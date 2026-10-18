@@ -570,7 +570,7 @@ const TXT = {
     lockedHintP:n=>"Réussissez 3 fois une progression sans faute pour débloquer la tonalité suivante. Encore "+n+" à découvrir.",
     typeLockedH:l=>"Ces tonalités s'ouvrent au niveau "+l+".", typeLockedP:l=>"Cette progression s'ouvre au niveau "+l+".", typeLockedE:l=>"Cette catégorie s'ouvre au niveau "+l+".",
     earHint:"Touchez une case pour écouter un exemple.", right:"Bonne réponse !", wrong:"Réponse : ", answerLbl:"Réponse",
-    kbdHintE:"Clavier d'ordinateur : rangée Q S D F G H J K pour jouer des notes. Espace : réécouter · Entrée : continuer · ⌫ : réessayer.", playSound:"Écouter",
+    kbdHintE:"Clavier d'ordinateur : rangée Q S D F G H J K pour jouer des notes. Espace : réécouter · Entrée (ou un Do au clavier MIDI) : continuer · ⌫ : réessayer.", playSound:"Écouter",
     intNames:{m2:"Seconde mineure",M2:"Seconde majeure",m3:"Tierce mineure",M3:"Tierce majeure",P4:"Quarte juste",TT:"Triton",P5:"Quinte juste",m6:"Sixte mineure",M6:"Sixte majeure",m7:"Septième mineure",M7:"Septième majeure",P8:"Octave"},
     intShort:{m2:"2m",M2:"2M",m3:"3m",M3:"3M",P4:"4J",TT:"Triton",P5:"5J",m6:"6m",M6:"6M",m7:"7m",M7:"7M",P8:"8ve"},
     secScales:"Gammes", secChords:"Accords", inversions:"Renversements", chordToPlay:"Accord à jouer",
@@ -584,11 +584,11 @@ const TXT = {
     inOrder:"À la suite", random:"Aléatoire", sig:"armure", noAcc:"ni ♯ ni ♭", notes:"notes",
     perfect:"Parfait !", errors:n=>n+" faute"+(n>1?"s":""), inSecs:" en ", correct:"notes justes", missed:n=>n+" manquée"+(n>1?"s":""), missedP:n=>n+" manqué"+(n>1?"s":""), session:"Partie", scalesWord:n=>n+" gamme"+(n>1?"s":""),
     start:"Commencer", giveUp:"Je sèche, montrer", knew:"Continuer", review:"Réessayer", replay:"Écouter la gamme", next:"Suivante",
-    screenKeys:"Clavier à l'écran", midiOff:"Activer le MIDI", micOff:"Activer le micro", midiNone:"MIDI : aucun appareil", midiDev:"MIDI : ",
+    midiStartTip:"Jouez un Do sur votre clavier MIDI pour commencer.", screenKeys:"Clavier à l'écran", midiOff:"Activer le MIDI", micOff:"Activer le micro", midiNone:"MIDI : aucun appareil", midiDev:"MIDI : ",
     midiBlocked:"MIDI bloqué", midiNo:"MIDI non pris en charge", micOn:"Micro : à l'écoute", micBlocked:"Micro bloqué",
     blocked:"Le navigateur a refusé l'accès. Cliquez sur le cadenas à gauche de l'adresse du site pour autoriser le micro ou le MIDI, puis réessayez. Dans l'aperçu claude.ai, ils sont toujours bloqués : utilisez pianochallenges.com.",
     midiUnsupported:"Ce navigateur ne gère pas le MIDI (c'est le cas de Safari et de l'iPhone). Utilisez Chrome ou Edge, ou le micro.",
-    kbdHint:"Clavier d'ordinateur : rangée Q S D F G H J K pour les touches blanches, rangée du dessus pour les noires. Espace : révéler / suivant · Entrée : continuer · ⌫ : réessayer.",
+    kbdHint:"Clavier d'ordinateur : rangée Q S D F G H J K pour les touches blanches, rangée du dessus pour les noires. Espace : révéler / suivant · Entrée (ou un Do au clavier MIDI) : continuer · ⌫ : réessayer.",
     progress:"Progression", viewLabel:"Afficher", settings:"Réglages", practise:"Gammes travaillées", order:"Ordre", answerAfter:"Réponse donnée après",
     never:"jamais", notation:"Notation", direction:"Sens", optOct:"Finir sur l'octave", optLabels:"Noms des notes sur le clavier",
     optMidiSound:"Jouer le son des notes MIDI", optAll:"Tout débloquer", reset:"Remettre la progression à zéro", confirmReset:"Confirmer : tout effacer ?",
@@ -637,7 +637,7 @@ const TXT = {
     inOrder:"In order", random:"Random", sig:"key signature", noAcc:"no ♯ or ♭", notes:"notes",
     perfect:"Perfect!", errors:n=>n+" mistake"+(n>1?"s":""), inSecs:" in ", correct:"correct notes", missed:n=>n+" missed", missedP:n=>n+" missed", session:"Session", scalesWord:n=>n+" scale"+(n>1?"s":""),
     start:"Start", giveUp:"Show me", knew:"Continue", review:"Retry", replay:"Listen to the scale", next:"Next",
-    screenKeys:"On-screen keys", midiOff:"Enable MIDI", micOff:"Enable mic", midiNone:"MIDI: no device", midiDev:"MIDI: ",
+    midiStartTip:"Play a C on your MIDI keyboard to start.", screenKeys:"On-screen keys", midiOff:"Enable MIDI", micOff:"Enable mic", midiNone:"MIDI: no device", midiDev:"MIDI: ",
     midiBlocked:"MIDI blocked", midiNo:"MIDI not supported", micOn:"Mic: listening", micBlocked:"Mic blocked",
     blocked:"The browser refused access. Click the padlock left of the site address to allow the mic or MIDI, then try again. Inside the claude.ai preview they are always blocked: use pianochallenges.com.",
     midiUnsupported:"This browser has no MIDI support (Safari and iPhone don't). Use Chrome or Edge, or the mic.",
@@ -860,7 +860,7 @@ const STORE="memo-gammes-v1";
 let firstVisit=false;
 const DEFAULTS={xp:0, mastery:{}, stats:{ok:0,perfect:0,revealed:0,errors:0}, streak:{days:0,last:""}, suiteIdx:0, csuiteIdx:0,
   seenTypes:["major","minor","chords:maj","chords:min"], langV2:true, secStats:{}, srs:{}, daily:{}, section:"scales",
-  settings:{lang:"en", mode:"suite", delay:5, notation:"en", dir:"up", octave:true, labels:false, midiSound:false, unlockAll:false,
+  settings:{lang:"en", mode:"suite", delay:5, notation:"en", dir:"up", octave:true, labels:false, midiSound:true, unlockAll:false,
     types:["major"], view:"major", ctypes:["maj"], cview:"maj", invs:[0],
     htypes:["maj"], hview:"maj", hdegs:[0,1,2,3,4,5,6], ptypes:["p145","pop"], pview:"pop", vl:false, etypes:["chord","int"], eview:"chord", earV2:true, gameLen:10}};
 const SECS=["scales","chords","harmony","prog","ear"];
@@ -882,6 +882,7 @@ function load(){
     s.seenTypes=s.seenTypes.map(x=>x.startsWith("ch:")?"chords:"+x.slice(3):x);
     if(!d.secStats){ s.secStats={scales:{...DEFAULTS.stats,...(d.stats||{})}}; }
     if(!s.settings.earV2){ s.settings.eview="chord"; s.settings.etypes=EARCATS.map(c=>c.id).filter(id=>s.settings.etypes.includes(id)); s.settings.earV2=true; }
+    if(!s.settings.midiV2){ s.settings.midiSound=true; s.settings.midiV2=true; }
     if(!s.langV2){ s.settings.lang="en"; s.settings.notation="en"; s.langV2=true; }
     return s; } }catch(e){}
   firstVisit=true;
@@ -1129,8 +1130,15 @@ function tick(){
   }
   raf=requestAnimationFrame(tick);
 }
+// a C on the MIDI keyboard starts the game, skips the pause after a success, or starts a new game from the summary
+function midiStart(note){
+  if(note%12!==0 || helpOpen) return false;
+  if(endOpen){ closeEnd(); startRound(); return true; }
+  if(phase==="idle" || phase==="success"){ startRound(); return true; }
+  return false;
+}
 // MIDI notes that arrive together (a block chord) are processed lowest first
-let midiBuf=[], midiTimer=0;
+let midiBuf=[], midiTimer=0, midiReady=false;
 function midiIn(m){ midiBuf.push(m); clearTimeout(midiTimer); midiTimer=setTimeout(()=>{ const b=midiBuf.sort((a,c)=>a-c); midiBuf=[]; b.forEach(x=>noteIn(x)); },35); }
 function hitSlot(j, m){
   found[j]=true; idx=found.filter(Boolean).length; played.push(fold(m)); markPlayed(); renderSlots(j);
@@ -1515,7 +1523,7 @@ function renderPrompt(){
   $("invTag").hidden = true;
   if(!cur){
     $("eyebrow").textContent = sec==="chords"?t("chordToPlay"):sec==="harmony"?t("chordOfKey"):sec==="prog"?t("progLbl"):sec==="ear"?t("listenLbl"):t("scaleToPlay");
-    $("prompt").textContent=t("ready"); $("promptSub").textContent=tx("idleSub"); return;
+    $("prompt").textContent=t("ready"); $("promptSub").textContent=tx("idleSub")+(midiReady?" "+t("midiStartTip"):""); return;
   }
   const order = S.settings.mode==="suite"?t("inOrder"):t("random");
   const shown = phase==="revealed"||phase==="success";
@@ -1685,9 +1693,12 @@ $("midiBtn").addEventListener("click", async ()=>{
   try{
     const acc=await navigator.requestMIDIAccess();
     const bind=()=>{ const names=[]; acc.inputs.forEach(inp=>{ names.push(inp.name); inp.onmidimessage=ev=>{
-        const [st,note,vel]=ev.data; if((st&0xf0)===0x90 && vel>0){ if(S.settings.midiSound) tone(note); midiIn(note); } }; });
+        const [st,note,vel]=ev.data; if((st&0xf0)===0x90 && vel>0){
+          if(S.settings.midiSound) tone(note,0,.9,.1+.26*vel/127);
+          if(midiStart(note)) return;
+          midiIn(note); } }; });
       $("midiBtn").classList.toggle("on",names.length>0); $("midiBtn").classList.remove("err");
-      $("midiTxt").textContent=names.length ? t("midiDev")+names[0] : t("midiNone"); };
+      $("midiTxt").textContent=names.length ? t("midiDev")+names[0] : t("midiNone"); midiReady=names.length>0; render(); };
     bind(); acc.onstatechange=bind; notice("");
   }catch(err){ $("midiBtn").classList.add("err"); $("midiTxt").textContent=t("midiBlocked"); notice(t("blocked")); }
 });
