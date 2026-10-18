@@ -146,7 +146,7 @@ button:focus-visible, select:focus-visible, input:focus-visible, summary:focus-v
 
 /* Stage */
 .stage{position:relative;overflow:hidden;background:var(--surface);border:1px solid var(--line);border-radius:14px;transition:border-color .3s,box-shadow .3s;padding:22px clamp(14px,3vw,28px);display:flex;flex-direction:column;gap:16px}
-.prompt-row{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:8px 16px}
+.prompt-row{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:start;gap:8px 16px}
 .prompt-row > div{min-width:0}
 .eyebrow{font-size:.74rem;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin:0 0 2px}
 .prompt{font-family:var(--f-display);font-weight:800;font-size:clamp(1.9rem,7vw,3.4rem);line-height:1.02;letter-spacing:-.02em;margin:0;text-wrap:balance}
@@ -350,10 +350,13 @@ select{font:inherit;color:var(--ink);background:var(--surface-2);border:1px soli
   .sections{display:flex;overflow-x:auto;scrollbar-width:none}
   .sections::-webkit-scrollbar{display:none}
   .sections button{flex:0 0 auto;padding:8px 12px;font-size:.9rem}
-  .score-col{align-items:stretch;width:100%}
-  .score-box{min-width:0}
-  .sb-val{font-size:1.35rem}
-  .session{white-space:normal}
+  .prompt-row{gap:8px 10px}
+  .score-col{align-items:stretch;width:auto;max-width:132px}
+  .score-box{min-width:0;grid-template-columns:1fr;padding:7px 10px;text-align:left}
+  .sb-label{font-size:.62rem}
+  .sb-val{font-size:1.3rem;text-align:left}
+  .sb-detail{font-size:.72rem}
+  .session{white-space:normal;font-size:.68rem}
   .kbd{height:clamp(160px,34vh,260px)}
   .wk span{font-size:.7rem}
   .slots{gap:4px}

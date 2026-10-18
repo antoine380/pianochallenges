@@ -1,2 +1,2 @@
 Piano Challenges
-build 2026-10-18 18:35 (on-screen keyboard matches the MIDI keyboard: 25-88 keys or detected)
+build 2026-10-18 18:40 (score box always beside the prompt)
