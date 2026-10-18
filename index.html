@@ -508,6 +508,15 @@ body.guest #dailyCard .lbl b::after{margin-left:6px;vertical-align:-2px}
 .inp-chip i{position:absolute;right:-3px;top:-3px;width:9px;height:9px;border-radius:50%;border:2px solid var(--surface)}
 .inp-chip i.on{background:var(--good)} .inp-chip i.off{background:var(--warn)}
 .gamebar .gend{margin-left:0}
+.ph-title{display:flex;align-items:center;gap:10px}
+.ph-title svg{width:26px;height:26px;fill:none;stroke:var(--accent);stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.ph-back{margin-left:auto}
+#settingsPage .set-body{padding:0;overflow:visible}
+#progressPage .prog-body{padding:0}
+[data-page="settings"] :is(.picker,.stage), [data-page="progress"] :is(.picker,.stage){display:none!important}
+.inp-opt:disabled{opacity:.55;cursor:not-allowed}
+.midi-setup{margin:0}
+#midiOk:disabled{opacity:.5;cursor:not-allowed}
 /* Characters + intro windows */
 .modal-sub{margin:2px 0 0;color:var(--muted);font-size:.88rem}
 .char-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px}
@@ -840,7 +849,18 @@ html.native .midi-body [data-i="midiHint"]{display:none}
       <p data-i="lockSub"></p>
       <ul class="wc-list" id="lockList"></ul>
       <button class="btn primary big" id="lockGo" type="button" data-i="wcSignup"></button>
+      <button class="linkbtn" id="lockGuest" type="button" data-i="lockGuest"></button>
     </div>
+  </section>
+
+  <section class="pane" id="settingsPage" hidden>
+    <div class="pane-head"><h2 class="ph-title"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 15.2a3.2 3.2 0 1 0 0-6.4 3.2 3.2 0 0 0 0 6.4z"/><path d="M19.4 13.5a7.6 7.6 0 0 0 0-3l2-1.6-2-3.4-2.4 1a7.5 7.5 0 0 0-2.6-1.5L14 2.5h-4l-.4 2.5A7.5 7.5 0 0 0 7 6.5l-2.4-1-2 3.4 2 1.6a7.6 7.6 0 0 0 0 3l-2 1.6 2 3.4 2.4-1a7.5 7.5 0 0 0 2.6 1.5l.4 2.5h4l.4-2.5a7.5 7.5 0 0 0 2.6-1.5l2.4 1 2-3.4z"/></svg><span data-i="settings"></span></h2><button class="btn ph-back" type="button" data-back data-i="backPlay"></button></div>
+    <div class="card" id="setHost"></div>
+  </section>
+
+  <section class="pane" id="progressPage" hidden>
+    <div class="pane-head"><h2 class="ph-title"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg><span data-i="progress"></span></h2><button class="btn ph-back" type="button" data-back data-i="backPlay"></button></div>
+    <div class="card" id="progHost"></div>
   </section>
 
   <section class="pane" id="rankPanel" hidden>
@@ -989,6 +1009,7 @@ html.native .midi-body [data-i="midiHint"]{display:none}
     <div class="modal-head"><h2 id="midiTitle" data-i="midiTitle"></h2><button class="modal-close" id="midiX" type="button" aria-label="Close">×</button></div>
     <div class="modal-body midi-body">
       <div class="midi-status"><span class="dot"></span><span id="mStTxt"></span><span class="spacer"></span><button class="btn primary" id="mEnable" type="button" data-i="midiOff"></button></div>
+      <p class="notice midi-setup" id="midiSetupMsg" hidden></p>
       <p class="mdev-h" data-i="midiFound"></p>
       <ul class="mdev" id="mDevList"></ul>
       <div class="mconn">
@@ -1104,7 +1125,7 @@ const TXT = {
     accuracy:"Précision", avgTime:"Temps moyen", xpWon:"XP gagnés", bestCombo:"Meilleur combo", toRework:"À retravailler", allPerfect:"Aucune erreur, bravo !",
     reworkBtn:"Retravailler mes erreurs", newGame:"Nouvelle partie", closeLbl:"Fermer", outOf:"exercices sans faute", nextReview:"Prochaine révision : ", tomorrow:"demain", inDays:n=>"dans "+n+" jours",
     secHarmony:"Harmonie", secProg:"Progressions", secEar:"Oreille", secGames:"Jeux", secRank:"Classement", secAccount:"Profil",
-    inTitle:"Comment vas-tu jouer ?", inSub:"Choisis une fois pour toutes. Tu pourras changer dans les Réglages.", inLbl:"Je joue avec",
+    inTitle:"Comment vas-tu jouer ?", midiDone:"Terminer la configuration", midiSetupNeed:"Branche ton clavier en USB ou cherche-le en Bluetooth : il doit apparaître dans la liste pour continuer.", midiSetupOk:"Clavier détecté ! Joue quelques notes pour vérifier, puis termine la configuration.", backPlay:"← Retour", lockGuest:"Continuer sans compte pour l'instant", inSub:"Choisis une fois pour toutes. Tu pourras changer dans les Réglages.", inLbl:"Je joue avec",
     inModes:{screen:["Le clavier à l'écran","Touche les notes à l'écran, ou utilise le clavier de l'ordinateur.","Écran"],midi:["Mon clavier MIDI","Branché en USB ou connecté en Bluetooth. Le plus précis.","MIDI"],mic:["Mon piano, avec le micro","Pour un piano acoustique : l'app écoute les notes que tu joues.","Micro"]},
     inCfgMidi:"Connecter / régler le clavier MIDI", inCfgMic:"Activer le micro", inMidiNo:"Ce navigateur ne gère pas le MIDI : utilise Chrome ou Edge, l'app iPhone/iPad, ou le micro.",
     inMidiOk:n=>"Connecté : "+n, inMidiNone:"Aucun clavier détecté : branche-le ou connecte-le en Bluetooth.", inMicOk:"Le micro écoute.", inMicOff:"Micro pas encore activé.", inScreenOk:"Touche les notes à l'écran.",
@@ -1215,7 +1236,7 @@ const TXT = {
     accuracy:"Accuracy", avgTime:"Average time", xpWon:"XP earned", bestCombo:"Best combo", toRework:"To rework", allPerfect:"No mistakes, well done!",
     reworkBtn:"Rework my mistakes", newGame:"New game", closeLbl:"Close", outOf:"exercises without mistakes", nextReview:"Next review: ", tomorrow:"tomorrow", inDays:n=>"in "+n+" days",
     secHarmony:"Harmony", secProg:"Progressions", secEar:"Ear", secGames:"Games", secRank:"Leaderboard", secAccount:"Profile",
-    inTitle:"How will you play?", inSub:"Choose once. You can change it later in Settings.", inLbl:"I play with",
+    inTitle:"How will you play?", midiDone:"Finish set-up", midiSetupNeed:"Plug your keyboard in with USB or search for it over Bluetooth: it must show up in the list to continue.", midiSetupOk:"Keyboard detected! Play a few notes to check, then finish the set-up.", backPlay:"← Back", lockGuest:"Continue without an account for now", inSub:"Choose once. You can change it later in Settings.", inLbl:"I play with",
     inModes:{screen:["The on-screen keyboard","Tap the notes on screen, or use your computer keyboard.","Screen"],midi:["My MIDI keyboard","Plugged in with USB or connected over Bluetooth. The most accurate.","MIDI"],mic:["My piano, with the mic","For an acoustic piano: the app listens to the notes you play.","Mic"]},
     inCfgMidi:"Connect / set up the MIDI keyboard", inCfgMic:"Turn the mic on", inMidiNo:"This browser has no MIDI: use Chrome or Edge, the iPhone/iPad app, or the mic.",
     inMidiOk:n=>"Connected: "+n, inMidiNone:"No keyboard detected: plug it in or connect it over Bluetooth.", inMicOk:"The mic is listening.", inMicOff:"Mic not turned on yet.", inScreenOk:"Tap the notes on screen.",
@@ -1760,7 +1781,7 @@ document.addEventListener("keydown", e=>{
   if(document.body.classList.contains("drawer")){ if(e.code==="Escape") closeDrawer(); return; }
   if(openMods.length){ if(e.code==="Escape") closeMod(openMods[openMods.length-1]); return; }
   if(e.code==="Escape" && typesOpen){ closeTypes(); return; }
-  if(["rank","account","locked"].includes(page)) return;
+  if(["rank","account","locked","settings","progress"].includes(page)) return;
   if(page==="games" && (e.code==="Space"||e.code==="Enter"||e.code==="Backspace")) return;
   if(e.code==="Space"){ e.preventDefault(); primaryAction(); return; }
   if(e.code==="Enter" && phase==="revealed"){ e.preventDefault(); grade(true); return; }
@@ -1872,7 +1893,7 @@ function guessKbdSize(name){
 }
 // a C on the MIDI keyboard starts the game, continues after an answer, or starts a new game from the summary
 function midiStart(note){
-  if(note%12!==0 || ["games","rank","account","locked"].includes(page) || setOpen || openMods.length || helpOpen || midiOpen || S.settings.midiC===false) return false;
+  if(note%12!==0 || ["games","rank","account","locked","settings","progress"].includes(page) || setOpen || openMods.length || helpOpen || midiOpen || S.settings.midiC===false) return false;
   if(page==="daily" && !game && !endOpen){ startDaily(); return true; }
   if(endOpen){ closeEnd(); if(page==="daily") return true; startRound(); return true; }
   if(phase==="idle" || phase==="success"){ startRound(); return true; }
@@ -2464,7 +2485,7 @@ function renderSettings(){
   setNav();
   renderTypes(); renderKeySel();
 }
-function render(){ document.body.classList.toggle("playing", !!game || phase!=="idle"); document.body.dataset.page=page; $("gamesPanel").hidden = page!=="games"; $("dailyPanel").hidden = page!=="daily"; $("rankPanel").hidden = page!=="rank"; $("accountPanel").hidden = page!=="account"; $("lockPanel").hidden = page!=="locked"; renderDaily(); renderGameBar(); setNav();
+function render(){ document.body.classList.toggle("playing", !!game || phase!=="idle"); document.body.dataset.page=page; $("gamesPanel").hidden = page!=="games"; $("dailyPanel").hidden = page!=="daily"; $("rankPanel").hidden = page!=="rank"; $("accountPanel").hidden = page!=="account"; $("lockPanel").hidden = page!=="locked"; $("settingsPage").hidden = page!=="settings"; $("progressPage").hidden = page!=="progress"; renderDaily(); renderGameBar(); setNav();
   if(phase==="idle"||phase==="listening") resetScore(); renderSession(); renderHint(); renderPrompt(); renderTimeline(); renderSlots(); renderActions(); renderStatus(); renderMap(); }
 
 // ---------- Settings wiring ----------
@@ -2482,12 +2503,14 @@ $("dpStart").addEventListener("click",()=>{ if(!(game&&game.daily)) startDaily()
 
 // settings / progress window
 let setOpen=false;
-function openSet(tab){ if(!setOpen) modalOpened(); setOpen=true; $("setModal").hidden=false; showSetTab(tab||"settings"); renderSettings(); renderMap(); $("setX").focus({preventScroll:true}); }
-function showSetTab(tab){ $("setPane").hidden = tab!=="settings"; $("progPane").hidden = tab!=="progress"; $("setTabs").querySelectorAll("button").forEach(b=>b.setAttribute("aria-pressed", b.dataset.v===tab)); }
-function closeSet(){ if(!setOpen) return; setOpen=false; $("setModal").hidden=true; modalClosed(); }
+// Settings and Progress are pages of their own (the old window's content is moved into them)
+$("setHost").appendChild($("setPane")); $("progHost").appendChild($("progPane"));
+$("setPane").classList.remove("modal-body"); $("progPane").classList.remove("modal-body"); $("progPane").hidden=false; $("setModal").remove();
+function openSet(tab){ closeDrawer(); openPage(tab==="progress"?"progress":"settings"); }
+function showSetTab(tab){ openSet(tab); }
+function closeSet(){ if(INFO_PAGES.includes(page)){ page="practice"; returnPage=null; paused=false; render(); renderDaily(); } } // e.g. a tile picked on the Progress page starts that exercise
 $("setBtn").addEventListener("click",()=>openSet("settings")); $("mbSet").addEventListener("click",()=>openSet("settings")); $("progBtn").addEventListener("click",()=>openSet("progress"));
-$("setTabs").addEventListener("click",e=>{ const b=e.target.closest("button"); if(b) showSetTab(b.dataset.v); });
-$("setX").addEventListener("click",closeSet); $("setBg").addEventListener("click",closeSet);
+document.querySelectorAll("[data-back]").forEach(b=>b.addEventListener("click",()=>openPage(returnPage||"practice")));
 $("kbSize").addEventListener("change",e=>{ S.settings.kbdSize=e.target.value; save(); buildKeyboard(); renderSettings(); if(cur&&seq.length) scrollKbdTo(revealMidis()[0]); });
 $("kbDetect").addEventListener("click",()=>{ if(calib){ calibApply(); return; } if(!midiReady){ calibMsg(t("calibNeedMidi")); return; } calib={lo:null,hi:null}; $("kbDetect").textContent=t("kbValidate"); calibMsg(t("calibListen")); });
 $("homeLink").addEventListener("click",e=>{ e.preventDefault(); goHome(); });
@@ -2498,9 +2521,9 @@ const phoneMQ=window.matchMedia("(max-width:640px)"), railMQ=window.matchMedia("
 function setNav(){
   const mark=(el,on)=>{ if(on) el.setAttribute("aria-current","page"); else el.removeAttribute("aria-current"); };
   $("secTabs").querySelectorAll("button").forEach(b=>mark(b, page==="practice" ? b.dataset.v===S.section : b.dataset.v===page));
-  mark($("dailyCard"),page==="daily"); mark($("rankBtn"),page==="rank"); mark($("accountBtn"),page==="account");
+  mark($("dailyCard"),page==="daily"); mark($("rankBtn"),page==="rank"); mark($("accountBtn"),page==="account"); mark($("setBtn"),page==="settings"); mark($("progBtn"),page==="progress");
   const pv = page==="practice"?S.section : page==="locked"?lockFor : page;
-  $("mbTitle").textContent = t({chords:"secChords",scales:"secScales",harmony:"secHarmony",prog:"secProg",ear:"secEar",games:"secGames",daily:"dailyTitle",rank:"secRank",account:"secAccount"}[pv]);
+  $("mbTitle").textContent = t({chords:"secChords",scales:"secScales",harmony:"secHarmony",prog:"secProg",ear:"secEar",games:"secGames",daily:"dailyTitle",rank:"secRank",account:"secAccount",settings:"settings",progress:"progress"}[pv]);
   if(page==="locked"){ $("secTabs").querySelectorAll("button").forEach(b=>mark(b,b.dataset.v===lockFor)); mark($("dailyCard"),lockFor==="daily"); }
 }
 function applySide(){
@@ -2641,18 +2664,24 @@ function renderGames(){ const box=$("gameCards"); box.innerHTML="";
     c.querySelector("b").textContent=title; c.querySelector("p").textContent=desc; c.querySelector(".soon").textContent=t("soon"); box.appendChild(c); }); }
 const LOCKED=["games","daily"];
 let lockFor="";
-const needLogin = pg => LOCKED.includes(pg) && !user && !cloudFail;
+const needLogin = pg => LOCKED.includes(pg) && !user && !cloudFail && !guestPass;
+const INFO_PAGES=["settings","progress"];
+let returnPage=null, guestPass=false;
 function openPage(pg){
   if(needLogin(pg)){ lockFor=pg; pg="locked"; }
   if(pg===page && pg!=="practice" && pg!=="locked") return;
   if(pg!=="games") runnerClose();
-  const keepDaily = pg==="daily" && game && game.daily;
+  const toInfo = INFO_PAGES.includes(pg) && !INFO_PAGES.includes(page);
+  const backFromInfo = INFO_PAGES.includes(page) && returnPage && pg===returnPage;
+  if(toInfo){ returnPage=page; pauseRound(); }
+  else if(!INFO_PAGES.includes(pg) && !backFromInfo) returnPage=null;
+  const keepDaily = (pg==="daily" && game && game.daily) || toInfo || backFromInfo || (INFO_PAGES.includes(pg) && INFO_PAGES.includes(page));
   if(!keepDaily){
     clearTimeout(advanceTimer); cancelAnimationFrame(raf); clearPlayTimers(); closeEnd();
     phase="idle"; cur=null; seq=[]; found=[]; played=[]; idx=0; errors=0; game=null;
     clearKeys(); $("stage").classList.remove("res-good","res-warn","res-bad");
   }
-  page=pg; if(pg==="locked") renderLock(); if(pg==="games") renderGames(); if(pg==="rank") renderRank(); if(pg==="account") renderAccount(); if(pg==="daily") dailyPlan();
+  page=pg; if(backFromInfo){ returnPage=null; setTimeout(resumeRound,0); } if(pg==="locked") renderLock(); if(pg==="settings") renderSettings(); if(pg==="progress") renderMap(); if(pg==="games") renderGames(); if(pg==="rank") renderRank(); if(pg==="account") renderAccount(); if(pg==="daily") dailyPlan();
   if(narrowMQ.matches) buildKeyboard();
   renderSettings(); render(); renderDaily(); $("main").scrollTo({top:0});
   if(["games","daily"].includes(pg)) autoIntro(pg);
@@ -2730,6 +2759,7 @@ function renderLock(){
   const ul=$("lockList"); ul.innerHTML=""; t("perks").forEach(x=>{ const li=document.createElement("li"); li.textContent=x; ul.appendChild(li); });
 }
 $("lockGo").addEventListener("click",()=>openPage("account"));
+$("lockGuest").addEventListener("click",()=>{ guestPass=true; document.body.classList.remove("guest"); openPage(lockFor||"games"); });
 function renderWelcome(){ const ul=$("wcList"); ul.innerHTML=""; t("perks").forEach(x=>{ const li=document.createElement("li"); li.textContent=x; ul.appendChild(li); }); }
 $("wcSignup").addEventListener("click",()=>{ closeMod("welcomeModal"); openPage("account"); });
 async function renderRank(){
@@ -2880,7 +2910,7 @@ $("optVL").addEventListener("change",e=>{ S.settings.vl=e.target.checked; save()
 $("secTabs").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; closeDrawer();
   const v=b.dataset.v;
   if(v==="games"){ openPage("games"); return; }
-  if(page!=="practice"){ if(S.section!==v){ S.section=v; save(); } openPage("practice"); }
+  if(page!=="practice"){ if(S.section!==v){ S.section=v; save(); returnPage=null; } openPage(INFO_PAGES.includes(page)&&returnPage==="practice"?"practice":"practice"); }
   else switchSection(v);
   autoIntro(v); });
 function setDelay(v){ S.settings.delay=v; save(); renderSettings(); renderGameBar(); if(phase==="listening") startRound(cur,true); else renderTimeline(); }
@@ -2919,10 +2949,17 @@ function renderInputUI(){
   const ok = m==="screen" || (m==="midi"&&midiReady) || (m==="mic"&&micOn);
   const chip=$("inChip"); chip.innerHTML=INPUT_ICONS[m]+'<i class="'+(ok?"on":"off")+'"></i>'; chip.title=M[m][0]+" — "+st; chip.setAttribute("aria-label",chip.title);
 }
+let midiSetup=null; // {prev} while the player is connecting a MIDI keyboard after choosing MIDI
 async function setInput(v, fromUser){
+  if(v==="midi" && fromUser){
+    midiSetup={prev:S.settings.input||null}; if(micOn) micStop();
+    if(navigator.requestMIDIAccess) await enableMidi();
+    if(midiReady){ midiSetup=null; S.settings.input="midi"; save(); renderInputUI(); render(); return; }
+    openMidi(); return;
+  }
   S.settings.input=v; save();
   if(v!=="mic" && micOn) micStop();
-  if(v==="midi"){ if(navigator.requestMIDIAccess){ await enableMidi(); if(fromUser && !midiReady) openMidi(); } }
+  if(v==="midi"){ if(navigator.requestMIDIAccess){ await enableMidi(); } }
   if(v==="mic" && fromUser && !micOn) $("micBtn").click();
   renderInputUI(); render();
 }
@@ -2933,6 +2970,7 @@ function openInputChooser(){
   inputModes().forEach(v=>{ const b=document.createElement("button"); b.type="button"; b.className="inp-opt";
     b.innerHTML='<span class="io-ic">'+INPUT_ICONS[v]+'</span><span class="io-t"><b></b><small></small></span>';
     b.querySelector("b").textContent=M[v][0]; b.querySelector("small").textContent=M[v][1];
+    if(v==="midi" && !navigator.requestMIDIAccess){ b.disabled=true; b.querySelector("small").textContent=t("inMidiNo"); }
     b.onclick=()=>{ closeMod("inputModal"); setInput(v,true); }; box.appendChild(b); });
   openMod("inputModal");
 }
@@ -2952,6 +2990,9 @@ function notice(x){ const n=$("notice"); n.textContent=x; n.hidden=!x; }
 // ---------- MIDI ----------
 let midiAcc=null, midiNames=[], midiOpen=false;
 function renderMidiModal(){
+  const setup=!!midiSetup, ok=$("midiOk");
+  ok.textContent = setup ? t("midiDone") : t("closeLbl"); ok.disabled = setup && !midiReady;
+  $("midiSetupMsg").hidden=!setup; $("midiSetupMsg").textContent = midiReady ? t("midiSetupOk") : t("midiSetupNeed");
   $("midiModal").querySelector(".midi-status").classList.toggle("on",midiReady);
   $("mStTxt").textContent = midiReady ? $("midiTxt").textContent : (midiAcc ? t("midiNone") : t("midiOffState"));
   $("mEnable").hidden = !!midiAcc || !navigator.requestMIDIAccess;
@@ -2965,7 +3006,8 @@ function renderMidiModal(){
   renderSettings();
 }
 function openMidi(){ if(!midiOpen) modalOpened(); midiOpen=true; renderMidiModal(); startMidiPoll(); $("midiModal").hidden=false; $("midiOk").focus(); }
-function closeMidi(){ if(!midiOpen) return; midiOpen=false; $("midiModal").hidden=true; if(calib){ calib=null; calibMsg(""); $("kbDetect").textContent=t("kbDetect"); } clearInterval(midiPoll); modalClosed(); }
+function closeMidi(){ if(!midiOpen) return; midiOpen=false; $("midiModal").hidden=true;
+  if(midiSetup){ const prev=midiSetup.prev; midiSetup=null; S.settings.input = midiReady ? "midi" : (prev && prev!=="midi" ? prev : undefined); if(!S.settings.input) delete S.settings.input; save(); renderInputUI(); render(); } if(calib){ calib=null; calibMsg(""); $("kbDetect").textContent=t("kbDetect"); } clearInterval(midiPoll); modalClosed(); }
 let midiPoll=0; // in the app, look for newly paired / plugged keyboards while the window is open
 function startMidiPoll(){ clearInterval(midiPoll); if(window.__nativeMidi && midiAcc) midiPoll=setInterval(()=>{ window.__nativeMidi.listInputs().catch(()=>{}); },2000); }
 function calibMsg(x){ const m=$("calibMsg"); m.textContent=x; m.hidden=!x; if(!midiOpen) notice(x); }
@@ -3040,7 +3082,7 @@ function autoCorrelate(buf,sr){
 let helpOpen=false, pausedLeft=0, tutI=0;
 // any window open: freeze the countdown and auto-advance, keep focus inside the window
 let paused=false, pendingAdv=false, modalFocus=[];
-function anyModal(){ return helpOpen||setOpen||midiOpen||endOpen||openMods.length>0; }
+function anyModal(){ return helpOpen||setOpen||midiOpen||endOpen||openMods.length>0||INFO_PAGES.includes(page); }
 function pauseRound(){ if(!paused && phase==="listening"){ cancelAnimationFrame(raf); pausedLeft = deadline ? Math.max(0,deadline-performance.now()) : 0; paused=true; } }
 function resumeRound(){
   if(anyModal()) return;
