@@ -5,7 +5,8 @@ import Capacitor
 class MainViewController: CAPBridgeViewController {
     override func capacitorDidLoad() {
         bridge?.registerPluginInstance(MidiPlugin())
-        CAPLog.print("⚡️  Piano Challenges: Midi plugin registered")
+        bridge?.registerPluginInstance(AuthPlugin())
+        CAPLog.print("⚡️  Piano Challenges: Midi and Auth plugins registered")
     }
 
     override func viewDidLoad() {

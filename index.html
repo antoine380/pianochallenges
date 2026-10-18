@@ -1140,7 +1140,7 @@ const TXT = {
     loginReady:"Crée ton compte gratuit, ou connecte-toi :",
     emailPh:"ton@email.fr", sendCode:"Recevoir un code", codeSent:e=>"Code envoyé à "+e+" (regarde aussi les spams). Entre-le ci-dessus, ou clique sur le lien du mail.", codePh:"Code à 6 chiffres", verify:"Valider", changeMail:"Changer d'e-mail",
     orLbl:"ou", appSoon:"Bientôt dans l'app", signedAs:e=>"Connecté : "+e, logout:"Se déconnecter", nameLbl:"Nom affiché (prénom et nom, visible dans le classement)", saveLbl:"Enregistrer", saved:"Enregistré ✓",
-    cloudErr:"Connexion au serveur impossible pour l'instant.", badCode:"Code incorrect ou expiré.", tooMany:"Trop de tentatives, réessaie dans quelques minutes.",
+    cloudErr:"Connexion au serveur impossible pour l'instant.", badCode:"Code incorrect ou expiré.", tooMany:"Trop de tentatives, réessaie dans quelques minutes.", mailFail:"L'e-mail n'a pas pu partir pour l'instant. Réessaie dans un moment, ou connecte-toi avec Google.",
     synced:"Progression sauvegardée en ligne ✓", rankEmpty:"Personne n'est encore classé. Connecte-toi pour être le premier !", rankErr:"Classement indisponible pour l'instant.", rankLoading:"Chargement…",
     rankSubIn:"Classement général par XP. Ton score se met à jour tout seul.",
     acctXp:"XP au total", acctStreak:"Série", acctDone:"Exercices réussis", acctLevel:"Niveau",
@@ -1148,7 +1148,7 @@ const TXT = {
     gamesTitle:"Jeux", gamesSub:"Des défis au piano pour jouer plus vite et plus juste. Les premiers jeux arrivent bientôt ; en attendant, le piano est libre.",
     freePlay:"Jeu libre", soon:"Bientôt",
     rnName:"Saute-notes", rnDesc:"Tu es un piano ! Joue l'accord affiché pour sauter par-dessus les croches et les doubles croches.", rnPlay:"Jouer", rnQuit:"Quitter",
-    rnStart:"Joue un Do pour démarrer", rnHow:"Joue l'accord écrit au-dessus de chaque note pour sauter", rnOver:"Aïe ! Joue un Do pour rejouer", rnBestL:"Record", rnNew:"Nouveau record !",
+    rnStart:"Joue un Do pour démarrer", rnTap:"Touche le jeu pour démarrer", rnOverShort:"Aïe !", rnHow:"Joue l'accord écrit au-dessus de chaque note pour sauter", rnOver:"Aïe ! Joue un Do pour rejouer", rnBestL:"Record", rnNew:"Nouveau record !",
     games:[["Saute-notes","play"],["Contre la montre","Un maximum de gammes en 60 secondes."],["Pluie de notes","Joue chaque note avant qu'elle ne touche le clavier."],["Mémoire d'accords","Répète des suites d'accords de plus en plus longues."],["Défis du jour","Un défi chronométré et un classement."]],
     degrees:"Degrés travaillés", optVL:"Enchaîner avec les renversements les plus proches", practiseH:"Tonalités travaillées", practiseP:"Progressions travaillées", practiseE:"Catégories travaillées",
     chordOfKey:"Accord de la tonalité", ofKey:" de ", inKey:"en ", progLbl:"Progression", vlOn:"renversements les plus proches", listenLbl:"Écoutez",
@@ -1176,7 +1176,7 @@ const TXT = {
     inOrder:"À la suite", random:"Aléatoire", sig:"armure", noAcc:"ni ♯ ni ♭", notes:"notes",
     perfect:"Parfait !", errors:n=>n+" faute"+(n>1?"s":""), inSecs:" en ", correct:"notes justes", missed:n=>n+" manquée"+(n>1?"s":""), missedP:n=>n+" manqué"+(n>1?"s":""), session:"Partie", scalesWord:n=>n+" gamme"+(n>1?"s":""),
     start:"Commencer", giveUp:"Je sèche, montrer", knew:"Continuer", review:"Réessayer", replay:"Écouter la gamme", next:"Suivante",
-    midiStartTip:"Joue un Do pour commencer, puis pour continuer.", screenKeys:"Clavier à l'écran", midiOff:"Activer le MIDI", micOff:"Activer le micro", midiNone:"MIDI : aucun appareil", midiDev:"MIDI : ",
+    midiStartTip:"Joue un Do sur ton clavier MIDI pour commencer, puis pour continuer.", screenKeys:"Clavier à l'écran", midiOff:"Activer le MIDI", micOff:"Activer le micro", midiNone:"MIDI : aucun appareil", midiDev:"MIDI : ",
     midiBlocked:"MIDI bloqué", midiNo:"MIDI non pris en charge", micOn:"Micro : à l'écoute", micBlocked:"Micro bloqué",
     blocked:"Le navigateur a refusé l'accès. Cliquez sur le cadenas à gauche de l'adresse du site pour autoriser le micro ou le MIDI, puis réessayez. Dans l'aperçu claude.ai, ils sont toujours bloqués : utilisez pianochallenges.com.",
     midiUnsupported:"Ce navigateur ne gère pas le MIDI (c'est le cas de Safari, de l'iPhone et de l'iPad). Utilise l'app Piano Challenges, Chrome ou Edge, ou le micro.",
@@ -1188,7 +1188,7 @@ const TXT = {
     mcUsbWeb:"Branche ton clavier en USB, puis active le MIDI. Il apparaît dans la liste.",
     mcBtApp:"Allume ton clavier, touche Rechercher et choisis-le dans la liste. Inutile de l'appairer dans les réglages Bluetooth.",
     mcBtWeb:"Appaire d'abord le clavier dans les réglages Bluetooth de ton ordinateur (sur Mac : Configuration audio et MIDI), puis active le MIDI.", midiTitle:"Clavier MIDI", midiInput:"Appareil", midiAll:"Tous les appareils", midiOffState:"MIDI non activé", midiCfgBtn:"Réglages du clavier MIDI",
-    optMidiC:"Un Do pour commencer et continuer (MIDI, micro ou écran)", midiHint:"Le MIDI marche dans Chrome et Edge, en USB ou Bluetooth (pas dans Safari ni sur iPhone/iPad).",
+    optMidiC:"Un Do sur le clavier MIDI pour commencer et continuer", midiHint:"Le MIDI marche dans Chrome et Edge, en USB ou Bluetooth (pas dans Safari ni sur iPhone/iPad).",
     keyLbl:"Tonalité", allKeys:"Toutes", dirMix:"Les deux",
     kbLbl:"Clavier à l'écran", kbAuto:"Automatique (3 octaves)", keys:"touches", kbCustom:"Détecté", kbDetect:"Détecter mon clavier MIDI",
     calibLow:"Jouez la touche la plus grave de votre clavier MIDI.", calibHigh:"Maintenant, jouez la touche la plus aiguë.",
@@ -1251,7 +1251,7 @@ const TXT = {
     loginReady:"Create your free account, or sign in:",
     emailPh:"you@email.com", sendCode:"Get a code", codeSent:e=>"Code sent to "+e+" (check spam too). Enter it above, or click the link in the email.", codePh:"6-digit code", verify:"Confirm", changeMail:"Use another email",
     orLbl:"or", appSoon:"Coming soon in the app", signedAs:e=>"Signed in: "+e, logout:"Sign out", nameLbl:"Display name (first and last name, shown on the leaderboard)", saveLbl:"Save", saved:"Saved ✓",
-    cloudErr:"Can't reach the server right now.", badCode:"Wrong or expired code.", tooMany:"Too many attempts, try again in a few minutes.",
+    cloudErr:"Can't reach the server right now.", badCode:"Wrong or expired code.", tooMany:"Too many attempts, try again in a few minutes.", mailFail:"The email could not be sent right now. Try again in a moment, or sign in with Google.",
     synced:"Progress saved online ✓", rankEmpty:"Nobody is ranked yet. Sign in to be the first!", rankErr:"Leaderboard unavailable right now.", rankLoading:"Loading…",
     rankSubIn:"Overall ranking by XP. Your score updates by itself.",
     acctXp:"Total XP", acctStreak:"Streak", acctDone:"Exercises solved", acctLevel:"Level",
@@ -1259,7 +1259,7 @@ const TXT = {
     gamesTitle:"Games", gamesSub:"Piano challenges to play faster and cleaner. The first games are coming soon; meanwhile, the piano is free to play.",
     freePlay:"Free play", soon:"Soon",
     rnName:"Note Jumper", rnDesc:"You are a piano! Play the chord shown to jump over eighth and sixteenth notes.", rnPlay:"Play", rnQuit:"Quit",
-    rnStart:"Play a C to start", rnHow:"Play the chord written above each note to jump", rnOver:"Ouch! Play a C to try again", rnBestL:"Best", rnNew:"New record!",
+    rnStart:"Play a C to start", rnTap:"Tap the game to start", rnOverShort:"Ouch!", rnHow:"Play the chord written above each note to jump", rnOver:"Ouch! Play a C to try again", rnBestL:"Best", rnNew:"New record!",
     games:[["Note Jumper","play"],["Against the clock","As many scales as you can in 60 seconds."],["Note rain","Play each note before it hits the keyboard."],["Chord memory","Repeat ever longer chord sequences."],["Daily challenge","One timed challenge and a leaderboard."]],
     degrees:"Degrees to practise", optVL:"Chain with the closest inversions (voice leading)", practiseH:"Keys to practise", practiseP:"Progressions to practise", practiseE:"Categories to practise",
     chordOfKey:"Chord of the key", ofKey:" of ", inKey:"in ", progLbl:"Progression", vlOn:"closest inversions", listenLbl:"Listen",
@@ -1287,7 +1287,7 @@ const TXT = {
     inOrder:"In order", random:"Random", sig:"key signature", noAcc:"no ♯ or ♭", notes:"notes",
     perfect:"Perfect!", errors:n=>n+" mistake"+(n>1?"s":""), inSecs:" in ", correct:"correct notes", missed:n=>n+" missed", missedP:n=>n+" missed", session:"Session", scalesWord:n=>n+" scale"+(n>1?"s":""),
     start:"Start", giveUp:"Show me", knew:"Continue", review:"Retry", replay:"Listen to the scale", next:"Next",
-    midiStartTip:"Play a C to start, and again to continue.", screenKeys:"On-screen keys", midiOff:"Enable MIDI", micOff:"Enable mic", midiNone:"MIDI: no device", midiDev:"MIDI: ",
+    midiStartTip:"Play a C on your MIDI keyboard to start, and again to continue.", screenKeys:"On-screen keys", midiOff:"Enable MIDI", micOff:"Enable mic", midiNone:"MIDI: no device", midiDev:"MIDI: ",
     midiBlocked:"MIDI blocked", midiNo:"MIDI not supported", micOn:"Mic: listening", micBlocked:"Mic blocked",
     blocked:"The browser refused access. Click the padlock left of the site address to allow the mic or MIDI, then try again. Inside the claude.ai preview they are always blocked: use pianochallenges.com.",
     midiUnsupported:"This browser has no MIDI support (Safari, iPhone and iPad don't). Use the Piano Challenges app, Chrome or Edge, or the mic.",
@@ -1299,7 +1299,7 @@ const TXT = {
     mcUsbWeb:"Plug your keyboard in with USB, then enable MIDI. It shows up in the list.",
     mcBtApp:"Turn your keyboard on, tap Search and pick it in the list. No need to pair it in Bluetooth settings.",
     mcBtWeb:"First pair the keyboard in your computer's Bluetooth settings (on a Mac: Audio MIDI Setup), then enable MIDI.", midiTitle:"MIDI keyboard", midiInput:"Device", midiAll:"All devices", midiOffState:"MIDI not enabled", midiCfgBtn:"MIDI keyboard settings",
-    optMidiC:"A C starts and continues (MIDI, mic or screen)", midiHint:"MIDI works in Chrome and Edge, over USB or Bluetooth (not in Safari or on iPhone/iPad).",
+    optMidiC:"A C on the MIDI keyboard starts and continues", midiHint:"MIDI works in Chrome and Edge, over USB or Bluetooth (not in Safari or on iPhone/iPad).",
     keyLbl:"Key", allKeys:"All", dirMix:"Both",
     kbLbl:"On-screen keyboard", kbAuto:"Automatic (3 octaves)", keys:"keys", kbCustom:"Detected", kbDetect:"Detect my MIDI keyboard",
     calibLow:"Play the lowest key of your MIDI keyboard.", calibHigh:"Now play the highest key.",
@@ -1708,7 +1708,7 @@ function phoneStart(){
   let pc = cur.sec==="prog" ? seq[0].voicing[0]%12 : chordLike(cur.sec) ? seq[0].pc : tonicNote(cur.k).pc;
   while(!NAT.includes(pc)) pc--; return 48+pc;
 }
-const KB_PRESETS={"25":[48,72],"37":[48,84],"49":[36,84],"61":[36,96],"76":[28,103],"88":[21,108]};
+const KB_PRESETS={"24":[48,71],"25":[48,72],"32":[41,72],"37":[48,84],"49":[36,84],"61":[36,96],"76":[28,103],"88":[21,108]};
 const kbFull = () => (S.settings.kbdSize||"auto")!=="auto";
 const octName = m => (S.settings.notation==="fr"?PC_FR:PC_EN)[m%12]+(Math.floor(m/12)-(S.settings.notation==="fr"?2:1));
 function buildKeyboard(){
@@ -1757,6 +1757,7 @@ document.addEventListener("keydown", e=>{
   if(midiOpen){ if(e.code==="Escape") closeMidi(); return; }
   if(setOpen){ if(e.code==="Escape") closeSet(); return; }
   if(e.target.matches("input,select,textarea")) return;
+  if(document.body.classList.contains("drawer")){ if(e.code==="Escape") closeDrawer(); return; }
   if(openMods.length){ if(e.code==="Escape") closeMod(openMods[openMods.length-1]); return; }
   if(e.code==="Escape" && typesOpen){ closeTypes(); return; }
   if(["rank","account","locked"].includes(page)) return;
@@ -1860,6 +1861,15 @@ function calibApply(){
   Object.assign(S.settings,{kbdSize:"custom",kbdLow:lo,kbdHigh:hi}); save(); buildKeyboard(); renderSettings();
   calibMsg(t("kbDone")(hi-lo+1,octName(lo),octName(hi)));
 }
+// most keyboards say their size in their name ("Keystation 49", "Launchkey 61"...); a few are known models
+function guessKbdSize(name){
+  if(!name || S.settings.kbdGuessFor===name) return;
+  const n=String(name), m=n.match(/(^|\D)(24|25|32|37|49|61|76|88)(\D|$)/);
+  let size = m ? m[2] : /lumi|piano ?m\b|keys block/i.test(n) ? "24" : /seaboard block|songmaker/i.test(n) ? "24" : /rise ?2?/i.test(n) ? "49" : null;
+  S.settings.kbdGuessFor=name;
+  if(size && (S.settings.kbdSize||"auto")==="auto"){ S.settings.kbdSize=size; save(); buildKeyboard(); renderSettings(); }
+  else save();
+}
 // a C on the MIDI keyboard starts the game, continues after an answer, or starts a new game from the summary
 function midiStart(note){
   if(note%12!==0 || ["games","rank","account","locked"].includes(page) || setOpen || openMods.length || helpOpen || midiOpen || S.settings.midiC===false) return false;
@@ -1884,7 +1894,6 @@ function wrongNote(m){
 function noteIn(m){
   if(helpOpen || setOpen || openMods.length) return;
   if(page==="games"){ pressKey(m); flashKey(m,"k-hit"); runnerNote(m); return; }
-  if(phase!=="listening" && midiStart(m)){ pressKey(m); return; }
   if(endOpen) return;
   pressKey(m);
   if(phase!=="listening" || cur.sec==="ear"){ flashKey(m,"k-hit"); return; }
@@ -2286,12 +2295,12 @@ function renderActions(){
   const mk=(label,cls,fn,k)=>{ const b=document.createElement("button"); b.type="button"; b.className="btn "+cls; b.textContent=label;
     if(k){ const kb=document.createElement("kbd"); kb.textContent=k; b.appendChild(kb); } b.onclick=fn; a.appendChild(b); };
   const sp=()=>{ const s=document.createElement("span"); s.className="spacer"; a.appendChild(s); };
-  const space=S.settings.lang==="fr"?"Espace":"Space", enter=S.settings.lang==="fr"?"Entrée":"Enter";
-  const cKey = S.settings.midiC!==false ? (S.settings.notation==="fr"?"Do":"C") : null;
+  const kb=hasKeyboard(), space=kb?(S.settings.lang==="fr"?"Espace":"Space"):null, enter=kb?(S.settings.lang==="fr"?"Entrée":"Enter"):null;
+  const cKey = midiMode() && S.settings.midiC!==false ? (S.settings.notation==="fr"?"Do":"C") : null;
   if(phase==="idle") mk(t("start"),"primary big",()=>startRound(),cKey||space);
   else if(phase==="listening" && cur.sec==="ear") mk(tx("replay"),"primary",()=>playScale(0),space);
   else if(phase==="listening") mk(t("giveUp"),"",()=>reveal(false),space);
-  else if(phase==="revealed"){ mk(tx("replay"),"",()=>{ playScale(0); if(cur.sec!=="prog") showReveal(true); }); sp(); mk(t("review"),"",()=>grade(false),"⌫"); mk(t("knew"),"good",()=>grade(true),cKey||enter); }
+  else if(phase==="revealed"){ mk(tx("replay"),"",()=>{ playScale(0); if(cur.sec!=="prog") showReveal(true); }); sp(); mk(t("review"),"",()=>grade(false),kb?"⌫":null); mk(t("knew"),"good",()=>grade(true),cKey||enter); }
   else if(phase==="success") mk(t("next"),"primary",()=>startRound(),cKey||space);
 }
 function renderPrompt(){
@@ -2299,7 +2308,7 @@ function renderPrompt(){
   $("invTag").hidden = true;
   if(!cur){
     $("eyebrow").textContent = sec==="chords"?t("chordToPlay"):sec==="harmony"?t("chordOfKey"):sec==="prog"?t("progLbl"):sec==="ear"?t("listenLbl"):t("scaleToPlay");
-    $("prompt").textContent=t("ready"); $("promptSub").textContent=tx("idleSub")+(S.settings.midiC!==false?" "+t("midiStartTip"):""); return;
+    $("prompt").textContent=t("ready"); $("promptSub").textContent=tx("idleSub")+(midiMode()&&S.settings.midiC!==false?" "+t("midiStartTip"):""); return;
   }
   const order = S.settings.mode==="suite"?t("inOrder"):t("random");
   const shown = phase==="revealed"||phase==="success";
@@ -2335,7 +2344,10 @@ function renderPrompt(){
   $("prompt").textContent=scaleName(cur.tid,cur.k);
   $("promptSub").textContent = seq.length+" "+t("notes") + (cur.tid==="mel" && dirOf()==="down" ? t("melDown") : "");
 }
-function renderHint(){ $("kbdHint").textContent=tx("kbdHint"); }
+function renderHint(){ $("kbdHint").textContent=tx("kbdHint"); $("kbdHint").hidden=!hasKeyboard(); }
+// a physical computer keyboard is likely only on desktop browsers (not in the app, not on iPad / phones)
+function hasKeyboard(){ if(document.documentElement.classList.contains("native")) return false; const ua=navigator.userAgent; if(/iPad|iPhone|Android|Mobile/.test(ua) || (navigator.platform==="MacIntel" && navigator.maxTouchPoints>1)) return false; return matchMedia("(hover:hover) and (pointer:fine)").matches; }
+const midiMode = () => (S.settings.input||"screen")==="midi" && midiReady;
 function renderTimeline(){
   const d=S.settings.delay; $("timeline").hidden=!(d>0) || S.section==="ear"; $("ticks").innerHTML="";
   for(let i=1;i<d;i++){ const x=document.createElement("i"); x.style.left=(i/d*100)+"%"; $("ticks").appendChild(x); }
@@ -2439,7 +2451,7 @@ function renderSettings(){
   const set=(id,v)=>$(id).querySelectorAll("button").forEach(b=>b.setAttribute("aria-pressed",b.dataset.v===v));
   set("segMode",S.settings.mode); set("segDiff",String(S.settings.delay));
   const ks=$("kbSize"); ks.innerHTML="";
-  [["auto",t("kbAuto")],...["25","37","49","61","76","88"].map(n=>[n,n+" "+t("keys")]),...(S.settings.kbdSize==="custom"?[["custom",t("kbCustom")+" · "+(S.settings.kbdHigh-S.settings.kbdLow+1)+" "+t("keys")]]:[])]
+  [["auto",t("kbAuto")],...["24","25","32","37","49","61","76","88"].map(n=>[n,n+" "+t("keys")]),...(S.settings.kbdSize==="custom"?[["custom",t("kbCustom")+" · "+(S.settings.kbdHigh-S.settings.kbdLow+1)+" "+t("keys")]]:[])]
     .forEach(([v,l])=>{ const o=document.createElement("option"); o.value=v; o.textContent=l; ks.appendChild(o); });
   ks.value=S.settings.kbdSize||"auto";
   $("kbRange").textContent = kbFull() ? t("kbRangeTxt")(Object.keys(keyEls).length,octName(LOW),octName(HIGH)) : ""; set("segLen",String(S.settings.gameLen)); set("segNot",S.settings.notation); set("segDir",S.settings.dir); set("langSeg",S.settings.lang);
@@ -2520,12 +2532,15 @@ function rnChords(){
 function runnerOpen(){ RN.on=true; document.body.classList.add("runner-on"); $("runner").hidden=false; $("rnTitle").textContent=t("rnName"); $("rnQuit").textContent=t("rnQuit"); rnReset(); RN.state="ready"; cancelAnimationFrame(RN.raf); RN.last=performance.now(); RN.raf=requestAnimationFrame(rnLoop); }
 function runnerClose(){ if(!RN.on) return; RN.on=false; cancelAnimationFrame(RN.raf); $("runner").hidden=true; document.body.classList.remove("runner-on"); if(RN.xp){ addXP(RN.xp); RN.xp=0; save(); renderStatus(); } }
 $("rnQuit").addEventListener("click",runnerClose);
+function rnGo(){ if(RN.state==="run") return; if(RN.state==="over") rnReset(); RN.state="run"; }
+$("rnCanvas").addEventListener("pointerdown",()=>{ if(RN.state!=="run" && performance.now()-RN.crashAt>500) rnGo(); });
+document.addEventListener("keydown",e=>{ if(RN.on && RN.state!=="run" && (e.code==="Space"||e.code==="Enter") && performance.now()-RN.crashAt>500){ e.preventDefault(); rnGo(); } });
 function rnReset(){ Object.assign(RN,{obs:[],held:[],dist:0,y:0,vy:0,jump:null,cleared:0,spawnIn:1.2,newBest:false,speed:0}); RN.pool=rnChords(); rnScore(); }
 function rnScore(){ const sc=RN.cleared*10+Math.floor(RN.dist/40); RN.score=sc; $("rnScore").textContent=String(sc).padStart(5,"0"); $("rnBest").textContent=t("rnBestL")+" "+String(S.runnerBest||0).padStart(5,"0"); }
 function runnerNote(m){
   if(!RN.on) return;
   const pc=((m%12)+12)%12;
-  if(RN.state!=="run"){ if(pc===0 && performance.now()-RN.crashAt>700){ if(RN.state==="over") rnReset(); RN.state="run"; } return; }
+  if(RN.state!=="run"){ if(pc===0 && midiMode() && performance.now()-RN.crashAt>700) rnGo(); return; }
   const now=performance.now(); RN.held=RN.held.filter(h=>now-h.t<1400); RN.held.push({pc,t:now});
   const target=RN.obs.find(o=>!o.armed && !o.passed);
   if(!target) return;
@@ -2609,9 +2624,10 @@ function rnDraw(g,W,H,u,ground,px,pw,ph){
   if(RN.state!=="run"){
     g.fillStyle=ink; g.textAlign="center"; g.textBaseline="middle";
     g.font="800 "+Math.round(20*u)+"px "+C("--f-display");
-    g.fillText(RN.state==="over"?(RN.newBest?t("rnNew"):t("rnOver")):t("rnStart"), W/2, H*0.42);
+    const startTxt = midiMode() ? t("rnStart") : t("rnTap");
+    g.fillText(RN.state==="over"?(RN.newBest?t("rnNew"):t("rnOverShort")):startTxt, W/2, H*0.42);
     g.font="400 "+Math.round(12*u)+"px "+C("--f-body"); g.fillStyle=muted;
-    g.fillText(RN.state==="over"?t("rnOver").replace(/^.*?!\s*/,""):t("rnHow"), W/2, H*0.42+22*u);
+    g.fillText(RN.state==="over"?(midiMode()?t("rnStart"):t("rnTap")):t("rnHow"), W/2, H*0.42+22*u);
   }
 }
 function rr(g,x,y,w,h,r){ g.beginPath(); g.moveTo(x+r,y); g.arcTo(x+w,y,x+w,y+h,r); g.arcTo(x+w,y+h,x,y+h,r); g.arcTo(x,y+h,x,y,r); g.arcTo(x,y,x+w,y,r); g.closePath(); }
@@ -2708,7 +2724,7 @@ async function cloudPushNow(){
   const r2=await sb.from("profiles").upsert({id:user.id, name:myName().slice(0,24), avatar:charIndex(li.L), photo:userPhoto()||null, xp:S.xp, level:li.L, streak:S.streak.days, solved, updated_at:now});
   if(r1.error||r2.error) throw (r1.error||r2.error);
 }
-function authMsg(err){ const m=(err&&err.message||"").toLowerCase(); return m.includes("rate")||m.includes("too many") ? t("tooMany") : m.includes("token")||m.includes("otp")||m.includes("expired")||m.includes("invalid") ? t("badCode") : (err&&err.message)||t("cloudErr"); }
+function authMsg(err){ const m=(err&&err.message||"").toLowerCase(); if(m.includes("sending")||m.includes("smtp")) return t("mailFail"); return m.includes("rate")||m.includes("too many") ? t("tooMany") : m.includes("token")||m.includes("otp")||m.includes("expired")||m.includes("invalid") ? t("badCode") : (err&&err.message)||t("cloudErr"); }
 function renderLock(){
   $("lockTitle").textContent=t("lockTitle")(lockFor);
   const ul=$("lockList"); ul.innerHTML=""; t("perks").forEach(x=>{ const li=document.createElement("li"); li.textContent=x; ul.appendChild(li); });
@@ -2734,6 +2750,20 @@ async function renderRank(){
   const list=data||[]; list.forEach((r,i)=>ol.appendChild(row(r,i+1,user&&r.id===user.id)));
   if(!list.length && !error){ const p=document.createElement("p"); p.className="rank-msg"; p.textContent=t("rankEmpty"); ol.appendChild(p); }
   if(!user) ol.appendChild(row({name:t("you"),avatar:charIndex(li.L),level:li.L,xp:S.xp,streak:S.streak.days},"—",true));
+}
+async function oauthLogin(provider){
+  try{
+    if(isApp()){
+      const {data,error}=await sb.auth.signInWithOAuth({provider, options:{redirectTo:"pianochallenges://auth", skipBrowserRedirect:true}});
+      if(error) throw error;
+      const r=await window.Capacitor.nativePromise("Auth","start",{url:data.url, scheme:"pianochallenges"});
+      const back=new URL(r.url.replace("pianochallenges://","https://x/")), code=back.searchParams.get("code");
+      if(!code) throw new Error(back.searchParams.get("error_description")||"cancelled");
+      const ex=await sb.auth.exchangeCodeForSession(code); if(ex.error) throw ex.error;
+    } else {
+      const {error}=await sb.auth.signInWithOAuth({provider, options:{redirectTo:location.origin+location.pathname}}); if(error) throw error;
+    }
+  }catch(err){ const m=String(err&&err.message||err); if(/cancel/i.test(m)) return; loginStep.msg=authMsg(err); loginStep.err=true; renderAccount(); }
 }
 function renderAccount(){
   const li=levelInfo(S.xp), ci=charIndex(li.L), c=t("chars")[ci];
@@ -2783,7 +2813,7 @@ function renderAccount(){
   h("div",t("orLbl"),"or");
   const lb=h("div",null,"login-btns");
   const prov=(label,fn,soon)=>{ const b=document.createElement("button"); b.type="button"; b.innerHTML="<span></span><small></small>"; b.querySelector("span").textContent=label; if(soon){ b.disabled=true; b.querySelector("small").textContent=soon; } else { b.querySelector("small").remove(); b.onclick=fn; } lb.appendChild(b); };
-  prov(t("loginWith")("Google"), async()=>{ const {error}=await sb.auth.signInWithOAuth({provider:"google",options:{redirectTo:location.origin+location.pathname}}); if(error){ loginStep.msg=authMsg(error); loginStep.err=true; renderAccount(); } }, isApp()?t("appSoon"):null);
+  prov(t("loginWith")("Google"), ()=>oauthLogin("google"), null);
   prov(t("loginWith")("Apple"), null, t("soon"));
   prov(t("loginWith")("Facebook"), null, t("soon"));
   const cs=h("p","", "msg"); cs.innerHTML='<a href="/confidentialite.html"></a>'; cs.querySelector("a").textContent=t("consent");
@@ -2961,7 +2991,8 @@ async function enableMidi(){
           midiIn(note); } }; });
       $("midiBtn").classList.toggle("on",names.length>0); $("midiBtn").classList.remove("err");
       const shown = S.settings.midiInput && names.includes(S.settings.midiInput) ? S.settings.midiInput : names[0];
-      $("midiTxt").textContent=names.length ? t("midiDev")+shown : t("midiNone"); midiReady=names.length>0; midiNames=names; render(); if(midiOpen) renderMidiModal(); renderInputUI(); };
+      $("midiTxt").textContent=names.length ? t("midiDev")+shown : t("midiNone");
+      if(names.length) guessKbdSize(shown); midiReady=names.length>0; midiNames=names; render(); if(midiOpen) renderMidiModal(); renderInputUI(); };
     bind(); acc.onstatechange=bind; notice("");
   }catch(err){ $("midiBtn").classList.add("err"); $("midiTxt").textContent=t("midiBlocked"); notice(t("blocked")); }
 }
