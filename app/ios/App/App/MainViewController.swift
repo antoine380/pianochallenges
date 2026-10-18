@@ -20,6 +20,4 @@ class MainViewController: CAPBridgeViewController {
         UIApplication.shared.isIdleTimerDisabled = true
     }
 
-    override var prefersHomeIndicatorAutoHidden: Bool { true }
-    override var prefersStatusBarHidden: Bool { true }
 }
