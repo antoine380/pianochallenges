@@ -31,7 +31,6 @@
 @font-face{font-family:"DM Mono";font-style:normal;font-weight:400;font-display:swap;src:url(/assets/fonts/dm-mono-latin-400-normal.woff2) format("woff2")}
 @font-face{font-family:"DM Mono";font-style:normal;font-weight:500;font-display:swap;src:url(/assets/fonts/dm-mono-latin-500-normal.woff2) format("woff2")}
 html{color-scheme:light;-webkit-text-size-adjust:100%}
-:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
 body{margin:0}
 img{max-width:100%}
 </style>
@@ -73,7 +72,6 @@ button:focus-visible, select:focus-visible, input:focus-visible, summary:focus-v
 .mono{font-family:var(--f-mono);font-variant-numeric:tabular-nums}
 
 /* Status strip */
-.top{display:flex;flex-wrap:wrap;align-items:center;gap:10px 14px}
 .brand-h{margin:0 auto 0 0;font-size:inherit}
 .brand{display:inline-flex;align-items:center;gap:11px;text-decoration:none;color:var(--ink);border-radius:12px}
 .brand:hover .wm-b{text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:4px}
@@ -82,13 +80,9 @@ button:focus-visible, select:focus-visible, input:focus-visible, summary:focus-v
 .wm{display:flex;flex-direction:column;line-height:.95;font-family:var(--f-display)}
 .wm-a{font-weight:800;font-size:1.32rem;letter-spacing:-.02em}
 .wm-b{font-weight:700;font-size:.98rem;letter-spacing:.06em;text-transform:uppercase;color:var(--accent)}
-.tools{display:flex;align-items:center;gap:8px}
 .lang{display:flex;border:1px solid var(--line);border-radius:8px;overflow:hidden}
 .lang button{border:0;background:transparent;padding:3px 9px;font-family:var(--f-mono);font-size:.78rem}
 .lang button[aria-pressed="true"]{background:var(--ink);color:var(--bg)}
-.help-btn{border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:3px 11px 3px 4px;font-size:.82rem;font-weight:700;display:inline-flex;align-items:center;gap:6px}
-.help-btn > span:first-child{display:inline-grid;place-items:center;width:20px;height:20px;border-radius:50%;background:var(--accent);color:var(--on-accent);font-family:var(--f-display);font-weight:800;font-size:.8rem}
-.help-btn:hover{border-color:var(--ink)}
 .modal{position:fixed;inset:0;z-index:40;display:flex;align-items:center;justify-content:center;
   padding:calc(16px + env(safe-area-inset-top, 0px)) max(16px, env(safe-area-inset-right, 0px)) calc(16px + env(safe-area-inset-bottom, 0px)) max(16px, env(safe-area-inset-left, 0px))}
 .modal-bg{position:absolute;inset:0;background:var(--scrim)}
@@ -136,7 +130,6 @@ button:focus-visible, select:focus-visible, input:focus-visible, summary:focus-v
 @keyframes pulse{50%{transform:scale(1.35)}}
 .xp-txt{font-size:.7rem;color:var(--muted)}
 .lvl{display:flex;align-items:center;gap:10px;min-width:0}
-.lvl-badge{font-family:var(--f-display);font-weight:800;font-size:1.3rem;background:var(--ink);color:var(--bg);border-radius:10px;min-width:42px;height:42px;display:grid;place-items:center;padding:0 8px}
 .lvl-meta{display:flex;flex-direction:column;gap:3px;min-width:120px}
 .lvl-title{font-size:.75rem;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;white-space:nowrap}
 .xpbar{height:6px;background:var(--line);border-radius:3px;overflow:hidden}
@@ -210,13 +203,6 @@ button:focus-visible, select:focus-visible, input:focus-visible, summary:focus-v
 .segs i.cur{background:var(--surface);box-shadow:inset 0 0 0 2px var(--accent)}
 .timer-sel{font:inherit;font-family:var(--f-mono);font-size:.78rem;padding:3px 8px;border-radius:7px;background:var(--surface-2);border:1px solid var(--line);color:var(--ink);cursor:pointer}
 .gamebar .gend{border:0;background:none;color:var(--muted);text-decoration:underline;font-size:.78rem;padding:0}
-.daily{display:flex;align-items:center;gap:14px;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:12px 14px;flex-wrap:wrap}
-.daily .dicon{width:44px;height:44px;border-radius:12px;background:var(--accent-soft);display:grid;place-items:center;flex:none}
-.daily .dicon svg{width:24px;height:24px;fill:none;stroke:var(--accent);stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
-.daily .dtxt{flex:1;min-width:180px;display:flex;flex-direction:column;gap:2px}
-.daily .dtxt b{font-family:var(--f-display);font-weight:800;font-size:1.08rem}
-.daily .dtxt span{font-size:.86rem;color:var(--muted)}
-.daily.done .dicon{background:var(--good-soft)} .daily.done .dicon svg{stroke:var(--good)}
 .end-hero{display:flex;align-items:center;gap:18px;flex-wrap:wrap}
 .end-big{font-family:var(--f-display);font-weight:800;font-size:3.2rem;line-height:1;font-variant-numeric:tabular-nums}
 .end-big small{font-size:1.4rem;color:var(--muted)}
@@ -257,12 +243,6 @@ button:focus-visible, select:focus-visible, input:focus-visible, summary:focus-v
 .inv-tag{display:inline-flex;align-items:center;gap:6px;margin-top:8px;padding:3px 10px;border-radius:999px;background:var(--accent-soft);color:var(--ink);font-weight:700;font-size:.85rem}
 .inv-tag i{width:8px;height:8px;border-radius:50%;background:var(--accent)}
 /* Section switch */
-.sections{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:4px;padding:4px;background:var(--surface);border:1px solid var(--line);border-radius:14px}
-.sections button{display:flex;align-items:center;justify-content:center;gap:8px;border:0;background:transparent;border-radius:10px;padding:9px 8px;font-family:var(--f-display);font-weight:700;font-size:.98rem;color:var(--muted);min-width:0;white-space:nowrap}
-.sections button span{overflow:hidden;text-overflow:ellipsis}
-.sections button svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
-.sections button[aria-selected="true"]{background:var(--ink);color:var(--bg)}
-.sections button:hover:not([aria-selected="true"]){color:var(--ink)}
 @keyframes shake{25%{transform:translateX(-4px)}75%{transform:translateX(4px)}}
 
 /* Keyboard */
@@ -297,15 +277,6 @@ button:focus-visible, select:focus-visible, input:focus-visible, summary:focus-v
 .notice{font-size:.85rem;background:var(--accent-soft);border-radius:8px;padding:8px 12px;margin:0}
 
 /* Progress + settings */
-.cols{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);gap:18px;align-items:start}
-@media (max-width:760px){.cols{grid-template-columns:minmax(0,1fr)}}
-details.panel{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:0;min-width:0}
-details.panel > summary{list-style:none;cursor:pointer;padding:14px 18px;display:flex;align-items:center;justify-content:space-between;gap:10px}
-details.panel > summary::-webkit-details-marker{display:none}
-details.panel > summary h2{font-family:var(--f-display);font-weight:700;font-size:1.05rem;margin:0}
-details.panel > summary::after{content:"+";font-family:var(--f-mono);color:var(--muted);font-size:1.1rem}
-details.panel[open] > summary::after{content:"−"}
-.panel-body{padding:0 18px 16px;display:flex;flex-direction:column;gap:12px}
 .map-head{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
 select{font:inherit;color:var(--ink);background:var(--surface-2);border:1px solid var(--line);border-radius:8px;padding:6px 10px;max-width:100%}
 .map{display:grid;grid-template-columns:repeat(auto-fill,minmax(88px,1fr));gap:8px}
@@ -342,15 +313,13 @@ select{font:inherit;color:var(--ink);background:var(--surface-2);border:1px soli
 .check input{accent-color:var(--accent);width:18px;height:18px;flex:none}
 .danger{background:none;border:0;color:var(--muted);text-decoration:underline;font-size:.8rem;align-self:flex-start;padding:0}
 
-.toasts{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(16px + env(safe-area-inset-bottom, 0px));display:flex;flex-direction:column;gap:6px;z-index:30;pointer-events:none;width:max-content;max-width:calc(100% - 32px)}
-.toast{background:var(--ink);color:var(--bg);border-radius:10px;padding:9px 16px;font-weight:700;font-family:var(--f-display);animation:pop .3s ease;text-align:center}
 @keyframes pop{from{transform:translateY(8px);opacity:0}}
 
 /* ---------- App shell: sidebar + main, sized to the screen ---------- */
 html,body{height:100%}
 body{margin:0;padding:0;overflow:hidden}
-.app{display:grid;grid-template-columns:auto minmax(0,1fr);height:100vh;height:100dvh}
-.main{overflow-y:auto;overflow-x:hidden;min-width:0;padding:16px max(22px, env(safe-area-inset-right, 0px)) 16px 22px}
+.app{display:grid;grid-template-columns:auto minmax(0,1fr);height:100vh;height:100dvh;padding-top:env(safe-area-inset-top, 0px)}
+.main{overflow-y:auto;overflow-x:hidden;min-width:0;padding:16px max(22px, env(safe-area-inset-right, 0px)) calc(16px + env(safe-area-inset-bottom, 0px)) 22px}
 .wrap{height:100%;max-width:1240px;margin:0 auto;display:flex;flex-direction:column;gap:12px}
 .mbar,.side-scrim{display:none}
 
@@ -457,6 +426,18 @@ body{margin:0;padding:0;overflow:hidden}
 .login-btns{display:flex;flex-direction:column;gap:8px}
 .login-btns button{display:flex;align-items:center;justify-content:space-between;gap:10px;border:1px solid var(--line);background:var(--surface-2);border-radius:10px;padding:11px 14px;font-weight:700;cursor:not-allowed;color:var(--ink)}
 .login-btns button small{font-family:var(--f-mono);font-size:.66rem;text-transform:uppercase;letter-spacing:.08em;color:var(--accent);background:var(--accent-soft);border-radius:999px;padding:1px 7px;font-weight:500}
+.acct-login form{display:flex;flex-direction:column;gap:8px;margin-bottom:12px}
+.acct-login input[type=email],.acct-login input[type=text],.acct-login input[inputmode=numeric]{font:inherit;color:var(--ink);background:var(--surface-2);border:1px solid var(--line);border-radius:10px;padding:10px 12px;width:100%}
+.acct-login input:focus{outline:2px solid var(--accent);outline-offset:1px}
+.acct-login .code-in{font-family:var(--f-mono);font-size:1.3rem;letter-spacing:.3em;text-align:center}
+.acct-login .msg{margin:0;font-size:.85rem;color:var(--muted)} .acct-login .msg.err{color:var(--bad)} .acct-login .msg.ok{color:var(--good)}
+.acct-login .or{display:flex;align-items:center;gap:10px;color:var(--muted);font-size:.78rem;margin:6px 0 10px}
+.acct-login .or::before,.acct-login .or::after{content:"";flex:1;height:1px;background:var(--line)}
+.login-btns button:not(:disabled){cursor:pointer} .login-btns button:not(:disabled):hover{border-color:var(--ink)}
+.acct-row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.acct-row input{flex:1;min-width:140px}
+.linkbtn{border:0;background:none;padding:0;color:var(--muted);text-decoration:underline;font-size:.82rem;align-self:flex-start}
+.rank-msg{margin:0 0 12px;color:var(--muted);font-size:.9rem}
 /* Characters + intro windows */
 .modal-sub{margin:2px 0 0;color:var(--muted);font-size:.88rem}
 .char-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px}
@@ -543,8 +524,6 @@ html.native .midi-body [data-i="midiHint"]{display:none}
 
 /* Games */
 .games{flex:none;display:flex;flex-direction:column;gap:12px}
-.games-head h2{font-family:var(--f-display);font-weight:800;font-size:1.5rem;margin:0;letter-spacing:-.01em}
-.games-head p{margin:2px 0 0;color:var(--muted)}
 .game-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:10px}
 .game-card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px 14px;display:flex;gap:12px;align-items:flex-start;min-width:0}
 .game-card .gi{width:40px;height:40px;border-radius:10px;background:var(--accent-soft);display:grid;place-items:center;flex:none}
@@ -559,7 +538,7 @@ html.native .midi-body [data-i="midiHint"]{display:none}
 
 /* Phone, portrait: menu becomes a drawer */
 @media (max-width:640px){
-  .app{grid-template-columns:minmax(0,1fr);grid-template-rows:auto minmax(0,1fr)}
+  .app{grid-template-columns:minmax(0,1fr);grid-template-rows:auto minmax(0,1fr);padding-top:0}
   .mbar{display:flex;align-items:center;gap:10px;padding:calc(8px + env(safe-area-inset-top, 0px)) 14px 8px;background:var(--surface);border-bottom:1px solid var(--line)}
   .mbar .brand{margin-right:auto}
   .mbar .mark{width:32px;height:32px} .mbar .wm-a{font-size:1.05rem} .mbar .wm-b{font-size:.78rem}
@@ -639,7 +618,7 @@ html.native .midi-body [data-i="midiHint"]{display:none}
   .prompt{font-size:clamp(1.9rem,4.4vw,2.8rem)}
   .hint.keys{display:none}
 }
-@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.sp-k,.sp-b,.sp-wm{opacity:1!important;transform:none!important}}
 </style>
 
 <script>if(window.Capacitor&&window.webkit&&window.webkit.messageHandlers&&window.webkit.messageHandlers.bridge)document.documentElement.classList.add("native");</script>
@@ -778,11 +757,7 @@ html.native .midi-body [data-i="midiHint"]{display:none}
     <div class="pane-head"><div><h2 data-i="secAccount"></h2><p data-i="acctSub"></p></div></div>
     <div class="acct-grid">
       <div class="card acct-me" id="acctMe"></div>
-      <div class="card acct-login">
-        <h3 data-i="loginTitle"></h3>
-        <p data-i="loginSub"></p>
-        <div class="login-btns" id="loginBtns"></div>
-      </div>
+      <div class="card acct-login" id="acctLogin"></div>
     </div>
   </section>
 
@@ -946,7 +921,6 @@ html.native .midi-body [data-i="midiHint"]{display:none}
     </div>
   </div>
 </div>
-<div class="toasts" id="toasts"></div>
 
 <script>
 // Inside the Piano Challenges iOS app, MIDI comes from CoreMIDI through a native plugin.
@@ -1011,6 +985,12 @@ const TXT = {
     acctSub:"Ta progression est enregistrée sur cet appareil.",
     loginTitle:"Créer un compte", loginSub:"Bientôt : connecte-toi pour sauvegarder ta progression, la retrouver sur ordinateur, iPhone et iPad, et entrer dans le classement.",
     loginWith:p=>"Continuer avec "+p, loginMail:"Continuer avec un e-mail",
+    loginReady:"Connecte-toi pour sauvegarder ta progression, la retrouver sur ordinateur, iPhone et iPad, et entrer dans le classement.",
+    emailPh:"ton@email.fr", sendCode:"Recevoir un code", codeSent:e=>"Code envoyé à "+e+". Regarde ta boîte mail (et les spams).", codePh:"Code reçu", verify:"Valider", changeMail:"Changer d'e-mail",
+    orLbl:"ou", appSoon:"Bientôt dans l'app", signedAs:e=>"Connecté : "+e, logout:"Se déconnecter", nameLbl:"Pseudo (visible dans le classement)", saveLbl:"Enregistrer", saved:"Enregistré ✓",
+    cloudErr:"Connexion au serveur impossible pour l'instant.", badCode:"Code incorrect ou expiré.", tooMany:"Trop de tentatives, réessaie dans quelques minutes.",
+    synced:"Progression sauvegardée en ligne ✓", rankEmpty:"Personne n'est encore classé. Connecte-toi pour être le premier !", rankErr:"Classement indisponible pour l'instant.", rankLoading:"Chargement…",
+    rankSubIn:"Classement général par XP. Ton score se met à jour tout seul.",
     acctXp:"XP au total", acctStreak:"Série", acctDone:"Exercices réussis", acctLevel:"Niveau",
     collapse:"Réduire le menu", expand:"Agrandir le menu",
     gamesTitle:"Jeux", gamesSub:"Des défis au piano pour jouer plus vite et plus juste. Les premiers jeux arrivent bientôt ; en attendant, le piano est libre.",
@@ -1102,6 +1082,12 @@ const TXT = {
     acctSub:"Your progress is saved on this device.",
     loginTitle:"Create an account", loginSub:"Coming soon: sign in to save your progress, find it on computer, iPhone and iPad, and join the leaderboard.",
     loginWith:p=>"Continue with "+p, loginMail:"Continue with email",
+    loginReady:"Sign in to save your progress, find it on computer, iPhone and iPad, and join the leaderboard.",
+    emailPh:"you@email.com", sendCode:"Get a code", codeSent:e=>"Code sent to "+e+". Check your inbox (and spam).", codePh:"Code received", verify:"Confirm", changeMail:"Use another email",
+    orLbl:"or", appSoon:"Coming soon in the app", signedAs:e=>"Signed in: "+e, logout:"Sign out", nameLbl:"Nickname (shown on the leaderboard)", saveLbl:"Save", saved:"Saved ✓",
+    cloudErr:"Can't reach the server right now.", badCode:"Wrong or expired code.", tooMany:"Too many attempts, try again in a few minutes.",
+    synced:"Progress saved online ✓", rankEmpty:"Nobody is ranked yet. Sign in to be the first!", rankErr:"Leaderboard unavailable right now.", rankLoading:"Loading…",
+    rankSubIn:"Overall ranking by XP. Your score updates by itself.",
     acctXp:"Total XP", acctStreak:"Streak", acctDone:"Exercises solved", acctLevel:"Level",
     collapse:"Collapse menu", expand:"Expand menu",
     gamesTitle:"Games", gamesSub:"Piano challenges to play faster and cleaner. The first games are coming soon; meanwhile, the piano is free to play.",
@@ -1364,6 +1350,7 @@ function earMidis(q){
 
 // ---------- Persistence ----------
 const STORE="memo-gammes-v1";
+const clone = o => JSON.parse(JSON.stringify(o)); // works on every iOS version
 let firstVisit=false;
 const DEFAULTS={xp:0, mastery:{}, stats:{ok:0,perfect:0,revealed:0,errors:0}, streak:{days:0,last:""}, suiteIdx:0, csuiteIdx:0,
   seenTypes:["major","minor","chords:maj","chords:min"], langV2:true, secStats:{}, srs:{}, daily:{}, section:"scales",
@@ -1373,7 +1360,7 @@ const DEFAULTS={xp:0, mastery:{}, stats:{ok:0,perfect:0,revealed:0,errors:0}, st
 const SECS=["scales","chords","harmony","prog","ear"];
 function load(){
   try{ const raw=localStorage.getItem(STORE); if(raw){ const d=JSON.parse(raw);
-    const s={...structuredClone(DEFAULTS), ...d, stats:{...DEFAULTS.stats,...d.stats}, settings:{...DEFAULTS.settings,...d.settings}, mastery:{}};
+    const s={...clone(DEFAULTS), ...d, stats:{...DEFAULTS.stats,...d.stats}, settings:{...DEFAULTS.settings,...d.settings}, mastery:{}};
     Object.entries(d.mastery||{}).forEach(([k,v])=>{ s.mastery[k.includes(":")?k:"major:"+k]=v; });
     s.settings.types=(s.settings.types||["major"]).filter(id=>TYPE[id]); if(!s.settings.types.length) s.settings.types=["major"];
     s.settings.ctypes=(s.settings.ctypes||["maj"]).filter(id=>CTYPE[id]); if(!s.settings.ctypes.length) s.settings.ctypes=["maj"];
@@ -1394,9 +1381,9 @@ function load(){
     if(!s.langV2){ s.settings.lang="en"; s.settings.notation="en"; s.langV2=true; }
     return s; } }catch(e){}
   firstVisit=true;
-  return structuredClone(DEFAULTS);
+  return clone(DEFAULTS);
 }
-function save(){ try{ localStorage.setItem(STORE, JSON.stringify(S)); }catch(e){} }
+function save(){ try{ localStorage.setItem(STORE, JSON.stringify(S)); }catch(e){} if(typeof cloudPush==="function") cloudPush(); }
 let S=load();
 const isCh = () => S.section==="chords";
 const SUF = {chords:"C", harmony:"H", prog:"P", ear:"E"};
@@ -1508,9 +1495,9 @@ function addXP(n){
   }
 }
 function bumpStreak(){
-  const d=new Date(), today=d.toISOString().slice(0,10);
+  const today=dayStr();
   if(S.streak.last===today) return;
-  const y=new Date(d.getTime()-864e5).toISOString().slice(0,10);
+  const y=addDays(-1);
   S.streak.days = S.streak.last===y ? S.streak.days+1 : 1; S.streak.last=today;
 }
 function setMastery(it,v){
@@ -1643,6 +1630,7 @@ function buildSeq(){
 function seqMidis(){
   // ascending midi numbers (for playback / reveal), reversed when a scale is descending
   if(cur && cur.sec==="ear") return earMidis(cur);
+  if(cur && cur.sec==="prog") return seq[0].voicing.slice();
   const down=dirOf()==="down";
   const asc = down ? seq.slice().reverse() : seq;
   const tpc=asc[0].pc; let prev=-1; const base=60+tpc-(tpc>5?12:0);
@@ -1698,7 +1686,7 @@ function calibNote(note){
 }
 // a C on the MIDI keyboard starts the game, continues after an answer, or starts a new game from the summary
 function midiStart(note){
-  if(note%12!==0 || page==="games" || helpOpen || midiOpen || S.settings.midiC===false) return false;
+  if(note%12!==0 || ["games","rank","account"].includes(page) || setOpen || openMods.length || helpOpen || midiOpen || S.settings.midiC===false) return false;
   if(page==="daily" && !game && !endOpen){ startDaily(); return true; }
   if(endOpen){ closeEnd(); if(page==="daily") return true; startRound(); return true; }
   if(phase==="idle" || phase==="success"){ startRound(); return true; }
@@ -1718,7 +1706,7 @@ function wrongNote(m){
   const sl=$("slots").children[at]; if(sl){ sl.classList.remove("err","pop"); void sl.offsetWidth; sl.classList.add("err"); }
 }
 function noteIn(m){
-  if(helpOpen || endOpen || setOpen) return;
+  if(helpOpen || endOpen || setOpen || openMods.length) return;
   pressKey(m);
   if(phase!=="listening" || cur.sec==="ear"){ flashKey(m,"k-hit"); return; }
   const pc=((m%12)+12)%12;
@@ -1765,7 +1753,7 @@ function success(){
   else showScore([perfect?t("perfect"):t("errors")(errors), "+"+gain+" XP", secs.toFixed(1).replace(".",sep)+" s"]);
   if(cur.sec==="ear") showEarKeys();
   render();
-  if(S.settings.autoNext!==false) advanceTimer=setTimeout(()=>{ if(phase==="success" && !endOpen && !helpOpen) startRound(); }, cur.sec==="ear"?1900:1700);
+  if(S.settings.autoNext!==false) advanceTimer=setTimeout(()=>{ if(phase!=="success") return; if(anyModal()) pendingAdv=true; else startRound(); }, cur.sec==="ear"?1900:1700);
 }
 function revealMidis(){
   // the answer as one ascending run, shifted by octaves to sit inside the visible keyboard
@@ -1827,7 +1815,7 @@ function reveal(auto){
   render();
   if(S.settings.autoNext!==false){
     const playMs = cur.sec==="prog" ? seq.length*1100+600 : cur.sec==="ear" ? 2800 : (seq.length*300+1400);
-    advanceTimer=setTimeout(()=>{ if(phase==="revealed" && !endOpen && !helpOpen) grade(true); }, playMs+2500);
+    advanceTimer=setTimeout(()=>{ if(phase!=="revealed") return; if(anyModal()) pendingAdv=true; else grade(true); }, playMs+2500);
   }
 }
 function earAnswer(id){
@@ -1922,8 +1910,10 @@ function startDaily(){
 function finishGame(){
   const g=game; lastGame=g; game=null; phase="idle"; cur=null; seq=[]; found=[]; played=[]; clearKeys();
   $("stage").classList.remove("res-good","res-warn","res-bad");
-  if(g.daily){ const good=g.results.filter(r=>r&&r.level==="good").length; S.daily={date:dayStr(), score:good+"/"+g.results.length, levels:g.queue.map((_,i)=>g.results[i]?g.results[i].level:null)}; }
-  save(); render(); renderDaily(); openEnd(g);
+  const doneN=g.results.filter(Boolean).length; g.complete = g.queue ? doneN>=g.total : true;
+  if(g.daily && g.complete){ const good=g.results.filter(r=>r&&r.level==="good").length; S.daily={date:dayStr(), score:good+"/"+doneN, items:g.queue.map(stripItem), levels:g.queue.map((_,i)=>g.results[i]?g.results[i].level:null)}; }
+  save(); render(); renderDaily();
+  if(doneN) openEnd(g);
 }
 function openEnd(g){
   const L=S.settings.lang, R=g.results.filter(Boolean), n=R.length;
@@ -1931,7 +1921,7 @@ function openEnd(g){
   const notesOk=R.reduce((a,r)=>a+r.ok,0), notesTot=R.reduce((a,r)=>a+r.total,0);
   const solved=R.filter(r=>r.solved), avg=solved.length?solved.reduce((a,r)=>a+r.secs,0)/solved.length:0;
   const pct=notesTot?Math.round(notesOk/notesTot*100):0, sep=L==="fr"?",":".", per=L==="fr"?" %":"%";
-  $("endTitle").textContent = g.daily ? t("endDaily") : t("endTitle");
+  $("endTitle").textContent = g.daily && g.complete ? t("endDaily") : t("endTitle");
   const body=$("endBody"); body.innerHTML="";
   const hero=document.createElement("div"); hero.className="end-hero";
   hero.innerHTML='<div class="end-big"></div><div><div class="end-sub hint"></div><div class="end-chips"></div></div>';
@@ -1960,10 +1950,10 @@ function openEnd(g){
   if(misses.length) btn(t("reworkBtn"),"",()=>{ closeEnd(); page="practice"; game=makeGame(misses.map(r=>r.it)); game.i=-1; startRound(); });
   const main=btn(t("newGame"),"primary",()=>{ closeEnd(); page="practice"; if(g.sec&&!g.daily&&g.sec!==S.section) switchSection(g.sec); startRound(); });
   $("endX").setAttribute("aria-label",t("closeLbl"));
-  endOpen=true; $("endModal").hidden=false; main.focus();
+  if(!endOpen) modalOpened(); endOpen=true; $("endModal").hidden=false; main.focus();
   if(n && good/n>=.8) setTimeout(confetti,150);
 }
-function closeEnd(){ if(!endOpen) return; endOpen=false; $("endModal").hidden=true; }
+function closeEnd(){ if(!endOpen) return; endOpen=false; $("endModal").hidden=true; modalClosed(); }
 function renderGameBar(){
   const bar=$("gamebar"), segs=$("segs"), lbl=$("gameLbl"), end=$("gameEnd");
   const g=game, total = g ? g.total : (S.settings.gameLen||Infinity);
@@ -1995,7 +1985,7 @@ function renderDaily(){
   const today=dayStr(), done=S.daily&&S.daily.date===today, due=dueItems().length;
   $("dailyCard").classList.toggle("done",!!done);
   const run = game && game.daily;
-  $("dailySub").textContent = run ? t("dpRun")(Math.min(game.i,game.total-1)+1,game.total) : done ? t("dpDone")(S.daily.score) : t("dailySub")(10,due);
+  $("dailySub").textContent = run ? t("dpRun")(Math.min(game.i,game.total-1)+1,game.total) : done ? t("dpDone")(S.daily.score) : t("dailySub")((S.dailyPlan&&S.dailyPlan.date===today?S.dailyPlan.items.length:10),due);
   if(page==="daily") renderDailyPanel();
 }
 function showScore(detailParts){
@@ -2290,9 +2280,9 @@ $("dpStart").addEventListener("click",()=>{ if(!(game&&game.daily)) startDaily()
 $("keySel").addEventListener("change",e=>{ S.settings.focus=S.settings.focus||{}; S.settings.focus[S.section]=e.target.value; S[sufKey()]=0; save(); if(phase==="listening"&&game&&!game.queue) startRound(undefined,true); });
 // settings / progress window
 let setOpen=false;
-function openSet(tab){ setOpen=true; $("setModal").hidden=false; showSetTab(tab||"settings"); renderSettings(); renderMap(); }
+function openSet(tab){ if(!setOpen) modalOpened(); setOpen=true; $("setModal").hidden=false; showSetTab(tab||"settings"); renderSettings(); renderMap(); $("setX").focus({preventScroll:true}); }
 function showSetTab(tab){ $("setPane").hidden = tab!=="settings"; $("progPane").hidden = tab!=="progress"; $("setTabs").querySelectorAll("button").forEach(b=>b.setAttribute("aria-pressed", b.dataset.v===tab)); }
-function closeSet(){ if(!setOpen) return; setOpen=false; $("setModal").hidden=true; }
+function closeSet(){ if(!setOpen) return; setOpen=false; $("setModal").hidden=true; modalClosed(); }
 $("setBtn").addEventListener("click",()=>openSet("settings")); $("progBtn").addEventListener("click",()=>openSet("progress"));
 $("setTabs").addEventListener("click",e=>{ const b=e.target.closest("button"); if(b) showSetTab(b.dataset.v); });
 $("setX").addEventListener("click",closeSet); $("setBg").addEventListener("click",closeSet);
@@ -2347,6 +2337,7 @@ function openPage(pg){
 const SEC_ICON = sec => { const b=$("secTabs").querySelector('[data-v="'+sec+'"] svg'); return b?b.outerHTML:""; };
 function renderDailyPanel(){
   const plan=dailyPlan(), run=game&&game.daily, done=S.daily&&S.daily.date===dayStr();
+  const shown = !run && done && S.daily.items ? {items:S.daily.items} : plan;
   const levels = run ? plan.items.map((_,i)=>game.results[i]?game.results[i].level:null) : (done&&S.daily.levels ? S.daily.levels : []);
   const curI = run ? game.i : -1;
   const dateTxt = new Date().toLocaleDateString(S.settings.lang==="fr"?"fr-FR":"en-GB",{weekday:"long",day:"numeric",month:"long"});
@@ -2354,7 +2345,7 @@ function renderDailyPanel(){
   $("dpStart").hidden = !!run; $("dpStart").textContent = done ? t("dailyAgain") : t("dailyStart");
   const ol=$("dTimeline"); ol.innerHTML="";
   const check='<svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>', cross='<svg viewBox="0 0 24 24"><path d="M12 7v6M12 17v.5"/></svg>';
-  plan.items.forEach((it,i)=>{ const li=document.createElement("li"), lv=levels[i];
+  shown.items.forEach((it,i)=>{ const li=document.createElement("li"), lv=levels[i];
     li.className = lv ? lv : i===curI ? "cur" : "todo";
     li.innerHTML='<span class="dot"></span><span class="st-sec"></span><span class="st-name"></span>';
     li.querySelector(".dot").innerHTML = lv==="good" ? check : lv ? cross : String(i+1);
@@ -2368,30 +2359,121 @@ function renderDailyPanel(){
   fin.querySelector(".st-name").textContent=t("dpFinish"); ol.appendChild(fin);
   const c=ol.querySelector(".cur"); if(c) c.scrollIntoView({block:"nearest",inline:"center"});
 }
-function renderRank(){
+// ---------- Accounts, sync and leaderboard (Supabase) ----------
+const SUPA_URL="https://ijdxeasxmgevuchyuenn.supabase.co", SUPA_KEY="sb_publishable_6o1XurqA3viU17YsXJQizg_H7HpMtqC";
+const SUPA_SRC="/assets/js/supabase-2.116.0.js";
+let sb=null, user=null, cloudFail=false, pushT=0, loginStep={email:"",sent:false,msg:"",err:false,busy:false};
+const isApp = () => document.documentElement.classList.contains("native");
+function loadSupa(){ return new Promise((res,rej)=>{ if(window.supabase&&window.supabase.createClient) return res(window.supabase);
+  const sc=document.createElement("script"); sc.src=SUPA_SRC; sc.async=true; sc.onload=()=>res(window.supabase); sc.onerror=rej; document.head.appendChild(sc); }); }
+async function initCloud(){
+  try{
+    const lib=await loadSupa();
+    sb=lib.createClient(SUPA_URL,SUPA_KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true,flowType:"pkce"}});
+    const {data}=await sb.auth.getSession();
+    if(location.search.includes("code=")) history.replaceState(null,"",location.pathname);
+    await setUser(data.session ? data.session.user : null);
+    sb.auth.onAuthStateChange((ev,session)=>{ const u=session?session.user:null; if((u&&u.id)!==(user&&user.id)) setUser(u); });
+  }catch(e){ cloudFail=true; }
+  if(page==="account") renderAccount(); if(page==="rank") renderRank();
+}
+const myName = () => S.profileName || (user && ((user.user_metadata&&(user.user_metadata.full_name||user.user_metadata.name)) || (user.email||"").split("@")[0])) || t("you");
+async function setUser(u){
+  user=u;
+  if(u){ try{ await cloudPull(); }catch(e){} }
+  if(page==="account") renderAccount(); if(page==="rank") renderRank();
+}
+async function cloudPull(){
+  const {data,error}=await sb.from("progress").select("data").eq("user_id",user.id).maybeSingle();
+  if(error) throw error;
+  const cloud=data&&data.data;
+  if(cloud && (cloud.xp||0) > (S.xp||0)){ // the account has more progress than this device: take it, keep this device's settings
+    const merged={...cloud, settings:{...cloud.settings, ...S.settings}, profileName:cloud.profileName||S.profileName};
+    try{ localStorage.setItem(STORE, JSON.stringify(merged)); }catch(e){}
+    location.reload(); return;
+  }
+  await cloudPushNow();
+}
+function cloudPush(){ if(!sb||!user) return; clearTimeout(pushT); pushT=setTimeout(()=>cloudPushNow().catch(()=>{}),3000); }
+async function cloudPushNow(){
+  if(!sb||!user) return;
+  const li=levelInfo(S.xp), solved=Object.values(S.secStats||{}).reduce((a,x)=>a+(x.ok||0),0), now=new Date().toISOString();
+  const r1=await sb.from("progress").upsert({user_id:user.id, data:S, updated_at:now});
+  const r2=await sb.from("profiles").upsert({id:user.id, name:myName().slice(0,24), avatar:charIndex(li.L), xp:S.xp, level:li.L, streak:S.streak.days, solved, updated_at:now});
+  if(r1.error||r2.error) throw (r1.error||r2.error);
+}
+function authMsg(err){ const m=(err&&err.message||"").toLowerCase(); return m.includes("rate")||m.includes("too many") ? t("tooMany") : m.includes("token")||m.includes("otp")||m.includes("expired")||m.includes("invalid") ? t("badCode") : (err&&err.message)||t("cloudErr"); }
+async function renderRank(){
   const li=levelInfo(S.xp), ol=$("rankList"); ol.innerHTML="";
-  const me=document.createElement("li"); me.className="me";
-  me.innerHTML='<span class="rk">—</span><span class="av">'+avatarSVG(charIndex(li.L))+'</span><span><b></b><small></small></span><span class="num"></span><span class="num"></span>';
-  me.querySelector("b").textContent=t("you"); me.querySelector("small").textContent=titleFor(li.L);
-  const n=me.querySelectorAll(".num"); n[0].textContent=S.xp+" XP"; n[1].textContent="🔥 "+S.streak.days+" "+t("day");
-  ol.appendChild(me);
-  for(let i=0;i<4;i++){ const sk=document.createElement("li"); sk.setAttribute("aria-hidden","true");
-    sk.innerHTML='<span class="rk">'+(i+1)+'</span><span class="skel-av"></span><span><span class="skel" style="width:'+(60-i*8)+'%"></span></span><span class="skel" style="width:54px"></span><span class="skel" style="width:40px"></span>'; ol.appendChild(sk); }
+  const row=(r,rk,me)=>{ const el=document.createElement("li"); if(me) el.className="me";
+    el.innerHTML='<span class="rk"></span><span class="av">'+avatarSVG(Math.max(0,Math.min(9,r.avatar|0)))+'</span><span><b></b><small></small></span><span class="num"></span><span class="num"></span>';
+    el.querySelector(".rk").textContent=rk; el.querySelector("b").textContent=r.name; el.querySelector("small").textContent=t("acctLevel")+" "+r.level+" · "+t("chars")[Math.max(0,Math.min(9,r.avatar|0))][0];
+    const n=el.querySelectorAll(".num"); n[0].textContent=r.xp+" XP"; n[1].textContent="🔥 "+r.streak+" "+t("day"); return el; };
+  const cta=document.querySelector(".rank-cta"); cta.hidden=!!user;
+  $("rankPanel").querySelector(".pane-head p").textContent = user ? t("rankSubIn") : t("rankSub");
+  if(!sb){ ol.appendChild(row({name:t("you"),avatar:charIndex(li.L),level:li.L,xp:S.xp,streak:S.streak.days},"—",true)); if(cloudFail){ const p=document.createElement("p"); p.className="rank-msg"; p.textContent=t("rankErr"); ol.prepend(p); } return; }
+  const wait=document.createElement("p"); wait.className="rank-msg"; wait.textContent=t("rankLoading"); ol.appendChild(wait);
+  const {data,error}=await Promise.race([sb.from("profiles").select("id,name,avatar,xp,level,streak").order("xp",{ascending:false}).limit(50), new Promise(r=>setTimeout(()=>r({data:null,error:{message:"timeout"}}),10000))]);
+  if(page!=="rank") return;
+  ol.innerHTML="";
+  if(error){ const p=document.createElement("p"); p.className="rank-msg"; p.textContent=t("rankErr"); ol.appendChild(p); }
+  const list=data||[]; list.forEach((r,i)=>ol.appendChild(row(r,i+1,user&&r.id===user.id)));
+  if(!list.length && !error){ const p=document.createElement("p"); p.className="rank-msg"; p.textContent=t("rankEmpty"); ol.appendChild(p); }
+  if(!user) ol.appendChild(row({name:t("you"),avatar:charIndex(li.L),level:li.L,xp:S.xp,streak:S.streak.days},"—",true));
 }
 function renderAccount(){
   const li=levelInfo(S.xp), ci=charIndex(li.L), c=t("chars")[ci];
   const solved=Object.values(S.secStats||{}).reduce((a,x)=>a+(x.ok||0),0);
   const box=$("acctMe"); box.innerHTML='<div class="acct-top"><span class="av">'+avatarSVG(ci)+'</span><div><b></b><small></small></div></div><div class="acct-stats"></div>';
-  box.querySelector("b").textContent=c[0]+" "+c[1]; box.querySelector("small").textContent=c[2]+" · "+t("acctLevel")+" "+li.L;
+  box.querySelector("b").textContent = user ? myName() : c[0]+" "+c[1]; box.querySelector("small").textContent=c[0]+" · "+c[2]+" · "+t("acctLevel")+" "+li.L;
   const st=box.querySelector(".acct-stats");
   [[t("acctXp"),S.xp],[t("acctStreak"),S.streak.days+" "+t("day")],[t("acctDone"),solved],[t("acctLevel"),li.L]].forEach(([k,v])=>{ const d=document.createElement("div"); d.className="end-stat"; d.innerHTML="<span></span><b></b>"; d.querySelector("span").textContent=k; d.querySelector("b").textContent=v; st.appendChild(d); });
-  const lb=$("loginBtns"); lb.innerHTML="";
-  [t("loginWith")("Google"),t("loginWith")("Apple"),t("loginWith")("Facebook"),t("loginMail")].forEach(x=>{ const b=document.createElement("button"); b.type="button"; b.disabled=true; b.innerHTML="<span></span><small></small>"; b.querySelector("span").textContent=x; b.querySelector("small").textContent=t("soon"); lb.appendChild(b); });
+  $("accountPanel").querySelector(".pane-head p").textContent = user ? t("synced") : t("acctSub");
+  const L=$("acctLogin"); L.innerHTML="";
+  const h=(tag,txt,cls)=>{ const e=document.createElement(tag); if(txt!=null) e.textContent=txt; if(cls) e.className=cls; L.appendChild(e); return e; };
+  if(user){
+    h("h3",t("secAccount")); h("p",t("signedAs")(user.email||myName()));
+    const f=document.createElement("form"); L.appendChild(f);
+    const lb=document.createElement("label"); lb.className="pk-lbl"; lb.textContent=t("nameLbl"); f.appendChild(lb);
+    const row=document.createElement("div"); row.className="acct-row"; f.appendChild(row);
+    const inp=document.createElement("input"); inp.type="text"; inp.maxLength=24; inp.value=myName(); row.appendChild(inp);
+    const sv=document.createElement("button"); sv.className="btn primary"; sv.type="submit"; sv.textContent=t("saveLbl"); row.appendChild(sv);
+    const m=h("p","", "msg");
+    f.onsubmit=async e=>{ e.preventDefault(); const v=inp.value.trim().slice(0,24); if(!v) return; S.profileName=v; save(); try{ await cloudPushNow(); m.className="msg ok"; m.textContent=t("saved"); }catch(err){ m.className="msg err"; m.textContent=t("cloudErr"); } };
+    const lo=h("button",t("logout"),"btn"); lo.type="button"; lo.onclick=async()=>{ await sb.auth.signOut(); };
+    return;
+  }
+  h("h3",t("loginTitle")); h("p", sb ? t("loginReady") : cloudFail ? t("cloudErr") : t("rankLoading"));
+  if(!sb) return;
+  const f=document.createElement("form"); L.appendChild(f);
+  if(!loginStep.sent){
+    const em=document.createElement("input"); em.type="email"; em.required=true; em.autocomplete="email"; em.placeholder=t("emailPh"); em.value=loginStep.email; f.appendChild(em);
+    const b=document.createElement("button"); b.className="btn primary"; b.type="submit"; b.textContent=t("sendCode"); b.disabled=loginStep.busy; f.appendChild(b);
+    f.onsubmit=async e=>{ e.preventDefault(); loginStep.email=em.value.trim(); loginStep.busy=true; renderAccount();
+      const {error}=await sb.auth.signInWithOtp({email:loginStep.email, options:{shouldCreateUser:true, emailRedirectTo: isApp()?undefined:location.origin+location.pathname}});
+      loginStep.busy=false; if(error){ loginStep.msg=authMsg(error); loginStep.err=true; } else { loginStep.sent=true; loginStep.msg=t("codeSent")(loginStep.email); loginStep.err=false; } renderAccount(); };
+  } else {
+    const cd=document.createElement("input"); cd.inputMode="numeric"; cd.autocomplete="one-time-code"; cd.className="code-in"; cd.placeholder=t("codePh"); cd.maxLength=10; f.appendChild(cd);
+    const b=document.createElement("button"); b.className="btn primary"; b.type="submit"; b.textContent=t("verify"); b.disabled=loginStep.busy; f.appendChild(b);
+    const ch=document.createElement("button"); ch.className="linkbtn"; ch.type="button"; ch.textContent=t("changeMail"); f.appendChild(ch);
+    ch.onclick=()=>{ loginStep={email:loginStep.email,sent:false,msg:"",err:false,busy:false}; renderAccount(); };
+    f.onsubmit=async e=>{ e.preventDefault(); const token=cd.value.replace(/\D/g,""); if(!token) return; loginStep.busy=true; renderAccount();
+      const {error}=await sb.auth.verifyOtp({email:loginStep.email, token, type:"email"});
+      loginStep.busy=false; if(error){ loginStep.msg=authMsg(error); loginStep.err=true; renderAccount(); } else { loginStep={email:"",sent:false,msg:"",err:false,busy:false}; } };
+    setTimeout(()=>cd.focus(),50);
+  }
+  if(loginStep.msg){ const m=h("p",loginStep.msg,"msg"+(loginStep.err?" err":" ok")); f.appendChild(m); }
+  h("div",t("orLbl"),"or");
+  const lb=h("div",null,"login-btns");
+  const prov=(label,fn,soon)=>{ const b=document.createElement("button"); b.type="button"; b.innerHTML="<span></span><small></small>"; b.querySelector("span").textContent=label; if(soon){ b.disabled=true; b.querySelector("small").textContent=soon; } else { b.querySelector("small").remove(); b.onclick=fn; } lb.appendChild(b); };
+  prov(t("loginWith")("Google"), async()=>{ const {error}=await sb.auth.signInWithOAuth({provider:"google",options:{redirectTo:location.origin+location.pathname}}); if(error){ loginStep.msg=authMsg(error); loginStep.err=true; renderAccount(); } }, isApp()?t("appSoon"):null);
+  prov(t("loginWith")("Apple"), null, t("soon"));
+  prov(t("loginWith")("Facebook"), null, t("soon"));
 }
 // ---- simple windows: characters + intros
 const openMods=[];
-function openMod(id){ $(id).hidden=false; if(!openMods.includes(id)) openMods.push(id); const f=$(id).querySelector(".modal-close"); if(f) f.focus({preventScroll:true}); }
-function closeMod(id){ $(id).hidden=true; const i=openMods.indexOf(id); if(i>=0) openMods.splice(i,1); }
+function openMod(id){ if(!openMods.includes(id)){ modalOpened(); openMods.push(id); } $(id).hidden=false; const f=$(id).querySelector(".modal-close"); if(f) f.focus({preventScroll:true}); }
+function closeMod(id){ $(id).hidden=true; const i=openMods.indexOf(id); if(i>=0){ openMods.splice(i,1); modalClosed(); } }
 document.addEventListener("click",e=>{ const c=e.target.closest("[data-close]"); if(c) closeMod(c.dataset.close); });
 function openChars(){
   closeDrawer(); const L=levelInfo(S.xp).L, ci=charIndex(L), g=$("charGrid"); g.innerHTML="";
@@ -2449,12 +2531,13 @@ $("optAll").addEventListener("change",e=>{ S.settings.unlockAll=e.target.checked
 let resetArmed=false;
 $("resetBtn").addEventListener("click",e=>{
   if(!resetArmed){ resetArmed=true; e.target.textContent=t("confirmReset"); setTimeout(()=>{ resetArmed=false; e.target.textContent=t("reset"); },4000); return; }
-  const keep=S.settings, sec=S.section; S=structuredClone(DEFAULTS); S.settings=keep; S.section=sec;
+  const keep=S.settings, sec=S.section; S=clone(DEFAULTS); S.settings=keep; S.section=sec;
   Object.assign(S.settings,{types:["major"],view:"major",ctypes:["maj"],cview:"maj",invs:[0],htypes:["maj"],hview:"maj",ptypes:["p145","pop"],pview:"pop",etypes:["chord","int"],eview:"chord",unlockAll:false});
   save(); resetArmed=false; e.target.textContent=t("reset"); phase="idle"; cur=null; seq=[]; found=[]; played=[]; combo=0; game=null; renderDaily(); clearKeys(); renderSettings(); render(); toast(t("resetDone"));
 });
 narrowMQ.addEventListener?.("change",()=>buildKeyboard());
 
+document.addEventListener("change",e=>{ if(e.target.matches("select, input[type=checkbox], input[type=range]") && !e.target.closest(".acct-login")) setTimeout(()=>e.target.blur(),0); });
 // ---------- Toasts & notices ----------
 function toast(x){ /* notifications removed on request: unlocks show in the progress view */ }
 function notice(x){ const n=$("notice"); n.textContent=x; n.hidden=!x; }
@@ -2474,8 +2557,8 @@ function renderMidiModal(){
   sel.value = midiNames.includes(S.settings.midiInput) ? S.settings.midiInput : "";
   renderSettings();
 }
-function openMidi(){ midiOpen=true; renderMidiModal(); $("midiModal").hidden=false; $("midiOk").focus(); }
-function closeMidi(){ if(!midiOpen) return; midiOpen=false; $("midiModal").hidden=true; if(calib){ calib=null; calibMsg(""); } }
+function openMidi(){ if(!midiOpen) modalOpened(); midiOpen=true; renderMidiModal(); $("midiModal").hidden=false; $("midiOk").focus(); }
+function closeMidi(){ if(!midiOpen) return; midiOpen=false; $("midiModal").hidden=true; if(calib){ calib=null; calibMsg(""); } modalClosed(); }
 function calibMsg(x){ const m=$("calibMsg"); m.textContent=x; m.hidden=!x; if(!midiOpen) notice(x); }
 $("midiCfg").addEventListener("click",openMidi); $("midiCfg2").addEventListener("click",openMidi);
 $("midiX").addEventListener("click",closeMidi); $("midiBg").addEventListener("click",closeMidi); $("midiOk").addEventListener("click",closeMidi);
@@ -2543,7 +2626,18 @@ function autoCorrelate(buf,sr){
 }
 
 // ---------- Help / tutorial ----------
-let helpOpen=false, pausedLeft=0, lastFocus=null, tutI=0;
+let helpOpen=false, pausedLeft=0, tutI=0;
+// any window open: freeze the countdown and auto-advance, keep focus inside the window
+let paused=false, pendingAdv=false, modalFocus=[];
+function anyModal(){ return helpOpen||setOpen||midiOpen||endOpen||openMods.length>0; }
+function pauseRound(){ if(!paused && phase==="listening"){ cancelAnimationFrame(raf); pausedLeft = deadline ? Math.max(0,deadline-performance.now()) : 0; paused=true; } }
+function resumeRound(){
+  if(anyModal()) return;
+  if(paused){ paused=false; if(phase==="listening"){ if(deadline) deadline=performance.now()+pausedLeft; raf=requestAnimationFrame(tick); } }
+  if(pendingAdv){ pendingAdv=false; setTimeout(()=>{ if(anyModal()){ pendingAdv=true; return; } if(phase==="success") startRound(); else if(phase==="revealed") grade(true); },500); }
+}
+function modalOpened(){ modalFocus.push(document.activeElement); pauseRound(); try{ $("app").inert=true; }catch(e){} }
+function modalClosed(){ if(!anyModal()){ try{ $("app").inert=false; }catch(e){} } const f=modalFocus.pop(); try{ if(f&&f.focus&&!anyModal()) f.focus({preventScroll:true}); }catch(e){} resumeRound(); }
 const VB='viewBox="0 0 360 190"';
 const svgHead = id => '<svg '+VB+' class="tut-svg" role="img" aria-hidden="true"><defs><marker id="'+id+'" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="s-ah"/></marker></defs>';
 const arrow = (id,d) => '<path class="s-arrow" d="'+d+'" marker-end="url(#'+id+')"/>';
@@ -2636,14 +2730,11 @@ function renderTut(){
 }
 function tutGo(d){ const n=t("tut").length; if(tutI+d>=n){ closeHelp(); return; } tutI=Math.max(0,tutI+d); renderTut(); }
 function openHelp(){
-  if(helpOpen) return; helpOpen=true; lastFocus=document.activeElement; tutI=0;
-  if(phase==="listening"){ cancelAnimationFrame(raf); pausedLeft = deadline ? Math.max(0,deadline-performance.now()) : 0; }
+  if(helpOpen) return; modalOpened(); helpOpen=true; tutI=0;
   renderTut(); $("helpModal").hidden=false; $("tutNext").focus();
 }
 function closeHelp(){
-  if(!helpOpen) return; helpOpen=false; $("helpModal").hidden=true;
-  if(phase==="listening"){ if(deadline) deadline=performance.now()+pausedLeft; raf=requestAnimationFrame(tick); }
-  try{ lastFocus&&lastFocus.focus(); }catch(e){}
+  if(!helpOpen) return; helpOpen=false; $("helpModal").hidden=true; modalClosed();
   if(window.__nativeMidi) setTimeout(()=>maybeMidiConn(),300);
 }
 $("helpBtn").addEventListener("click",openHelp);
@@ -2659,6 +2750,7 @@ $("helpBody").addEventListener("pointerup",e=>{ if(swipeX==null) return; const d
 // ---------- Boot ----------
 
 applyStatic(); applySide(); buildKeyboard(); renderSettings(); render(); renderDaily();
+setTimeout(initCloud, 400);
 { const sp=$("splash"); if(document.documentElement.classList.contains("native")){ const t0=performance.now(); setTimeout(()=>{ sp.classList.add("out"); setTimeout(()=>sp.remove(),400); }, Math.max(0,1500-t0)); } else sp.remove(); }
 if(firstVisit){ save(); openHelp(); }
 })();

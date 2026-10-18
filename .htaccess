@@ -42,3 +42,4 @@ Options -Indexes
 # The iOS app source is in the repo but must not be served
 RedirectMatch 404 ^/app(/|$)
 RedirectMatch 404 ^/\.git
+RedirectMatch 404 ^/supabase(/|$)
