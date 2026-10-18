@@ -517,6 +517,8 @@ body.guest #dailyCard .lbl b::after{margin-left:6px;vertical-align:-2px}
 .inp-opt:disabled{opacity:.55;cursor:not-allowed}
 .midi-setup{margin:0}
 #midiOk:disabled{opacity:.5;cursor:not-allowed}
+.inp-note{margin:4px 2px 0;font-size:.84rem;color:var(--muted)}
+.rn-help{font-size:.85rem}
 /* Characters + intro windows */
 .modal-sub{margin:2px 0 0;color:var(--muted);font-size:.88rem}
 .char-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px}
@@ -828,7 +830,7 @@ html.native .midi-body [data-i="midiHint"]{display:none}
   </section>
 
   <section class="runner" id="runner" hidden>
-    <div class="rn-head"><b id="rnTitle"></b><span class="rn-score mono" id="rnScore"></span><span class="rn-best mono" id="rnBest"></span><span class="spacer"></span><button class="btn" id="rnQuit" type="button" data-i="rnQuit"></button></div>
+    <div class="rn-head"><b id="rnTitle"></b><span class="rn-score mono" id="rnScore"></span><span class="rn-best mono" id="rnBest"></span><span class="spacer"></span><label class="check rn-help"><input type="checkbox" id="rnHelp"> <span data-i="rnHelpLbl"></span></label><button class="btn" id="rnQuit" type="button" data-i="rnQuit"></button></div>
     <div class="rn-stage"><canvas id="rnCanvas" aria-label="Game"></canvas></div>
   </section>
 
@@ -1125,7 +1127,7 @@ const TXT = {
     accuracy:"Précision", avgTime:"Temps moyen", xpWon:"XP gagnés", bestCombo:"Meilleur combo", toRework:"À retravailler", allPerfect:"Aucune erreur, bravo !",
     reworkBtn:"Retravailler mes erreurs", newGame:"Nouvelle partie", closeLbl:"Fermer", outOf:"exercices sans faute", nextReview:"Prochaine révision : ", tomorrow:"demain", inDays:n=>"dans "+n+" jours",
     secHarmony:"Harmonie", secProg:"Progressions", secEar:"Oreille", secGames:"Jeux", secRank:"Classement", secAccount:"Profil",
-    inTitle:"Comment vas-tu jouer ?", midiDone:"Terminer la configuration", midiSetupNeed:"Branche ton clavier en USB ou cherche-le en Bluetooth : il doit apparaître dans la liste pour continuer.", midiSetupOk:"Clavier détecté ! Joue quelques notes pour vérifier, puis termine la configuration.", backPlay:"← Retour", lockGuest:"Continuer sans compte pour l'instant", inSub:"Choisis une fois pour toutes. Tu pourras changer dans les Réglages.", inLbl:"Je joue avec",
+    inTitle:"Comment vas-tu jouer ?", inMidiApp:"Un clavier MIDI ? Sur iPhone et iPad, il faut l'app Piano Challenges (le navigateur ne gère pas le MIDI).", midiDone:"Terminer la configuration", midiSetupNeed:"Branche ton clavier en USB ou cherche-le en Bluetooth : il doit apparaître dans la liste pour continuer.", midiSetupOk:"Clavier détecté ! Joue quelques notes pour vérifier, puis termine la configuration.", backPlay:"← Retour", lockGuest:"Continuer sans compte pour l'instant", inSub:"Choisis une fois pour toutes. Tu pourras changer dans les Réglages.", inLbl:"Je joue avec",
     inModes:{screen:["Le clavier à l'écran","Touche les notes à l'écran, ou utilise le clavier de l'ordinateur.","Écran"],midi:["Mon clavier MIDI","Branché en USB ou connecté en Bluetooth. Le plus précis.","MIDI"],mic:["Mon piano, avec le micro","Pour un piano acoustique : l'app écoute les notes que tu joues.","Micro"]},
     inCfgMidi:"Connecter / régler le clavier MIDI", inCfgMic:"Activer le micro", inMidiNo:"Ce navigateur ne gère pas le MIDI : utilise Chrome ou Edge, l'app iPhone/iPad, ou le micro.",
     inMidiOk:n=>"Connecté : "+n, inMidiNone:"Aucun clavier détecté : branche-le ou connecte-le en Bluetooth.", inMicOk:"Le micro écoute.", inMicOff:"Micro pas encore activé.", inScreenOk:"Touche les notes à l'écran.",
@@ -1147,7 +1149,7 @@ const TXT = {
       harmony:["L'harmonie",["Chaque tonalité contient <b>7 accords</b>, un par degré, de I à VII.","On te demande un degré : <b>IV de Do majeur</b>, c'est Fa majeur. Joue-le.","Choisis en haut les <b>degrés</b> à travailler pour te concentrer sur I, IV, V… C'est la base pour composer."]],
       prog:["Les progressions",["Une progression est une <b>suite d'accords</b> qui sonne bien, par exemple I – V – vi – IV.","Joue les accords <b>dans l'ordre</b>. Avec l'option d'enchaînement, chaque accord se joue dans le renversement le plus proche du précédent, comme un pianiste.","À la fin, écoute la progression pour entendre ce que tu as construit."]],
       ear:["L'oreille",["Écoute ce qui est joué : un <b>accord</b>, un <b>intervalle</b> ou une <b>gamme</b>.","Choisis la bonne réponse parmi les propositions. Tu peux réécouter autant que tu veux (Espace).","Les catégories se débloquent avec les niveaux."]],
-      games:["Les jeux",["<b>Saute-notes</b> : tu es un piano qui court. Au-dessus de chaque croche est écrit un accord.","Joue cet accord (toutes les notes ensemble, ou vite l'une après l'autre) : le piano saute tout seul au bon moment.","Joue un <b>Do</b> pour démarrer ou rejouer. D'autres jeux arrivent bientôt."]],
+      games:["Les jeux",["<b>Saute-notes</b> : tu es un piano qui court. Au-dessus de chaque croche est écrit un accord.","Joue cet accord, de préférence quand la note passe dans le <b>cercle</b> (bonus « Parfait ! ») : le piano saute tout seul. Les touches de l'accord s'allument sur le clavier si l'aide est activée.","Joue un <b>Do</b> pour démarrer ou rejouer. D'autres jeux arrivent bientôt."]],
       daily:["L'entraînement du jour",["Chaque jour, <b>10 exercices</b> mélangés, pris dans toutes les sections.","Les exercices ratés <b>reviennent</b> les jours suivants (répétition espacée) jusqu'à ce qu'ils soient acquis.","La <b>frise</b> en haut montre ton avancée. Va jusqu'au bout pour garder ta série."]]},
     secShort:{scales:"Gamme",chords:"Accord",harmony:"Harmonie",prog:"Progression",ear:"Oreille"},
     dpSubTxt:(d,n,due)=>d+" · "+n+" exercices"+(due?" · "+due+" à revoir":""),
@@ -1169,7 +1171,7 @@ const TXT = {
     gamesTitle:"Jeux", gamesSub:"Des défis au piano pour jouer plus vite et plus juste. Les premiers jeux arrivent bientôt ; en attendant, le piano est libre.",
     freePlay:"Jeu libre", soon:"Bientôt",
     rnName:"Saute-notes", rnDesc:"Tu es un piano ! Joue l'accord affiché pour sauter par-dessus les croches et les doubles croches.", rnPlay:"Jouer", rnQuit:"Quitter",
-    rnStart:"Joue un Do pour démarrer", rnTap:"Touche le jeu pour démarrer", rnOverShort:"Aïe !", rnHow:"Joue l'accord écrit au-dessus de chaque note pour sauter", rnOver:"Aïe ! Joue un Do pour rejouer", rnBestL:"Record", rnNew:"Nouveau record !",
+    rnStart:"Joue un Do pour démarrer", rnPerfect:"Parfait !", rnHelpLbl:"Montrer les notes", rnTap:"Touche le jeu pour démarrer", rnOverShort:"Aïe !", rnHow:"Joue l'accord écrit au-dessus de la note quand elle passe dans le cercle", rnOver:"Aïe ! Joue un Do pour rejouer", rnBestL:"Record", rnNew:"Nouveau record !",
     games:[["Saute-notes","play"],["Contre la montre","Un maximum de gammes en 60 secondes."],["Pluie de notes","Joue chaque note avant qu'elle ne touche le clavier."],["Mémoire d'accords","Répète des suites d'accords de plus en plus longues."],["Défis du jour","Un défi chronométré et un classement."]],
     degrees:"Degrés travaillés", optVL:"Enchaîner avec les renversements les plus proches", practiseH:"Tonalités travaillées", practiseP:"Progressions travaillées", practiseE:"Catégories travaillées",
     chordOfKey:"Accord de la tonalité", ofKey:" de ", inKey:"en ", progLbl:"Progression", vlOn:"renversements les plus proches", listenLbl:"Écoutez",
@@ -1236,7 +1238,7 @@ const TXT = {
     accuracy:"Accuracy", avgTime:"Average time", xpWon:"XP earned", bestCombo:"Best combo", toRework:"To rework", allPerfect:"No mistakes, well done!",
     reworkBtn:"Rework my mistakes", newGame:"New game", closeLbl:"Close", outOf:"exercises without mistakes", nextReview:"Next review: ", tomorrow:"tomorrow", inDays:n=>"in "+n+" days",
     secHarmony:"Harmony", secProg:"Progressions", secEar:"Ear", secGames:"Games", secRank:"Leaderboard", secAccount:"Profile",
-    inTitle:"How will you play?", midiDone:"Finish set-up", midiSetupNeed:"Plug your keyboard in with USB or search for it over Bluetooth: it must show up in the list to continue.", midiSetupOk:"Keyboard detected! Play a few notes to check, then finish the set-up.", backPlay:"← Back", lockGuest:"Continue without an account for now", inSub:"Choose once. You can change it later in Settings.", inLbl:"I play with",
+    inTitle:"How will you play?", inMidiApp:"A MIDI keyboard? On iPhone and iPad you need the Piano Challenges app (the browser has no MIDI).", midiDone:"Finish set-up", midiSetupNeed:"Plug your keyboard in with USB or search for it over Bluetooth: it must show up in the list to continue.", midiSetupOk:"Keyboard detected! Play a few notes to check, then finish the set-up.", backPlay:"← Back", lockGuest:"Continue without an account for now", inSub:"Choose once. You can change it later in Settings.", inLbl:"I play with",
     inModes:{screen:["The on-screen keyboard","Tap the notes on screen, or use your computer keyboard.","Screen"],midi:["My MIDI keyboard","Plugged in with USB or connected over Bluetooth. The most accurate.","MIDI"],mic:["My piano, with the mic","For an acoustic piano: the app listens to the notes you play.","Mic"]},
     inCfgMidi:"Connect / set up the MIDI keyboard", inCfgMic:"Turn the mic on", inMidiNo:"This browser has no MIDI: use Chrome or Edge, the iPhone/iPad app, or the mic.",
     inMidiOk:n=>"Connected: "+n, inMidiNone:"No keyboard detected: plug it in or connect it over Bluetooth.", inMicOk:"The mic is listening.", inMicOff:"Mic not turned on yet.", inScreenOk:"Tap the notes on screen.",
@@ -1258,7 +1260,7 @@ const TXT = {
       harmony:["Harmony",["Every key has <b>7 chords</b>, one per degree, from I to VII.","You are asked for a degree: <b>IV of C Major</b> is F Major. Play it.","Pick the <b>degrees</b> to practise at the top to focus on I, IV, V… It is the basis of songwriting."]],
       prog:["Progressions",["A progression is a <b>sequence of chords</b> that works, for example I – V – vi – IV.","Play the chords <b>in order</b>. With voice leading on, each chord is played in the inversion closest to the previous one, like a pianist.","At the end, listen to the progression to hear what you built."]],
       ear:["Ear training",["Listen to what is played: a <b>chord</b>, an <b>interval</b> or a <b>scale</b>.","Pick the right answer. Replay as often as you like (Space).","Categories unlock as you level up."]],
-      games:["Games",["<b>Note Jumper</b>: you are a running piano. A chord is written above each note.","Play that chord (all notes together, or quickly one after another): the piano jumps by itself at the right time.","Play a <b>C</b> to start or try again. More games are coming soon."]],
+      games:["Games",["<b>Note Jumper</b>: you are a running piano. A chord is written above each note.","Play that chord, ideally while the note crosses the <b>circle</b> (“Perfect!” bonus): the piano jumps by itself. The chord's keys light up on the keyboard when the hint is on.","Play a <b>C</b> to start or try again. More games are coming soon."]],
       daily:["Daily practice",["Every day, <b>10 mixed exercises</b> from all sections.","Exercises you miss <b>come back</b> on the following days (spaced repetition) until you know them.","The <b>timeline</b> at the top shows your progress. Finish it to keep your streak."]]},
     secShort:{scales:"Scale",chords:"Chord",harmony:"Harmony",prog:"Progression",ear:"Ear"},
     dpSubTxt:(d,n,due)=>d+" · "+n+" exercises"+(due?" · "+due+" to review":""),
@@ -1280,7 +1282,7 @@ const TXT = {
     gamesTitle:"Games", gamesSub:"Piano challenges to play faster and cleaner. The first games are coming soon; meanwhile, the piano is free to play.",
     freePlay:"Free play", soon:"Soon",
     rnName:"Note Jumper", rnDesc:"You are a piano! Play the chord shown to jump over eighth and sixteenth notes.", rnPlay:"Play", rnQuit:"Quit",
-    rnStart:"Play a C to start", rnTap:"Tap the game to start", rnOverShort:"Ouch!", rnHow:"Play the chord written above each note to jump", rnOver:"Ouch! Play a C to try again", rnBestL:"Best", rnNew:"New record!",
+    rnStart:"Play a C to start", rnPerfect:"Perfect!", rnHelpLbl:"Show the notes", rnTap:"Tap the game to start", rnOverShort:"Ouch!", rnHow:"Play the chord written above the note as it crosses the circle", rnOver:"Ouch! Play a C to try again", rnBestL:"Best", rnNew:"New record!",
     games:[["Note Jumper","play"],["Against the clock","As many scales as you can in 60 seconds."],["Note rain","Play each note before it hits the keyboard."],["Chord memory","Repeat ever longer chord sequences."],["Daily challenge","One timed challenge and a leaderboard."]],
     degrees:"Degrees to practise", optVL:"Chain with the closest inversions (voice leading)", practiseH:"Keys to practise", practiseP:"Progressions to practise", practiseE:"Categories to practise",
     chordOfKey:"Chord of the key", ofKey:" of ", inKey:"in ", progLbl:"Progression", vlOn:"closest inversions", listenLbl:"Listen",
@@ -1890,6 +1892,14 @@ function guessKbdSize(name){
   S.settings.kbdGuessFor=name;
   if(size && (S.settings.kbdSize||"auto")==="auto"){ S.settings.kbdSize=size; save(); buildKeyboard(); renderSettings(); }
   else save();
+}
+// keep the on-screen keyboard on the same keys as the MIDI keyboard: if a played note is outside, shift by octaves
+function followMidi(n){
+  if(n>=LOW && n<=HIGH) return;
+  const shift = n<LOW ? -Math.ceil((LOW-n)/12)*12 : Math.ceil((n-HIGH)/12)*12, lo=LOW+shift, hi=HIGH+shift;
+  if(lo<21 || hi>108) return;
+  Object.assign(S.settings,{kbdSize:"custom",kbdLow:lo,kbdHigh:hi}); save(); buildKeyboard(); renderSettings();
+  if(cur && typeof markPlayed==="function") markPlayed();
 }
 // a C on the MIDI keyboard starts the game, continues after an answer, or starts a new game from the summary
 function midiStart(note){
@@ -2552,14 +2562,17 @@ function rnChords(){
     const pcs=[...new Set(spellChord(ty.id,k,0).map(n=>n.pc))]; out.push({label:chordSym(ty.id,k), pcs}); }));
   return out.length?out:[{label:"C",pcs:[0,4,7]}];
 }
-function runnerOpen(){ RN.on=true; document.body.classList.add("runner-on"); $("runner").hidden=false; $("rnTitle").textContent=t("rnName"); $("rnQuit").textContent=t("rnQuit"); rnReset(); RN.state="ready"; cancelAnimationFrame(RN.raf); RN.last=performance.now(); RN.raf=requestAnimationFrame(rnLoop); }
-function runnerClose(){ if(!RN.on) return; RN.on=false; cancelAnimationFrame(RN.raf); $("runner").hidden=true; document.body.classList.remove("runner-on"); if(RN.xp){ addXP(RN.xp); RN.xp=0; save(); renderStatus(); } }
+function runnerOpen(){ $("rnHelp").checked=S.settings.rnHint!==false; RN.on=true; document.body.classList.add("runner-on"); $("runner").hidden=false; $("rnTitle").textContent=t("rnName"); $("rnQuit").textContent=t("rnQuit"); rnReset(); RN.state="ready"; cancelAnimationFrame(RN.raf); RN.last=performance.now(); RN.raf=requestAnimationFrame(rnLoop); }
+function runnerClose(){ if(!RN.on) return; RN.on=false; clearKeys(); cancelAnimationFrame(RN.raf); $("runner").hidden=true; document.body.classList.remove("runner-on"); if(RN.xp){ addXP(RN.xp); RN.xp=0; save(); renderStatus(); } }
 $("rnQuit").addEventListener("click",runnerClose);
+$("rnHelp").addEventListener("change",e=>{ S.settings.rnHint=e.target.checked; save(); RN.hintFor=undefined; });
 function rnGo(){ if(RN.state==="run") return; if(RN.state==="over") rnReset(); RN.state="run"; }
 $("rnCanvas").addEventListener("pointerdown",()=>{ if(RN.state!=="run" && performance.now()-RN.crashAt>500) rnGo(); });
 document.addEventListener("keydown",e=>{ if(RN.on && RN.state!=="run" && (e.code==="Space"||e.code==="Enter") && performance.now()-RN.crashAt>500){ e.preventDefault(); rnGo(); } });
-function rnReset(){ Object.assign(RN,{obs:[],held:[],dist:0,y:0,vy:0,jump:null,cleared:0,spawnIn:1.2,newBest:false,speed:0}); RN.pool=rnChords(); rnScore(); }
-function rnScore(){ const sc=RN.cleared*10+Math.floor(RN.dist/40); RN.score=sc; $("rnScore").textContent=String(sc).padStart(5,"0"); $("rnBest").textContent=t("rnBestL")+" "+String(S.runnerBest||0).padStart(5,"0"); }
+function rnReset(){ Object.assign(RN,{obs:[],held:[],dist:0,y:0,vy:0,jump:null,cleared:0,spawnIn:1.2,newBest:false,speed:0,bonus:0,flash:null,hintFor:null}); clearKeys(); RN.pool=rnChords(); rnScore(); }
+// show the keys of the chord to play (the next note), in the "reveal" colour, while the hint is on
+function rnHint(o){ clearKeys(); if(!o || S.settings.rnHint===false) return; o.pcs.forEach(pc=>{ for(let m=LOW;m<=HIGH;m++){ if(m%12===pc && keyEls[m]){ keyEls[m].classList.add("k-rev"); break; } } }); }
+function rnScore(){ const sc=RN.cleared*10+(RN.bonus||0)+Math.floor(RN.dist/40); RN.score=sc; $("rnScore").textContent=String(sc).padStart(5,"0"); $("rnBest").textContent=t("rnBestL")+" "+String(S.runnerBest||0).padStart(5,"0"); }
 function runnerNote(m){
   if(!RN.on) return;
   const pc=((m%12)+12)%12;
@@ -2568,7 +2581,9 @@ function runnerNote(m){
   const target=RN.obs.find(o=>!o.armed && !o.passed);
   if(!target) return;
   const have=new Set(RN.held.map(h=>h.pc));
-  if(target.pcs.every(p=>have.has(p))){ target.armed=true; RN.held=[]; }
+  if(target.pcs.every(p=>have.has(p))){ target.armed=true; RN.held=[];
+    if(target.inRing){ target.perfect=true; RN.cleared+=0; RN.bonus=(RN.bonus||0)+5; RN.flash={txt:t("rnPerfect"),t:performance.now()}; }
+    rnHint(null); }
 }
 function rnLoop(now){
   if(!RN.on) return;
@@ -2578,8 +2593,8 @@ function rnLoop(now){
   const g=cv.getContext("2d"); g.setTransform(dpr,0,0,dpr,0,0);
   const u=H/200, ground=H-26*u, px=Math.max(60*u,W*.12), pw=46*u, ph=44*u;
   if(RN.state==="run"){
-    if(!RN.speed) RN.speed=Math.min(W/3.6, 260*u*1.4);
-    RN.speed=Math.min(Math.max(W/1.8,380*u), RN.speed + dt*6*u);
+    if(!RN.speed) RN.speed=Math.min(W/4.6, 220*u);
+    if(RN.cleared>=3) RN.speed=Math.min(Math.max(W/2,360*u), RN.speed + dt*5*u);
     const dx=RN.speed*dt; RN.dist+=dx;
     RN.spawnIn-=dt;
     if(RN.spawnIn<=0){
@@ -2588,6 +2603,9 @@ function rnLoop(now){
       const gapT=Math.max(1.9, 3.4-RN.cleared*0.06); RN.spawnIn=gapT*(0.85+Math.random()*.4);
     }
     RN.obs.forEach(o=>o.x-=dx);
+    const ringX=px+pw+Math.max(18*u,(pw+28*u)*0.5)+70*u;
+    RN.obs.forEach(o=>{ o.inRing = Math.abs((o.x+o.w/2)-ringX) < 46*u; });
+    const tgt=RN.obs.find(o=>!o.armed && !o.passed); if(tgt!==RN.hintFor){ RN.hintFor=tgt; rnHint(tgt||null); }
     // auto-jump for an armed obstacle when it gets close enough
     const o=RN.obs.find(o=>!o.passed);
     if(o && o.armed && !o.jumped && !RN.jump){
@@ -2600,7 +2618,7 @@ function rnLoop(now){
     RN.obs.forEach(o=>{
       if(!o.passed && o.x+o.w < px){ o.passed=true; RN.cleared++; RN.xp+=2; tone(84,0,.12,.08); }
       const hit = o.x < px+pw-6*u && o.x+o.w > px+6*u && RN.y < o.h-6*u;
-      if(hit && RN.state==="run"){ RN.state="over"; RN.crashAt=performance.now(); tone(40,0,.4,.2);
+      if(hit && RN.state==="run"){ RN.state="over"; clearKeys(); RN.crashAt=performance.now(); tone(40,0,.4,.2);
         if(RN.score>(S.runnerBest||0)){ S.runnerBest=RN.score; RN.newBest=true; } if(RN.xp){ addXP(RN.xp); RN.xp=0; } save(); renderStatus(); }
     });
     RN.obs=RN.obs.filter(o=>o.x+o.w>-40);
@@ -2620,6 +2638,11 @@ function rnDraw(g,W,H,u,ground,px,pw,ph){
   // ground
   g.strokeStyle=muted; g.lineWidth=2*u; g.beginPath(); g.moveTo(0,ground); g.lineTo(W,ground); g.stroke();
   g.fillStyle=line; for(let x=-(RN.dist%(26*u));x<W;x+=26*u){ g.fillRect(x,ground+7*u,8*u,2*u); }
+  // timing ring: play the chord while the note crosses it
+  const ringX=px+pw+Math.max(18*u,(pw+28*u)*0.5)+70*u, ringY=ground-26*u, tgt=RN.obs.find(o=>!o.armed&&!o.passed), hot=tgt&&tgt.inRing;
+  g.strokeStyle=hot?good:acc; g.globalAlpha=hot?0.9:0.45; g.lineWidth=(hot?4:3)*u; g.setLineDash(hot?[]:[6*u,5*u]);
+  g.beginPath(); g.arc(ringX,ringY,40*u,0,Math.PI*2); g.stroke(); g.setLineDash([]); g.globalAlpha=1;
+  if(RN.flash && performance.now()-RN.flash.t<700){ g.fillStyle=good; g.font="800 "+Math.round(16*u)+"px "+C("--f-display"); g.textAlign="center"; g.fillText(RN.flash.txt, ringX, ringY-52*u); }
   // obstacles: eighth notes and beamed sixteenths, with the chord to play
   RN.obs.forEach(o=>{
     g.fillStyle=ink; g.strokeStyle=ink; g.lineWidth=3*u;
@@ -2936,7 +2959,8 @@ document.addEventListener("change",e=>{ if(e.target.matches("select, input[type=
 // ---------- How the player plays: on-screen keys, MIDI keyboard or microphone ----------
 const INPUT_ICONS={"screen": "<svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><rect x=\"2.5\" y=\"4\" width=\"19\" height=\"13\" rx=\"2\"/><path d=\"M8 21h8M12 17v4M6 8v5M9 8v5M12 8v5M15 8v5M18 8v5\"/></svg>", "midi": "<svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><rect x=\"2.5\" y=\"7\" width=\"19\" height=\"11\" rx=\"2\"/><path d=\"M6.5 7v6M10 7v6M14 7v6M17.5 7v6M12 7V3.5M12 3.5h4\"/></svg>", "mic": "<svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><rect x=\"9\" y=\"3\" width=\"6\" height=\"11\" rx=\"3\"/><path d=\"M5.5 11a6.5 6.5 0 0 0 13 0M12 17.5V21M8.5 21h7\"/></svg>"};
 const mobileWebNow = () => (phoneMQ.matches||railMQ.matches) && !document.documentElement.classList.contains("native");
-const inputModes = () => mobileWebNow() ? ["screen","mic"] : ["screen","midi","mic"];
+const midiPossible = () => document.documentElement.classList.contains("native") || (!!navigator.requestMIDIAccess && !mobileWebNow());
+const inputModes = () => midiPossible() ? ["screen","midi","mic"] : ["screen","mic"];
 function renderInputUI(){
   const m=S.settings.input||"screen", M=t("inModes");
   const seg=$("segInput"); seg.innerHTML="";
@@ -2945,6 +2969,7 @@ function renderInputUI(){
   if(m==="midi"){ st = !navigator.requestMIDIAccess ? t("inMidiNo") : midiReady ? t("inMidiOk")(midiNames.join(", ")) : t("inMidiNone"); cfg = navigator.requestMIDIAccess ? t("inCfgMidi") : ""; }
   else if(m==="mic"){ st = micOn ? t("inMicOk") : t("inMicOff"); cfg = micOn ? "" : t("inCfgMic"); }
   else st=t("inScreenOk");
+  if(!midiPossible() && m!=="midi") st+=" "+t("inMidiApp");
   $("inStatus").textContent=st; $("inCfg").textContent=cfg; $("inCfg").hidden=!cfg;
   const ok = m==="screen" || (m==="midi"&&midiReady) || (m==="mic"&&micOn);
   const chip=$("inChip"); chip.innerHTML=INPUT_ICONS[m]+'<i class="'+(ok?"on":"off")+'"></i>'; chip.title=M[m][0]+" — "+st; chip.setAttribute("aria-label",chip.title);
@@ -2970,11 +2995,11 @@ function openInputChooser(){
   inputModes().forEach(v=>{ const b=document.createElement("button"); b.type="button"; b.className="inp-opt";
     b.innerHTML='<span class="io-ic">'+INPUT_ICONS[v]+'</span><span class="io-t"><b></b><small></small></span>';
     b.querySelector("b").textContent=M[v][0]; b.querySelector("small").textContent=M[v][1];
-    if(v==="midi" && !navigator.requestMIDIAccess){ b.disabled=true; b.querySelector("small").textContent=t("inMidiNo"); }
     b.onclick=()=>{ closeMod("inputModal"); setInput(v,true); }; box.appendChild(b); });
+  const note=document.createElement("p"); note.className="inp-note"; note.textContent=t("inMidiApp"); note.hidden=midiPossible(); box.appendChild(note);
   openMod("inputModal");
 }
-function maybeAskInput(){ if(!S.settings.input && !anyModal()) setTimeout(()=>{ if(!S.settings.input && !anyModal()) openInputChooser(); },350); }
+function maybeAskInput(){ if(!S.settings.input && !anyModal()) setTimeout(()=>{ if(!S.settings.input && !anyModal()) openInputChooser(); }, document.documentElement.classList.contains("native")&&performance.now()<2500?1700:350); }
 // the chosen input comes back by itself (the mic needs a first tap: browsers require it)
 function restoreInput(){
   const m=S.settings.input;
@@ -3029,6 +3054,7 @@ async function enableMidi(){
         const [st,note,vel]=ev.data; if((st&0xf0)===0x90 && vel>0){
           if(S.settings.midiSound) tone(note,0,.9,.1+.26*vel/127);
           if(calib){ calibNote(note); return; }
+          followMidi(note);
           if(midiStart(note)) return;
           midiIn(note); } }; });
       $("midiBtn").classList.toggle("on",names.length>0); $("midiBtn").classList.remove("err");
@@ -3090,7 +3116,8 @@ function resumeRound(){
   if(pendingAdv){ pendingAdv=false; setTimeout(()=>{ if(anyModal()){ pendingAdv=true; return; } if(phase==="success") startRound(); else if(phase==="revealed") grade(true); },500); }
 }
 function modalOpened(){ modalFocus.push(document.activeElement); pauseRound(); try{ $("app").inert=true; }catch(e){} }
-function modalClosed(){ if(typeof maybeAskInput==="function") setTimeout(maybeAskInput,0); if(!anyModal()){ try{ $("app").inert=false; }catch(e){} } const f=modalFocus.pop(); try{ if(f&&f.focus&&!anyModal()) f.focus({preventScroll:true}); }catch(e){} resumeRound(); }
+let helpAfterInput=false;
+function modalClosed(){ if(typeof maybeAskInput==="function") setTimeout(()=>{ maybeAskInput(); if(helpAfterInput && S.settings.input && !anyModal()){ helpAfterInput=false; openHelp(); } },0); if(!anyModal()){ try{ $("app").inert=false; }catch(e){} } const f=modalFocus.pop(); try{ if(f&&f.focus&&!anyModal()) f.focus({preventScroll:true}); }catch(e){} resumeRound(); }
 const VB='viewBox="0 0 360 190"';
 const svgHead = id => '<svg '+VB+' class="tut-svg" role="img" aria-hidden="true"><defs><marker id="'+id+'" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="s-ah"/></marker></defs>';
 const arrow = (id,d) => '<path class="s-arrow" d="'+d+'" marker-end="url(#'+id+')"/>';
@@ -3208,7 +3235,7 @@ setTimeout(initCloud, 400);
 const mobileWeb = (phoneMQ.matches||railMQ.matches) && !document.documentElement.classList.contains("native");
 document.body.classList.add("guest");
 restoreInput();
-if(firstVisit){ save(); if(mobileWeb){ renderWelcome(); openMod("welcomeModal"); } else openHelp(); }
+if(firstVisit){ save(); if(mobileWeb){ renderWelcome(); openMod("welcomeModal"); } else { helpAfterInput=true; setTimeout(openInputChooser, document.documentElement.classList.contains("native")?1700:300); } }
 else maybeAskInput();
 })();
 </script>
