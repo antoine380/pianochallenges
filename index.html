@@ -239,6 +239,24 @@ button:focus-visible, select:focus-visible, input:focus-visible, summary:focus-v
 .pill.gear svg{width:16px;height:16px;fill:none;stroke:var(--ink);stroke-width:1.6;stroke-linejoin:round}
 .pill.gear:hover{border-color:var(--ink)}
 .modal-card.small{width:min(460px,100%)}
+.modal-card.wide{width:min(1040px,100%)}
+.set-body{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px 28px;align-items:start}
+.set-col{display:flex;flex-direction:column;gap:14px;min-width:0}
+.set-tabs{width:auto}
+.set-tabs button{padding:7px 16px;font-family:var(--f-display);font-weight:700}
+.prog-body{gap:12px}
+.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+@media (max-width:760px){.set-body{grid-template-columns:minmax(0,1fr)}}
+.picker{display:flex;gap:16px;align-items:flex-start;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:12px 14px}
+.pk-main{flex:1;min-width:0;display:flex;flex-direction:column;gap:10px}
+.pk-row{display:flex;flex-wrap:wrap;gap:10px 18px;align-items:flex-end}
+.pk-field{display:flex;flex-direction:column;gap:5px;min-width:0}
+.pk-field > span{font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
+.pk-field select{min-width:150px}
+.pk-side{display:flex;flex-direction:column;gap:6px;flex:none}
+.pk-btn{display:inline-flex;align-items:center;gap:8px;justify-content:flex-start}
+.pk-btn svg{width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+@media (max-width:640px){#types button:disabled{display:none}.picker{flex-direction:column;padding:10px 12px}.pk-side{flex-direction:row;width:100%}.pk-side .btn{flex:1;justify-content:center}}
 .midi-body{gap:14px}
 .midi-status{display:flex;align-items:center;gap:10px;background:var(--surface-2);border:1px solid var(--line);border-radius:10px;padding:10px 12px;font-weight:700}
 .midi-status .dot{width:10px;height:10px;border-radius:50%;background:var(--line);flex:none}
@@ -437,6 +455,29 @@ select{font:inherit;color:var(--ink);background:var(--surface-2);border:1px soli
     <button type="button" role="tab" data-v="ear"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 9a5 5 0 1 1 10 0c0 3-3 4-3 7a3 3 0 0 1-5.5 1.6M10 9a2 2 0 1 1 4 0"/></svg><span data-i="secEar"></span></button>
   </nav>
 
+  <section class="picker" id="picker">
+    <div class="pk-main">
+      <div class="pk-field pk-types"><span id="practiseLbl"></span><div class="types" id="types"></div></div>
+      <div class="pk-row">
+        <div class="pk-field" id="keyField"><span data-i="keyLbl"></span><select id="keySel"></select></div>
+        <div class="pk-field" id="dirField"><span data-i="direction"></span>
+          <div class="seg" id="segDir">
+            <button type="button" data-v="up" data-i="ascending"></button>
+            <button type="button" data-v="down" data-i="descending"></button>
+            <button type="button" data-v="mix" data-i="dirMix"></button>
+          </div>
+        </div>
+        <div class="pk-field" id="invField"><span data-i="inversions"></span><div class="types" id="invs"></div></div>
+        <div class="pk-field" id="degField"><span data-i="degrees"></span><div class="types" id="degs"></div></div>
+        <label class="check" id="vlField"><input type="checkbox" id="optVL"> <span data-i="optVL"></span></label>
+      </div>
+    </div>
+    <div class="pk-side">
+      <button class="btn pk-btn" id="setBtn" type="button" aria-haspopup="dialog"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 15.2a3.2 3.2 0 1 0 0-6.4 3.2 3.2 0 0 0 0 6.4z"/><path d="M19.4 13.5a7.6 7.6 0 0 0 0-3l2-1.6-2-3.4-2.4 1a7.5 7.5 0 0 0-2.6-1.5L14 2.5h-4l-.4 2.5A7.5 7.5 0 0 0 7 6.5l-2.4-1-2 3.4 2 1.6a7.6 7.6 0 0 0 0 3l-2 1.6 2 3.4 2.4-1a7.5 7.5 0 0 0 2.6 1.5l.4 2.5h4l.4-2.5a7.5 7.5 0 0 0 2.6-1.5l2.4 1 2-3.4z"/></svg><span data-i="settings"></span></button>
+      <button class="btn pk-btn" id="progBtn" type="button" aria-haspopup="dialog"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg><span data-i="progress"></span></button>
+    </div>
+  </section>
+
   <section class="stage" id="stage" aria-live="polite">
     <div class="gamebar" id="gamebar">
       <span class="glbl" id="gameLbl"></span>
@@ -483,81 +524,6 @@ select{font:inherit;color:var(--ink);background:var(--surface-2);border:1px soli
     <p class="hint keys" id="kbdHint"></p>
   </section>
 
-  <div class="cols">
-    <details class="panel" id="mapPanel" open>
-      <summary><h2 data-i="progress"></h2></summary>
-      <div class="panel-body">
-        <div class="map-head">
-          <label class="hint" for="viewSel" data-i="viewLabel"></label>
-          <select id="viewSel"></select>
-        </div>
-        <div class="map" id="map"></div>
-        <p class="hint" id="unlockHint"></p>
-        <div class="stats" id="stats"></div>
-      </div>
-    </details>
-
-    <details class="panel" id="setPanel" open>
-      <summary><h2 data-i="settings"></h2></summary>
-      <div class="panel-body">
-        <div class="field"><span id="practiseLbl"></span>
-          <div class="types" id="types"></div>
-        </div>
-        <div class="field" id="degField"><span data-i="degrees"></span>
-          <div class="types" id="degs"></div>
-        </div>
-        <label class="check" id="vlField"><input type="checkbox" id="optVL"> <span data-i="optVL"></span></label>
-        <div class="field" id="orderField"><span data-i="order"></span>
-          <div class="seg" id="segMode">
-            <button type="button" data-v="suite" data-i="inOrder"></button>
-            <button type="button" data-v="random" data-i="random"></button>
-          </div>
-        </div>
-        <div class="field" id="lenField"><span data-i="gameLen"></span>
-          <div class="seg" id="segLen">
-            <button type="button" data-v="5">5</button>
-            <button type="button" data-v="10">10</button>
-            <button type="button" data-v="20">20</button>
-            <button type="button" data-v="0">∞</button>
-          </div>
-        </div>
-        <div class="field" id="delayField"><span data-i="difficulty"></span>
-          <div class="seg diff" id="segDiff">
-            <button type="button" data-v="0"><b data-i="noTimer"></b></button>
-            <button type="button" data-v="20"><b>20 s</b></button>
-            <button type="button" data-v="10"><b>10 s</b></button>
-            <button type="button" data-v="5"><b>5 s</b></button>
-          </div>
-          <p class="hint" data-i="answerAfter"></p>
-          <div class="range-row">
-            <input type="range" id="delay" min="0" max="20" step="1">
-            <output class="mono" id="delayOut"></output>
-          </div>
-        </div>
-        <div class="field"><span data-i="notation"></span>
-          <div class="seg" id="segNot">
-            <button type="button" data-v="en">C D E</button>
-            <button type="button" data-v="fr">Do Ré Mi</button>
-          </div>
-        </div>
-        <div class="field" id="invField"><span data-i="inversions"></span>
-          <div class="types" id="invs"></div>
-        </div>
-        <div class="field" id="dirField"><span data-i="direction"></span>
-          <div class="seg" id="segDir">
-            <button type="button" data-v="up" data-i="ascending"></button>
-            <button type="button" data-v="down" data-i="descending"></button>
-          </div>
-        </div>
-        <label class="check" id="octField"><input type="checkbox" id="optOct"> <span data-i="optOct"></span></label>
-        <label class="check"><input type="checkbox" id="optLabels"> <span data-i="optLabels"></span></label>
-        <label class="check"><input type="checkbox" id="optAuto"> <span data-i="optAuto"></span></label>
-        <button class="btn" id="midiCfg2" type="button" data-i="midiCfgBtn"></button>
-        <label class="check"><input type="checkbox" id="optAll"> <span data-i="optAll"></span></label>
-        <button class="danger" id="resetBtn" type="button"></button>
-      </div>
-    </details>
-  </div>
 </div>
 <div class="modal" id="helpModal" role="dialog" aria-modal="true" aria-labelledby="helpTitle" hidden>
   <div class="modal-bg" id="helpBg"></div>
@@ -603,6 +569,49 @@ select{font:inherit;color:var(--ink);background:var(--surface-2);border:1px soli
       <p class="hint" data-i="midiHint"></p>
     </div>
     <div class="modal-foot end-foot"><button class="btn primary" id="midiOk" type="button" data-i="closeLbl"></button></div>
+  </div>
+</div>
+<div class="modal" id="setModal" role="dialog" aria-modal="true" aria-labelledby="setTitle" hidden>
+  <div class="modal-bg" id="setBg"></div>
+  <div class="modal-card wide">
+    <div class="modal-head">
+      <div class="seg set-tabs" id="setTabs"><button type="button" data-v="settings" data-i="settings"></button><button type="button" data-v="progress" data-i="progress"></button></div>
+      <h2 id="setTitle" class="sr-only" data-i="settings"></h2>
+      <button class="modal-close" id="setX" type="button" aria-label="Close">×</button>
+    </div>
+    <div class="modal-body set-body" id="setPane">
+      <div class="set-col">
+        <div class="field" id="orderField"><span data-i="order"></span>
+          <div class="seg" id="segMode"><button type="button" data-v="suite" data-i="inOrder"></button><button type="button" data-v="random" data-i="random"></button></div>
+        </div>
+        <div class="field" id="lenField"><span data-i="gameLen"></span>
+          <div class="seg" id="segLen"><button type="button" data-v="5">5</button><button type="button" data-v="10">10</button><button type="button" data-v="20">20</button><button type="button" data-v="0">∞</button></div>
+        </div>
+        <div class="field" id="delayField"><span data-i="difficulty"></span>
+          <div class="seg diff" id="segDiff"><button type="button" data-v="0"><b data-i="noTimer"></b></button><button type="button" data-v="20"><b>20 s</b></button><button type="button" data-v="10"><b>10 s</b></button><button type="button" data-v="5"><b>5 s</b></button></div>
+          <div class="range-row"><input type="range" id="delay" min="0" max="20" step="1" aria-label="Seconds"><output class="mono" id="delayOut"></output></div>
+        </div>
+      </div>
+      <div class="set-col">
+        <div class="field"><span data-i="notation"></span>
+          <div class="seg" id="segNot"><button type="button" data-v="en">C D E</button><button type="button" data-v="fr">Do Ré Mi</button></div>
+        </div>
+        <label class="check" id="octField"><input type="checkbox" id="optOct"> <span data-i="optOct"></span></label>
+        <label class="check"><input type="checkbox" id="optLabels"> <span data-i="optLabels"></span></label>
+        <label class="check"><input type="checkbox" id="optAuto"> <span data-i="optAuto"></span></label>
+      </div>
+      <div class="set-col">
+        <button class="btn" id="midiCfg2" type="button" data-i="midiCfgBtn"></button>
+        <label class="check"><input type="checkbox" id="optAll"> <span data-i="optAll"></span></label>
+        <button class="danger" id="resetBtn" type="button"></button>
+      </div>
+    </div>
+    <div class="modal-body prog-body" id="progPane" hidden>
+      <div class="map-head"><label class="hint" for="viewSel" data-i="viewLabel"></label><select id="viewSel"></select></div>
+      <div class="map" id="map"></div>
+      <p class="hint" id="unlockHint"></p>
+      <div class="stats" id="stats"></div>
+    </div>
   </div>
 </div>
 <div class="toasts" id="toasts"></div>
@@ -660,6 +669,7 @@ const TXT = {
     never:"jamais", notation:"Notation", direction:"Sens", optOct:"Finir sur l'octave", optLabels:"Noms des notes sur le clavier",
     midiTitle:"Clavier MIDI", midiInput:"Appareil", midiAll:"Tous les appareils", midiOffState:"MIDI non activé", midiCfgBtn:"Réglages du clavier MIDI",
     optMidiC:"Un Do pour commencer et continuer", midiHint:"Le MIDI marche dans Chrome et Edge, en USB ou Bluetooth (pas dans Safari ni sur iPhone/iPad).",
+    keyLbl:"Tonalité", allKeys:"Toutes (débloquées)", dirMix:"Les deux",
     kbLbl:"Clavier à l'écran", kbAuto:"Automatique (3 octaves)", keys:"touches", kbCustom:"Détecté", kbDetect:"Détecter mon clavier MIDI",
     calibLow:"Jouez la touche la plus grave de votre clavier MIDI.", calibHigh:"Maintenant, jouez la touche la plus aiguë.", calibNeedMidi:"Activez d'abord le MIDI (bouton sous le clavier), puis recommencez.",
     kbRangeTxt:(n,a,b)=>n+" touches, de "+a+" à "+b+". Le Do du milieu est "+(PC_FR[0])+"3.", kbDone:(n,a,b)=>"Clavier détecté : "+n+" touches ("+a+" – "+b+")",
@@ -719,6 +729,7 @@ const TXT = {
     never:"never", notation:"Note names", direction:"Direction", optOct:"End on the octave", optLabels:"Note names on the keys",
     midiTitle:"MIDI keyboard", midiInput:"Device", midiAll:"All devices", midiOffState:"MIDI not enabled", midiCfgBtn:"MIDI keyboard settings",
     optMidiC:"A C starts and continues", midiHint:"MIDI works in Chrome and Edge, over USB or Bluetooth (not in Safari or on iPhone/iPad).",
+    keyLbl:"Key", allKeys:"All (unlocked)", dirMix:"Both",
     kbLbl:"On-screen keyboard", kbAuto:"Automatic (3 octaves)", keys:"keys", kbCustom:"Detected", kbDetect:"Detect my MIDI keyboard",
     calibLow:"Play the lowest key of your MIDI keyboard.", calibHigh:"Now play the highest key.", calibNeedMidi:"Enable MIDI first (button under the keyboard), then try again.",
     kbRangeTxt:(n,a,b)=>n+" keys, from "+a+" to "+b+". Middle C is C4.", kbDone:(n,a,b)=>"Keyboard detected: "+n+" keys ("+a+" – "+b+")",
@@ -1033,6 +1044,11 @@ function activeTypes(sec){
   const a=S.settings[SEC[sec].sel].filter(id=>typeOpenS(sec,id)); return a.length?a:[SEC[sec].def];
 }
 function pool(){
+  const all=poolAll(), f=(S.settings.focus||{})[S.section];
+  if(f && S.section!=="ear"){ const only=all.filter(x=>x.k===f); if(only.length) return only; }
+  return all;
+}
+function poolAll(){
   const sec=S.section, act=activeTypes(sec), out=[];
   if(sec==="ear"){ act.forEach(cat=>openRoots(sec,cat).forEach(k=>out.push({sec,tid:cat,k}))); return out; }
   const invs=S.settings.invs.slice().sort(), degs=S.settings.hdegs.slice().sort();
@@ -1144,6 +1160,7 @@ document.addEventListener("keydown", e=>{
   if(helpOpen){ if(e.code==="Escape") closeHelp(); else if(e.code==="ArrowRight") tutGo(1); else if(e.code==="ArrowLeft") tutGo(-1); return; }
   if(endOpen){ if(e.code==="Escape") closeEnd(); return; }
   if(midiOpen){ if(e.code==="Escape") closeMidi(); return; }
+  if(setOpen){ if(e.code==="Escape") closeSet(); return; }
   if(e.target.matches("input,select,textarea")) return;
   if(e.code==="Space"){ e.preventDefault(); primaryAction(); return; }
   if(e.code==="Enter" && phase==="revealed"){ e.preventDefault(); grade(true); return; }
@@ -1167,13 +1184,13 @@ function pickNext(){
   const w=cand.map(x=>6-mastI(x)); let r=Math.random()*w.reduce((a,b)=>a+b,0);
   for(let i=0;i<cand.length;i++){ r-=w[i]; if(r<=0) return cand[i]; } return cand[cand.length-1];
 }
-const dirOf = () => cur && cur.sec==="scales" ? S.settings.dir : "up";
+const dirOf = () => cur && cur.sec==="scales" ? (cur.dir||"up") : "up";
 function buildSeq(){
   if(cur.sec==="chords") return spellChord(cur.tid, cur.k, cur.inv);
   if(cur.sec==="harmony"){ const h=HTYPE[cur.tid]; return hChord(h.scale,cur.k,cur.deg,h.sev).notes; }
   if(cur.sec==="prog") return progSteps(cur.tid, cur.k, S.settings.vl);
   if(cur.sec==="ear") return [];
-  const dir=S.settings.dir;
+  const dir=dirOf();
   let sq=spellType(cur.tid, cur.k, dir);
   if(S.settings.octave) sq=sq.concat([sq[0]]);
   if(dir==="down") sq=sq.slice().reverse();
@@ -1199,6 +1216,7 @@ function startRound(item, retry){
   }
   if(item && item.sec!==S.section){ S.section=item.sec; save(); renderSettings(); }
   cur=item||pickNext();
+  if(cur.sec==="scales" && !(retry && cur.dir)) cur={...cur, dir: S.settings.dir==="mix" ? (Math.random()<.5?"up":"down") : S.settings.dir};
   if(cur.sec==="ear" && cur.root==null){
     const span = cur.tid==="scale" ? 0 : cur.tid==="int" ? 9 : 10;
     cur={...cur, root:(cur.tid==="scale"?48:52)+Math.floor(Math.random()*(span+1))+(cur.tid==="scale"?Math.floor(Math.random()*8):0)};
@@ -1232,7 +1250,7 @@ function calibNote(note){
   const lo=Math.min(calib.low,note), hi=Math.max(calib.low,note); calib=null; calibMsg("");
   if(hi-lo<12) return;
   Object.assign(S.settings,{kbdSize:"custom",kbdLow:lo,kbdHigh:hi}); save(); buildKeyboard(); renderSettings();
-  toast(t("kbDone")(hi-lo+1,octName(lo),octName(hi)));
+  calibMsg(t("kbDone")(hi-lo+1,octName(lo),octName(hi)));
 }
 // a C on the MIDI keyboard starts the game, continues after an answer, or starts a new game from the summary
 function midiStart(note){
@@ -1255,7 +1273,7 @@ function wrongNote(m){
   const sl=$("slots").children[at]; if(sl){ sl.classList.remove("err","pop"); void sl.offsetWidth; sl.classList.add("err"); }
 }
 function noteIn(m){
-  if(helpOpen || endOpen) return;
+  if(helpOpen || endOpen || setOpen) return;
   pressKey(m);
   if(phase!=="listening" || cur.sec==="ear"){ flashKey(m,"k-hit"); return; }
   const pc=((m%12)+12)%12;
@@ -1600,7 +1618,8 @@ function renderSlots(popIdx){
   const ch=chordLike(sec);
   let sq=seq;
   if(!sq.length){ sq = ch ? spellChord("maj","C",0) : (()=>{ let x=spellType("major","C","up"); if(S.settings.octave) x=x.concat([x[0]]); return S.settings.dir==="down"?x.reverse():x; })(); }
-  const root = ch ? (seq.length ? (sec==="harmony"?seq[0]:tonicNote(cur.k)) : sq[0]) : (S.settings.dir==="down"?sq[sq.length-1]:sq[0]);
+  const dd = seq.length ? dirOf() : (S.settings.dir==="down"?"down":"up");
+  const root = ch ? (seq.length ? (sec==="harmony"?seq[0]:tonicNote(cur.k)) : sq[0]) : (dd==="down"?sq[sq.length-1]:sq[0]);
   box.style.gridTemplateColumns="repeat("+sq.length+",minmax(0,1fr))";
   sq.forEach((n,i)=>{
     const d=document.createElement("div"); d.className="slot"; let txt="";
@@ -1609,7 +1628,7 @@ function renderSlots(popIdx){
       else if(phase==="revealed"){ d.classList.add("rev"); d.style.animationDelay=revealAt(i)+"ms"; txt=noteName(n); }
       else if(phase==="listening" && (ch ? (!found[0] && i===0) : i===idx)) d.classList.add("cur");
     }
-    const isOct = !ch && S.settings.octave && (S.settings.dir==="down" ? i===0 : i===sq.length-1);
+    const isOct = !ch && S.settings.octave && (dd==="down" ? i===0 : i===sq.length-1);
     d.innerHTML='<span class="deg"></span><span class="nn"></span>';
     d.children[0].textContent = ch ? chordToneLabel(n,root) : (isOct ? "I" : degLabel(n,root));
     d.children[1].textContent = txt;
@@ -1684,9 +1703,9 @@ function renderPrompt(){
     $("invTag").hidden=false; $("invTxt").textContent=t("invNames")[cur.inv];
     return;
   }
-  $("eyebrow").textContent=(S.settings.dir==="down"?t("descending"):t("ascending"))+" · "+order;
+  $("eyebrow").textContent=(dirOf()==="down"?t("descending"):t("ascending"))+" · "+order;
   $("prompt").textContent=scaleName(cur.tid,cur.k);
-  $("promptSub").textContent = seq.length+" "+t("notes") + (cur.tid==="mel" && S.settings.dir==="down" ? t("melDown") : "");
+  $("promptSub").textContent = seq.length+" "+t("notes") + (cur.tid==="mel" && dirOf()==="down" ? t("melDown") : "");
 }
 function renderHint(){ $("kbdHint").textContent=tx("kbdHint"); }
 function renderTimeline(){
@@ -1728,6 +1747,15 @@ function renderTypes(){
   chips("degs", ROMAN, "hdegs");
   $("optVL").checked=S.settings.vl;
 }
+function renderKeySel(){
+  const sec=S.section, sel=$("keySel"); $("keyField").hidden = sec==="ear";
+  if(sec==="ear") return;
+  const keys=[]; activeTypes(sec).forEach(tid=>openRoots(sec,tid).forEach(k=>{ if(!keys.includes(k)) keys.push(k); }));
+  const f=(S.settings.focus||{})[sec]||"";
+  sel.innerHTML="";
+  [["",t("allKeys")],...keys.map(k=>[k,noteName(tonicNote(k))])].forEach(([v,l])=>{ const o=document.createElement("option"); o.value=v; o.textContent=l; sel.appendChild(o); });
+  sel.value = keys.includes(f) ? f : "";
+}
 function renderMap(){
   const sec=S.section, cfg=SEC[sec], vk=cfg.view;
   const sel=$("viewSel"); sel.innerHTML="";
@@ -1756,7 +1784,7 @@ function renderMap(){
     b.querySelector(".tn").textContent=noteName(tonicNote(k));
     b.querySelector(".ta").textContent=avail?sub:t("locked");
     b.title=avail?t("practiseTip")+itemName(it):tx("lockedTip");
-    b.onclick=()=>startRound(it);
+    b.onclick=()=>{ closeSet(); startRound(it); };
     map.appendChild(b);
   });
   const locked=rootsOf(sec,tid).length-un.length;
@@ -1781,7 +1809,7 @@ function renderSettings(){
   $("dirField").hidden=sec!=="scales"; $("octField").hidden=sec!=="scales";
   $("orderField").hidden=sec==="ear"; $("lenField").hidden=false; $("delayField").hidden=sec==="ear";
   $("secTabs").querySelectorAll("button").forEach(b=>b.setAttribute("aria-selected", b.dataset.v===S.section));
-  renderTypes();
+  renderTypes(); renderKeySel();
 }
 function render(){ renderGameBar(); $("secTabs").querySelectorAll("button").forEach(b=>b.setAttribute("aria-selected", b.dataset.v===S.section));
   if(phase==="idle"||phase==="listening") resetScore(); renderSession(); renderHint(); renderPrompt(); renderTimeline(); renderSlots(); renderActions(); renderStatus(); renderMap(); }
@@ -1791,12 +1819,21 @@ $("langSeg").addEventListener("click",e=>{ const b=e.target.closest("button"); i
   S.settings.lang=b.dataset.v; S.settings.notation=b.dataset.v; save(); applyStatic(); if(helpOpen) renderTut(); renderSettings(); labelKeys(); render(); renderDaily(); if(endOpen&&lastGame) openEnd(lastGame); });
 function bindSeg(id,key,restart){ $(id).addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return;
   S.settings[key]=b.dataset.v; save(); renderSettings(); labelKeys();
-  if(restart && cur && (phase==="listening"||phase==="revealed")) startRound(cur,true); else render(); }); }
+  if(restart && cur && (phase==="listening"||phase==="revealed")) startRound(key==="dir"?{...cur,dir:null}:cur,true); else render(); }); }
 bindSeg("segMode","mode",false);
 $("segLen").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; S.settings.gameLen=+b.dataset.v; save();
   if(game && !game.queue){ game.total=S.settings.gameLen||Infinity; if(game.i>=game.total) game.total=game.i+1; } renderSettings(); renderGameBar(); });
 $("gameEnd").addEventListener("click",()=>{ if(game){ clearTimeout(advanceTimer); cancelAnimationFrame(raf); clearPlayTimers(); if(game.results[game.i]==null) game.results.length=game.i; finishGame(); } });
 $("dailyBtn").addEventListener("click",startDaily);
+$("keySel").addEventListener("change",e=>{ S.settings.focus=S.settings.focus||{}; S.settings.focus[S.section]=e.target.value; S[sufKey()]=0; save(); if(phase==="listening"&&game&&!game.queue) startRound(undefined,true); });
+// settings / progress window
+let setOpen=false;
+function openSet(tab){ setOpen=true; $("setModal").hidden=false; showSetTab(tab||"settings"); renderSettings(); renderMap(); }
+function showSetTab(tab){ $("setPane").hidden = tab!=="settings"; $("progPane").hidden = tab!=="progress"; $("setTabs").querySelectorAll("button").forEach(b=>b.setAttribute("aria-pressed", b.dataset.v===tab)); }
+function closeSet(){ if(!setOpen) return; setOpen=false; $("setModal").hidden=true; }
+$("setBtn").addEventListener("click",()=>openSet("settings")); $("progBtn").addEventListener("click",()=>openSet("progress"));
+$("setTabs").addEventListener("click",e=>{ const b=e.target.closest("button"); if(b) showSetTab(b.dataset.v); });
+$("setX").addEventListener("click",closeSet); $("setBg").addEventListener("click",closeSet);
 $("kbSize").addEventListener("change",e=>{ S.settings.kbdSize=e.target.value; save(); buildKeyboard(); renderSettings(); if(cur&&seq.length) scrollKbdTo(revealMidis()[0]); });
 $("kbDetect").addEventListener("click",()=>{ if(!midiReady){ calibMsg(t("calibNeedMidi")); return; } calib={step:1}; calibMsg(t("calibLow")); });
 $("homeLink").addEventListener("click",e=>{ e.preventDefault(); goHome(); });
@@ -1832,7 +1869,7 @@ $("resetBtn").addEventListener("click",e=>{
 narrowMQ.addEventListener?.("change",()=>buildKeyboard());
 
 // ---------- Toasts & notices ----------
-function toast(x){ const el=document.createElement("div"); el.className="toast"; el.textContent=x; $("toasts").appendChild(el); setTimeout(()=>el.remove(),2600); }
+function toast(x){ /* notifications removed on request: unlocks show in the progress view */ }
 function notice(x){ const n=$("notice"); n.textContent=x; n.hidden=!x; }
 
 // ---------- MIDI ----------
@@ -2023,7 +2060,7 @@ $("helpBody").addEventListener("pointerup",e=>{ if(swipeX==null) return; const d
   if(Math.abs(dx)>50){ if(dx<0 && tutI<t("tut").length-1) tutGo(1); else if(dx>0) tutGo(-1); } });
 
 // ---------- Boot ----------
-if(narrowMQ.matches){ $("mapPanel").open=false; $("setPanel").open=false; }
+
 applyStatic(); buildKeyboard(); renderSettings(); render(); renderDaily();
 if(firstVisit){ save(); openHelp(); }
 })();

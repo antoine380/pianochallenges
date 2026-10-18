@@ -1,2 +1,2 @@
 Piano Challenges
-build 2026-10-18 18:55 (timer dropdown: no timer / 20 / 10 / 5 s)
+build 2026-10-18 19:00 (picker above the game, settings window, no pop-ups)
