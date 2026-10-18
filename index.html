@@ -334,7 +334,8 @@ body{margin:0;padding:0;overflow:hidden}
 .nav-item:hover{color:var(--ink);background:var(--surface-2)}
 .nav-item[aria-current="page"]{background:var(--ink);color:var(--bg)}
 .side-nav{display:flex;flex-direction:column;gap:2px}
-.side-foot{margin-top:auto;display:flex;flex-direction:column;gap:2px;padding-top:10px;border-top:1px solid var(--line)}
+.side .lvl-card{margin-top:auto}
+.side-foot{display:flex;flex-direction:column;gap:2px;padding-top:10px;border-top:1px solid var(--line)}
 .side-foot .lang{margin:6px 10px;align-self:flex-start}
 /* collapsed rail */
 /* Level card with character */
@@ -386,7 +387,7 @@ body{margin:0;padding:0;overflow:hidden}
 .picker .how-btn{margin-left:auto;padding:5px}
 .picker .how-btn span{display:none}
 .picker .how-btn svg{width:20px;height:20px}
-.dtl{list-style:none;margin:0;padding:12px 8px 10px;display:grid;grid-auto-flow:column;grid-auto-columns:minmax(78px,1fr);gap:0;background:var(--surface);border:1px solid var(--line);border-radius:14px;overflow-x:auto;scrollbar-width:thin}
+.dtl{list-style:none;margin:0;padding:10px 6px 8px;display:grid;grid-auto-flow:column;grid-auto-columns:minmax(0,1fr);gap:0;background:var(--surface);border:1px solid var(--line);border-radius:14px;overflow:hidden}
 .dtl li{position:relative;display:flex;flex-direction:column;align-items:center;gap:4px;text-align:center;min-width:0;padding:0 4px}
 .dtl li::before{content:"";position:absolute;top:15px;left:-50%;width:100%;height:3px;background:var(--line);z-index:0}
 .dtl li:first-child::before{display:none}
@@ -397,9 +398,8 @@ body{margin:0;padding:0;overflow:hidden}
 .dtl li.good .dot{border-color:var(--good);background:var(--good);color:#fff}
 .dtl li.warn .dot{border-color:var(--warn);background:var(--warn);color:#fff}
 .dtl li.bad .dot{border-color:var(--bad);background:var(--bad);color:#fff}
-.dtl .st-sec{font-size:.66rem;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);white-space:nowrap}
-.dtl .st-name{font-family:var(--f-display);font-weight:700;font-size:.8rem;line-height:1.15;max-width:100%;overflow:hidden;text-overflow:ellipsis;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
-.dtl li.todo .st-name{color:var(--muted);font-weight:500}
+.dtl .st-ic{display:block;width:18px;height:18px;color:var(--muted)} .dtl .st-ic svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.dtl li.cur .st-ic{color:var(--accent)} .dtl li.good .st-ic{color:var(--good)} .dtl li.warn .st-ic{color:var(--warn)} .dtl li.bad .st-ic{color:var(--bad)}
 .dtl li.finish .dot{border-style:dashed}
 .rank-list{list-style:none;margin:0 0 14px;padding:0;display:flex;flex-direction:column;gap:6px}
 .rank-list li{display:grid;grid-template-columns:36px 40px minmax(0,1fr) auto auto;align-items:center;gap:12px;padding:8px 12px;border-radius:10px;background:var(--surface-2)}
@@ -438,6 +438,18 @@ body{margin:0;padding:0;overflow:hidden}
 .acct-row input{flex:1;min-width:140px}
 .linkbtn{border:0;background:none;padding:0;color:var(--muted);text-decoration:underline;font-size:.82rem;align-self:flex-start}
 .rank-msg{margin:0 0 12px;color:var(--muted);font-size:.9rem}
+.pk-title{margin:0 6px 0 0;display:flex;align-items:center;gap:8px;font-family:var(--f-display);font-weight:800;font-size:1.15rem;letter-spacing:-.01em;white-space:nowrap}
+.pk-title svg{width:22px;height:22px;fill:none;stroke:var(--accent);stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+.legal-links{margin:6px 10px 0;font-size:.72rem;color:var(--muted)} .legal-links a{color:var(--muted)}
+.side.collapsed .legal-links{display:none}
+.dc-secs{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:8px}
+.dc-secs button{display:flex;align-items:center;gap:8px;border:1px solid var(--line);background:var(--surface-2);border-radius:10px;padding:10px;font-weight:700;text-align:left}
+.dc-secs button svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;flex:none}
+.dc-secs button[aria-pressed="true"]{background:var(--accent-soft);border-color:var(--accent);color:var(--ink)}
+.dc-secs button[aria-pressed="false"]{color:var(--muted)}
+.dc-secs button:disabled{opacity:.45;cursor:not-allowed}
+.photo{display:block;width:100%;height:100%;border-radius:50%;object-fit:cover}
+.lvl-chip{display:inline-flex;align-items:center;gap:4px;margin-left:8px;padding:1px 8px;border-radius:999px;background:var(--ink);color:var(--bg);font-family:var(--f-mono);font-size:.75rem;font-weight:500;vertical-align:middle}
 /* Characters + intro windows */
 .modal-sub{margin:2px 0 0;color:var(--muted);font-size:.88rem}
 .char-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px}
@@ -463,7 +475,7 @@ body{margin:0;padding:0;overflow:hidden}
 @media (max-width:640px), (max-height:520px) and (orientation:landscape){
   body.playing .dpanel .pane-head{display:none}
   body.playing .dtl{padding:8px 6px;grid-auto-columns:minmax(28px,1fr)}
-  body.playing .dtl :is(.st-sec,.st-name){display:none}
+  body.playing .dtl .st-ic{display:none}
   body.playing .dtl .dot{width:24px;height:24px;font-size:.7rem}
   body.playing .dtl li::before{top:11px}
 }
@@ -704,6 +716,7 @@ html.native .midi-body [data-i="midiHint"]{display:none}
       <button type="button" data-v="en">EN</button>
       <button type="button" data-v="fr">FR</button>
     </div>
+    <p class="legal-links"><a href="/mentions-legales.html" data-i="legalNotice"></a> · <a href="/confidentialite.html" data-i="privacy"></a></p>
     <button class="nav-item side-toggle" id="sideToggle" type="button" aria-controls="side"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14.5 6l-6 6 6 6M19 6v12"/></svg><span class="lbl" data-i="collapse"></span></button>
   </div>
 </aside>
@@ -711,6 +724,7 @@ html.native .midi-body [data-i="midiHint"]{display:none}
 <main class="main" id="main">
 <div class="wrap">
   <section class="picker" id="picker">
+    <h2 class="pk-title" id="secTitle"></h2>
     <div class="pk-field pk-typesel"><span class="pk-lbl" id="practiseLbl"></span>
       <div class="dd">
         <button class="dd-btn" id="typesBtn" type="button" aria-haspopup="true" aria-expanded="false" aria-controls="typesPop"><span id="typesSum"></span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 10l5 5 5-5"/></svg></button>
@@ -739,6 +753,7 @@ html.native .midi-body [data-i="midiHint"]{display:none}
   <section class="dpanel" id="dailyPanel" hidden>
     <div class="pane-head">
       <div><h2 data-i="dailyTitle"></h2><p id="dpSub"></p></div>
+      <button class="btn" id="dpCfg" type="button" data-i="dpChoose"></button>
       <button class="how-btn" type="button" data-intro="daily"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v5.5"/><circle cx="12" cy="7.8" r=".6"/></svg><span data-i="howBtn"></span></button>
       <button class="btn primary" id="dpStart" type="button"></button>
     </div>
@@ -843,6 +858,18 @@ html.native .midi-body [data-i="midiHint"]{display:none}
   <div class="modal-card wide">
     <div class="modal-head"><div><h2 id="charTitle" data-i="charTitle"></h2><p class="modal-sub" id="charSub"></p></div><button class="modal-close" type="button" data-close="charModal" aria-label="Close">×</button></div>
     <div class="modal-body"><div class="char-grid" id="charGrid"></div></div>
+  </div>
+</div>
+<div class="modal" id="dailyCfgModal" role="dialog" aria-modal="true" aria-labelledby="dcTitle" hidden>
+  <div class="modal-bg" data-close="dailyCfgModal"></div>
+  <div class="modal-card small">
+    <div class="modal-head"><h2 id="dcTitle" data-i="dpChoose"></h2><button class="modal-close" type="button" data-close="dailyCfgModal" aria-label="Close">×</button></div>
+    <div class="modal-body">
+      <div class="field"><span data-i="dcSecs"></span><div class="dc-secs" id="dcSecs"></div></div>
+      <div class="field"><span data-i="dcLen"></span><div class="seg" id="dcLen"><button type="button" data-v="5">5</button><button type="button" data-v="10">10</button><button type="button" data-v="15">15</button><button type="button" data-v="20">20</button></div></div>
+      <label class="check"><input type="checkbox" id="dcReview"> <span data-i="dcReview"></span></label>
+    </div>
+    <div class="modal-foot end-foot"><button class="btn primary" id="dcOk" type="button" data-i="dcApply"></button></div>
   </div>
 </div>
 <div class="modal" id="introModal" role="dialog" aria-modal="true" aria-labelledby="introTitle" hidden>
@@ -963,6 +990,8 @@ const TXT = {
     accuracy:"Précision", avgTime:"Temps moyen", xpWon:"XP gagnés", bestCombo:"Meilleur combo", toRework:"À retravailler", allPerfect:"Aucune erreur, bravo !",
     reworkBtn:"Retravailler mes erreurs", newGame:"Nouvelle partie", closeLbl:"Fermer", outOf:"exercices sans faute", nextReview:"Prochaine révision : ", tomorrow:"demain", inDays:n=>"dans "+n+" jours",
     secHarmony:"Harmonie", secProg:"Progressions", secEar:"Oreille", secGames:"Jeux", secRank:"Classement", secAccount:"Profil",
+    dpChoose:"Choisir les exercices", dcSecs:"Sections incluses", dcLen:"Nombre d'exercices", dcReview:"Inclure les exercices à revoir", dcApply:"Préparer mon entraînement",
+    legalNotice:"Mentions légales", privacy:"Confidentialité", consent:"En te connectant, tu acceptes la politique de confidentialité.",
     charMore:"Personnages", charTitle:"Les personnages",
     charSub:(nx,left)=>nx?"Encore "+left+" XP pour débloquer "+nx+".":"Tu as débloqué tous les personnages. Bravo !",
     charAt:(L,xp)=>"Niveau "+L+" · "+xp+" XP", charGot:"Débloqué ✓",
@@ -987,7 +1016,7 @@ const TXT = {
     loginWith:p=>"Continuer avec "+p, loginMail:"Continuer avec un e-mail",
     loginReady:"Connecte-toi pour sauvegarder ta progression, la retrouver sur ordinateur, iPhone et iPad, et entrer dans le classement.",
     emailPh:"ton@email.fr", sendCode:"Recevoir un code", codeSent:e=>"Code envoyé à "+e+" (regarde aussi les spams). Entre-le ci-dessus, ou clique sur le lien du mail.", codePh:"Code à 6 chiffres", verify:"Valider", changeMail:"Changer d'e-mail",
-    orLbl:"ou", appSoon:"Bientôt dans l'app", signedAs:e=>"Connecté : "+e, logout:"Se déconnecter", nameLbl:"Pseudo (visible dans le classement)", saveLbl:"Enregistrer", saved:"Enregistré ✓",
+    orLbl:"ou", appSoon:"Bientôt dans l'app", signedAs:e=>"Connecté : "+e, logout:"Se déconnecter", nameLbl:"Nom affiché (prénom et nom, visible dans le classement)", saveLbl:"Enregistrer", saved:"Enregistré ✓",
     cloudErr:"Connexion au serveur impossible pour l'instant.", badCode:"Code incorrect ou expiré.", tooMany:"Trop de tentatives, réessaie dans quelques minutes.",
     synced:"Progression sauvegardée en ligne ✓", rankEmpty:"Personne n'est encore classé. Connecte-toi pour être le premier !", rankErr:"Classement indisponible pour l'instant.", rankLoading:"Chargement…",
     rankSubIn:"Classement général par XP. Ton score se met à jour tout seul.",
@@ -1060,6 +1089,8 @@ const TXT = {
     accuracy:"Accuracy", avgTime:"Average time", xpWon:"XP earned", bestCombo:"Best combo", toRework:"To rework", allPerfect:"No mistakes, well done!",
     reworkBtn:"Rework my mistakes", newGame:"New game", closeLbl:"Close", outOf:"exercises without mistakes", nextReview:"Next review: ", tomorrow:"tomorrow", inDays:n=>"in "+n+" days",
     secHarmony:"Harmony", secProg:"Progressions", secEar:"Ear", secGames:"Games", secRank:"Leaderboard", secAccount:"Profile",
+    dpChoose:"Choose exercises", dcSecs:"Sections included", dcLen:"Number of exercises", dcReview:"Include exercises to review", dcApply:"Build my practice",
+    legalNotice:"Legal notice", privacy:"Privacy", consent:"By signing in you accept the privacy policy.",
     charMore:"Characters", charTitle:"Characters",
     charSub:(nx,left)=>nx?left+" XP to go to unlock "+nx+".":"You have unlocked every character. Well done!",
     charAt:(L,xp)=>"Level "+L+" · "+xp+" XP", charGot:"Unlocked ✓",
@@ -1084,7 +1115,7 @@ const TXT = {
     loginWith:p=>"Continue with "+p, loginMail:"Continue with email",
     loginReady:"Sign in to save your progress, find it on computer, iPhone and iPad, and join the leaderboard.",
     emailPh:"you@email.com", sendCode:"Get a code", codeSent:e=>"Code sent to "+e+" (check spam too). Enter it above, or click the link in the email.", codePh:"6-digit code", verify:"Confirm", changeMail:"Use another email",
-    orLbl:"or", appSoon:"Coming soon in the app", signedAs:e=>"Signed in: "+e, logout:"Sign out", nameLbl:"Nickname (shown on the leaderboard)", saveLbl:"Save", saved:"Saved ✓",
+    orLbl:"or", appSoon:"Coming soon in the app", signedAs:e=>"Signed in: "+e, logout:"Sign out", nameLbl:"Display name (first and last name, shown on the leaderboard)", saveLbl:"Save", saved:"Saved ✓",
     cloudErr:"Can't reach the server right now.", badCode:"Wrong or expired code.", tooMany:"Too many attempts, try again in a few minutes.",
     synced:"Progress saved online ✓", rankEmpty:"Nobody is ranked yet. Sign in to be the first!", rankErr:"Leaderboard unavailable right now.", rankLoading:"Loading…",
     rankSubIn:"Overall ranking by XP. Your score updates by itself.",
@@ -1888,10 +1919,12 @@ function dueItems(){
   return Object.entries(S.srs||{}).filter(([k,e])=>e.due<=today && typeDef(e.it.sec,e.it.tid) && typeOpenS(e.it.sec,e.it.tid))
     .sort((a,b)=>a[1].due.localeCompare(b[1].due)||a[1].box-b[1].box).map(([k,e])=>e.it);
 }
-function buildDaily(n=10){
+function dailySecs(){ const ch=S.settings.dailySecs; const ok=SECS.filter(sectionUsable); const sel=(ch&&ch.length?ch:SECS).filter(x=>ok.includes(x)); return sel.length?sel:ok; }
+function buildDaily(n=S.settings.dailyLen||10){
   const out=[], seen=new Set(), add=it=>{ const k=mkey(it); if(seen.has(k)) return false; seen.add(k); out.push(it); return true; };
-  dueItems().slice(0,6).forEach(add);
-  const secs=SECS.filter(sectionUsable), pools=Object.fromEntries(secs.map(sec=>[sec,poolFor(sec).sort(()=>Math.random()-.5).sort((a,b)=>mastI(a)-mastI(b))]));
+  const secs=dailySecs();
+  if(S.settings.dailyReview!==false) dueItems().filter(it=>secs.includes(it.sec)).slice(0,Math.ceil(n*.6)).forEach(add);
+  const pools=Object.fromEntries(secs.map(sec=>[sec,poolFor(sec).sort(()=>Math.random()-.5).sort((a,b)=>mastI(a)-mastI(b))]));
   let guard=0;
   while(out.length<n && guard++<200){ for(const sec of secs){ if(out.length>=n) break; const p=pools[sec]; while(p.length && !add(p.shift())); } }
   // mix sections so the same tab does not repeat back to back
@@ -1899,7 +1932,7 @@ function buildDaily(n=10){
 }
 function dailyPlan(fresh){
   const today=dayStr();
-  if(fresh || !S.dailyPlan || S.dailyPlan.date!==today){ S.dailyPlan={date:today, items:buildDaily(10).map(stripItem)}; save(); }
+  if(fresh || !S.dailyPlan || S.dailyPlan.date!==today){ S.dailyPlan={date:today, items:buildDaily().map(stripItem)}; save(); }
   return S.dailyPlan;
 }
 function startDaily(){
@@ -1985,7 +2018,7 @@ function renderDaily(){
   const today=dayStr(), done=S.daily&&S.daily.date===today, due=dueItems().length;
   $("dailyCard").classList.toggle("done",!!done);
   const run = game && game.daily;
-  $("dailySub").textContent = run ? t("dpRun")(Math.min(game.i,game.total-1)+1,game.total) : done ? t("dpDone")(S.daily.score) : t("dailySub")((S.dailyPlan&&S.dailyPlan.date===today?S.dailyPlan.items.length:10),due);
+  $("dailySub").textContent = run ? t("dpRun")(Math.min(game.i,game.total-1)+1,game.total) : done ? t("dpDone")(S.daily.score) : t("dailySub")((S.dailyPlan&&S.dailyPlan.date===today?S.dailyPlan.items.length:(S.settings.dailyLen||10)),due);
   if(page==="daily") renderDailyPanel();
 }
 function showScore(detailParts){
@@ -2163,7 +2196,9 @@ function renderTimeline(){
 function renderStatus(){
   const li=levelInfo(S.xp);
   $("lvlNum").textContent=li.L; $("mbLvl").textContent=li.L; $("lvlTitle").textContent=titleFor(li.L);
-  const ci=charIndex(li.L); if($("lvlAvatar").dataset.c!==String(ci)){ $("lvlAvatar").innerHTML=$("mbAv").innerHTML=avatarSVG(ci); $("lvlAvatar").dataset.c=ci; }
+  const ci=charIndex(li.L), ph=(typeof userPhoto==="function"&&userPhoto())||"", key=ph||String(ci);
+  if($("lvlAvatar").dataset.c!==key){ $("lvlAvatar").innerHTML=$("mbAv").innerHTML = ph ? photoImg(ph) : avatarSVG(ci); $("lvlAvatar").dataset.c=key; }
+  if(typeof user!=="undefined" && user) $("lvlTitle").textContent=myName();
   $("lvlAv").setAttribute("aria-label",titleFor(li.L)+" · "+t("charMore"));
   $("xpFill").style.width=(li.into/li.need*100)+"%"; $("xpTxt").textContent=li.into+" / "+li.need+" XP";
   const cEl=$("combo"), prevC=cEl.textContent; cEl.textContent="×"+combo;
@@ -2173,6 +2208,7 @@ function renderStatus(){
 }
 function renderTypes(){
   const sec=S.section, cfg=SEC[sec], box=$("types"); box.innerHTML="";
+  $("secTitle").innerHTML = SEC_ICON(sec)+"<span></span>"; $("secTitle").querySelector("span").textContent = t({scales:"secScales",chords:"secChords",harmony:"secHarmony",prog:"secProg",ear:"secEar"}[sec]);
   $("practiseLbl").textContent = {scales:t("practiseS"),chords:t("practiseC"),harmony:t("practiseH"),prog:t("practiseP"),ear:t("practiseE")}[sec];
   typeList(sec).forEach(ty=>{
     const b=document.createElement("button"); b.type="button";
@@ -2342,21 +2378,19 @@ function renderDailyPanel(){
   const curI = run ? game.i : -1;
   const dateTxt = new Date().toLocaleDateString(S.settings.lang==="fr"?"fr-FR":"en-GB",{weekday:"long",day:"numeric",month:"long"});
   $("dpSub").textContent = run ? t("dpRun")(Math.min(game.i,game.total-1)+1,game.total) : done ? t("dpDone")(S.daily.score) : t("dpSubTxt")(dateTxt.charAt(0).toUpperCase()+dateTxt.slice(1), plan.items.length, dueItems().length);
-  $("dpStart").hidden = !!run; $("dpStart").textContent = done ? t("dailyAgain") : t("dailyStart");
+  $("dpStart").hidden = !!run; $("dpCfg").hidden = !!run; $("dpStart").textContent = done ? t("dailyAgain") : t("dailyStart");
   const ol=$("dTimeline"); ol.innerHTML="";
   const check='<svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>', cross='<svg viewBox="0 0 24 24"><path d="M12 7v6M12 17v.5"/></svg>';
   shown.items.forEach((it,i)=>{ const li=document.createElement("li"), lv=levels[i];
     li.className = lv ? lv : i===curI ? "cur" : "todo";
-    li.innerHTML='<span class="dot"></span><span class="st-sec"></span><span class="st-name"></span>';
+    li.innerHTML='<span class="dot"></span><span class="st-ic">'+SEC_ICON(it.sec)+'</span>';
     li.querySelector(".dot").innerHTML = lv==="good" ? check : lv ? cross : String(i+1);
-    li.querySelector(".st-sec").textContent=t("secShort")[it.sec]||"";
     const show = lv || i===curI || (done && !run);
-    li.querySelector(".st-name").textContent = show ? (it.sec==="ear" && !lv ? t("dpHidden") : itemName(it)) : t("dpHidden");
-    li.title = show ? itemName(it) : "";
+    li.title = (t("secShort")[it.sec]||"") + (show && !(it.sec==="ear" && !lv) ? " · "+itemName(it) : "");
     ol.appendChild(li); });
   const fin=document.createElement("li"); fin.className="finish "+(done&&!run?"good":"todo");
-  fin.innerHTML='<span class="dot">'+(done&&!run?check:'<svg viewBox="0 0 24 24"><path d="M6 20V4M6 4h11l-2.5 4L17 12H6"/></svg>')+'</span><span class="st-sec"></span><span class="st-name"></span>';
-  fin.querySelector(".st-name").textContent=t("dpFinish"); ol.appendChild(fin);
+  fin.innerHTML='<span class="dot">'+(done&&!run?check:'<svg viewBox="0 0 24 24"><path d="M6 20V4M6 4h11l-2.5 4L17 12H6"/></svg>')+'</span>';
+  fin.title=t("dpFinish"); ol.appendChild(fin);
   const c=ol.querySelector(".cur"); if(c) c.scrollIntoView({block:"nearest",inline:"center"});
 }
 // ---------- Accounts, sync and leaderboard (Supabase) ----------
@@ -2377,9 +2411,9 @@ async function initCloud(){
   }catch(e){ cloudFail=true; }
   if(page==="account") renderAccount(); if(page==="rank") renderRank();
 }
-const myName = () => S.profileName || (user && ((user.user_metadata&&(user.user_metadata.full_name||user.user_metadata.name)) || (user.email||"").split("@")[0])) || t("you");
+const myName = () => S.profileName || (user && ((user.user_metadata&&(user.user_metadata.full_name||user.user_metadata.name||[user.user_metadata.given_name,user.user_metadata.family_name].filter(Boolean).join(" "))) || (user.email||"").split("@")[0])) || t("you");
 async function setUser(u){
-  user=u;
+  user=u; renderStatus();
   if(u){ try{ await cloudPull(); }catch(e){} }
   if(page==="account") renderAccount(); if(page==="rank") renderRank();
 }
@@ -2399,21 +2433,22 @@ async function cloudPushNow(){
   if(!sb||!user) return;
   const li=levelInfo(S.xp), solved=Object.values(S.secStats||{}).reduce((a,x)=>a+(x.ok||0),0), now=new Date().toISOString();
   const r1=await sb.from("progress").upsert({user_id:user.id, data:S, updated_at:now});
-  const r2=await sb.from("profiles").upsert({id:user.id, name:myName().slice(0,24), avatar:charIndex(li.L), xp:S.xp, level:li.L, streak:S.streak.days, solved, updated_at:now});
+  const r2=await sb.from("profiles").upsert({id:user.id, name:myName().slice(0,24), avatar:charIndex(li.L), photo:userPhoto()||null, xp:S.xp, level:li.L, streak:S.streak.days, solved, updated_at:now});
   if(r1.error||r2.error) throw (r1.error||r2.error);
 }
 function authMsg(err){ const m=(err&&err.message||"").toLowerCase(); return m.includes("rate")||m.includes("too many") ? t("tooMany") : m.includes("token")||m.includes("otp")||m.includes("expired")||m.includes("invalid") ? t("badCode") : (err&&err.message)||t("cloudErr"); }
 async function renderRank(){
   const li=levelInfo(S.xp), ol=$("rankList"); ol.innerHTML="";
   const row=(r,rk,me)=>{ const el=document.createElement("li"); if(me) el.className="me";
-    el.innerHTML='<span class="rk"></span><span class="av">'+avatarSVG(Math.max(0,Math.min(9,r.avatar|0)))+'</span><span><b></b><small></small></span><span class="num"></span><span class="num"></span>';
+    const okPhoto = r.photo && /^https:\/\//.test(r.photo);
+    el.innerHTML='<span class="rk"></span><span class="av">'+(okPhoto?photoImg(r.photo):avatarSVG(Math.max(0,Math.min(9,r.avatar|0))))+'</span><span><b></b><small></small></span><span class="num"></span><span class="num"></span>';
     el.querySelector(".rk").textContent=rk; el.querySelector("b").textContent=r.name; el.querySelector("small").textContent=t("acctLevel")+" "+r.level+" · "+t("chars")[Math.max(0,Math.min(9,r.avatar|0))][0];
     const n=el.querySelectorAll(".num"); n[0].textContent=r.xp+" XP"; n[1].textContent="🔥 "+r.streak+" "+t("day"); return el; };
   const cta=document.querySelector(".rank-cta"); cta.hidden=!!user;
   $("rankPanel").querySelector(".pane-head p").textContent = user ? t("rankSubIn") : t("rankSub");
   if(!sb){ ol.appendChild(row({name:t("you"),avatar:charIndex(li.L),level:li.L,xp:S.xp,streak:S.streak.days},"—",true)); if(cloudFail){ const p=document.createElement("p"); p.className="rank-msg"; p.textContent=t("rankErr"); ol.prepend(p); } return; }
   const wait=document.createElement("p"); wait.className="rank-msg"; wait.textContent=t("rankLoading"); ol.appendChild(wait);
-  const {data,error}=await Promise.race([sb.from("profiles").select("id,name,avatar,xp,level,streak").order("xp",{ascending:false}).limit(50), new Promise(r=>setTimeout(()=>r({data:null,error:{message:"timeout"}}),10000))]);
+  const {data,error}=await Promise.race([sb.from("profiles").select("id,name,avatar,photo,xp,level,streak").order("xp",{ascending:false}).limit(50), new Promise(r=>setTimeout(()=>r({data:null,error:{message:"timeout"}}),10000))]);
   if(page!=="rank") return;
   ol.innerHTML="";
   if(error){ const p=document.createElement("p"); p.className="rank-msg"; p.textContent=t("rankErr"); ol.appendChild(p); }
@@ -2424,8 +2459,10 @@ async function renderRank(){
 function renderAccount(){
   const li=levelInfo(S.xp), ci=charIndex(li.L), c=t("chars")[ci];
   const solved=Object.values(S.secStats||{}).reduce((a,x)=>a+(x.ok||0),0);
-  const box=$("acctMe"); box.innerHTML='<div class="acct-top"><span class="av">'+avatarSVG(ci)+'</span><div><b></b><small></small></div></div><div class="acct-stats"></div>';
-  box.querySelector("b").textContent = user ? myName() : c[0]+" "+c[1]; box.querySelector("small").textContent=c[0]+" · "+c[2]+" · "+t("acctLevel")+" "+li.L;
+  const ph=userPhoto();
+  const box=$("acctMe"); box.innerHTML='<div class="acct-top"><span class="av">'+(ph?photoImg(ph):avatarSVG(ci))+'</span><div><b><span class="nm"></span><span class="lvl-chip"></span></b><small></small></div></div><div class="acct-stats"></div>';
+  box.querySelector(".nm").textContent = user ? myName() : c[0]+" "+c[1]; box.querySelector(".lvl-chip").textContent=t("acctLevel")+" "+li.L;
+  box.querySelector("small").textContent=c[0]+" "+c[1]+" · "+c[2];
   const st=box.querySelector(".acct-stats");
   [[t("acctXp"),S.xp],[t("acctStreak"),S.streak.days+" "+t("day")],[t("acctDone"),solved],[t("acctLevel"),li.L]].forEach(([k,v])=>{ const d=document.createElement("div"); d.className="end-stat"; d.innerHTML="<span></span><b></b>"; d.querySelector("span").textContent=k; d.querySelector("b").textContent=v; st.appendChild(d); });
   $("accountPanel").querySelector(".pane-head p").textContent = user ? t("synced") : t("acctSub");
@@ -2439,7 +2476,7 @@ function renderAccount(){
     const inp=document.createElement("input"); inp.type="text"; inp.maxLength=24; inp.value=myName(); row.appendChild(inp);
     const sv=document.createElement("button"); sv.className="btn primary"; sv.type="submit"; sv.textContent=t("saveLbl"); row.appendChild(sv);
     const m=h("p","", "msg");
-    f.onsubmit=async e=>{ e.preventDefault(); const v=inp.value.trim().slice(0,24); if(!v) return; S.profileName=v; save(); try{ await cloudPushNow(); m.className="msg ok"; m.textContent=t("saved"); }catch(err){ m.className="msg err"; m.textContent=t("cloudErr"); } };
+    f.onsubmit=async e=>{ e.preventDefault(); const v=inp.value.trim().slice(0,24); if(!v) return; S.profileName=v; save(); renderStatus(); try{ await cloudPushNow(); m.className="msg ok"; m.textContent=t("saved"); box.querySelector(".nm").textContent=v; }catch(err){ m.className="msg err"; m.textContent=t("cloudErr"); } };
     const lo=h("button",t("logout"),"btn"); lo.type="button"; lo.onclick=async()=>{ await sb.auth.signOut(); };
     return;
   }
@@ -2469,6 +2506,7 @@ function renderAccount(){
   prov(t("loginWith")("Google"), async()=>{ const {error}=await sb.auth.signInWithOAuth({provider:"google",options:{redirectTo:location.origin+location.pathname}}); if(error){ loginStep.msg=authMsg(error); loginStep.err=true; renderAccount(); } }, isApp()?t("appSoon"):null);
   prov(t("loginWith")("Apple"), null, t("soon"));
   prov(t("loginWith")("Facebook"), null, t("soon"));
+  const cs=h("p","", "msg"); cs.innerHTML='<a href="/confidentialite.html"></a>'; cs.querySelector("a").textContent=t("consent");
 }
 // ---- simple windows: characters + intros
 const openMods=[];
@@ -2487,6 +2525,23 @@ function openChars(){
   openMod("charModal");
 }
 ["lvlAv","charMore","mbLvlBtn"].forEach(id=>$(id).addEventListener("click",openChars));
+let dcSel=null, dcLenV=10, dcRev=true;
+function renderDailyCfg(){
+  const ok=SECS.filter(sectionUsable), box=$("dcSecs"); box.innerHTML="";
+  SECS.forEach(sec=>{ const b=document.createElement("button"); b.type="button"; b.disabled=!ok.includes(sec);
+    b.setAttribute("aria-pressed", dcSel.includes(sec)&&ok.includes(sec)); b.innerHTML=SEC_ICON(sec)+"<span></span>";
+    b.querySelector("span").textContent=t({scales:"secScales",chords:"secChords",harmony:"secHarmony",prog:"secProg",ear:"secEar"}[sec]);
+    b.onclick=()=>{ const i=dcSel.indexOf(sec); if(i>=0){ if(dcSel.filter(x=>ok.includes(x)).length>1) dcSel.splice(i,1); } else dcSel.push(sec); renderDailyCfg(); };
+    box.appendChild(b); });
+  $("dcLen").querySelectorAll("button").forEach(b=>b.setAttribute("aria-pressed", +b.dataset.v===dcLenV));
+  $("dcReview").checked=dcRev;
+}
+$("dpCfg").addEventListener("click",()=>{ dcSel=[...dailySecs()]; dcLenV=S.settings.dailyLen||10; dcRev=S.settings.dailyReview!==false; renderDailyCfg(); openMod("dailyCfgModal"); });
+$("dcLen").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; dcLenV=+b.dataset.v; renderDailyCfg(); });
+$("dcReview").addEventListener("change",e=>{ dcRev=e.target.checked; });
+$("dcOk").addEventListener("click",()=>{ S.settings.dailySecs=SECS.filter(x=>dcSel.includes(x)); S.settings.dailyLen=dcLenV; S.settings.dailyReview=dcRev; save(); closeMod("dailyCfgModal"); if(!(game&&game.daily)){ dailyPlan(true); renderDaily(); } });
+const userPhoto = () => user && user.user_metadata && (user.user_metadata.avatar_url || user.user_metadata.picture) || "";
+const photoImg = url => '<img class="photo" alt="" referrerpolicy="no-referrer" src="'+String(url).replace(/"/g,"&quot;")+'">';
 function showIntro(key){
   const k = key==="section" ? (page==="practice"?S.section:page) : key, d=t("intro")[k]; if(!d) return;
   S.introSeen=S.introSeen||{}; S.introSeen[k]=true; save();
