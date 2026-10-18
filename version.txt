@@ -1,2 +1,2 @@
 Piano Challenges
-build 2026-10-18 18:40 (score box always beside the prompt)
+build 2026-10-18 18:50 (MIDI window, 3-octave keyboard, progressive answer, wider layout)
