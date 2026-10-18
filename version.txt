@@ -1,2 +1,2 @@
 Piano Challenges
-build 2026-10-18 18:12 (MIDI: play C to start, MIDI sound on)
+build 2026-10-18 18:25 (logo, home link, C to continue, auto-advance option, difficulty presets, untimed by default)

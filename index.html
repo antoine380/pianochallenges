@@ -73,10 +73,16 @@ button:focus-visible, select:focus-visible, input:focus-visible, summary:focus-v
 .mono{font-family:var(--f-mono);font-variant-numeric:tabular-nums}
 
 /* Status strip */
-.top{display:flex;flex-wrap:wrap;align-items:center;gap:10px 20px;justify-content:space-between}
-.brand-row{display:flex;align-items:center;gap:12px}
-.brand{font-family:var(--f-display);font-weight:800;font-size:1.35rem;letter-spacing:-.01em;margin:0}
-.brand span{color:var(--accent)}
+.top{display:flex;flex-wrap:wrap;align-items:center;gap:10px 14px}
+.brand-h{margin:0 auto 0 0;font-size:inherit}
+.brand{display:inline-flex;align-items:center;gap:11px;text-decoration:none;color:var(--ink);border-radius:12px}
+.brand:hover .wm-b{text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:4px}
+.mark{width:40px;height:40px;flex:none}
+.m-bg{fill:var(--ink)} .m-wk{fill:var(--bg)} .m-hit{fill:var(--accent)} .m-bk{fill:var(--ink)}
+.wm{display:flex;flex-direction:column;line-height:.95;font-family:var(--f-display)}
+.wm-a{font-weight:800;font-size:1.32rem;letter-spacing:-.02em}
+.wm-b{font-weight:700;font-size:.98rem;letter-spacing:.06em;text-transform:uppercase;color:var(--accent)}
+.tools{display:flex;align-items:center;gap:8px}
 .lang{display:flex;border:1px solid var(--line);border-radius:8px;overflow:hidden}
 .lang button{border:0;background:transparent;padding:3px 9px;font-family:var(--f-mono);font-size:.78rem}
 .lang button[aria-pressed="true"]{background:var(--ink);color:var(--bg)}
@@ -305,6 +311,10 @@ select{font:inherit;color:var(--ink);background:var(--surface-2);border:1px soli
 .types button:disabled{opacity:.5;cursor:not-allowed}
 .types button small{font-family:var(--f-mono);font-size:.68rem}
 .range-row{display:flex;align-items:center;gap:10px}
+.seg.diff{flex-wrap:wrap}
+.seg.diff button{display:flex;flex-direction:column;align-items:center;gap:0;padding:6px 4px;min-width:0}
+.seg.diff button b{font-weight:700;font-size:.82rem;white-space:nowrap}
+.seg.diff button small{font-family:var(--f-mono);font-size:.7rem;opacity:.75}
 .range-row input{flex:1;accent-color:var(--accent)}
 .check{display:flex;align-items:center;gap:8px;font-size:.9rem}
 .check input{accent-color:var(--accent);width:18px;height:18px;flex:none}
@@ -320,7 +330,9 @@ select{font:inherit;color:var(--ink);background:var(--surface-2);border:1px soli
   body{padding-block:12px calc(104px + env(safe-area-inset-bottom, 0px))}
   .wrap{gap:12px}
   .top{gap:8px}
-  .brand{font-size:1.15rem}
+  .mark{width:34px;height:34px}
+  .wm-a{font-size:1.12rem}
+  .wm-b{font-size:.82rem}
   .status{width:100%;justify-content:space-between;gap:8px}
   .lvl-card{padding:6px 10px 6px 6px}
   .stat{padding-left:10px}
@@ -356,8 +368,18 @@ select{font:inherit;color:var(--ink);background:var(--surface-2);border:1px soli
 
 <div class="wrap">
   <header class="top">
-    <div class="brand-row">
-      <h1 class="brand">Piano<span>·</span>Challenges</h1>
+    <h1 class="brand-h"><a class="brand" href="/" id="homeLink" aria-label="Piano Challenges">
+      <svg class="mark" viewBox="0 0 40 40" aria-hidden="true">
+        <rect class="m-bg" width="40" height="40" rx="11"/>
+        <rect class="m-wk" x="7" y="9" width="8" height="23" rx="2.2"/>
+        <rect class="m-hit" x="16" y="9" width="8" height="23" rx="2.2"/>
+        <rect class="m-wk" x="25" y="9" width="8" height="23" rx="2.2"/>
+        <rect class="m-bk" x="12.3" y="9" width="5.4" height="13.5" rx="1.4"/>
+        <rect class="m-bk" x="22.3" y="9" width="5.4" height="13.5" rx="1.4"/>
+      </svg>
+      <span class="wm"><span class="wm-a">Piano</span><span class="wm-b">Challenges</span></span>
+    </a></h1>
+    <div class="tools">
       <div class="lang" id="langSeg" role="group" aria-label="Langue / Language">
         <button type="button" data-v="en">EN</button>
         <button type="button" data-v="fr">FR</button>
@@ -481,7 +503,15 @@ select{font:inherit;color:var(--ink);background:var(--surface-2);border:1px soli
             <button type="button" data-v="0">∞</button>
           </div>
         </div>
-        <div class="field" id="delayField"><span data-i="answerAfter"></span>
+        <div class="field" id="delayField"><span data-i="difficulty"></span>
+          <div class="seg diff" id="segDiff">
+            <button type="button" data-v="0"><b data-i="dFree"></b><small>∞</small></button>
+            <button type="button" data-v="15"><b data-i="dEasy"></b><small>15 s</small></button>
+            <button type="button" data-v="10"><b data-i="dMedium"></b><small>10 s</small></button>
+            <button type="button" data-v="5"><b data-i="dHard"></b><small>5 s</small></button>
+            <button type="button" data-v="3"><b data-i="dExpert"></b><small>3 s</small></button>
+          </div>
+          <p class="hint" data-i="answerAfter"></p>
           <div class="range-row">
             <input type="range" id="delay" min="0" max="20" step="1">
             <output class="mono" id="delayOut"></output>
@@ -504,6 +534,7 @@ select{font:inherit;color:var(--ink);background:var(--surface-2);border:1px soli
         </div>
         <label class="check" id="octField"><input type="checkbox" id="optOct"> <span data-i="optOct"></span></label>
         <label class="check"><input type="checkbox" id="optLabels"> <span data-i="optLabels"></span></label>
+        <label class="check"><input type="checkbox" id="optAuto"> <span data-i="optAuto"></span></label>
         <label class="check"><input type="checkbox" id="optMidiSound"> <span data-i="optMidiSound"></span></label>
         <label class="check"><input type="checkbox" id="optAll"> <span data-i="optAll"></span></label>
         <button class="danger" id="resetBtn" type="button"></button>
@@ -584,14 +615,15 @@ const TXT = {
     inOrder:"À la suite", random:"Aléatoire", sig:"armure", noAcc:"ni ♯ ni ♭", notes:"notes",
     perfect:"Parfait !", errors:n=>n+" faute"+(n>1?"s":""), inSecs:" en ", correct:"notes justes", missed:n=>n+" manquée"+(n>1?"s":""), missedP:n=>n+" manqué"+(n>1?"s":""), session:"Partie", scalesWord:n=>n+" gamme"+(n>1?"s":""),
     start:"Commencer", giveUp:"Je sèche, montrer", knew:"Continuer", review:"Réessayer", replay:"Écouter la gamme", next:"Suivante",
-    midiStartTip:"Jouez un Do sur votre clavier MIDI pour commencer.", screenKeys:"Clavier à l'écran", midiOff:"Activer le MIDI", micOff:"Activer le micro", midiNone:"MIDI : aucun appareil", midiDev:"MIDI : ",
+    midiStartTip:"Jouez un Do sur votre clavier MIDI pour commencer, puis pour continuer.", screenKeys:"Clavier à l'écran", midiOff:"Activer le MIDI", micOff:"Activer le micro", midiNone:"MIDI : aucun appareil", midiDev:"MIDI : ",
     midiBlocked:"MIDI bloqué", midiNo:"MIDI non pris en charge", micOn:"Micro : à l'écoute", micBlocked:"Micro bloqué",
     blocked:"Le navigateur a refusé l'accès. Cliquez sur le cadenas à gauche de l'adresse du site pour autoriser le micro ou le MIDI, puis réessayez. Dans l'aperçu claude.ai, ils sont toujours bloqués : utilisez pianochallenges.com.",
     midiUnsupported:"Ce navigateur ne gère pas le MIDI (c'est le cas de Safari et de l'iPhone). Utilisez Chrome ou Edge, ou le micro.",
     kbdHint:"Clavier d'ordinateur : rangée Q S D F G H J K pour les touches blanches, rangée du dessus pour les noires. Espace : révéler / suivant · Entrée (ou un Do au clavier MIDI) : continuer · ⌫ : réessayer.",
-    progress:"Progression", viewLabel:"Afficher", settings:"Réglages", practise:"Gammes travaillées", order:"Ordre", answerAfter:"Réponse donnée après",
+    progress:"Progression", viewLabel:"Afficher", settings:"Réglages", practise:"Gammes travaillées", order:"Ordre", answerAfter:"Ou réglez le temps précis :",
     never:"jamais", notation:"Notation", direction:"Sens", optOct:"Finir sur l'octave", optLabels:"Noms des notes sur le clavier",
-    optMidiSound:"Jouer le son des notes MIDI", optAll:"Tout débloquer", reset:"Remettre la progression à zéro", confirmReset:"Confirmer : tout effacer ?",
+    difficulty:"Difficulté (temps pour jouer)", dFree:"Libre", dEasy:"Facile", dMedium:"Moyen", dHard:"Difficile", dExpert:"Expert", noTimer:"Sans chrono",
+    optAuto:"Passer automatiquement à l'exercice suivant", optMidiSound:"Jouer le son des notes MIDI", optAll:"Tout débloquer", reset:"Remettre la progression à zéro", confirmReset:"Confirmer : tout effacer ?",
     resetDone:"Progression remise à zéro", locked:"verrouillée", lvlShort:"Niv. ", level:"Niveau ", newScale:"Nouvelle gamme : ", newType:"Débloqué : ",
     lockedHint:n=>"Réussissez 3 fois une gamme sans faute pour remplir sa jauge et débloquer la suivante. Encore "+n+" à découvrir.",
     allOpen:"Les 12 tonalités de ce type sont ouvertes.", typeLocked:l=>"Ce type de gamme s'ouvre au niveau "+l+".",
@@ -637,14 +669,15 @@ const TXT = {
     inOrder:"In order", random:"Random", sig:"key signature", noAcc:"no ♯ or ♭", notes:"notes",
     perfect:"Perfect!", errors:n=>n+" mistake"+(n>1?"s":""), inSecs:" in ", correct:"correct notes", missed:n=>n+" missed", missedP:n=>n+" missed", session:"Session", scalesWord:n=>n+" scale"+(n>1?"s":""),
     start:"Start", giveUp:"Show me", knew:"Continue", review:"Retry", replay:"Listen to the scale", next:"Next",
-    midiStartTip:"Play a C on your MIDI keyboard to start.", screenKeys:"On-screen keys", midiOff:"Enable MIDI", micOff:"Enable mic", midiNone:"MIDI: no device", midiDev:"MIDI: ",
+    midiStartTip:"Play a C on your MIDI keyboard to start, and again to continue.", screenKeys:"On-screen keys", midiOff:"Enable MIDI", micOff:"Enable mic", midiNone:"MIDI: no device", midiDev:"MIDI: ",
     midiBlocked:"MIDI blocked", midiNo:"MIDI not supported", micOn:"Mic: listening", micBlocked:"Mic blocked",
     blocked:"The browser refused access. Click the padlock left of the site address to allow the mic or MIDI, then try again. Inside the claude.ai preview they are always blocked: use pianochallenges.com.",
     midiUnsupported:"This browser has no MIDI support (Safari and iPhone don't). Use Chrome or Edge, or the mic.",
     kbdHint:"Computer keyboard: A S D F G H J K row for white keys, the row above for black keys. Space: reveal / next · Enter: continue · ⌫: retry.",
-    progress:"Progress", viewLabel:"Show", settings:"Settings", practise:"Scales to practise", order:"Order", answerAfter:"Answer shown after",
+    progress:"Progress", viewLabel:"Show", settings:"Settings", practise:"Scales to practise", order:"Order", answerAfter:"Or set the exact time:",
     never:"never", notation:"Note names", direction:"Direction", optOct:"End on the octave", optLabels:"Note names on the keys",
-    optMidiSound:"Play sound for MIDI notes", optAll:"Unlock everything", reset:"Reset progress", confirmReset:"Confirm: erase everything?",
+    difficulty:"Difficulty (time to play)", dFree:"Free", dEasy:"Easy", dMedium:"Medium", dHard:"Hard", dExpert:"Expert", noTimer:"No timer",
+    optAuto:"Move on to the next exercise automatically", optMidiSound:"Play sound for MIDI notes", optAll:"Unlock everything", reset:"Reset progress", confirmReset:"Confirm: erase everything?",
     resetDone:"Progress reset", locked:"locked", lvlShort:"Lvl ", level:"Level ", newScale:"New scale: ", newType:"Unlocked: ",
     lockedHint:n=>"Play a scale 3 times without mistakes to fill its gauge and unlock the next one. "+n+" left to discover.",
     allOpen:"All 12 keys of this type are open.", typeLocked:l=>"This scale type opens at level "+l+".",
@@ -860,7 +893,7 @@ const STORE="memo-gammes-v1";
 let firstVisit=false;
 const DEFAULTS={xp:0, mastery:{}, stats:{ok:0,perfect:0,revealed:0,errors:0}, streak:{days:0,last:""}, suiteIdx:0, csuiteIdx:0,
   seenTypes:["major","minor","chords:maj","chords:min"], langV2:true, secStats:{}, srs:{}, daily:{}, section:"scales",
-  settings:{lang:"en", mode:"suite", delay:5, notation:"en", dir:"up", octave:true, labels:false, midiSound:true, unlockAll:false,
+  settings:{lang:"en", mode:"suite", delay:0, notation:"en", dir:"up", octave:true, labels:false, midiSound:true, autoNext:true, unlockAll:false,
     types:["major"], view:"major", ctypes:["maj"], cview:"maj", invs:[0],
     htypes:["maj"], hview:"maj", hdegs:[0,1,2,3,4,5,6], ptypes:["p145","pop"], pview:"pop", vl:false, etypes:["chord","int"], eview:"chord", earV2:true, gameLen:10}};
 const SECS=["scales","chords","harmony","prog","ear"];
@@ -882,6 +915,7 @@ function load(){
     s.seenTypes=s.seenTypes.map(x=>x.startsWith("ch:")?"chords:"+x.slice(3):x);
     if(!d.secStats){ s.secStats={scales:{...DEFAULTS.stats,...(d.stats||{})}}; }
     if(!s.settings.earV2){ s.settings.eview="chord"; s.settings.etypes=EARCATS.map(c=>c.id).filter(id=>s.settings.etypes.includes(id)); s.settings.earV2=true; }
+    if(!s.settings.diffV2){ s.settings.delay=0; s.settings.diffV2=true; }
     if(!s.settings.midiV2){ s.settings.midiSound=true; s.settings.midiV2=true; }
     if(!s.langV2){ s.settings.lang="en"; s.settings.notation="en"; s.langV2=true; }
     return s; } }catch(e){}
@@ -1130,11 +1164,12 @@ function tick(){
   }
   raf=requestAnimationFrame(tick);
 }
-// a C on the MIDI keyboard starts the game, skips the pause after a success, or starts a new game from the summary
+// a C on the MIDI keyboard starts the game, continues after an answer, or starts a new game from the summary
 function midiStart(note){
   if(note%12!==0 || helpOpen) return false;
   if(endOpen){ closeEnd(); startRound(); return true; }
   if(phase==="idle" || phase==="success"){ startRound(); return true; }
+  if(phase==="revealed"){ grade(true); return true; }
   return false;
 }
 // MIDI notes that arrive together (a block chord) are processed lowest first
@@ -1197,7 +1232,7 @@ function success(){
   else showScore([perfect?t("perfect"):t("errors")(errors), "+"+gain+" XP", secs.toFixed(1).replace(".",sep)+" s"]);
   if(cur.sec==="ear") showEarKeys();
   render();
-  advanceTimer=setTimeout(()=>{ if(phase==="success" && !endOpen && !helpOpen) startRound(); }, cur.sec==="ear"?1900:1700);
+  if(S.settings.autoNext!==false) advanceTimer=setTimeout(()=>{ if(phase==="success" && !endOpen && !helpOpen) startRound(); }, cur.sec==="ear"?1900:1700);
 }
 function revealMidis(){
   // the answer as one ascending run, shifted by octaves to sit inside the visible keyboard
@@ -1246,6 +1281,10 @@ function reveal(auto){
   if(cur.sec==="ear") showEar(false,0);
   else showScore([seq.length-idx?(cur.sec==="prog"?t("missedP"):t("missed"))(seq.length-idx):"", errors?t("errors")(errors):""]);
   render();
+  if(S.settings.autoNext!==false){
+    const playMs = cur.sec==="prog" ? seq.length*1100+600 : cur.sec==="ear" ? 2800 : (seq.length*300+1400);
+    advanceTimer=setTimeout(()=>{ if(phase==="revealed" && !endOpen && !helpOpen) grade(true); }, playMs+2500);
+  }
 }
 function earAnswer(id){
   if(phase!=="listening" || cur.sec!=="ear") return;
@@ -1377,7 +1416,7 @@ function renderGameBar(){
   end.hidden = !g; end.textContent=t("endGame");
   lbl.className="glbl"+(g&&g.daily?" is-daily":""); lbl.innerHTML="";
   const pre = g&&g.daily ? t("dailyLbl")+" · " : "";
-  if(!g){ lbl.textContent = isFinite(total) ? t("gameOf")(total) : t("endlessLbl"); }
+  if(!g){ lbl.textContent = (isFinite(total) ? t("gameOf")(total) : t("endlessLbl"))+" · "+diffLabel(); }
   else if(isFinite(total)){ lbl.append(pre+t("exercise")+" "); const b=document.createElement("b"); b.textContent=(Math.min(g.i,total-1)+1)+" / "+total; lbl.append(b); }
   else { lbl.append(t("endlessLbl")+" · "+t("exercise")+" "); const b=document.createElement("b"); b.textContent=g.i+1; lbl.append(b); }
   segs.innerHTML="";
@@ -1389,6 +1428,11 @@ function renderGameBar(){
     segs.hidden = !(g&&g.results.length);
     (g?g.results.slice(-20):[]).forEach(r=>{ const d=document.createElement("i"); if(r) d.className=r.level; segs.appendChild(d); });
   }
+}
+function diffLabel(){
+  const d=S.settings.delay, names={15:"dEasy",10:"dMedium",5:"dHard",3:"dExpert"};
+  if(!d) return t("noTimer");
+  return (names[d]?t(names[d])+" · ":"")+d+" s";
 }
 function renderDaily(){
   const today=dayStr(), done=S.daily&&S.daily.date===today, due=dueItems().length;
@@ -1512,10 +1556,11 @@ function renderActions(){
     if(k){ const kb=document.createElement("kbd"); kb.textContent=k; b.appendChild(kb); } b.onclick=fn; a.appendChild(b); };
   const sp=()=>{ const s=document.createElement("span"); s.className="spacer"; a.appendChild(s); };
   const space=S.settings.lang==="fr"?"Espace":"Space", enter=S.settings.lang==="fr"?"Entrée":"Enter";
-  if(phase==="idle") mk(t("start"),"primary big",()=>startRound(),space);
+  const cKey = midiReady ? "C" : null;
+  if(phase==="idle") mk(t("start"),"primary big",()=>startRound(),cKey||space);
   else if(phase==="listening" && cur.sec==="ear") mk(tx("replay"),"primary",()=>playScale(0),space);
   else if(phase==="listening") mk(t("giveUp"),"",()=>reveal(false),space);
-  else if(phase==="revealed"){ mk(tx("replay"),"",()=>playScale(0)); sp(); mk(t("review"),"",()=>grade(false),"⌫"); mk(t("knew"),"good",()=>grade(true),enter); }
+  else if(phase==="revealed"){ mk(tx("replay"),"",()=>playScale(0)); sp(); mk(t("review"),"",()=>grade(false),"⌫"); mk(t("knew"),"good",()=>grade(true),cKey||enter); }
   else if(phase==="success") mk(t("next"),"primary",()=>startRound(),space);
 }
 function renderPrompt(){
@@ -1639,9 +1684,9 @@ function renderMap(){
 }
 function renderSettings(){
   const set=(id,v)=>$(id).querySelectorAll("button").forEach(b=>b.setAttribute("aria-pressed",b.dataset.v===v));
-  set("segMode",S.settings.mode); set("segLen",String(S.settings.gameLen)); set("segNot",S.settings.notation); set("segDir",S.settings.dir); set("langSeg",S.settings.lang);
+  set("segMode",S.settings.mode); set("segDiff",String(S.settings.delay)); set("segLen",String(S.settings.gameLen)); set("segNot",S.settings.notation); set("segDir",S.settings.dir); set("langSeg",S.settings.lang);
   $("delay").value=S.settings.delay; $("delayOut").textContent=S.settings.delay?S.settings.delay+" s":t("never");
-  $("optOct").checked=S.settings.octave; $("optLabels").checked=S.settings.labels; $("optMidiSound").checked=S.settings.midiSound; $("optAll").checked=S.settings.unlockAll;
+  $("optOct").checked=S.settings.octave; $("optLabels").checked=S.settings.labels; $("optMidiSound").checked=S.settings.midiSound; $("optAuto").checked=S.settings.autoNext!==false; $("optAll").checked=S.settings.unlockAll;
   const sec=S.section;
   $("invField").hidden=sec!=="chords"; $("degField").hidden=sec!=="harmony"; $("vlField").hidden=sec!=="prog";
   $("dirField").hidden=sec!=="scales"; $("octField").hidden=sec!=="scales";
@@ -1657,21 +1702,32 @@ $("langSeg").addEventListener("click",e=>{ const b=e.target.closest("button"); i
   S.settings.lang=b.dataset.v; S.settings.notation=b.dataset.v; save(); applyStatic(); if(helpOpen) renderTut(); renderSettings(); labelKeys(); render(); renderDaily(); if(endOpen&&lastGame) openEnd(lastGame); });
 function bindSeg(id,key,restart){ $(id).addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return;
   S.settings[key]=b.dataset.v; save(); renderSettings(); labelKeys();
-  if(restart && cur && (phase==="listening"||phase==="revealed")) startRound(cur); else render(); }); }
+  if(restart && cur && (phase==="listening"||phase==="revealed")) startRound(cur,true); else render(); }); }
 bindSeg("segMode","mode",false);
 $("segLen").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; S.settings.gameLen=+b.dataset.v; save();
   if(game && !game.queue){ game.total=S.settings.gameLen||Infinity; if(game.i>=game.total) game.total=game.i+1; } renderSettings(); renderGameBar(); });
 $("gameEnd").addEventListener("click",()=>{ if(game){ clearTimeout(advanceTimer); cancelAnimationFrame(raf); clearPlayTimers(); if(game.results[game.i]==null) game.results.length=game.i; finishGame(); } });
 $("dailyBtn").addEventListener("click",startDaily);
+$("homeLink").addEventListener("click",e=>{ e.preventDefault(); goHome(); });
+function goHome(){
+  // back to the start screen: no game running, first tab, top of the page
+  clearTimeout(advanceTimer); cancelAnimationFrame(raf); clearPlayTimers(); closeEnd(); closeHelp();
+  game=null; phase="idle"; cur=null; seq=[]; found=[]; played=[]; idx=0; errors=0;
+  clearKeys(); $("stage").classList.remove("res-good","res-warn","res-bad");
+  if(S.section!=="scales"){ S.section="scales"; save(); if(narrowMQ.matches) buildKeyboard(); }
+  renderSettings(); render(); renderDaily(); window.scrollTo({top:0,behavior:"smooth"});
+}
 $("endX").addEventListener("click",closeEnd); $("endBg").addEventListener("click",closeEnd); bindSeg("segNot","notation",false); bindSeg("segDir","dir",true);
 $("viewSel").addEventListener("change",e=>{ S.settings[SEC[S.section].view]=e.target.value; save(); renderMap(); if(phase==="idle") renderSlots(); });
-$("optVL").addEventListener("change",e=>{ S.settings.vl=e.target.checked; save(); if(cur&&cur.sec==="prog"&&phase!=="idle") startRound({sec:cur.sec,tid:cur.tid,k:cur.k}); else render(); });
+$("optVL").addEventListener("change",e=>{ S.settings.vl=e.target.checked; save(); if(cur&&cur.sec==="prog"&&phase!=="idle") startRound({sec:cur.sec,tid:cur.tid,k:cur.k},true); else render(); });
 $("secTabs").addEventListener("click",e=>{ const b=e.target.closest("button"); if(b) switchSection(b.dataset.v); });
+$("segDiff").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; S.settings.delay=+b.dataset.v; save(); renderSettings(); if(phase==="listening") startRound(cur,true); else renderTimeline(); });
 $("delay").addEventListener("input",e=>{ S.settings.delay=+e.target.value; save(); renderSettings(); if(phase!=="listening") renderTimeline(); });
-$("delay").addEventListener("change",()=>{ if(phase==="listening") startRound(cur); });
-$("optOct").addEventListener("change",e=>{ S.settings.octave=e.target.checked; save(); if(cur&&phase!=="idle") startRound(cur); else render(); });
+$("delay").addEventListener("change",()=>{ if(phase==="listening") startRound(cur,true); });
+$("optOct").addEventListener("change",e=>{ S.settings.octave=e.target.checked; save(); if(cur&&phase!=="idle") startRound(cur,true); else render(); });
 $("optLabels").addEventListener("change",e=>{ S.settings.labels=e.target.checked; save(); labelKeys(); });
 $("optMidiSound").addEventListener("change",e=>{ S.settings.midiSound=e.target.checked; save(); });
+$("optAuto").addEventListener("change",e=>{ S.settings.autoNext=e.target.checked; save(); if(!e.target.checked) clearTimeout(advanceTimer); });
 $("optAll").addEventListener("change",e=>{ S.settings.unlockAll=e.target.checked; save(); renderSettings(); render(); });
 let resetArmed=false;
 $("resetBtn").addEventListener("click",e=>{
