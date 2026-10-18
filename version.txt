@@ -1,2 +1,2 @@
 Piano Challenges
-build 2026-10-18 18:50 (MIDI window, 3-octave keyboard, progressive answer, wider layout)
+build 2026-10-18 18:55 (timer dropdown: no timer / 20 / 10 / 5 s)
