@@ -74,7 +74,6 @@ button:focus-visible, select:focus-visible, input:focus-visible, summary:focus-v
 /* Status strip */
 .brand-h{margin:0 auto 0 0;font-size:inherit}
 .brand{display:inline-flex;align-items:center;gap:11px;text-decoration:none;color:var(--ink);border-radius:12px}
-.brand:hover .wm-b{text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:4px}
 .mark{width:40px;height:40px;flex:none}
 .m-bg{fill:var(--ink)} .m-wk{fill:var(--bg)} .m-hit{fill:var(--accent)} .m-bk{fill:var(--ink)}
 .wm{display:flex;flex-direction:column;line-height:.95;font-family:var(--f-display)}
@@ -201,7 +200,7 @@ button:focus-visible, select:focus-visible, input:focus-visible, summary:focus-v
 .segs i{flex:1;height:8px;border-radius:4px;background:var(--line);transition:background .3s}
 .segs i.good{background:var(--good)} .segs i.warn{background:var(--warn)} .segs i.bad{background:var(--bad)}
 .segs i.cur{background:var(--surface);box-shadow:inset 0 0 0 2px var(--accent)}
-.timer-sel{font:inherit;font-family:var(--f-mono);font-size:.78rem;padding:3px 8px;border-radius:7px;background:var(--surface-2);border:1px solid var(--line);color:var(--ink);cursor:pointer}
+.timer-sel{-webkit-appearance:none;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M7 10l5 5 5-5' fill='none' stroke='%235b6271' stroke-width='2.4' stroke-linecap='round'/%3E%3C/svg%3E")!important;background-repeat:no-repeat!important;background-position:right 5px center!important;background-size:14px!important;font:inherit;font-family:var(--f-mono);font-size:.78rem;padding:3px 22px 3px 9px;border-radius:7px;background:var(--surface-2);border:1px solid var(--line);color:var(--ink);cursor:pointer}
 .gamebar .gend{border:0;background:none;color:var(--muted);text-decoration:underline;font-size:.78rem;padding:0}
 .end-hero{display:flex;align-items:center;gap:18px;flex-wrap:wrap}
 .end-big{font-family:var(--f-display);font-weight:800;font-size:3.2rem;line-height:1;font-variant-numeric:tabular-nums}
@@ -380,14 +379,14 @@ body{margin:0;padding:0;overflow:hidden}
 .pane,.dpanel{flex:none;display:flex;flex-direction:column;gap:12px}
 .pane-head{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
 .pane-head > div{flex:1;min-width:200px}
-.pane-head h2{font-family:var(--f-display);font-weight:800;font-size:1.5rem;margin:0;letter-spacing:-.01em}
+.pane-head h2{font-family:var(--f-display);font-weight:800;font-size:1.7rem;margin:0;letter-spacing:-.01em}
 .pane-head p{margin:2px 0 0;color:var(--muted);font-size:.92rem}
 .card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:16px}
 .how-btn{display:inline-flex;align-items:center;gap:6px;border:0;background:none;color:var(--muted);font-size:.82rem;font-weight:700;padding:4px 6px;border-radius:8px;white-space:nowrap}
 .how-btn svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round}
 .how-btn:hover{color:var(--ink);background:var(--surface-2)}
-.picker .how-btn{padding:5px}
-.picker .how-btn span{display:none}
+.picker .how-btn{padding:5px 8px;margin-left:auto!important}
+.picker .how-btn span{display:inline}
 .picker .how-btn svg{width:20px;height:20px}
 .dtl{list-style:none;margin:0;padding:10px 6px 8px;display:grid;grid-auto-flow:column;grid-auto-columns:minmax(0,1fr);gap:0;background:var(--surface);border:1px solid var(--line);border-radius:14px;overflow:hidden}
 .dtl li{position:relative;display:flex;flex-direction:column;align-items:center;gap:4px;text-align:center;min-width:0;padding:0 4px}
@@ -440,8 +439,8 @@ body{margin:0;padding:0;overflow:hidden}
 .acct-row input{flex:1;min-width:140px}
 .linkbtn{border:0;background:none;padding:0;color:var(--muted);text-decoration:underline;font-size:.82rem;align-self:flex-start}
 .rank-msg{margin:0 0 12px;color:var(--muted);font-size:.9rem}
-.pk-title{margin:0 6px 0 0;display:flex;align-items:center;gap:8px;font-family:var(--f-display);font-weight:800;font-size:1.15rem;letter-spacing:-.01em;white-space:nowrap}
-.pk-title svg{width:22px;height:22px;fill:none;stroke:var(--accent);stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+.pk-title{margin:0 8px 0 0;display:flex;align-items:center;gap:10px;font-family:var(--f-display);font-weight:800;font-size:1.55rem;letter-spacing:-.015em;white-space:nowrap}
+.pk-title svg{width:28px;height:28px;fill:none;stroke:var(--accent);stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
 .legal-links{margin:6px 10px 0;font-size:.72rem;color:var(--muted)} .legal-links a{color:var(--muted)}
 .side.collapsed .legal-links{display:none}
 .dc-secs{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:8px}
@@ -510,7 +509,7 @@ body.guest #dailyCard .lbl b::after{margin-left:6px;vertical-align:-2px}
 .gamebar .gend{margin-left:0}
 .ph-title{display:flex;align-items:center;gap:10px}
 .ph-title svg{width:26px;height:26px;fill:none;stroke:var(--accent);stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
-.ph-back{margin-left:auto}
+.ph-back{display:none!important}
 #settingsPage .set-body{padding:0;overflow:visible}
 #progressPage .prog-body{padding:0}
 [data-page="settings"] :is(.picker,.stage), [data-page="progress"] :is(.picker,.stage){display:none!important}
@@ -544,6 +543,26 @@ body.guest #dailyCard .lbl b::after{margin-left:6px;vertical-align:-2px}
 .dtl li.cur .dot{color:var(--on-accent)} .dtl li.cur .st-n{color:var(--accent);font-weight:700}
 .dt-tip{position:absolute;top:calc(100% + 6px);transform:translateX(-50%);background:var(--ink);color:var(--bg);font-size:.82rem;font-weight:700;padding:5px 10px;border-radius:8px;white-space:nowrap;z-index:6;pointer-events:none}
 .dt-tip::before{content:"";position:absolute;left:50%;top:-5px;margin-left:-5px;border:5px solid transparent;border-top:0;border-bottom-color:var(--ink)}
+.gm-opt{display:inline-flex;align-items:center;gap:6px;font-size:.8rem;color:var(--muted)}
+.gm-opt select{padding:4px 8px;font-size:.85rem}
+.gm-board{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;text-align:center;padding:14px;cursor:pointer;user-select:none;-webkit-user-select:none}
+.gm-kick{margin:0;font-size:.78rem;text-transform:uppercase;letter-spacing:.1em;color:var(--muted)}
+.gm-big{margin:0;font-family:var(--f-display);font-weight:800;font-size:clamp(2.2rem,8vh,4rem);line-height:1}
+.gm-sub{margin:0;color:var(--muted);font-size:.9rem;max-width:46ch}
+.gm-bar{width:min(420px,80%);height:8px;border-radius:4px;background:var(--line);overflow:hidden;margin-top:6px}
+.gm-bar i{display:block;height:100%;width:100%;background:var(--accent);transition:width .1s linear} .gm-bar i.low{background:var(--bad)}
+.gm-board.hit{animation:gmHit .3s ease} @keyframes gmHit{40%{background:var(--good-soft)}}
+@media (max-width:640px){ .gm-opt span{display:none} .rn-head{gap:8px} }
+.set-body{display:flex!important;flex-direction:column;align-items:stretch!important;gap:26px}
+.set-sec{width:100%;min-width:0}
+.set-sec h3{display:flex;align-items:center;gap:10px;margin:0 0 12px;font-family:var(--f-display);font-weight:800;font-size:1.2rem;padding-bottom:8px;border-bottom:1px solid var(--line)}
+.set-sec h3 svg{width:24px;height:24px;fill:none;stroke:var(--accent);stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.set-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px 28px;align-items:start}
+.set-checks{display:flex;flex-direction:column;gap:10px}
+.set-reset{margin:0}
+.ph-title svg{width:28px;height:28px}
+.rank-per{align-self:flex-start;flex-wrap:wrap}
+.rank-per button{padding:6px 14px;white-space:nowrap}
 /* Characters + intro windows */
 .modal-sub{margin:2px 0 0;color:var(--muted);font-size:.88rem}
 .char-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px}
@@ -843,25 +862,29 @@ html.native .midi-body [data-i="midiHint"]{display:none}
       </div>
     </div>
     <div class="pk-field" id="keyField"><span class="pk-lbl" data-i="keyLbl"></span><div class="dd"><button class="dd-btn" id="keysBtn" type="button" data-pop="keysPop" aria-haspopup="true" aria-expanded="false"><span id="keysSum"></span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 10l5 5 5-5"/></svg></button><div class="dd-pop" id="keysPop" hidden><div class="key-checks" id="keyChecks"></div></div></div></div>
-    <button class="how-btn" type="button" data-intro="section" id="howPk"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v5.5"/><circle cx="12" cy="7.8" r=".6"/></svg><span data-i="howBtn"></span></button>
     <div class="pk-field" id="invField"><span class="pk-lbl" data-i="inversions"></span><div class="dd"><button class="dd-btn" type="button" data-pop="invsPop" aria-haspopup="true" aria-expanded="false"><span id="invsSum"></span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 10l5 5 5-5"/></svg></button><div class="dd-pop" id="invsPop" hidden><div class="types" id="invs"></div></div></div></div>
     <div class="pk-field" id="degField"><span class="pk-lbl" data-i="degrees"></span><div class="dd"><button class="dd-btn" type="button" data-pop="degsPop" aria-haspopup="true" aria-expanded="false"><span id="degsSum"></span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 10l5 5 5-5"/></svg></button><div class="dd-pop" id="degsPop" hidden><div class="types" id="degs"></div></div></div></div>
     <label class="check" id="vlField"><input type="checkbox" id="optVL"> <span data-i="optVL"></span></label>
+    <span class="pk-push"></span><button class="how-btn" type="button" data-intro="section" id="howPk"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v5.5"/><circle cx="12" cy="7.8" r=".6"/></svg><span data-i="help"></span></button>
   </section>
 
   <section class="games" id="gamesPanel" hidden>
-    <div class="pane-head"><div><h2 data-i="gamesTitle"></h2><p data-i="gamesSub"></p></div><button class="how-btn" type="button" data-intro="games"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v5.5"/><circle cx="12" cy="7.8" r=".6"/></svg><span data-i="howBtn"></span></button></div>
+    <div class="pane-head"><div><h2 class="ph-title"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2.5" y="7" width="19" height="11" rx="5.5"/><path d="M7.5 10.5v4M5.5 12.5h4"/><circle cx="15.5" cy="11.2" r=".9"/><circle cx="17.8" cy="13.8" r=".9"/></svg><span data-i="gamesTitle"></span></h2><p data-i="gamesSub"></p></div><button class="how-btn" type="button" data-intro="games"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v5.5"/><circle cx="12" cy="7.8" r=".6"/></svg><span data-i="howBtn"></span></button></div>
     <div class="game-cards" id="gameCards"></div>
   </section>
 
   <section class="runner" id="runner" hidden>
-    <div class="rn-head"><b id="rnTitle"></b><span class="rn-score mono" id="rnScore"></span><span class="rn-best mono" id="rnBest"></span><span class="spacer"></span><label class="check rn-help"><input type="checkbox" id="rnHelp"> <span data-i="rnHelpLbl"></span></label><button class="btn" id="rnQuit" type="button" data-i="rnQuit"></button></div>
-    <div class="rn-stage"><canvas id="rnCanvas" aria-label="Game"></canvas></div>
+    <div class="rn-head"><b id="rnTitle"></b><span class="rn-score mono" id="rnScore"></span><span class="rn-best mono" id="rnBest"></span><span class="spacer"></span>
+      <label class="gm-opt"><span data-i="gmDiffL"></span><select id="gmDiff"></select></label>
+      <label class="gm-opt"><span data-i="gmContL"></span><select id="gmCont"></select></label>
+      <label class="check rn-help"><input type="checkbox" id="rnHelp"> <span data-i="rnHelpLbl"></span></label><button class="btn" id="rnQuit" type="button" data-i="rnQuit"></button></div>
+    <div class="rn-stage" id="rnStage"><canvas id="rnCanvas" aria-label="Game"></canvas></div>
+    <div class="rn-stage gm-board" id="gmBoard" hidden><p class="gm-kick" id="gmKick"></p><p class="gm-big" id="gmBig"></p><p class="gm-sub" id="gmSub"></p><div class="gm-bar"><i id="gmBar"></i></div></div>
   </section>
 
   <section class="dpanel" id="dailyPanel" hidden>
     <div class="pane-head">
-      <div><h2 data-i="dailyTitle"></h2><p id="dpSub"></p></div>
+      <div><h2 class="ph-title"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15" rx="3"/><path d="M3.5 10h17M8 3v4M16 3v4M9 15l2 2 4-4"/></svg><span data-i="dailyTitle"></span></h2><p id="dpSub"></p></div>
       <button class="btn" id="dpCfg" type="button" data-i="dpChoose"></button>
       <button class="how-btn" type="button" data-intro="daily"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v5.5"/><circle cx="12" cy="7.8" r=".6"/></svg><span data-i="howBtn"></span></button>
       <button class="btn primary" id="dpStart" type="button"></button>
@@ -891,7 +914,8 @@ html.native .midi-body [data-i="midiHint"]{display:none}
   </section>
 
   <section class="pane" id="rankPanel" hidden>
-    <div class="pane-head"><div><h2 data-i="secRank"></h2><p data-i="rankSub"></p></div></div>
+    <div class="pane-head"><div><h2 class="ph-title"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 4h8v5a4 4 0 0 1-8 0zM8 6H4.5a3 3 0 0 0 3.5 4M16 6h3.5a3 3 0 0 1-3.5 4M12 13v4M8.5 20h7"/></svg><span data-i="secRank"></span></h2><p data-i="rankSub"></p></div></div>
+    <div class="seg rank-per" id="rankPer"></div>
     <div class="card rank-card">
       <ol class="rank-list" id="rankList"></ol>
       <div class="rank-cta"><p data-i="rankCta"></p><button class="btn primary" id="rankLogin" type="button" data-i="loginBtn"></button></div>
@@ -899,7 +923,7 @@ html.native .midi-body [data-i="midiHint"]{display:none}
   </section>
 
   <section class="pane" id="accountPanel" hidden>
-    <div class="pane-head"><div><h2 data-i="secAccount"></h2><p data-i="acctSub"></p></div></div>
+    <div class="pane-head"><div><h2 class="ph-title"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8.5" r="4"/><path d="M4.5 20a7.5 7.5 0 0 1 15 0"/></svg><span data-i="secAccount"></span></h2><p data-i="acctSub"></p></div></div>
     <div class="acct-grid">
       <div class="card acct-me" id="acctMe"></div>
       <div class="card acct-login" id="acctLogin"></div>
@@ -1073,42 +1097,38 @@ html.native .midi-body [data-i="midiHint"]{display:none}
       <button class="modal-close" id="setX" type="button" aria-label="Close">×</button>
     </div>
     <div class="modal-body set-body" id="setPane">
-      <div class="set-col">
-        <div class="field" id="inputField"><span data-i="inLbl"></span>
+      <section class="set-sec"><h3><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2.5" y="7" width="19" height="11" rx="2"/><path d="M6.5 7v6M10 7v6M14 7v6M17.5 7v6"/></svg><span data-i="secInter"></span></h3>
+        <div class="set-grid"><div class="field" id="inputField"><span data-i="inLbl"></span>
           <div class="seg" id="segInput"></div>
           <p class="inp-status" id="inStatus"></p>
           <button class="btn" id="inCfg" type="button"></button>
         </div>
-        <div class="field" id="dirField"><span data-i="direction"></span>
+          <div class="field"><span data-i="notation"></span><div class="seg" id="segNot"><button type="button" data-v="en">C D E</button><button type="button" data-v="fr">Do Ré Mi</button></div>
+        </div>
+          <div class="set-checks"><label class="check"><input type="checkbox" id="optLabels"> <span data-i="optLabels"></span></label></div>
+        </div>
+      </section>
+      <section class="set-sec"><h3><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M10 8.5l5.5 3.5-5.5 3.5z"/></svg><span data-i="secGame"></span></h3>
+        <div class="set-grid"><div class="field" id="dirField"><span data-i="direction"></span>
           <div class="seg" id="segDir">
             <button type="button" data-v="up" data-i="ascending"></button>
             <button type="button" data-v="down" data-i="descending"></button>
             <button type="button" data-v="mix" data-i="dirMix"></button>
           </div>
-        </div>
-        <div class="field" id="orderField"><span data-i="order"></span>
+        </div><div class="field" id="orderField"><span data-i="order"></span>
           <div class="seg" id="segMode"><button type="button" data-v="suite" data-i="inOrder"></button><button type="button" data-v="random" data-i="random"></button></div>
-        </div>
-        <div class="field" id="lenField"><span data-i="gameLen"></span>
+        </div><div class="field" id="lenField"><span data-i="gameLen"></span>
           <div class="seg" id="segLen"><button type="button" data-v="5">5</button><button type="button" data-v="10">10</button><button type="button" data-v="20">20</button><button type="button" data-v="0">∞</button></div>
-        </div>
-        <div class="field" id="delayField"><span data-i="difficulty"></span>
+        </div><div class="field" id="delayField"><span data-i="difficulty"></span>
           <div class="seg diff" id="segDiff"><button type="button" data-v="0"><b data-i="noTimer"></b></button><button type="button" data-v="20"><b>20 s</b></button><button type="button" data-v="10"><b>10 s</b></button><button type="button" data-v="5"><b>5 s</b></button></div>
           <div class="range-row"><input type="range" id="delay" min="0" max="20" step="1" aria-label="Seconds"><output class="mono" id="delayOut"></output></div>
         </div>
-      </div>
-      <div class="set-col">
-        <div class="field"><span data-i="notation"></span>
-          <div class="seg" id="segNot"><button type="button" data-v="en">C D E</button><button type="button" data-v="fr">Do Ré Mi</button></div>
+          <div class="set-checks"><label class="check" id="octField"><input type="checkbox" id="optOct"> <span data-i="optOct"></span></label>
+          <label class="check"><input type="checkbox" id="optAuto"> <span data-i="optAuto"></span></label>
+          <label class="check" hidden><input type="checkbox" id="optAll"> <span data-i="optAll"></span></label></div>
         </div>
-        <label class="check" id="octField"><input type="checkbox" id="optOct"> <span data-i="optOct"></span></label>
-        <label class="check"><input type="checkbox" id="optLabels"> <span data-i="optLabels"></span></label>
-        <label class="check"><input type="checkbox" id="optAuto"> <span data-i="optAuto"></span></label>
-      </div>
-      <div class="set-col">
-        <label class="check"><input type="checkbox" id="optAll"> <span data-i="optAll"></span></label>
-        <button class="danger" id="resetBtn" type="button"></button>
-      </div>
+      </section>
+      <p class="set-reset"><button class="danger" id="resetBtn" type="button"></button></p>
     </div>
     <div class="modal-body prog-body" id="progPane" hidden>
       <div class="prog-cats" id="progCats"></div>
@@ -1163,7 +1183,7 @@ const TXT = {
     accuracy:"Précision", avgTime:"Temps moyen", xpWon:"XP gagnés", bestCombo:"Meilleur combo", toRework:"À retravailler", allPerfect:"Aucune erreur, bravo !",
     reworkBtn:"Retravailler mes erreurs", newGame:"Nouvelle partie", closeLbl:"Fermer", outOf:"exercices sans faute", nextReview:"Prochaine révision : ", tomorrow:"demain", inDays:n=>"dans "+n+" jours",
     secHarmony:"Harmonie", secProg:"Progressions", secEar:"Oreille", secGames:"Jeux", secRank:"Classement", secAccount:"Profil",
-    inTitle:"Comment vas-tu jouer ?", pcSolved:n=>n+" réussis", inChange:"Mode de jeu", leaveTitle:"Quitter l'entraînement du jour ?", leaveSub:"Tu es en cours. Si tu quittes, cet entraînement s'arrête et il faudra le recommencer.", leaveStay:"Continuer l'entraînement", leaveGo:"Quitter", dcStart:"Démarrer l'entraînement", inMidiApp:"Un clavier MIDI ? Sur iPhone et iPad, il faut l'app Piano Challenges (le navigateur ne gère pas le MIDI).", midiDone:"Terminer la configuration", midiSetupNeed:"Branche ton clavier en USB ou cherche-le en Bluetooth : il doit apparaître dans la liste pour continuer.", midiSetupOk:"Clavier détecté ! Joue quelques notes pour vérifier, puis termine la configuration.", backPlay:"← Retour", lockGuest:"Continuer sans compte pour l'instant", inSub:"Choisis une fois pour toutes. Tu pourras changer dans les Réglages.", inLbl:"Je joue avec",
+    inTitle:"Comment vas-tu jouer ?", secInter:"Interaction", secGame:"Réglages de jeu", periods:{day:"Jour",week:"Semaine",month:"Mois",year:"Année",all:"Depuis le début"}, rankEmptyP:"Personne n'a encore gagné d'XP sur cette période. À toi de jouer !", pcSolved:n=>n+" réussis", inChange:"Mode de jeu", leaveTitle:"Quitter l'entraînement du jour ?", leaveSub:"Tu es en cours. Si tu quittes, cet entraînement s'arrête et il faudra le recommencer.", leaveStay:"Continuer l'entraînement", leaveGo:"Quitter", dcStart:"Démarrer l'entraînement", inMidiApp:"Un clavier MIDI ? Sur iPhone et iPad, il faut l'app Piano Challenges (le navigateur ne gère pas le MIDI).", midiDone:"Terminer la configuration", midiSetupNeed:"Branche ton clavier en USB ou cherche-le en Bluetooth : il doit apparaître dans la liste pour continuer.", midiSetupOk:"Clavier détecté ! Joue quelques notes pour vérifier, puis termine la configuration.", backPlay:"← Retour", lockGuest:"Continuer sans compte pour l'instant", inSub:"Choisis une fois pour toutes. Tu pourras changer dans les Réglages.", inLbl:"Je joue avec",
     inModes:{screen:["Le clavier à l'écran","Touche les notes à l'écran, ou utilise le clavier de l'ordinateur.","Écran"],midi:["Mon clavier MIDI","Branché en USB ou connecté en Bluetooth. Le plus précis.","MIDI"],mic:["Mon piano, avec le micro","Pour un piano acoustique : l'app écoute les notes que tu joues.","Micro"]},
     inCfgMidi:"Connecter / régler le clavier MIDI", inCfgMic:"Activer le micro", inMidiNo:"Ce navigateur ne gère pas le MIDI : utilise Chrome ou Edge, l'app iPhone/iPad, ou le micro.",
     inMidiOk:n=>"Connecté : "+n, inMidiNone:"Aucun clavier détecté : branche-le ou connecte-le en Bluetooth.", inMicOk:"Le micro écoute.", inMicOff:"Micro pas encore activé.", inScreenOk:"Touche les notes à l'écran.",
@@ -1204,11 +1224,15 @@ const TXT = {
     rankSubIn:"Classement général par XP. Ton score se met à jour tout seul.",
     acctXp:"XP au total", acctStreak:"Série", acctDone:"Exercices réussis", acctLevel:"Niveau",
     collapse:"Réduire le menu", expand:"Agrandir le menu",
-    gamesTitle:"Jeux", gamesSub:"Des défis au piano pour jouer plus vite et plus juste. Les premiers jeux arrivent bientôt ; en attendant, le piano est libre.",
+    gamesTitle:"Jeux", gamesSub:"Des défis au piano pour jouer plus vite et plus juste. Choisis un jeu, ou joue librement sur le piano en dessous.",
     freePlay:"Jeu libre", soon:"Bientôt",
     rnName:"Saute-notes", rnDesc:"Tu es un piano ! Joue l'accord affiché pour sauter par-dessus les croches et les doubles croches.", rnPlay:"Jouer", rnQuit:"Quitter",
-    rnStart:"Joue un Do pour démarrer", rnPerfect:"Parfait !", rnHelpLbl:"Montrer les notes", rnTap:"Touche le jeu pour démarrer", rnOverShort:"Aïe !", rnHow:"Joue l'accord écrit au-dessus de la note quand elle passe dans le cercle", rnOver:"Aïe ! Joue un Do pour rejouer", rnBestL:"Record", rnNew:"Nouveau record !",
-    games:[["Saute-notes","play"],["Contre la montre","Un maximum de gammes en 60 secondes."],["Pluie de notes","Joue chaque note avant qu'elle ne touche le clavier."],["Mémoire d'accords","Répète des suites d'accords de plus en plus longues."],["Défis du jour","Un défi chronométré et un classement."]],
+    rnStart:"Joue un Do pour démarrer",
+    gmDiffL:"Difficulté", gmContL:"Jouer", gmDiffs:{prog:"Progressive",slow:"Lent",mid:"Moyen",fast:"Rapide"}, gmConts:{chords:"Des accords",notes:"Des notes"},
+    gmTap:"Touche ici pour démarrer.", gmReady:"Prêt ?", gmOver:"Terminé !", gmChord:"Accord à jouer", gmNote:"Note à jouer",
+    spName:"Contre la montre", spHow:s=>"Joue un maximum de bonnes réponses en "+s+" secondes.", spDone:n=>n+" bonne"+(n>1?"s":"")+" réponse"+(n>1?"s":"")+" !",
+    mmName:"Mémoire musicale", mmHow:"Écoute, regarde les touches s'allumer, puis rejoue la suite.", mmListen:"Écoute…", mmYou:"À toi !", mmGood:"Bravo ! Une de plus…", mmRound:n=>"Tour "+n, mmDone:n=>n+" tour"+(n>1?"s":"")+" réussi"+(n>1?"s":"")+".", rnPerfect:"Parfait !", rnHelpLbl:"Montrer les notes", rnTap:"Touche le jeu pour démarrer", rnOverShort:"Aïe !", rnHow:"Joue l'accord écrit au-dessus de la note quand elle passe dans le cercle", rnOver:"Aïe ! Joue un Do pour rejouer", rnBestL:"Record", rnNew:"Nouveau record !",
+    games:[["Saute-notes","Tu es un piano ! Joue l'accord (ou la note) affiché pour sauter par-dessus les croches.","runner"],["Contre la montre","Joue un maximum d'accords (ou de notes) avant la fin du chrono.","speed"],["Mémoire musicale","Écoute une suite de notes ou d'accords, puis rejoue-la. Elle s'allonge à chaque tour.","memory"],["Défi du jour","Le même défi chronométré pour tout le monde, avec un classement."]],
     degrees:"Degrés travaillés", optVL:"Enchaîner avec les renversements les plus proches", practiseH:"Tonalités travaillées", practiseP:"Progressions travaillées", practiseE:"Catégories travaillées",
     chordOfKey:"Accord de la tonalité", ofKey:" de ", inKey:"en ", progLbl:"Progression", vlOn:"renversements les plus proches", listenLbl:"Écoutez",
     idleSubH:"Trouvez l'accord demandé dans la tonalité, et jouez-le en partant de sa fondamentale.",
@@ -1274,7 +1298,7 @@ const TXT = {
     accuracy:"Accuracy", avgTime:"Average time", xpWon:"XP earned", bestCombo:"Best combo", toRework:"To rework", allPerfect:"No mistakes, well done!",
     reworkBtn:"Rework my mistakes", newGame:"New game", closeLbl:"Close", outOf:"exercises without mistakes", nextReview:"Next review: ", tomorrow:"tomorrow", inDays:n=>"in "+n+" days",
     secHarmony:"Harmony", secProg:"Progressions", secEar:"Ear", secGames:"Games", secRank:"Leaderboard", secAccount:"Profile",
-    inTitle:"How will you play?", pcSolved:n=>n+" solved", inChange:"Play mode", leaveTitle:"Leave the daily practice?", leaveSub:"You are in the middle of it. If you leave, it stops and you will have to start again.", leaveStay:"Keep practising", leaveGo:"Leave", dcStart:"Start the practice", inMidiApp:"A MIDI keyboard? On iPhone and iPad you need the Piano Challenges app (the browser has no MIDI).", midiDone:"Finish set-up", midiSetupNeed:"Plug your keyboard in with USB or search for it over Bluetooth: it must show up in the list to continue.", midiSetupOk:"Keyboard detected! Play a few notes to check, then finish the set-up.", backPlay:"← Back", lockGuest:"Continue without an account for now", inSub:"Choose once. You can change it later in Settings.", inLbl:"I play with",
+    inTitle:"How will you play?", secInter:"Interaction", secGame:"Game settings", periods:{day:"Today",week:"This week",month:"This month",year:"This year",all:"All time"}, rankEmptyP:"Nobody has earned XP in this period yet. Your turn!", pcSolved:n=>n+" solved", inChange:"Play mode", leaveTitle:"Leave the daily practice?", leaveSub:"You are in the middle of it. If you leave, it stops and you will have to start again.", leaveStay:"Keep practising", leaveGo:"Leave", dcStart:"Start the practice", inMidiApp:"A MIDI keyboard? On iPhone and iPad you need the Piano Challenges app (the browser has no MIDI).", midiDone:"Finish set-up", midiSetupNeed:"Plug your keyboard in with USB or search for it over Bluetooth: it must show up in the list to continue.", midiSetupOk:"Keyboard detected! Play a few notes to check, then finish the set-up.", backPlay:"← Back", lockGuest:"Continue without an account for now", inSub:"Choose once. You can change it later in Settings.", inLbl:"I play with",
     inModes:{screen:["The on-screen keyboard","Tap the notes on screen, or use your computer keyboard.","Screen"],midi:["My MIDI keyboard","Plugged in with USB or connected over Bluetooth. The most accurate.","MIDI"],mic:["My piano, with the mic","For an acoustic piano: the app listens to the notes you play.","Mic"]},
     inCfgMidi:"Connect / set up the MIDI keyboard", inCfgMic:"Turn the mic on", inMidiNo:"This browser has no MIDI: use Chrome or Edge, the iPhone/iPad app, or the mic.",
     inMidiOk:n=>"Connected: "+n, inMidiNone:"No keyboard detected: plug it in or connect it over Bluetooth.", inMicOk:"The mic is listening.", inMicOff:"Mic not turned on yet.", inScreenOk:"Tap the notes on screen.",
@@ -1315,11 +1339,15 @@ const TXT = {
     rankSubIn:"Overall ranking by XP. Your score updates by itself.",
     acctXp:"Total XP", acctStreak:"Streak", acctDone:"Exercises solved", acctLevel:"Level",
     collapse:"Collapse menu", expand:"Expand menu",
-    gamesTitle:"Games", gamesSub:"Piano challenges to play faster and cleaner. The first games are coming soon; meanwhile, the piano is free to play.",
+    gamesTitle:"Games", gamesSub:"Piano challenges to play faster and cleaner. Pick a game, or play freely on the piano below.",
     freePlay:"Free play", soon:"Soon",
     rnName:"Note Jumper", rnDesc:"You are a piano! Play the chord shown to jump over eighth and sixteenth notes.", rnPlay:"Play", rnQuit:"Quit",
-    rnStart:"Play a C to start", rnPerfect:"Perfect!", rnHelpLbl:"Show the notes", rnTap:"Tap the game to start", rnOverShort:"Ouch!", rnHow:"Play the chord written above the note as it crosses the circle", rnOver:"Ouch! Play a C to try again", rnBestL:"Best", rnNew:"New record!",
-    games:[["Note Jumper","play"],["Against the clock","As many scales as you can in 60 seconds."],["Note rain","Play each note before it hits the keyboard."],["Chord memory","Repeat ever longer chord sequences."],["Daily challenge","One timed challenge and a leaderboard."]],
+    rnStart:"Play a C to start",
+    gmDiffL:"Difficulty", gmContL:"Play", gmDiffs:{prog:"Progressive",slow:"Slow",mid:"Medium",fast:"Fast"}, gmConts:{chords:"Chords",notes:"Notes"},
+    gmTap:"Tap here to start.", gmReady:"Ready?", gmOver:"Done!", gmChord:"Chord to play", gmNote:"Note to play",
+    spName:"Against the clock", spHow:s=>"Play as many right answers as you can in "+s+" seconds.", spDone:n=>n+" right answer"+(n>1?"s":"")+"!",
+    mmName:"Musical memory", mmHow:"Listen, watch the keys light up, then play the sequence back.", mmListen:"Listen…", mmYou:"Your turn!", mmGood:"Well done! One more…", mmRound:n=>"Round "+n, mmDone:n=>n+" round"+(n>1?"s":"")+" completed.", rnPerfect:"Perfect!", rnHelpLbl:"Show the notes", rnTap:"Tap the game to start", rnOverShort:"Ouch!", rnHow:"Play the chord written above the note as it crosses the circle", rnOver:"Ouch! Play a C to try again", rnBestL:"Best", rnNew:"New record!",
+    games:[["Note Jumper","You are a piano! Play the chord (or note) shown to jump over the notes.","runner"],["Against the clock","Play as many chords (or notes) as you can before time runs out.","speed"],["Musical memory","Listen to a sequence of notes or chords, then play it back. It grows every round.","memory"],["Daily challenge","The same timed challenge for everyone, with a leaderboard."]],
     degrees:"Degrees to practise", optVL:"Chain with the closest inversions (voice leading)", practiseH:"Keys to practise", practiseP:"Progressions to practise", practiseE:"Categories to practise",
     chordOfKey:"Chord of the key", ofKey:" of ", inKey:"in ", progLbl:"Progression", vlOn:"closest inversions", listenLbl:"Listen",
     idleSubH:"Find the requested chord in the key and play it from its root.",
@@ -1707,7 +1735,7 @@ function poolAll(){
   if(sec==="ear"){ act.forEach(cat=>openRoots(sec,cat).forEach(k=>out.push({sec,tid:cat,k}))); return out; }
   const invs=S.settings.invs.slice().sort(), degs=S.settings.hdegs.slice().sort();
   for(let r=0;r<12;r++) typeList(sec).forEach(ty=>{
-    if(!act.includes(ty.id)) return; const k=rootsOf(sec,ty.id)[r]; if(!openRoots(sec,ty.id).includes(k)) return;
+    if(!act.includes(ty.id)) return; const k=rootsOf(sec,ty.id)[r]; if(!openRoots(sec,ty.id).includes(k) && !focusOf(sec).includes(k)) return;
     if(sec==="chords"){ const ok=invs.filter(i=>i<ty.iv.length); (ok.length?ok:[0]).forEach(inv=>out.push({sec,tid:ty.id,k,inv})); }
     else if(sec==="harmony") degs.forEach(deg=>out.push({sec,tid:ty.id,k,deg}));
     else out.push({sec,tid:ty.id,k});
@@ -1715,6 +1743,7 @@ function poolAll(){
   return out;
 }
 function addXP(n){
+  S.xpDays=S.xpDays||{}; const dk=dayStr(); S.xpDays[dk]=(S.xpDays[dk]||0)+n;
   const before=levelInfo(S.xp).L; S.xp+=n; const after=levelInfo(S.xp).L;
   if(after>before){
     toast(t("level")+after+" · "+titleFor(after));
@@ -2364,6 +2393,7 @@ function renderActions(){
   const sp=()=>{ const s=document.createElement("span"); s.className="spacer"; a.appendChild(s); };
   const kb=hasKeyboard(), space=kb?(S.settings.lang==="fr"?"Espace":"Space"):null, enter=kb?(S.settings.lang==="fr"?"Entrée":"Enter"):null;
   const cKey = midiMode() && S.settings.midiC!==false ? (S.settings.notation==="fr"?"Do":"C") : null;
+  if(phase==="idle" && page==="daily" && !game) return; // the header already has "Start"
   if(phase==="idle") mk(t("start"),"primary big",()=>startRound(),cKey||space);
   else if(phase==="listening" && cur.sec==="ear") mk(tx("replay"),"primary",()=>playScale(0),space);
   else if(phase==="listening") mk(t("giveUp"),"",()=>reveal(false),space);
@@ -2467,7 +2497,7 @@ function focusOf(sec){ const f=(S.settings.focus||{})[sec]; return Array.isArray
 function renderKeySel(){
   const sec=S.section; $("keyField").hidden = sec==="ear";
   if(sec==="ear") return;
-  const keys=[]; activeTypes(sec).forEach(tid=>openRoots(sec,tid).forEach(k=>{ if(!keys.includes(k)) keys.push(k); }));
+  const keys=[]; activeTypes(sec).forEach(tid=>rootsOf(sec,tid).forEach(k=>{ if(!keys.includes(k)) keys.push(k); }));
   const f=focusOf(sec).filter(k=>keys.includes(k)), box=$("keyChecks"); box.innerHTML="";
   const row=(label,checked,onch,cls)=>{ const l=document.createElement("label"); l.className="check"+(cls?" "+cls:""); const i=document.createElement("input"); i.type="checkbox"; i.checked=checked; i.onchange=()=>onch(i.checked); l.appendChild(i); const sp=document.createElement("span"); sp.textContent=label; l.appendChild(sp); box.appendChild(l); };
   const setF=v=>{ S.settings.focus=S.settings.focus||{}; S.settings.focus[sec]=v; S[sufKey()]=0; save(); renderKeySel(); if(phase==="listening"&&game&&!game.queue) startRound(undefined,true); };
@@ -2628,19 +2658,49 @@ function rnChords(){
     const pcs=[...new Set(spellChord(ty.id,k,0).map(n=>n.pc))]; out.push({label:chordSym(ty.id,k), pcs}); }));
   return out.length?out:[{label:"C",pcs:[0,4,7]}];
 }
-function runnerOpen(){ $("rnHelp").checked=S.settings.rnHint!==false; RN.on=true; document.body.classList.add("runner-on"); $("runner").hidden=false; $("rnTitle").textContent=t("rnName"); $("rnQuit").textContent=t("rnQuit"); rnReset(); RN.state="ready"; cancelAnimationFrame(RN.raf); RN.last=performance.now(); RN.raf=requestAnimationFrame(rnLoop); }
-function runnerClose(){ if(!RN.on) return; RN.on=false; clearKeys(); cancelAnimationFrame(RN.raf); $("runner").hidden=true; document.body.classList.remove("runner-on"); if(RN.xp){ addXP(RN.xp); RN.xp=0; save(); renderStatus(); } }
+let GM="runner"; // which game is open: runner | speed | memory
+const gmDiff = () => S.settings.gmDiff||"prog", gmCont = () => S.settings.gmCont||"chords";
+function gmFill(){
+  const d=$("gmDiff"), c=$("gmCont"), D=t("gmDiffs"), C=t("gmConts");
+  d.innerHTML=Object.keys(D).map(k=>'<option value="'+k+'">'+D[k]+'</option>').join(""); d.value=gmDiff();
+  c.innerHTML=Object.keys(C).map(k=>'<option value="'+k+'">'+C[k]+'</option>').join(""); c.value=gmCont();
+}
+$("gmDiff").addEventListener("change",e=>{ S.settings.gmDiff=e.target.value; save(); gameRestart(); });
+$("gmCont").addEventListener("change",e=>{ S.settings.gmCont=e.target.value; save(); gameRestart(); });
+// what the games ask for: chords (default) or single notes
+function gmItems(){
+  if(gmCont()==="notes"){
+    const easy = gmDiff()==="slow" || gmDiff()==="prog";
+    return rootsOf("chords","maj").map(k=>tonicNote(k)).filter(n=>!easy || n.acc===0 || n.acc==null && !/[#b♯♭]/.test(noteName(n)))
+      .filter((n,i,a)=>a.findIndex(x=>x.pc===n.pc)===i).map(n=>({label:noteName(n), pcs:[n.pc], note:true}));
+  }
+  return rnChords();
+}
+function gameOpen(id){
+  GM=id; gmFill(); $("rnHelp").checked=S.settings.rnHint!==false;
+  document.body.classList.add("runner-on"); $("runner").hidden=false; $("rnQuit").textContent=t("rnQuit");
+  $("rnTitle").textContent=t({runner:"rnName",speed:"spName",memory:"mmName"}[id]);
+  $("rnStage").hidden = id!=="runner"; $("gmBoard").hidden = id==="runner";
+  RN.on=true; clearKeys();
+  if(id==="runner"){ rnReset(); RN.state="ready"; cancelAnimationFrame(RN.raf); RN.last=performance.now(); RN.raf=requestAnimationFrame(rnLoop); }
+  else if(id==="speed") spReset(); else mmReset();
+}
+function gameRestart(){ if(!RN.on) return; gameOpen(GM); }
+function runnerOpen(){ gameOpen("runner"); }
+function runnerClose(){ if(!RN.on) return; RN.on=false; clearKeys(); cancelAnimationFrame(SP.raf); clearTimeout(MM.timer); MM.timers.forEach(clearTimeout); MM.timers=[]; cancelAnimationFrame(RN.raf); $("runner").hidden=true; document.body.classList.remove("runner-on"); if(RN.xp){ addXP(RN.xp); RN.xp=0; save(); renderStatus(); } }
 $("rnQuit").addEventListener("click",runnerClose);
 $("rnHelp").addEventListener("change",e=>{ S.settings.rnHint=e.target.checked; save(); RN.hintFor=undefined; });
 function rnGo(){ if(RN.state==="run") return; if(RN.state==="over") rnReset(); RN.state="run"; }
 $("rnCanvas").addEventListener("pointerdown",()=>{ if(RN.state!=="run" && performance.now()-RN.crashAt>500) rnGo(); });
 document.addEventListener("keydown",e=>{ if(RN.on && RN.state!=="run" && (e.code==="Space"||e.code==="Enter") && performance.now()-RN.crashAt>500){ e.preventDefault(); rnGo(); } });
-function rnReset(){ Object.assign(RN,{obs:[],held:[],dist:0,y:0,vy:0,jump:null,cleared:0,spawnIn:1.2,newBest:false,speed:0,bonus:0,flash:null,hintFor:null}); clearKeys(); RN.pool=rnChords(); rnScore(); }
+function rnReset(){ Object.assign(RN,{obs:[],held:[],dist:0,y:0,vy:0,jump:null,cleared:0,spawnIn:1.2,newBest:false,speed:0,bonus:0,flash:null,hintFor:null,blink:0}); clearKeys(); RN.pool=gmItems(); rnScore(); }
 // show the keys of the chord to play (the next note), in the "reveal" colour, while the hint is on
 function rnHint(o){ clearKeys(); if(!o || S.settings.rnHint===false) return; o.pcs.forEach(pc=>{ for(let m=LOW;m<=HIGH;m++){ if(m%12===pc && keyEls[m]){ keyEls[m].classList.add("k-rev"); break; } } }); }
 function rnScore(){ const sc=RN.cleared*10+(RN.bonus||0)+Math.floor(RN.dist/40); RN.score=sc; $("rnScore").textContent=String(sc).padStart(5,"0"); $("rnBest").textContent=t("rnBestL")+" "+String(S.runnerBest||0).padStart(5,"0"); }
 function runnerNote(m){
   if(!RN.on) return;
+  if(GM==="speed") return spNote(m);
+  if(GM==="memory") return mmNote(m);
   const pc=((m%12)+12)%12;
   if(RN.state!=="run"){ if(pc===0 && midiMode() && performance.now()-RN.crashAt>700) rnGo(); return; }
   const now=performance.now(); RN.held=RN.held.filter(h=>now-h.t<1400); RN.held.push({pc,t:now});
@@ -2659,14 +2719,15 @@ function rnLoop(now){
   const g=cv.getContext("2d"); g.setTransform(dpr,0,0,dpr,0,0);
   const u=H/200, ground=H-26*u, px=Math.max(60*u,W*.12), pw=46*u, ph=44*u;
   if(RN.state==="run"){
-    if(!RN.speed) RN.speed=Math.min(W/4.6, 220*u);
-    if(RN.cleared>=3) RN.speed=Math.min(Math.max(W/2,360*u), RN.speed + dt*5*u);
+    const df=gmDiff(), base={slow:W/5.6, mid:W/4, fast:W/2.9, prog:W/5.6}[df];
+    if(!RN.speed) RN.speed=base;
+    if(df==="prog" && RN.cleared>=3) RN.speed=Math.min(W/2.4, RN.speed + dt*5*u);
     const dx=RN.speed*dt; RN.dist+=dx;
     RN.spawnIn-=dt;
     if(RN.spawnIn<=0){
-      const ch=RN.pool[Math.floor(Math.random()*RN.pool.length)], dbl=RN.cleared>=4 && Math.random()<.35;
+      const ch=RN.pool[Math.floor(Math.random()*RN.pool.length)], dbl=(gmDiff()==="prog"?RN.cleared>=4:gmDiff()!=="slow") && Math.random()<.35;
       RN.obs.push({x:W+20*u, w:(dbl?50:24)*u, h:(dbl?50:44)*u, dbl, label:ch.label, pcs:ch.pcs, armed:false, passed:false, jumped:false});
-      const gapT=Math.max(1.9, 3.4-RN.cleared*0.06); RN.spawnIn=gapT*(0.85+Math.random()*.4);
+      const gapT={slow:3.6, mid:2.8, fast:2.1, prog:Math.max(1.9, 3.5-RN.cleared*0.07)}[gmDiff()]; RN.spawnIn=gapT*(0.85+Math.random()*.4);
     }
     RN.obs.forEach(o=>o.x-=dx);
     const ringX=px+pw+Math.max(18*u,(pw+28*u)*0.5)+70*u;
@@ -2722,16 +2783,22 @@ function rnDraw(g,W,H,u,ground,px,pw,ph){
       g.fillStyle="#fff"; g.textAlign="center"; g.textBaseline="middle"; g.fillText((o.armed?"✓ ":"")+o.label,o.x+o.w/2,by+11.5*u);
     }
   });
-  // the piano character
-  const y=ground-ph-RN.y, run=RN.state==="run"&&RN.y===0, step=Math.floor(RN.dist/(14*u))%2;
+  // the piano character: an upright piano with big eyes (they look at the next note, and blink)
+  const y=ground-ph-RN.y, run=RN.state==="run"&&RN.y===0, step=Math.floor(RN.dist/(14*u))%2, crashed=RN.state==="over";
   g.fillStyle=ink; [0,1].forEach(i=>{ const lx=px+(i?pw-14*u:8*u), lift=run&&(step===i)?4*u:0; g.fillRect(lx,y+ph-8*u-lift-(RN.y>0?3*u:0),6*u,8*u); });
-  rr(g,px,y,pw,ph-6*u,7*u); g.fill();
-  g.fillStyle=surf; rr(g,px+4*u,y+ph*0.5,pw-8*u,ph*0.3,3*u); g.fill();
-  g.fillStyle=ink; for(let i=1;i<6;i++){ if(i===3) continue; g.fillRect(px+4*u+i*(pw-8*u)/6-2*u,y+ph*0.5,4*u,ph*0.17); }
-  const crashed=RN.state==="over";
-  [px+pw*0.32,px+pw*0.68].forEach(ex=>{ if(crashed){ g.strokeStyle=surf; g.lineWidth=2*u; g.beginPath(); g.moveTo(ex-4*u,y+9*u); g.lineTo(ex+4*u,y+17*u); g.moveTo(ex+4*u,y+9*u); g.lineTo(ex-4*u,y+17*u); g.stroke(); }
-    else { g.fillStyle=surf; g.beginPath(); g.arc(ex,y+13*u,5.5*u,0,Math.PI*2); g.fill(); g.fillStyle=ink; g.beginPath(); g.arc(ex+1.5*u,y+13.5*u,2.6*u,0,Math.PI*2); g.fill(); } });
-  g.fillStyle=acc; g.fillRect(px+pw*0.42,y+ph*0.5,pw*0.12,ph*0.3);
+  rr(g,px,y-6*u,pw,ph,8*u); g.fill();                              // body
+  g.fillStyle=surf; rr(g,px+4*u,y+ph*0.52,pw-8*u,ph*0.3,3*u); g.fill(); // keyboard
+  g.fillStyle=ink; for(let i=1;i<6;i++){ if(i===3) continue; g.fillRect(px+4*u+i*(pw-8*u)/6-2*u,y+ph*0.52,4*u,ph*0.17); }
+  g.fillStyle=acc; g.fillRect(px+pw*0.42,y+ph*0.52,pw*0.12,ph*0.3);
+  const tgtO=RN.obs.find(o=>!o.passed), look = tgtO ? Math.max(-1,Math.min(1,(tgtO.x-px)/(200*u))) : 1;
+  RN.blink=(RN.blink||0)+1; const blinking = !crashed && (RN.blink%190)<7;
+  [px+pw*0.3,px+pw*0.7].forEach(ex=>{ const ey=y+9*u;
+    if(crashed){ g.strokeStyle=surf; g.lineWidth=2.4*u; g.beginPath(); g.moveTo(ex-5*u,ey-5*u); g.lineTo(ex+5*u,ey+5*u); g.moveTo(ex+5*u,ey-5*u); g.lineTo(ex-5*u,ey+5*u); g.stroke(); return; }
+    g.fillStyle="#fff"; g.beginPath(); g.ellipse(ex,ey,8.5*u, blinking?1.5*u:9*u,0,0,Math.PI*2); g.fill();
+    if(!blinking){ g.fillStyle="#161920"; g.beginPath(); g.arc(ex+2.6*u*look,ey+1*u,4.3*u,0,Math.PI*2); g.fill(); g.fillStyle="#fff"; g.beginPath(); g.arc(ex+2.6*u*look+1.4*u,ey-0.6*u,1.4*u,0,Math.PI*2); g.fill(); } });
+  g.strokeStyle=surf; g.lineWidth=2*u; g.beginPath();
+  if(crashed){ g.arc(px+pw/2,y+ph*0.43,4*u,Math.PI*1.15,Math.PI*1.85); } else { g.arc(px+pw/2,y+ph*0.3,5*u,Math.PI*0.2,Math.PI*0.8); }
+  g.stroke();
   // messages
   if(RN.state!=="run"){
     g.fillStyle=ink; g.textAlign="center"; g.textBaseline="middle";
@@ -2743,13 +2810,81 @@ function rnDraw(g,W,H,u,ground,px,pw,ph){
   }
 }
 function rr(g,x,y,w,h,r){ g.beginPath(); g.moveTo(x+r,y); g.arcTo(x+w,y,x+w,y+h,r); g.arcTo(x+w,y+h,x,y+h,r); g.arcTo(x,y+h,x,y,r); g.arcTo(x,y,x+w,y,r); g.closePath(); }
+// ---------- Game: Against the clock (play as many chords / notes as you can) ----------
+const SP={state:"ready",count:0,end:0,dur:60,target:null,held:[],raf:0,last:-1};
+function spDur(){ return {slow:90, mid:60, fast:40, prog:60}[gmDiff()]; }
+function spReset(){ cancelAnimationFrame(SP.raf); Object.assign(SP,{state:"ready",count:0,held:[],target:null}); SP.pool=gmItems(); gmBoard(); gmScore(); }
+function spGo(){ if(SP.state==="run") return; SP.state="run"; SP.count=0; SP.dur=spDur(); SP.end=performance.now()+SP.dur*1000; spNext(); SP.raf=requestAnimationFrame(spTick); }
+function spNext(){ let n; do{ n=SP.pool[Math.floor(Math.random()*SP.pool.length)]; }while(SP.pool.length>1 && SP.target && n.label===SP.target.label); SP.target=n; SP.held=[]; rnHintPcs(n.pcs); gmBoard(); }
+function spTick(now){
+  if(!RN.on || GM!=="speed" || SP.state!=="run") return;
+  let left=(SP.end-now)/1000;
+  // progressive: each answer gives back a little time, less and less
+  if(left<=0){ SP.state="over"; clearKeys(); const best=(S.gameBest||{}).speed||0; if(SP.count>best){ S.gameBest={...(S.gameBest||{}),speed:SP.count}; SP.newBest=true; } else SP.newBest=false; if(SP.count){ addXP(SP.count); renderStatus(); } save(); tone(48,0,.4,.15); gmBoard(); gmScore(); return; }
+  $("gmBar").style.width=(left/SP.dur*100)+"%"; $("gmBar").classList.toggle("low",left<10);
+  SP.raf=requestAnimationFrame(spTick);
+}
+function spNote(m){
+  const pc=((m%12)+12)%12;
+  if(SP.state!=="run"){ if(pc===0 && midiMode()) spGo(); return; }
+  const now=performance.now(); SP.held=SP.held.filter(h=>now-h.t<1300); SP.held.push({pc,t:now});
+  const have=new Set(SP.held.map(h=>h.pc));
+  if(SP.target && SP.target.pcs.every(p=>have.has(p))){ SP.count++; if(gmDiff()==="prog") SP.end+=Math.max(300,1500-SP.count*60); tone(84,0,.1,.08); gmScore(); $("gmBoard").classList.remove("hit"); void $("gmBoard").offsetWidth; $("gmBoard").classList.add("hit"); spNext(); }
+}
+// ---------- Game: Musical memory (repeat a growing sequence) ----------
+const MM={state:"ready",seq:[],step:0,round:0,timer:0,timers:[],held:[]};
+function mmTempo(){ return {slow:950, mid:680, fast:460, prog:Math.max(380, 900-MM.round*45)}[gmDiff()]; }
+function mmReset(){ MM.timers.forEach(clearTimeout); MM.timers=[]; Object.assign(MM,{state:"ready",seq:[],step:0,round:0,held:[]}); MM.pool=gmItems(); gmBoard(); gmScore(); }
+function mmGo(){ if(MM.state==="listen"||MM.state==="input") return; MM.seq=[]; MM.round=0; mmAdd(); mmPlay(); }
+function mmAdd(){ MM.seq.push(MM.pool[Math.floor(Math.random()*MM.pool.length)]); }
+function mmPlay(){
+  MM.state="listen"; MM.step=0; gmBoard(); clearKeys();
+  const tp=mmTempo();
+  MM.seq.forEach((it,i)=>{ MM.timers.push(setTimeout(()=>{ if(!RN.on||GM!=="memory") return; clearKeys(); it.pcs.forEach((pc,j)=>tone(60+pc,0,.55,.16)); rnHintPcs(it.pcs, true); $("gmBig").textContent=it.label; }, 500+i*tp));
+    MM.timers.push(setTimeout(()=>clearKeys(), 500+i*tp+tp*0.7)); });
+  MM.timers.push(setTimeout(()=>{ if(!RN.on||GM!=="memory") return; MM.state="input"; MM.held=[]; clearKeys(); gmBoard(); }, 500+MM.seq.length*tp));
+}
+function mmNote(m){
+  const pc=((m%12)+12)%12;
+  if(MM.state==="ready"||MM.state==="over"){ if(pc===0 && midiMode()) mmGo(); return; }
+  if(MM.state!=="input") return;
+  const it=MM.seq[MM.step], now=performance.now();
+  if(!it.pcs.includes(pc)){ MM.state="over"; tone(40,0,.4,.2); const best=(S.gameBest||{}).memory||0; MM.newBest=MM.round>best; if(MM.newBest) S.gameBest={...(S.gameBest||{}),memory:MM.round}; if(MM.round){ addXP(MM.round*2); renderStatus(); } save(); gmBoard(); gmScore(); return; }
+  MM.held=MM.held.filter(h=>now-h.t<1500); MM.held.push({pc,t:now});
+  const have=new Set(MM.held.map(h=>h.pc));
+  if(it.pcs.every(p=>have.has(p))){ MM.step++; MM.held=[]; $("gmBig").textContent=MM.step+" / "+MM.seq.length;
+    if(MM.step>=MM.seq.length){ MM.round++; gmScore(); MM.state="listen"; $("gmSub").textContent=t("mmGood"); mmAdd(); MM.timers.push(setTimeout(mmPlay, 900)); } }
+}
+// shared board text for the two DOM games
+function gmBoard(){
+  const k=$("gmKick"), big=$("gmBig"), sub=$("gmSub"), startTxt = midiMode()?t("rnStart"):t("gmTap");
+  $("gmBar").parentElement.hidden = GM!=="speed";
+  if(GM==="speed"){
+    if(SP.state==="ready"){ k.textContent=t("spName"); big.textContent=t("gmReady"); sub.textContent=t("spHow")(spDur())+" "+startTxt; $("gmBar").style.width="100%"; }
+    else if(SP.state==="run"){ k.textContent=SP.target&&SP.target.note?t("gmNote"):t("gmChord"); big.textContent=SP.target?SP.target.label:""; sub.textContent=""; }
+    else { k.textContent=SP.newBest?t("rnNew"):t("gmOver"); big.textContent=String(SP.count); sub.textContent=t("spDone")(SP.count)+" "+startTxt; }
+  } else {
+    if(MM.state==="ready"){ k.textContent=t("mmName"); big.textContent=t("gmReady"); sub.textContent=t("mmHow")+" "+startTxt; }
+    else if(MM.state==="listen"){ k.textContent=t("mmListen"); big.textContent="♪"; sub.textContent=t("mmRound")(MM.round+1); }
+    else if(MM.state==="input"){ k.textContent=t("mmYou"); big.textContent="0 / "+MM.seq.length; sub.textContent=t("mmRound")(MM.round+1); }
+    else { k.textContent=MM.newBest?t("rnNew"):t("gmOver"); big.textContent=String(MM.round); sub.textContent=t("mmDone")(MM.round)+" "+startTxt; }
+  }
+}
+function gmScore(){
+  const sc = GM==="speed" ? SP.count : GM==="memory" ? MM.round : 0, best=((S.gameBest||{})[GM])||0;
+  $("rnScore").textContent=String(sc).padStart(3,"0"); $("rnBest").textContent=t("rnBestL")+" "+String(best).padStart(3,"0");
+}
+function rnHintPcs(pcs, force){ clearKeys(); if(!force && S.settings.rnHint===false) return; pcs.forEach(pc=>{ for(let m=LOW;m<=HIGH;m++){ if(m%12===pc && keyEls[m]){ keyEls[m].classList.add("k-rev"); break; } } }); }
+$("gmBoard").addEventListener("pointerdown",()=>{ if(GM==="speed" && SP.state!=="run") spGo(); else if(GM==="memory" && (MM.state==="ready"||MM.state==="over")) mmGo(); });
+document.addEventListener("keydown",e=>{ if(!RN.on || GM==="runner") return; if(e.code==="Space"||e.code==="Enter"){ if(GM==="speed" && SP.state!=="run"){ e.preventDefault(); spGo(); } else if(GM==="memory" && (MM.state==="ready"||MM.state==="over")){ e.preventDefault(); mmGo(); } } });
 function renderGames(){ const box=$("gameCards"); box.innerHTML="";
-  t("games").forEach(([title,desc],i)=>{ const c=document.createElement("div"); c.className="game-card";
-    if(desc==="play"){ c.classList.add("play"); c.setAttribute("role","button"); c.tabIndex=0;
-      c.innerHTML='<span class="gi"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="8" width="13" height="11" rx="2"/><path d="M4 14h13M7.5 14v5M11 14v5M14 14v5M18 6l2-2M19.5 9H22"/></svg></span><span class="gt"><b></b><p></p><button class="btn primary go" type="button"></button></span>';
-      c.querySelector("b").textContent=t("rnName"); c.querySelector("p").textContent=t("rnDesc"); c.querySelector(".go").textContent=t("rnPlay");
-      c.onclick=()=>runnerOpen(); c.onkeydown=e=>{ if(e.key==="Enter") runnerOpen(); }; box.appendChild(c); return; }
-    c.innerHTML='<span class="gi"><svg viewBox="0 0 24 24" aria-hidden="true">'+GAME_ICONS[i-1]+'</svg></span><span class="gt"><b></b><p></p><span class="soon"></span></span>';
+  const PLAY={runner:'<rect x="4" y="8" width="13" height="11" rx="2"/><path d="M4 14h13M7.5 14v5M11 14v5M14 14v5M18 6l2-2M19.5 9H22"/>', speed:GAME_ICONS[0], memory:GAME_ICONS[2]};
+  t("games").forEach(([title,desc,id],i)=>{ const c=document.createElement("div"); c.className="game-card";
+    if(id){ c.classList.add("play"); c.setAttribute("role","button"); c.tabIndex=0;
+      c.innerHTML='<span class="gi"><svg viewBox="0 0 24 24" aria-hidden="true">'+PLAY[id]+'</svg></span><span class="gt"><b></b><p></p><button class="btn primary go" type="button"></button></span>';
+      c.querySelector("b").textContent=title; c.querySelector("p").textContent=desc; c.querySelector(".go").textContent=t("rnPlay");
+      c.onclick=()=>gameOpen(id); c.onkeydown=e=>{ if(e.key==="Enter") gameOpen(id); }; box.appendChild(c); return; }
+    c.innerHTML='<span class="gi"><svg viewBox="0 0 24 24" aria-hidden="true">'+GAME_ICONS[3]+'</svg></span><span class="gt"><b></b><p></p><span class="soon"></span></span>';
     c.querySelector("b").textContent=title; c.querySelector("p").textContent=desc; c.querySelector(".soon").textContent=t("soon"); box.appendChild(c); }); }
 const LOCKED=["games","daily"];
 let lockFor="";
@@ -2841,6 +2976,9 @@ async function cloudPushNow(){
   const r1=await sb.from("progress").upsert({user_id:user.id, data:S, updated_at:now});
   const r2=await sb.from("profiles").upsert({id:user.id, name:myName().slice(0,24), avatar:charIndex(li.L), photo:userPhoto()||null, xp:S.xp, level:li.L, streak:S.streak.days, solved, updated_at:now});
   if(r1.error||r2.error) throw (r1.error||r2.error);
+  // XP earned per day (last 7 days) feeds the day / week / month / year leaderboards
+  const days=Object.entries(S.xpDays||{}).filter(([d])=>d>=addDays(-7)).map(([day,xp])=>({user_id:user.id, day, xp}));
+  if(days.length) await sb.from("xp_log").upsert(days);
 }
 function authMsg(err){ const m=(err&&err.message||"").toLowerCase(); if(m.includes("sending")||m.includes("smtp")) return t("mailFail"); return m.includes("rate")||m.includes("too many") ? t("tooMany") : m.includes("token")||m.includes("otp")||m.includes("expired")||m.includes("invalid") ? t("badCode") : (err&&err.message)||t("cloudErr"); }
 function renderLock(){
@@ -2851,7 +2989,10 @@ $("lockGo").addEventListener("click",()=>openPage("account"));
 $("lockGuest").addEventListener("click",()=>{ guestPass=true; document.body.classList.remove("guest"); openPage(lockFor||"games"); });
 function renderWelcome(){ const ul=$("wcList"); ul.innerHTML=""; t("perks").forEach(x=>{ const li=document.createElement("li"); li.textContent=x; ul.appendChild(li); }); }
 $("wcSignup").addEventListener("click",()=>{ closeMod("welcomeModal"); openPage("account"); });
+function renderRankPer(){ const box=$("rankPer"), P=t("periods"), cur=S.settings.rankPer||"week"; box.innerHTML="";
+  Object.keys(P).forEach(k=>{ const b=document.createElement("button"); b.type="button"; b.textContent=P[k]; b.setAttribute("aria-pressed",k===cur); b.onclick=()=>{ S.settings.rankPer=k; save(); renderRank(); }; box.appendChild(b); }); }
 async function renderRank(){
+  renderRankPer();
   const li=levelInfo(S.xp), ol=$("rankList"); ol.innerHTML="";
   const row=(r,rk,me)=>{ const el=document.createElement("li"); if(me) el.className="me";
     const okPhoto = r.photo && /^https:\/\//.test(r.photo);
@@ -2860,15 +3001,20 @@ async function renderRank(){
     const n=el.querySelectorAll(".num"); n[0].textContent=r.xp+" XP"; n[1].textContent="🔥 "+r.streak+" "+t("day"); return el; };
   const cta=document.querySelector(".rank-cta"); cta.hidden=!!user;
   $("rankPanel").querySelector(".pane-head p").textContent = user ? t("rankSubIn") : t("rankSub");
-  if(!sb){ ol.appendChild(row({name:t("you"),avatar:charIndex(li.L),level:li.L,xp:S.xp,streak:S.streak.days},"—",true)); if(cloudFail){ const p=document.createElement("p"); p.className="rank-msg"; p.textContent=t("rankErr"); ol.prepend(p); } return; }
+  const per=S.settings.rankPer||"week", now=new Date();
+  const since = per==="day" ? dayStr() : per==="week" ? addDays(-((now.getDay()+6)%7)) : per==="month" ? dayStr().slice(0,8)+"01" : per==="year" ? dayStr().slice(0,5)+"01-01" : null;
+  const myXP = since ? Object.entries(S.xpDays||{}).reduce((a,[d,x])=>d>=since?a+x:a,0) : S.xp;
+  if(!sb){ ol.appendChild(row({name:t("you"),avatar:charIndex(li.L),level:li.L,xp:myXP,streak:S.streak.days},"—",true)); if(cloudFail){ const p=document.createElement("p"); p.className="rank-msg"; p.textContent=t("rankErr"); ol.prepend(p); } return; }
   const wait=document.createElement("p"); wait.className="rank-msg"; wait.textContent=t("rankLoading"); ol.appendChild(wait);
-  const {data,error}=await Promise.race([sb.from("profiles").select("id,name,avatar,photo,xp,level,streak").order("xp",{ascending:false}).limit(50), new Promise(r=>setTimeout(()=>r({data:null,error:{message:"timeout"}}),10000))]);
+  if(user){ try{ await Promise.race([cloudPushNow(), new Promise(r=>setTimeout(r,4000))]); }catch(e){} }
+  const q = since ? sb.rpc("leaderboard",{since}) : sb.from("profiles").select("id,name,avatar,photo,xp,level,streak").order("xp",{ascending:false}).limit(50);
+  const {data,error}=await Promise.race([q, new Promise(r=>setTimeout(()=>r({data:null,error:{message:"timeout"}}),10000))]);
   if(page!=="rank") return;
   ol.innerHTML="";
   if(error){ const p=document.createElement("p"); p.className="rank-msg"; p.textContent=t("rankErr"); ol.appendChild(p); }
   const list=data||[]; list.forEach((r,i)=>ol.appendChild(row(r,i+1,user&&r.id===user.id)));
-  if(!list.length && !error){ const p=document.createElement("p"); p.className="rank-msg"; p.textContent=t("rankEmpty"); ol.appendChild(p); }
-  if(!user) ol.appendChild(row({name:t("you"),avatar:charIndex(li.L),level:li.L,xp:S.xp,streak:S.streak.days},"—",true));
+  if(!list.length && !error){ const p=document.createElement("p"); p.className="rank-msg"; p.textContent=since?t("rankEmptyP"):t("rankEmpty"); ol.appendChild(p); }
+  if(!user) ol.appendChild(row({name:t("you"),avatar:charIndex(li.L),level:li.L,xp:myXP,streak:S.streak.days},"—",true));
 }
 async function oauthLogin(provider){
   try{
