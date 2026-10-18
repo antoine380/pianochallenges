@@ -494,6 +494,20 @@ body.guest #dailyCard .lbl b::after{margin-left:6px;vertical-align:-2px}
 @media (max-width:640px), (max-height:520px) and (orientation:landscape){
   html:not(.native) :is(.inputs .pill-group, .inputs > .pill.on, #midiCfg2){display:none!important}
 }
+.inputs{display:none!important}
+.inp-opts{display:flex;flex-direction:column;gap:10px}
+.inp-opt{display:flex;align-items:center;gap:14px;width:100%;text-align:left;border:1px solid var(--line);background:var(--surface-2);border-radius:14px;padding:14px}
+.inp-opt:hover{border-color:var(--accent);background:var(--accent-soft)}
+.io-ic{width:48px;height:48px;border-radius:12px;background:var(--surface);border:1px solid var(--line);display:grid;place-items:center;flex:none}
+.io-ic svg,.inp-chip svg{width:26px;height:26px;fill:none;stroke:var(--accent);stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.io-t{display:flex;flex-direction:column;gap:2px} .io-t b{font-family:var(--f-display);font-size:1.05rem} .io-t small{color:var(--muted);font-size:.86rem;line-height:1.35}
+.inp-status{margin:2px 0 0;font-size:.84rem;color:var(--muted)}
+#inCfg{align-self:flex-start}
+.inp-chip{position:relative;margin-left:auto;border:1px solid var(--line);background:var(--surface-2);border-radius:9px;width:34px;height:30px;display:grid;place-items:center;padding:0;flex:none}
+.inp-chip svg{width:20px;height:20px}
+.inp-chip i{position:absolute;right:-3px;top:-3px;width:9px;height:9px;border-radius:50%;border:2px solid var(--surface)}
+.inp-chip i.on{background:var(--good)} .inp-chip i.off{background:var(--warn)}
+.gamebar .gend{margin-left:0}
 /* Characters + intro windows */
 .modal-sub{margin:2px 0 0;color:var(--muted);font-size:.88rem}
 .char-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px}
@@ -851,6 +865,7 @@ html.native .midi-body [data-i="midiHint"]{display:none}
       <select class="timer-sel" id="timerSel" aria-label="Timer"></select>
       <div class="segs" id="segs"></div>
       <button class="gend" id="gameEnd" type="button" hidden></button>
+      <button class="inp-chip" id="inChip" type="button"></button>
     </div>
     <div class="prompt-row">
       <div>
@@ -953,6 +968,13 @@ html.native .midi-body [data-i="midiHint"]{display:none}
     </div>
   </div>
 </div>
+<div class="modal" id="inputModal" role="dialog" aria-modal="true" aria-labelledby="inTitle" hidden>
+  <div class="modal-bg"></div>
+  <div class="modal-card">
+    <div class="modal-head"><div><h2 id="inTitle" data-i="inTitle"></h2><p class="modal-sub" data-i="inSub"></p></div></div>
+    <div class="modal-body"><div class="inp-opts" id="inOpts"></div></div>
+  </div>
+</div>
 <div class="modal" id="introModal" role="dialog" aria-modal="true" aria-labelledby="introTitle" hidden>
   <div class="modal-bg" data-close="introModal"></div>
   <div class="modal-card">
@@ -996,6 +1018,11 @@ html.native .midi-body [data-i="midiHint"]{display:none}
     </div>
     <div class="modal-body set-body" id="setPane">
       <div class="set-col">
+        <div class="field" id="inputField"><span data-i="inLbl"></span>
+          <div class="seg" id="segInput"></div>
+          <p class="inp-status" id="inStatus"></p>
+          <button class="btn" id="inCfg" type="button"></button>
+        </div>
         <div class="field" id="dirField"><span data-i="direction"></span>
           <div class="seg" id="segDir">
             <button type="button" data-v="up" data-i="ascending"></button>
@@ -1023,7 +1050,6 @@ html.native .midi-body [data-i="midiHint"]{display:none}
         <label class="check"><input type="checkbox" id="optAuto"> <span data-i="optAuto"></span></label>
       </div>
       <div class="set-col">
-        <button class="btn" id="midiCfg2" type="button" data-i="midiCfgBtn"></button>
         <label class="check"><input type="checkbox" id="optAll"> <span data-i="optAll"></span></label>
         <button class="danger" id="resetBtn" type="button"></button>
       </div>
@@ -1078,6 +1104,10 @@ const TXT = {
     accuracy:"Précision", avgTime:"Temps moyen", xpWon:"XP gagnés", bestCombo:"Meilleur combo", toRework:"À retravailler", allPerfect:"Aucune erreur, bravo !",
     reworkBtn:"Retravailler mes erreurs", newGame:"Nouvelle partie", closeLbl:"Fermer", outOf:"exercices sans faute", nextReview:"Prochaine révision : ", tomorrow:"demain", inDays:n=>"dans "+n+" jours",
     secHarmony:"Harmonie", secProg:"Progressions", secEar:"Oreille", secGames:"Jeux", secRank:"Classement", secAccount:"Profil",
+    inTitle:"Comment vas-tu jouer ?", inSub:"Choisis une fois pour toutes. Tu pourras changer dans les Réglages.", inLbl:"Je joue avec",
+    inModes:{screen:["Le clavier à l'écran","Touche les notes à l'écran, ou utilise le clavier de l'ordinateur.","Écran"],midi:["Mon clavier MIDI","Branché en USB ou connecté en Bluetooth. Le plus précis.","MIDI"],mic:["Mon piano, avec le micro","Pour un piano acoustique : l'app écoute les notes que tu joues.","Micro"]},
+    inCfgMidi:"Connecter / régler le clavier MIDI", inCfgMic:"Activer le micro", inMidiNo:"Ce navigateur ne gère pas le MIDI : utilise Chrome ou Edge, l'app iPhone/iPad, ou le micro.",
+    inMidiOk:n=>"Connecté : "+n, inMidiNone:"Aucun clavier détecté : branche-le ou connecte-le en Bluetooth.", inMicOk:"Le micro écoute.", inMicOff:"Micro pas encore activé.", inScreenOk:"Touche les notes à l'écran.",
     wcTitle:"Bienvenue sur Piano Challenges", wcSub:"Apprends les accords, les gammes et les progressions en jouant sur ton piano. 5 minutes par jour suffisent.",
     wcSignup:"Créer mon compte gratuit", wcSkip:"Essayer d'abord sans compte",
     perks:["Garde ta progression sur ordinateur, téléphone et tablette","Relève l'entraînement du jour et ses défis","Joue aux jeux musicaux, comme Saute-notes","Suis tes progrès et grimpe dans le classement"],
@@ -1185,6 +1215,10 @@ const TXT = {
     accuracy:"Accuracy", avgTime:"Average time", xpWon:"XP earned", bestCombo:"Best combo", toRework:"To rework", allPerfect:"No mistakes, well done!",
     reworkBtn:"Rework my mistakes", newGame:"New game", closeLbl:"Close", outOf:"exercises without mistakes", nextReview:"Next review: ", tomorrow:"tomorrow", inDays:n=>"in "+n+" days",
     secHarmony:"Harmony", secProg:"Progressions", secEar:"Ear", secGames:"Games", secRank:"Leaderboard", secAccount:"Profile",
+    inTitle:"How will you play?", inSub:"Choose once. You can change it later in Settings.", inLbl:"I play with",
+    inModes:{screen:["The on-screen keyboard","Tap the notes on screen, or use your computer keyboard.","Screen"],midi:["My MIDI keyboard","Plugged in with USB or connected over Bluetooth. The most accurate.","MIDI"],mic:["My piano, with the mic","For an acoustic piano: the app listens to the notes you play.","Mic"]},
+    inCfgMidi:"Connect / set up the MIDI keyboard", inCfgMic:"Turn the mic on", inMidiNo:"This browser has no MIDI: use Chrome or Edge, the iPhone/iPad app, or the mic.",
+    inMidiOk:n=>"Connected: "+n, inMidiNone:"No keyboard detected: plug it in or connect it over Bluetooth.", inMicOk:"The mic is listening.", inMicOff:"Mic not turned on yet.", inScreenOk:"Tap the notes on screen.",
     wcTitle:"Welcome to Piano Challenges", wcSub:"Learn chords, scales and progressions by playing on your piano. 5 minutes a day is enough.",
     wcSignup:"Create my free account", wcSkip:"Try it first without an account",
     perks:["Keep your progress on computer, phone and tablet","Take on the daily practice and its challenges","Play the music games, like Note Jumper","Track your progress and climb the leaderboard"],
@@ -2423,7 +2457,7 @@ function render(){ document.body.classList.toggle("playing", !!game || phase!=="
 
 // ---------- Settings wiring ----------
 $("langSeg").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return;
-  S.settings.lang=b.dataset.v; S.settings.notation=b.dataset.v; save(); applyStatic(); applySide(); renderGames(); if(page==="rank") renderRank(); if(page==="account") renderAccount(); if(helpOpen) renderTut(); renderSettings(); labelKeys(); render(); renderDaily(); if(endOpen&&lastGame) openEnd(lastGame); });
+  S.settings.lang=b.dataset.v; S.settings.notation=b.dataset.v; save(); applyStatic(); applySide(); renderGames(); renderInputUI(); if(page==="rank") renderRank(); if(page==="account") renderAccount(); if(helpOpen) renderTut(); renderSettings(); labelKeys(); render(); renderDaily(); if(endOpen&&lastGame) openEnd(lastGame); });
 function bindSeg(id,key,restart){ $(id).addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return;
   S.settings[key]=b.dataset.v; save(); renderSettings(); labelKeys();
   if(restart && cur && (phase==="listening"||phase==="revealed")) startRound(key==="dir"?{...cur,dir:null}:cur,true); else render(); }); }
@@ -2839,6 +2873,48 @@ $("resetBtn").addEventListener("click",e=>{
 narrowMQ.addEventListener?.("change",()=>buildKeyboard());
 
 document.addEventListener("change",e=>{ if(e.target.matches("select, input[type=checkbox], input[type=range]") && !e.target.closest(".acct-login")) setTimeout(()=>e.target.blur(),0); });
+// ---------- How the player plays: on-screen keys, MIDI keyboard or microphone ----------
+const INPUT_ICONS={"screen": "<svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><rect x=\"2.5\" y=\"4\" width=\"19\" height=\"13\" rx=\"2\"/><path d=\"M8 21h8M12 17v4M6 8v5M9 8v5M12 8v5M15 8v5M18 8v5\"/></svg>", "midi": "<svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><rect x=\"2.5\" y=\"7\" width=\"19\" height=\"11\" rx=\"2\"/><path d=\"M6.5 7v6M10 7v6M14 7v6M17.5 7v6M12 7V3.5M12 3.5h4\"/></svg>", "mic": "<svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><rect x=\"9\" y=\"3\" width=\"6\" height=\"11\" rx=\"3\"/><path d=\"M5.5 11a6.5 6.5 0 0 0 13 0M12 17.5V21M8.5 21h7\"/></svg>"};
+const mobileWebNow = () => (phoneMQ.matches||railMQ.matches) && !document.documentElement.classList.contains("native");
+const inputModes = () => mobileWebNow() ? ["screen","mic"] : ["screen","midi","mic"];
+function renderInputUI(){
+  const m=S.settings.input||"screen", M=t("inModes");
+  const seg=$("segInput"); seg.innerHTML="";
+  inputModes().forEach(v=>{ const b=document.createElement("button"); b.type="button"; b.dataset.v=v; b.setAttribute("aria-pressed",v===m); b.textContent=M[v][2]; b.onclick=()=>setInput(v,true); seg.appendChild(b); });
+  let st="", cfg="";
+  if(m==="midi"){ st = !navigator.requestMIDIAccess ? t("inMidiNo") : midiReady ? t("inMidiOk")(midiNames.join(", ")) : t("inMidiNone"); cfg = navigator.requestMIDIAccess ? t("inCfgMidi") : ""; }
+  else if(m==="mic"){ st = micOn ? t("inMicOk") : t("inMicOff"); cfg = micOn ? "" : t("inCfgMic"); }
+  else st=t("inScreenOk");
+  $("inStatus").textContent=st; $("inCfg").textContent=cfg; $("inCfg").hidden=!cfg;
+  const ok = m==="screen" || (m==="midi"&&midiReady) || (m==="mic"&&micOn);
+  const chip=$("inChip"); chip.innerHTML=INPUT_ICONS[m]+'<i class="'+(ok?"on":"off")+'"></i>'; chip.title=M[m][0]+" — "+st; chip.setAttribute("aria-label",chip.title);
+}
+async function setInput(v, fromUser){
+  S.settings.input=v; save();
+  if(v!=="mic" && micOn) micStop();
+  if(v==="midi"){ if(navigator.requestMIDIAccess){ await enableMidi(); if(fromUser && !midiReady) openMidi(); } }
+  if(v==="mic" && fromUser && !micOn) $("micBtn").click();
+  renderInputUI(); render();
+}
+$("inCfg").addEventListener("click",()=>{ const m=S.settings.input; if(m==="midi") openMidi(); else if(m==="mic") $("micBtn").click(); });
+$("inChip").addEventListener("click",()=>openSet("settings"));
+function openInputChooser(){
+  const box=$("inOpts"), M=t("inModes"); box.innerHTML="";
+  inputModes().forEach(v=>{ const b=document.createElement("button"); b.type="button"; b.className="inp-opt";
+    b.innerHTML='<span class="io-ic">'+INPUT_ICONS[v]+'</span><span class="io-t"><b></b><small></small></span>';
+    b.querySelector("b").textContent=M[v][0]; b.querySelector("small").textContent=M[v][1];
+    b.onclick=()=>{ closeMod("inputModal"); setInput(v,true); }; box.appendChild(b); });
+  openMod("inputModal");
+}
+function maybeAskInput(){ if(!S.settings.input && !anyModal()) setTimeout(()=>{ if(!S.settings.input && !anyModal()) openInputChooser(); },350); }
+// the chosen input comes back by itself (the mic needs a first tap: browsers require it)
+function restoreInput(){
+  const m=S.settings.input;
+  if(m==="midi" && navigator.requestMIDIAccess) enableMidi();
+  if(m==="mic"){ const go=()=>{ document.removeEventListener("pointerdown",go,true); if(S.settings.input==="mic" && !micOn) $("micBtn").click(); }; document.addEventListener("pointerdown",go,true); }
+  if(mobileWebNow() && m==="midi"){ S.settings.input="screen"; save(); }
+  renderInputUI();
+}
 // ---------- Toasts & notices ----------
 function toast(x){ /* notifications removed on request: unlocks show in the progress view */ }
 function notice(x){ const n=$("notice"); n.textContent=x; n.hidden=!x; }
@@ -2863,13 +2939,11 @@ function closeMidi(){ if(!midiOpen) return; midiOpen=false; $("midiModal").hidde
 let midiPoll=0; // in the app, look for newly paired / plugged keyboards while the window is open
 function startMidiPoll(){ clearInterval(midiPoll); if(window.__nativeMidi && midiAcc) midiPoll=setInterval(()=>{ window.__nativeMidi.listInputs().catch(()=>{}); },2000); }
 function calibMsg(x){ const m=$("calibMsg"); m.textContent=x; m.hidden=!x; if(!midiOpen) notice(x); }
-$("midiCfg").addEventListener("click",openMidi); $("midiCfg2").addEventListener("click",openMidi);
+$("midiCfg").addEventListener("click",openMidi);
 $("midiX").addEventListener("click",closeMidi); $("midiBg").addEventListener("click",closeMidi); $("midiOk").addEventListener("click",closeMidi);
 $("mEnable").addEventListener("click",()=>$("midiBtn").click());
 $("mBt").addEventListener("click",async ()=>{ if(!window.__nativeMidi) return; if(!midiAcc) $("midiBtn").click(); try{ await window.__nativeMidi.showBluetooth(); }catch(e){} });
-if(window.__nativeMidi) setTimeout(async ()=>{ // the app turns MIDI on by itself, and shows the connection window once if nothing is plugged in
-  await enableMidi(); setTimeout(maybeMidiConn,700); },300);
-function maybeMidiConn(){ if(window.__nativeMidi && !midiReady && !S.settings.midiConnSeen && !helpOpen && !midiOpen){ S.settings.midiConnSeen=true; save(); openMidi(); } }
+function maybeMidiConn(){}
 $("mInput").addEventListener("change",e=>{ S.settings.midiInput=e.target.value; save(); if(midiAcc&&midiAcc.onstatechange) midiAcc.onstatechange(); renderMidiModal(); });
 $("optMidiC").addEventListener("change",e=>{ S.settings.midiC=e.target.checked; save(); render(); });
 $("midiBtn").addEventListener("click", ()=>{ if(midiAcc) openMidi(); else enableMidi(); });
@@ -2887,7 +2961,7 @@ async function enableMidi(){
           midiIn(note); } }; });
       $("midiBtn").classList.toggle("on",names.length>0); $("midiBtn").classList.remove("err");
       const shown = S.settings.midiInput && names.includes(S.settings.midiInput) ? S.settings.midiInput : names[0];
-      $("midiTxt").textContent=names.length ? t("midiDev")+shown : t("midiNone"); midiReady=names.length>0; midiNames=names; render(); if(midiOpen) renderMidiModal(); };
+      $("midiTxt").textContent=names.length ? t("midiDev")+shown : t("midiNone"); midiReady=names.length>0; midiNames=names; render(); if(midiOpen) renderMidiModal(); renderInputUI(); };
     bind(); acc.onstatechange=bind; notice("");
   }catch(err){ $("midiBtn").classList.add("err"); $("midiTxt").textContent=t("midiBlocked"); notice(t("blocked")); }
 }
@@ -2900,8 +2974,8 @@ $("micBtn").addEventListener("click", async ()=>{
     const stream=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:false,noiseSuppression:false,autoGainControl:false}});
     const src=c.createMediaStreamSource(stream), an=c.createAnalyser(); an.fftSize=2048; src.connect(an);
     const buf=new Float32Array(an.fftSize); let cand=null, count=0, lastEmit=null;
-    micOn=true; $("micBtn").classList.add("on"); $("micBtn").classList.remove("err"); $("micTxt").textContent=t("micOn"); notice("");
-    setInterval(()=>{
+    micStream=stream; micOn=true; $("micBtn").classList.add("on"); $("micBtn").classList.remove("err"); $("micTxt").textContent=t("micOn"); notice("");
+    micTimer=setInterval(()=>{
       an.getFloatTimeDomainData(buf); const f=autoCorrelate(buf,c.sampleRate);
       if(f<0){ cand=null; count=0; lastEmit=null; return; }
       if(performance.now()<micMuteUntil) return;
@@ -2910,7 +2984,10 @@ $("micBtn").addEventListener("click", async ()=>{
       if(count===3 && m%12!==lastEmit){ lastEmit=m%12; flashKey(m,"k-hit",150); noteIn(m); }
     },25);
   }catch(err){ $("micBtn").classList.add("err"); $("micTxt").textContent=t("micBlocked"); notice(t("blocked")); }
+  renderInputUI();
 });
+let micStream=null, micTimer=0;
+function micStop(){ clearInterval(micTimer); if(micStream) micStream.getTracks().forEach(tr=>tr.stop()); micStream=null; micOn=false; $("micBtn").classList.remove("on"); $("micTxt").textContent=t("micOff"); }
 function autoCorrelate(buf,sr){
   let SIZE=buf.length, rms=0; for(let i=0;i<SIZE;i++) rms+=buf[i]*buf[i]; rms=Math.sqrt(rms/SIZE);
   if(rms<0.012) return -1;
@@ -2940,7 +3017,7 @@ function resumeRound(){
   if(pendingAdv){ pendingAdv=false; setTimeout(()=>{ if(anyModal()){ pendingAdv=true; return; } if(phase==="success") startRound(); else if(phase==="revealed") grade(true); },500); }
 }
 function modalOpened(){ modalFocus.push(document.activeElement); pauseRound(); try{ $("app").inert=true; }catch(e){} }
-function modalClosed(){ if(!anyModal()){ try{ $("app").inert=false; }catch(e){} } const f=modalFocus.pop(); try{ if(f&&f.focus&&!anyModal()) f.focus({preventScroll:true}); }catch(e){} resumeRound(); }
+function modalClosed(){ if(typeof maybeAskInput==="function") setTimeout(maybeAskInput,0); if(!anyModal()){ try{ $("app").inert=false; }catch(e){} } const f=modalFocus.pop(); try{ if(f&&f.focus&&!anyModal()) f.focus({preventScroll:true}); }catch(e){} resumeRound(); }
 const VB='viewBox="0 0 360 190"';
 const svgHead = id => '<svg '+VB+' class="tut-svg" role="img" aria-hidden="true"><defs><marker id="'+id+'" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="s-ah"/></marker></defs>';
 const arrow = (id,d) => '<path class="s-arrow" d="'+d+'" marker-end="url(#'+id+')"/>';
@@ -3057,7 +3134,9 @@ setTimeout(initCloud, 400);
 { const sp=$("splash"); if(document.documentElement.classList.contains("native")){ const t0=performance.now(); setTimeout(()=>{ sp.classList.add("out"); setTimeout(()=>sp.remove(),400); }, Math.max(0,1500-t0)); } else sp.remove(); }
 const mobileWeb = (phoneMQ.matches||railMQ.matches) && !document.documentElement.classList.contains("native");
 document.body.classList.add("guest");
+restoreInput();
 if(firstVisit){ save(); if(mobileWeb){ renderWelcome(); openMod("welcomeModal"); } else openHelp(); }
+else maybeAskInput();
 })();
 </script>
 
