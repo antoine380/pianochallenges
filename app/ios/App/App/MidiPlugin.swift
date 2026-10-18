@@ -16,7 +16,7 @@ import CoreAudioKit
 ///   "midi"        { id, data: [status, data1, data2] }
 ///   "statechange" { inputs: [{ id, name }] }
 @objc(MidiPlugin)
-public class MidiPlugin: CAPPlugin, CAPBridgedPlugin {
+public class MidiPlugin: CAPPlugin, CAPBridgedPlugin, UIAdaptivePresentationControllerDelegate {
     public let identifier = "MidiPlugin"
     public let jsName = "Midi"
     public let pluginMethods: [CAPPluginMethod] = [
@@ -30,29 +30,36 @@ public class MidiPlugin: CAPPlugin, CAPBridgedPlugin {
     private var started = false
     private var connected = Set<MIDIUniqueID>()
     private var bluetoothNav: UINavigationController?
+    private var lastSignature = ""
 
     // MARK: - JS methods
 
+    // Capacitor runs plugin calls on a background queue. CoreMIDI delivers its "setup changed"
+    // notifications on the run loop of the thread that created the client, so create it on the main thread.
     @objc func start(_ call: CAPPluginCall) {
-        if !started {
-            var status = MIDIClientCreateWithBlock("Piano Challenges" as CFString, &client) { [weak self] notification in
-                if notification.pointee.messageID == .msgSetupChanged {
-                    DispatchQueue.main.async { self?.refresh(notify: true) }
+        DispatchQueue.main.async {
+            if !self.started {
+                var status = MIDIClientCreateWithBlock("Piano Challenges" as CFString, &self.client) { [weak self] notification in
+                    if notification.pointee.messageID == .msgSetupChanged || notification.pointee.messageID == .msgObjectAdded || notification.pointee.messageID == .msgObjectRemoved {
+                        DispatchQueue.main.async { self?.refresh(notify: true) }
+                    }
                 }
+                guard status == noErr else { call.reject("Could not start MIDI (\(status))"); return }
+                status = MIDIInputPortCreateWithBlock(self.client, "Input" as CFString, &self.inputPort) { [weak self] packetList, refCon in
+                    self?.receive(packetList, refCon)
+                }
+                guard status == noErr else { call.reject("Could not open MIDI input (\(status))"); return }
+                self.started = true
             }
-            guard status == noErr else { call.reject("Could not start MIDI (\(status))"); return }
-
-            status = MIDIInputPortCreateWithBlock(client, "Input" as CFString, &inputPort) { [weak self] packetList, refCon in
-                self?.receive(packetList, refCon)
-            }
-            guard status == noErr else { call.reject("Could not open MIDI input (\(status))"); return }
-            started = true
+            call.resolve(["inputs": self.refresh(notify: false)])
         }
-        call.resolve(["inputs": refresh(notify: false)])
     }
 
+    /// Also used by the page as a safety net: it reconnects any new source and reports changes.
     @objc func listInputs(_ call: CAPPluginCall) {
-        call.resolve(["inputs": started ? refresh(notify: false) : []])
+        DispatchQueue.main.async {
+            call.resolve(["inputs": self.started ? self.refresh(notify: true) : []])
+        }
     }
 
     @objc func showBluetooth(_ call: CAPPluginCall) {
@@ -64,6 +71,7 @@ public class MidiPlugin: CAPPlugin, CAPBridgedPlugin {
                 barButtonSystemItem: .done, target: self, action: #selector(self.closeBluetooth))
             let nav = UINavigationController(rootViewController: central)
             nav.modalPresentationStyle = .formSheet
+            nav.presentationController?.delegate = self
             self.bluetoothNav = nav
             presenter.present(nav, animated: true)
             call.resolve()
@@ -74,6 +82,16 @@ public class MidiPlugin: CAPPlugin, CAPBridgedPlugin {
         bluetoothNav?.dismiss(animated: true)
         bluetoothNav = nil
         refresh(notify: true)
+        // a Bluetooth keyboard can take a moment to publish its MIDI source
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) { self.refresh(notify: true) }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) { self.refresh(notify: true) }
+    }
+
+    // Swiping the Bluetooth sheet down (iPad / iPhone) counts as closing it too.
+    public func presentationControllerDidDismiss(_ presentationController: UIPresentationController) {
+        bluetoothNav = nil
+        refresh(notify: true)
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) { self.refresh(notify: true) }
     }
 
     // MARK: - Sources
@@ -101,7 +119,9 @@ public class MidiPlugin: CAPPlugin, CAPBridgedPlugin {
         }
         // Sources that disappeared are disconnected by CoreMIDI; forget them so they reconnect later.
         connected = connected.intersection(present)
-        if notify { notifyListeners("statechange", data: ["inputs": inputs]) }
+        let signature = inputs.map { "\($0["id"] ?? "")" }.joined(separator: ",")
+        if notify && signature != lastSignature { notifyListeners("statechange", data: ["inputs": inputs]) }
+        lastSignature = signature
         return inputs
     }
 
