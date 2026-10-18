@@ -398,6 +398,48 @@ select{font:inherit;color:var(--ink);background:var(--surface-2);border:1px soli
   .actions .btn kbd,.actions .spacer{display:none}
   .toasts{bottom:calc(84px + env(safe-area-inset-bottom, 0px))}
 }
+/* Phones: while a game runs, keep only the game on screen */
+@media (max-width:640px), (max-height:520px) and (orientation:landscape){
+  body.playing .daily, body.playing .sections, body.playing .picker{display:none}
+  body.playing .lvl-title, body.playing .xp-txt{display:none}
+}
+/* Phones and small tablets held sideways: everything compact, the keyboard gets the room */
+@media (max-height:520px) and (orientation:landscape){
+  body{padding-block:8px 12px;font-size:14px}
+  .wrap{gap:8px}
+  .top{gap:6px 10px;flex-wrap:nowrap}
+  .mark{width:30px;height:30px} .wm-a{font-size:1rem} .wm-b{font-size:.74rem}
+  .lvl-card{padding:4px 10px 4px 4px;gap:4px 10px}
+  .lvl-badge{min-width:30px;height:30px;font-size:1rem}
+  .lvl-meta{min-width:80px}
+  .stat svg{width:18px;height:18px} .stat-txt b{font-size:.95rem}
+  .help-btn > span:last-child{display:none} .help-btn{padding:3px 4px}
+  .daily{padding:8px 12px} .daily .dicon{width:34px;height:34px}
+  .sections button{padding:6px 8px;font-size:.88rem}
+  .picker{padding:8px 12px;gap:10px}
+  .pk-side{flex-direction:row}
+  .stage{padding:10px 14px;gap:8px;border-radius:12px}
+  .prompt{font-size:1.7rem}
+  .prompt-sub{margin-top:2px;font-size:.78rem}
+  .eyebrow{font-size:.66rem}
+  .score-box{padding:5px 10px;min-width:150px}
+  .sb-val{font-size:1.25rem}
+  .timeline{height:18px}
+  .slot{padding:3px 2px 4px} .slot .nn{font-size:.95rem;min-height:1.3em}
+  .kbd{height:max(120px,38vh)}
+  .actions{position:static;padding:0;border:0;background:none}
+  .actions .btn{min-height:40px;padding:6px 14px}
+  .inputs .pill{padding:3px 10px;font-size:.78rem}
+  .hint.keys{display:none}
+  .gamebar{gap:8px}
+  .answers{grid-template-columns:repeat(auto-fill,minmax(130px,1fr))}
+  .answers button{min-height:40px;padding:8px}
+  .modal-card{max-height:96%}
+  .set-body{grid-template-columns:repeat(3,minmax(0,1fr))}
+  body.playing .top, body.playing .inputs, body.playing .eyebrow, body.playing .session{display:none}
+  body.playing .kbd{height:max(110px,34vh)}
+  body.playing .stage{gap:6px}
+}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
 
@@ -558,6 +600,7 @@ select{font:inherit;color:var(--ink);background:var(--surface-2);border:1px soli
     <div class="modal-head"><h2 id="midiTitle" data-i="midiTitle"></h2><button class="modal-close" id="midiX" type="button" aria-label="Close">×</button></div>
     <div class="modal-body midi-body">
       <div class="midi-status"><span class="dot"></span><span id="mStTxt"></span><span class="spacer"></span><button class="btn primary" id="mEnable" type="button" data-i="midiOff"></button></div>
+      <button class="btn" id="mBt" type="button" hidden data-i="midiBt"></button>
       <div class="field" id="mInField"><span data-i="midiInput"></span><select id="mInput"></select></div>
       <div class="field" id="kbField"><span data-i="kbLbl"></span>
         <div class="range-row"><select id="kbSize" aria-label="On-screen keyboard"></select><button class="btn" id="kbDetect" type="button" data-i="kbDetect"></button></div>
@@ -617,6 +660,21 @@ select{font:inherit;color:var(--ink);background:var(--surface-2);border:1px soli
 <div class="toasts" id="toasts"></div>
 
 <script>
+// Inside the Piano Challenges iOS app, MIDI comes from CoreMIDI through a native plugin.
+// It is exposed with the same shape as the browser's Web MIDI API, so the rest of the code is unchanged.
+(function(){
+  const cap=window.Capacitor; if(!cap || !cap.isNativePlatform || !cap.isNativePlatform()) return;
+  const M=cap.Plugins && cap.Plugins.Midi; if(!M) return;
+  window.__nativeMidi=M;
+  navigator.requestMIDIAccess=async()=>{
+    const access={inputs:new Map(), onstatechange:null};
+    const sync=list=>{ const old=access.inputs, m=new Map(); (list||[]).forEach(d=>{ const k=String(d.id); m.set(k, old.get(k)||{id:k,name:d.name,onmidimessage:null}); }); access.inputs=m; };
+    const r=await M.start(); sync(r.inputs);
+    M.addListener("midi", ev=>{ const inp=access.inputs.get(String(ev.id)); if(inp && inp.onmidimessage) inp.onmidimessage({data:ev.data}); });
+    M.addListener("statechange", ev=>{ sync(ev.inputs); if(access.onstatechange) access.onstatechange(); });
+    return access;
+  };
+})();
 (() => {
 "use strict";
 // ---------- Text ----------
@@ -667,7 +725,7 @@ const TXT = {
     kbdHint:"Clavier d'ordinateur : rangée Q S D F G H J K pour les touches blanches, rangée du dessus pour les noires. Espace : révéler / suivant · Entrée (ou un Do au clavier MIDI) : continuer · ⌫ : réessayer.",
     progress:"Progression", viewLabel:"Afficher", settings:"Réglages", practise:"Gammes travaillées", order:"Ordre", answerAfter:"Ou réglez le temps précis :",
     never:"jamais", notation:"Notation", direction:"Sens", optOct:"Finir sur l'octave", optLabels:"Noms des notes sur le clavier",
-    midiTitle:"Clavier MIDI", midiInput:"Appareil", midiAll:"Tous les appareils", midiOffState:"MIDI non activé", midiCfgBtn:"Réglages du clavier MIDI",
+    midiBt:"Connecter un clavier Bluetooth", midiTitle:"Clavier MIDI", midiInput:"Appareil", midiAll:"Tous les appareils", midiOffState:"MIDI non activé", midiCfgBtn:"Réglages du clavier MIDI",
     optMidiC:"Un Do pour commencer et continuer", midiHint:"Le MIDI marche dans Chrome et Edge, en USB ou Bluetooth (pas dans Safari ni sur iPhone/iPad).",
     keyLbl:"Tonalité", allKeys:"Toutes (débloquées)", dirMix:"Les deux",
     kbLbl:"Clavier à l'écran", kbAuto:"Automatique (3 octaves)", keys:"touches", kbCustom:"Détecté", kbDetect:"Détecter mon clavier MIDI",
@@ -727,7 +785,7 @@ const TXT = {
     kbdHint:"Computer keyboard: A S D F G H J K row for white keys, the row above for black keys. Space: reveal / next · Enter: continue · ⌫: retry.",
     progress:"Progress", viewLabel:"Show", settings:"Settings", practise:"Scales to practise", order:"Order", answerAfter:"Or set the exact time:",
     never:"never", notation:"Note names", direction:"Direction", optOct:"End on the octave", optLabels:"Note names on the keys",
-    midiTitle:"MIDI keyboard", midiInput:"Device", midiAll:"All devices", midiOffState:"MIDI not enabled", midiCfgBtn:"MIDI keyboard settings",
+    midiBt:"Connect a Bluetooth keyboard", midiTitle:"MIDI keyboard", midiInput:"Device", midiAll:"All devices", midiOffState:"MIDI not enabled", midiCfgBtn:"MIDI keyboard settings",
     optMidiC:"A C starts and continues", midiHint:"MIDI works in Chrome and Edge, over USB or Bluetooth (not in Safari or on iPhone/iPad).",
     keyLbl:"Key", allKeys:"All (unlocked)", dirMix:"Both",
     kbLbl:"On-screen keyboard", kbAuto:"Automatic (3 octaves)", keys:"keys", kbCustom:"Detected", kbDetect:"Detect my MIDI keyboard",
@@ -1811,7 +1869,7 @@ function renderSettings(){
   $("secTabs").querySelectorAll("button").forEach(b=>b.setAttribute("aria-selected", b.dataset.v===S.section));
   renderTypes(); renderKeySel();
 }
-function render(){ renderGameBar(); $("secTabs").querySelectorAll("button").forEach(b=>b.setAttribute("aria-selected", b.dataset.v===S.section));
+function render(){ document.body.classList.toggle("playing", !!game || phase!=="idle"); renderGameBar(); $("secTabs").querySelectorAll("button").forEach(b=>b.setAttribute("aria-selected", b.dataset.v===S.section));
   if(phase==="idle"||phase==="listening") resetScore(); renderSession(); renderHint(); renderPrompt(); renderTimeline(); renderSlots(); renderActions(); renderStatus(); renderMap(); }
 
 // ---------- Settings wiring ----------
@@ -1889,6 +1947,9 @@ function calibMsg(x){ const m=$("calibMsg"); m.textContent=x; m.hidden=!x; if(!m
 $("midiCfg").addEventListener("click",openMidi); $("midiCfg2").addEventListener("click",openMidi);
 $("midiX").addEventListener("click",closeMidi); $("midiBg").addEventListener("click",closeMidi); $("midiOk").addEventListener("click",closeMidi);
 $("mEnable").addEventListener("click",()=>$("midiBtn").click());
+$("mBt").hidden=!window.__nativeMidi;
+$("mBt").addEventListener("click",()=>{ if(window.__nativeMidi) window.__nativeMidi.showBluetooth(); });
+if(window.__nativeMidi) setTimeout(()=>$("midiBtn").click(),300); // the app turns MIDI on by itself
 $("mInput").addEventListener("change",e=>{ S.settings.midiInput=e.target.value; save(); if(midiAcc&&midiAcc.onstatechange) midiAcc.onstatechange(); renderMidiModal(); });
 $("optMidiC").addEventListener("change",e=>{ S.settings.midiC=e.target.checked; save(); render(); });
 $("midiBtn").addEventListener("click", async ()=>{

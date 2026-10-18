@@ -1,0 +1,12 @@
+{
+  "appId": "com.pianochallenges.app",
+  "appName": "Piano Challenges",
+  "webDir": "www",
+  "backgroundColor": "#161920",
+  "ios": {
+    "contentInset": "never",
+    "scrollEnabled": true,
+    "allowsLinkPreview": false,
+    "preferredContentMode": "mobile"
+  }
+}

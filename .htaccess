@@ -38,3 +38,7 @@ AddType image/svg+xml .svg
 # 6. Unknown URLs go back to the app
 ErrorDocument 404 /index.html
 Options -Indexes
+
+# The iOS app source is in the repo but must not be served
+RedirectMatch 404 ^/app(/|$)
+RedirectMatch 404 ^/\.git
