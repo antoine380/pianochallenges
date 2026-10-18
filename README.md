@@ -11,3 +11,7 @@ The site is a static page. OVHcloud web hosting deploys this repository automati
 - `index.html` – the whole application
 - `assets/fonts/` – self-hosted fonts
 - `.htaccess` – HTTPS redirect, permissions for microphone and MIDI, caching
+
+## Project file
+
+Summary, decisions, deployment checklist and roadmap: https://claude.ai/code/artifact/dd48f85b-47b8-4364-87fe-94bf68509759
