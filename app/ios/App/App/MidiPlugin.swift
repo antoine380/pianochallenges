@@ -15,7 +15,9 @@ import CoreAudioKit
 /// Events:
 ///   "midi"        { id, data: [status, data1, data2] }
 ///   "statechange" { inputs: [{ id, name }] }
-@objc(MidiPlugin)
+// The Objective-C name matches the JS name ("Midi"): if the plugin was not registered by
+// MainViewController, Capacitor finds it by this name on the first call and loads it itself.
+@objc(Midi)
 public class MidiPlugin: CAPPlugin, CAPBridgedPlugin, UIAdaptivePresentationControllerDelegate {
     public let identifier = "MidiPlugin"
     public let jsName = "Midi"
