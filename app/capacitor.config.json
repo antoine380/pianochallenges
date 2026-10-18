@@ -8,5 +8,6 @@
     "scrollEnabled": true,
     "allowsLinkPreview": false,
     "preferredContentMode": "mobile"
-  }
+  },
+  "zoomEnabled": false
 }

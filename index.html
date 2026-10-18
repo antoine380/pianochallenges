@@ -489,6 +489,39 @@ body{margin:0;padding:0;overflow:hidden}
 [data-page="daily"] .picker{display:none}
 [data-page="rank"] :is(.picker,.stage), [data-page="account"] :is(.picker,.stage){display:none!important}
 
+/* App launch animation (iOS app only) */
+.splash{display:none}
+html.native .splash{display:grid;place-items:center;align-content:center;gap:18px;position:fixed;inset:0;z-index:100;background:#161920;transition:opacity .35s ease,visibility .35s}
+html.native .splash.out{opacity:0;visibility:hidden}
+.sp-mark{width:96px;height:96px;overflow:visible}
+.sp-k{fill:#eceef2;transform-box:fill-box;transform-origin:top;opacity:0;animation:spKey .5s cubic-bezier(.3,1.4,.5,1) forwards}
+.sp-k2{fill:#e09a2f;animation-delay:.12s} .sp-k3{animation-delay:.24s}
+.sp-b{fill:#161920;opacity:0;animation:spIn .3s ease .42s forwards}
+.sp-k2{animation:spKey .5s cubic-bezier(.3,1.4,.5,1) .12s forwards, spPress .28s ease .75s 2 alternate}
+.sp-wm{display:flex;flex-direction:column;align-items:center;line-height:1;font-family:var(--f-display);opacity:0;transform:translateY(8px);animation:spIn .45s ease .5s forwards}
+.sp-wm span:first-child{color:#fff;font-weight:800;font-size:2rem;letter-spacing:-.02em}
+.sp-wm span:last-child{color:#e09a2f;font-weight:700;font-size:1.05rem;letter-spacing:.14em;text-transform:uppercase;margin-top:4px}
+@keyframes spKey{from{opacity:0;transform:scaleY(.2)}to{opacity:1;transform:none}}
+@keyframes spIn{to{opacity:1;transform:none}}
+@keyframes spPress{to{transform:scaleY(.9)}}
+html.native, html.native body{touch-action:manipulation;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
+html.native :is(input,select,textarea){-webkit-user-select:auto;user-select:auto}
+html.native .midi-body [data-i="midiHint"]{display:none}
+/* MIDI connection window */
+.mconn{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:10px}
+@media (max-width:520px){.mconn{grid-template-columns:minmax(0,1fr)}}
+.mc-card{display:flex;flex-direction:column;gap:6px;border:1px solid var(--line);border-radius:12px;padding:12px;background:var(--surface-2)}
+.mc-card .mc-h{display:flex;align-items:center;gap:8px;font-family:var(--f-display);font-weight:800}
+.mc-card .mc-h svg{width:22px;height:22px;fill:none;stroke:var(--accent);stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.mc-card p{margin:0;font-size:.84rem;color:var(--muted);line-height:1.4}
+.mc-card .btn{margin-top:auto;align-self:flex-start}
+.mdev{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px}
+.mdev li{display:flex;align-items:center;gap:10px;padding:8px 12px;border-radius:10px;border:1px solid var(--good);background:var(--good-soft);font-weight:700}
+.mdev li::before{content:"";width:9px;height:9px;border-radius:50%;background:var(--good);flex:none}
+.mdev li.none{border-color:var(--line);background:var(--surface-2);color:var(--muted);font-weight:400}
+.mdev li.none::before{background:var(--line)}
+.mdev-h{font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:0}
+
 /* Picker: one compact toolbar */
 .picker{flex:none;display:flex;flex-wrap:wrap;align-items:center;gap:8px 18px;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:8px 12px}
 .pk-field{display:flex;align-items:center;gap:8px;min-width:0}
@@ -609,6 +642,17 @@ body{margin:0;padding:0;overflow:hidden}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
 
+<script>if(window.Capacitor&&window.webkit&&window.webkit.messageHandlers&&window.webkit.messageHandlers.bridge)document.documentElement.classList.add("native");</script>
+<div class="splash" id="splash" aria-hidden="true">
+  <svg class="sp-mark" viewBox="0 0 40 40">
+    <rect class="sp-k sp-k1" x="7" y="9" width="8" height="23" rx="2.2"/>
+    <rect class="sp-k sp-k2" x="16" y="9" width="8" height="23" rx="2.2"/>
+    <rect class="sp-k sp-k3" x="25" y="9" width="8" height="23" rx="2.2"/>
+    <rect class="sp-b" x="12.3" y="9" width="5.4" height="13.5" rx="1.4"/>
+    <rect class="sp-b" x="22.3" y="9" width="5.4" height="13.5" rx="1.4"/>
+  </svg>
+  <div class="sp-wm"><span>Piano</span><span>Challenges</span></div>
+</div>
 <div class="app" id="app">
 <header class="mbar">
   <button class="mbar-btn" id="menuBtn" type="button" aria-label="Menu" aria-controls="side" aria-expanded="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
@@ -840,7 +884,12 @@ body{margin:0;padding:0;overflow:hidden}
     <div class="modal-head"><h2 id="midiTitle" data-i="midiTitle"></h2><button class="modal-close" id="midiX" type="button" aria-label="Close">×</button></div>
     <div class="modal-body midi-body">
       <div class="midi-status"><span class="dot"></span><span id="mStTxt"></span><span class="spacer"></span><button class="btn primary" id="mEnable" type="button" data-i="midiOff"></button></div>
-      <button class="btn" id="mBt" type="button" hidden data-i="midiBt"></button>
+      <p class="mdev-h" data-i="midiFound"></p>
+      <ul class="mdev" id="mDevList"></ul>
+      <div class="mconn">
+        <div class="mc-card"><span class="mc-h"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v13M12 3l-2.5 3h5zM7 10v3l5 3M17 8v3l-5 3"/><circle cx="12" cy="19" r="2"/><rect x="5.6" y="8" width="2.8" height="2.8" rx=".5"/><circle cx="17" cy="7" r="1.4"/></svg>USB</span><p id="mcUsb"></p></div>
+        <div class="mc-card"><span class="mc-h"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 7l10 10-5 4V3l5 4L7 17"/></svg>Bluetooth</span><p id="mcBt"></p><button class="btn primary" id="mBt" type="button" hidden data-i="midiBt"></button></div>
+      </div>
       <div class="field" id="mInField"><span data-i="midiInput"></span><select id="mInput"></select></div>
       <div class="field" id="kbField"><span data-i="kbLbl"></span>
         <div class="range-row"><select id="kbSize" aria-label="On-screen keyboard"></select><button class="btn" id="kbDetect" type="button" data-i="kbDetect"></button></div>
@@ -903,17 +952,25 @@ body{margin:0;padding:0;overflow:hidden}
 // Inside the Piano Challenges iOS app, MIDI comes from CoreMIDI through a native plugin.
 // It is exposed with the same shape as the browser's Web MIDI API, so the rest of the code is unchanged.
 (function(){
-  const cap=window.Capacitor; if(!cap || !cap.isNativePlatform || !cap.isNativePlatform()) return;
-  const M=cap.Plugins && cap.Plugins.Midi; if(!M) return;
-  window.__nativeMidi=M;
+  // window.Capacitor here is the native bridge only (no @capacitor/core bundle), so talk to it directly
+  const cap=window.Capacitor, wk=window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers.bridge;
+  if(!cap || !wk || typeof cap.nativePromise!=="function" || typeof cap.nativeCallback!=="function") return;
+  const call=(m,o)=>cap.nativePromise("Midi",m,o||{});
+  const on=(ev,fn)=>cap.nativeCallback("Midi","addListener",{eventName:ev},(d,err)=>{ if(!err && d) fn(d); });
+  window.__nativeMidi={ start:()=>call("start"), listInputs:()=>call("listInputs"), showBluetooth:()=>call("showBluetooth") };
+  let access=null;
   navigator.requestMIDIAccess=async()=>{
-    const access={inputs:new Map(), onstatechange:null};
-    const sync=list=>{ const old=access.inputs, m=new Map(); (list||[]).forEach(d=>{ const k=String(d.id); m.set(k, old.get(k)||{id:k,name:d.name,onmidimessage:null}); }); access.inputs=m; };
-    const r=await M.start(); sync(r.inputs);
-    M.addListener("midi", ev=>{ const inp=access.inputs.get(String(ev.id)); if(inp && inp.onmidimessage) inp.onmidimessage({data:ev.data}); });
-    M.addListener("statechange", ev=>{ sync(ev.inputs); if(access.onstatechange) access.onstatechange(); });
-    return access;
+    if(access) return access;
+    const acc={inputs:new Map(), onstatechange:null};
+    const sync=list=>{ const old=acc.inputs, m=new Map(); (list||[]).forEach(d=>{ const k=String(d.id); m.set(k, old.get(k)||{id:k,name:d.name,onmidimessage:null}); }); acc.inputs=m; };
+    on("midi", ev=>{ const inp=acc.inputs.get(String(ev.id)); if(inp && inp.onmidimessage) inp.onmidimessage({data:new Uint8Array(ev.data||[])}); });
+    on("statechange", ev=>{ sync(ev.inputs); if(acc.onstatechange) acc.onstatechange(); });
+    const r=await call("start"); sync(r && r.inputs);
+    access=acc; return acc;
   };
+  // no pinch / double-tap zoom inside the app
+  document.addEventListener("gesturestart",e=>e.preventDefault());
+  document.addEventListener("dblclick",e=>e.preventDefault(),{passive:false});
 })();
 (() => {
 "use strict";
@@ -988,11 +1045,15 @@ const TXT = {
     midiStartTip:"Jouez un Do sur votre clavier MIDI pour commencer, puis pour continuer.", screenKeys:"Clavier à l'écran", midiOff:"Activer le MIDI", micOff:"Activer le micro", midiNone:"MIDI : aucun appareil", midiDev:"MIDI : ",
     midiBlocked:"MIDI bloqué", midiNo:"MIDI non pris en charge", micOn:"Micro : à l'écoute", micBlocked:"Micro bloqué",
     blocked:"Le navigateur a refusé l'accès. Cliquez sur le cadenas à gauche de l'adresse du site pour autoriser le micro ou le MIDI, puis réessayez. Dans l'aperçu claude.ai, ils sont toujours bloqués : utilisez pianochallenges.com.",
-    midiUnsupported:"Ce navigateur ne gère pas le MIDI (c'est le cas de Safari et de l'iPhone). Utilisez Chrome ou Edge, ou le micro.",
+    midiUnsupported:"Ce navigateur ne gère pas le MIDI (c'est le cas de Safari, de l'iPhone et de l'iPad). Utilise l'app Piano Challenges, Chrome ou Edge, ou le micro.",
     kbdHint:"Clavier d'ordinateur : rangée Q S D F G H J K pour les touches blanches, rangée du dessus pour les noires. Espace : révéler / suivant · Entrée (ou un Do au clavier MIDI) : continuer · ⌫ : réessayer.",
     progress:"Progression", viewLabel:"Afficher", settings:"Réglages", practise:"Gammes travaillées", order:"Ordre", answerAfter:"Ou réglez le temps précis :",
     never:"jamais", notation:"Notation", direction:"Sens", optOct:"Finir sur l'octave", optLabels:"Noms des notes sur le clavier",
-    midiBt:"Connecter un clavier Bluetooth", midiTitle:"Clavier MIDI", midiInput:"Appareil", midiAll:"Tous les appareils", midiOffState:"MIDI non activé", midiCfgBtn:"Réglages du clavier MIDI",
+    midiBt:"Rechercher un clavier Bluetooth", midiFound:"Claviers détectés", midiNoneLong:"Aucun clavier détecté pour l'instant.",
+    mcUsbApp:"Branche ton clavier en USB-C (ou avec l'adaptateur Lightning). Il apparaît tout seul dans la liste.",
+    mcUsbWeb:"Branche ton clavier en USB, puis active le MIDI. Il apparaît dans la liste.",
+    mcBtApp:"Allume ton clavier, touche Rechercher et choisis-le dans la liste. Inutile de l'appairer dans les réglages Bluetooth.",
+    mcBtWeb:"Appaire d'abord le clavier dans les réglages Bluetooth de ton ordinateur (sur Mac : Configuration audio et MIDI), puis active le MIDI.", midiTitle:"Clavier MIDI", midiInput:"Appareil", midiAll:"Tous les appareils", midiOffState:"MIDI non activé", midiCfgBtn:"Réglages du clavier MIDI",
     optMidiC:"Un Do pour commencer et continuer", midiHint:"Le MIDI marche dans Chrome et Edge, en USB ou Bluetooth (pas dans Safari ni sur iPhone/iPad).",
     keyLbl:"Tonalité", allKeys:"Toutes (débloquées)", dirMix:"Les deux",
     kbLbl:"Clavier à l'écran", kbAuto:"Automatique (3 octaves)", keys:"touches", kbCustom:"Détecté", kbDetect:"Détecter mon clavier MIDI",
@@ -1075,11 +1136,15 @@ const TXT = {
     midiStartTip:"Play a C on your MIDI keyboard to start, and again to continue.", screenKeys:"On-screen keys", midiOff:"Enable MIDI", micOff:"Enable mic", midiNone:"MIDI: no device", midiDev:"MIDI: ",
     midiBlocked:"MIDI blocked", midiNo:"MIDI not supported", micOn:"Mic: listening", micBlocked:"Mic blocked",
     blocked:"The browser refused access. Click the padlock left of the site address to allow the mic or MIDI, then try again. Inside the claude.ai preview they are always blocked: use pianochallenges.com.",
-    midiUnsupported:"This browser has no MIDI support (Safari and iPhone don't). Use Chrome or Edge, or the mic.",
+    midiUnsupported:"This browser has no MIDI support (Safari, iPhone and iPad don't). Use the Piano Challenges app, Chrome or Edge, or the mic.",
     kbdHint:"Computer keyboard: A S D F G H J K row for white keys, the row above for black keys. Space: reveal / next · Enter: continue · ⌫: retry.",
     progress:"Progress", viewLabel:"Show", settings:"Settings", practise:"Scales to practise", order:"Order", answerAfter:"Or set the exact time:",
     never:"never", notation:"Note names", direction:"Direction", optOct:"End on the octave", optLabels:"Note names on the keys",
-    midiBt:"Connect a Bluetooth keyboard", midiTitle:"MIDI keyboard", midiInput:"Device", midiAll:"All devices", midiOffState:"MIDI not enabled", midiCfgBtn:"MIDI keyboard settings",
+    midiBt:"Search for a Bluetooth keyboard", midiFound:"Detected keyboards", midiNoneLong:"No keyboard detected yet.",
+    mcUsbApp:"Plug your keyboard in with USB-C (or the Lightning adapter). It shows up in the list by itself.",
+    mcUsbWeb:"Plug your keyboard in with USB, then enable MIDI. It shows up in the list.",
+    mcBtApp:"Turn your keyboard on, tap Search and pick it in the list. No need to pair it in Bluetooth settings.",
+    mcBtWeb:"First pair the keyboard in your computer's Bluetooth settings (on a Mac: Audio MIDI Setup), then enable MIDI.", midiTitle:"MIDI keyboard", midiInput:"Device", midiAll:"All devices", midiOffState:"MIDI not enabled", midiCfgBtn:"MIDI keyboard settings",
     optMidiC:"A C starts and continues", midiHint:"MIDI works in Chrome and Edge, over USB or Bluetooth (not in Safari or on iPhone/iPad).",
     keyLbl:"Key", allKeys:"All (unlocked)", dirMix:"Both",
     kbLbl:"On-screen keyboard", kbAuto:"Automatic (3 octaves)", keys:"keys", kbCustom:"Detected", kbDetect:"Detect my MIDI keyboard",
@@ -2399,7 +2464,11 @@ let midiAcc=null, midiNames=[], midiOpen=false;
 function renderMidiModal(){
   $("midiModal").querySelector(".midi-status").classList.toggle("on",midiReady);
   $("mStTxt").textContent = midiReady ? $("midiTxt").textContent : (midiAcc ? t("midiNone") : t("midiOffState"));
-  $("mEnable").hidden = !!midiAcc;
+  $("mEnable").hidden = !!midiAcc || !navigator.requestMIDIAccess;
+  const nat=!!window.__nativeMidi, dl=$("mDevList"); dl.innerHTML="";
+  if(midiNames.length) midiNames.forEach(n=>{ const li=document.createElement("li"); li.textContent=n; dl.appendChild(li); });
+  else { const li=document.createElement("li"); li.className="none"; li.textContent = !navigator.requestMIDIAccess ? t("midiUnsupported") : midiAcc ? t("midiNoneLong") : t("midiOffState"); dl.appendChild(li); }
+  $("mcUsb").textContent=t(nat?"mcUsbApp":"mcUsbWeb"); $("mcBt").textContent=t(nat?"mcBtApp":"mcBtWeb"); $("mBt").hidden=!nat;
   const sel=$("mInput"); sel.innerHTML=""; $("mInField").hidden = midiNames.length<2;
   [["",t("midiAll")],...midiNames.map(n=>[n,n])].forEach(([v,l])=>{ const o=document.createElement("option"); o.value=v; o.textContent=l; sel.appendChild(o); });
   sel.value = midiNames.includes(S.settings.midiInput) ? S.settings.midiInput : "";
@@ -2411,12 +2480,14 @@ function calibMsg(x){ const m=$("calibMsg"); m.textContent=x; m.hidden=!x; if(!m
 $("midiCfg").addEventListener("click",openMidi); $("midiCfg2").addEventListener("click",openMidi);
 $("midiX").addEventListener("click",closeMidi); $("midiBg").addEventListener("click",closeMidi); $("midiOk").addEventListener("click",closeMidi);
 $("mEnable").addEventListener("click",()=>$("midiBtn").click());
-$("mBt").hidden=!window.__nativeMidi;
-$("mBt").addEventListener("click",()=>{ if(window.__nativeMidi) window.__nativeMidi.showBluetooth(); });
-if(window.__nativeMidi) setTimeout(()=>$("midiBtn").click(),300); // the app turns MIDI on by itself
+$("mBt").addEventListener("click",async ()=>{ if(!window.__nativeMidi) return; if(!midiAcc) $("midiBtn").click(); try{ await window.__nativeMidi.showBluetooth(); }catch(e){} });
+if(window.__nativeMidi) setTimeout(async ()=>{ // the app turns MIDI on by itself, and shows the connection window once if nothing is plugged in
+  await enableMidi(); setTimeout(maybeMidiConn,700); },300);
+function maybeMidiConn(){ if(window.__nativeMidi && !midiReady && !S.settings.midiConnSeen && !helpOpen && !midiOpen){ S.settings.midiConnSeen=true; save(); openMidi(); } }
 $("mInput").addEventListener("change",e=>{ S.settings.midiInput=e.target.value; save(); if(midiAcc&&midiAcc.onstatechange) midiAcc.onstatechange(); renderMidiModal(); });
 $("optMidiC").addEventListener("change",e=>{ S.settings.midiC=e.target.checked; save(); render(); });
-$("midiBtn").addEventListener("click", async ()=>{
+$("midiBtn").addEventListener("click", ()=>{ if(midiAcc) openMidi(); else enableMidi(); });
+async function enableMidi(){
   audio();
   if(!navigator.requestMIDIAccess){ $("midiBtn").classList.add("err"); $("midiTxt").textContent=t("midiNo"); notice(t("midiUnsupported")); return; }
   try{
@@ -2433,7 +2504,7 @@ $("midiBtn").addEventListener("click", async ()=>{
       $("midiTxt").textContent=names.length ? t("midiDev")+shown : t("midiNone"); midiReady=names.length>0; midiNames=names; render(); if(midiOpen) renderMidiModal(); };
     bind(); acc.onstatechange=bind; notice("");
   }catch(err){ $("midiBtn").classList.add("err"); $("midiTxt").textContent=t("midiBlocked"); notice(t("blocked")); }
-});
+}
 
 // ---------- Microphone pitch detection ----------
 let micOn=false;
@@ -2573,6 +2644,7 @@ function closeHelp(){
   if(!helpOpen) return; helpOpen=false; $("helpModal").hidden=true;
   if(phase==="listening"){ if(deadline) deadline=performance.now()+pausedLeft; raf=requestAnimationFrame(tick); }
   try{ lastFocus&&lastFocus.focus(); }catch(e){}
+  if(window.__nativeMidi) setTimeout(()=>maybeMidiConn(),300);
 }
 $("helpBtn").addEventListener("click",openHelp);
 $("helpX").addEventListener("click",closeHelp);
@@ -2587,6 +2659,7 @@ $("helpBody").addEventListener("pointerup",e=>{ if(swipeX==null) return; const d
 // ---------- Boot ----------
 
 applyStatic(); applySide(); buildKeyboard(); renderSettings(); render(); renderDaily();
+{ const sp=$("splash"); if(document.documentElement.classList.contains("native")){ const t0=performance.now(); setTimeout(()=>{ sp.classList.add("out"); setTimeout(()=>sp.remove(),400); }, Math.max(0,1500-t0)); } else sp.remove(); }
 if(firstVisit){ save(); openHelp(); }
 })();
 </script>

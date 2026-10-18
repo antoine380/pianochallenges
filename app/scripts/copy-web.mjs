@@ -1,5 +1,5 @@
 // Copies the website (repo root) into app/www so the app runs offline.
-import { cpSync, rmSync, mkdirSync, existsSync } from "node:fs";
+import { cpSync, rmSync, mkdirSync, existsSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 const app = join(dirname(fileURLToPath(import.meta.url)), "..");
@@ -11,4 +11,9 @@ for (const f of ["index.html", "assets", "favicon.svg", "favicon-32.png", "apple
   const src = join(site, f);
   if (existsSync(src)) cpSync(src, join(www, f), { recursive: true });
 }
+// In the app the page must not zoom (pinch or double tap): WKWebView honours these viewport limits.
+const page = join(www, "index.html");
+let html = readFileSync(page, "utf8");
+html = html.replace(/<meta name="viewport"[^>]*>/, '<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">');
+writeFileSync(page, html);
 console.log("Web files copied to", www);
