@@ -245,7 +245,8 @@ button:focus-visible, select:focus-visible, input:focus-visible, summary:focus-v
 @keyframes shake{25%{transform:translateX(-4px)}75%{transform:translateX(4px)}}
 
 /* Keyboard */
-.kbd{position:relative;height:clamp(120px,22vw,170px);display:flex;user-select:none;-webkit-user-select:none;touch-action:none;-webkit-touch-callout:none}
+.kbd-wrap{overflow-x:auto;overflow-y:hidden;scrollbar-width:thin;margin-inline:-2px;padding-inline:2px}
+.kbd{position:relative;width:100%;height:clamp(120px,22vw,170px);display:flex;user-select:none;-webkit-user-select:none;touch-action:none;-webkit-touch-callout:none}
 .wk{flex:1;background:var(--key-white);border:1px solid var(--key-white-edge);border-radius:0 0 6px 6px;margin-right:-1px;position:relative;display:flex;align-items:flex-end;justify-content:center;padding-bottom:6px;transition:background .08s}
 .bk{position:absolute;top:0;height:60%;background:var(--key-black);border-radius:0 0 4px 4px;z-index:2;border:1px solid var(--key-black);transition:background .08s}
 .wk span,.bk span{font-family:var(--f-mono);font-size:.62rem;color:#59606e;pointer-events:none}
@@ -452,7 +453,7 @@ select{font:inherit;color:var(--ink);background:var(--surface-2);border:1px soli
     <div class="slots" id="slots"></div>
     <div class="answers" id="answers" hidden></div>
 
-    <div class="kbd" id="kbd" aria-label="Piano"></div>
+    <div class="kbd-wrap" id="kbdWrap"><div class="kbd" id="kbd" aria-label="Piano"></div></div>
 
     <div class="actions" id="actions"></div>
 
@@ -533,6 +534,10 @@ select{font:inherit;color:var(--ink);background:var(--surface-2);border:1px soli
           </div>
         </div>
         <label class="check" id="octField"><input type="checkbox" id="optOct"> <span data-i="optOct"></span></label>
+        <div class="field" id="kbField"><span data-i="kbLbl"></span>
+          <div class="range-row"><select id="kbSize" aria-label="On-screen keyboard"></select><button class="btn" id="kbDetect" type="button" data-i="kbDetect"></button></div>
+          <p class="hint" id="kbRange"></p>
+        </div>
         <label class="check"><input type="checkbox" id="optLabels"> <span data-i="optLabels"></span></label>
         <label class="check"><input type="checkbox" id="optAuto"> <span data-i="optAuto"></span></label>
         <label class="check"><input type="checkbox" id="optMidiSound"> <span data-i="optMidiSound"></span></label>
@@ -622,6 +627,9 @@ const TXT = {
     kbdHint:"Clavier d'ordinateur : rangée Q S D F G H J K pour les touches blanches, rangée du dessus pour les noires. Espace : révéler / suivant · Entrée (ou un Do au clavier MIDI) : continuer · ⌫ : réessayer.",
     progress:"Progression", viewLabel:"Afficher", settings:"Réglages", practise:"Gammes travaillées", order:"Ordre", answerAfter:"Ou réglez le temps précis :",
     never:"jamais", notation:"Notation", direction:"Sens", optOct:"Finir sur l'octave", optLabels:"Noms des notes sur le clavier",
+    kbLbl:"Clavier à l'écran", kbAuto:"Automatique (2 octaves)", keys:"touches", kbCustom:"Détecté", kbDetect:"Détecter mon clavier MIDI",
+    calibLow:"Jouez la touche la plus grave de votre clavier MIDI.", calibHigh:"Maintenant, jouez la touche la plus aiguë.", calibNeedMidi:"Activez d'abord le MIDI (bouton sous le clavier), puis recommencez.",
+    kbRangeTxt:(n,a,b)=>n+" touches, de "+a+" à "+b+". Le Do du milieu est "+(PC_FR[0])+"3.", kbDone:(n,a,b)=>"Clavier détecté : "+n+" touches ("+a+" – "+b+")",
     difficulty:"Difficulté (temps pour jouer)", dFree:"Libre", dEasy:"Facile", dMedium:"Moyen", dHard:"Difficile", dExpert:"Expert", noTimer:"Sans chrono",
     optAuto:"Passer automatiquement à l'exercice suivant", optMidiSound:"Jouer le son des notes MIDI", optAll:"Tout débloquer", reset:"Remettre la progression à zéro", confirmReset:"Confirmer : tout effacer ?",
     resetDone:"Progression remise à zéro", locked:"verrouillée", lvlShort:"Niv. ", level:"Niveau ", newScale:"Nouvelle gamme : ", newType:"Débloqué : ",
@@ -676,6 +684,9 @@ const TXT = {
     kbdHint:"Computer keyboard: A S D F G H J K row for white keys, the row above for black keys. Space: reveal / next · Enter: continue · ⌫: retry.",
     progress:"Progress", viewLabel:"Show", settings:"Settings", practise:"Scales to practise", order:"Order", answerAfter:"Or set the exact time:",
     never:"never", notation:"Note names", direction:"Direction", optOct:"End on the octave", optLabels:"Note names on the keys",
+    kbLbl:"On-screen keyboard", kbAuto:"Automatic (2 octaves)", keys:"keys", kbCustom:"Detected", kbDetect:"Detect my MIDI keyboard",
+    calibLow:"Play the lowest key of your MIDI keyboard.", calibHigh:"Now play the highest key.", calibNeedMidi:"Enable MIDI first (button under the keyboard), then try again.",
+    kbRangeTxt:(n,a,b)=>n+" keys, from "+a+" to "+b+". Middle C is C4.", kbDone:(n,a,b)=>"Keyboard detected: "+n+" keys ("+a+" – "+b+")",
     difficulty:"Difficulty (time to play)", dFree:"Free", dEasy:"Easy", dMedium:"Medium", dHard:"Hard", dExpert:"Expert", noTimer:"No timer",
     optAuto:"Move on to the next exercise automatically", optMidiSound:"Play sound for MIDI notes", optAll:"Unlock everything", reset:"Reset progress", confirmReset:"Confirm: erase everything?",
     resetDone:"Progress reset", locked:"locked", lvlShort:"Lvl ", level:"Level ", newScale:"New scale: ", newType:"Unlocked: ",
@@ -893,7 +904,7 @@ const STORE="memo-gammes-v1";
 let firstVisit=false;
 const DEFAULTS={xp:0, mastery:{}, stats:{ok:0,perfect:0,revealed:0,errors:0}, streak:{days:0,last:""}, suiteIdx:0, csuiteIdx:0,
   seenTypes:["major","minor","chords:maj","chords:min"], langV2:true, secStats:{}, srs:{}, daily:{}, section:"scales",
-  settings:{lang:"en", mode:"suite", delay:0, notation:"en", dir:"up", octave:true, labels:false, midiSound:true, autoNext:true, unlockAll:false,
+  settings:{lang:"en", mode:"suite", delay:0, notation:"en", dir:"up", octave:true, labels:false, midiSound:true, autoNext:true, kbdSize:"auto", kbdLow:36, kbdHigh:96, unlockAll:false,
     types:["major"], view:"major", ctypes:["maj"], cview:"maj", invs:[0],
     htypes:["maj"], hview:"maj", hdegs:[0,1,2,3,4,5,6], ptypes:["p145","pop"], pview:"pop", vl:false, etypes:["chord","int"], eview:"chord", earV2:true, gameLen:10}};
 const SECS=["scales","chords","harmony","prog","ear"];
@@ -1051,13 +1062,21 @@ function phoneStart(){
   let pc = cur.sec==="prog" ? seq[0].voicing[0]%12 : chordLike(cur.sec) ? seq[0].pc : tonicNote(cur.k).pc;
   while(!NAT.includes(pc)) pc--; return 48+pc;
 }
+const KB_PRESETS={"25":[48,72],"37":[48,84],"49":[36,84],"61":[36,96],"76":[28,103],"88":[21,108]};
+const kbFull = () => (S.settings.kbdSize||"auto")!=="auto";
+const octName = m => (S.settings.notation==="fr"?PC_FR:PC_EN)[m%12]+(Math.floor(m/12)-(S.settings.notation==="fr"?2:1));
 function buildKeyboard(){
-  if(narrowMQ.matches){ // phone: 10 white keys from the white key at/below the tonic
+  const size=S.settings.kbdSize||"auto";
+  if(size!=="auto"){ // the same keys as the player's MIDI keyboard
+    let [lo,hi] = size==="custom" ? [S.settings.kbdLow,S.settings.kbdHigh] : KB_PRESETS[size];
+    while(!NAT.includes(lo%12)) lo--; while(!NAT.includes(hi%12)) hi++; LOW=lo; HIGH=hi;
+  } else if(narrowMQ.matches){ // phone: 10 white keys from the white key at/below the tonic
     LOW=phoneStart(); let m=LOW, w=0; while(w<10){ if(NAT.includes(m%12)) w++; if(w<10) m++; } HIGH=m;
   } else { LOW=48; HIGH=72; } // desktop: C3–C5
   kbd.innerHTML=""; keyEls={};
   const whites=[]; for(let m=LOW;m<=HIGH;m++) if(NAT.includes(m%12)) whites.push(m);
   const ww=100/whites.length, bw=ww*.62;
+  kbd.style.minWidth = size!=="auto" ? whites.length*(narrowMQ.matches?30:16)+"px" : "";
   whites.forEach((m,i)=>{
     const el=document.createElement("div"); el.className="wk"; el.dataset.m=m; el.appendChild(document.createElement("span"));
     kbd.appendChild(el); keyEls[m]=el;
@@ -1071,9 +1090,14 @@ function buildKeyboard(){
 }
 function labelKeys(){
   const names=S.settings.notation==="fr"?PC_FR:PC_EN;
-  Object.entries(keyEls).forEach(([m,el])=>{ const pc=m%12; el.querySelector("span").textContent=(S.settings.labels||pc===0)?names[pc]:""; });
+  const full=kbFull();
+  Object.entries(keyEls).forEach(([m,el])=>{ const pc=m%12; el.querySelector("span").textContent = pc===0 && full ? octName(+m) : (S.settings.labels||pc===0)?names[pc]:""; });
 }
 const fold = m => { while(m<LOW) m+=12; while(m>HIGH) m-=12; return m; };
+function scrollKbdTo(m){
+  const wrap=$("kbdWrap"), el=keyEls[fold(m)]; if(!el || wrap.scrollWidth<=wrap.clientWidth+2) return;
+  wrap.scrollTo({left:Math.max(0, el.offsetLeft - wrap.clientWidth/2 + 60), behavior:"smooth"});
+}
 kbd.addEventListener("pointerdown", e=>{
   const el=e.target.closest("[data-m]"); if(!el) return;
   e.preventDefault(); const m=+el.dataset.m; tone(m); noteIn(m);
@@ -1147,10 +1171,11 @@ function startRound(item, retry){
   phase="listening"; startT=performance.now();
   const per = cur.sec==="prog" ? seq.length : 1;
   deadline=(S.settings.delay>0 && cur.sec!=="ear") ? startT+S.settings.delay*1000*per : 0;
-  if(narrowMQ.matches && LOW!==phoneStart()) buildKeyboard();
+  if(narrowMQ.matches && !kbFull() && LOW!==phoneStart()) buildKeyboard();
   clearKeys(); resetScore(); $("stage").classList.remove("res-good","res-warn","res-bad");
   S.settings[SEC[cur.sec].view]=cur.tid;
   render(); cancelAnimationFrame(raf); raf=requestAnimationFrame(tick);
+  if(cur.sec!=="ear" && seq.length) scrollKbdTo(revealMidis()[0]);
   if(cur.sec==="ear") setTimeout(()=>{ if(phase==="listening") playScale(0); },150);
 }
 function tick(){
@@ -1163,6 +1188,15 @@ function tick(){
     if(left<=0){ reveal(true); return; }
   }
   raf=requestAnimationFrame(tick);
+}
+// keyboard detection: lowest key, then highest key
+let calib=null;
+function calibNote(note){
+  if(calib.step===1){ calib={step:2, low:note}; notice(t("calibHigh")); return; }
+  const lo=Math.min(calib.low,note), hi=Math.max(calib.low,note); calib=null; notice("");
+  if(hi-lo<12) return;
+  Object.assign(S.settings,{kbdSize:"custom",kbdLow:lo,kbdHigh:hi}); save(); buildKeyboard(); renderSettings();
+  toast(t("kbDone")(hi-lo+1,octName(lo),octName(hi)));
 }
 // a C on the MIDI keyboard starts the game, continues after an answer, or starts a new game from the summary
 function midiStart(note){
@@ -1237,8 +1271,7 @@ function success(){
 function revealMidis(){
   // the answer as one ascending run, shifted by octaves to sit inside the visible keyboard
   let ms=seqMidis(); const asc=dirOf()==="down"?ms.slice().reverse():ms;
-  let k=0; while(asc[0]+12*k<LOW) k++; while(asc[0]+12*k>LOW+11) k--;
-  if(asc[asc.length-1]+12*k>HIGH && asc[0]+12*(k-1)>=LOW) k--;
+  let k=0; while(asc[0]+12*k<LOW) k++; while(asc[asc.length-1]+12*k>HIGH && asc[0]+12*(k-1)>=LOW) k--;
   if(played.length && cur.sec!=="ear"){ // follow the octave the player actually used, when the whole run still fits
     const k2=Math.round((played[0]-ms[found.indexOf(true)>=0?found.indexOf(true):0])/12);
     if(ms.every(m=>m+12*k2>=LOW && m+12*k2<=HIGH)) k=k2;
@@ -1684,7 +1717,12 @@ function renderMap(){
 }
 function renderSettings(){
   const set=(id,v)=>$(id).querySelectorAll("button").forEach(b=>b.setAttribute("aria-pressed",b.dataset.v===v));
-  set("segMode",S.settings.mode); set("segDiff",String(S.settings.delay)); set("segLen",String(S.settings.gameLen)); set("segNot",S.settings.notation); set("segDir",S.settings.dir); set("langSeg",S.settings.lang);
+  set("segMode",S.settings.mode); set("segDiff",String(S.settings.delay));
+  const ks=$("kbSize"); ks.innerHTML="";
+  [["auto",t("kbAuto")],...["25","37","49","61","76","88"].map(n=>[n,n+" "+t("keys")]),...(S.settings.kbdSize==="custom"?[["custom",t("kbCustom")+" · "+(S.settings.kbdHigh-S.settings.kbdLow+1)+" "+t("keys")]]:[])]
+    .forEach(([v,l])=>{ const o=document.createElement("option"); o.value=v; o.textContent=l; ks.appendChild(o); });
+  ks.value=S.settings.kbdSize||"auto";
+  $("kbRange").textContent = kbFull() ? t("kbRangeTxt")(Object.keys(keyEls).length,octName(LOW),octName(HIGH)) : ""; set("segLen",String(S.settings.gameLen)); set("segNot",S.settings.notation); set("segDir",S.settings.dir); set("langSeg",S.settings.lang);
   $("delay").value=S.settings.delay; $("delayOut").textContent=S.settings.delay?S.settings.delay+" s":t("never");
   $("optOct").checked=S.settings.octave; $("optLabels").checked=S.settings.labels; $("optMidiSound").checked=S.settings.midiSound; $("optAuto").checked=S.settings.autoNext!==false; $("optAll").checked=S.settings.unlockAll;
   const sec=S.section;
@@ -1708,6 +1746,8 @@ $("segLen").addEventListener("click",e=>{ const b=e.target.closest("button"); if
   if(game && !game.queue){ game.total=S.settings.gameLen||Infinity; if(game.i>=game.total) game.total=game.i+1; } renderSettings(); renderGameBar(); });
 $("gameEnd").addEventListener("click",()=>{ if(game){ clearTimeout(advanceTimer); cancelAnimationFrame(raf); clearPlayTimers(); if(game.results[game.i]==null) game.results.length=game.i; finishGame(); } });
 $("dailyBtn").addEventListener("click",startDaily);
+$("kbSize").addEventListener("change",e=>{ S.settings.kbdSize=e.target.value; save(); buildKeyboard(); renderSettings(); if(cur&&seq.length) scrollKbdTo(revealMidis()[0]); });
+$("kbDetect").addEventListener("click",()=>{ if(!midiReady){ notice(t("calibNeedMidi")); $("midiBtn").scrollIntoView({block:"center",behavior:"smooth"}); return; } calib={step:1}; notice(t("calibLow")); $("notice").scrollIntoView({block:"center",behavior:"smooth"}); });
 $("homeLink").addEventListener("click",e=>{ e.preventDefault(); goHome(); });
 function goHome(){
   // back to the start screen: no game running, first tab, top of the page
@@ -1751,6 +1791,7 @@ $("midiBtn").addEventListener("click", async ()=>{
     const bind=()=>{ const names=[]; acc.inputs.forEach(inp=>{ names.push(inp.name); inp.onmidimessage=ev=>{
         const [st,note,vel]=ev.data; if((st&0xf0)===0x90 && vel>0){
           if(S.settings.midiSound) tone(note,0,.9,.1+.26*vel/127);
+          if(calib){ calibNote(note); return; }
           if(midiStart(note)) return;
           midiIn(note); } }; });
       $("midiBtn").classList.toggle("on",names.length>0); $("midiBtn").classList.remove("err");
