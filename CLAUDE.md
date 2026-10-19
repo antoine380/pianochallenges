@@ -30,6 +30,7 @@ Lis ce fichier en entier avant de travailler sur le projet.
 - État persistant `S` dans localStorage `memo-gammes-v1` (réglages dans `S.settings`, XP `S.xp`, XP par jour `S.xpDays`, records de jeux `S.gameBest`, `S.runnerBest`).
 - Navigation : variable `page` (practice|daily|games|rank|account|locked|settings|progress), `openPage(pg)`, `body[data-page]`. Le script n'expose pas ses fonctions sur `window` : dans les tests, cliquer sur les boutons (`#setBtn`, `#rankBtn`, `#accountBtn`, `#progBtn`, `[data-v=games]`, `#dailyCard`).
 - Fenêtres : `openMod/closeMod`. `anyWin()` = vraies fenêtres (inert/focus) ; `anyModal()` inclut aussi les pages info (pause). Ne pas les confondre : un mélange a déjà gelé l'app.
+- Gammes : mode `S.settings.scMode` notes|chords (+ `sc7` pour les accords de 7e). En mode accords, l'item porte `ch:1`, la séquence vient de `scaleChordSteps()` et suit le moteur des progressions (`chSeq()` = prog ou gamme en accords).
 - Textes FR/EN dans le dictionnaire `t()` (ajouter chaque clé dans les deux langues).
 - Jeux : runner canvas (« Note Jumper », piano avec des yeux), « Contre la montre », « Mémoire musicale ». `gameOpen(id)`, réglages `gmDiff` (progressif/lent/moyen/rapide) et `gmCont` (accords/notes). « Défi du jour » = bientôt.
 - MIDI : Web MIDI dans le navigateur ; dans l'app, pont natif `Capacitor.nativePromise("Midi", …)` + `nativeCallback(... "addListener", {eventName})` (pas de @capacitor/core côté web). `followMidi(n)` décale le clavier écran par octaves (ex. LUMI 24 touches).

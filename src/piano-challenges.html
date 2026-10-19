@@ -598,6 +598,7 @@ html.native .midi-body [data-i="midiHint"]{display:none}
 /* Picker: one compact toolbar */
 .picker{flex:none;display:flex;flex-wrap:wrap;align-items:center;gap:8px 18px;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:8px 12px}
 .pk-field{display:flex;align-items:center;gap:8px;min-width:0}
+.pk-seg button{padding:5px 12px;white-space:nowrap}
 .pk-lbl{font-size:.7rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);white-space:nowrap}
 .picker select{padding:5px 8px}
 .picker .seg button{padding:5px 10px;font-size:.84rem;white-space:nowrap}
@@ -831,6 +832,8 @@ html.native .midi-body [data-i="midiHint"]{display:none}
     <div class="pk-field" id="keyField"><span class="pk-lbl" data-i="keyLbl"></span><div class="dd"><button class="dd-btn" id="keysBtn" type="button" data-pop="keysPop" aria-haspopup="true" aria-expanded="false"><span id="keysSum"></span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 10l5 5 5-5"/></svg></button><div class="dd-pop" id="keysPop" hidden><div class="key-checks" id="keyChecks"></div></div></div></div>
     <div class="pk-field" id="invField"><span class="pk-lbl" data-i="inversions"></span><div class="dd"><button class="dd-btn" type="button" data-pop="invsPop" aria-haspopup="true" aria-expanded="false"><span id="invsSum"></span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 10l5 5 5-5"/></svg></button><div class="dd-pop" id="invsPop" hidden><div class="types" id="invs"></div></div></div></div>
     <div class="pk-field" id="degField"><span class="pk-lbl" data-i="degrees"></span><div class="dd"><button class="dd-btn" type="button" data-pop="degsPop" aria-haspopup="true" aria-expanded="false"><span id="degsSum"></span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 10l5 5 5-5"/></svg></button><div class="dd-pop" id="degsPop" hidden><div class="types" id="degs"></div></div></div></div>
+    <div class="pk-field" id="scModeField"><span class="pk-lbl" data-i="scModeLbl"></span><div class="seg pk-seg" id="segScMode"><button type="button" data-v="notes" data-i="scNotes"></button><button type="button" data-v="chords" data-i="scChords"></button></div></div>
+    <label class="check" id="sc7Field"><input type="checkbox" id="optSc7"> <span data-i="optSc7"></span></label>
     <label class="check" id="vlField"><input type="checkbox" id="optVL"> <span data-i="optVL"></span></label>
     <span class="pk-push"></span><button class="how-btn" type="button" data-intro="section" id="howPk"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v5.5"/><circle cx="12" cy="7.8" r=".6"/></svg><span data-i="help"></span></button>
   </section>
@@ -1167,7 +1170,7 @@ const TXT = {
     chars:[["Mimi","la souris","Curieuse"],["Piou","le moineau","Apprenti"],["Tika","la chatte","Doigts agiles"],["Lou","le lapin","Oreille fine"],["Hector","le hibou","Harmoniste"],["Rocco","le raton laveur","Beatmaker"],["Fenn","le renard","Producteur"],["Bao","le panda","Virtuose"],["Léon","le lion","Maestro"],["Draco","le dragon","Légende"]],
     howBtn:"Comment ça marche", introGo:"C'est parti",
     intro:{
-      scales:["Les gammes",["En haut, choisis les <b>gammes</b>, la <b>tonalité</b> et le <b>sens</b> (montant, descendant ou les deux).","Joue la gamme <b>note par note</b> sur ton piano (MIDI, micro ou clavier à l'écran) : chaque bonne note remplit une case.","Bloqué ? <b>Je sèche, montrer</b> dévoile la réponse petit à petit. Une partie compte 10 exercices : sans faute, tu gagnes plus d'XP et ton combo monte."]],
+      scales:["Les gammes",["En haut, choisis les <b>gammes</b>, la <b>tonalité</b> et le <b>sens</b> (montant, descendant ou les deux).","<b>Notes</b> : tu joues la gamme note par note. <b>Accords</b> : tu joues les 7 accords de la gamme à la suite, un par degré (I, II, III…), avec l'option accords de 7e.","Joue la gamme <b>note par note</b> sur ton piano (MIDI, micro ou clavier à l'écran) : chaque bonne note remplit une case.","Bloqué ? <b>Je sèche, montrer</b> dévoile la réponse petit à petit. Une partie compte 10 exercices : sans faute, tu gagnes plus d'XP et ton combo monte."]],
       chords:["Les accords",["On te demande un accord, par exemple <b>Fa mineur</b>.","Joue toutes ses notes <b>ensemble</b> (MIDI) ou <b>une par une</b>, en partant de la plus grave.","Active les <b>renversements</b> pour travailler les positions : 1er renversement = la tierce en bas, 2e = la quinte en bas. Les nouveaux accords se débloquent avec les niveaux."]],
       harmony:["L'harmonie",["Chaque tonalité contient <b>7 accords</b>, un par degré, de I à VII.","On te demande un degré : <b>IV de Do majeur</b>, c'est Fa majeur. Joue-le.","Choisis en haut les <b>degrés</b> à travailler pour te concentrer sur I, IV, V… C'est la base pour composer."]],
       prog:["Les progressions",["Une progression est une <b>suite d'accords</b> qui sonne bien, par exemple I – V – vi – IV.","Joue les accords <b>dans l'ordre</b>. Avec l'option d'enchaînement, chaque accord se joue dans le renversement le plus proche du précédent, comme un pianiste.","À la fin, écoute la progression pour entendre ce que tu as construit."]],
@@ -1217,7 +1220,7 @@ const TXT = {
     intShort:{m2:"2m",M2:"2M",m3:"3m",M3:"3M",P4:"4J",TT:"Triton",P5:"5J",m6:"6m",M6:"6M",m7:"7m",M7:"7M",P8:"8ve"},
     secScales:"Gammes", secChords:"Accords", inversions:"Renversements", chordToPlay:"Accord à jouer",
     idleSubC:"Jouez l'accord en partant de sa note la plus grave : plaqué (MIDI) ou note par note.", replayC:"Écouter l'accord",
-    practiseS:"Gammes travaillées", practiseC:"Accords travaillés", chordsWord:n=>n+" accord"+(n>1?"s":""), newChord:"Nouvel accord : ",
+    practiseS:"Gammes travaillées", idleSubSC:"Jouez les accords de la gamme l'un après l'autre, du Ier au VIIe degré (plaqués en MIDI, ou note par note).", scModeLbl:"Jouer", scNotes:"Notes", scChords:"Accords", optSc7:"Accords de 7e", scChordsOf:" · accords", scChordsLbl:"Accords de la gamme", chordsN:n=>n+" accord"+(n>1?"s":""), practiseC:"Accords travaillés", chordsWord:n=>n+" accord"+(n>1?"s":""), newChord:"Nouvel accord : ",
     lockedHintC:n=>"Réussissez 3 fois un accord sans faute pour débloquer la fondamentale suivante. Encore "+n+" à découvrir.",
     typeLockedC:l=>"Ce type d'accord s'ouvre au niveau "+l+".", lockedTipC:"Maîtrisez un accord de plus pour le débloquer",
     invNames:["État fondamental","1er renversement","2e renversement","3e renversement"], rootLbl:"F",
@@ -1282,7 +1285,7 @@ const TXT = {
     chars:[["Mimi","the Mouse","Curious"],["Pip","the Sparrow","Apprentice"],["Tika","the Cat","Nimble fingers"],["Lou","the Rabbit","Sharp ear"],["Hector","the Owl","Harmonist"],["Rocco","the Raccoon","Beatmaker"],["Fenn","the Fox","Producer"],["Bao","the Panda","Virtuoso"],["Leo","the Lion","Maestro"],["Draco","the Dragon","Legend"]],
     howBtn:"How it works", introGo:"Let's go",
     intro:{
-      scales:["Scales",["At the top, pick the <b>scales</b>, the <b>key</b> and the <b>direction</b> (up, down or both).","Play the scale <b>note by note</b> on your piano (MIDI, mic or on-screen keys): each right note fills a box.","Stuck? <b>Show me</b> reveals the answer step by step. A game has 10 exercises: play them cleanly to earn more XP and build your combo."]],
+      scales:["Scales",["At the top, pick the <b>scales</b>, the <b>key</b> and the <b>direction</b> (up, down or both).","<b>Notes</b>: play the scale note by note. <b>Chords</b>: play the 7 chords of the scale in a row, one per degree (I, II, III…), with a 7th-chords option.","Play the scale <b>note by note</b> on your piano (MIDI, mic or on-screen keys): each right note fills a box.","Stuck? <b>Show me</b> reveals the answer step by step. A game has 10 exercises: play them cleanly to earn more XP and build your combo."]],
       chords:["Chords",["You are asked for a chord, for example <b>F Minor</b>.","Play its notes <b>together</b> (MIDI) or <b>one at a time</b>, starting from the lowest.","Turn on <b>inversions</b> to practise positions: 1st inversion = third at the bottom, 2nd = fifth at the bottom. New chords unlock as you level up."]],
       harmony:["Harmony",["Every key has <b>7 chords</b>, one per degree, from I to VII.","You are asked for a degree: <b>IV of C Major</b> is F Major. Play it.","Pick the <b>degrees</b> to practise at the top to focus on I, IV, V… It is the basis of songwriting."]],
       prog:["Progressions",["A progression is a <b>sequence of chords</b> that works, for example I – V – vi – IV.","Play the chords <b>in order</b>. With voice leading on, each chord is played in the inversion closest to the previous one, like a pianist.","At the end, listen to the progression to hear what you built."]],
@@ -1332,7 +1335,7 @@ const TXT = {
     intShort:{m2:"m2",M2:"M2",m3:"m3",M3:"M3",P4:"P4",TT:"TT",P5:"P5",m6:"m6",M6:"M6",m7:"m7",M7:"M7",P8:"P8"},
     secScales:"Scales", secChords:"Chords", inversions:"Inversions", chordToPlay:"Chord to play",
     idleSubC:"Play the chord starting from its lowest note: all at once (MIDI) or one note at a time.", replayC:"Listen to the chord",
-    practiseS:"Scales to practise", practiseC:"Chords to practise", chordsWord:n=>n+" chord"+(n>1?"s":""), newChord:"New chord: ",
+    practiseS:"Scales to practise", idleSubSC:"Play the chords of the scale one after another, from degree I to VII (all at once in MIDI, or note by note).", scModeLbl:"Play", scNotes:"Notes", scChords:"Chords", optSc7:"7th chords", scChordsOf:" · chords", scChordsLbl:"Chords of the scale", chordsN:n=>n+" chord"+(n>1?"s":""), practiseC:"Chords to practise", chordsWord:n=>n+" chord"+(n>1?"s":""), newChord:"New chord: ",
     lockedHintC:n=>"Play a chord 3 times without mistakes to unlock the next root. "+n+" left to discover.",
     typeLockedC:l=>"This chord type opens at level "+l+".", lockedTipC:"Master one more chord to unlock it",
     invNames:["Root position","1st inversion","2nd inversion","3rd inversion"], rootLbl:"R",
@@ -1505,8 +1508,21 @@ function hChord(scale, key, deg, sev){
   const notes=[0,2,4].concat(sev?[6]:[]).map(o=>sc[(deg+o)%7]);
   const r=notes[0], semis=notes.map(n=>(n.pc-r.pc+12)%12);
   const ct=CTYPES.find(c=>c.iv.length===semis.length && c.iv.every((v,i)=>v===semis[i]));
+  if(!ct){ // chords of the harmonic / melodic minor that are not in the chord list
+    const x=HEXTRA[semis.join(",")]||{sym:"?"};
+    return {notes, ct:null, sym:x.sym, roman:(x.low?ROMAN[deg].toLowerCase():ROMAN[deg])+(x.sup||""), root:r};
+  }
   let roman=ROMAN[deg]; if(["min","dim","min7","hdim7","dim7"].includes(ct.id)) roman=roman.toLowerCase();
   return {notes, ct:ct.id, roman:roman+(CSUF[ct.id]||""), root:r};
+}
+const HEXTRA={"0,3,7,11":{sym:"m(maj7)",low:true,sup:"maj7"},"0,4,8,11":{sym:"+maj7",sup:"+maj7"},"0,4,8,10":{sym:"+7",sup:"+7"}};
+const chordSymOf = st => st.ct ? symOf(st.ct, st.root) : noteName(st.root)+st.sym;
+// the 7 chords of a scale, in root position, climbing from the tonic (plus the octave chord when the scale has it)
+function scaleChordSteps(tid, key, sev, dir){
+  const sc=spellIv(key, TYPE[tid].iv), b0=48+sc[0].pc;
+  const steps=[0,1,2,3,4,5,6].map(d=>{ const ch=hChord(tid,key,d,sev); const b=b0+((ch.root.pc-sc[0].pc+12)%12); return {...ch, inv:0, voicing:voiceAt(ch.notes,0,b), bassPc:ch.root.pc}; });
+  if(S.settings.octave){ const ch=hChord(tid,key,0,sev); steps.push({...ch, inv:0, voicing:voiceAt(ch.notes,0,b0+12), bassPc:ch.root.pc}); }
+  return dir==="down" ? steps.reverse() : steps;
 }
 
 // ---------- Progressions ----------
@@ -1546,7 +1562,7 @@ function progSteps(pid, key, vl){
     return {...ch, inv:best.inv, voicing:best.v, bassPc:ch.notes[best.inv].pc};
   });
 }
-const slashSym = st => symOf(st.ct, st.root)+(st.inv? "/"+noteName(st.notes[st.inv]) : "");
+const slashSym = st => chordSymOf(st)+(st.inv? "/"+noteName(st.notes[st.inv]) : "");
 
 // ---------- Ear training ----------
 const INTS = [
@@ -1579,7 +1595,7 @@ const DEFAULTS={xp:0, mastery:{}, stats:{ok:0,perfect:0,revealed:0,errors:0}, st
   seenTypes:["major","minor","chords:maj","chords:min"], langV2:true, secStats:{}, srs:{}, daily:{}, section:"chords",
   settings:{lang:"en", mode:"suite", delay:0, notation:"en", dir:"up", octave:true, labels:false, midiSound:true, midiC:true, midiInput:"", autoNext:true, kbdSize:"auto", kbdLow:36, kbdHigh:96, unlockAll:false,
     types:["major"], view:"major", ctypes:["maj"], cview:"maj", invs:[0],
-    htypes:["maj"], hview:"maj", hdegs:[0,1,2,3,4,5,6], ptypes:["p145","pop"], pview:"pop", vl:false, etypes:["chord","int"], eview:"chord", earV2:true, gameLen:10}};
+    htypes:["maj"], hview:"maj", hdegs:[0,1,2,3,4,5,6], ptypes:["p145","pop"], pview:"pop", vl:false, etypes:["chord","int"], eview:"chord", earV2:true, scMode:"notes", sc7:false, gameLen:10}};
 const SECS=["scales","chords","harmony","prog","ear"];
 function load(){
   try{ const raw=localStorage.getItem(STORE); if(raw){ const d=JSON.parse(raw);
@@ -1610,7 +1626,7 @@ function save(){ try{ localStorage.setItem(STORE, JSON.stringify(S)); }catch(e){
 let S=load();
 const isCh = () => S.section==="chords";
 const SUF = {chords:"C", harmony:"H", prog:"P", ear:"E"};
-const tx = k => { const sf=SUF[S.section]; const d=TXT[S.settings.lang]; return (sf && d[k+sf]!==undefined) ? d[k+sf] : t(k); };
+const tx = k => { const scc=S.section==="scales" && (cur&&cur.sec==="scales" ? !!cur.ch : S.settings.scMode==="chords"); if(scc && (k==="correct"||k==="replay"||k==="missed")) return t(k+"P"); if(scc && k==="idleSub") return t("idleSubSC"); const sf=SUF[S.section]; const d=TXT[S.settings.lang]; return (sf && d[k+sf]!==undefined) ? d[k+sf] : t(k); };
 const chordLike = sec => sec==="chords" || sec==="harmony";
 // per-section configuration
 const SEC = {
@@ -1627,7 +1643,7 @@ function mkey(it){
     case "harmony": return "h:"+it.tid+":"+it.k+":"+it.deg;
     case "prog": return "p:"+it.tid+":"+it.k+(S.settings.vl?":vl":"");
     case "ear": return "e:"+it.tid+":"+it.k;
-    default: return it.tid+":"+it.k;
+    default: return (it.ch ? "sc:"+it.tid+":"+it.k+(S.settings.sc7?":7":"") : it.tid+":"+it.k);
   }
 }
 const mastI = it => S.mastery[mkey(it)]||0;
@@ -1644,6 +1660,7 @@ const typeList = sec => SEC[sec].list();
 function tileMast(sec,tid,k){
   if(sec==="chords") return Math.max(...[0,1,2,3].map(inv=>mastI({sec,tid,k,inv})));
   if(sec==="harmony"){ let sum=0; for(let d=0;d<7;d++) sum+=mastI({sec,tid,k,deg:d}); return Math.min(5,Math.floor(sum/4)); }
+  if(sec==="scales" && S.settings.scMode==="chords") return mastI({sec,tid,k,ch:1});
   return mastI({sec,tid,k});
 }
 function itemName(it){
@@ -1651,7 +1668,7 @@ function itemName(it){
   if(it.sec==="harmony"){ const h=HTYPE[it.tid]; return hChord(h.scale,it.k,it.deg,h.sev).roman+t("ofKey")+scaleName(h.scale,it.k); }
   if(it.sec==="prog") return progName(it.tid)+" · "+scaleName(PROG[it.tid].scale,it.k);
   if(it.sec==="ear") return earLabel(it.tid,it.k);
-  return scaleName(it.tid,it.k);
+  return scaleName(it.tid,it.k)+(it.ch?t("scChordsOf"):"");
 }
 
 // ---------- Progression ----------
@@ -1705,8 +1722,10 @@ function poolAll(){
     if(!act.includes(ty.id)) return; const k=rootsOf(sec,ty.id)[r]; if(!openRoots(sec,ty.id).includes(k) && !focusOf(sec).includes(k)) return;
     if(sec==="chords"){ const ok=invs.filter(i=>i<ty.iv.length); (ok.length?ok:[0]).forEach(inv=>out.push({sec,tid:ty.id,k,inv})); }
     else if(sec==="harmony") degs.forEach(deg=>out.push({sec,tid:ty.id,k,deg}));
+    else if(sec==="scales" && S.settings.scMode==="chords"){ if(TYPE[ty.id].iv) out.push({sec,tid:ty.id,k,ch:1}); } // pentatonic / blues scales have no chord per degree
     else out.push({sec,tid:ty.id,k});
   });
+  if(!out.length && sec==="scales"){ S.settings.scMode="notes"; return poolAll(); }
   return out;
 }
 function addXP(n){
@@ -1760,7 +1779,7 @@ let LOW=48, HIGH=72, keyEls={};
 function phoneStart(){
   if(!cur||!seq.length) return 48;
   if(cur.sec==="ear") return 48;
-  let pc = cur.sec==="prog" ? seq[0].voicing[0]%12 : chordLike(cur.sec) ? seq[0].pc : tonicNote(cur.k).pc;
+  let pc = chSeq() ? seq[0].voicing[0]%12 : chordLike(cur.sec) ? seq[0].pc : tonicNote(cur.k).pc;
   while(!NAT.includes(pc)) pc--; return 48+pc;
 }
 const KB_PRESETS={"24":[48,71],"25":[48,72],"32":[41,72],"37":[48,84],"49":[36,84],"61":[36,96],"76":[28,103],"88":[21,108]};
@@ -1841,10 +1860,12 @@ function pickNext(){
   for(let i=0;i<cand.length;i++){ r-=w[i]; if(r<=0) return cand[i]; } return cand[cand.length-1];
 }
 const dirOf = () => cur && cur.sec==="scales" ? (cur.dir||"up") : "up";
+const chSeq = () => !!cur && (cur.sec==="prog" || (cur.sec==="scales" && !!cur.ch));
 function buildSeq(){
   if(cur.sec==="chords") return spellChord(cur.tid, cur.k, cur.inv);
   if(cur.sec==="harmony"){ const h=HTYPE[cur.tid]; return hChord(h.scale,cur.k,cur.deg,h.sev).notes; }
   if(cur.sec==="prog") return progSteps(cur.tid, cur.k, S.settings.vl);
+  if(cur.sec==="scales" && cur.ch) return scaleChordSteps(cur.tid, cur.k, !!S.settings.sc7, dirOf());
   if(cur.sec==="ear") return [];
   const dir=dirOf();
   let sq=spellType(cur.tid, cur.k, dir);
@@ -1855,7 +1876,7 @@ function buildSeq(){
 function seqMidis(){
   // ascending midi numbers (for playback / reveal), reversed when a scale is descending
   if(cur && cur.sec==="ear") return earMidis(cur);
-  if(cur && cur.sec==="prog") return seq[0].voicing.slice();
+  if(cur && chSeq()) return seq[0].voicing.slice();
   const down=dirOf()==="down";
   const asc = down ? seq.slice().reverse() : seq;
   const tpc=asc[0].pc; let prev=-1; const base=60+tpc-(tpc>5?12:0);
@@ -1880,7 +1901,7 @@ function startRound(item, retry){
   }
   lastId=mkey(cur); seq=buildSeq(); found=seq.map(()=>false); played=[]; idx=0; errors=0; pStep=0; pFound=new Set(); earPick=null;
   phase="listening"; startT=performance.now();
-  const per = cur.sec==="prog" ? seq.length : 1;
+  const per = chSeq() ? seq.length : 1;
   deadline=(S.settings.delay>0 && cur.sec!=="ear") ? startT+S.settings.delay*1000*per : 0;
   if(narrowMQ.matches && !kbFull() && LOW!==phoneStart()) buildKeyboard();
   clearKeys(); resetScore(); $("stage").classList.remove("res-good","res-warn","res-bad");
@@ -1892,7 +1913,7 @@ function startRound(item, retry){
 function tick(){
   if(phase!=="listening") return;
   if(deadline){
-    const per = cur.sec==="prog" ? seq.length : 1;
+    const per = chSeq() ? seq.length : 1;
     const left=Math.max(0,deadline-performance.now()), frac=left/(S.settings.delay*1000*per);
     $("tFill").style.transform="scaleX("+frac+")"; $("tFill").classList.toggle("low",frac<.25);
     $("secs").textContent=(left/1000).toFixed(1).replace(".", S.settings.lang==="fr"?",":".")+" s";
@@ -1951,7 +1972,7 @@ function hitSlot(j, m){
 }
 function wrongNote(m){
   errors++; flashKey(m,"k-bad",300);
-  const at = cur.sec==="prog" ? pStep : chordLike(cur.sec) ? found.indexOf(false) : idx;
+  const at = chSeq() ? pStep : chordLike(cur.sec) ? found.indexOf(false) : idx;
   const sl=$("slots").children[at]; if(sl){ sl.classList.remove("err","pop"); void sl.offsetWidth; sl.classList.add("err"); }
 }
 function noteIn(m){
@@ -1961,11 +1982,11 @@ function noteIn(m){
   pressKey(m);
   if(phase!=="listening" || cur.sec==="ear"){ flashKey(m,"k-hit"); return; }
   const pc=((m%12)+12)%12;
-  if(cur.sec==="prog"){
+  if(chSeq()){
     const st=seq[pStep], pcs=st.notes.map(n=>n.pc);
     if(pFound.has(pc)){ flashKey(m,"k-hit",150); return; }
     if(!pcs.includes(pc)){ wrongNote(m); return; }
-    if(S.settings.vl && pFound.size===0 && pc!==st.bassPc){ wrongNote(m); return; }
+    if(cur.sec==="prog" && S.settings.vl && pFound.size===0 && pc!==st.bassPc){ wrongNote(m); return; }
     pFound.add(pc); played.push(fold(m)); markPlayed();
     if(pFound.size===pcs.length){
       found[pStep]=true; idx=found.filter(Boolean).length; const done=pStep; pStep++; pFound=new Set();
@@ -1996,9 +2017,10 @@ function success(){
   if(cur.sec==="scales" && seq.length>=8) gain+=2;
   if(cur.sec==="chords" && cur.inv) gain+=3;
   if(cur.sec==="prog") gain+=seq.length*3+(S.settings.vl?6:0);
+  if(cur.sec==="scales" && cur.ch) gain+=seq.length*2+(S.settings.sc7?4:0);
   if(cur.sec==="ear") gain=8+Math.min(combo,10)*2;
   bumpStreak(); addXP(gain); record(roundLevel(), secs); save();
-  if(cur.sec!=="ear"){ const root=48+((cur.sec==="prog"?seq[0].root.pc:seqMidis()[0])%12); [0,4,7,12].forEach((iv,i)=>tone(root+iv+24,i*.07,.5,.16)); }
+  if(cur.sec!=="ear"){ const root=48+((chSeq()?seq[0].root.pc:seqMidis()[0])%12); [0,4,7,12].forEach((iv,i)=>tone(root+iv+24,i*.07,.5,.16)); }
   const sep=S.settings.lang==="fr"?",":".";
   if(cur.sec==="ear"){ showEar(true,gain); }
   else showScore([perfect?t("perfect"):t("errors")(errors), "+"+gain+" XP", secs.toFixed(1).replace(".",sep)+" s"]);
@@ -2019,13 +2041,13 @@ function revealMidis(){
 // time (ms) at which note/chord i of the answer sounds, so keys and boxes appear with it
 function revealAt(i){
   if(!cur) return 0;
-  if(cur.sec==="prog") return 150+i*1100;
+  if(chSeq()) return 150+i*1100;
   if(chordLike(cur.sec)) return 150+i*220;
   return 150+i*300;
 }
 let revealDone=false;
 function showReveal(instant){
-  if(cur.sec==="prog"){ clearKeys(); return; }
+  if(chSeq()){ clearKeys(); return; }
   if(cur.sec==="ear"){ showEarKeys(); return; }
   // one continuous run: notes already found in green now, the missing ones in blue one by one
   Object.values(keyEls).forEach(el=>el.classList.remove("k-ok","k-rev"));
@@ -2040,7 +2062,7 @@ function lightChord(v, cls){ clearKeys(); v.forEach(m=>keyEls[fold(m)]?.classLis
 function playScale(delay=.15){
   if(!cur) return;
   clearPlayTimers();
-  if(cur.sec==="prog"){
+  if(chSeq()){
     seq.forEach((st,i)=>{ const at=delay+i*1.1; st.voicing.forEach(m=>tone(m,at,1.0,.17)); tone(st.voicing[0]-12,at,1.0,.12);
       if(phase!=="listening") playTimers.push(setTimeout(()=>{ lightChord(st.voicing,"k-rev"); markNow(i); }, at*1000)); });
     if(phase!=="listening") playTimers.push(setTimeout(()=>markNow(-1), (delay+seq.length*1.1)*1000));
@@ -2062,10 +2084,10 @@ function reveal(auto){
   bumpStreak(); record(roundLevel(), null); save();
   revealDone=false; playScale(); showReveal();
   if(cur.sec==="ear") showEar(false,0);
-  else showScore([seq.length-idx?(cur.sec==="prog"?t("missedP"):t("missed"))(seq.length-idx):"", errors?t("errors")(errors):""]);
+  else showScore([seq.length-idx?(chSeq()?t("missedP"):t("missed"))(seq.length-idx):"", errors?t("errors")(errors):""]);
   render();
   if(S.settings.autoNext!==false){
-    const playMs = cur.sec==="prog" ? seq.length*1100+600 : cur.sec==="ear" ? 2800 : (seq.length*300+1400);
+    const playMs = chSeq() ? seq.length*1100+600 : cur.sec==="ear" ? 2800 : (seq.length*300+1400);
     advanceTimer=setTimeout(()=>{ if(phase!=="revealed") return; if(anyModal()) pendingAdv=true; else grade(true); }, playMs+2500);
   }
 }
@@ -2116,7 +2138,7 @@ function roundLevel(){
   if(cur.sec==="ear") return errors?"bad":"good";
   const f=(seq.length-idx)+errors; return f===0?"good":f<=3?"warn":"bad";
 }
-function stripItem(it){ const o={sec:it.sec,tid:it.tid,k:it.k}; if(it.inv!=null) o.inv=it.inv; if(it.deg!=null) o.deg=it.deg; return o; }
+function stripItem(it){ const o={sec:it.sec,tid:it.tid,k:it.k}; if(it.inv!=null) o.inv=it.inv; if(it.deg!=null) o.deg=it.deg; if(it.ch) o.ch=1; return o; }
 function record(level, secs){
   // first finish of the current exercise only: retries never change the result
   if(!game || game.results[game.i]) return false;
@@ -2299,8 +2321,8 @@ function renderSlots(popIdx){
   box.hidden = sec==="ear"; ans.hidden = sec!=="ear";
   if(sec==="ear"){ renderAnswers(); return; }
   box.innerHTML="";
-  if(sec==="prog"){
-    const steps = seq.length ? seq : progSteps(S.settings.pview, PROG[S.settings.pview].scale==="major"?"C":"A", S.settings.vl);
+  if(sec==="prog" || (sec==="scales" && (seq.length ? !!cur.ch : S.settings.scMode==="chords"))){
+    const steps = seq.length ? seq : sec==="prog" ? progSteps(S.settings.pview, PROG[S.settings.pview].scale==="major"?"C":"A", S.settings.vl) : scaleChordSteps("major","C",!!S.settings.sc7,S.settings.dir==="down"?"down":"up");
     box.style.gridTemplateColumns="repeat("+steps.length+",minmax(0,1fr))";
     steps.forEach((st,i)=>{
       const d=document.createElement("div"); d.className="slot chordslot"; let txt="";
@@ -2371,7 +2393,7 @@ function renderPrompt(){
   const sec=S.section;
   $("invTag").hidden = true;
   if(!cur){
-    $("eyebrow").textContent = sec==="chords"?t("chordToPlay"):sec==="harmony"?t("chordOfKey"):sec==="prog"?t("progLbl"):sec==="ear"?t("listenLbl"):t("scaleToPlay");
+    $("eyebrow").textContent = sec==="chords"?t("chordToPlay"):sec==="harmony"?t("chordOfKey"):sec==="prog"?t("progLbl"):sec==="ear"?t("listenLbl"):S.settings.scMode==="chords"?t("scChordsLbl"):t("scaleToPlay");
     $("prompt").textContent=t("ready"); $("promptSub").textContent=tx("idleSub")+(midiMode()&&S.settings.midiC!==false?" "+t("midiStartTip"):""); return;
   }
   const order = S.settings.mode==="suite"?t("inOrder"):t("random");
@@ -2404,9 +2426,9 @@ function renderPrompt(){
     $("invTag").hidden=false; $("invTxt").textContent=t("invNames")[cur.inv];
     return;
   }
-  $("eyebrow").textContent=(dirOf()==="down"?t("descending"):t("ascending"))+" · "+order;
+  $("eyebrow").textContent=(cur.ch?t("scChordsLbl")+" · ":"")+(dirOf()==="down"?t("descending"):t("ascending"))+" · "+order;
   $("prompt").textContent=scaleName(cur.tid,cur.k);
-  $("promptSub").textContent = seq.length+" "+t("notes") + (cur.tid==="mel" && dirOf()==="down" ? t("melDown") : "");
+  $("promptSub").textContent = cur.ch ? t("chordsN")(seq.length)+(S.settings.sc7?(S.settings.lang==="fr"?" · 7e":" · 7ths"):"") : seq.length+" "+t("notes") + (cur.tid==="mel" && dirOf()==="down" ? t("melDown") : "");
 }
 function renderHint(){ $("kbdHint").textContent=tx("kbdHint"); $("kbdHint").hidden=!hasKeyboard(); }
 // a physical computer keyboard is likely only on desktop browsers (not in the app, not on iPad / phones)
@@ -2436,8 +2458,9 @@ function renderTypes(){
   $("practiseLbl").textContent = {scales:t("practiseS"),chords:t("practiseC"),harmony:t("practiseH"),prog:t("practiseP"),ear:t("practiseE")}[sec];
   typeList(sec).forEach(ty=>{
     const b=document.createElement("button"); b.type="button";
-    const open=typeOpenS(sec,ty.id), on=S.settings[cfg.sel].includes(ty.id)&&open;
-    b.setAttribute("aria-pressed",on); b.disabled=!open;
+    const noCh = sec==="scales" && S.settings.scMode==="chords" && !ty.iv; // no chord per degree in pentatonic / blues scales
+    const open=typeOpenS(sec,ty.id) && !noCh, on=S.settings[cfg.sel].includes(ty.id)&&open;
+    b.setAttribute("aria-pressed",on); b.disabled=!open; if(noCh) b.title=t("scNotes");
     b.textContent = cfg.name(ty);
     if(!open){ const sm=document.createElement("small"); sm.textContent=t("lvlShort")+ty.lvl; b.appendChild(sm); }
     b.onclick=()=>{ const set=new Set(S.settings[cfg.sel].filter(id=>typeOpenS(sec,id)));
@@ -2516,7 +2539,7 @@ function renderMap(){
     if(sec==="chords"){ it={sec,tid,k,inv:S.settings.invs[0]||0}; sub=chordSym(tid,k); }
     else if(sec==="harmony"){ it={sec,tid,k,deg:S.settings.hdegs[0]||0}; sub=HTYPE[tid].scale==="minor"?(S.settings.lang==="fr"?"Mineur":"Minor"):(S.settings.lang==="fr"?"Majeur":"Major"); }
     else if(sec==="prog"){ it={sec,tid,k}; sub=PROG[tid].scale==="minor"?(S.settings.lang==="fr"?"Mineur":"Minor"):(S.settings.lang==="fr"?"Majeur":"Major"); }
-    else { it={sec,tid,k}; sub=sigText(tid,k); }
+    else { it={sec,tid,k}; if(S.settings.scMode==="chords" && TYPE[tid].iv) it.ch=1; sub=sigText(tid,k); }
     b.querySelector(".tn").textContent=noteName(tonicNote(k));
     b.querySelector(".ta").textContent=avail?sub:t("locked");
     b.title=avail?t("practiseTip")+itemName(it):tx("lockedTip");
@@ -2542,6 +2565,7 @@ function renderSettings(){
   $("optOct").checked=S.settings.octave; $("optLabels").checked=S.settings.labels; $("optMidiSound").checked=S.settings.midiSound; $("optMidiC").checked=S.settings.midiC!==false; $("optAuto").checked=S.settings.autoNext!==false; $("optAll").checked=S.settings.unlockAll;
   const sec=S.section;
   $("invField").hidden=sec!=="chords"; $("degField").hidden=sec!=="harmony"; $("vlField").hidden=sec!=="prog";
+  $("scModeField").hidden=sec!=="scales"; $("sc7Field").hidden=!(sec==="scales" && S.settings.scMode==="chords"); set("segScMode",S.settings.scMode||"notes"); $("optSc7").checked=!!S.settings.sc7;
   $("dirField").hidden=sec!=="scales"; $("octField").hidden=sec!=="scales";
   $("orderField").hidden=sec==="ear"; $("lenField").hidden=false; $("delayField").hidden=sec==="ear";
   setNav();
@@ -2557,6 +2581,10 @@ function bindSeg(id,key,restart){ $(id).addEventListener("click",e=>{ const b=e.
   S.settings[key]=b.dataset.v; save(); renderSettings(); labelKeys();
   if(restart && cur && (phase==="listening"||phase==="revealed")) startRound(key==="dir"?{...cur,dir:null}:cur,true); else render(); }); }
 bindSeg("segMode","mode",false);
+$("segScMode").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b || b.dataset.v===S.settings.scMode) return;
+  S.settings.scMode=b.dataset.v; S[sufKey()]=0; save(); renderSettings();
+  if(cur && cur.sec==="scales" && phase!=="idle" && game && !game.queue) startRound(undefined,true); else render(); });
+$("optSc7").addEventListener("change",e=>{ S.settings.sc7=e.target.checked; save(); if(cur&&cur.sec==="scales"&&cur.ch&&phase!=="idle") startRound(cur,true); else render(); });
 $("segLen").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; S.settings.gameLen=+b.dataset.v; save();
   if(game && !game.queue){ game.total=S.settings.gameLen||Infinity; if(game.i>=game.total) game.total=game.i+1; } renderSettings(); renderGameBar(); });
 $("gameEnd").addEventListener("click",()=>{ if(game){ clearTimeout(advanceTimer); cancelAnimationFrame(raf); clearPlayTimers(); if(game.results[game.i]==null) game.results.length=game.i; finishGame(); } });
