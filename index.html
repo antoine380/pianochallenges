@@ -79,9 +79,17 @@ button:focus-visible, select:focus-visible, input:focus-visible, summary:focus-v
 .wm{display:flex;flex-direction:column;line-height:.95;font-family:var(--f-display)}
 .wm-a{font-weight:800;font-size:1.32rem;letter-spacing:-.02em}
 .wm-b{font-weight:700;font-size:.98rem;letter-spacing:.06em;text-transform:uppercase;color:var(--accent)}
-.lang{display:flex;border:1px solid var(--line);border-radius:8px;overflow:hidden}
-.lang button{border:0;background:transparent;padding:3px 9px;font-family:var(--f-mono);font-size:.78rem}
-.lang button[aria-pressed="true"]{background:var(--ink);color:var(--bg)}
+.lang{display:flex;flex-direction:column;gap:2px;min-width:150px}
+.lang button{border:0;background:transparent;padding:7px 10px;border-radius:8px;text-align:left;display:flex;align-items:center;gap:8px;font-size:.92rem}
+.lang button:hover{background:var(--surface-2)}
+.lang button[aria-pressed="true"]{background:var(--ink);color:var(--bg);font-weight:700}
+.flag{font-size:1.15em;line-height:1}
+.side-tools{display:flex;align-items:center;gap:8px;margin:8px 10px 2px}
+.lang-btn{font-weight:600;padding:4px 8px 4px 10px;font-size:.88rem}
+.lang-btn svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round}
+.lang-dd .dd-pop{top:auto;bottom:calc(100% + 6px)}
+.side.collapsed .side-tools{justify-content:center;margin-inline:0}
+.side.collapsed .lang-dd{display:none}
 .modal{position:fixed;inset:0;z-index:40;display:flex;align-items:center;justify-content:center;
   padding:calc(16px + env(safe-area-inset-top, 0px)) max(16px, env(safe-area-inset-right, 0px)) calc(16px + env(safe-area-inset-bottom, 0px)) max(16px, env(safe-area-inset-left, 0px))}
 .modal-bg{position:absolute;inset:0;background:var(--scrim)}
@@ -203,6 +211,7 @@ button:focus-visible, select:focus-visible, input:focus-visible, summary:focus-v
 .timer-sel{-webkit-appearance:none;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M7 10l5 5 5-5' fill='none' stroke='%235b6271' stroke-width='2.4' stroke-linecap='round'/%3E%3C/svg%3E")!important;background-repeat:no-repeat!important;background-position:right 5px center!important;background-size:14px!important;font:inherit;font-family:var(--f-mono);font-size:.78rem;padding:3px 22px 3px 9px;border-radius:7px;background:var(--surface-2);border:1px solid var(--line);color:var(--ink);cursor:pointer}
 .guide-btn{padding:3px 22px 3px 9px!important;font-weight:400!important;border-radius:7px!important;font-family:var(--f-mono);font-size:.78rem;max-width:none}
 .guide-btn.on{border-color:var(--reveal);color:var(--reveal);font-weight:700!important}
+.guide-checks{display:flex;flex-direction:column;gap:9px}
 .guide-note{display:block;color:var(--muted);font-size:.74rem;max-width:240px;margin-top:2px}
 .slot.pre .nn{color:var(--muted);opacity:.75}
 .gamebar .gend{border:0;background:none;color:var(--muted);text-decoration:underline;font-size:.78rem;padding:0}
@@ -344,7 +353,6 @@ body{margin:0;padding:0;overflow:hidden}
 .side-nav{display:flex;flex-direction:column;gap:2px}
 .side .lvl-card{margin-top:auto}
 .side-foot{display:flex;flex-direction:column;gap:2px;padding-top:10px;border-top:1px solid var(--line)}
-.side-foot .lang{margin:6px 10px;align-self:flex-start}
 /* collapsed rail */
 /* Level card with character */
 .side .lvl-card{display:grid;grid-template-columns:auto minmax(0,1fr);align-items:center;gap:10px 12px;padding:10px;border-radius:12px;background:var(--surface-2);border:1px solid var(--line);flex-wrap:nowrap}
@@ -369,7 +377,7 @@ body{margin:0;padding:0;overflow:hidden}
 .side-daily[aria-current="page"]{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent)}
 /* collapsed rail */
 .side.collapsed{--sw:68px;padding-inline:8px}
-.side.collapsed :is(.wm,.lbl,.lvl-meta,.stat-txt small,.lang){display:none}
+.side.collapsed :is(.wm,.lbl,.lvl-meta,.stat-txt small){display:none}
 .side.collapsed .nav-item{justify-content:center;padding:8px 0}
 .side.collapsed .side-head{display:flex;justify-content:center;padding:0}
 .side.collapsed .lvl-card{grid-template-columns:1fr;justify-items:center;padding:8px 2px;gap:8px}
@@ -509,8 +517,8 @@ body.guest #dailyCard .lbl b::after{margin-left:6px;vertical-align:-2px}
 .io-t{display:flex;flex-direction:column;gap:2px} .io-t b{font-family:var(--f-display);font-size:1.05rem} .io-t small{color:var(--muted);font-size:.86rem;line-height:1.35}
 .inp-status{margin:2px 0 0;font-size:.84rem;color:var(--muted)}
 #inCfg{align-self:flex-start}
-.inp-chip{position:relative;margin-left:auto;border:1px solid var(--line);background:var(--surface-2);border-radius:9px;width:34px;height:30px;display:grid;place-items:center;padding:0;flex:none}
-.inp-chip svg{width:20px;height:20px}
+.inp-chip{position:relative;border:1px solid var(--line);background:var(--surface-2);border-radius:9px;width:44px;height:32px;display:grid;place-items:center;padding:0;flex:none;overflow:visible}
+.inp-chip>svg{width:22px;height:22px}
 .inp-chip i{position:absolute;right:-3px;top:-3px;width:9px;height:9px;border-radius:50%;border:2px solid var(--surface)}
 .inp-chip i.on{background:var(--good)} .inp-chip i.off{background:var(--warn)}
 .gamebar .gend{margin-left:0}
@@ -538,7 +546,6 @@ body.guest #dailyCard .lbl b::after{margin-left:6px;vertical-align:-2px}
 .char .lv-n{font-family:var(--f-display);font-weight:800;font-size:1.05rem;color:var(--accent)}
 .char.locked .lv-n{color:var(--muted)}
 .inp-opt.cur{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent);background:var(--accent-soft)}
-.inp-chip{width:44px}
 .inp-chip .cg{position:absolute;right:2px;bottom:1px;width:13px;height:13px;border-radius:50%;background:var(--surface);display:grid;place-items:center}
 .inp-chip .cg svg{width:11px;height:11px;stroke:var(--muted);stroke-width:2}
 .dtl-wrap{position:relative}
@@ -645,6 +652,7 @@ html.native .midi-body [data-i="midiHint"]{display:none}
 .picker .types button{padding:4px 9px}
 .dd{position:relative;min-width:0}
 .dd-btn{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);background:var(--surface-2);border-radius:8px;padding:5px 8px 5px 12px;font-weight:700;max-width:min(340px,60vw)}
+#keysBtn{max-width:none}
 .dd-btn span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .dd-btn svg{width:16px;height:16px;flex:none;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;transition:transform .15s}
 .dd-btn[aria-expanded="true"]{border-color:var(--ink)} .dd-btn[aria-expanded="true"] svg{transform:rotate(180deg)}
@@ -841,9 +849,13 @@ html.native .midi-body [data-i="midiHint"]{display:none}
     <button class="nav-item" id="progBtn" type="button" aria-haspopup="dialog"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg><span class="lbl" data-i="progress"></span></button>
     <button class="nav-item" id="setBtn" type="button" aria-haspopup="dialog"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 15.2a3.2 3.2 0 1 0 0-6.4 3.2 3.2 0 0 0 0 6.4z"/><path d="M19.4 13.5a7.6 7.6 0 0 0 0-3l2-1.6-2-3.4-2.4 1a7.5 7.5 0 0 0-2.6-1.5L14 2.5h-4l-.4 2.5A7.5 7.5 0 0 0 7 6.5l-2.4-1-2 3.4 2 1.6a7.6 7.6 0 0 0 0 3l-2 1.6 2 3.4 2.4-1a7.5 7.5 0 0 0 2.6-1.5l.4 2.5h4l.4-2.5a7.5 7.5 0 0 0 2.6-1.5l2.4 1 2-3.4z"/></svg><span class="lbl" data-i="settings"></span></button>
     <button class="nav-item" id="helpBtn" type="button" aria-haspopup="dialog"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M9.6 9.3a2.5 2.5 0 1 1 3.4 2.3c-.7.3-1 .8-1 1.5v.6"/><circle cx="12" cy="16.9" r=".5"/></svg><span class="lbl" data-i="help"></span></button>
-    <div class="lang" id="langSeg" role="group" aria-label="Langue / Language">
-      <button type="button" data-v="en">EN</button>
-      <button type="button" data-v="fr">FR</button>
+    <div class="side-tools">
+      <div class="dd lang-dd"><button class="dd-btn lang-btn" id="langBtn" type="button" data-pop="langPop" aria-haspopup="true" aria-expanded="false" aria-label="Langue / Language"><span id="langSum"></span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 10l5 5 5-5"/></svg></button>
+        <div class="dd-pop" id="langPop" hidden><div class="lang" id="langSeg" role="group" aria-label="Langue / Language">
+          <button type="button" data-v="fr"><span class="flag">🇫🇷</span> Français</button>
+          <button type="button" data-v="en"><span class="flag">🇬🇧</span> English</button>
+        </div></div></div>
+      <button class="inp-chip" id="inChip" type="button"></button>
     </div>
     <p class="legal-links"><a href="/mentions-legales.html" data-i="legalNotice"></a> · <a href="/confidentialite.html" data-i="privacy"></a></p>
     <button class="nav-item side-toggle" id="sideToggle" type="button" aria-controls="side"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14.5 6l-6 6 6 6M19 6v12"/></svg><span class="lbl" data-i="collapse"></span></button>
@@ -945,10 +957,9 @@ html.native .midi-body [data-i="midiHint"]{display:none}
       <span class="glbl" id="gameLbl"></span>
       <select class="timer-sel" id="timerSel" aria-label="Timer"></select>
       <div class="dd guide-dd"><button class="timer-sel dd-btn guide-btn" id="guideBtn" type="button" data-pop="guidePop" aria-haspopup="true" aria-expanded="false"><span id="guideSum"></span></button>
-        <div class="dd-pop" id="guidePop" hidden><div class="key-checks"><label class="check"><input type="checkbox" id="optGuideN"> <span data-i="guideNames"></span></label><label class="check"><input type="checkbox" id="optGuideK"> <span data-i="guideKeys"></span></label><small class="guide-note" data-i="guideXp"></small></div></div></div>
+        <div class="dd-pop" id="guidePop" hidden><div class="guide-checks"><label class="check"><input type="checkbox" id="optGuideN"> <span data-i="guideNames"></span></label><label class="check"><input type="checkbox" id="optGuideK"> <span data-i="guideKeys"></span></label><small class="guide-note" data-i="guideXp"></small></div></div></div>
       <div class="segs" id="segs"></div>
       <button class="gend" id="gameEnd" type="button" hidden></button>
-      <button class="inp-chip" id="inChip" type="button"></button>
     </div>
     <div class="prompt-row">
       <div>
@@ -2556,7 +2567,7 @@ function renderKeySel(){
   row(t("allKeys"), !f.length, on=>{ if(on) setF([]); else renderKeySel(); }, "all");
   keys.forEach(k=>row(noteName(tonicNote(k)), f.includes(k), on=>{ const n=new Set(f); if(on) n.add(k); else n.delete(k); setF(keys.filter(x=>n.has(x))); }));
   const names=f.map(k=>noteName(tonicNote(k)));
-  $("keysSum").textContent = !names.length ? t("allKeys") : names.length<=3 ? names.join(", ") : names.slice(0,2).join(", ")+" +"+(names.length-2);
+  $("keysSum").textContent = !names.length ? t("allKeys") : names.join(", ");
 }
 let progSec=null;
 function secProgress(sec){ let tot=0, got=0; typeList(sec).filter(ty=>typeOpenS(sec,ty.id)).forEach(ty=>rootsOf(sec,ty.id).forEach(k=>{ tot++; if(tileMast(sec,ty.id,k)>=3) got++; })); const st=(S.secStats||{})[sec]||{}; return {tot,got,pct:tot?Math.round(got/tot*100):0,ok:st.ok||0}; }
@@ -2618,6 +2629,7 @@ function renderMap(){
 function renderSettings(){
   const set=(id,v)=>$(id).querySelectorAll("button").forEach(b=>b.setAttribute("aria-pressed",b.dataset.v===v));
   set("segMode",S.settings.mode); set("segDiff",String(S.settings.delay));
+  $("langSum").innerHTML = S.settings.lang==="fr" ? '<span class="flag">🇫🇷</span> Français' : '<span class="flag">🇬🇧</span> English';
   const ks=$("kbSize"); ks.innerHTML="";
   [["auto",t("kbAuto")],...["24","25","32","37","49","61","76","88"].map(n=>[n,n+" "+t("keys")]),...(S.settings.kbdSize==="custom"?[["custom",t("kbCustom")+" · "+(S.settings.kbdHigh-S.settings.kbdLow+1)+" "+t("keys")]]:[])]
     .forEach(([v,l])=>{ const o=document.createElement("option"); o.value=v; o.textContent=l; ks.appendChild(o); });
@@ -2638,7 +2650,7 @@ function render(){ document.body.classList.toggle("playing", !!game || phase!=="
 
 // ---------- Settings wiring ----------
 $("langSeg").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return;
-  S.settings.lang=b.dataset.v; S.settings.notation=b.dataset.v; save(); applyStatic(); applySide(); renderGames(); renderInputUI(); if(page==="rank") renderRank(); if(page==="account") renderAccount(); if(helpOpen) renderTut(); renderSettings(); labelKeys(); render(); renderDaily(); if(endOpen&&lastGame) openEnd(lastGame); });
+  S.settings.lang=b.dataset.v; S.settings.notation=b.dataset.v; save(); closeTypes(); applyStatic(); applySide(); renderGames(); renderInputUI(); if(page==="rank") renderRank(); if(page==="account") renderAccount(); if(helpOpen) renderTut(); renderSettings(); labelKeys(); render(); renderDaily(); if(endOpen&&lastGame) openEnd(lastGame); });
 function bindSeg(id,key,restart){ $(id).addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return;
   S.settings[key]=b.dataset.v; save(); renderSettings(); labelKeys();
   if(restart && cur && (phase==="listening"||phase==="revealed")) startRound(key==="dir"?{...cur,dir:null}:cur,true); else render(); }); }

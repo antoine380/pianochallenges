@@ -49,7 +49,7 @@ Lis ce fichier en entier avant de travailler sur le projet.
 
 ## Préférences UX d'Antoine
 - Aucun défilement sur iPad ni sur mobile : tout tient sur un écran.
-- Menu latéral rétractable à gauche (style chess.com), menu déroulant sur mobile.
+- Menu latéral rétractable à gauche (style chess.com), menu déroulant sur mobile. En bas du menu : langue (menu déroulant avec drapeau) + picto du mode d'interaction (`#inChip`).
 - Pas de bouton « Retour » sur les pages Réglages/Progression ; titres de pages avec picto à gauche.
 - En MIDI : jouer un Do pour commencer/continuer.
 - On parle de « niveaux », pas de « personnages ».
