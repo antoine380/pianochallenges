@@ -43,3 +43,5 @@ Options -Indexes
 RedirectMatch 404 ^/app(/|$)
 RedirectMatch 404 ^/\.git
 RedirectMatch 404 ^/supabase(/|$)
+RedirectMatch 404 ^/(src|tools)(/|$)
+RedirectMatch 404 ^/CLAUDE\.md$

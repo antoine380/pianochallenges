@@ -8,7 +8,10 @@ Live site: https://pianochallenges.com
 
 The site is a static page. OVHcloud web hosting deploys this repository automatically (Git integration on the `main` branch, triggered by a GitHub webhook on each push).
 
-- `index.html` – the whole application
+- `src/piano-challenges.html` – the editable source of the whole application
+- `tools/build.py` – builds `index.html` from the source (`python3 tools/build.py`)
+- `index.html` – the built application (do not edit by hand)
+- `CLAUDE.md` – project brief for Claude sessions
 - `assets/fonts/` – self-hosted fonts
 - `.htaccess` – HTTPS redirect, permissions for microphone and MIDI, caching
 

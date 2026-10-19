@@ -1,0 +1,50 @@
+# Builds the OVH-ready index.html (repo root) from the editable source src/piano-challenges.html.
+# Usage (from the repo root): python3 tools/build.py
+import re, pathlib
+ROOT=pathlib.Path(__file__).resolve().parent.parent
+SRC=(ROOT/"src/piano-challenges.html").read_text(encoding="utf-8")
+body=SRC
+for pat in [r'<title>.*?</title>\n', r'<meta name="claude:viewport-fit-sides"[^>]*>\n', r'<link rel="preconnect"[^>]*>\n', r'<link rel="stylesheet" href="https://fonts.googleapis.com[^>]*>\n']:
+    body, n = re.subn(pat, '', body, count=2); assert n>=1, pat
+faces=[("Bricolage Grotesque","bricolage-grotesque",[500,700,800]),("Atkinson Hyperlegible","atkinson-hyperlegible",[400,700]),("DM Mono","dm-mono",[400,500])]
+ff="\n".join(f"@font-face{{font-family:\"{name}\";font-style:normal;font-weight:{w};font-display:swap;src:url(/assets/fonts/{slug}-latin-{w}-normal.woff2) format(\"woff2\")}}" for name,slug,ws in faces for w in ws)
+DESC_EN="Learn piano scales, chords, inversions, harmony and chord progressions by playing on your own piano (MIDI or mic). Ear training, daily practice, levels and challenges."
+head=f'''<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Piano Challenges · Scales, chords and progressions on your piano</title>
+<meta name="description" content="{DESC_EN}">
+<link rel="canonical" href="https://pianochallenges.com/">
+<meta name="theme-color" content="#eceef2" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#111318" media="(prefers-color-scheme: dark)">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://pianochallenges.com/">
+<meta property="og:title" content="Piano Challenges">
+<meta property="og:description" content="{DESC_EN}">
+<meta property="og:image" content="https://pianochallenges.com/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="manifest" href="/manifest.webmanifest">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Piano Challenges">
+<link rel="preload" href="/assets/fonts/bricolage-grotesque-latin-800-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/assets/fonts/atkinson-hyperlegible-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+<style>
+{ff}
+html{{color-scheme:light;-webkit-text-size-adjust:100%}}
+body{{margin:0}}
+img{{max-width:100%}}
+</style>
+</head>
+<body>
+'''
+body=body.replace("https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.116.0/dist/umd/supabase.js","/assets/js/supabase-2.116.0.js")
+assert "/assets/js/supabase-2.116.0.js" in body
+out=head+body+"\n</body>\n</html>\n"
+(ROOT/"index.html").write_text(out,encoding="utf-8")
+(ROOT/"version.txt").write_text(__import__("datetime").datetime.now(__import__("datetime").timezone.utc).strftime("%Y-%m-%dT%H:%MZ")+"\n")
+print("index.html", len(out))
