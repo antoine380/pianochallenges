@@ -302,6 +302,7 @@ select{font:inherit;color:var(--ink);background:var(--surface-2);border:1px soli
 .types button[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--on-accent);font-weight:700}
 .types button:disabled{opacity:.5;cursor:not-allowed}
 .types button small{font-family:var(--f-mono);font-size:.68rem}
+.types .dd-unlock{flex-basis:100%;justify-content:center;background:transparent;border-style:dashed;color:var(--accent);font-weight:700;margin-top:4px}
 .range-row{display:flex;align-items:center;gap:10px}
 .seg.diff{flex-wrap:wrap}
 .seg.diff button{display:flex;flex-direction:column;align-items:center;gap:0;padding:6px 4px;min-width:0}
@@ -1128,7 +1129,7 @@ html.native .midi-body [data-i="midiHint"]{display:none}
         </div>
           <div class="set-checks"><label class="check" id="octField"><input type="checkbox" id="optOct"> <span data-i="optOct"></span></label>
           <label class="check"><input type="checkbox" id="optAuto"> <span data-i="optAuto"></span></label>
-          <label class="check" hidden><input type="checkbox" id="optAll"> <span data-i="optAll"></span></label></div>
+          <label class="check"><input type="checkbox" id="optAll"> <span data-i="optAll"></span></label></div>
         </div>
       </section>
       <p class="set-reset"><button class="danger" id="resetBtn" type="button"></button></p>
@@ -1281,7 +1282,7 @@ const TXT = {
     calibListen:"Joue la touche la plus grave et la plus aiguë de ton clavier (dans l'ordre que tu veux), puis touche Valider.", calibLive:(n,a,b)=>n+" touches détectées : "+a+" → "+b+". Touche Valider quand c'est bon.", calibShort:"Pas assez de touches détectées : joue bien la plus grave et la plus aiguë.", kbValidate:"Valider", calibNeedMidi:"Activez d'abord le MIDI (bouton sous le clavier), puis recommencez.",
     kbRangeTxt:(n,a,b)=>n+" touches, de "+a+" à "+b+". Le Do du milieu est "+(PC_FR[0])+"3.", kbDone:(n,a,b)=>"Clavier détecté : "+n+" touches ("+a+" – "+b+")",
     difficulty:"Temps pour jouer", dFree:"Libre", dEasy:"Facile", dMedium:"Moyen", dHard:"Difficile", dExpert:"Expert", noTimer:"Sans chrono",
-    optAuto:"Passer automatiquement à l'exercice suivant", optMidiSound:"Jouer le son des notes MIDI", optAll:"Tout débloquer", reset:"Remettre la progression à zéro", confirmReset:"Confirmer : tout effacer ?",
+    optAuto:"Passer automatiquement à l'exercice suivant", optMidiSound:"Jouer le son des notes MIDI", optAll:"Tout débloquer : toutes les gammes, accords et tonalités, sans passer par les niveaux", unlockBtn:"Tout débloquer", relockBtn:"Revenir aux niveaux", reset:"Remettre la progression à zéro", confirmReset:"Confirmer : tout effacer ?",
     resetDone:"Progression remise à zéro", locked:"verrouillée", lvlShort:"Niv. ", level:"Niveau ", newScale:"Nouvelle gamme : ", newType:"Débloqué : ",
     lockedHint:n=>"Réussissez 3 fois une gamme sans faute pour remplir sa jauge et débloquer la suivante. Encore "+n+" à découvrir.",
     allOpen:"Les 12 tonalités de ce type sont ouvertes.", typeLocked:l=>"Ce type de gamme s'ouvre au niveau "+l+".",
@@ -1396,7 +1397,7 @@ const TXT = {
     calibListen:"Play the lowest and the highest key of your keyboard (any order), then tap Confirm.", calibLive:(n,a,b)=>n+" keys detected: "+a+" → "+b+". Tap Confirm when it's right.", calibShort:"Not enough keys detected: play the lowest and the highest key.", kbValidate:"Confirm", calibNeedMidi:"Enable MIDI first (button under the keyboard), then try again.",
     kbRangeTxt:(n,a,b)=>n+" keys, from "+a+" to "+b+". Middle C is C4.", kbDone:(n,a,b)=>"Keyboard detected: "+n+" keys ("+a+" – "+b+")",
     difficulty:"Time to play", dFree:"Free", dEasy:"Easy", dMedium:"Medium", dHard:"Hard", dExpert:"Expert", noTimer:"No timer",
-    optAuto:"Move on to the next exercise automatically", optMidiSound:"Play sound for MIDI notes", optAll:"Unlock everything", reset:"Reset progress", confirmReset:"Confirm: erase everything?",
+    optAuto:"Move on to the next exercise automatically", optMidiSound:"Play sound for MIDI notes", optAll:"Unlock everything: every scale, chord and key, without going through the levels", unlockBtn:"Unlock everything", relockBtn:"Back to levels", reset:"Reset progress", confirmReset:"Confirm: erase everything?",
     resetDone:"Progress reset", locked:"locked", lvlShort:"Lvl ", level:"Level ", newScale:"New scale: ", newType:"Unlocked: ",
     lockedHint:n=>"Play a scale 3 times without mistakes to fill its gauge and unlock the next one. "+n+" left to discover.",
     allOpen:"All 12 keys of this type are open.", typeLocked:l=>"This scale type opens at level "+l+".",
@@ -2502,6 +2503,11 @@ function renderTypes(){
       if(phase==="idle") render(); };
     box.appendChild(b);
   });
+  if(typeList(sec).some(ty=>!typeOpenS(sec,ty.id)) || S.settings.unlockAll){ // locked by level: one click opens everything
+    const u=document.createElement("button"); u.type="button"; u.className="dd-unlock"; u.textContent=t(S.settings.unlockAll?"relockBtn":"unlockBtn");
+    u.onclick=()=>{ S.settings.unlockAll=!S.settings.unlockAll; save(); renderSettings(); render(); };
+    box.appendChild(u);
+  }
   const chips=(boxId, labels, key, after)=>{ const ib=$(boxId); ib.innerHTML="";
     labels.forEach((nm,i)=>{ const b=document.createElement("button"); b.type="button"; b.textContent=nm;
       b.setAttribute("aria-pressed", S.settings[key].includes(i));
