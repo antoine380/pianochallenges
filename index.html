@@ -961,7 +961,7 @@ html.native .midi-body [data-i="midiHint"]{display:none}
       <span class="glbl" id="gameLbl"></span>
       <select class="timer-sel" id="timerSel" aria-label="Timer"></select>
       <div class="dd guide-dd"><button class="timer-sel dd-btn guide-btn" id="guideBtn" type="button" data-pop="guidePop" aria-haspopup="true" aria-expanded="false"><span id="guideSum"></span></button>
-        <div class="dd-pop" id="guidePop" hidden><div class="guide-checks"><label class="check"><input type="checkbox" id="optGuideN"> <span data-i="guideNames"></span></label><label class="check"><input type="checkbox" id="optGuideK"> <span data-i="guideKeys"></span></label><small class="guide-note" data-i="guideXp"></small></div></div></div>
+        <div class="dd-pop" id="guidePop" hidden><div class="guide-checks"><label class="check"><input type="checkbox" id="optGuideN"> <span data-i="guideNames"></span></label><label class="check"><input type="checkbox" id="optGuideK"> <span data-i="guideKeys"></span></label><label class="check"><input type="checkbox" id="optGuideP"> <span data-i="guideP"></span></label><small class="guide-note" data-i="guideXp"></small></div></div></div>
       <div class="segs" id="segs"></div>
       <button class="gend" id="gameEnd" type="button" hidden></button>
     </div>
@@ -1277,7 +1277,7 @@ const TXT = {
     intShort:{m2:"2m",M2:"2M",m3:"3m",M3:"3M",P4:"4J",TT:"Triton",P5:"5J",m6:"6m",M6:"6M",m7:"7m",M7:"7M",P8:"8ve"},
     secScales:"Gammes", secChords:"Accords", inversions:"Renversements", chordToPlay:"Accord à jouer",
     idleSubC:"Jouez l'accord en partant de sa note la plus grave : plaqué (MIDI) ou note par note.", replayC:"Écouter l'accord",
-    practiseS:"Gammes travaillées", idleSubSC:"Jouez les accords de la gamme l'un après l'autre, du Ier au VIIe degré (plaqués en MIDI, ou note par note).", scModeLbl:"Jouer", scNotes:"Notes", scChords:"Accords", optSc7:"Accords de 7e", scChordsOf:" · accords", scChordsLbl:"Accords de la gamme", chordsN:n=>n+" accord"+(n>1?"s":""), practiseC:"Accords travaillés", chordsWord:n=>n+" accord"+(n>1?"s":""), newChord:"Nouvel accord : ",
+    practiseS:"Gammes travaillées", replaySC:"Écouter les accords", idleSubSC:"Jouez les accords de la gamme l'un après l'autre, du Ier au VIIe degré (plaqués en MIDI, ou note par note).", scModeLbl:"Jouer", scNotes:"Notes", scChords:"Accords", optSc7:"Accords de 7e", scChordsOf:" · accords", scChordsLbl:"Accords de la gamme", chordsN:n=>n+" accord"+(n>1?"s":""), practiseC:"Accords travaillés", chordsWord:n=>n+" accord"+(n>1?"s":""), newChord:"Nouvel accord : ",
     lockedHintC:n=>"Réussissez 3 fois un accord sans faute pour débloquer la fondamentale suivante. Encore "+n+" à découvrir.",
     typeLockedC:l=>"Ce type d'accord s'ouvre au niveau "+l+".", lockedTipC:"Maîtrisez un accord de plus pour le débloquer",
     invNames:["État fondamental","1er renversement","2e renversement","3e renversement"], rootLbl:"F",
@@ -1304,7 +1304,7 @@ const TXT = {
     calibLow:"Jouez la touche la plus grave de votre clavier MIDI.", calibHigh:"Maintenant, jouez la touche la plus aiguë.",
     calibListen:"Joue la touche la plus grave et la plus aiguë de ton clavier (dans l'ordre que tu veux), puis touche Valider.", calibLive:(n,a,b)=>n+" touches détectées : "+a+" → "+b+". Touche Valider quand c'est bon.", calibShort:"Pas assez de touches détectées : joue bien la plus grave et la plus aiguë.", kbValidate:"Valider", calibNeedMidi:"Activez d'abord le MIDI (bouton sous le clavier), puis recommencez.",
     kbRangeTxt:(n,a,b)=>n+" touches, de "+a+" à "+b+". Le Do du milieu est "+(PC_FR[0])+"3.", kbDone:(n,a,b)=>"Clavier détecté : "+n+" touches ("+a+" – "+b+")",
-    difficulty:"Temps pour jouer", dFree:"Libre", dEasy:"Facile", dMedium:"Moyen", dHard:"Difficile", dExpert:"Expert", noTimer:"Sans chrono", guideLbl:"Guide", guideOff:"non", guideNShort:"notes", guideKShort:"touches", guideNames:"Voir les notes avant de jouer", guideKeys:"Allumer les touches à jouer", guideXp:"Avec le guide, les exercices rapportent moitié moins d'XP.",
+    difficulty:"Temps pour jouer", dFree:"Libre", dEasy:"Facile", dMedium:"Moyen", dHard:"Difficile", dExpert:"Expert", noTimer:"Sans chrono", guideLbl:"Guide", guideOff:"non", guideP:"Aide progressive : le degré, puis le nom de l'accord, puis les touches (8 s chacun, ou Espace)", guidePShort:"progressif", hintBtn:"Un indice", guideNShort:"notes", guideKShort:"touches", guideNames:"Voir les notes avant de jouer", guideKeys:"Allumer les touches à jouer", guideXp:"Avec le guide, les exercices rapportent moitié moins d'XP.",
     optAuto:"Passer automatiquement à l'exercice suivant", optMidiSound:"Jouer le son des notes MIDI", optAll:"Tout débloquer : toutes les gammes, accords et tonalités, sans passer par les niveaux", unlockBtn:"Tout débloquer", relockBtn:"Revenir aux niveaux", reset:"Remettre la progression à zéro", confirmReset:"Confirmer : tout effacer ?",
     resetDone:"Progression remise à zéro", locked:"verrouillée", lvlShort:"Niv. ", level:"Niveau ", newScale:"Nouvelle gamme : ", newType:"Débloqué : ",
     lockedHint:n=>"Réussissez 3 fois une gamme sans faute pour remplir sa jauge et débloquer la suivante. Encore "+n+" à découvrir.",
@@ -1392,7 +1392,7 @@ const TXT = {
     intShort:{m2:"m2",M2:"M2",m3:"m3",M3:"M3",P4:"P4",TT:"TT",P5:"P5",m6:"m6",M6:"M6",m7:"m7",M7:"M7",P8:"P8"},
     secScales:"Scales", secChords:"Chords", inversions:"Inversions", chordToPlay:"Chord to play",
     idleSubC:"Play the chord starting from its lowest note: all at once (MIDI) or one note at a time.", replayC:"Listen to the chord",
-    practiseS:"Scales to practise", idleSubSC:"Play the chords of the scale one after another, from degree I to VII (all at once in MIDI, or note by note).", scModeLbl:"Play", scNotes:"Notes", scChords:"Chords", optSc7:"7th chords", scChordsOf:" · chords", scChordsLbl:"Chords of the scale", chordsN:n=>n+" chord"+(n>1?"s":""), practiseC:"Chords to practise", chordsWord:n=>n+" chord"+(n>1?"s":""), newChord:"New chord: ",
+    practiseS:"Scales to practise", replaySC:"Listen to the chords", idleSubSC:"Play the chords of the scale one after another, from degree I to VII (all at once in MIDI, or note by note).", scModeLbl:"Play", scNotes:"Notes", scChords:"Chords", optSc7:"7th chords", scChordsOf:" · chords", scChordsLbl:"Chords of the scale", chordsN:n=>n+" chord"+(n>1?"s":""), practiseC:"Chords to practise", chordsWord:n=>n+" chord"+(n>1?"s":""), newChord:"New chord: ",
     lockedHintC:n=>"Play a chord 3 times without mistakes to unlock the next root. "+n+" left to discover.",
     typeLockedC:l=>"This chord type opens at level "+l+".", lockedTipC:"Master one more chord to unlock it",
     invNames:["Root position","1st inversion","2nd inversion","3rd inversion"], rootLbl:"R",
@@ -1419,7 +1419,7 @@ const TXT = {
     calibLow:"Play the lowest key of your MIDI keyboard.", calibHigh:"Now play the highest key.",
     calibListen:"Play the lowest and the highest key of your keyboard (any order), then tap Confirm.", calibLive:(n,a,b)=>n+" keys detected: "+a+" → "+b+". Tap Confirm when it's right.", calibShort:"Not enough keys detected: play the lowest and the highest key.", kbValidate:"Confirm", calibNeedMidi:"Enable MIDI first (button under the keyboard), then try again.",
     kbRangeTxt:(n,a,b)=>n+" keys, from "+a+" to "+b+". Middle C is C4.", kbDone:(n,a,b)=>"Keyboard detected: "+n+" keys ("+a+" – "+b+")",
-    difficulty:"Time to play", dFree:"Free", dEasy:"Easy", dMedium:"Medium", dHard:"Hard", dExpert:"Expert", noTimer:"No timer", guideLbl:"Guide", guideOff:"off", guideNShort:"notes", guideKShort:"keys", guideNames:"Show the notes before playing", guideKeys:"Light up the keys to play", guideXp:"With the guide on, exercises earn half the XP.",
+    difficulty:"Time to play", dFree:"Free", dEasy:"Easy", dMedium:"Medium", dHard:"Hard", dExpert:"Expert", noTimer:"No timer", guideLbl:"Guide", guideOff:"off", guideP:"Step-by-step help: the degree, then the chord name, then the keys (8 s each, or Space)", guidePShort:"step by step", hintBtn:"A hint", guideNShort:"notes", guideKShort:"keys", guideNames:"Show the notes before playing", guideKeys:"Light up the keys to play", guideXp:"With the guide on, exercises earn half the XP.",
     optAuto:"Move on to the next exercise automatically", optMidiSound:"Play sound for MIDI notes", optAll:"Unlock everything: every scale, chord and key, without going through the levels", unlockBtn:"Unlock everything", relockBtn:"Back to levels", reset:"Reset progress", confirmReset:"Confirm: erase everything?",
     resetDone:"Progress reset", locked:"locked", lvlShort:"Lvl ", level:"Level ", newScale:"New scale: ", newType:"Unlocked: ",
     lockedHint:n=>"Play a scale 3 times without mistakes to fill its gauge and unlock the next one. "+n+" left to discover.",
@@ -1683,7 +1683,7 @@ function save(){ try{ localStorage.setItem(STORE, JSON.stringify(S)); }catch(e){
 let S=load();
 const isCh = () => S.section==="chords";
 const SUF = {chords:"C", harmony:"H", prog:"P", ear:"E"};
-const tx = k => { const scc=S.section==="scales" && (cur&&cur.sec==="scales" ? !!cur.ch : S.settings.scMode==="chords"); if(scc && (k==="correct"||k==="replay"||k==="missed")) return t(k+"P"); if(scc && k==="idleSub") return t("idleSubSC"); const sf=SUF[S.section]; const d=TXT[S.settings.lang]; return (sf && d[k+sf]!==undefined) ? d[k+sf] : t(k); };
+const tx = k => { const scc=S.section==="scales" && (cur&&cur.sec==="scales" ? !!cur.ch : S.settings.scMode==="chords"); if(scc && k==="replay") return t("replaySC"); if(scc && (k==="correct"||k==="missed")) return t(k+"P"); if(scc && k==="idleSub") return t("idleSubSC"); const sf=SUF[S.section]; const d=TXT[S.settings.lang]; return (sf && d[k+sf]!==undefined) ? d[k+sf] : t(k); };
 const chordLike = sec => sec==="chords" || sec==="harmony";
 // per-section configuration
 const SEC = {
@@ -1904,7 +1904,7 @@ function clearKeys(){ Object.values(keyEls).forEach(el=>el.classList.remove("k-o
 // guide: light up what to play next (the next note, the rest of the chord, or the current chord of a sequence)
 function guideKeys(){
   Object.values(keyEls).forEach(el=>el.classList.remove("k-guide"));
-  if(!S.settings.guideK || phase!=="listening" || !cur || cur.sec==="ear" || page==="games" || !seq.length) return;
+  if(!guideKeysOn() || phase!=="listening" || !cur || cur.sec==="ear" || page==="games" || !seq.length) return;
   let ms;
   if(chSeq()) ms=seq[pStep].voicing.map(fold);
   else if(chordLike(cur.sec)){ const rm=revealMidis(); ms=rm.filter((m,i)=>!found[i]); }
@@ -1966,7 +1966,7 @@ function startRound(item, retry){
     const span = cur.tid==="scale" ? 0 : cur.tid==="int" ? 9 : 10;
     cur={...cur, root:(cur.tid==="scale"?48:52)+Math.floor(Math.random()*(span+1))+(cur.tid==="scale"?Math.floor(Math.random()*8):0)};
   }
-  lastId=mkey(cur); seq=buildSeq(); found=seq.map(()=>false); played=[]; idx=0; errors=0; pStep=0; pFound=new Set(); earPick=null;
+  lastId=mkey(cur); seq=buildSeq(); found=seq.map(()=>false); played=[]; idx=0; hintStage=0; hintUsed=false; hintT=performance.now(); errors=0; pStep=0; pFound=new Set(); earPick=null;
   phase="listening"; startT=performance.now();
   const per = chSeq() ? seq.length : 1;
   deadline=(S.settings.delay>0 && cur.sec!=="ear") ? startT+S.settings.delay*1000*per : 0;
@@ -1979,6 +1979,7 @@ function startRound(item, retry){
 }
 function tick(){
   if(phase!=="listening") return;
+  if(S.settings.guideP && cur && cur.sec!=="ear"){ const st=Math.min(2,Math.floor((performance.now()-hintT)/HINT_MS)); if(st>hintStage){ hintStage=st; hintUsed=true; renderSlots(); renderActions(); } }
   if(deadline){
     const per = chSeq() ? seq.length : 1;
     const left=Math.max(0,deadline-performance.now()), frac=left/(S.settings.delay*1000*per);
@@ -2034,7 +2035,7 @@ function midiStart(note){
 let midiBuf=[], midiTimer=0, midiReady=false;
 function midiIn(m){ midiBuf.push(m); clearTimeout(midiTimer); midiTimer=setTimeout(()=>{ const b=midiBuf.sort((a,c)=>a-c); midiBuf=[]; b.forEach(x=>noteIn(x)); },35); }
 function hitSlot(j, m){
-  found[j]=true; idx=found.filter(Boolean).length; played.push(fold(m)); markPlayed(); renderSlots(j);
+  found[j]=true; if(!chordLike(cur.sec)) hintReset(); idx=found.filter(Boolean).length; played.push(fold(m)); markPlayed(); renderSlots(j);
   if(idx===seq.length) success();
 }
 function wrongNote(m){
@@ -2056,7 +2057,7 @@ function noteIn(m){
     if(cur.sec==="prog" && S.settings.vl && pFound.size===0 && pc!==st.bassPc){ wrongNote(m); return; }
     pFound.add(pc); played.push(fold(m)); markPlayed();
     if(pFound.size===pcs.length){
-      found[pStep]=true; idx=found.filter(Boolean).length; const done=pStep; pStep++; pFound=new Set();
+      found[pStep]=true; idx=found.filter(Boolean).length; const done=pStep; pStep++; pFound=new Set(); hintReset();
       renderSlots(done);
       if(idx===seq.length){ success(); return; }
       setTimeout(()=>{ if(phase==="listening"){ played=[]; clearKeys(); renderSlots(); } },260);
@@ -2086,7 +2087,7 @@ function success(){
   if(cur.sec==="prog") gain+=seq.length*3+(S.settings.vl?6:0);
   if(cur.sec==="scales" && cur.ch) gain+=seq.length*2+(S.settings.sc7?4:0);
   if(cur.sec==="ear") gain=8+Math.min(combo,10)*2;
-  else if(S.settings.guideN||S.settings.guideK) gain=Math.max(2,Math.round(gain/2));
+  else if(S.settings.guideN||S.settings.guideK||hintUsed) gain=Math.max(2,Math.round(gain/2));
   bumpStreak(); addXP(gain); record(roundLevel(), secs); save();
   if(cur.sec!=="ear"){ const root=48+((chSeq()?seq[0].root.pc:seqMidis()[0])%12); [0,4,7,12].forEach((iv,i)=>tone(root+iv+24,i*.07,.5,.16)); }
   const sep=S.settings.lang==="fr"?",":".";
@@ -2114,6 +2115,12 @@ function revealAt(i){
   return 150+i*300;
 }
 let revealDone=false;
+// step-by-step help: 0 = degree only, 1 = + chord / note name, 2 = + keys lit. Advances every HINT_MS, or with the hint button.
+let hintStage=0, hintT=0, hintUsed=false; const HINT_MS=8000;
+const guideNamesOn = () => !!S.settings.guideN || (!!S.settings.guideP && hintStage>=1);
+const guideKeysOn = () => !!S.settings.guideK || (!!S.settings.guideP && hintStage>=2);
+function hintReset(){ const was=hintStage; hintStage=0; hintT=performance.now(); if(was && S.settings.guideP) renderActions(); }
+function hintMore(){ if(hintStage>=2) return false; hintStage++; hintUsed=true; hintT=performance.now(); renderSlots(); renderActions(); return true; }
 function showReveal(instant){
   if(chSeq()){ clearKeys(); return; }
   if(cur.sec==="ear"){ showEarKeys(); return; }
@@ -2173,7 +2180,7 @@ function grade(next){
 function primaryAction(){
   if(page==="daily" && !game && (phase==="idle"||phase==="success")){ startDaily(); return; }
   if(phase==="idle"||phase==="success") startRound();
-  else if(phase==="listening"){ if(cur.sec==="ear") playScale(0); else reveal(false); }
+  else if(phase==="listening"){ if(cur.sec==="ear") playScale(0); else if(!(S.settings.guideP && hintMore())) reveal(false); }
   else if(phase==="revealed") grade(true);
 }
 function switchSection(sec){
@@ -2309,9 +2316,9 @@ function renderGameBar(){
   const ts=$("timerSel"), opts=[0,20,10,5]; if(!opts.includes(S.settings.delay)) opts.push(S.settings.delay);
   ts.innerHTML=""; opts.forEach(v=>{ const o=document.createElement("option"); o.value=v; o.textContent = v ? v+" s" : t("noTimer"); ts.appendChild(o); });
   ts.value=String(S.settings.delay);
-  const gN=!!S.settings.guideN, gK=!!S.settings.guideK, gs=$("guideSum");
-  gs.textContent=t("guideLbl")+(S.settings.lang==="fr"?" : ":": ")+(gN&&gK ? t("guideNShort")+" + "+t("guideKShort") : gN ? t("guideNShort") : gK ? t("guideKShort") : t("guideOff"));
-  $("guideBtn").classList.toggle("on",gN||gK); $("optGuideN").checked=gN; $("optGuideK").checked=gK;
+  const gN=!!S.settings.guideN, gK=!!S.settings.guideK, gP=!!S.settings.guideP, gs=$("guideSum");
+  gs.textContent=t("guideLbl")+(S.settings.lang==="fr"?" : ":": ")+(gP ? t("guidePShort") : gN&&gK ? t("guideNShort")+" + "+t("guideKShort") : gN ? t("guideNShort") : gK ? t("guideKShort") : t("guideOff"));
+  $("guideBtn").classList.toggle("on",gN||gK||gP); $("optGuideN").checked=gN; $("optGuideK").checked=gK; $("optGuideP").checked=gP;
   segs.innerHTML="";
   if(isFinite(total)){
     segs.hidden=false;
@@ -2401,7 +2408,7 @@ function renderSlots(popIdx){
       if(seq.length){
         if(found[i]){ d.classList.add("ok"); txt=slashSym(st); if(i===popIdx) d.classList.add("pop"); }
         else if(phase==="revealed"){ d.classList.add("rev"); d.style.animationDelay=revealAt(i)+"ms"; txt=slashSym(st); }
-        else if(phase==="listening"){ if(i===pStep) d.classList.add("cur"); if(S.settings.guideN){ d.classList.add("pre"); txt=slashSym(st); } }
+        else if(phase==="listening"){ if(i===pStep) d.classList.add("cur"); if(S.settings.guideN || (guideNamesOn() && i===pStep)){ d.classList.add("pre"); txt=slashSym(st); } }
       }
       d.innerHTML='<span class="deg"></span><span class="nn"></span>';
       d.children[0].textContent=st.roman; d.children[1].textContent=txt;
@@ -2420,7 +2427,7 @@ function renderSlots(popIdx){
     if(seq.length){
       if(found[i]){ d.classList.add("ok"); txt=noteName(n); if(i===popIdx) d.classList.add("pop"); }
       else if(phase==="revealed"){ d.classList.add("rev"); d.style.animationDelay=revealAt(i)+"ms"; txt=noteName(n); }
-      else if(phase==="listening"){ if(ch ? (!found[0] && i===0) : i===idx) d.classList.add("cur"); if(S.settings.guideN){ d.classList.add("pre"); txt=noteName(n); } }
+      else if(phase==="listening"){ if(ch ? (!found[0] && i===0) : i===idx) d.classList.add("cur"); if(S.settings.guideN || (guideNamesOn() && (ch || i===idx))){ d.classList.add("pre"); txt=noteName(n); } }
     }
     const isOct = !ch && S.settings.octave && (dd==="down" ? i===0 : i===sq.length-1);
     d.innerHTML='<span class="deg"></span><span class="nn"></span>';
@@ -2457,9 +2464,9 @@ function renderActions(){
   if(phase==="idle" && page==="daily" && !game) return; // the header already has "Start"
   if(phase==="idle") mk(t("start"),"primary big",()=>startRound(),cKey||space);
   else if(phase==="listening" && cur.sec==="ear") mk(tx("replay"),"primary",()=>playScale(0),space);
-  else if(phase==="listening") mk(t("giveUp"),"",()=>reveal(false),space);
+  else if(phase==="listening"){ if(S.settings.guideP && hintStage<2) mk(t("hintBtn"),"",()=>hintMore(),space); else mk(t("giveUp"),"",()=>reveal(false),space); }
   else if(phase==="revealed"){ mk(tx("replay"),"",()=>{ playScale(0); if(cur.sec!=="prog") showReveal(true); }); sp(); mk(t("review"),"",()=>grade(false),kb?"⌫":null); mk(t("knew"),"good",()=>grade(true),cKey||enter); }
-  else if(phase==="success") mk(t("next"),"primary",()=>startRound(),cKey||space);
+  else if(phase==="success"){ mk(tx("replay"),"",()=>{ clearTimeout(advanceTimer); playScale(0); if(!chSeq()) showReveal(true); }); sp(); mk(t("next"),"primary",()=>startRound(),cKey||space); }
 }
 function renderPrompt(){
   const sec=S.section;
@@ -3230,8 +3237,9 @@ $("secTabs").addEventListener("click",e=>{ const b=e.target.closest("button"); i
   autoIntro(v); });
 function setDelay(v){ S.settings.delay=v; save(); renderSettings(); renderGameBar(); if(phase==="listening") startRound(cur,true); else renderTimeline(); }
 $("timerSel").addEventListener("change",e=>setDelay(+e.target.value));
-$("optGuideN").addEventListener("change",e=>{ S.settings.guideN=e.target.checked; save(); render(); });
-$("optGuideK").addEventListener("change",e=>{ S.settings.guideK=e.target.checked; save(); render(); });
+$("optGuideN").addEventListener("change",e=>{ S.settings.guideN=e.target.checked; if(e.target.checked) S.settings.guideP=false; save(); render(); });
+$("optGuideK").addEventListener("change",e=>{ S.settings.guideK=e.target.checked; if(e.target.checked) S.settings.guideP=false; save(); render(); });
+$("optGuideP").addEventListener("change",e=>{ S.settings.guideP=e.target.checked; if(e.target.checked){ S.settings.guideN=false; S.settings.guideK=false; } save(); render(); });
 $("segDiff").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; setDelay(+b.dataset.v); });
 $("delay").addEventListener("input",e=>{ S.settings.delay=+e.target.value; save(); renderSettings(); if(phase!=="listening") renderTimeline(); });
 $("delay").addEventListener("change",()=>{ if(phase==="listening") startRound(cur,true); });
