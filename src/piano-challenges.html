@@ -56,7 +56,11 @@ button:focus-visible, select:focus-visible, input:focus-visible, summary:focus-v
 .lang-btn svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round}
 .lang-dd .dd-pop{top:auto;bottom:calc(100% + 6px)}
 .side.collapsed .side-tools{justify-content:center;margin-inline:0}
-.side.collapsed .lang-dd{display:none}
+.side.collapsed .side-tools{gap:4px;margin-inline:0}
+.side.collapsed .lang-btn{padding:5px 5px;height:32px}
+.side.collapsed .lang-btn :is(.ltxt,svg){display:none}
+.side.collapsed .inp-chip{width:30px}
+.side.collapsed .inp-chip>svg{width:19px;height:19px}
 .modal{position:fixed;inset:0;z-index:40;display:flex;align-items:center;justify-content:center;
   padding:calc(16px + env(safe-area-inset-top, 0px)) max(16px, env(safe-area-inset-right, 0px)) calc(16px + env(safe-area-inset-bottom, 0px)) max(16px, env(safe-area-inset-left, 0px))}
 .modal-bg{position:absolute;inset:0;background:var(--scrim)}
@@ -2596,7 +2600,7 @@ function renderMap(){
 function renderSettings(){
   const set=(id,v)=>$(id).querySelectorAll("button").forEach(b=>b.setAttribute("aria-pressed",b.dataset.v===v));
   set("segMode",S.settings.mode); set("segDiff",String(S.settings.delay));
-  $("langSum").innerHTML = S.settings.lang==="fr" ? '<span class="flag">🇫🇷</span> Français' : '<span class="flag">🇬🇧</span> English';
+  $("langSum").innerHTML = S.settings.lang==="fr" ? '<span class="flag">🇫🇷</span><span class="ltxt"> Français</span>' : '<span class="flag">🇬🇧</span><span class="ltxt"> English</span>';
   const ks=$("kbSize"); ks.innerHTML="";
   [["auto",t("kbAuto")],...["24","25","32","37","49","61","76","88"].map(n=>[n,n+" "+t("keys")]),...(S.settings.kbdSize==="custom"?[["custom",t("kbCustom")+" · "+(S.settings.kbdHigh-S.settings.kbdLow+1)+" "+t("keys")]]:[])]
     .forEach(([v,l])=>{ const o=document.createElement("option"); o.value=v; o.textContent=l; ks.appendChild(o); });
@@ -2683,7 +2687,8 @@ function closeDrawer(){ document.body.classList.remove("drawer"); $("menuBtn").s
 $("menuBtn").addEventListener("click",openDrawer); $("sideScrim").addEventListener("click",closeDrawer);
 [$("progBtn"),$("setBtn"),$("helpBtn")].forEach(b=>b.addEventListener("click",closeDrawer));
 function closeTypes(){ document.querySelectorAll(".dd-pop").forEach(p=>p.hidden=true); document.querySelectorAll(".dd-btn").forEach(b=>b.setAttribute("aria-expanded","false")); typesOpen=false; }
-document.querySelectorAll(".dd-btn[data-pop]").forEach(b=>b.addEventListener("click",()=>{ const p=$(b.dataset.pop), open=p.hidden; closeTypes(); if(open){ p.hidden=false; b.setAttribute("aria-expanded","true"); typesOpen=true; } }));
+document.querySelectorAll(".dd-btn[data-pop]").forEach(b=>b.addEventListener("click",()=>{
+  if(b.id==="langBtn" && document.getElementById("side").classList.contains("collapsed")){ closeTypes(); document.querySelector('#langSeg [data-v="'+(S.settings.lang==="fr"?"en":"fr")+'"]').click(); return; } const p=$(b.dataset.pop), open=p.hidden; closeTypes(); if(open){ p.hidden=false; b.setAttribute("aria-expanded","true"); typesOpen=true; } }));
 document.addEventListener("pointerdown",e=>{ if(typesOpen && !e.target.closest(".dd")) closeTypes(); });
 const GAME_ICONS=['<circle cx="12" cy="13.5" r="7.5"/><path d="M12 9.5v4l2.5 2M10 3h4M12 3v3"/>','<path d="M6 3v6M12 5v8M18 3v5"/><rect x="3" y="16" width="18" height="5" rx="1.5"/>','<rect x="3.5" y="3.5" width="7" height="7" rx="1.5"/><rect x="13.5" y="3.5" width="7" height="7" rx="1.5"/><rect x="3.5" y="13.5" width="7" height="7" rx="1.5"/><rect x="13.5" y="13.5" width="7" height="7" rx="1.5"/>','<path d="M8 4h8v5a4 4 0 0 1-8 0zM8 6H4.5a3 3 0 0 0 3.5 4M16 6h3.5a3 3 0 0 1-3.5 4M12 13v4M8.5 20h7"/>'];
 // ---------- Game: Note Jumper (a running piano jumps over notes when you play the chord shown) ----------
