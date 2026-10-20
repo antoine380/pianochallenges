@@ -1692,9 +1692,23 @@ const DEFAULTS={xp:0, mastery:{}, stats:{ok:0,perfect:0,revealed:0,errors:0}, st
     htypes:["maj"], hview:"maj", hdegs:[0,1,2,3,4,5,6], ptypes:["p145","pop"], pview:"pop", vl:false, etypes:["chord","int"], eview:"chord", earV2:true, scMode:"notes", sc7:false, gameLen:10}};
 const SECS=["scales","chords","harmony","prog","ear"];
 function load(){
-  try{ const raw=localStorage.getItem(STORE); if(raw){ const d=JSON.parse(raw);
-    const s={...clone(DEFAULTS), ...d, stats:{...DEFAULTS.stats,...d.stats}, settings:{...DEFAULTS.settings,...d.settings}, mastery:{}};
-    Object.entries(d.mastery||{}).forEach(([k,v])=>{ s.mastery[k.includes(":")?k:"major:"+k]=v; });
+  let raw=null;
+  try{ raw=localStorage.getItem(STORE); if(raw){ let d=JSON.parse(raw);
+    if(!d || typeof d!=="object" || Array.isArray(d)) throw new Error("bad state");
+    // defensive normalisation: a field of the wrong type falls back to its default instead of crashing the app
+    const isObj=x=>x && typeof x==="object" && !Array.isArray(x), num=(x,dflt)=>{ const v=typeof x==="string"?parseFloat(x):x; return Number.isFinite(v)?v:dflt; };
+    const s={...clone(DEFAULTS), ...d, stats:{...DEFAULTS.stats,...(isObj(d.stats)?d.stats:{})}, settings:{...DEFAULTS.settings,...(isObj(d.settings)?d.settings:{})}, mastery:{}};
+    ["streak","stats","secStats","srs","daily","xpDays"].forEach(k=>{ if(!isObj(s[k])) s[k]=clone(DEFAULTS[k]||{}); });
+    s.streak={days:num(s.streak.days,0), last:typeof s.streak.last==="string"?s.streak.last:""};
+    if(!isObj(s.dailyPlan)) delete s.dailyPlan; if(!isObj(s.dailyRun)) delete s.dailyRun;
+    s.xp=Math.max(0,num(s.xp,0)); Object.keys(s.xpDays).forEach(k=>{ s.xpDays[k]=num(s.xpDays[k],0); });
+    Object.keys(s.stats).forEach(k=>{ s.stats[k]=num(s.stats[k],0); });
+    Object.keys(s.secStats).forEach(k=>{ if(!isObj(s.secStats[k])) delete s.secStats[k]; });
+    Object.keys(s.srs).forEach(k=>{ const e=s.srs[k]; if(!isObj(e)||!isObj(e.it)||typeof e.due!=="string") delete s.srs[k]; });
+    if(!Array.isArray(s.seenTypes)) s.seenTypes=clone(DEFAULTS.seenTypes); s.seenTypes=s.seenTypes.filter(x=>typeof x==="string");
+    ["types","ctypes","htypes","ptypes","etypes","invs","hdegs"].forEach(k=>{ if(!Array.isArray(s.settings[k])) s.settings[k]=clone(DEFAULTS.settings[k]); });
+    s.settings.delay=num(s.settings.delay,0);
+    Object.entries(isObj(d.mastery)?d.mastery:{}).forEach(([k,v])=>{ const n=num(v,NaN); if(Number.isFinite(n)) s.mastery[k.includes(":")?k:"major:"+k]=n; });
     s.settings.types=(s.settings.types||["major"]).filter(id=>TYPE[id]); if(!s.settings.types.length) s.settings.types=["major"];
     s.settings.ctypes=(s.settings.ctypes||["maj"]).filter(id=>CTYPE[id]); if(!s.settings.ctypes.length) s.settings.ctypes=["maj"];
     s.settings.invs=(s.settings.invs||[0]).filter(i=>i>=0&&i<=3); if(!s.settings.invs.length) s.settings.invs=[0];
@@ -1712,7 +1726,7 @@ function load(){
     if(!s.settings.diffV2){ s.settings.delay=0; s.settings.diffV2=true; }
     if(!s.settings.midiV2){ s.settings.midiSound=true; s.settings.midiV2=true; }
     if(!s.langV2){ s.settings.lang="en"; s.settings.notation="en"; s.langV2=true; }
-    return s; } }catch(e){}
+    return s; } }catch(e){ try{ if(raw) localStorage.setItem(STORE+".bak", raw); }catch(e2){} } // keep an unreadable state aside before it gets overwritten
   firstVisit=true;
   return clone(DEFAULTS);
 }
