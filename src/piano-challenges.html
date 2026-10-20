@@ -3065,7 +3065,8 @@ const needLogin = pg => LOCKED.includes(pg) && !user && !cloudFail && !guestPass
 const INFO_PAGES=["settings","progress"];
 let returnPage=null, guestPass=false;
 // Page Play: the Clavio prototype (play/index.html) runs in a frame; notes played here are forwarded to it.
-function playSend(type,m,vel){ const f=$("playFrame"); if(f && f.contentWindow) f.contentWindow.postMessage({source:"piano-challenges",type,m,vel},"*"); }
+const SAME_ORIGIN = location.origin && location.origin!=="null" ? location.origin : "*"; // file:// has no origin
+function playSend(type,m,vel){ const f=$("playFrame"); if(f && f.contentWindow) f.contentWindow.postMessage({source:"piano-challenges",type,m,vel},SAME_ORIGIN); }
 let playHash="#songs"; // #songs = song library, #games = Play games, #game=<id> = that game
 function playOpen(){ const f=$("playFrame"); const src="play/index.html"+playHash+"&lang="+(S.settings.lang==="fr"?"fr":"en"); const old=f.getAttribute("src");
   if(old!==src){ f.onload=()=>{ if(page==="play" && !anyWin()) f.focus(); }; f.src=src; if(old){ try{ f.contentWindow.location.reload(); }catch(e){} } } // a hash-only change would not reload the page: force it

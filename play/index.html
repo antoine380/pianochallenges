@@ -377,7 +377,7 @@ const onlySongs=VIEW==='songs',onlyGames=VIEW==='games'||VIEW.startsWith('game='
 document.getElementById('secGames').hidden=onlySongs;document.getElementById('secSongs').hidden=onlyGames;
 if(onlySongs){document.getElementById('heroT').textContent=tr('heroSongsT');document.getElementById('heroP').textContent=tr('heroSongsP')}
 if(onlyGames){document.getElementById('heroT').textContent=tr('heroGamesT');document.getElementById('heroP').textContent=tr('heroGamesP')}
-addEventListener('message',e=>{const d=e.data;if(!d||d.source!=='piano-challenges')return;
+addEventListener('message',e=>{if(location.origin!=='null'&&e.origin!==location.origin)return;const d=e.data;if(!d||d.source!=='piano-challenges')return;
   if(d.type==='noteon')noteOn(d.m,d.vel??.8);else if(d.type==='noteoff')noteOff(d.m);else if(d.type==='midi')setMidi(!!d.on,d.text||'')});
 midiBtn.addEventListener('click',async()=>{audio();
   if(!navigator.requestMIDIAccess){setMidi(false,tr('midiNone'));return}
