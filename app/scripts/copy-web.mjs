@@ -7,7 +7,7 @@ const site = join(app, "..");
 const www = join(app, "www");
 rmSync(www, { recursive: true, force: true });
 mkdirSync(www, { recursive: true });
-for (const f of ["index.html", "assets", "favicon.svg", "favicon-32.png", "apple-touch-icon.png", "icon-192.png", "icon-512.png", "manifest.webmanifest"]) {
+for (const f of ["index.html", "assets", "play", "favicon.svg", "favicon-32.png", "apple-touch-icon.png", "icon-192.png", "icon-512.png", "manifest.webmanifest"]) {
   const src = join(site, f);
   if (existsSync(src)) cpSync(src, join(www, f), { recursive: true });
 }

@@ -680,6 +680,9 @@ html.native .midi-body [data-i="midiHint"]{display:none}
 .free-lbl{display:none;margin:0;font-family:var(--f-display);font-weight:700;font-size:1.05rem}
 [data-page="games"] :is(.picker,.gamebar,.prompt-row,.timeline,.slots,.answers,.actions,.hint,.notice){display:none!important}
 [data-page="games"] .free-lbl{display:block}
+[data-page="play"] :is(.picker,.stage,.gamebar,.prompt-row,.timeline,.slots,.answers,.actions,.hint,.notice,.pane-head){display:none!important}
+.playpanel{flex:1;min-height:0;display:flex;border-radius:14px;overflow:hidden;background:#f6f2eb}
+.playpanel iframe{flex:1;width:100%;height:100%;border:0;display:block}
 
 /* Phones (portrait and landscape): the page slides right to reveal the menu */
 @media (max-width:640px), (max-height:520px) and (orientation:landscape){
@@ -821,6 +824,7 @@ html.native .midi-body [data-i="midiHint"]{display:none}
     <button class="nav-item" type="button" data-v="prog"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2.5" y="8" width="5" height="8" rx="1.5"/><rect x="16.5" y="8" width="5" height="8" rx="1.5"/><path d="M8.5 12h7M12.5 9l3 3-3 3"/></svg><span class="lbl" data-i="secProg"></span></button>
     <button class="nav-item" type="button" data-v="ear"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 9a5 5 0 1 1 10 0c0 3-3 4-3 7a3 3 0 0 1-5.5 1.6M10 9a2 2 0 1 1 4 0"/></svg><span class="lbl" data-i="secEar"></span></button>
     <button class="nav-item" type="button" data-v="games"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2.5" y="7" width="19" height="11" rx="5.5"/><path d="M7.5 10.5v4M5.5 12.5h4"/><circle cx="15.5" cy="11.2" r=".9"/><circle cx="17.8" cy="13.8" r=".9"/></svg><span class="lbl" data-i="secGames"></span></button>
+    <button class="nav-item" type="button" data-v="play"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.5l12 7.5-12 7.5z"/></svg><span class="lbl" data-i="secPlay"></span></button>
   </nav>
 
   <div class="status lvl-card" id="lvlCard">
@@ -897,6 +901,10 @@ html.native .midi-body [data-i="midiHint"]{display:none}
   <section class="games" id="gamesPanel" hidden>
     <div class="pane-head"><div><h2 class="ph-title"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2.5" y="7" width="19" height="11" rx="5.5"/><path d="M7.5 10.5v4M5.5 12.5h4"/><circle cx="15.5" cy="11.2" r=".9"/><circle cx="17.8" cy="13.8" r=".9"/></svg><span data-i="gamesTitle"></span></h2><p data-i="gamesSub"></p></div><button class="how-btn" type="button" data-intro="games"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v5.5"/><circle cx="12" cy="7.8" r=".6"/></svg><span data-i="howBtn"></span></button></div>
     <div class="game-cards" id="gameCards"></div>
+  </section>
+
+  <section class="playpanel" id="playPanel" hidden>
+    <iframe id="playFrame" title="Play" tabindex="-1"></iframe>
   </section>
 
   <section class="runner" id="runner" hidden>
@@ -1209,7 +1217,7 @@ const TXT = {
     endTitle:"Partie terminée !", endDaily:"Entraînement du jour terminé !", perfectN:"sans faute", warnN:"avec 1 à 3 fautes", badN:"avec plus de 3 fautes",
     accuracy:"Précision", avgTime:"Temps moyen", xpWon:"XP gagnés", bestCombo:"Meilleur combo", toRework:"À retravailler", allPerfect:"Aucune erreur, bravo !",
     reworkBtn:"Retravailler mes erreurs", newGame:"Nouvelle partie", closeLbl:"Fermer", outOf:"exercices sans faute", nextReview:"Prochaine révision : ", tomorrow:"demain", inDays:n=>"dans "+n+" jours",
-    secHarmony:"Harmonie", secProg:"Progressions", secEar:"Oreille", secGames:"Jeux", secRank:"Classement", secAccount:"Profil",
+    secHarmony:"Harmonie", secProg:"Progressions", secEar:"Oreille", secGames:"Jeux", secPlay:"Play", secRank:"Classement", secAccount:"Profil",
     inTitle:"Comment vas-tu jouer ?", secInter:"Interaction", secGame:"Réglages de jeu", periods:{day:"Jour",week:"Semaine",month:"Mois",year:"Année",all:"Depuis le début"}, rankEmptyP:"Personne n'a encore gagné d'XP sur cette période. À toi de jouer !", pcSolved:n=>n+" réussis", inChange:"Mode de jeu", leaveTitle:"Quitter l'entraînement du jour ?", leaveSub:"Tu es en cours. Si tu quittes, cet entraînement s'arrête et il faudra le recommencer.", leaveStay:"Continuer l'entraînement", leaveGo:"Quitter", dcStart:"Démarrer l'entraînement", inMidiApp:"Un clavier MIDI ? Sur iPhone et iPad, il faut l'app Piano Challenges (le navigateur ne gère pas le MIDI).", midiDone:"Terminer la configuration", midiSetupNeed:"Branche ton clavier en USB ou cherche-le en Bluetooth : il doit apparaître dans la liste pour continuer.", midiSetupOk:"Clavier détecté ! Joue quelques notes pour vérifier, puis termine la configuration.", backPlay:"← Retour", lockGuest:"Continuer sans compte pour l'instant", inSub:"Choisis une fois pour toutes. Tu pourras changer dans les Réglages.", inLbl:"Je joue avec",
     inModes:{screen:["Le clavier à l'écran","Touche les notes à l'écran, ou utilise le clavier de l'ordinateur.","Écran"],midi:["Mon clavier MIDI","Branché en USB ou connecté en Bluetooth. Le plus précis.","MIDI"],mic:["Mon piano, avec le micro","Pour un piano acoustique : l'app écoute les notes que tu joues.","Micro"]},
     inCfgMidi:"Connecter / régler le clavier MIDI", inCfgMic:"Activer le micro", inMidiNo:"Ce navigateur ne gère pas le MIDI : utilise Chrome ou Edge, l'app iPhone/iPad, ou le micro.",
@@ -1324,7 +1332,7 @@ const TXT = {
     endTitle:"Game complete!", endDaily:"Daily practice complete!", perfectN:"perfect", warnN:"with 1–3 mistakes", badN:"with 4+ mistakes",
     accuracy:"Accuracy", avgTime:"Average time", xpWon:"XP earned", bestCombo:"Best combo", toRework:"To rework", allPerfect:"No mistakes, well done!",
     reworkBtn:"Rework my mistakes", newGame:"New game", closeLbl:"Close", outOf:"exercises without mistakes", nextReview:"Next review: ", tomorrow:"tomorrow", inDays:n=>"in "+n+" days",
-    secHarmony:"Harmony", secProg:"Progressions", secEar:"Ear", secGames:"Games", secRank:"Leaderboard", secAccount:"Profile",
+    secHarmony:"Harmony", secProg:"Progressions", secEar:"Ear", secGames:"Games", secPlay:"Play", secRank:"Leaderboard", secAccount:"Profile",
     inTitle:"How will you play?", secInter:"Interaction", secGame:"Game settings", periods:{day:"Today",week:"This week",month:"This month",year:"This year",all:"All time"}, rankEmptyP:"Nobody has earned XP in this period yet. Your turn!", pcSolved:n=>n+" solved", inChange:"Play mode", leaveTitle:"Leave the daily practice?", leaveSub:"You are in the middle of it. If you leave, it stops and you will have to start again.", leaveStay:"Keep practising", leaveGo:"Leave", dcStart:"Start the practice", inMidiApp:"A MIDI keyboard? On iPhone and iPad you need the Piano Challenges app (the browser has no MIDI).", midiDone:"Finish set-up", midiSetupNeed:"Plug your keyboard in with USB or search for it over Bluetooth: it must show up in the list to continue.", midiSetupOk:"Keyboard detected! Play a few notes to check, then finish the set-up.", backPlay:"← Back", lockGuest:"Continue without an account for now", inSub:"Choose once. You can change it later in Settings.", inLbl:"I play with",
     inModes:{screen:["The on-screen keyboard","Tap the notes on screen, or use your computer keyboard.","Screen"],midi:["My MIDI keyboard","Plugged in with USB or connected over Bluetooth. The most accurate.","MIDI"],mic:["My piano, with the mic","For an acoustic piano: the app listens to the notes you play.","Mic"]},
     inCfgMidi:"Connect / set up the MIDI keyboard", inCfgMic:"Turn the mic on", inMidiNo:"This browser has no MIDI: use Chrome or Edge, the iPhone/iPad app, or the mic.",
@@ -2044,6 +2052,7 @@ function wrongNote(m){
   const sl=$("slots").children[at]; if(sl){ sl.classList.remove("err","pop"); void sl.offsetWidth; sl.classList.add("err"); }
 }
 function noteIn(m){
+  if(page==="play"){ playSend("noteon",m); setTimeout(()=>playSend("noteoff",m),400); return; } // screen keyboard / mic: no release event, so release after 400 ms
   if(helpOpen || setOpen || openMods.length) return;
   if(page==="games"){ pressKey(m); flashKey(m,"k-hit"); runnerNote(m); return; }
   if(endOpen) return;
@@ -2709,7 +2718,7 @@ function setNav(){
   $("secTabs").querySelectorAll("button").forEach(b=>mark(b, page==="practice" ? b.dataset.v===S.section : b.dataset.v===page));
   mark($("dailyCard"),page==="daily"); mark($("rankBtn"),page==="rank"); mark($("accountBtn"),page==="account"); mark($("setBtn"),page==="settings"); mark($("progBtn"),page==="progress");
   const pv = page==="practice"?S.section : page==="locked"?lockFor : page;
-  $("mbTitle").textContent = t({chords:"secChords",scales:"secScales",harmony:"secHarmony",prog:"secProg",ear:"secEar",games:"secGames",daily:"dailyTitle",rank:"secRank",account:"secAccount",settings:"settings",progress:"progress"}[pv]);
+  $("mbTitle").textContent = t({chords:"secChords",scales:"secScales",harmony:"secHarmony",prog:"secProg",ear:"secEar",games:"secGames",play:"secPlay",daily:"dailyTitle",rank:"secRank",account:"secAccount",settings:"settings",progress:"progress"}[pv]);
   if(page==="locked"){ $("secTabs").querySelectorAll("button").forEach(b=>mark(b,b.dataset.v===lockFor)); mark($("dailyCard"),lockFor==="daily"); }
 }
 function applySide(){
@@ -2972,10 +2981,15 @@ let lockFor="";
 const needLogin = pg => LOCKED.includes(pg) && !user && !cloudFail && !guestPass;
 const INFO_PAGES=["settings","progress"];
 let returnPage=null, guestPass=false;
+// Page Play: the Clavio prototype (play/index.html) runs in a frame; notes played here are forwarded to it.
+function playSend(type,m,vel){ const f=$("playFrame"); if(f && f.contentWindow) f.contentWindow.postMessage({source:"piano-challenges",type,m,vel},"*"); }
+function playOpen(){ const f=$("playFrame"); if(!f.getAttribute("src")) f.src="play/index.html"; $("playPanel").hidden=false; }
+function playClose(){ const f=$("playFrame"); if(f.getAttribute("src")) f.removeAttribute("src"); $("playPanel").hidden=true; }
 function openPage(pg){
   if(needLogin(pg)){ lockFor=pg; pg="locked"; }
   if(pg===page && pg!=="practice" && pg!=="locked") return;
   if(pg!=="games") runnerClose();
+  if(pg==="play") playOpen(); else playClose();
   const toInfo = INFO_PAGES.includes(pg) && !INFO_PAGES.includes(page);
   const backFromInfo = INFO_PAGES.includes(page) && returnPage && pg===returnPage;
   if(toInfo){ returnPage=page; pauseRound(); }
@@ -3232,6 +3246,7 @@ $("secTabs").addEventListener("click",e=>{ const b=e.target.closest("button"); i
   if(page==="daily" && game && game.daily){ guardLeave(()=>{ game=null; $("secTabs").querySelector('[data-v="'+b.dataset.v+'"]').click(); }); return; }
   const v=b.dataset.v;
   if(v==="games"){ openPage("games"); return; }
+  if(v==="play"){ openPage("play"); return; }
   if(page!=="practice"){ if(S.section!==v){ S.section=v; save(); returnPage=null; } openPage(INFO_PAGES.includes(page)&&returnPage==="practice"?"practice":"practice"); }
   else switchSection(v);
   autoIntro(v); });
@@ -3356,7 +3371,9 @@ async function enableMidi(){
     const acc=await navigator.requestMIDIAccess(); midiAcc=acc;
     const bind=()=>{ const names=[]; acc.inputs.forEach(inp=>{ names.push(inp.name); inp.onmidimessage=ev=>{
         if(S.settings.midiInput && inp.name!==S.settings.midiInput) return;
-        const [st,note,vel]=ev.data; if((st&0xf0)===0x90 && vel>0){
+        const [st,note,vel]=ev.data;
+        if(page==="play"){ if((st&0xf0)===0x90 && vel>0) playSend("noteon",note,vel/127); else if((st&0xf0)===0x80 || ((st&0xf0)===0x90 && vel===0)) playSend("noteoff",note); return; }
+        if((st&0xf0)===0x90 && vel>0){
           if(S.settings.midiSound) tone(note,0,.9,.1+.26*vel/127);
           if(calib){ calibNote(note); return; }
           followMidi(note);
