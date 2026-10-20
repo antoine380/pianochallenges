@@ -147,45 +147,45 @@ button:focus-visible{outline:2px solid var(--coral);outline-offset:3px}
           Clavio
         </div>
         <div class="top-right">
-          <span class="pill" id="midiPill"><span class="dot"></span><span id="midiText">Clavier à l'écran</span></span>
-          <button class="btn light" id="midiBtn">Connecter un clavier MIDI</button>
+          <span class="pill" id="midiPill"><span class="dot"></span><span id="midiText" data-i="midiScreen"></span></span>
+          <button class="btn light" id="midiBtn" data-i="midiConnect"></button>
           <span class="pill"><span class="stars" style="color:var(--sun)">★</span><span class="mono" id="starTotal">0</span></span>
         </div>
       </header>
       <div class="hello">
-        <h1 id="heroT">Il y a une raison pour qu'on dise « jouer » du piano</h1>
-        <p id="heroP">Branche n'importe quel clavier MIDI, ou joue sur celui de l'écran. Les notes tombent sur les touches ; à toi de les attraper au bon moment.</p>
+        <h1 id="heroT" data-i="heroT"></h1>
+        <p id="heroP" data-i="heroP"></p>
       </div>
       <section id="secSongs">
-        <div class="sec-h"><h2>Morceaux</h2><span>Domaine public · à ton rythme</span></div>
+        <div class="sec-h"><h2 data-i="songsH"></h2><span data-i="songsSub"></span></div>
         <div class="grid" id="songGrid"></div>
       </section>
       <section id="secGames">
-        <div class="sec-h"><h2>Jeux</h2><span>Une compétence par jeu</span></div>
+        <div class="sec-h"><h2 data-i="gamesH"></h2><span data-i="gamesSub"></span></div>
         <div class="grid" id="gameGrid"></div>
       </section>
-      <p class="foot" id="foot">Prototype. Le son est un synthé intégré ; l'app finale utilisera le piano échantillonné Salamander. Clavier d'ordinateur : Q S D F G H J K L pour les blanches, Z E T Y U O P pour les noires.</p>
+      <p class="foot" id="foot" data-i="foot"></p>
     </div>
   </section>
 
   <section class="screen" id="play" hidden>
     <div class="bar">
-      <button class="back" data-home aria-label="Retour">‹</button>
+      <button class="back" data-home aria-label="Retour" data-i-aria="back">‹</button>
       <div class="ttl"><b id="sTitle">—</b><small id="sSub">—</small></div>
       <div class="prog" id="progWrap"><i id="sProg"></i></div>
-      <div class="stat" id="stLives" hidden><small>Vies</small><span class="lives" id="gLives"></span></div>
-      <div class="stat" id="stTime" hidden><small>Temps</small><b id="gTime">60</b></div>
-      <div class="stat" id="stStreak"><small>Série</small><b id="sStreak">0</b></div>
-      <div class="stat"><small>Score</small><b id="sScore">0</b></div>
+      <div class="stat" id="stLives" hidden><small data-i="lives"></small><span class="lives" id="gLives"></span></div>
+      <div class="stat" id="stTime" hidden><small data-i="time"></small><b id="gTime">60</b></div>
+      <div class="stat" id="stStreak"><small data-i="streak"></small><b id="sStreak">0</b></div>
+      <div class="stat"><small data-i="score"></small><b id="sScore">0</b></div>
       <div class="tools">
-        <button class="tool speed" id="tSpeed" aria-pressed="false"><b id="speedLbl">100</b>Vitesse</button>
-        <button class="tool" id="tNames" aria-pressed="true"><svg viewBox="0 0 24 24"><path d="M9 18V5l10-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="16" cy="16" r="3"/></svg>Notes</button>
-        <button class="tool" id="tFing" aria-pressed="true"><svg viewBox="0 0 24 24"><path d="M8 13V5.5a1.5 1.5 0 0 1 3 0V12M11 11V4.5a1.5 1.5 0 0 1 3 0V12M14 11.5V6.5a1.5 1.5 0 0 1 3 0V13M17 12.5V9a1.5 1.5 0 0 1 3 0v5a7 7 0 0 1-7 7h-1.5a6 6 0 0 1-5-2.7L4 14.5a1.6 1.6 0 0 1 2.6-1.9L8 14"/></svg>Doigts</button>
-        <button class="tool song-only" id="tWait" aria-pressed="true"><svg viewBox="0 0 24 24"><rect x="5" y="4" width="4" height="16" rx="1"/><rect x="15" y="4" width="4" height="16" rx="1"/></svg>Attente</button>
-        <button class="tool song-only" id="tListen" aria-pressed="false"><svg viewBox="0 0 24 24"><path d="M6 4l14 8-14 8z"/></svg>Écouter</button>
-        <button class="tool song-only" id="tMetro" aria-pressed="false"><svg viewBox="0 0 24 24"><path d="M8 3h8l3 18H5z"/><path d="M12 15L18 5"/></svg>Métro</button>
-        <button class="tool game-only" id="tHint" aria-pressed="true"><svg viewBox="0 0 24 24"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-4 10.5c.7.7 1 1.5 1 2.5h6c0-1 .3-1.8 1-2.5A6 6 0 0 0 12 3z"/></svg>Indice</button>
-        <button class="tool" id="restart"><svg viewBox="0 0 24 24"><path d="M4 12a8 8 0 1 0 3-6.2"/><path d="M4 4v5h5"/></svg>Rejouer</button>
+        <button class="tool speed" id="tSpeed" aria-pressed="false"><b id="speedLbl">100</b><span data-i="speed"></span></button>
+        <button class="tool" id="tNames" aria-pressed="true"><svg viewBox="0 0 24 24"><path d="M9 18V5l10-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="16" cy="16" r="3"/></svg><span data-i="names"></span></button>
+        <button class="tool" id="tFing" aria-pressed="true"><svg viewBox="0 0 24 24"><path d="M8 13V5.5a1.5 1.5 0 0 1 3 0V12M11 11V4.5a1.5 1.5 0 0 1 3 0V12M14 11.5V6.5a1.5 1.5 0 0 1 3 0V13M17 12.5V9a1.5 1.5 0 0 1 3 0v5a7 7 0 0 1-7 7h-1.5a6 6 0 0 1-5-2.7L4 14.5a1.6 1.6 0 0 1 2.6-1.9L8 14"/></svg><span data-i="fing"></span></button>
+        <button class="tool song-only" id="tWait" aria-pressed="true"><svg viewBox="0 0 24 24"><rect x="5" y="4" width="4" height="16" rx="1"/><rect x="15" y="4" width="4" height="16" rx="1"/></svg><span data-i="wait"></span></button>
+        <button class="tool song-only" id="tListen" aria-pressed="false"><svg viewBox="0 0 24 24"><path d="M6 4l14 8-14 8z"/></svg><span data-i="listen"></span></button>
+        <button class="tool song-only" id="tMetro" aria-pressed="false"><svg viewBox="0 0 24 24"><path d="M8 3h8l3 18H5z"/><path d="M12 15L18 5"/></svg><span data-i="metro"></span></button>
+        <button class="tool game-only" id="tHint" aria-pressed="true"><svg viewBox="0 0 24 24"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-4 10.5c.7.7 1 1.5 1 2.5h6c0-1 .3-1.8 1-2.5A6 6 0 0 0 12 3z"/></svg><span data-i="hint"></span></button>
+        <button class="tool" id="restart"><svg viewBox="0 0 24 24"><path d="M4 12a8 8 0 1 0 3-6.2"/><path d="M4 4v5h5"/></svg><span data-i="replay"></span></button>
       </div>
     </div>
     <div class="stagewrap">
@@ -193,16 +193,72 @@ button:focus-visible{outline:2px solid var(--coral);outline-offset:3px}
         <canvas id="cv"></canvas>
         <div class="overlay" id="ov" hidden><div class="ocard" id="ovCard"></div></div>
       </div>
-      <div class="kbd" id="kbd" aria-label="Clavier"></div>
+      <div class="kbd" id="kbd" aria-label="Clavier" data-i-aria="kbd"></div>
     </div>
   </section>
 </div>
 
 <script>
 (() => {
+/* ================= Language ================= */
+// The hash carries the view and the language: #songs&lang=en, #games&lang=fr, #game=runner&lang=en. Alone, the browser language decides.
+const HASH=(location.hash||'#all').slice(1).split('&');
+const LANG=(HASH.find(x=>x.startsWith('lang='))||'lang='+((navigator.language||'en').toLowerCase().startsWith('fr')?'fr':'en')).slice(5)==='fr'?'fr':'en';
+document.documentElement.lang=LANG;
+const T={
+fr:{midiScreen:"Clavier à l'écran",midiConnect:"Connecter un clavier MIDI",midiHost:"Notes reçues de Piano Challenges",midiNone:"MIDI web indisponible ici",midiNo:"Aucun clavier MIDI détecté",midiDenied:"Accès MIDI refusé",midiLbl:"MIDI : ",
+ heroT:"Il y a une raison pour qu'on dise « jouer » du piano",heroP:"Branche n'importe quel clavier MIDI, ou joue sur celui de l'écran. Les notes tombent sur les touches ; à toi de les attraper au bon moment.",
+ heroSongsT:"Joue tes premiers morceaux",heroSongsP:"Les notes tombent sur les touches ; en mode attente, le morceau patiente jusqu'à ce que tu joues la bonne. Choisis ta vitesse, affiche les noms des notes et les doigtés.",
+ heroGamesT:"Une compétence par jeu",heroGamesP:"Repérer les notes, tenir le tempo, les accords, les gammes, l'oreille et la lecture : chaque jeu entraîne une seule chose, sur ton clavier.",
+ songsH:"Morceaux",songsSub:"Domaine public · à ton rythme",gamesH:"Jeux",gamesSub:"Une compétence par jeu",
+ foot:"Prototype. Le son est un synthé intégré ; l'app finale utilisera le piano échantillonné Salamander. Clavier d'ordinateur : Q S D F G H J K L pour les blanches, Z E T Y U O P pour les noires.",
+ back:"Retour",kbd:"Clavier",lives:"Vies",time:"Temps",streak:"Série",score:"Score",speed:"Vitesse",names:"Notes",fing:"Doigts",wait:"Attente",listen:"Écouter",metro:"Métro",hint:"Indice",replay:"Rejouer",
+ level:"Niveau",levels:['','Débutant','Facile','Intermédiaire'],trad:"Traditionnel",tradMozart:"Traditionnel (var. Mozart)",notes:"notes",record:"Record",play:"Jouer",library:"Bibliothèque",game:"Jeu",
+ songIntro:(s,c)=>`${c} · ${s.notes.length} notes. Le morceau s'arrête jusqu'à ce que tu joues la <span style="color:${TONE[s.tone]}">bonne note</span>. Les chiffres indiquent le doigt à utiliser (1 = pouce).`,
+ listenHint:"« Écouter » joue d'abord le morceau pour toi.",listenedT:"Tu as écouté le morceau",listenedP:"À toi de jouer maintenant.",
+ waitNote:"Le morceau attend la bonne note",perfect:"Parfait",good:"Bien",missed:"Raté",verdicts:['On recommence ?','Bien joué','Très bien','Parfait !'],
+ acc:(a,sc,st)=>`Précision ${a} % · Score ${sc} · Meilleure série ${st}`,resPerfect:"Parfait",resGood:"Bien",resMissed:"Ratées",resWrong:"Fausses",tooFast:"Trop rapide ? Passe la vitesse à 75 %.",
+ newRecord:"Nouveau record !",gameOver:"Partie terminée",scoreRec:(s,b)=>`Score ${s} · record ${b}`,combo:"Combo ×",notThat:n=>'Pas '+n+' !',cleared:n=>`${n} obstacles franchis`,
+ tooEarly:"Trop tôt",tooLate:"Trop tard",wrongNote:"Mauvaise note",hits:(h,m)=>`${h} frappes réussies, ${m} ratées`,destroyed:n=>`${n} astéroïdes détruits`,
+ up:"Et on remonte !",down:"Redescends",slip:"Glissade",floors:(f,l)=>`${f} étages, ${l} allers-retours`,finger:"  doigt ",floor:" · étage ",
+ earListen:"Écoute…",earYou:n=>'À toi : rejoue '+(n>1?'les '+n+' notes':'la note'),earMiss:"Raté, c'était ",bravo:"Bravo !",question:"Question",earReplay:"Rejouer = réécouter",earRes:n=>`${n} bonnes réponses sur 10`,read:n=>`${n} notes lues`,
+ scales:['Do majeur','Sol majeur','Fa majeur','La mineur'],
+ games:{runner:['Note Runner','Saute les obstacles en jouant la note écrite dessus.','Repérer les notes','Un obstacle arrive avec un nom de note. Joue cette note pour sauter par-dessus. Tu commences avec Do, Ré, Mi ; d’autres notes s’ajoutent quand tu progresses. N’importe quelle octave compte.'],
+  pulse:['Rythme Pulse','Frappe au moment exact où le cercle touche la cible.','Tenir le tempo','Un cercle se contracte sur la cible à chaque temps. Frappe une touche pile quand il la touche. À partir de 8 réussites, il faudra jouer la note demandée. 60 secondes.'],
+  blaster:['Accord Blaster','Joue l’accord affiché pour détruire l’astéroïde.','Accords','Des astéroïdes descendent avec un nom d’accord (C, Dm, Em, F, G, Am). Joue les trois notes de l’accord en même temps, dans n’importe quelle octave, pour tirer. Trois astéroïdes qui passent et c’est fini.'],
+  climber:['Gamme Climber','Grimpe la tour en jouant la gamme sans faute, de plus en plus vite.','Gammes et doigté','Grimpe la tour en jouant la gamme, montée puis descente. Une fausse note et tu glisses d’un étage. Les chiffres indiquent le doigté (passage du pouce compris). 60 secondes.'],
+  ear:['Oreille d’Or','Écoute une note ou une courte mélodie, puis rejoue-la de mémoire.','Oreille musicale','Tu entends d’abord un Do de référence, puis une note ou une courte mélodie. Rejoue-la de mémoire. 10 questions, de plus en plus longues.'],
+  staff:['Partition Express','Les notes arrivent sur une portée, pas en cascade.','Lecture de partition','Les notes glissent sur une portée en clé de sol, de droite à gauche. Joue chaque note quand elle atteint la barre. Une note manquée coûte une vie.']}},
+en:{midiScreen:"On-screen keyboard",midiConnect:"Connect a MIDI keyboard",midiHost:"Notes received from Piano Challenges",midiNone:"Web MIDI not available here",midiNo:"No MIDI keyboard found",midiDenied:"MIDI access denied",midiLbl:"MIDI: ",
+ heroT:"There is a reason we say we \"play\" the piano",heroP:"Plug in any MIDI keyboard, or play the one on screen. Notes fall onto the keys; catch them at the right moment.",
+ heroSongsT:"Play your first songs",heroSongsP:"Notes fall onto the keys; in wait mode, the song waits until you play the right one. Pick your speed, show note names and fingering.",
+ heroGamesT:"One skill per game",heroGamesP:"Finding notes, keeping the beat, chords, scales, ear and reading: each game trains one thing, on your keyboard.",
+ songsH:"Songs",songsSub:"Public domain · at your own pace",gamesH:"Games",gamesSub:"One skill per game",
+ foot:"Prototype. The sound is a built-in synth; the final app will use the sampled Salamander piano. Computer keyboard: A S D F G H J K L for the white keys, W E T Y U O P for the black keys.",
+ back:"Back",kbd:"Keyboard",lives:"Lives",time:"Time",streak:"Streak",score:"Score",speed:"Speed",names:"Names",fing:"Fingers",wait:"Wait",listen:"Listen",metro:"Metro",hint:"Hint",replay:"Replay",
+ level:"Level",levels:['','Beginner','Easy','Intermediate'],trad:"Traditional",tradMozart:"Traditional (Mozart var.)",notes:"notes",record:"Best",play:"Play",library:"Library",game:"Game",
+ songIntro:(s,c)=>`${c} · ${s.notes.length} notes. The song stops until you play the <span style="color:${TONE[s.tone]}">right note</span>. The numbers show which finger to use (1 = thumb).`,
+ listenHint:"“Listen” plays the song for you first.",listenedT:"You listened to the song",listenedP:"Now it's your turn.",
+ waitNote:"The song is waiting for the right note",perfect:"Perfect",good:"Good",missed:"Missed",verdicts:['Try again?','Well played','Very good','Perfect!'],
+ acc:(a,sc,st)=>`Accuracy ${a}% · Score ${sc} · Best streak ${st}`,resPerfect:"Perfect",resGood:"Good",resMissed:"Missed",resWrong:"Wrong",tooFast:"Too fast? Set the speed to 75%.",
+ newRecord:"New record!",gameOver:"Game over",scoreRec:(s,b)=>`Score ${s} · best ${b}`,combo:"Combo ×",notThat:n=>'Not '+n+'!',cleared:n=>`${n} obstacles cleared`,
+ tooEarly:"Too early",tooLate:"Too late",wrongNote:"Wrong note",hits:(h,m)=>`${h} hits, ${m} misses`,destroyed:n=>`${n} asteroids destroyed`,
+ up:"Back up!",down:"Back down",slip:"Slip",floors:(f,l)=>`${f} floors, ${l} round trips`,finger:"  finger ",floor:" · floor ",
+ earListen:"Listen…",earYou:n=>'Your turn: play back '+(n>1?'the '+n+' notes':'the note'),earMiss:"Missed, it was ",bravo:"Well done!",question:"Question",earReplay:"Replay = listen again",earRes:n=>`${n} correct answers out of 10`,read:n=>`${n} notes read`,
+ scales:['C major','G major','F major','A minor'],
+ games:{runner:['Note Runner','Jump over obstacles by playing the note written on them.','Finding notes','An obstacle arrives with a note name. Play that note to jump over it. You start with C, D, E; more notes join as you progress. Any octave counts.'],
+  pulse:['Rhythm Pulse','Hit a key exactly when the ring reaches the target.','Keeping the beat','A ring shrinks onto the target on every beat. Hit a key right when it touches it. From 8 hits on, you will have to play the requested note. 60 seconds.'],
+  blaster:['Chord Blaster','Play the chord shown to blast the asteroid.','Chords','Asteroids fall with a chord name (C, Dm, Em, F, G, Am). Play the three notes of the chord together, in any octave, to shoot. Three asteroids through and it is over.'],
+  climber:['Scale Climber','Climb the tower by playing the scale without a slip, faster and faster.','Scales and fingering','Climb the tower by playing the scale, up then down. One wrong note and you slide down a floor. The numbers show the fingering (thumb-under included). 60 seconds.'],
+  ear:['Golden Ear','Listen to a note or a short melody, then play it back from memory.','Musical ear','You first hear a reference C, then a note or a short melody. Play it back from memory. 10 questions, longer and longer.'],
+  staff:['Staff Express','Notes arrive on a staff, not in a cascade.','Sight reading','Notes slide along a treble-clef staff, right to left. Play each note when it reaches the bar. A missed note costs a life.']}}};
+const tr=k=>T[LANG][k];
+document.querySelectorAll('[data-i]').forEach(el=>el.textContent=tr(el.dataset.i));
+document.querySelectorAll('[data-i-aria]').forEach(el=>el.setAttribute('aria-label',tr(el.dataset.iAria)));
 /* ================= Music data ================= */
-const NAMES=['Do','Do♯','Ré','Ré♯','Mi','Fa','Fa♯','Sol','Sol♯','La','La♯','Si'];
+const FRN=['Do','Do♯','Ré','Ré♯','Mi','Fa','Fa♯','Sol','Sol♯','La','La♯','Si'];
 const EN=['C','C#','D','D#','E','F','F#','G','G#','A','A#','B'];
+const NAMES=LANG==='fr'?FRN:EN; // note names in the page language
 const HUE=[4,16,32,42,52,150,165,188,215,255,280,330];
 const col=(m,l=62,a=1)=>`hsla(${HUE[((m%12)+12)%12]},86%,${l}%,${a})`;
 const pc=m=>((m%12)+12)%12;
@@ -212,29 +268,30 @@ const toMidi=n=>{const t=n.match(/^([A-G])(#?)(\d)$/);return 12*(+t[3]+1)+{C:0,D
 const parse=(s,fing)=>{let b=0;const out=[];for(const tok of s.trim().split(/\s+/)){const[n,d]=tok.split(':');const dur=parseFloat(d);if(n!=='R')out.push({m:toMidi(n),s:b,d:dur,f:fing[n]||0});b+=dur}return out};
 
 const SONGS=[
- {id:'lune',title:'Au clair de la lune',composer:'Traditionnel',level:1,bpm:96,tone:'coral',fing:{C4:1,D4:2,E4:3},
+ {id:'lune',title:'Au clair de la lune',composer:'trad',level:1,bpm:96,tone:'coral',fing:{C4:1,D4:2,E4:3},
   seq:'C4:1 C4:1 C4:1 D4:1 E4:2 D4:2 C4:1 E4:1 D4:1 D4:1 C4:4 C4:1 C4:1 C4:1 D4:1 E4:2 D4:2 C4:1 E4:1 D4:1 D4:1 C4:4'},
- {id:'maman',title:'Ah ! vous dirai-je, maman',composer:'Traditionnel (var. Mozart)',level:1,bpm:100,tone:'cyan',fing:{C4:1,D4:2,E4:3,F4:4,G4:5,A4:5},
+ {id:'maman',title:LANG==='fr'?'Ah ! vous dirai-je, maman':'Twinkle, Twinkle, Little Star',composer:'tradMozart',level:1,bpm:100,tone:'cyan',fing:{C4:1,D4:2,E4:3,F4:4,G4:5,A4:5},
   seq:'C4:1 C4:1 G4:1 G4:1 A4:1 A4:1 G4:2 F4:1 F4:1 E4:1 E4:1 D4:1 D4:1 C4:2 G4:1 G4:1 F4:1 F4:1 E4:1 E4:1 D4:2 G4:1 G4:1 F4:1 F4:1 E4:1 E4:1 D4:2 C4:1 C4:1 G4:1 G4:1 A4:1 A4:1 G4:2 F4:1 F4:1 E4:1 E4:1 D4:1 D4:1 C4:2'},
- {id:'ode',title:'Ode à la joie',composer:'L. van Beethoven',level:2,bpm:104,tone:'sun',fing:{C4:1,D4:2,E4:3,F4:4,G4:5},
+ {id:'ode',title:LANG==='fr'?'Ode à la joie':'Ode to Joy',composer:'L. van Beethoven',level:2,bpm:104,tone:'sun',fing:{C4:1,D4:2,E4:3,F4:4,G4:5},
   seq:'E4:1 E4:1 F4:1 G4:1 G4:1 F4:1 E4:1 D4:1 C4:1 C4:1 D4:1 E4:1 E4:1.5 D4:.5 D4:2 E4:1 E4:1 F4:1 G4:1 G4:1 F4:1 E4:1 D4:1 C4:1 C4:1 D4:1 E4:1 D4:1.5 C4:.5 C4:2'},
- {id:'jacques',title:'Frère Jacques',composer:'Traditionnel',level:2,bpm:108,tone:'mint',fing:{G4:1,C5:1,D5:2,E5:3,F5:4,G5:5,A5:5},
+ {id:'jacques',title:'Frère Jacques',composer:'trad',level:2,bpm:108,tone:'mint',fing:{G4:1,C5:1,D5:2,E5:3,F5:4,G5:5,A5:5},
   seq:'C5:1 D5:1 E5:1 C5:1 C5:1 D5:1 E5:1 C5:1 E5:1 F5:1 G5:2 E5:1 F5:1 G5:2 G5:.5 A5:.5 G5:.5 F5:.5 E5:1 C5:1 G5:.5 A5:.5 G5:.5 F5:.5 E5:1 C5:1 C5:1 G4:1 C5:2 C5:1 G4:1 C5:2'},
- {id:'elise',title:'Lettre à Élise',composer:'L. van Beethoven',level:3,bpm:76,tone:'violet',fing:{E5:4,'D#5':3,D5:3,C5:2,B4:1,A4:1,'G#4':2,E4:2,C4:1},
+ {id:'elise',title:LANG==='fr'?'Lettre à Élise':'Für Elise',composer:'L. van Beethoven',level:3,bpm:76,tone:'violet',fing:{E5:4,'D#5':3,D5:3,C5:2,B4:1,A4:1,'G#4':2,E4:2,C4:1},
   seq:'E5:.5 D#5:.5 E5:.5 D#5:.5 E5:.5 B4:.5 D5:.5 C5:.5 A4:1.5 C4:.5 E4:.5 A4:.5 B4:1.5 E4:.5 G#4:.5 B4:.5 C5:1.5 E4:.5 E5:.5 D#5:.5 E5:.5 D#5:.5 E5:.5 B4:.5 D5:.5 C5:.5 A4:1.5 C4:.5 E4:.5 A4:.5 B4:1.5 E4:.5 C5:.5 B4:.5 A4:3'},
 ];
-SONGS.forEach(s=>{s.notes=parse(s.seq,s.fing);s.end=Math.max(...s.notes.map(n=>n.s+n.d))});
-const LEVEL=['','Débutant','Facile','Intermédiaire'];
+SONGS.forEach(s=>{s.notes=parse(s.seq,s.fing);s.end=Math.max(...s.notes.map(n=>n.s+n.d));s.by=T[LANG][s.composer]||s.composer});
+const LEVEL=tr('levels');
 const TONE={coral:'#f26a5e',cyan:'#3ab8c8',sun:'#d9b23a',mint:'#3fae7c',violet:'#7a5cf5'};
 
 const GAMES=[
- {id:'runner',t:'Note Runner',d:'Saute les obstacles en jouant la note écrite dessus.',skill:'Repérer les notes',bg:'#3fae7c',notes:[{m:60,s:0,d:1},{m:62,s:1.5,d:1},{m:64,s:3,d:1}],lit:[0,2,4]},
- {id:'pulse',t:'Rythme Pulse',d:'Frappe au moment exact où le cercle touche la cible.',skill:'Tenir le tempo',bg:'#2f9468',big:'◎'},
- {id:'blaster',t:'Accord Blaster',d:'Joue l’accord affiché pour détruire l’astéroïde.',skill:'Accords',bg:'#56bd8e',notes:[{m:60,s:0,d:2},{m:64,s:0,d:2},{m:67,s:0,d:2}],lit:[0,4,7]},
- {id:'climber',t:'Gamme Climber',d:'Grimpe la tour en jouant la gamme sans faute, de plus en plus vite.',skill:'Gammes et doigté',bg:'#287c57',notes:[60,62,64,65,67,69,71,72].map((m,i)=>({m,s:i*.6,d:.5})),lit:[0,2,4,5,7,9,11]},
- {id:'ear',t:'Oreille d’Or',d:'Écoute une note ou une courte mélodie, puis rejoue-la de mémoire.',skill:'Oreille musicale',bg:'#3aa374',big:'♪ ?'},
- {id:'staff',t:'Partition Express',d:'Les notes arrivent sur une portée, pas en cascade.',skill:'Lecture de partition',bg:'#1f6a4a',big:'𝄞'},
+ {id:'runner',bg:'#3fae7c',notes:[{m:60,s:0,d:1},{m:62,s:1.5,d:1},{m:64,s:3,d:1}],lit:[0,2,4]},
+ {id:'pulse',bg:'#2f9468',big:'◎'},
+ {id:'blaster',bg:'#56bd8e',notes:[{m:60,s:0,d:2},{m:64,s:0,d:2},{m:67,s:0,d:2}],lit:[0,4,7]},
+ {id:'climber',bg:'#287c57',notes:[60,62,64,65,67,69,71,72].map((m,i)=>({m,s:i*.6,d:.5})),lit:[0,2,4,5,7,9,11]},
+ {id:'ear',bg:'#3aa374',big:'♪ ?'},
+ {id:'staff',bg:'#1f6a4a',big:'𝄞'},
 ];
+GAMES.forEach(g=>{const [t,d,skill,intro]=tr('games')[g.id];Object.assign(g,{t,d,skill,intro})});
 
 /* ================= Storage ================= */
 const store={get(k,d){try{const v=localStorage.getItem('clavio:'+k);return v==null?d:JSON.parse(v)}catch(e){return d}},
@@ -283,7 +340,7 @@ for(let m=LOW;m<=HIGH;m++){const L=lane(m),k=document.createElement('div');
   k.style.left=`calc(6px + (100% - 12px) * ${L.x})`;k.style.width=`calc((100% - 12px) * ${L.w} - 2px)`;
   k.style.setProperty('--kc',col(m,isBlack(m)?56:62));k.dataset.m=m;
   k.innerHTML='<span class="lbl"></span><span class="fg"></span>';kbd.appendChild(k);keyEls.set(m,k)}
-function labelKeys(){keyEls.forEach((k,m)=>{k.firstChild.textContent=!showNames?(pc(m)===0?'Do'+(Math.floor(m/12)-1):''):(isBlack(m)?'':NAMES[pc(m)])})}
+function labelKeys(){keyEls.forEach((k,m)=>{k.firstChild.textContent=!showNames?(pc(m)===0?NAMES[0]+(Math.floor(m/12)-1):''):(isBlack(m)?'':NAMES[pc(m)])})}
 labelKeys();
 let lastTargets='';
 function setTargets(list){ // [{m,f}]
@@ -311,23 +368,23 @@ addEventListener('pointerdown',()=>audio(),{once:true});
 const midiPill=document.getElementById('midiPill'),midiText=document.getElementById('midiText'),midiBtn=document.getElementById('midiBtn');
 function setMidi(on,text){midiPill.classList.toggle('on',on);midiText.textContent=text}
 const embedded=window.parent!==window;
-if(embedded){midiBtn.hidden=true;setMidi(true,'Notes reçues de Piano Challenges');document.getElementById('foot').hidden=true;document.getElementById('brand').hidden=true;
+if(embedded){midiBtn.hidden=true;setMidi(true,tr('midiHost'));document.getElementById('foot').hidden=true;document.getElementById('brand').hidden=true;
   // follow the host's theme (same origin)
   try{const root=window.parent.document.documentElement;const sync=()=>{const th=root.getAttribute('data-theme');if(th)document.documentElement.setAttribute('data-theme',th);else document.documentElement.removeAttribute('data-theme')};sync();new MutationObserver(sync).observe(root,{attributes:true,attributeFilter:['data-theme']})}catch(e){}}
 // View: #songs (library only), #games (games only), #game=<id> (open that game), default = everything
-const VIEW=(location.hash||'#all').slice(1);
+const VIEW=HASH[0];
 const onlySongs=VIEW==='songs',onlyGames=VIEW==='games'||VIEW.startsWith('game=');
 document.getElementById('secGames').hidden=onlySongs;document.getElementById('secSongs').hidden=onlyGames;
-if(onlySongs){document.getElementById('heroT').textContent='Joue tes premiers morceaux';document.getElementById('heroP').textContent='Les notes tombent sur les touches ; en mode attente, le morceau patiente jusqu\'à ce que tu joues la bonne. Choisis ta vitesse, affiche les noms des notes et les doigtés.'}
-if(onlyGames){document.getElementById('heroT').textContent='Une compétence par jeu';document.getElementById('heroP').textContent='Repérer les notes, tenir le tempo, les accords, les gammes, l\'oreille et la lecture : chaque jeu entraîne une seule chose, sur ton clavier.'}
+if(onlySongs){document.getElementById('heroT').textContent=tr('heroSongsT');document.getElementById('heroP').textContent=tr('heroSongsP')}
+if(onlyGames){document.getElementById('heroT').textContent=tr('heroGamesT');document.getElementById('heroP').textContent=tr('heroGamesP')}
 addEventListener('message',e=>{const d=e.data;if(!d||d.source!=='piano-challenges')return;
   if(d.type==='noteon')noteOn(d.m,d.vel??.8);else if(d.type==='noteoff')noteOff(d.m);else if(d.type==='midi')setMidi(!!d.on,d.text||'')});
 midiBtn.addEventListener('click',async()=>{audio();
-  if(!navigator.requestMIDIAccess){setMidi(false,'MIDI web indisponible ici');return}
+  if(!navigator.requestMIDIAccess){setMidi(false,tr('midiNone'));return}
   try{const acc=await navigator.requestMIDIAccess();
     const bind=()=>{const ins=[...acc.inputs.values()];ins.forEach(i=>i.onmidimessage=onMidi);
-      setMidi(ins.length>0,ins.length?('MIDI : '+ins[0].name):'Aucun clavier MIDI détecté')};
-    bind();acc.onstatechange=bind}catch(err){setMidi(false,'Accès MIDI refusé')}});
+      setMidi(ins.length>0,ins.length?(tr('midiLbl')+ins[0].name):tr('midiNo'))};
+    bind();acc.onstatechange=bind}catch(err){setMidi(false,tr('midiDenied'))}});
 function onMidi(ev){const[st,d1,d2]=ev.data;const c=st&0xf0;
   if(c===0x90&&d2>0)noteOn(d1,d2/127);else if(c===0x80||(c===0x90&&d2===0))noteOff(d1)}
 
@@ -364,14 +421,14 @@ function renderHome(){
   SONGS.forEach(s=>{const b=best[s.id]||0;total+=b;
     const c=document.createElement('button');c.className='tile';c.style.background=TONE[s.tone];
     const mins=Math.round(s.end/s.bpm*60);
-    c.innerHTML=tablet({notes:s.notes,lit:[pc(s.notes[0].m)]})+`<div class="tile-body"><span class="lvl">Niveau ${s.level} · ${LEVEL[s.level]}</span><h3>${s.title}</h3>
-      <div class="meta"><span>${s.composer}</span>${starsHTML(b)}</div>
-      <div class="meta"><span class="mono">${s.notes.length} notes · ${mins} s</span><span class="mono">${s.bpm} BPM</span></div></div>`;
+    c.innerHTML=tablet({notes:s.notes,lit:[pc(s.notes[0].m)]})+`<div class="tile-body"><span class="lvl">${tr('level')} ${s.level} · ${LEVEL[s.level]}</span><h3>${s.title}</h3>
+      <div class="meta"><span>${s.by}</span>${starsHTML(b)}</div>
+      <div class="meta"><span class="mono">${s.notes.length} ${tr('notes')} · ${mins} s</span><span class="mono">${s.bpm} BPM</span></div></div>`;
     c.addEventListener('click',()=>openSong(s));g.appendChild(c)});
   $('starTotal').textContent=total;
   const gg=$('gameGrid');gg.innerHTML='';
   GAMES.forEach(x=>{const c=document.createElement('button');c.className='tile';c.style.background=x.bg;
-    c.innerHTML=tablet(x)+`<div class="tile-body"><span class="lvl">${x.skill}</span><h3>${x.t}</h3><div class="meta"><span>${x.d}</span></div><div class="meta"><span>Record</span><span class="mono">${gbest[x.id]||0}</span></div></div>`;
+    c.innerHTML=tablet(x)+`<div class="tile-body"><span class="lvl">${x.skill}</span><h3>${x.t}</h3><div class="meta"><span>${x.d}</span></div><div class="meta"><span>${tr('record')}</span><span class="mono">${gbest[x.id]||0}</span></div></div>`;
     c.addEventListener('click',()=>openGame(x.id));gg.appendChild(c)});
 }
 
@@ -414,11 +471,11 @@ $('restart').addEventListener('click',()=>{if(mode==='song')startSong();else GAM
 /* ================= Song player ================= */
 const P={song:null,notes:[],t:0,playing:false,wait:true,listen:false,metro:false,score:0,streak:0,maxStreak:0,c:{p:0,b:0,m:0,w:0},frozen:false,lastBeat:-9};
 function openSong(s){mode='song';P.song=s;go('play');
-  setBar({title:s.title,sub:`${s.composer} · Niveau ${s.level}`,lives:false,time:false,streak:true,prog:true,tools:['song','speed','fing','names']});
+  setBar({title:s.title,sub:`${s.by} · ${tr('level')} ${s.level}`,lives:false,time:false,streak:true,prog:true,tools:['song','speed','fing','names']});
   resetSong();
-  overlay(`<span class="lvl">Niveau ${s.level} · ${LEVEL[s.level]}</span><h2>${s.title}</h2>
-    <p>${s.composer} · ${s.notes.length} notes. Le morceau s'arrête jusqu'à ce que tu joues la <span style="color:${TONE[s.tone]}">bonne note</span>. Les chiffres indiquent le doigt à utiliser (1 = pouce).</p>
-    <div class="row"><button class="btn" id="go">Jouer</button></div><span class="hint">« Écouter » joue d'abord le morceau pour toi.</span>`);
+  overlay(`<span class="lvl">${tr('level')} ${s.level} · ${LEVEL[s.level]}</span><h2>${s.title}</h2>
+    <p>${tr('songIntro')(s,s.by)}</p>
+    <div class="row"><button class="btn" id="go">${tr('play')}</button></div><span class="hint">${tr('listenHint')}</span>`);
   $('go').onclick=()=>{audio();startSong()}}
 function resetSong(){P.notes=P.song.notes.map(n=>({...n,st:0}));P.t=-2;P.score=0;P.streak=0;P.maxStreak=0;P.c={p:0,b:0,m:0,w:0};P.frozen=false;P.lastBeat=-9;fx.length=0;pops.length=0;P.playing=false;hud()}
 function startSong(){if(!P.song)return;resetSong();ov.hidden=true;P.playing=true}
@@ -430,7 +487,7 @@ function updateSong(dt){
   let nt=P.t+dt*bps();const f=front();P.frozen=false;
   if(P.listen){for(const n of P.notes)if(n.st===0&&n.s<=nt){n.st=3;playNote(n.m,n.d/bps()*.9);burst(n.m,.5)}}
   else if(P.wait){if(f&&nt>=f.s){nt=f.s;P.frozen=true}}
-  else{const win=.16*bps();for(const n of P.notes)if(n.st===0&&n.s<nt-win){n.st=2;P.c.m++;P.streak=0;popLane('Raté',n.m,'bad')}}
+  else{const win=.16*bps();for(const n of P.notes)if(n.st===0&&n.s<nt-win){n.st=2;P.c.m++;P.streak=0;popLane(tr('missed'),n.m,'bad')}}
   if(P.metro&&!P.frozen){const b=Math.floor(nt);if(b!==P.lastBeat&&b>Math.floor(P.t)){P.lastBeat=b;blip(b%4===0?1500:1000,.03,'square',.05)}}
   P.t=nt;
   if(P.t>P.song.end+1.2)finishSong();
@@ -447,23 +504,23 @@ function songPress(m){
   bst.st=1;const perfect=bd<=perf;if(perfect)P.c.p++;else P.c.b++;
   P.streak++;P.maxStreak=Math.max(P.maxStreak,P.streak);
   P.score+=Math.round((perfect?100:60)*Math.min(3,1+P.streak/10));
-  popLane(perfect?'Parfait':'Bien',m,perfect?'good':'warn');burst(m,1);hud();
+  popLane(perfect?tr('perfect'):tr('good'),m,perfect?'good':'warn');burst(m,1);hud();
 }
 function finishSong(){
   P.playing=false;held.forEach(noteOff);setTargets([]);
   const total=P.notes.length;
-  if(P.listen){overlay(`<h2>Tu as écouté le morceau</h2><p>À toi de jouer maintenant.</p><div class="row"><button class="btn" id="again">Jouer</button><button class="btn light" data-h>Bibliothèque</button></div>`);
+  if(P.listen){overlay(`<h2>${tr('listenedT')}</h2><p>${tr('listenedP')}</p><div class="row"><button class="btn" id="again">${tr('play')}</button><button class="btn light" data-h>${tr('library')}</button></div>`);
     $('again').onclick=()=>{$('tListen').setAttribute('aria-pressed','false');P.listen=false;startSong()};return}
   const acc=Math.round((P.c.p+P.c.b*.7)/(total+P.c.w*.25)*100);
   const stars=acc>=92?3:acc>=75?2:acc>=45?1:0;
   if(stars>(best[P.song.id]||0)){best[P.song.id]=stars;store.set('best',best)}
   if(stars>=2)fanfare();
   overlay(`<div class="big-stars">${'★'.repeat(stars)}<span class="off">${'★'.repeat(3-stars)}</span></div>
-    <h2>${['On recommence ?','Bien joué','Très bien','Parfait !'][stars]}</h2>
-    <p class="mono">Précision ${acc} % · Score ${P.score} · Meilleure série ${P.maxStreak}</p>
-    <div class="res"><div><b style="color:var(--good)">${P.c.p}</b><small>Parfait</small></div><div><b style="color:var(--warn)">${P.c.b}</b><small>Bien</small></div><div><b style="color:var(--bad)">${P.c.m}</b><small>Ratées</small></div><div><b>${P.c.w}</b><small>Fausses</small></div></div>
-    <div class="row"><button class="btn" id="again">Rejouer</button><button class="btn light" data-h>Bibliothèque</button></div>
-    ${speed<1?'':`<span class="hint">Trop rapide ? Passe la vitesse à 75 %.</span>`}`);
+    <h2>${tr('verdicts')[stars]}</h2>
+    <p class="mono">${tr('acc')(acc,P.score,P.maxStreak)}</p>
+    <div class="res"><div><b style="color:var(--good)">${P.c.p}</b><small>${tr('resPerfect')}</small></div><div><b style="color:var(--warn)">${P.c.b}</b><small>${tr('resGood')}</small></div><div><b style="color:var(--bad)">${P.c.m}</b><small>${tr('resMissed')}</small></div><div><b>${P.c.w}</b><small>${tr('resWrong')}</small></div></div>
+    <div class="row"><button class="btn" id="again">${tr('replay')}</button><button class="btn light" data-h>${tr('library')}</button></div>
+    ${speed<1?'':`<span class="hint">${tr('tooFast')}</span>`}`);
   $('again').onclick=startSong;
 }
 
@@ -519,7 +576,7 @@ function drawSong(dt){
   const pulse=P.frozen?.5+.5*Math.sin(performance.now()/160):0;
   const lg=ctx.createLinearGradient(0,0,SW,0);lg.addColorStop(0,'rgba(244,241,255,0)');lg.addColorStop(.5,`rgba(244,241,255,${.35+.45*pulse})`);lg.addColorStop(1,'rgba(244,241,255,0)');
   ctx.fillStyle=lg;ctx.fillRect(0,SH-5,SW,2);
-  if(P.frozen)centerText('Le morceau attend la bonne note',30);
+  if(P.frozen)centerText(tr('waitNote'),30);
   if(P.playing&&P.t<0)centerText(Math.ceil(-P.t),SH/2+20,84,800);
   drawFx(dt);
 }
@@ -530,31 +587,30 @@ let gs=null; // current game state
 function openGame(id){mode=id;const g=GAMES.find(x=>x.id===id);go('play');
   setBar({title:g.t,sub:g.skill,lives:GAME[id].lives,time:GAME[id].timed,streak:false,prog:false,tools:GAME[id].tools||['fing','names']});
   GAME[id].reset();drawG=GAME[id].draw;
-  overlay(`<span class="lvl">Jeu · ${g.skill}</span><h2>${g.t}</h2><p>${GAME[id].intro}</p>${GAME[id].options?GAME[id].options():''}<div class="row"><button class="btn" id="go">Jouer</button></div>`);
+  overlay(`<span class="lvl">${tr('game')} · ${g.skill}</span><h2>${g.t}</h2><p>${g.intro}</p>${GAME[id].options?GAME[id].options():''}<div class="row"><button class="btn" id="go">${tr('play')}</button></div>`);
   $('go').onclick=()=>{audio();GAME[id].begin()}}
 let drawG=null;
 function ghud(){$('sScore').textContent=gs.score;if(gs.lives!=null)$('gLives').innerHTML='♥'.repeat(gs.lives)+`<span class="off">${'♥'.repeat(3-gs.lives)}</span>`;if(gs.time!=null)$('gTime').textContent=Math.ceil(gs.time)}
 function endGame(id,extra=''){gs.running=false;setTargets([]);const b=gbest[id]||0,rec=gs.score>b;if(rec){gbest[id]=gs.score;store.set('gbest',gbest);fanfare()}
-  overlay(`<h2>${rec?'Nouveau record !':'Partie terminée'}</h2><p class="mono">Score ${gs.score} · record ${Math.max(b,gs.score)}</p>${extra}
-    <div class="row"><button class="btn" id="again">Rejouer</button><button class="btn light" data-h>Bibliothèque</button></div>`);
+  overlay(`<h2>${rec?tr('newRecord'):tr('gameOver')}</h2><p class="mono">${tr('scoreRec')(gs.score,Math.max(b,gs.score))}</p>${extra}
+    <div class="row"><button class="btn" id="again">${tr('replay')}</button><button class="btn light" data-h>${tr('library')}</button></div>`);
   $('again').onclick=()=>GAME[id].begin()}
 function tick(dt){if(gs.time!=null&&gs.running){gs.time-=dt;if(gs.time<=0){gs.time=0;return true}}return false}
 
 /* --- 1. Note Runner --- */
 GAME.runner={lives:true,timed:false,tools:['names','hint'],
-  intro:'Un obstacle arrive avec un nom de note. Joue cette note pour sauter par-dessus. Tu commences avec Do, Ré, Mi ; d’autres notes s’ajoutent quand tu progresses. N’importe quelle octave compte.',
   reset(){gs={running:false,score:0,lives:3,obs:[],timer:.6,y:0,vy:0,combo:0,shake:0,t:0,dist:0,cleared:0};fx.length=0;pops.length=0;ghud()},
   begin(){GAME.runner.reset();ov.hidden=true;gs.running=true},
   stop(){gs.running=false},
   pool(){const p=[60,62,64];if(gs.cleared>=6)p.push(65,67);if(gs.cleared>=14)p.push(69,71);if(gs.cleared>=24)p.push(72);return p},
   press(m){if(!gs.running)return;const rx=SW*.18,tgt=gs.obs.find(o=>!o.done&&o.x>rx-10);if(!tgt||tgt.x>rx+SW*.6)return;
     if(pc(tgt.m)===pc(m)){tgt.done='ok';gs.vy=-Math.sqrt(2*1800*Math.max(90,SH*.3));gs.combo++;gs.cleared++;const gain=10*Math.min(5,1+Math.floor(gs.combo/4));gs.score+=gain;burstAt(tgt.x+30,SH*.74-40,tgt.m);pop('+'+gain,tgt.x+30,SH*.74-90,'good');blip(520,.12,'triangle',.07,1040)}
-    else{gs.combo=0;gs.shake=.25;blip(140,.15,'sawtooth',.06);pop('Pas '+NAMES[pc(m)]+' !',rx+40,SH*.74-120,'bad')}ghud()},
+    else{gs.combo=0;gs.shake=.25;blip(140,.15,'sawtooth',.06);pop(tr('notThat')(NAMES[pc(m)]),rx+40,SH*.74-120,'bad')}ghud()},
   update(dt){gs.t+=dt;if(gs.shake>0)gs.shake-=dt;gs.vy+=1800*dt;gs.y=Math.min(0,gs.y+gs.vy*dt);if(gs.y===0)gs.vy=0;if(!gs.running)return;
     const sp=SW*(.2+Math.min(.22,gs.cleared*.008))*speed;gs.dist+=sp*dt;
     gs.timer-=dt;if(gs.timer<=0){const p=GAME.runner.pool();let m=p[Math.floor(Math.random()*p.length)];const lo=gs.obs.at(-1);if(lo&&lo.m===m&&Math.random()<.6)m=p[(p.indexOf(m)+1)%p.length];gs.obs.push({m,x:SW+40,done:false});gs.timer=Math.max(1.05,2.3-gs.cleared*.04)/speed}
     const rx=SW*.18;
-    for(const o of gs.obs){o.x-=sp*dt;if(!o.done&&o.x<rx+18){o.done='hit';gs.lives--;gs.combo=0;gs.shake=.35;blip(110,.3,'sawtooth',.09,60);burstAt(rx,SH*.74-30,o.m);ghud();if(gs.lives<=0){endGame('runner',`<p>${gs.cleared} obstacles franchis</p>`);break}}}
+    for(const o of gs.obs){o.x-=sp*dt;if(!o.done&&o.x<rx+18){o.done='hit';gs.lives--;gs.combo=0;gs.shake=.35;blip(110,.3,'sawtooth',.09,60);burstAt(rx,SH*.74-30,o.m);ghud();if(gs.lives<=0){endGame('runner',`<p>${tr('cleared')(gs.cleared)}</p>`);break}}}
     gs.obs=gs.obs.filter(o=>o.x>-120);
     const tgt=gs.obs.find(o=>!o.done&&o.x>rx-10);setTargets(hint&&tgt&&tgt.x<rx+SW*.6?[{m:tgt.m}]:[])},
   draw(dt){const sx=gs.shake>0?(Math.random()-.5)*12:0;ctx.save();ctx.translate(sx,0);const gy=SH*.74,rx=SW*.18;
@@ -571,24 +627,23 @@ GAME.runner={lives:true,timed:false,tools:['names','hint'],
     ctx.fillStyle='#f4f1ff';ctx.beginPath();ctx.ellipse(rx,y-r+bob,r*(gs.y<0?.9:1.05),r*(gs.y<0?1.1:.95),0,0,7);ctx.fill();
     ctx.fillStyle='#0f0e14';ctx.beginPath();ctx.arc(rx+r*.35,y-r*1.15+bob,r*.16,0,7);ctx.fill();
     ctx.fillStyle=C.coral;ctx.fillRect(rx-r,y-r*1.55+bob,r*1.6,r*.28);
-    if(gs.running&&gs.combo>=4){ctx.fillStyle=C.text;ctx.font='600 16px Bricolage Grotesque, system-ui';ctx.textAlign='left';ctx.fillText('Combo ×'+Math.min(5,1+Math.floor(gs.combo/4)),16,30)}
+    if(gs.running&&gs.combo>=4){ctx.fillStyle=C.text;ctx.font='600 16px Bricolage Grotesque, system-ui';ctx.textAlign='left';ctx.fillText(tr('combo')+Math.min(5,1+Math.floor(gs.combo/4)),16,30)}
     drawFx(dt);ctx.restore()}};
 
 /* --- 2. Rythme Pulse --- */
 GAME.pulse={lives:false,timed:true,tools:['names','speed'],
-  intro:'Un cercle se contracte sur la cible à chaque temps. Frappe une touche pile quand il la touche. À partir de 8 réussites, il faudra jouer la note demandée. 60 secondes.',
   reset(){gs={running:false,score:0,time:60,bpm:80,beat:0,hits:0,streak:0,miss:0,flash:0,fl:'',need:null,judged:false,last:0};fx.length=0;pops.length=0;ghud()},
   begin(){GAME.pulse.reset();ov.hidden=true;gs.running=true;gs.t0=performance.now()/1000},
   stop(){gs.running=false},
   press(m){if(!gs.running)return;const per=60/(gs.bpm*speed),now=performance.now()/1000-gs.t0,ph=now/per,k=Math.round(ph),off=Math.abs(ph-k)*per;
     if(gs.judged===k)return;gs.judged=k;
     const okNote=!gs.need||pc(m)===gs.need;
-    if(off<.07&&okNote){gs.hits++;gs.streak++;gs.score+=Math.round(100*Math.min(3,1+gs.streak/8));gs.fl='Parfait';gs.flc='good';blip(880,.08,'triangle',.07)}
-    else if(off<.14&&okNote){gs.hits++;gs.streak++;gs.score+=50;gs.fl='Bien';gs.flc='warn';blip(660,.08,'triangle',.06)}
-    else{gs.streak=0;gs.miss++;gs.fl=okNote?'Trop '+(ph-k<0?'tôt':'tard'):'Mauvaise note';gs.flc='bad';blip(140,.15,'sawtooth',.06)}
+    if(off<.07&&okNote){gs.hits++;gs.streak++;gs.score+=Math.round(100*Math.min(3,1+gs.streak/8));gs.fl=tr('perfect');gs.flc='good';blip(880,.08,'triangle',.07)}
+    else if(off<.14&&okNote){gs.hits++;gs.streak++;gs.score+=50;gs.fl=tr('good');gs.flc='warn';blip(660,.08,'triangle',.06)}
+    else{gs.streak=0;gs.miss++;gs.fl=okNote?(ph-k<0?tr('tooEarly'):tr('tooLate')):tr('wrongNote');gs.flc='bad';blip(140,.15,'sawtooth',.06)}
     gs.flash=1;if(gs.hits>=8&&gs.hits%4===0)gs.bpm=Math.min(140,gs.bpm+6);
     if(gs.hits>=8){gs.need=[0,2,4,5,7,9,11][Math.floor(Math.random()*7)];setTargets(hint?[{m:60+gs.need}]:[])}ghud()},
-  update(dt){if(!gs.running)return;if(tick(dt)){endGame('pulse',`<p>${gs.hits} frappes réussies, ${gs.miss} ratées</p>`);return}
+  update(dt){if(!gs.running)return;if(tick(dt)){endGame('pulse',`<p>${tr('hits')(gs.hits,gs.miss)}</p>`);return}
     const per=60/(gs.bpm*speed),now=performance.now()/1000-gs.t0,k=Math.floor(now/per);
     if(k!==gs.last){gs.last=k;blip(k%4===0?1400:1000,.03,'square',.04);if(gs.judged!==k-1&&k>1&&gs.hits+gs.miss>0){}}
     gs.flash=Math.max(0,gs.flash-dt*2);ghud()},
@@ -599,12 +654,11 @@ GAME.pulse={lives:false,timed:true,tools:['names','speed'],
     if(gs.flash>0){ctx.fillStyle=(C[gs.flc]||'#fff').replace(')',`,${gs.flash*.35})`).replace('#',`rgba(`);ctx.fillStyle=`rgba(255,255,255,${gs.flash*.15})`;ctx.beginPath();ctx.arc(cx,cy,R,0,7);ctx.fill();centerText(gs.fl,cy-R-18,20,600,C[gs.flc])}
     centerText(gs.need!=null?NAMES[gs.need]:'♩',cy+12,gs.need!=null?34:40,500);
     centerText(`${Math.round(gs.bpm*speed)} BPM`,SH-18,13,400,C.muted);
-    if(gs.running){ctx.fillStyle=C.muted;ctx.font='400 14px Bricolage Grotesque, system-ui';ctx.textAlign='left';ctx.fillText('Série '+gs.streak,16,30)}
+    if(gs.running){ctx.fillStyle=C.muted;ctx.font='400 14px Bricolage Grotesque, system-ui';ctx.textAlign='left';ctx.fillText(tr('streak')+' '+gs.streak,16,30)}
     drawFx(dt)}};
 
 /* --- 3. Accord Blaster --- */
 GAME.blaster={lives:true,timed:false,tools:['names','hint'],
-  intro:'Des astéroïdes descendent avec un nom d’accord (C, Dm, Em, F, G, Am). Joue les trois notes de l’accord en même temps, dans n’importe quelle octave, pour tirer. Trois astéroïdes qui passent et c’est fini.',
   reset(){gs={running:false,score:0,lives:3,rocks:[],timer:1,killed:0,lasers:[],t:0};fx.length=0;pops.length=0;ghud()},
   begin(){GAME.blaster.reset();ov.hidden=true;gs.running=true},
   stop(){gs.running=false},
@@ -615,7 +669,7 @@ GAME.blaster={lives:true,timed:false,tools:['names','hint'],
     gs.timer-=dt;if(gs.timer<=0){const ch=[[0,0],[2,1],[4,1],[5,0],[7,0],[9,1]][Math.floor(Math.random()*6)];
       gs.rocks.push({root:ch[0],minor:ch[1],pcs:chordPcs(ch[0],ch[1]),x:SW*(.15+.7*Math.random()),y:-40,r:Math.min(52,SW*.06),spin:Math.random()*6,dead:false});gs.timer=Math.max(1.6,3.4-gs.killed*.08)/speed}
     const vy=(SH*.06+gs.killed*2)*speed;
-    for(const r of gs.rocks){r.y+=vy*dt;r.spin+=dt*.6;if(!r.dead&&r.y>SH-20){r.dead=true;gs.lives--;blip(110,.3,'sawtooth',.09,60);burstAt(r.x,SH-20,r.root,10);ghud();if(gs.lives<=0){endGame('blaster',`<p>${gs.killed} astéroïdes détruits</p>`);break}}}
+    for(const r of gs.rocks){r.y+=vy*dt;r.spin+=dt*.6;if(!r.dead&&r.y>SH-20){r.dead=true;gs.lives--;blip(110,.3,'sawtooth',.09,60);burstAt(r.x,SH-20,r.root,10);ghud();if(gs.lives<=0){endGame('blaster',`<p>${tr('destroyed')(gs.killed)}</p>`);break}}}
     gs.rocks=gs.rocks.filter(r=>!r.dead||r.y<SH+60);gs.lasers.forEach(l=>l.life-=dt*4);gs.lasers=gs.lasers.filter(l=>l.life>0);
     const nxt=gs.rocks.filter(r=>!r.dead).sort((a,b)=>b.y-a.y)[0];
     setTargets(hint&&nxt?nxt.pcs.map(p=>({m:60+p+(p<pc(60)?12:0)})):[])},
@@ -630,9 +684,8 @@ GAME.blaster={lives:true,timed:false,tools:['names','hint'],
     drawFx(dt)}};
 
 /* --- 4. Gamme Climber --- */
-const SCALES=[{n:'Do majeur',root:60,st:[0,2,4,5,7,9,11,12],f:[1,2,3,1,2,3,4,5]},{n:'Sol majeur',root:67,st:[0,2,4,5,7,9,11,12],f:[1,2,3,1,2,3,4,5]},{n:'Fa majeur',root:65,st:[0,2,4,5,7,9,11,12],f:[1,2,3,4,1,2,3,4]},{n:'La mineur',root:69,st:[0,2,3,5,7,8,10,12],f:[1,2,3,1,2,3,4,5]}];
+const SCALES=[{n:tr('scales')[0],root:60,st:[0,2,4,5,7,9,11,12],f:[1,2,3,1,2,3,4,5]},{n:tr('scales')[1],root:67,st:[0,2,4,5,7,9,11,12],f:[1,2,3,1,2,3,4,5]},{n:tr('scales')[2],root:65,st:[0,2,4,5,7,9,11,12],f:[1,2,3,4,1,2,3,4]},{n:tr('scales')[3],root:69,st:[0,2,3,5,7,8,10,12],f:[1,2,3,1,2,3,4,5]}];
 GAME.climber={lives:false,timed:true,tools:['names','fing','hint'],sc:0,
-  intro:'Grimpe la tour en jouant la gamme, montée puis descente. Une fausse note et tu glisses d’un étage. Les chiffres indiquent le doigté (passage du pouce compris). 60 secondes.',
   options(){return`<div class="seg" id="scSeg">${SCALES.map((s,i)=>`<button type="button" data-i="${i}" aria-pressed="${i===GAME.climber.sc}">${s.n}</button>`).join('')}</div>`},
   reset(){gs={running:false,score:0,time:60,step:0,dir:1,floor:0,laps:0,shake:0,t:0};fx.length=0;pops.length=0;ghud();
     setTimeout(()=>document.querySelectorAll('#scSeg button').forEach(b=>b.onclick=()=>{GAME.climber.sc=+b.dataset.i;document.querySelectorAll('#scSeg button').forEach(x=>x.setAttribute('aria-pressed',x===b))}),0)},
@@ -642,56 +695,54 @@ GAME.climber={lives:false,timed:true,tools:['names','fing','hint'],sc:0,
   aim(){const c=GAME.climber.cur();const m=c.m>HIGH?c.m-12:c.m;setTargets(hint?[{m,f:c.f}]:[])},
   press(m){if(!gs.running)return;const c=GAME.climber.cur();
     if(pc(m)===pc(c.m)){gs.step++;gs.floor++;const gain=10+gs.laps*5;gs.score+=gain;burst(m>HIGH?m-12:m,.6);blip(500+gs.floor*20,.08,'triangle',.06);
-      if(gs.step>7){gs.step=0;gs.dir*=-1;if(gs.dir>0)gs.laps++;pop(gs.dir>0?'Et on remonte !':'Redescends',SW/2,SH*.3,'good')}}
-    else{gs.floor=Math.max(0,gs.floor-1);gs.shake=.3;blip(140,.15,'sawtooth',.06);popLane('Glissade',m,'bad')}
+      if(gs.step>7){gs.step=0;gs.dir*=-1;if(gs.dir>0)gs.laps++;pop(gs.dir>0?tr('up'):tr('down'),SW/2,SH*.3,'good')}}
+    else{gs.floor=Math.max(0,gs.floor-1);gs.shake=.3;blip(140,.15,'sawtooth',.06);popLane(tr('slip'),m,'bad')}
     GAME.climber.aim();ghud()},
-  update(dt){gs.t+=dt;if(gs.shake>0)gs.shake-=dt;if(!gs.running)return;if(tick(dt))endGame('climber',`<p>${gs.floor} étages, ${gs.laps} allers-retours</p>`)},
+  update(dt){gs.t+=dt;if(gs.shake>0)gs.shake-=dt;if(!gs.running)return;if(tick(dt))endGame('climber',`<p>${tr('floors')(gs.floor,gs.laps)}</p>`)},
   draw(dt){const sx=gs.shake>0?(Math.random()-.5)*10:0;ctx.save();ctx.translate(sx,0);bgDark('#06120c','#0b2416','#0f3a22');
     const s=SCALES[GAME.climber.sc],n=16,h=SH*.9/n,w=SW*.22,x0=SW/2-w/2,base=SH-10-gs.floor*h*0;
     for(let i=0;i<n;i++){const y=SH-10-(i+1)*h+ (gs.floor>8?(gs.floor-8)*h:0);if(y>SH||y<-h)continue;const idx=i%8,m=s.root+s.st[idx],on=i<gs.floor;
       ctx.fillStyle=on?col(m,58):'rgba(255,255,255,.06)';ctx.strokeStyle=on?col(m,70):'rgba(255,255,255,.15)';ctx.lineWidth=1.5;rr(x0+(i%2?12:-12),y+3,w,h-6,8);ctx.fill();ctx.stroke();
       ctx.fillStyle=on?'#0f0e14':C.muted;ctx.font='500 13px Bricolage Grotesque, system-ui';ctx.textAlign='center';ctx.fillText((showNames?NAMES[pc(m)]:EN[pc(m)])+(showFing?' · '+s.f[idx]:''),x0+(i%2?12:-12)+w/2,y+h/2+4)}
-    const c=GAME.climber.cur();centerText((gs.dir>0?'↑ ':'↓ ')+(showNames?NAMES[pc(c.m)]:EN[pc(c.m)])+(showFing?'  doigt '+c.f:''),30,20,500);
-    ctx.fillStyle=C.muted;ctx.font='400 13px Bricolage Grotesque, system-ui';ctx.textAlign='left';ctx.fillText(s.n+' · étage '+gs.floor,16,SH-16);
+    const c=GAME.climber.cur();centerText((gs.dir>0?'↑ ':'↓ ')+(showNames?NAMES[pc(c.m)]:EN[pc(c.m)])+(showFing?tr('finger')+c.f:''),30,20,500);
+    ctx.fillStyle=C.muted;ctx.font='400 13px Bricolage Grotesque, system-ui';ctx.textAlign='left';ctx.fillText(s.n+tr('floor')+gs.floor,16,SH-16);
     drawFx(dt);ctx.restore()}};
 
 /* --- 5. Oreille d'Or --- */
 GAME.ear={lives:false,timed:false,tools:['names'],
-  intro:'Tu entends d’abord un Do de référence, puis une note ou une courte mélodie. Rejoue-la de mémoire. 10 questions, de plus en plus longues.',
   reset(){gs={running:false,score:0,q:0,seq:[],got:[],playing:false,msg:'',ok:0};fx.length=0;pops.length=0;ghud()},
   begin(){GAME.ear.reset();ov.hidden=true;gs.running=true;GAME.ear.ask()},
   stop(){gs.running=false},
-  ask(){if(gs.q>=10){endGame('ear',`<p>${gs.ok} bonnes réponses sur 10</p>`);return}gs.q++;const len=gs.q<=3?1:gs.q<=7?2:3;const pool=[60,62,64,65,67,69,71,72];
+  ask(){if(gs.q>=10){endGame('ear',`<p>${tr('earRes')(gs.ok)}</p>`);return}gs.q++;const len=gs.q<=3?1:gs.q<=7?2:3;const pool=[60,62,64,65,67,69,71,72];
     gs.seq=[];let prev=60;for(let i=0;i<len;i++){let m;do{m=pool[Math.floor(Math.random()*pool.length)]}while(m===prev);gs.seq.push(m);prev=m}
-    gs.got=[];gs.msg='Écoute…';GAME.ear.replay()},
-  replay(){const g=gs;gs.playing=true;const sp=.55/speed;playNote(60,sp*.8,.5);gs.seq.forEach((m,i)=>setTimeout(()=>{if(gs===g)playNote(m,sp*.8)},(i+1)*sp*1000+300));setTimeout(()=>{if(gs!==g)return;gs.playing=false;gs.msg='À toi : rejoue '+(gs.seq.length>1?'les '+gs.seq.length+' notes':'la note')},(gs.seq.length+1)*sp*1000+400)},
+    gs.got=[];gs.msg=tr('earListen');GAME.ear.replay()},
+  replay(){const g=gs;gs.playing=true;const sp=.55/speed;playNote(60,sp*.8,.5);gs.seq.forEach((m,i)=>setTimeout(()=>{if(gs===g)playNote(m,sp*.8)},(i+1)*sp*1000+300));setTimeout(()=>{if(gs!==g)return;gs.playing=false;gs.msg=tr('earYou')(gs.seq.length)},(gs.seq.length+1)*sp*1000+400)},
   press(m){if(!gs.running||gs.playing)return;gs.got.push(m);const i=gs.got.length-1;
-    if(pc(m)!==pc(gs.seq[i])){gs.msg='Raté, c’était '+gs.seq.map(x=>NAMES[pc(x)]).join(' ');blip(140,.15,'sawtooth',.06);gs.playing=true;const g=gs;setTimeout(()=>{if(gs!==g)return;gs.seq.forEach((x,j)=>setTimeout(()=>{if(gs!==g)return;keyEls.get(x)?.classList.add('target');setTimeout(()=>keyEls.get(x)?.classList.remove('target'),400);playNote(x,.4)},j*500));setTimeout(()=>{if(gs===g&&gs.running)GAME.ear.ask()},gs.seq.length*500+600)},300);return}
-    burst(m,.6);if(gs.got.length===gs.seq.length){gs.ok++;gs.score+=100*gs.seq.length;gs.msg='Bravo !';blip(880,.1,'triangle',.07);gs.playing=true;const g=gs;setTimeout(()=>{if(gs===g&&gs.running)GAME.ear.ask()},700)}ghud()},
+    if(pc(m)!==pc(gs.seq[i])){gs.msg=tr('earMiss')+gs.seq.map(x=>NAMES[pc(x)]).join(' ');blip(140,.15,'sawtooth',.06);gs.playing=true;const g=gs;setTimeout(()=>{if(gs!==g)return;gs.seq.forEach((x,j)=>setTimeout(()=>{if(gs!==g)return;keyEls.get(x)?.classList.add('target');setTimeout(()=>keyEls.get(x)?.classList.remove('target'),400);playNote(x,.4)},j*500));setTimeout(()=>{if(gs===g&&gs.running)GAME.ear.ask()},gs.seq.length*500+600)},300);return}
+    burst(m,.6);if(gs.got.length===gs.seq.length){gs.ok++;gs.score+=100*gs.seq.length;gs.msg=tr('bravo');blip(880,.1,'triangle',.07);gs.playing=true;const g=gs;setTimeout(()=>{if(gs===g&&gs.running)GAME.ear.ask()},700)}ghud()},
   update(dt){},
   draw(dt){bgDark('#14110a','#2a2210','#3f3314');const cx=SW/2,cy=SH*.46;
     for(let i=0;i<4;i++){const r=40+i*34+(gs.playing?Math.sin(performance.now()/300+i)*6:0);ctx.strokeStyle=`rgba(231,195,68,${.5-i*.11})`;ctx.lineWidth=2;ctx.beginPath();ctx.arc(cx,cy,r,0,7);ctx.stroke()}
     centerText(gs.playing?'♪':'?',cy+16,46,700);
     centerText(gs.msg,SH-40,18,400);
-    ctx.textAlign='left';ctx.fillStyle=C.muted;ctx.font='400 14px Bricolage Grotesque, system-ui';ctx.fillText('Question '+gs.q+' / 10',16,30);
+    ctx.textAlign='left';ctx.fillStyle=C.muted;ctx.font='400 14px Bricolage Grotesque, system-ui';ctx.fillText(tr('question')+' '+gs.q+' / 10',16,30);
     const dots=gs.seq.map((m,i)=>i<gs.got.length?(pc(gs.got[i])===pc(m)?'●':'✕'):'○').join('  ');centerText(dots,cy+70,20,400,C.sun);
-    if(!gs.playing&&gs.running){ctx.fillStyle=C.muted;ctx.font='400 13px Bricolage Grotesque, system-ui';ctx.textAlign='right';ctx.fillText('Rejouer = réécouter',SW-16,30)}
+    if(!gs.playing&&gs.running){ctx.fillStyle=C.muted;ctx.font='400 13px Bricolage Grotesque, system-ui';ctx.textAlign='right';ctx.fillText(tr('earReplay'),SW-16,30)}
     drawFx(dt)}};
 GAME.ear.begin=function(){if(mode==='ear'&&gs&&gs.running&&!gs.playing&&gs.q>0&&ov.hidden){GAME.ear.replay();return}GAME.ear.reset();ov.hidden=true;gs.running=true;GAME.ear.ask()};
 
 /* --- 6. Partition Express --- */
 GAME.staff={lives:true,timed:false,tools:['names','speed','hint'],
-  intro:'Les notes glissent sur une portée en clé de sol, de droite à gauche. Joue chaque note quand elle atteint la barre. Une note manquée coûte une vie.',
   reset(){gs={running:false,score:0,lives:3,notes:[],timer:.5,t:0,streak:0,hit:0};fx.length=0;pops.length=0;ghud()},
   begin(){GAME.staff.reset();ov.hidden=true;gs.running=true},
   stop(){gs.running=false},
   pool(){const p=[60,62,64,65,67];if(gs.hit>=8)p.push(69,71,72);if(gs.hit>=18)p.push(74,76,77,79);return p},
   press(m){if(!gs.running)return;const bx=SW*.22,n=gs.notes.find(o=>!o.done&&Math.abs(o.x-bx)<SW*.09);
-    if(n&&pc(n.m)===pc(m)&&Math.abs(n.m-m)<=12){n.done='ok';gs.hit++;gs.streak++;const gain=Math.abs(n.x-bx)<SW*.03?100:60;gs.score+=gain;burstAt(n.x,n.y,n.m,14);pop(gain===100?'Parfait':'Bien',n.x,n.y-30,gain===100?'good':'warn');blip(660,.08,'triangle',.06)}
+    if(n&&pc(n.m)===pc(m)&&Math.abs(n.m-m)<=12){n.done='ok';gs.hit++;gs.streak++;const gain=Math.abs(n.x-bx)<SW*.03?100:60;gs.score+=gain;burstAt(n.x,n.y,n.m,14);pop(gain===100?tr('perfect'):tr('good'),n.x,n.y-30,gain===100?'good':'warn');blip(660,.08,'triangle',.06)}
     else{gs.streak=0;blip(140,.15,'sawtooth',.06);const k=keyEls.get(m);if(k){k.classList.add('wrong');setTimeout(()=>k.classList.remove('wrong'),180)}}ghud()},
   update(dt){gs.t+=dt;if(!gs.running)return;const sp=SW*.14*speed*(1+Math.min(.6,gs.hit*.02));
     gs.timer-=dt;if(gs.timer<=0){const p=GAME.staff.pool();const m=p[Math.floor(Math.random()*p.length)];gs.notes.push({m,x:SW+30,done:false});gs.timer=Math.max(.9,1.9-gs.hit*.03)/speed}
-    const bx=SW*.22;for(const n of gs.notes){n.x-=sp*dt;if(!n.done&&n.x<bx-SW*.09){n.done='miss';gs.lives--;gs.streak=0;blip(110,.3,'sawtooth',.09,60);pop('Raté',n.x,n.y-30,'bad');ghud();if(gs.lives<=0){endGame('staff',`<p>${gs.hit} notes lues</p>`);break}}}
+    const bx=SW*.22;for(const n of gs.notes){n.x-=sp*dt;if(!n.done&&n.x<bx-SW*.09){n.done='miss';gs.lives--;gs.streak=0;blip(110,.3,'sawtooth',.09,60);pop(tr('missed'),n.x,n.y-30,'bad');ghud();if(gs.lives<=0){endGame('staff',`<p>${tr('read')(gs.hit)}</p>`);break}}}
     gs.notes=gs.notes.filter(n=>n.x>-40);
     const nxt=gs.notes.find(n=>!n.done);setTargets(hint&&nxt&&nxt.x<bx+SW*.5?[{m:nxt.m}]:[])},
   draw(dt){bgDark('#120b0a','#241412','#3a1d19');const gap=Math.min(22,SH*.08),top=SH*.5-2*gap,bx=SW*.22;
@@ -708,7 +759,7 @@ GAME.staff={lives:true,timed:false,tools:['names','speed','hint'],
       ctx.strokeStyle=col(n.m,62);ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(n.x+gap*.55,y);ctx.lineTo(n.x+gap*.55,y-gap*3);ctx.stroke();
       if(sharp){ctx.fillStyle='#fff';ctx.font=`600 ${gap}px Bricolage Grotesque`;ctx.textAlign='center';ctx.fillText('♯',n.x-gap*1.1,y+gap*.35)}
       if(showNames){ctx.fillStyle='rgba(255,255,255,.75)';ctx.font='500 12px Bricolage Grotesque, system-ui';ctx.textAlign='center';ctx.fillText(NAMES[pc(n.m)],n.x,top+6*gap+14)}ctx.globalAlpha=1}
-    if(gs.running&&gs.streak>=5){ctx.fillStyle=C.text;ctx.font='600 16px Bricolage Grotesque, system-ui';ctx.textAlign='left';ctx.fillText('Série '+gs.streak,16,30)}
+    if(gs.running&&gs.streak>=5){ctx.fillStyle=C.text;ctx.font='600 16px Bricolage Grotesque, system-ui';ctx.textAlign='left';ctx.fillText(tr('streak')+' '+gs.streak,16,30)}
     drawFx(dt)}};
 
 /* ================= Loop ================= */

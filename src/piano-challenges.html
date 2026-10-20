@@ -2740,7 +2740,7 @@ function render(){ document.body.classList.toggle("playing", !!game || phase!=="
 
 // ---------- Settings wiring ----------
 $("langSeg").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return;
-  S.settings.lang=b.dataset.v; S.settings.notation=b.dataset.v; save(); closeTypes(); applyStatic(); applySide(); renderGames(); renderInputUI(); if(page==="rank") renderRank(); if(page==="account") renderAccount(); if(helpOpen) renderTut(); renderSettings(); labelKeys(); render(); renderDaily(); if(endOpen&&lastGame) openEnd(lastGame); });
+  S.settings.lang=b.dataset.v; S.settings.notation=b.dataset.v; save(); closeTypes(); applyStatic(); applySide(); renderGames(); renderInputUI(); if(page==="rank") renderRank(); if(page==="account") renderAccount(); if(helpOpen) renderTut(); renderSettings(); labelKeys(); render(); renderDaily(); if(endOpen&&lastGame) openEnd(lastGame); if(page==="play") playOpen(); });
 function bindSeg(id,key,restart){ $(id).addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return;
   S.settings[key]=b.dataset.v; save(); renderSettings(); labelKeys();
   if(restart && cur && (phase==="listening"||phase==="revealed")) startRound(key==="dir"?{...cur,dir:null}:cur,true); else render(); }); }
@@ -3067,7 +3067,9 @@ let returnPage=null, guestPass=false;
 // Page Play: the Clavio prototype (play/index.html) runs in a frame; notes played here are forwarded to it.
 function playSend(type,m,vel){ const f=$("playFrame"); if(f && f.contentWindow) f.contentWindow.postMessage({source:"piano-challenges",type,m,vel},"*"); }
 let playHash="#songs"; // #songs = song library, #games = Play games, #game=<id> = that game
-function playOpen(){ const f=$("playFrame"); const src="play/index.html"+playHash; if(f.getAttribute("src")!==src){ f.onload=()=>{ if(page==="play" && !anyWin()) f.focus(); }; f.src=src; } $("playPanel").hidden=false; }
+function playOpen(){ const f=$("playFrame"); const src="play/index.html"+playHash+"&lang="+(S.settings.lang==="fr"?"fr":"en"); const old=f.getAttribute("src");
+  if(old!==src){ f.onload=()=>{ if(page==="play" && !anyWin()) f.focus(); }; f.src=src; if(old){ try{ f.contentWindow.location.reload(); }catch(e){} } } // a hash-only change would not reload the page: force it
+  $("playPanel").hidden=false; }
 function openPlayWith(h){ playHash=h; if(page==="play"){ playOpen(); setNav(); } else openPage("play"); }
 function goMode(m){ closeDrawer(); if(m==="learn") openPage("learn"); else if(m==="play") openPlayWith("#songs"); else openPage("games"); }
 document.querySelectorAll("[data-mode]").forEach(b=>b.addEventListener("click",()=>{ const m=b.dataset.mode; if(page==="daily" && game && game.daily){ guardLeave(()=>{ game=null; goMode(m); }); return; } goMode(m); }));
