@@ -3323,14 +3323,24 @@ $("secTabs").addEventListener("click",e=>{ const b=e.target.closest("button"); i
   if(page!=="practice"){ if(S.section!==v){ S.section=v; save(); returnPage=null; } openPage(INFO_PAGES.includes(page)&&returnPage==="practice"?"practice":"practice"); }
   else switchSection(v);
   autoIntro(v); });
-function setDelay(v){ S.settings.delay=v; save(); renderSettings(); renderGameBar(); if(phase==="listening") startRound(cur,true); else renderTimeline(); }
+function retime(prev){
+  // the timer setting changed during an exercise: rescale the time left, never restart the round
+  if(phase!=="listening" || !cur || cur.sec==="ear"){ renderTimeline(); return; }
+  const per=chSeq()?seq.length:1, d=S.settings.delay, now=performance.now();
+  const left = paused ? pausedLeft : (deadline ? Math.max(0,deadline-now) : 0);
+  let nl=0;
+  if(d>0) nl = (prev>0 && (deadline||paused)) ? left/(prev*1000*per)*d*1000*per : Math.max(1000, startT+d*1000*per-now);
+  if(paused) pausedLeft=nl;
+  deadline = d>0 ? now+nl : 0;
+  renderTimeline();
+}
+function setDelay(v){ const prev=S.settings.delay; S.settings.delay=v; save(); renderSettings(); renderGameBar(); retime(prev); }
 $("timerSel").addEventListener("change",e=>setDelay(+e.target.value));
 $("optGuideN").addEventListener("change",e=>{ S.settings.guideN=e.target.checked; if(e.target.checked) S.settings.guideP=false; save(); render(); });
 $("optGuideK").addEventListener("change",e=>{ S.settings.guideK=e.target.checked; if(e.target.checked) S.settings.guideP=false; save(); render(); });
 $("optGuideP").addEventListener("change",e=>{ S.settings.guideP=e.target.checked; if(e.target.checked){ S.settings.guideN=false; S.settings.guideK=false; } save(); render(); });
 $("segDiff").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; setDelay(+b.dataset.v); });
-$("delay").addEventListener("input",e=>{ S.settings.delay=+e.target.value; save(); renderSettings(); if(phase!=="listening") renderTimeline(); });
-$("delay").addEventListener("change",()=>{ if(phase==="listening") startRound(cur,true); });
+$("delay").addEventListener("input",e=>{ const prev=S.settings.delay; S.settings.delay=+e.target.value; save(); renderSettings(); retime(prev); });
 $("optOct").addEventListener("change",e=>{ S.settings.octave=e.target.checked; save(); if(cur&&phase!=="idle") startRound(cur,true); else render(); });
 $("optLabels").addEventListener("change",e=>{ S.settings.labels=e.target.checked; save(); labelKeys(); });
 $("optMidiSound").addEventListener("change",e=>{ S.settings.midiSound=e.target.checked; save(); });
