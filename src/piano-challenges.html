@@ -126,6 +126,7 @@ button:focus-visible, select:focus-visible, input:focus-visible, summary:focus-v
 .score-box{display:grid;grid-template-columns:auto auto;align-items:baseline;justify-content:space-between;column-gap:14px;row-gap:2px;min-width:200px;
   border:1px solid var(--line);background:var(--surface-2);border-radius:12px;padding:9px 14px;transition:background .3s,border-color .3s}
 .sb-label{font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
+.sb-miss{font-size:.68rem;margin-left:6px;padding:1px 7px;border-radius:999px;background:var(--bad-soft);color:var(--bad);vertical-align:1px;white-space:nowrap}
 .sb-val{font-family:var(--f-display);font-weight:800;font-size:1.6rem;line-height:1.1;text-align:right;color:var(--muted)}
 .sb-val .of{font-size:1rem;font-weight:700}
 .sb-detail{grid-column:1 / -1;font-size:.82rem;font-weight:700;min-height:1.3em;color:var(--muted)}
@@ -1033,6 +1034,7 @@ html.native .midi-body [data-i="midiHint"]{display:none}
   </section>
 
   <section class="stage" id="stage" aria-live="polite">
+    <span class="sr-only" id="srNote"></span>
     <div class="gamebar" id="gamebar">
       <span class="glbl" id="gameLbl"></span>
       <select class="timer-sel" id="timerSel" aria-label="Timer"></select>
@@ -1050,7 +1052,7 @@ html.native .midi-body [data-i="midiHint"]{display:none}
       </div>
       <div class="score-col">
         <div class="score-box" id="feedback">
-          <span class="sb-label" id="sbLabel"></span>
+          <span class="sb-label" id="sbLabel"></span><span class="sb-miss mono" id="sbMiss" hidden></span>
           <span class="sb-val mono" id="sbVal"></span>
           <span class="sb-detail" id="sbDetail"></span>
         </div>
@@ -1387,7 +1389,8 @@ const TXT = {
     allOpen:"Les 12 tonalités de ce type sont ouvertes.", typeLocked:l=>"Ce type de gamme s'ouvre au niveau "+l+".",
     st:["Réussies","Sans faute","Révélées","Maîtrisées","Réussite"], practiseTip:"S'entraîner sur ", lockedTip:"Maîtrisez une gamme de plus pour la débloquer",
     melDown:" · descend en Mineur",
-    titles:["Curieux","Apprenti","Doigts agiles","Oreille fine","Harmoniste","Beatmaker","Producteur","Virtuose","Maestro"]},
+    titles:["Curieux","Apprenti","Doigts agiles","Oreille fine","Harmoniste","Beatmaker","Producteur","Virtuose","Maestro"],
+    wrongSr:"Fausse note : "},
   en:{help:"Help", helpTitle:"How it works", helpOk:"Let's go", tutNext:"Next", tutPrev:"Previous", close:"Close", stepOf:(i,n)=>"Step "+i+" of "+n,
     tut:[{h:"Read the challenge",p:"A scale, a chord or a progression appears with a countdown. Picture the notes in your head before the bar runs out."},
          {h:"Play it on your piano",p:"Scales from the root up to the octave, chords from their lowest note, progressions chord by chord. Digital piano (MIDI), acoustic piano (mic) or on-screen keys: each correct note fills a box. MIDI works in Chrome and Edge (not in Safari)."},
@@ -1502,7 +1505,8 @@ const TXT = {
     allOpen:"All 12 keys of this type are open.", typeLocked:l=>"This scale type opens at level "+l+".",
     st:["Completed","Perfect","Revealed","Mastered","Success rate"], practiseTip:"Practise ", lockedTip:"Master one more scale to unlock it",
     melDown:" · descends as Minor",
-    titles:["Curious","Apprentice","Nimble fingers","Sharp ear","Harmonist","Beatmaker","Producer","Virtuoso","Maestro"]}
+    titles:["Curious","Apprentice","Nimble fingers","Sharp ear","Harmonist","Beatmaker","Producer","Virtuoso","Maestro"],
+    wrongSr:"Wrong note: "}
 };
 const t = k => TXT[S.settings.lang][k];
 
@@ -2118,6 +2122,8 @@ function hitSlot(j, m){
 }
 function wrongNote(m){
   errors++; flashKey(m,"k-bad",300);
+  const sr=$("srNote"); sr.textContent=""; sr.textContent=t("wrongSr")+(S.settings.notation==="fr"?PC_FR:PC_EN)[m%12]; // screen readers hear the wrong note
+  const mb=$("sbMiss"); mb.textContent=t("errors")(errors); mb.hidden=false;
   const at = chSeq() ? pStep : chordLike(cur.sec) ? found.indexOf(false) : idx;
   const sl=$("slots").children[at]; if(sl){ sl.classList.remove("err","pop"); void sl.offsetWidth; sl.classList.add("err"); }
 }
@@ -2274,7 +2280,7 @@ function switchSection(sec){
 // ---------- Rendering ----------
 function resetScore(){
   const n = seq.length || (chordLike(S.section)?3:S.section==="prog"?4:(S.settings.octave?8:7));
-  $("feedback").className="score-box"; $("sbLabel").textContent=tx("correct");
+  $("feedback").className="score-box"; $("sbLabel").textContent=tx("correct"); $("sbMiss").hidden=true; $("srNote").textContent="";
   if(S.section==="ear"){ $("sbLabel").textContent=t("answerLbl"); $("sbVal").innerHTML="—"; $("sbDetail").textContent=""; return; }
   $("sbVal").innerHTML='—<span class="of"> / '+n+'</span>'; $("sbDetail").textContent="";
 }
