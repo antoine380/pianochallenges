@@ -46,6 +46,7 @@ T = {
    cta="Ouvrir Piano Challenges", official="Site officiel", buyAt="Voir chez", photo="Photo",
    drawn="Illustration : clavier {} touches",
    disc1="<strong>Liens affiliés.</strong> Certains liens de cette page sont des liens partenaires : si tu achètes après avoir cliqué, Piano Challenges peut toucher une commission, sans surcoût pour toi. En tant que Partenaire Amazon, nous réalisons un bénéfice sur les achats remplissant les conditions requises.",
+   copyright="© 2026 Antoine Bernard · Tous droits réservés.",
    disc2="Prix en fourchettes indicatives, autonomies selon les fabricants. Aucune marque ne publie ses ventes par modèle : le classement est une estimation. Photos : © les fabricants. Mise à jour : {}.",
    legal="Mentions légales", privacy="Confidentialité"),
  "en": dict(lang="en", path="/keyboard/", other="/clavier/", otherLabel="Français", title="Best MIDI keyboard for iPad? Buying guide · Piano Challenges",
@@ -72,6 +73,7 @@ T = {
    cta="Open Piano Challenges", official="Official site", buyAt="View at", photo="Photo",
    drawn="Illustration: {}-key keyboard",
    disc1="<strong>Affiliate links.</strong> Some links on this page are partner links: if you buy after clicking, Piano Challenges may earn a commission at no extra cost to you. As an Amazon Associate we earn from qualifying purchases.",
+   copyright="© 2026 Antoine Bernard · All rights reserved.",
    disc2="Prices shown as rough ranges, battery life as stated by manufacturers. No brand publishes per-model sales, so the ranking is an estimate. Photos © their manufacturers. Updated: {}.",
    legal="Legal notice", privacy="Privacy"),
 }
@@ -224,7 +226,7 @@ def page(t):
 <p class="empty" id="empty" hidden>{t["empty"]}</p></section>
 <section class="sec" aria-labelledby="howto"><div class="sec-head"><h2 id="howto">{t["how"]}</h2></div><ol class="steps">{steps}</ol>
 <p class="cta-row"><a class="cta" href="/">{t["cta"]}</a></p></section>
-<footer><p>{t["disc1"]}</p><p>{t["disc2"].format(upd)}</p><p><a href="/mentions-legales.html">{t["legal"]}</a> · <a href="/confidentialite.html">{t["privacy"]}</a></p></footer>
+<footer><p>{t["disc1"]}</p><p>{t["disc2"].format(upd)}</p><p><a href="/mentions-legales.html">{t["legal"]}</a> · <a href="/confidentialite.html">{t["privacy"]}</a></p><p>{t["copyright"]}</p></footer>
 </div>
 <script>
 {JS}
