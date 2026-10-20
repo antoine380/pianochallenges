@@ -658,6 +658,8 @@ body.runner-on .free-lbl{display:none!important}
   body.playing .dtl li::before{top:11px}
 }
 [data-page="daily"] .picker{display:none}
+/* Daily practice: the exercise area only appears once the practice has started */
+body[data-page="daily"]:not(.playing) .stage{display:none!important}
 [data-page="rank"] :is(.picker,.stage), [data-page="account"] :is(.picker,.stage){display:none!important}
 
 /* App launch animation (iOS app only) */
