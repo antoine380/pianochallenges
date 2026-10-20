@@ -3188,17 +3188,52 @@ async function setUser(u){
   if(u){ try{ await cloudPull(); }catch(e){} }
   if(page==="account") renderAccount(); if(page==="rank") renderRank();
 }
+// field-by-field merge of this device's state with the account's: nothing is ever lost, the settings stay local
+function mergeState(local, cloud){
+  const isObj=x=>x&&typeof x==="object"&&!Array.isArray(x), num=x=>Number.isFinite(+x)?+x:0;
+  const m=clone(local), c=isObj(cloud)?cloud:{};
+  const maxMap=(a,b)=>{ const o={...(isObj(a)?a:{})}; Object.entries(isObj(b)?b:{}).forEach(([k,v])=>{ if(Number.isFinite(+v)) o[k]=Math.max(num(o[k]),num(v)); }); return o; };
+  m.xp=Math.max(num(local.xp),num(c.xp));
+  m.xpDays=maxMap(local.xpDays,c.xpDays);
+  m.mastery=maxMap(local.mastery,c.mastery);
+  m.stats=maxMap(local.stats,c.stats);
+  m.secStats={...(isObj(local.secStats)?local.secStats:{})}; Object.entries(isObj(c.secStats)?c.secStats:{}).forEach(([sec,v])=>{ m.secStats[sec]=maxMap(m.secStats[sec],v); });
+  m.srs={...(isObj(local.srs)?local.srs:{})}; Object.entries(isObj(c.srs)?c.srs:{}).forEach(([k,e])=>{ const l=m.srs[k]; if(!l || (isObj(e) && String(e.due||"")>String(l.due||""))) m.srs[k]=e; });
+  const ls=isObj(local.streak)?local.streak:{days:0,last:""}, cs=isObj(c.streak)?c.streak:{days:0,last:""};
+  m.streak = String(cs.last||"")>String(ls.last||"") ? {...cs} : String(cs.last||"")<String(ls.last||"") ? {...ls} : {days:Math.max(num(ls.days),num(cs.days)), last:ls.last||""};
+  m.gameBest=maxMap(local.gameBest,c.gameBest); m.runnerBest=Math.max(num(local.runnerBest),num(c.runnerBest));
+  const newer=(a,b)=>{ if(!isObj(b)) return a; if(!isObj(a)) return b; return String(b.date||"")>String(a.date||"") ? b : a; };
+  m.daily=newer(local.daily,c.daily); m.dailyPlan=newer(local.dailyPlan,c.dailyPlan); m.dailyRun=newer(local.dailyRun,c.dailyRun);
+  if(m.daily==null) delete m.daily; if(m.dailyPlan==null) delete m.dailyPlan; if(m.dailyRun==null) delete m.dailyRun;
+  m.seenTypes=[...new Set([...(Array.isArray(local.seenTypes)?local.seenTypes:[]), ...(Array.isArray(c.seenTypes)?c.seenTypes:[])])];
+  m.introSeen={...(isObj(c.introSeen)?c.introSeen:{}), ...(isObj(local.introSeen)?local.introSeen:{})};
+  m.profileName=c.profileName||local.profileName; if(!m.profileName) delete m.profileName;
+  m.settings={...(isObj(local.settings)?local.settings:{})}; // this device's settings win
+  return {merged:m, changed:JSON.stringify(m)!==JSON.stringify(local)};
+}
+let lastPull=0;
 async function cloudPull(){
+  if(!sb||!user) return;
+  lastPull=Date.now();
   const {data,error}=await sb.from("progress").select("data").eq("user_id",user.id).maybeSingle();
   if(error) throw error;
   const cloud=data&&data.data;
-  if(cloud && (cloud.xp||0) > (S.xp||0)){ // the account has more progress than this device: take it, keep this device's settings
-    const merged={...cloud, settings:{...cloud.settings, ...S.settings}, profileName:cloud.profileName||S.profileName};
-    try{ localStorage.setItem(STORE, JSON.stringify(merged)); }catch(e){}
-    location.reload(); return;
+  if(cloud){
+    const {merged,changed}=mergeState(S,cloud);
+    if(changed){
+      S=merged; let stored=false;
+      try{ localStorage.setItem(STORE, JSON.stringify(S)); stored=true; }catch(e){}
+      try{ await cloudPushNow(); }catch(e){}
+      // reload only when the merged state could be written (#36) and no exercise is running; otherwise apply in memory
+      if(stored && phase==="idle" && !game){ location.reload(); return; }
+      renderSettings(); render(); renderDaily(); if(page==="account") renderAccount();
+      return;
+    }
   }
   await cloudPushNow();
 }
+// pull again when the app comes back to the foreground (another device may have played), at most once a minute
+document.addEventListener("visibilitychange",()=>{ if(document.visibilityState==="visible" && sb && user && Date.now()-lastPull>60000) cloudPull().catch(()=>{}); });
 function cloudPush(){ if(!sb||!user) return; clearTimeout(pushT); pushT=setTimeout(()=>cloudPushNow().catch(()=>{}),3000); }
 async function cloudPushNow(){
   if(!sb||!user) return;
