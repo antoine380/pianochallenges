@@ -2004,6 +2004,8 @@ function startRound(item, retry){
     cur={...cur, root:(cur.tid==="scale"?48:52)+Math.floor(Math.random()*(span+1))+(cur.tid==="scale"?Math.floor(Math.random()*8):0)};
   }
   lastId=mkey(cur); seq=buildSeq(); found=seq.map(()=>false); played=[]; idx=0; hintStage=0; hintUsed=false; hintT=performance.now(); errors=0; pStep=0; pFound=new Set(); earPick=null;
+  // retry after a reveal: the answer was shown, so a success now only earns the guided-mode XP
+  if(retry && game && game.results[game.i] && game.results[game.i].solved===false) hintUsed=true;
   phase="listening"; startT=performance.now();
   const per = chSeq() ? seq.length : 1;
   deadline=(S.settings.delay>0 && cur.sec!=="ear") ? startT+S.settings.delay*1000*per : 0;
