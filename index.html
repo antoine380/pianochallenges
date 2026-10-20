@@ -3174,7 +3174,9 @@ async function cloudPushNow(){
   const days=Object.entries(S.xpDays||{}).filter(([d])=>d>=addDays(-7)).map(([day,xp])=>({user_id:user.id, day, xp}));
   if(days.length) await sb.from("xp_log").upsert(days);
 }
-function authMsg(err){ const m=(err&&err.message||"").toLowerCase(); if(m.includes("sending")||m.includes("smtp")) return t("mailFail"); return m.includes("rate")||m.includes("too many") ? t("tooMany") : m.includes("token")||m.includes("otp")||m.includes("expired")||m.includes("invalid") ? t("badCode") : (err&&err.message)||t("cloudErr"); }
+function authMsg(err){ const m=(err&&err.message||"").toLowerCase();
+  if(err instanceof TypeError || (err&&err.name==="TypeError") || m.includes("fetch") || m.includes("network") || m.includes("load failed")) return t("cloudErr"); // offline / server unreachable
+  if(m.includes("sending")||m.includes("smtp")) return t("mailFail"); return m.includes("rate")||m.includes("too many") ? t("tooMany") : m.includes("token")||m.includes("otp")||m.includes("expired")||m.includes("invalid") ? t("badCode") : (err&&err.message)||t("cloudErr"); }
 function renderLock(){
   $("lockTitle").textContent=t("lockTitle")(lockFor);
   const ul=$("lockList"); ul.innerHTML=""; t("perks").forEach(x=>{ const li=document.createElement("li"); li.textContent=x; ul.appendChild(li); });
