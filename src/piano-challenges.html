@@ -512,11 +512,6 @@ body.runner-on .free-lbl{display:none!important}
 .lock-ic{width:56px;height:56px;border-radius:16px;background:var(--accent-soft);display:grid;place-items:center}
 .lock-ic svg{width:28px;height:28px;fill:none;stroke:var(--accent);stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
 [data-page="locked"] :is(.picker,.stage){display:none!important}
-body.guest #secTabs [data-v="games"]::after, body.guest #dailyCard .lbl b::after{content:"";display:inline-block;width:14px;height:14px;margin-left:auto;flex:none;opacity:.6;background:currentColor;
-  -webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect x='5' y='10.5' width='14' height='10' rx='2.5'/%3E%3Cpath d='M8 10.5V7.8a4 4 0 0 1 8 0v2.7' fill='none' stroke='black' stroke-width='2.4'/%3E%3C/svg%3E") center/contain no-repeat;
-  mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect x='5' y='10.5' width='14' height='10' rx='2.5'/%3E%3Cpath d='M8 10.5V7.8a4 4 0 0 1 8 0v2.7' fill='none' stroke='black' stroke-width='2.4'/%3E%3C/svg%3E") center/contain no-repeat}
-body.guest #dailyCard .lbl b::after{margin-left:6px;vertical-align:-2px}
-.side.collapsed #secTabs [data-v="games"]::after{display:none}
 /* Mobile web (no app): no MIDI on phones, only the mic */
 @media (max-width:640px), (max-height:520px) and (orientation:landscape){
   html:not(.native) :is(.inputs .pill-group, .inputs > .pill.on, #midiCfg2){display:none!important}
@@ -3018,7 +3013,7 @@ function renderGames(){ const box=$("gameCards"); box.innerHTML=""; const base=M
 function renderLearn(){ const box=$("learnTiles"); box.innerHTML=""; const base=MODE_COL.learn, sh=[0,-.12,.08,-.22,.16,-.3];
   t("learnTiles").forEach(([id,title,desc],i)=>box.appendChild(tile({color:shade(base,sh[i%sh.length]),icon:TILE_ICON[id],kick:"Learn",title,desc,btn:t("rnPlay"),
     onOpen:()=>{ if(id==="daily") $("dailyCard").click(); else $("secTabs").querySelector('[data-v="'+id+'"]').click(); }}))); }
-const LOCKED=["games","daily"];
+const LOCKED=[]; // everything is open to guests; the Profile page keeps the invitation to create an account
 let lockFor="";
 const needLogin = pg => LOCKED.includes(pg) && !user && !cloudFail && !guestPass;
 const INFO_PAGES=["settings","progress"];
