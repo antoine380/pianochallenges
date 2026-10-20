@@ -1740,7 +1740,7 @@ function load(){
     // defensive normalisation: a field of the wrong type falls back to its default instead of crashing the app
     const isObj=x=>x && typeof x==="object" && !Array.isArray(x), num=(x,dflt)=>{ const v=typeof x==="string"?parseFloat(x):x; return Number.isFinite(v)?v:dflt; };
     const s={...clone(DEFAULTS), ...d, stats:{...DEFAULTS.stats,...(isObj(d.stats)?d.stats:{})}, settings:{...DEFAULTS.settings,...(isObj(d.settings)?d.settings:{})}, mastery:{}};
-    ["streak","stats","secStats","srs","daily","xpDays"].forEach(k=>{ if(!isObj(s[k])) s[k]=clone(DEFAULTS[k]||{}); });
+    ["streak","stats","secStats","srs","daily","xpDays","xpPushed"].forEach(k=>{ if(!isObj(s[k])) s[k]=clone(DEFAULTS[k]||{}); });
     s.streak={days:num(s.streak.days,0), last:typeof s.streak.last==="string"?s.streak.last:""};
     if(!isObj(s.dailyPlan)) delete s.dailyPlan; if(!isObj(s.dailyRun)) delete s.dailyRun;
     s.xp=Math.max(0,num(s.xp,0)); Object.keys(s.xpDays).forEach(k=>{ s.xpDays[k]=num(s.xpDays[k],0); });
@@ -3165,6 +3165,7 @@ const SUPA_URL="https://ijdxeasxmgevuchyuenn.supabase.co", SUPA_KEY="sb_publisha
 const SUPA_SRC="/assets/js/supabase-2.116.0.js";
 let sb=null, user=null, cloudFail=false, pushT=0, loginStep={email:"",sent:false,msg:"",err:false,busy:false};
 let lastPushOk=0, lastPushErr=null; // real sync state shown in the profile
+let addXpRpc=true; // false once the server says the add_xp function does not exist (migration not applied yet)
 function agoText(ts){ const L=S.settings.lang, m=Math.round((Date.now()-ts)/6e4); if(m<1) return L==="fr"?"à l'instant":"just now"; if(m<60) return L==="fr"?"il y a "+m+" min":m+" min ago"; const h=Math.round(m/60); if(h<24) return L==="fr"?"il y a "+h+" h":h+" h ago"; const d=Math.round(h/24); return L==="fr"?"il y a "+d+" j":d+" d ago"; }
 function syncText(){ if(lastPushErr) return t("syncErr")(lastPushOk?agoText(lastPushOk):t("agoNever")); if(lastPushOk) return t("syncOk")(agoText(lastPushOk)); return t("synced"); }
 const isApp = () => document.documentElement.classList.contains("native");
@@ -3203,7 +3204,7 @@ function mergeState(local, cloud){
   const m=clone(local), c=isObj(cloud)?cloud:{};
   const maxMap=(a,b)=>{ const o={...(isObj(a)?a:{})}; Object.entries(isObj(b)?b:{}).forEach(([k,v])=>{ if(Number.isFinite(+v)) o[k]=Math.max(num(o[k]),num(v)); }); return o; };
   m.xp=Math.max(num(local.xp),num(c.xp));
-  m.xpDays=maxMap(local.xpDays,c.xpDays);
+  m.xpDays=maxMap(local.xpDays,c.xpDays); m.xpPushed=maxMap(local.xpPushed,c.xpPushed);
   m.mastery=maxMap(local.mastery,c.mastery);
   m.stats=maxMap(local.stats,c.stats);
   m.secStats={...(isObj(local.secStats)?local.secStats:{})}; Object.entries(isObj(c.secStats)?c.secStats:{}).forEach(([sec,v])=>{ m.secStats[sec]=maxMap(m.secStats[sec],v); });
@@ -3256,8 +3257,23 @@ async function cloudPushRaw(){
   const r2=await sb.from("profiles").upsert({id:user.id, name:myName().slice(0,24), avatar:charIndex(li.L), photo:userPhoto()||null, xp:S.xp, level:li.L, streak:S.streak.days, solved, updated_at:now});
   if(r1.error||r2.error) throw (r1.error||r2.error);
   // XP earned per day (last 7 days) feeds the day / week / month / year leaderboards
-  const days=Object.entries(S.xpDays||{}).filter(([d])=>d>=addDays(-7)).map(([day,xp])=>({user_id:user.id, day, xp}));
-  if(days.length){ const r3=await sb.from("xp_log").upsert(days); if(r3.error) throw r3.error; }
+  const since=addDays(-7), today=dayStr();
+  const days=Object.entries(S.xpDays||{}).filter(([d])=>d>=since);
+  if(addXpRpc){
+    // server-side credit (add_xp, see supabase/schema.sql): only the XP earned since the last push is sent, the server caps it per day
+    const pushed={...(S.xpPushed||{})}; Object.keys(pushed).forEach(d=>{ if(d<since) delete pushed[d]; });
+    const todo=days.filter(([d,xp])=>+xp>(pushed[d]||0) || d===today); if(!todo.some(([d])=>d===today)) todo.push([today,S.xpDays&&S.xpDays[today]||0]);
+    let ok=true;
+    for(const [day,xp] of todo){
+      const delta=Math.max(0,Math.min(3000,Math.round(+xp||0)-(pushed[day]||0)));
+      const r=await sb.rpc("add_xp",{delta, day, streak:S.streak.days, solved});
+      if(r.error){ if(r.error.code==="PGRST202" || /could not find the function|does not exist|schema cache/i.test(r.error.message||"")){ addXpRpc=false; ok=false; break; } throw r.error; }
+      pushed[day]=Math.max(pushed[day]||0, Math.round(+xp||0));
+    }
+    if(ok){ S.xpPushed=pushed; try{ localStorage.setItem(STORE, JSON.stringify(S)); }catch(e){} return; }
+  }
+  // fallback while the migration is not applied: write the day totals directly
+  if(days.length){ const r3=await sb.from("xp_log").upsert(days.map(([day,xp])=>({user_id:user.id, day, xp}))); if(r3.error) throw r3.error; }
 }
 function authMsg(err){ const m=(err&&err.message||"").toLowerCase();
   if(err instanceof TypeError || (err&&err.name==="TypeError") || m.includes("fetch") || m.includes("network") || m.includes("load failed")) return t("cloudErr"); // offline / server unreachable
