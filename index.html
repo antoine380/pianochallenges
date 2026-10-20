@@ -3559,8 +3559,7 @@ function resumeRound(){
   if(pendingAdv){ pendingAdv=false; setTimeout(()=>{ if(anyModal()){ pendingAdv=true; return; } if(phase==="success") startRound(); else if(phase==="revealed") grade(true); },500); }
 }
 function modalOpened(){ modalFocus.push(document.activeElement); pauseRound(); try{ $("app").inert=true; }catch(e){} }
-let helpAfterInput=false;
-function modalClosed(){ if(typeof maybeAskInput==="function") setTimeout(()=>{ maybeAskInput(); if(helpAfterInput && S.settings.input && !anyModal()){ helpAfterInput=false; openHelp(); } },0); if(!anyWin()){ try{ $("app").inert=false; }catch(e){} modalFocus.length=Math.min(modalFocus.length,1); } const f=modalFocus.pop(); try{ if(f&&f.focus&&!anyWin()&&document.contains(f)) f.focus({preventScroll:true}); }catch(e){} resumeRound(); }
+function modalClosed(){ if(typeof maybeAskInput==="function") setTimeout(()=>{ maybeAskInput(); },0); if(!anyWin()){ try{ $("app").inert=false; }catch(e){} modalFocus.length=Math.min(modalFocus.length,1); } const f=modalFocus.pop(); try{ if(f&&f.focus&&!anyWin()&&document.contains(f)) f.focus({preventScroll:true}); }catch(e){} resumeRound(); }
 // safety net: if no window is open, the app must never stay frozen
 setInterval(()=>{ try{ if(!anyWin() && $("app").inert) $("app").inert=false; }catch(e){} }, 1500);
 const VB='viewBox="0 0 360 190"';
@@ -3680,7 +3679,7 @@ setTimeout(initCloud, 400);
 const mobileWeb = (phoneMQ.matches||railMQ.matches) && !document.documentElement.classList.contains("native");
 document.body.classList.add("guest");
 restoreInput();
-if(firstVisit){ save(); if(mobileWeb){ renderWelcome(); openMod("welcomeModal"); } else { helpAfterInput=true; setTimeout(openInputChooser, document.documentElement.classList.contains("native")?1700:300); } }
+if(firstVisit){ save(); if(mobileWeb){ renderWelcome(); openMod("welcomeModal"); } else { setTimeout(openInputChooser, document.documentElement.classList.contains("native")?1700:300); } }
 else maybeAskInput();
 })();
 </script>
