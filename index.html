@@ -1381,7 +1381,8 @@ const TXT = {
     allOpen:"Les 12 tonalités de ce type sont ouvertes.", typeLocked:l=>"Ce type de gamme s'ouvre au niveau "+l+".",
     st:["Réussies","Sans faute","Révélées","Maîtrisées","Réussite"], practiseTip:"S'entraîner sur ", lockedTip:"Maîtrisez une gamme de plus pour la débloquer",
     melDown:" · descend en Mineur",
-    titles:["Curieux","Apprenti","Doigts agiles","Oreille fine","Harmoniste","Beatmaker","Producteur","Virtuose","Maestro"]},
+    titles:["Curieux","Apprenti","Doigts agiles","Oreille fine","Harmoniste","Beatmaker","Producteur","Virtuose","Maestro"],
+    midiBlockedMsg:"Le navigateur a refusé l'accès MIDI. Clique sur le cadenas à gauche de l'adresse pour l'autoriser, ou choisis le clavier à l'écran."},
   en:{help:"Help", helpTitle:"How it works", helpOk:"Let's go", tutNext:"Next", tutPrev:"Previous", close:"Close", stepOf:(i,n)=>"Step "+i+" of "+n,
     tut:[{h:"Read the challenge",p:"A scale, a chord or a progression appears with a countdown. Picture the notes in your head before the bar runs out."},
          {h:"Play it on your piano",p:"Scales from the root up to the octave, chords from their lowest note, progressions chord by chord. Digital piano (MIDI), acoustic piano (mic) or on-screen keys: each correct note fills a box. MIDI works in Chrome and Edge (not in Safari)."},
@@ -1496,7 +1497,8 @@ const TXT = {
     allOpen:"All 12 keys of this type are open.", typeLocked:l=>"This scale type opens at level "+l+".",
     st:["Completed","Perfect","Revealed","Mastered","Success rate"], practiseTip:"Practise ", lockedTip:"Master one more scale to unlock it",
     melDown:" · descends as Minor",
-    titles:["Curious","Apprentice","Nimble fingers","Sharp ear","Harmonist","Beatmaker","Producer","Virtuoso","Maestro"]}
+    titles:["Curious","Apprentice","Nimble fingers","Sharp ear","Harmonist","Beatmaker","Producer","Virtuoso","Maestro"],
+    midiBlockedMsg:"The browser refused MIDI access. Click the padlock left of the address to allow it, or choose the on-screen keyboard."}
 };
 const t = k => TXT[S.settings.lang][k];
 
@@ -3429,13 +3431,13 @@ let midiAcc=null, midiNames=[], midiOpen=false;
 function renderMidiModal(){
   const setup=!!midiSetup, ok=$("midiOk");
   ok.textContent = setup ? t("midiDone") : t("closeLbl"); ok.disabled = setup && !midiReady;
-  $("midiSetupMsg").hidden=!setup; $("midiSetupMsg").textContent = midiReady ? t("midiSetupOk") : t("midiSetupNeed");
+  $("midiSetupMsg").hidden=!setup && !midiDenied; $("midiSetupMsg").textContent = midiDenied ? t("midiBlockedMsg") : midiReady ? t("midiSetupOk") : t("midiSetupNeed");
   $("midiModal").querySelector(".midi-status").classList.toggle("on",midiReady);
-  $("mStTxt").textContent = midiReady ? $("midiTxt").textContent : (midiAcc ? t("midiNone") : t("midiOffState"));
+  $("mStTxt").textContent = midiReady ? $("midiTxt").textContent : midiDenied ? t("midiBlocked") : (midiAcc ? t("midiNone") : t("midiOffState"));
   $("mEnable").hidden = !!midiAcc || !navigator.requestMIDIAccess;
   const nat=!!window.__nativeMidi, dl=$("mDevList"); dl.innerHTML="";
   if(midiNames.length) midiNames.forEach(n=>{ const li=document.createElement("li"); li.textContent=n; dl.appendChild(li); });
-  else { const li=document.createElement("li"); li.className="none"; li.textContent = !navigator.requestMIDIAccess ? t("midiUnsupported") : midiAcc ? t("midiNoneLong") : t("midiOffState"); dl.appendChild(li); }
+  else { const li=document.createElement("li"); li.className="none"; li.textContent = !navigator.requestMIDIAccess ? t("midiUnsupported") : midiDenied ? t("midiBlockedMsg") : midiAcc ? t("midiNoneLong") : t("midiOffState"); dl.appendChild(li); }
   $("mcUsb").textContent=t(nat?"mcUsbApp":"mcUsbWeb"); $("mcBt").textContent=t(nat?"mcBtApp":"mcBtWeb"); $("mBt").hidden=!nat;
   const sel=$("mInput"); sel.innerHTML=""; $("mInField").hidden = midiNames.length<2;
   [["",t("midiAll")],...midiNames.map(n=>[n,n])].forEach(([v,l])=>{ const o=document.createElement("option"); o.value=v; o.textContent=l; sel.appendChild(o); });
@@ -3456,6 +3458,7 @@ function maybeMidiConn(){}
 $("mInput").addEventListener("change",e=>{ S.settings.midiInput=e.target.value; save(); if(midiAcc&&midiAcc.onstatechange) midiAcc.onstatechange(); renderMidiModal(); });
 $("optMidiC").addEventListener("change",e=>{ S.settings.midiC=e.target.checked; save(); render(); });
 $("midiBtn").addEventListener("click", ()=>{ if(midiAcc) openMidi(); else enableMidi(); });
+let midiDenied=false; // the browser refused requestMIDIAccess
 async function enableMidi(){
   audio();
   if(!navigator.requestMIDIAccess){ $("midiBtn").classList.add("err"); $("midiTxt").textContent=t("midiNo"); notice(t("midiUnsupported")); return; }
@@ -3477,8 +3480,8 @@ async function enableMidi(){
       const shown = S.settings.midiInput && names.includes(S.settings.midiInput) ? S.settings.midiInput : names[0];
       $("midiTxt").textContent=names.length ? t("midiDev")+shown : t("midiNone");
       if(names.length) guessKbdSize(shown); midiReady=names.length>0; midiNames=names; render(); if(midiOpen) renderMidiModal(); renderInputUI(); };
-    bind(); acc.onstatechange=bind; notice("");
-  }catch(err){ $("midiBtn").classList.add("err"); $("midiTxt").textContent=t("midiBlocked"); notice(t("blocked")); }
+    midiDenied=false; bind(); acc.onstatechange=bind; notice("");
+  }catch(err){ midiDenied=true; $("midiBtn").classList.add("err"); $("midiTxt").textContent=t("midiBlocked"); notice(t("blocked")); if(midiOpen) renderMidiModal(); }
 }
 
 // ---------- Microphone pitch detection ----------
