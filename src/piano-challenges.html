@@ -3454,7 +3454,8 @@ async function enableMidi(){
 // ---------- Microphone pitch detection ----------
 let micOn=false;
 $("micBtn").addEventListener("click", async ()=>{
-  if(micOn) return; const c=audio(); if(!c) return;
+  if(micOn){ micStop(); renderInputUI(); return; } // toggle: a second click stops the microphone
+  const c=audio(); if(!c) return;
   try{
     const stream=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:false,noiseSuppression:false,autoGainControl:false}});
     const src=c.createMediaStreamSource(stream), an=c.createAnalyser(); an.fftSize=2048; src.connect(an);
