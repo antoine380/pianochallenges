@@ -1961,7 +1961,9 @@ document.addEventListener("keydown", e=>{
   if(document.body.classList.contains("drawer")){ if(e.code==="Escape") closeDrawer(); return; }
   if(openMods.length){ if(e.code==="Escape") closeMod(openMods[openMods.length-1]); return; }
   if(e.code==="Escape" && typesOpen){ closeTypes(); return; }
-  if(["rank","account","locked","settings","progress"].includes(page)) return;
+  // Play: only the note letters are forwarded to the frame (no host sound); other pages without an exercise ignore the keyboard
+  if(page==="play"){ const m=CODE_MAP[e.code]; if(m!=null && !e.repeat && !e.metaKey && !e.ctrlKey && !e.altKey) noteIn(fold(m)); return; }
+  if(!["practice","daily","games"].includes(page)) return;
   if(page==="games" && (e.code==="Space"||e.code==="Enter"||e.code==="Backspace")) return;
   if(e.code==="Space"){ e.preventDefault(); primaryAction(); return; }
   if(e.code==="Enter" && phase==="revealed"){ e.preventDefault(); grade(true); return; }
@@ -2094,7 +2096,7 @@ function followMidi(n){
 }
 // a C on the MIDI keyboard starts the game, continues after an answer, or starts a new game from the summary
 function midiStart(note){
-  if(note%12!==0 || ["games","rank","account","locked","settings","progress"].includes(page) || setOpen || openMods.length || helpOpen || midiOpen || S.settings.midiC===false) return false;
+  if(note%12!==0 || !(page==="practice"||page==="daily") || setOpen || openMods.length || helpOpen || midiOpen || S.settings.midiC===false) return false;
   if(page==="daily" && !game && !endOpen){ startDaily(); return true; }
   if(endOpen){ closeEnd(); if(page==="daily") return true; startRound(); return true; }
   if(phase==="idle" || phase==="success"){ startRound(); return true; }
@@ -2115,6 +2117,7 @@ function wrongNote(m){
 }
 function noteIn(m){
   if(page==="play"){ playSend("noteon",m); setTimeout(()=>playSend("noteoff",m),400); return; } // screen keyboard / mic: no release event, so release after 400 ms
+  if(!["practice","daily","games"].includes(page)) return; // no exercise on the other pages: nothing to feed
   if(helpOpen || setOpen || openMods.length) return;
   if(page==="games"){ pressKey(m); flashKey(m,"k-hit"); runnerNote(m); return; }
   if(endOpen) return;
