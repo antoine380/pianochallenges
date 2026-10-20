@@ -802,6 +802,14 @@ html.native .midi-body [data-i="midiHint"]{display:none}
 }
 /* Phone, portrait */
 @media (max-width:640px){
+  /* the drawer must fit a 667 px screen: tighter menu, level card, daily card and legal links */
+  .side{gap:7px}
+  .mode-nav{gap:5px} .mode-item{min-height:46px;padding:5px 10px;border-radius:12px} .mode-item .mi{width:32px;height:32px;border-radius:10px} .mode-item .mt b{font-size:.88rem}
+  .side .lvl-card{padding:7px 8px;gap:4px 10px} .lvl-av{width:40px;height:40px} .side .xp-txt{display:none}
+  .lvl-stats{gap:6px} .lvl-stats .stat{gap:5px} .stat-txt small{font-size:.62rem}
+  .side-daily{padding:5px 8px} .side-daily .dicon{width:30px;height:30px}
+  .side-foot{padding-top:5px;gap:0} .side .nav-item{min-height:34px;padding-block:3px}
+  .side-tools{margin-top:2px} .legal-links{margin:2px 10px 0;font-size:.66rem}
   .main{padding:12px 14px calc(96px + env(safe-area-inset-bottom, 0px))}
   .wrap{height:100%;gap:10px}
   .kbd-wrap{flex:0 1 230px;min-height:90px}
@@ -1425,7 +1433,8 @@ const TXT = {
     st:["Réussies","Sans faute","Révélées","Maîtrisées","Réussite"], practiseTip:"S'entraîner sur ", lockedTip:"Maîtrise une gamme de plus pour la débloquer",
     melDown:" · descend en Mineur",
     titles:["Curieux","Apprenti","Doigts agiles","Oreille fine","Harmoniste","Beatmaker","Producteur","Virtuose","Maestro"],
-    wrongSr:"Fausse note : "},
+    wrongSr:"Fausse note : ",
+    dailyShort:"Entraînement"},
   en:{help:"Help", helpTitle:"How it works", helpOk:"Let's go", tutNext:"Next", tutPrev:"Previous", close:"Close", stepOf:(i,n)=>"Step "+i+" of "+n,
     tut:[{h:"Read the challenge",p:"A scale, a chord or a progression appears with a countdown. Picture the notes in your head before the bar runs out."},
          {h:"Play it on your piano",p:"Scales from the root up to the octave, chords from their lowest note, progressions chord by chord. Digital piano (MIDI), acoustic piano (mic) or on-screen keys: each correct note fills a box. MIDI works in Chrome and Edge (not in Safari)."},
@@ -1541,7 +1550,8 @@ const TXT = {
     st:["Completed","Perfect","Revealed","Mastered","Success rate"], practiseTip:"Practise ", lockedTip:"Master one more scale to unlock it",
     melDown:" · descends as Minor",
     titles:["Curious","Apprentice","Nimble fingers","Sharp ear","Harmonist","Beatmaker","Producer","Virtuoso","Maestro"],
-    wrongSr:"Wrong note: "}
+    wrongSr:"Wrong note: ",
+    dailyShort:"Daily"}
 };
 const t = k => TXT[S.settings.lang][k];
 
@@ -2834,7 +2844,7 @@ function setNav(){
   $("side").dataset.mode=mode; $("modeNav").querySelectorAll("button").forEach(b=>mark(b,b.dataset.mode===mode));
   mark($("dailyCard"),page==="daily"); mark($("rankBtn"),page==="rank"); mark($("accountBtn"),page==="account"); mark($("setBtn"),page==="settings"); mark($("progBtn"),page==="progress");
   const pv = page==="practice"?S.section : page==="locked"?lockFor : page;
-  $("mbTitle").textContent = t({chords:"secChords",scales:"secScales",harmony:"secHarmony",prog:"secProg",ear:"secEar",games:"secGames",play:"secPlay",hub:"hub",learn:"learn",daily:"dailyTitle",rank:"secRank",account:"secAccount",settings:"settings",progress:"progress"}[pv]);
+  $("mbTitle").textContent = t({chords:"secChords",scales:"secScales",harmony:"secHarmony",prog:"secProg",ear:"secEar",games:"secGames",play:"secPlay",hub:"hub",learn:"learn",daily:narrowMQ.matches?"dailyShort":"dailyTitle",rank:"secRank",account:"secAccount",settings:"settings",progress:"progress"}[pv]);
   if(page==="locked"){ $("secTabs").querySelectorAll("button").forEach(b=>mark(b,b.dataset.v===lockFor)); mark($("dailyCard"),lockFor==="daily"); }
 }
 function applySide(){
