@@ -1523,7 +1523,11 @@ TYPES.forEach(ty=>{
 });
 const accSym = a => a===1?"♯":a===-1?"♭":a===2?"𝄪":a===-2?"𝄫":"";
 const nameIn = (n,not) => (not==="fr"?NAME_FR[n.l]:n.l)+accSym(n.a);
-const noteName = n => nameIn(n, S.settings.notation);
+// simple enharmonic of a double-altered note (F𝄪 → G, B𝄫 → A), in the current notation
+const PC_FR_B = ["Do","Ré♭","Ré","Mi♭","Mi","Fa","Sol♭","Sol","La♭","La","Si♭","Si"];
+const PC_EN_B = ["C","D♭","D","E♭","E","F","G♭","G","A♭","A","B♭","B"];
+const enhName = n => { const ni=NAT.indexOf(n.pc); if(ni>=0) return nameIn({l:LETTERS[ni],a:0,pc:n.pc}, S.settings.notation); return (S.settings.notation==="fr"?(n.a<0?PC_FR_B:PC_FR):(n.a<0?PC_EN_B:PC_EN))[n.pc]; };
+const noteName = n => { const s=nameIn(n, S.settings.notation); return Math.abs(n.a)>=2 ? s+" ("+enhName(n)+")" : s; };
 const tonicNote = tonic => spellIv(tonic,[0])[0];
 function scaleName(tid, tonic){
   const ty=TYPE[tid], lang=S.settings.lang;
