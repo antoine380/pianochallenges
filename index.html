@@ -2233,7 +2233,7 @@ function markNow(i){ [...$("slots").children].forEach((el,j)=>el.classList.toggl
 function reveal(auto){
   if(phase!=="listening") return;
   phase="revealed"; cancelAnimationFrame(raf); combo=0;
-  bumpStreak(); record(roundLevel(), null); save();
+  record(roundLevel(), null); save(); // no streak credit for a revealed answer
   revealDone=false; playScale(); showReveal();
   if(cur.sec==="ear") showEar(false,0);
   else showScore([seq.length-idx?(chSeq()?t("missedP"):t("missed"))(seq.length-idx):"", errors?t("errors")(errors):""]);
