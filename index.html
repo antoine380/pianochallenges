@@ -1954,8 +1954,18 @@ function buildKeyboard(){
   if(phase==="revealed") showReveal(true);
   else markPlayed();
 }
+function keyNames(){
+  // names of the 12 pitch classes: the notes of the current exercise keep their own spelling (E♭ major is written with flats),
+  // the other keys follow the key signature (flats in a flat key, sharps otherwise)
+  const not=S.settings.notation;
+  const notes=[]; if(cur && seq.length) seq.forEach(x=>{ if(x.notes) x.notes.forEach(n=>notes.push(n)); else if(x.pc!=null) notes.push(x); });
+  const flat = notes.some(n=>n.a<0) && !notes.some(n=>n.a>0);
+  const names=(not==="fr" ? (flat?PC_FR_B:PC_FR) : (flat?PC_EN_B:PC_EN)).slice();
+  notes.forEach(n=>{ names[n.pc] = Math.abs(n.a)>=2 ? enhName(n) : nameIn(n,not); }); // a double sharp / flat is labelled by the key it lands on
+  return names;
+}
 function labelKeys(){
-  const names=S.settings.notation==="fr"?PC_FR:PC_EN;
+  const names=keyNames();
   const full=kbFull();
   Object.entries(keyEls).forEach(([m,el])=>{ const pc=m%12; el.querySelector("span").textContent = pc===0 && full ? octName(+m) : (S.settings.labels||pc===0)?names[pc]:""; });
 }
@@ -2753,7 +2763,7 @@ function renderSettings(){
   renderTypes(); renderKeySel();
 }
 function render(){ document.body.classList.toggle("playing", !!game || phase!=="idle"); document.body.dataset.page=page; $("gamesPanel").hidden = page!=="games"; $("hubPanel").hidden = page!=="hub"; $("learnPanel").hidden = page!=="learn"; $("dailyPanel").hidden = page!=="daily"; $("rankPanel").hidden = page!=="rank"; $("accountPanel").hidden = page!=="account"; $("lockPanel").hidden = page!=="locked"; $("settingsPage").hidden = page!=="settings"; $("progressPage").hidden = page!=="progress"; renderDaily(); renderGameBar(); setNav();
-  if(phase==="idle"||phase==="listening") resetScore(); renderSession(); renderHint(); renderPrompt(); renderTimeline(); renderSlots(); renderActions(); renderStatus(); renderMap(); }
+  if(phase==="idle"||phase==="listening") resetScore(); renderSession(); renderHint(); renderPrompt(); renderTimeline(); renderSlots(); renderActions(); renderStatus(); renderMap(); labelKeys(); }
 
 // ---------- Settings wiring ----------
 $("langSeg").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return;
