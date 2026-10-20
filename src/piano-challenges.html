@@ -7,7 +7,7 @@
 /* Layout: one practice "track" — status strip, prompt + timeline, degree slots, keyboard, then progress map and settings. On phones the actions dock to the bottom edge. */
 :root{
   --bg:#eceef2; --surface:#ffffff; --surface-2:#f5f6f9; --ink:#161920; --muted:#5b6271; --line:#d4d8e0;
-  --accent:#b8740f; --accent-soft:#f6e6c9; --on-accent:#ffffff;
+  --accent:#9a600a; --accent-soft:#f6e6c9; --on-accent:#ffffff;
   --good:#1d7f55; --good-soft:#d5efe2; --bad:#bf3434; --bad-soft:#f7dada; --warn:#c25a0a; --warn-soft:#fbe3cf;
   --reveal:#3d62c4; --reveal-soft:#dfe6fa;
   --key-white:#fdfdfd; --key-white-edge:#c9ced8; --key-black:#1b1d23; --scrim:rgba(20,22,28,.45);
@@ -126,6 +126,7 @@ button:focus-visible, select:focus-visible, input:focus-visible, summary:focus-v
 .score-box{display:grid;grid-template-columns:auto auto;align-items:baseline;justify-content:space-between;column-gap:14px;row-gap:2px;min-width:200px;
   border:1px solid var(--line);background:var(--surface-2);border-radius:12px;padding:9px 14px;transition:background .3s,border-color .3s}
 .sb-label{font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
+.sb-miss{font-size:.68rem;margin-left:6px;padding:1px 7px;border-radius:999px;background:var(--bad-soft);color:var(--bad);vertical-align:1px;white-space:nowrap}
 .sb-val{font-family:var(--f-display);font-weight:800;font-size:1.6rem;line-height:1.1;text-align:right;color:var(--muted)}
 .sb-val .of{font-size:1rem;font-weight:700}
 .sb-detail{grid-column:1 / -1;font-size:.82rem;font-weight:700;min-height:1.3em;color:var(--muted)}
@@ -323,7 +324,7 @@ body{margin:0;padding:0;overflow:hidden}
 .nav-item[aria-current="page"]{background:var(--ink);color:var(--bg)}
 .side-nav{display:flex;flex-direction:column;gap:2px}
 /* Three modes, one color each: GAMES (green) / PLAY (violet) / LEARN (coral). The mode pages are tile grids in the Play style. */
-:root{--m-games:#3fae7c;--m-play:#7a5cf5;--m-learn:#f26a5e}
+:root{--m-games:#26805a;--m-play:#7a5bf5;--m-learn:#c9463c} /* white text ≥ 4.5:1 on each */
 .mode-nav{display:flex;flex-direction:column;gap:6px}
 .mode-item{display:flex;align-items:center;gap:12px;width:100%;border:1px solid var(--line);background:var(--surface);border-radius:14px;padding:8px 10px;text-align:left;color:var(--ink);min-height:56px}
 .mode-item .mi{width:38px;height:38px;border-radius:12px;background:var(--mc);color:#fff;display:grid;place-items:center;flex:none}
@@ -341,15 +342,15 @@ body{margin:0;padding:0;overflow:hidden}
 .ptile-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:14px}
 .ptile{display:flex;flex-direction:column;gap:10px;text-align:left;border:0;border-radius:24px;padding:16px 16px 18px;color:#fff;background:var(--tc,#555);min-width:0;transition:transform .15s;font-family:var(--f-body)}
 .ptile:hover{transform:translateY(-3px)}
-.ptile.soon{cursor:default;opacity:.65} .ptile.soon:hover{transform:none}
+.ptile.soon{cursor:default;filter:saturate(.3)} .ptile.soon:hover{transform:none} /* greyed, not translucent: the white text keeps its contrast */
 .ptile .art{aspect-ratio:16/9;max-width:100%;border-radius:12px;background:#111016;box-shadow:0 10px 26px #0005,inset 0 0 0 3px #26242e;display:grid;place-items:center;position:relative;overflow:hidden}
 .ptile .art::after{content:"";position:absolute;left:4%;right:4%;bottom:0;height:22%;background:repeating-linear-gradient(90deg,#2b2a31 0 calc(100%/14 - 2px),transparent 0 calc(100%/14));border-radius:3px 3px 0 0}
 .ptile .art svg{width:38%;height:38%;fill:none;stroke:#fff;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;filter:drop-shadow(0 0 16px var(--tc));position:relative;top:-6%}
-.ptile .pk{font-family:var(--f-mono);font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;opacity:.85}
-.ptile h3{margin:0;font-family:var(--f-display);font-weight:800;font-size:1.3rem;letter-spacing:-.015em;line-height:1.15}
-.ptile p{margin:0;font-size:.88rem;opacity:.92;line-height:1.4}
+.ptile .pk{font-family:var(--f-mono);font-size:.68rem;letter-spacing:.1em;text-transform:uppercase}
+.ptile .h3{display:block;margin:0;font-family:var(--f-display);font-weight:800;font-size:1.3rem;letter-spacing:-.015em;line-height:1.15}
+.ptile p{margin:0;font-size:.88rem;line-height:1.4}
 .ptile .go{margin-top:auto;align-self:flex-start;border-radius:999px;padding:8px 14px;background:#fff;color:#161920;font-family:var(--f-display);font-weight:700;font-size:.85rem;border:0}
-.ptile .rec{font-family:var(--f-mono);font-size:.78rem;opacity:.9}
+.ptile .rec{font-family:var(--f-mono);font-size:.78rem}
 /* Mode pages: hub, learn, games */
 [data-page="hub"] :is(.picker,.stage,.gamebar,.prompt-row,.timeline,.slots,.answers,.actions,.hint,.notice,.pane-head){display:none!important}
 [data-page="learn"] :is(.picker,.stage,.gamebar,.prompt-row,.timeline,.slots,.answers,.actions,.hint,.notice,.pane-head){display:none!important}
@@ -358,12 +359,54 @@ body{margin:0;padding:0;overflow:hidden}
 .mode-h h2{font-family:var(--f-display);font-weight:800;font-size:clamp(1.5rem,3vw,2.3rem);letter-spacing:-.025em;line-height:1.05;margin:0;text-wrap:balance}
 .mode-h p{margin:6px 0 0;color:var(--muted);max-width:62ch}
 .hub-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
-.hub-grid .ptile h3{font-size:1.7rem;letter-spacing:.06em}
-.hub-grid .ptile .tags{font-family:var(--f-mono);font-size:.72rem;opacity:.85;line-height:1.6}
+.hub-grid .ptile .h3{font-size:1.7rem;letter-spacing:.06em}
+.hub-grid .ptile .tags{font-family:var(--f-mono);font-size:.72rem;line-height:1.6}
 #gamesPanel .pane-head{display:none!important}
-.gc-head{margin:6px 0 0;font-family:var(--f-display);font-weight:800;font-size:1.05rem;display:flex;align-items:baseline;gap:10px}
+@media (min-width:1200px){ #gameCards{grid-template-columns:repeat(4,minmax(0,1fr))} #playCards{grid-template-columns:repeat(6,minmax(0,1fr))} }
+.gc-head{margin:6px 0 0;font-family:var(--f-display);font-weight:800;font-size:1.05rem;display:flex;flex-wrap:wrap;align-items:baseline;gap:2px 10px} .gc-head span{white-space:nowrap}
 .gc-head small{font-family:var(--f-body);font-weight:400;color:var(--muted);font-size:.84rem}
-@media (max-width:760px){.ptile-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px} .ptile-grid .ptile .art{display:none} .ptile-grid .ptile{padding:12px 12px 14px;gap:4px} .ptile-grid .ptile h3{font-size:1rem} .ptile-grid .ptile p{font-size:.76rem} .ptile-grid .ptile .go{padding:6px 11px;font-size:.78rem;margin-top:6px} .hub-grid{grid-template-columns:1fr;gap:10px} .mode-page.hub{justify-content:flex-start} .hub-grid .ptile .art{display:none} .hub-grid .ptile{padding:14px 16px;gap:4px} .hub-grid .ptile h3{font-size:1.3rem} .hub-grid .ptile .tags{display:none}}
+@media (max-width:760px){.ptile-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px} .ptile-grid .ptile .art{display:none} .ptile-grid .ptile{padding:12px 12px 14px;gap:4px} .ptile-grid .ptile .h3{font-size:1rem} .ptile-grid .ptile p{font-size:.76rem} .ptile-grid .ptile .go{padding:6px 11px;font-size:.78rem;margin-top:6px} .hub-grid{grid-template-columns:1fr;gap:10px} .mode-page.hub{justify-content:flex-start} .hub-grid .ptile .art{display:none} .hub-grid .ptile{padding:14px 16px;gap:4px} .hub-grid .ptile .h3{font-size:1.3rem} .hub-grid .ptile .tags{display:none}}
+/* Tablets and short screens (iPad 1024×768 and 768×1024, laptops 1280×800): compact tiles without the "screen" art, so Games and Learn fit on one screen */
+@media (max-height:820px), (max-width:900px){
+  .ptile-grid{grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:10px}
+  #learnTiles{grid-template-columns:repeat(3,minmax(0,1fr))}
+  #gameCards{grid-template-columns:repeat(4,minmax(0,1fr))}
+  #playCards{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .ptile-grid .ptile .art{display:none}
+  .ptile-grid .ptile{padding:12px 14px 14px;gap:5px;border-radius:18px}
+  .ptile-grid .ptile .pk{font-size:.62rem}
+  .ptile-grid .ptile .h3{font-size:1.05rem}
+  .ptile-grid .ptile p{font-size:.78rem;line-height:1.35}
+  .ptile-grid .ptile .rec{font-size:.72rem}
+  .ptile-grid .ptile .go{padding:6px 12px;font-size:.78rem;margin-top:6px}
+  .mode-page{gap:12px;padding-block:2px 6px}
+  .mode-h p{margin-top:4px;font-size:.92rem}
+  .gc-head{margin:2px 0 -2px}
+}
+@media (max-height:820px) and (min-width:900px){ #playCards{grid-template-columns:repeat(6,minmax(0,1fr))} }
+/* Phones, portrait: name + record + button only */
+@media (max-width:640px){
+  #learnTiles,#gameCards,#playCards{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .ptile-grid .ptile :is(.pk,p,.go){display:none}
+  .ptile-grid .ptile{padding:10px 12px 12px;gap:3px;min-height:58px;justify-content:center}
+  .gc-head{margin:0;font-size:.95rem} .gc-head small{display:none}
+  .mode-h p{display:none}
+  .mode-page{gap:10px;padding-block:0}
+}
+/* Phones held sideways (812×375): even tighter, the hub is a row of three */
+@media (max-height:420px) and (orientation:landscape){
+  .mode-h h2{font-size:1.2rem} .mode-h p{display:none}
+  .mode-page{gap:6px;padding-block:0}
+  .ptile-grid{gap:8px}
+  #learnTiles{grid-template-columns:repeat(3,minmax(0,1fr))} #gameCards{grid-template-columns:repeat(4,minmax(0,1fr))} #playCards{grid-template-columns:repeat(6,minmax(0,1fr))}
+  .ptile-grid .ptile{padding:8px 10px 9px;gap:2px;border-radius:14px}
+  .ptile-grid .ptile :is(.pk,p,.rec:not(:last-child),.go){display:none}
+  .ptile-grid .ptile{min-height:44px;justify-content:center}
+  .ptile-grid .ptile .h3{font-size:.9rem}
+  .gc-head{margin:0;font-size:.9rem}
+  .hub-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+  .hub-grid .ptile .art{display:none} .hub-grid .ptile{padding:10px 12px;gap:3px} .hub-grid .ptile .h3{font-size:1.1rem} .hub-grid .ptile .tags{display:none} .hub-grid .ptile p{font-size:.74rem}
+}
 .side .lvl-card{margin-top:auto}
 .side-foot{display:flex;flex-direction:column;gap:2px;padding-top:10px;border-top:1px solid var(--line)}
 /* collapsed rail */
@@ -454,7 +497,7 @@ body{margin:0;padding:0;overflow:hidden}
 .acct-login p{margin:4px 0 14px;color:var(--muted);font-size:.9rem}
 .login-btns{display:flex;flex-direction:column;gap:8px}
 .login-btns button{display:flex;align-items:center;justify-content:space-between;gap:10px;border:1px solid var(--line);background:var(--surface-2);border-radius:10px;padding:11px 14px;font-weight:700;cursor:not-allowed;color:var(--ink)}
-.login-btns button small{font-family:var(--f-mono);font-size:.66rem;text-transform:uppercase;letter-spacing:.08em;color:var(--accent);background:var(--accent-soft);border-radius:999px;padding:1px 7px;font-weight:500}
+.login-btns button small{font-family:var(--f-mono);font-size:.66rem;text-transform:uppercase;letter-spacing:.08em;color:var(--accent);background:var(--surface-2);border:1px solid var(--line);border-radius:999px;padding:1px 7px;font-weight:500}
 .acct-login form{display:flex;flex-direction:column;gap:8px;margin-bottom:12px}
 .acct-login input[type=email],.acct-login input[type=text],.acct-login input[inputmode=numeric]{font:inherit;color:var(--ink);background:var(--surface-2);border:1px solid var(--line);border-radius:10px;padding:10px 12px;width:100%}
 .acct-login input:focus{outline:2px solid var(--accent);outline-offset:1px}
@@ -512,11 +555,6 @@ body.runner-on .free-lbl{display:none!important}
 .lock-ic{width:56px;height:56px;border-radius:16px;background:var(--accent-soft);display:grid;place-items:center}
 .lock-ic svg{width:28px;height:28px;fill:none;stroke:var(--accent);stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
 [data-page="locked"] :is(.picker,.stage){display:none!important}
-body.guest #secTabs [data-v="games"]::after, body.guest #dailyCard .lbl b::after{content:"";display:inline-block;width:14px;height:14px;margin-left:auto;flex:none;opacity:.6;background:currentColor;
-  -webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect x='5' y='10.5' width='14' height='10' rx='2.5'/%3E%3Cpath d='M8 10.5V7.8a4 4 0 0 1 8 0v2.7' fill='none' stroke='black' stroke-width='2.4'/%3E%3C/svg%3E") center/contain no-repeat;
-  mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect x='5' y='10.5' width='14' height='10' rx='2.5'/%3E%3Cpath d='M8 10.5V7.8a4 4 0 0 1 8 0v2.7' fill='none' stroke='black' stroke-width='2.4'/%3E%3C/svg%3E") center/contain no-repeat}
-body.guest #dailyCard .lbl b::after{margin-left:6px;vertical-align:-2px}
-.side.collapsed #secTabs [data-v="games"]::after{display:none}
 /* Mobile web (no app): no MIDI on phones, only the mic */
 @media (max-width:640px), (max-height:520px) and (orientation:landscape){
   html:not(.native) :is(.inputs .pill-group, .inputs > .pill.on, #midiCfg2){display:none!important}
@@ -620,6 +658,8 @@ body.guest #dailyCard .lbl b::after{margin-left:6px;vertical-align:-2px}
   body.playing .dtl li::before{top:11px}
 }
 [data-page="daily"] .picker{display:none}
+/* Daily practice: the exercise area only appears once the practice has started */
+body[data-page="daily"]:not(.playing) .stage{display:none!important}
 [data-page="rank"] :is(.picker,.stage), [data-page="account"] :is(.picker,.stage){display:none!important}
 
 /* App launch animation (iOS app only) */
@@ -729,6 +769,14 @@ html.native .midi-body [data-i="midiHint"]{display:none}
 }
 /* Phone, portrait */
 @media (max-width:640px){
+  /* the drawer must fit a 667 px screen: tighter menu, level card, daily card and legal links */
+  .side{gap:7px}
+  .mode-nav{gap:5px} .mode-item{min-height:46px;padding:5px 10px;border-radius:12px} .mode-item .mi{width:32px;height:32px;border-radius:10px} .mode-item .mt b{font-size:.88rem}
+  .side .lvl-card{padding:7px 8px;gap:4px 10px} .lvl-av{width:40px;height:40px} .side .xp-txt{display:none}
+  .lvl-stats{gap:6px} .lvl-stats .stat{gap:5px} .stat-txt small{font-size:.62rem}
+  .side-daily{padding:5px 8px} .side-daily .dicon{width:30px;height:30px}
+  .side-foot{padding-top:5px;gap:0} .side .nav-item{min-height:34px;padding-block:3px}
+  .side-tools{margin-top:2px} .legal-links{margin:2px 10px 0;font-size:.66rem}
   .main{padding:12px 14px calc(96px + env(safe-area-inset-bottom, 0px))}
   .wrap{height:100%;gap:10px}
   .kbd-wrap{flex:0 1 230px;min-height:90px}
@@ -916,14 +964,16 @@ html.native .midi-body [data-i="midiHint"]{display:none}
     <div class="mode-h"><h2 data-i="gamesTitle"></h2><p data-i="gamesSub"></p></div>
     <div class="pane-head"><div><h2 class="ph-title"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2.5" y="7" width="19" height="11" rx="5.5"/><path d="M7.5 10.5v4M5.5 12.5h4"/><circle cx="15.5" cy="11.2" r=".9"/><circle cx="17.8" cy="13.8" r=".9"/></svg><span data-i="gamesTitle"></span></h2><p data-i="gamesSub"></p></div><button class="how-btn" type="button" data-intro="games"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v5.5"/><circle cx="12" cy="7.8" r=".6"/></svg><span data-i="howBtn"></span></button></div>
     <div class="ptile-grid" id="gameCards"></div>
+    <p class="gc-head" id="playHead"><span></span><small></small></p>
+    <div class="ptile-grid play" id="playCards"></div>
   </section>
 
   <section class="mode-page hub" id="hubPanel" hidden>
     <div class="mode-h"><h2 data-i="hubTitle"></h2><p data-i="hubSub"></p></div>
     <div class="hub-grid">
-      <button class="ptile" type="button" data-mode="games" style="--tc:var(--m-games)"><span class="art"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2.5" y="7" width="19" height="11" rx="5.5"/><path d="M7.5 10.5v4M5.5 12.5h4"/><circle cx="15.5" cy="11.2" r=".9"/><circle cx="17.8" cy="13.8" r=".9"/></svg></span><h3>GAMES</h3><p data-i="hubGames"></p><span class="tags" data-i="hubGamesTags"></span></button>
-      <button class="ptile" type="button" data-mode="play" style="--tc:var(--m-play)"><span class="art"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.5l12 7.5-12 7.5z"/></svg></span><h3>PLAY</h3><p data-i="hubPlay"></p><span class="tags" data-i="hubPlayTags"></span></button>
-      <button class="ptile" type="button" data-mode="learn" style="--tc:var(--m-learn)"><span class="art"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6.5A2.5 2.5 0 0 1 6.5 4H11v16H6.5A2.5 2.5 0 0 0 4 22zM20 6.5A2.5 2.5 0 0 0 17.5 4H13v16h4.5A2.5 2.5 0 0 1 20 22z"/></svg></span><h3>LEARN</h3><p data-i="hubLearn"></p><span class="tags" data-i="hubLearnTags"></span></button>
+      <button class="ptile" type="button" data-mode="games" style="--tc:var(--m-games)"><span class="art"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2.5" y="7" width="19" height="11" rx="5.5"/><path d="M7.5 10.5v4M5.5 12.5h4"/><circle cx="15.5" cy="11.2" r=".9"/><circle cx="17.8" cy="13.8" r=".9"/></svg></span><span class="h3">GAMES</span><p data-i="hubGames"></p><span class="tags" data-i="hubGamesTags"></span></button>
+      <button class="ptile" type="button" data-mode="play" style="--tc:var(--m-play)"><span class="art"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.5l12 7.5-12 7.5z"/></svg></span><span class="h3">PLAY</span><p data-i="hubPlay"></p><span class="tags" data-i="hubPlayTags"></span></button>
+      <button class="ptile" type="button" data-mode="learn" style="--tc:var(--m-learn)"><span class="art"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6.5A2.5 2.5 0 0 1 6.5 4H11v16H6.5A2.5 2.5 0 0 0 4 22zM20 6.5A2.5 2.5 0 0 0 17.5 4H13v16h4.5A2.5 2.5 0 0 1 20 22z"/></svg></span><span class="h3">LEARN</span><p data-i="hubLearn"></p><span class="tags" data-i="hubLearnTags"></span></button>
     </div>
   </section>
 
@@ -933,7 +983,7 @@ html.native .midi-body [data-i="midiHint"]{display:none}
   </section>
 
   <section class="playpanel" id="playPanel" hidden>
-    <iframe id="playFrame" title="Play" tabindex="-1"></iframe>
+    <iframe id="playFrame" title="Play"></iframe>
   </section>
 
   <section class="runner" id="runner" hidden>
@@ -994,6 +1044,7 @@ html.native .midi-body [data-i="midiHint"]{display:none}
   </section>
 
   <section class="stage" id="stage" aria-live="polite">
+    <span class="sr-only" id="srNote"></span>
     <div class="gamebar" id="gamebar">
       <span class="glbl" id="gameLbl"></span>
       <select class="timer-sel" id="timerSel" aria-label="Timer"></select>
@@ -1011,7 +1062,7 @@ html.native .midi-body [data-i="midiHint"]{display:none}
       </div>
       <div class="score-col">
         <div class="score-box" id="feedback">
-          <span class="sb-label" id="sbLabel"></span>
+          <span class="sb-label" id="sbLabel"></span><span class="sb-miss mono" id="sbMiss" hidden></span>
           <span class="sb-val mono" id="sbVal"></span>
           <span class="sb-detail" id="sbDetail"></span>
         </div>
@@ -1235,17 +1286,17 @@ html.native .midi-body [data-i="midiHint"]{display:none}
 // ---------- Text ----------
 const TXT = {
   fr:{help:"Aide", helpTitle:"Comment ça marche", helpOk:"C'est parti", tutNext:"Suivant", tutPrev:"Précédent", close:"Fermer", stepOf:(i,n)=>"Étape "+i+" sur "+n,
-    tut:[{h:"Lisez la consigne",p:"Une gamme, un accord ou une progression s'affiche avec un compte à rebours. Visualisez les notes dans votre tête avant que la barre ne se vide."},
-         {h:"Jouez sur votre piano",p:"Les gammes de la tonique à l'octave, les accords en partant de leur note la plus grave, les progressions accord après accord. Piano numérique (MIDI), piano acoustique (micro) ou clavier à l'écran : chaque bonne note remplit une case. Le MIDI marche dans Chrome et Edge (pas dans Safari)."},
-         {h:"Temps écoulé : la réponse",p:"La réponse s'allume en bleu et se joue. Cliquez sur « Continuer » pour passer à la suite, ou sur « Réessayer » pour retenter tout de suite."},
-         {h:"Progressez et débloquez",p:"Chaque réussite sans faute remplit une jauge : 3 crans débloquent la tonalité suivante, et chaque niveau ouvre de nouveaux contenus. L'onglet Oreille se joue sans piano : écoutez et choisissez la réponse."}],
+    tut:[{h:"Lis la consigne",p:"Une gamme, un accord ou une progression s'affiche avec un compte à rebours. Visualise les notes dans ta tête avant que la barre ne se vide."},
+         {h:"Joue sur ton piano",p:"Les gammes de la tonique à l'octave, les accords en partant de leur note la plus grave, les progressions accord après accord. Piano numérique (MIDI), piano acoustique (micro) ou clavier à l'écran : chaque bonne note remplit une case. Le MIDI marche dans Chrome et Edge (pas dans Safari)."},
+         {h:"Temps écoulé : la réponse",p:"La réponse s'allume en bleu et se joue. Clique sur « Continuer » pour passer à la suite, ou sur « Réessayer » pour retenter tout de suite."},
+         {h:"Progresse et débloque",p:"Chaque réussite sans faute remplit une jauge : 3 crans débloquent la tonalité suivante, et chaque niveau ouvre de nouveaux contenus. L'onglet Oreille se joue sans piano : écoute et choisis la réponse."}],
     svg:{count:"compte à rebours", mic:"Micro", screen:"Écran", unlocked:"débloquée", types:"+ penta, blues…"},
     gameLen:"Exercices par partie", exercise:"Exercice", gameOf:n=>"Partie de "+n+" exercices", endlessLbl:"Partie libre", endGame:"Terminer la partie",
-    dailyTitle:"Entraînement du jour", dailySub:(n,d)=>n+" exercices · "+(d?d+" à revoir · ":"")+"environ 5 min", dailyDone:s=>"Fait aujourd'hui ✓ · "+s+" sans faute. Revenez demain !",
+    dailyTitle:"Entraînement du jour", dailySub:(n,d)=>n+" exercices · "+(d?d+" à revoir · ":"")+"environ 5 min",
     dailyStart:"Démarrer", dailyAgain:"Refaire", dailyLbl:"Entraînement du jour",
     endTitle:"Partie terminée !", endDaily:"Entraînement du jour terminé !", perfectN:"sans faute", warnN:"avec 1 à 3 fautes", badN:"avec plus de 3 fautes",
     accuracy:"Précision", avgTime:"Temps moyen", xpWon:"XP gagnés", bestCombo:"Meilleur combo", toRework:"À retravailler", allPerfect:"Aucune erreur, bravo !",
-    reworkBtn:"Retravailler mes erreurs", newGame:"Nouvelle partie", closeLbl:"Fermer", outOf:"exercices sans faute", nextReview:"Prochaine révision : ", tomorrow:"demain", inDays:n=>"dans "+n+" jours",
+    reworkBtn:"Retravailler mes erreurs", newGame:"Nouvelle partie", closeLbl:"Fermer", outOf:"exercices sans faute", tomorrow:"demain",
     secHarmony:"Harmonie", secProg:"Progressions", secEar:"Oreille", secGames:"Jeux", secPlay:"Play", hub:"Accueil", learn:"Learn", learnTitle:"Qu'est-ce qu'on travaille ?", learnSub:"Choisis une matière : les exercices se jouent sur ton piano et sont corrigés note par note.", learnTiles:[["chords","Accords","Majeurs, mineurs, renversements, accords de 7e."],["scales","Gammes","Majeures, mineures, pentatoniques, en notes ou en accords."],["harmony","Harmonie","Les degrés d'une tonalité et leurs accords."],["prog","Progressions","Les enchaînements d'accords des chansons."],["ear","Oreille","Reconnais intervalles et accords à l'écoute."],["daily","Entraînement du jour","10 exercices mélangés, environ 5 minutes."]], modeLearnSub:"Théorie et exercices", modePlaySub:"Morceaux en cascade", modeGamesSub:"Mini-jeux", hubTitle:"Qu'est-ce qu'on joue aujourd'hui ?", hubSub:"Trois façons de progresser au piano. Tu peux changer à tout moment depuis le menu.", hubLearn:"Accords, gammes, harmonie, progressions et oreille, avec des exercices corrigés note par note.", hubPlay:"Des morceaux qui tombent sur le clavier, à ta vitesse, avec les doigtés. Le morceau t'attend si tu te trompes.", hubGames:"Des mini-jeux courts pour repérer les notes, tenir le tempo, lire une portée ou tendre l'oreille.", hubLearnTags:"Accords · Gammes · Harmonie · Progressions · Oreille · Entraînement du jour", hubPlayTags:"Cascade 3D · Mode attente · Vitesse · Noms des notes · Doigtés", hubGamesTags:"Saute-notes · Contre la montre · Mémoire · Note Runner · Rythme Pulse · Accord Blaster · Gamme Climber · Oreille d'Or · Partition Express", playGamesHead:"Jeux Play", playGamesSub:"Sur le clavier lumineux, avec les notes qui tombent", playGames:[["Note Runner","Saute les obstacles en jouant la note écrite dessus.","runner"],["Rythme Pulse","Frappe au moment exact où le cercle touche la cible.","pulse"],["Accord Blaster","Joue l'accord affiché pour détruire l'astéroïde.","blaster"],["Gamme Climber","Grimpe la tour en jouant la gamme sans faute.","climber"],["Oreille d'Or","Écoute une note ou une mélodie, puis rejoue-la.","ear"],["Partition Express","Lis les notes qui arrivent sur la portée.","staff"]], secRank:"Classement", secAccount:"Profil",
     inTitle:"Comment vas-tu jouer ?", secInter:"Interaction", secGame:"Réglages de jeu", periods:{day:"Jour",week:"Semaine",month:"Mois",year:"Année",all:"Depuis le début"}, rankEmptyP:"Personne n'a encore gagné d'XP sur cette période. À toi de jouer !", pcSolved:n=>n+" réussis", inChange:"Mode de jeu", leaveTitle:"Quitter l'entraînement du jour ?", leaveSub:"Tu es en cours. Si tu quittes, cet entraînement s'arrête et il faudra le recommencer.", leaveStay:"Continuer l'entraînement", leaveGo:"Quitter", dcStart:"Démarrer l'entraînement", inMidiApp:"Un clavier MIDI ? Sur iPhone et iPad, il faut l'app Piano Challenges (le navigateur ne gère pas le MIDI).", midiDone:"Terminer la configuration", midiSetupNeed:"Branche ton clavier en USB ou cherche-le en Bluetooth : il doit apparaître dans la liste pour continuer.", midiSetupOk:"Clavier détecté ! Joue quelques notes pour vérifier, puis termine la configuration.", backPlay:"← Retour", lockGuest:"Continuer sans compte pour l'instant", inSub:"Choisis une fois pour toutes. Tu pourras changer dans les Réglages.", inLbl:"Je joue avec",
     inModes:{screen:["Le clavier à l'écran","Touche les notes à l'écran, ou utilise le clavier de l'ordinateur.","Écran"],midi:["Mon clavier MIDI","Branché en USB ou connecté en Bluetooth. Le plus précis.","MIDI"],mic:["Mon piano, avec le micro","Pour un piano acoustique : l'app écoute les notes que tu joues.","Micro"]},
@@ -1260,7 +1311,7 @@ const TXT = {
     legalNotice:"Mentions légales", privacy:"Confidentialité", consent:"En te connectant, tu acceptes la politique de confidentialité.",
     charMore:"Niveaux", charTitle:"Les niveaux",
     charSub:(nx,left)=>nx?"Encore "+left+" XP pour atteindre le "+nx+".":"Tu as atteint le niveau le plus haut. Bravo !",
-    charAt:(L,xp)=>"Niveau "+L+" · "+xp+" XP", charGot:"Débloqué ✓",
+    charGot:"Débloqué ✓",
     chars:[["Mimi","la souris","Curieuse"],["Piou","le moineau","Apprenti"],["Tika","la chatte","Doigts agiles"],["Lou","le lapin","Oreille fine"],["Hector","le hibou","Harmoniste"],["Rocco","le raton laveur","Beatmaker"],["Fenn","le renard","Producteur"],["Bao","le panda","Virtuose"],["Léon","le lion","Maestro"],["Draco","le dragon","Légende"]],
     howBtn:"Comment ça marche", introGo:"C'est parti",
     intro:{
@@ -1271,26 +1322,25 @@ const TXT = {
       ear:["L'oreille",["Écoute ce qui est joué : un <b>accord</b>, un <b>intervalle</b> ou une <b>gamme</b>.","Choisis la bonne réponse parmi les propositions. Tu peux réécouter autant que tu veux (Espace).","Les catégories se débloquent avec les niveaux."]],
       games:["Les jeux",["<b>Saute-notes</b> : tu es un piano qui court. Au-dessus de chaque croche est écrit un accord.","Joue cet accord, de préférence quand la note passe dans le <b>cercle</b> (bonus « Parfait ! ») : le piano saute tout seul. Les touches de l'accord s'allument sur le clavier si l'aide est activée.","Joue un <b>{C}</b> pour démarrer ou rejouer. D'autres jeux arrivent bientôt."]],
       daily:["L'entraînement du jour",["Chaque jour, <b>10 exercices</b> mélangés, pris dans toutes les sections.","Les exercices ratés <b>reviennent</b> les jours suivants (répétition espacée) jusqu'à ce qu'ils soient acquis.","La <b>frise</b> en haut montre ton avancée. Va jusqu'au bout pour garder ta série."]]},
-    secShort:{scales:"Gamme",chords:"Accord",harmony:"Harmonie",prog:"Progression",ear:"Oreille"},
     dpSubTxt:(d,n,due)=>d+" · "+n+" exercices"+(due?" · "+due+" à revoir":""),
-    dpRun:(i,n)=>"Exercice "+i+" sur "+n, dpDone:s=>"Terminé aujourd'hui · "+s+" sans faute", dpFinish:"Fin", dpHidden:"?",
+    dpRun:(i,n)=>"Exercice "+i+" sur "+n, dpDone:s=>"Terminé aujourd'hui · "+s+" sans faute", dpFinish:"Fin",
     rankSub:"Compare ton XP, ta série et tes records avec les autres joueurs.",
     rankCta:"Crée ton compte gratuit pour entrer dans le classement et garder tes scores sur tous tes appareils.",
     loginBtn:"Se connecter", you:"Toi",
     acctSub:"Ta progression est enregistrée sur cet appareil.",
-    loginTitle:"Créer un compte", loginSub:"Bientôt : connecte-toi pour sauvegarder ta progression, la retrouver sur ordinateur, iPhone et iPad, et entrer dans le classement.",
-    loginWith:p=>"Continuer avec "+p, loginMail:"Continuer avec un e-mail",
+    loginTitle:"Créer un compte",
+    loginWith:p=>"Continuer avec "+p,
     loginReady:"Crée ton compte gratuit, ou connecte-toi :",
     emailPh:"ton@email.fr", sendCode:"Recevoir un code", codeSent:e=>"Code envoyé à "+e+" (regarde aussi les spams). Entre-le ci-dessus, ou clique sur le lien du mail.", codePh:"Code à 6 chiffres", verify:"Valider", changeMail:"Changer d'e-mail",
-    orLbl:"ou", appSoon:"Bientôt dans l'app", signedAs:e=>"Connecté : "+e, logout:"Se déconnecter", nameLbl:"Nom affiché (prénom et nom, visible dans le classement)", saveLbl:"Enregistrer", saved:"Enregistré ✓",
+    orLbl:"ou", signedAs:e=>"Connecté : "+e, logout:"Se déconnecter", nameLbl:"Nom affiché (prénom et nom, visible dans le classement)", saveLbl:"Enregistrer", saved:"Enregistré ✓",
     cloudErr:"Connexion au serveur impossible pour l'instant.", badCode:"Code incorrect ou expiré.", tooMany:"Trop de tentatives, réessaie dans quelques minutes.", mailFail:"L'e-mail n'a pas pu partir pour l'instant. Réessaie dans un moment, ou connecte-toi avec Google.",
     synced:"Progression sauvegardée en ligne ✓", rankEmpty:"Personne n'est encore classé. Connecte-toi pour être le premier !", rankErr:"Classement indisponible pour l'instant.", rankLoading:"Chargement…",
     rankSubIn:"Classement général par XP. Ton score se met à jour tout seul.",
     acctXp:"XP au total", acctStreak:"Série", acctDone:"Exercices réussis", acctLevel:"Niveau",
     collapse:"Réduire le menu", expand:"Agrandir le menu",
-    gamesTitle:"Jeux", gamesSub:"Des défis au piano pour jouer plus vite et plus juste. Choisis un jeu, ou joue librement sur le piano en dessous.",
+    gamesTitle:"Jeux", gamesSub:"Des défis au piano pour jouer plus vite et plus juste. Choisis un jeu : chaque partie se joue sur ton clavier.",
     freePlay:"Jeu libre", soon:"Bientôt",
-    rnName:"Saute-notes", rnDesc:"Tu es un piano ! Joue l'accord affiché pour sauter par-dessus les croches et les doubles croches.", rnPlay:"Jouer", rnQuit:"Quitter",
+    rnName:"Saute-notes", rnPlay:"Jouer", rnQuit:"Quitter",
     get rnStart(){ return "Joue un "+CNAME()+" pour démarrer"; },
     gmDiffL:"Difficulté", gmContL:"Jouer", gmDiffs:{prog:"Progressive",slow:"Lent",mid:"Moyen",fast:"Rapide"}, gmConts:{chords:"Des accords",notes:"Des notes"},
     gmTap:"Touche ici pour démarrer.", gmReady:"Prêt ?", gmOver:"Terminé !", gmChord:"Accord à jouer", gmNote:"Note à jouer",
@@ -1298,37 +1348,37 @@ const TXT = {
     mmName:"Mémoire musicale", mmHow:"Écoute, regarde les touches s'allumer, puis rejoue la suite.", mmListen:"Écoute…", mmYou:"À toi !", mmGood:"Bravo ! Une de plus…", mmRound:n=>"Tour "+n, mmDone:n=>n+" tour"+(n>1?"s":"")+" réussi"+(n>1?"s":"")+".", rnPerfect:"Parfait !", rnHelpLbl:"Montrer les notes", rnTap:"Touche le jeu pour démarrer", rnOverShort:"Aïe !", rnHow:"Joue l'accord écrit au-dessus de la note quand elle passe dans le cercle", get rnOver(){ return "Aïe ! Joue un "+CNAME()+" pour rejouer"; }, rnBestL:"Record", rnNew:"Nouveau record !",
     games:[["Saute-notes","Tu es un piano ! Joue l'accord (ou la note) affiché pour sauter par-dessus les croches.","runner"],["Contre la montre","Joue un maximum d'accords (ou de notes) avant la fin du chrono.","speed"],["Mémoire musicale","Écoute une suite de notes ou d'accords, puis rejoue-la. Elle s'allonge à chaque tour.","memory"],["Défi du jour","Le même défi chronométré pour tout le monde, avec un classement."]],
     degrees:"Degrés travaillés", optVL:"Enchaîner avec les renversements les plus proches", practiseH:"Tonalités travaillées", practiseP:"Progressions travaillées", practiseE:"Catégories travaillées",
-    chordOfKey:"Accord de la tonalité", ofKey:" de ", inKey:"en ", progLbl:"Progression", vlOn:"renversements les plus proches", listenLbl:"Écoutez",
-    idleSubH:"Trouvez l'accord demandé dans la tonalité, et jouez-le en partant de sa fondamentale.",
-    idleSubP:"Jouez les accords de la progression l'un après l'autre (plaqués en MIDI, ou note par note).",
-    idleSubE:"Écoutez et trouvez ce que vous entendez. Pas besoin de piano.",
+    chordOfKey:"Accord de la tonalité", ofKey:" de ", inKey:"en ", progLbl:"Progression", vlOn:"renversements les plus proches", listenLbl:"Écouter",
+    idleSubH:"Trouve l'accord demandé dans la tonalité, et joue-le en partant de sa fondamentale.",
+    idleSubP:"Joue les accords de la progression l'un après l'autre (plaqués en MIDI, ou note par note).",
+    idleSubE:"Écoute et trouve ce que tu entends. Pas besoin de piano.",
     replayH:"Écouter l'accord", replayP:"Écouter la progression", replayE:"Réécouter",
     correctP:"accords justes", correctE:"bonnes réponses", whichE:{int:"Quel intervalle ?",chord:"Quel accord ?",scale:"Quelle gamme ?"},
     itemsWordH:n=>n+" accord"+(n>1?"s":""), itemsWordP:n=>n+" progression"+(n>1?"s":""), itemsWordE:n=>n+" question"+(n>1?"s":""),
-    lockedHintH:n=>"Remplissez les jauges des degrés d'une tonalité pour débloquer la suivante. Encore "+n+" à découvrir.",
-    lockedHintP:n=>"Réussissez 3 fois une progression sans faute pour débloquer la tonalité suivante. Encore "+n+" à découvrir.",
+    lockedHintH:n=>"Remplis les jauges des degrés d'une tonalité pour débloquer la suivante. Encore "+n+" à découvrir.",
+    lockedHintP:n=>"Réussis 3 fois une progression sans faute pour débloquer la tonalité suivante. Encore "+n+" à découvrir.",
     typeLockedH:l=>"Ces tonalités s'ouvrent au niveau "+l+".", typeLockedP:l=>"Cette progression s'ouvre au niveau "+l+".", typeLockedE:l=>"Cette catégorie s'ouvre au niveau "+l+".",
-    earHint:"Touchez une case pour écouter un exemple.", right:"Bonne réponse !", wrong:"Réponse : ", answerLbl:"Réponse",
+    earHint:"Touche une case pour écouter un exemple.", right:"Bonne réponse !", wrong:"Réponse : ", answerLbl:"Réponse",
     get kbdHintE(){ return "Clavier d'ordinateur : rangée Q S D F G H J K pour jouer des notes. Espace : réécouter · Entrée (ou un "+CNAME()+" au clavier MIDI) : continuer · ⌫ : réessayer."; }, playSound:"Écouter",
     intNames:{m2:"Seconde mineure",M2:"Seconde majeure",m3:"Tierce mineure",M3:"Tierce majeure",P4:"Quarte juste",TT:"Triton",P5:"Quinte juste",m6:"Sixte mineure",M6:"Sixte majeure",m7:"Septième mineure",M7:"Septième majeure",P8:"Octave"},
     intShort:{m2:"2m",M2:"2M",m3:"3m",M3:"3M",P4:"4J",TT:"Triton",P5:"5J",m6:"6m",M6:"6M",m7:"7m",M7:"7M",P8:"8ve"},
     secScales:"Gammes", secChords:"Accords", inversions:"Renversements", chordToPlay:"Accord à jouer",
-    idleSubC:"Jouez l'accord en partant de sa note la plus grave : plaqué (MIDI) ou note par note.", replayC:"Écouter l'accord",
-    practiseS:"Gammes travaillées", replaySC:"Écouter les accords", idleSubSC:"Jouez les accords de la gamme l'un après l'autre, du Ier au VIIe degré (plaqués en MIDI, ou note par note).", scModeLbl:"Jouer", scNotes:"Notes", scChords:"Accords", optSc7:"Accords de 7e", scChordsOf:" · accords", scChordsLbl:"Accords de la gamme", chordsN:n=>n+" accord"+(n>1?"s":""), practiseC:"Accords travaillés", chordsWord:n=>n+" accord"+(n>1?"s":""), newChord:"Nouvel accord : ",
-    lockedHintC:n=>"Réussissez 3 fois un accord sans faute pour débloquer la fondamentale suivante. Encore "+n+" à découvrir.",
-    typeLockedC:l=>"Ce type d'accord s'ouvre au niveau "+l+".", lockedTipC:"Maîtrisez un accord de plus pour le débloquer",
+    idleSubC:"Joue l'accord en partant de sa note la plus grave : plaqué (MIDI) ou note par note.", replayC:"Écouter l'accord",
+    practiseS:"Gammes travaillées", replaySC:"Écouter les accords", idleSubSC:"Joue les accords de la gamme l'un après l'autre, du Ier au VIIe degré (plaqués en MIDI, ou note par note).", scModeLbl:"Jouer", scNotes:"Notes", scChords:"Accords", optSc7:"Accords de 7e", scChordsOf:" · accords", scChordsLbl:"Accords de la gamme", chordsN:n=>n+" accord"+(n>1?"s":""), practiseC:"Accords travaillés", newChord:"Nouvel accord : ",
+    lockedHintC:n=>"Réussis 3 fois un accord sans faute pour débloquer la fondamentale suivante. Encore "+n+" à découvrir.",
+    typeLockedC:l=>"Ce type d'accord s'ouvre au niveau "+l+".", lockedTipC:"Maîtrise un accord de plus pour le débloquer",
     invNames:["État fondamental","1er renversement","2e renversement","3e renversement"], rootLbl:"F",
     combo:"Combo", streak:"Série", day:"j", scaleToPlay:"Gamme à jouer", ready:"Prêt ?",
-    idleSub:"Jouez la gamme sur votre piano, de la tonique à l'octave.", ascending:"Montante", descending:"Descendante",
-    inOrder:"À la suite", random:"Aléatoire", sig:"armure", noAcc:"ni ♯ ni ♭", notes:"notes",
-    perfect:"Parfait !", errors:n=>n+" faute"+(n>1?"s":""), inSecs:" en ", correct:"notes justes", missed:n=>n+" manquée"+(n>1?"s":""), missedP:n=>n+" manqué"+(n>1?"s":""), session:"Partie", scalesWord:n=>n+" gamme"+(n>1?"s":""),
+    idleSub:"Joue la gamme sur ton piano, de la tonique à l'octave.", ascending:"Montante", descending:"Descendante",
+    inOrder:"À la suite", random:"Aléatoire", noAcc:"ni ♯ ni ♭", notes:"notes",
+    perfect:"Parfait !", errors:n=>n+" faute"+(n>1?"s":""), correct:"notes justes", missed:n=>n+" manquée"+(n>1?"s":""), missedP:n=>n+" manqué"+(n>1?"s":""), session:"Partie",
     start:"Commencer", giveUp:"Je sèche, montrer", knew:"Continuer", review:"Réessayer", replay:"Écouter la gamme", next:"Suivante",
     get midiStartTip(){ return "Joue un "+CNAME()+" sur ton clavier MIDI pour commencer, puis pour continuer."; }, screenKeys:"Clavier à l'écran", midiOff:"Activer le MIDI", micOff:"Activer le micro", midiNone:"MIDI : aucun appareil", midiDev:"MIDI : ",
     midiBlocked:"MIDI bloqué", midiNo:"MIDI non pris en charge", micOn:"Micro : à l'écoute", micBlocked:"Micro bloqué",
-    blocked:"Le navigateur a refusé l'accès. Cliquez sur le cadenas à gauche de l'adresse du site pour autoriser le micro ou le MIDI, puis réessayez. Dans l'aperçu claude.ai, ils sont toujours bloqués : utilisez pianochallenges.com.",
+    blocked:"Le navigateur a refusé l'accès. Clique sur le cadenas à gauche de l'adresse du site pour autoriser le micro ou le MIDI, puis réessaie.",
     midiUnsupported:"Ce navigateur ne gère pas le MIDI (c'est le cas de Safari, de l'iPhone et de l'iPad). Utilise l'app Piano Challenges, Chrome ou Edge, ou le micro.",
     get kbdHint(){ return "Clavier d'ordinateur : rangée Q S D F G H J K pour les touches blanches, rangée du dessus pour les noires. Espace : révéler / suivant · Entrée (ou un "+CNAME()+" au clavier MIDI) : continuer · ⌫ : réessayer."; },
-    progress:"Progression", viewLabel:"Afficher", settings:"Réglages", practise:"Gammes travaillées", order:"Ordre", answerAfter:"Ou réglez le temps précis :",
+    progress:"Progression", settings:"Réglages", order:"Ordre", 
     never:"jamais", notation:"Notation", direction:"Sens", optOct:"Finir sur l'octave", optLabels:"Noms des notes sur le clavier",
     midiBt:"Rechercher un clavier Bluetooth", midiFound:"Claviers détectés", midiNoneLong:"Aucun clavier détecté pour l'instant.",
     mcUsbApp:"Branche ton clavier en USB-C (ou avec l'adaptateur Lightning). Il apparaît tout seul dans la liste.",
@@ -1338,20 +1388,21 @@ const TXT = {
     get optMidiC(){ return "Un "+CNAME()+" sur le clavier MIDI pour commencer et continuer"; }, midiHint:"Le MIDI marche dans Chrome et Edge, en USB ou Bluetooth (pas dans Safari ni sur iPhone/iPad).",
     keyLbl:"Tonalité", allKeys:"Toutes", dirMix:"Les deux",
     kbLbl:"Clavier à l'écran", kbAuto:"Automatique (3 octaves)", keys:"touches", kbCustom:"Détecté", kbDetect:"Détecter mon clavier MIDI",
-    calibLow:"Jouez la touche la plus grave de votre clavier MIDI.", calibHigh:"Maintenant, jouez la touche la plus aiguë.",
+    
     calibListen:"Joue la touche la plus grave et la plus aiguë de ton clavier (dans l'ordre que tu veux), puis touche Valider.", calibLive:(n,a,b)=>n+" touches détectées : "+a+" → "+b+". Touche Valider quand c'est bon.", calibShort:"Pas assez de touches détectées : joue bien la plus grave et la plus aiguë.", kbValidate:"Valider", calibNeedMidi:"Activez d'abord le MIDI (bouton sous le clavier), puis recommencez.",
     kbRangeTxt:(n,a,b)=>n+" touches, de "+a+" à "+b+". Le "+CNAME()+" du milieu est "+CNAME()+"3.", kbDone:(n,a,b)=>"Clavier détecté : "+n+" touches ("+a+" – "+b+")",
-    difficulty:"Temps pour jouer", dFree:"Libre", dEasy:"Facile", dMedium:"Moyen", dHard:"Difficile", dExpert:"Expert", noTimer:"Sans chrono", guideLbl:"Guide", guideOff:"non", guideP:"Aide progressive : le degré, puis le nom de l'accord, puis les touches (8 s chacun, ou Espace)", guidePShort:"progressif", hintBtn:"Un indice", guideNShort:"notes", guideKShort:"touches", guideNames:"Voir les notes avant de jouer", guideKeys:"Allumer les touches à jouer", guideXp:"Avec le guide, les exercices rapportent moitié moins d'XP.",
+    difficulty:"Temps pour jouer", dEasy:"Facile", dMedium:"Moyen", dHard:"Difficile", dExpert:"Expert", noTimer:"Sans chrono", guideLbl:"Guide", guideOff:"non", guideP:"Aide progressive : le degré, puis le nom de l'accord, puis les touches (8 s chacun, ou Espace)", guidePShort:"progressif", hintBtn:"Un indice", guideNShort:"notes", guideKShort:"touches", guideNames:"Voir les notes avant de jouer", guideKeys:"Allumer les touches à jouer", guideXp:"Avec le guide, les exercices rapportent moitié moins d'XP.",
     optAuto:"Passer automatiquement à l'exercice suivant", optMidiSound:"Jouer le son des notes MIDI", optAll:"Tout débloquer : toutes les gammes, accords et tonalités, sans passer par les niveaux", unlockBtn:"Tout débloquer", relockBtn:"Revenir aux niveaux", reset:"Remettre la progression à zéro", confirmReset:"Confirmer : tout effacer ?",
     resetDone:"Progression remise à zéro", locked:"verrouillée", lvlShort:"Niv. ", level:"Niveau ", newScale:"Nouvelle gamme : ", newType:"Débloqué : ",
-    lockedHint:n=>"Réussissez 3 fois une gamme sans faute pour remplir sa jauge et débloquer la suivante. Encore "+n+" à découvrir.",
+    lockedHint:n=>"Réussis 3 fois une gamme sans faute pour remplir sa jauge et débloquer la suivante. Encore "+n+" à découvrir.",
     allOpen:"Les 12 tonalités de ce type sont ouvertes.", typeLocked:l=>"Ce type de gamme s'ouvre au niveau "+l+".",
-    st:["Réussies","Sans faute","Révélées","Maîtrisées","Réussite"], practiseTip:"S'entraîner sur ", lockedTip:"Maîtrisez une gamme de plus pour la débloquer",
+    st:["Réussies","Sans faute","Révélées","Maîtrisées","Réussite"], practiseTip:"S'entraîner sur ", lockedTip:"Maîtrise une gamme de plus pour la débloquer",
     melDown:" · descend en Mineur",
-    titles:["Curieux","Apprenti","Doigts agiles","Oreille fine","Harmoniste","Beatmaker","Producteur","Virtuose","Maestro"],
     midiBlockedMsg:"Le navigateur a refusé l'accès MIDI. Clique sur le cadenas à gauche de l'adresse pour l'autoriser, ou choisis le clavier à l'écran.",
     dailyResume:"Reprendre",
-    syncOk:x=>"Sauvegardé en ligne "+x+" ✓", syncErr:x=>"Hors ligne : dernière sauvegarde "+x+".", agoNever:"inconnue", signedOut:"Déconnecté"},
+    syncOk:x=>"Sauvegardé en ligne "+x+" ✓", syncErr:x=>"Hors ligne : dernière sauvegarde "+x+".", agoNever:"inconnue", signedOut:"Déconnecté",
+    wrongSr:"Fausse note : ",
+    dailyShort:"Entraînement"},
   en:{help:"Help", helpTitle:"How it works", helpOk:"Let's go", tutNext:"Next", tutPrev:"Previous", close:"Close", stepOf:(i,n)=>"Step "+i+" of "+n,
     tut:[{h:"Read the challenge",p:"A scale, a chord or a progression appears with a countdown. Picture the notes in your head before the bar runs out."},
          {h:"Play it on your piano",p:"Scales from the root up to the octave, chords from their lowest note, progressions chord by chord. Digital piano (MIDI), acoustic piano (mic) or on-screen keys: each correct note fills a box. MIDI works in Chrome and Edge (not in Safari)."},
@@ -1359,11 +1410,11 @@ const TXT = {
          {h:"Level up and unlock",p:"Each perfect run fills a gauge: 3 steps unlock the next key, and each level opens new content. The Ear tab works without a piano: listen and pick the answer."}],
     svg:{count:"countdown", mic:"Mic", screen:"Screen", unlocked:"unlocked", types:"+ penta, blues…"},
     gameLen:"Exercises per game", exercise:"Exercise", gameOf:n=>"Game of "+n+" exercises", endlessLbl:"Endless game", endGame:"End game",
-    dailyTitle:"Daily practice", dailySub:(n,d)=>n+" exercises · "+(d?d+" to review · ":"")+"about 5 min", dailyDone:s=>"Done today ✓ · "+s+" perfect. Come back tomorrow!",
+    dailyTitle:"Daily practice", dailySub:(n,d)=>n+" exercises · "+(d?d+" to review · ":"")+"about 5 min",
     dailyStart:"Start", dailyAgain:"Do it again", dailyLbl:"Daily practice",
     endTitle:"Game complete!", endDaily:"Daily practice complete!", perfectN:"perfect", warnN:"with 1–3 mistakes", badN:"with 4+ mistakes",
     accuracy:"Accuracy", avgTime:"Average time", xpWon:"XP earned", bestCombo:"Best combo", toRework:"To rework", allPerfect:"No mistakes, well done!",
-    reworkBtn:"Rework my mistakes", newGame:"New game", closeLbl:"Close", outOf:"exercises without mistakes", nextReview:"Next review: ", tomorrow:"tomorrow", inDays:n=>"in "+n+" days",
+    reworkBtn:"Rework my mistakes", newGame:"New game", closeLbl:"Close", outOf:"exercises without mistakes", tomorrow:"tomorrow",
     secHarmony:"Harmony", secProg:"Progressions", secEar:"Ear", secGames:"Games", secPlay:"Play", hub:"Home", learn:"Learn", learnTitle:"What do we work on?", learnSub:"Pick a topic: exercises are played on your piano and checked note by note.", learnTiles:[["chords","Chords","Major, minor, inversions, 7th chords."],["scales","Scales","Major, minor, pentatonic, as notes or chords."],["harmony","Harmony","The degrees of a key and their chords."],["prog","Progressions","The chord sequences behind songs."],["ear","Ear","Recognise intervals and chords by ear."],["daily","Daily practice","10 mixed exercises, about 5 minutes."]], modeLearnSub:"Theory and exercises", modePlaySub:"Falling-note songs", modeGamesSub:"Mini-games", hubTitle:"What do we play today?", hubSub:"Three ways to get better at the piano. Switch any time from the menu.", hubLearn:"Chords, scales, harmony, progressions and ear training, checked note by note.", hubPlay:"Songs that fall onto the keys at your own speed, with fingering. The song waits for you when you miss.", hubGames:"Short mini-games to find the notes, keep the beat, read the staff or train your ear.", hubLearnTags:"Chords · Scales · Harmony · Progressions · Ear · Daily practice", hubPlayTags:"3D cascade · Wait mode · Speed · Note names · Fingering", hubGamesTags:"Note Jumper · Time attack · Memory · Note Runner · Rhythm Pulse · Chord Blaster · Scale Climber · Golden Ear · Staff Express", playGamesHead:"Play games", playGamesSub:"On the lit keyboard, with falling notes", playGames:[["Note Runner","Jump over obstacles by playing the note written on them.","runner"],["Rhythm Pulse","Hit a key exactly when the ring reaches the target.","pulse"],["Chord Blaster","Play the chord shown to blast the asteroid.","blaster"],["Scale Climber","Climb the tower by playing the scale without a slip.","climber"],["Golden Ear","Listen to a note or a short melody, then play it back.","ear"],["Staff Express","Read the notes as they reach the bar on the staff.","staff"]], secRank:"Leaderboard", secAccount:"Profile",
     inTitle:"How will you play?", secInter:"Interaction", secGame:"Game settings", periods:{day:"Today",week:"This week",month:"This month",year:"This year",all:"All time"}, rankEmptyP:"Nobody has earned XP in this period yet. Your turn!", pcSolved:n=>n+" solved", inChange:"Play mode", leaveTitle:"Leave the daily practice?", leaveSub:"You are in the middle of it. If you leave, it stops and you will have to start again.", leaveStay:"Keep practising", leaveGo:"Leave", dcStart:"Start the practice", inMidiApp:"A MIDI keyboard? On iPhone and iPad you need the Piano Challenges app (the browser has no MIDI).", midiDone:"Finish set-up", midiSetupNeed:"Plug your keyboard in with USB or search for it over Bluetooth: it must show up in the list to continue.", midiSetupOk:"Keyboard detected! Play a few notes to check, then finish the set-up.", backPlay:"← Back", lockGuest:"Continue without an account for now", inSub:"Choose once. You can change it later in Settings.", inLbl:"I play with",
     inModes:{screen:["The on-screen keyboard","Tap the notes on screen, or use your computer keyboard.","Screen"],midi:["My MIDI keyboard","Plugged in with USB or connected over Bluetooth. The most accurate.","MIDI"],mic:["My piano, with the mic","For an acoustic piano: the app listens to the notes you play.","Mic"]},
@@ -1378,7 +1429,7 @@ const TXT = {
     legalNotice:"Legal notice", privacy:"Privacy", consent:"By signing in you accept the privacy policy.",
     charMore:"Levels", charTitle:"Levels",
     charSub:(nx,left)=>nx?left+" XP to go to reach "+nx+".":"You have reached the top level. Well done!",
-    charAt:(L,xp)=>"Level "+L+" · "+xp+" XP", charGot:"Unlocked ✓",
+    charGot:"Unlocked ✓",
     chars:[["Mimi","the Mouse","Curious"],["Pip","the Sparrow","Apprentice"],["Tika","the Cat","Nimble fingers"],["Lou","the Rabbit","Sharp ear"],["Hector","the Owl","Harmonist"],["Rocco","the Raccoon","Beatmaker"],["Fenn","the Fox","Producer"],["Bao","the Panda","Virtuoso"],["Leo","the Lion","Maestro"],["Draco","the Dragon","Legend"]],
     howBtn:"How it works", introGo:"Let's go",
     intro:{
@@ -1389,26 +1440,25 @@ const TXT = {
       ear:["Ear training",["Listen to what is played: a <b>chord</b>, an <b>interval</b> or a <b>scale</b>.","Pick the right answer. Replay as often as you like (Space).","Categories unlock as you level up."]],
       games:["Games",["<b>Note Jumper</b>: you are a running piano. A chord is written above each note.","Play that chord, ideally while the note crosses the <b>circle</b> (“Perfect!” bonus): the piano jumps by itself. The chord's keys light up on the keyboard when the hint is on.","Play a <b>{C}</b> to start or try again. More games are coming soon."]],
       daily:["Daily practice",["Every day, <b>10 mixed exercises</b> from all sections.","Exercises you miss <b>come back</b> on the following days (spaced repetition) until you know them.","The <b>timeline</b> at the top shows your progress. Finish it to keep your streak."]]},
-    secShort:{scales:"Scale",chords:"Chord",harmony:"Harmony",prog:"Progression",ear:"Ear"},
     dpSubTxt:(d,n,due)=>d+" · "+n+" exercises"+(due?" · "+due+" to review":""),
-    dpRun:(i,n)=>"Exercise "+i+" of "+n, dpDone:s=>"Done today · "+s+" perfect", dpFinish:"Finish", dpHidden:"?",
+    dpRun:(i,n)=>"Exercise "+i+" of "+n, dpDone:s=>"Done today · "+s+" perfect", dpFinish:"Finish",
     rankSub:"Compare your XP, streak and records with other players.",
     rankCta:"Create your free account to join the leaderboard and keep your scores on all your devices.",
     loginBtn:"Sign in", you:"You",
     acctSub:"Your progress is saved on this device.",
-    loginTitle:"Create an account", loginSub:"Coming soon: sign in to save your progress, find it on computer, iPhone and iPad, and join the leaderboard.",
-    loginWith:p=>"Continue with "+p, loginMail:"Continue with email",
+    loginTitle:"Create an account",
+    loginWith:p=>"Continue with "+p,
     loginReady:"Create your free account, or sign in:",
     emailPh:"you@email.com", sendCode:"Get a code", codeSent:e=>"Code sent to "+e+" (check spam too). Enter it above, or click the link in the email.", codePh:"6-digit code", verify:"Confirm", changeMail:"Use another email",
-    orLbl:"or", appSoon:"Coming soon in the app", signedAs:e=>"Signed in: "+e, logout:"Sign out", nameLbl:"Display name (first and last name, shown on the leaderboard)", saveLbl:"Save", saved:"Saved ✓",
+    orLbl:"or", signedAs:e=>"Signed in: "+e, logout:"Sign out", nameLbl:"Display name (first and last name, shown on the leaderboard)", saveLbl:"Save", saved:"Saved ✓",
     cloudErr:"Can't reach the server right now.", badCode:"Wrong or expired code.", tooMany:"Too many attempts, try again in a few minutes.", mailFail:"The email could not be sent right now. Try again in a moment, or sign in with Google.",
     synced:"Progress saved online ✓", rankEmpty:"Nobody is ranked yet. Sign in to be the first!", rankErr:"Leaderboard unavailable right now.", rankLoading:"Loading…",
     rankSubIn:"Overall ranking by XP. Your score updates by itself.",
     acctXp:"Total XP", acctStreak:"Streak", acctDone:"Exercises solved", acctLevel:"Level",
     collapse:"Collapse menu", expand:"Expand menu",
-    gamesTitle:"Games", gamesSub:"Piano challenges to play faster and cleaner. Pick a game, or play freely on the piano below.",
+    gamesTitle:"Games", gamesSub:"Piano challenges to play faster and cleaner. Pick a game: every round is played on your keyboard.",
     freePlay:"Free play", soon:"Soon",
-    rnName:"Note Jumper", rnDesc:"You are a piano! Play the chord shown to jump over eighth and sixteenth notes.", rnPlay:"Play", rnQuit:"Quit",
+    rnName:"Note Jumper", rnPlay:"Play", rnQuit:"Quit",
     get rnStart(){ return "Play a "+CNAME()+" to start"; },
     gmDiffL:"Difficulty", gmContL:"Play", gmDiffs:{prog:"Progressive",slow:"Slow",mid:"Medium",fast:"Fast"}, gmConts:{chords:"Chords",notes:"Notes"},
     gmTap:"Tap here to start.", gmReady:"Ready?", gmOver:"Done!", gmChord:"Chord to play", gmNote:"Note to play",
@@ -1432,21 +1482,21 @@ const TXT = {
     intShort:{m2:"m2",M2:"M2",m3:"m3",M3:"M3",P4:"P4",TT:"TT",P5:"P5",m6:"m6",M6:"M6",m7:"m7",M7:"M7",P8:"P8"},
     secScales:"Scales", secChords:"Chords", inversions:"Inversions", chordToPlay:"Chord to play",
     idleSubC:"Play the chord starting from its lowest note: all at once (MIDI) or one note at a time.", replayC:"Listen to the chord",
-    practiseS:"Scales to practise", replaySC:"Listen to the chords", idleSubSC:"Play the chords of the scale one after another, from degree I to VII (all at once in MIDI, or note by note).", scModeLbl:"Play", scNotes:"Notes", scChords:"Chords", optSc7:"7th chords", scChordsOf:" · chords", scChordsLbl:"Chords of the scale", chordsN:n=>n+" chord"+(n>1?"s":""), practiseC:"Chords to practise", chordsWord:n=>n+" chord"+(n>1?"s":""), newChord:"New chord: ",
+    practiseS:"Scales to practise", replaySC:"Listen to the chords", idleSubSC:"Play the chords of the scale one after another, from degree I to VII (all at once in MIDI, or note by note).", scModeLbl:"Play", scNotes:"Notes", scChords:"Chords", optSc7:"7th chords", scChordsOf:" · chords", scChordsLbl:"Chords of the scale", chordsN:n=>n+" chord"+(n>1?"s":""), practiseC:"Chords to practise", newChord:"New chord: ",
     lockedHintC:n=>"Play a chord 3 times without mistakes to unlock the next root. "+n+" left to discover.",
     typeLockedC:l=>"This chord type opens at level "+l+".", lockedTipC:"Master one more chord to unlock it",
     invNames:["Root position","1st inversion","2nd inversion","3rd inversion"], rootLbl:"R",
     combo:"Combo", streak:"Streak", day:"d", scaleToPlay:"Scale to play", ready:"Ready?",
     idleSub:"Play the scale on your piano, from the root up to the octave.", ascending:"Ascending", descending:"Descending",
-    inOrder:"In order", random:"Random", sig:"key signature", noAcc:"no ♯ or ♭", notes:"notes",
-    perfect:"Perfect!", errors:n=>n+" mistake"+(n>1?"s":""), inSecs:" in ", correct:"correct notes", missed:n=>n+" missed", missedP:n=>n+" missed", session:"Session", scalesWord:n=>n+" scale"+(n>1?"s":""),
+    inOrder:"In order", random:"Random", noAcc:"no ♯ or ♭", notes:"notes",
+    perfect:"Perfect!", errors:n=>n+" mistake"+(n>1?"s":""), correct:"correct notes", missed:n=>n+" missed", missedP:n=>n+" missed", session:"Session",
     start:"Start", giveUp:"Show me", knew:"Continue", review:"Retry", replay:"Listen to the scale", next:"Next",
     get midiStartTip(){ return "Play a "+CNAME()+" on your MIDI keyboard to start, and again to continue."; }, screenKeys:"On-screen keys", midiOff:"Enable MIDI", micOff:"Enable mic", midiNone:"MIDI: no device", midiDev:"MIDI: ",
     midiBlocked:"MIDI blocked", midiNo:"MIDI not supported", micOn:"Mic: listening", micBlocked:"Mic blocked",
-    blocked:"The browser refused access. Click the padlock left of the site address to allow the mic or MIDI, then try again. Inside the claude.ai preview they are always blocked: use pianochallenges.com.",
+    blocked:"The browser refused access. Click the padlock left of the site address to allow the mic or MIDI, then try again.",
     midiUnsupported:"This browser has no MIDI support (Safari, iPhone and iPad don't). Use the Piano Challenges app, Chrome or Edge, or the mic.",
     get kbdHint(){ return "Computer keyboard: A S D F G H J K row for white keys, the row above for black keys. Space: reveal / next · Enter (or a "+CNAME()+" on the MIDI keyboard): continue · ⌫: retry."; },
-    progress:"Progress", viewLabel:"Show", settings:"Settings", practise:"Scales to practise", order:"Order", answerAfter:"Or set the exact time:",
+    progress:"Progress", settings:"Settings", order:"Order", 
     never:"never", notation:"Note names", direction:"Direction", optOct:"End on the octave", optLabels:"Note names on the keys",
     midiBt:"Search for a Bluetooth keyboard", midiFound:"Detected keyboards", midiNoneLong:"No keyboard detected yet.",
     mcUsbApp:"Plug your keyboard in with USB-C (or the Lightning adapter). It shows up in the list by itself.",
@@ -1456,20 +1506,20 @@ const TXT = {
     get optMidiC(){ return "A "+CNAME()+" on the MIDI keyboard starts and continues"; }, midiHint:"MIDI works in Chrome and Edge, over USB or Bluetooth (not in Safari or on iPhone/iPad).",
     keyLbl:"Key", allKeys:"All", dirMix:"Both",
     kbLbl:"On-screen keyboard", kbAuto:"Automatic (3 octaves)", keys:"keys", kbCustom:"Detected", kbDetect:"Detect my MIDI keyboard",
-    calibLow:"Play the lowest key of your MIDI keyboard.", calibHigh:"Now play the highest key.",
     calibListen:"Play the lowest and the highest key of your keyboard (any order), then tap Confirm.", calibLive:(n,a,b)=>n+" keys detected: "+a+" → "+b+". Tap Confirm when it's right.", calibShort:"Not enough keys detected: play the lowest and the highest key.", kbValidate:"Confirm", calibNeedMidi:"Enable MIDI first (button under the keyboard), then try again.",
     kbRangeTxt:(n,a,b)=>n+" keys, from "+a+" to "+b+". Middle "+CNAME()+" is "+CNAME()+"4.", kbDone:(n,a,b)=>"Keyboard detected: "+n+" keys ("+a+" – "+b+")",
-    difficulty:"Time to play", dFree:"Free", dEasy:"Easy", dMedium:"Medium", dHard:"Hard", dExpert:"Expert", noTimer:"No timer", guideLbl:"Guide", guideOff:"off", guideP:"Step-by-step help: the degree, then the chord name, then the keys (8 s each, or Space)", guidePShort:"step by step", hintBtn:"A hint", guideNShort:"notes", guideKShort:"keys", guideNames:"Show the notes before playing", guideKeys:"Light up the keys to play", guideXp:"With the guide on, exercises earn half the XP.",
+    difficulty:"Time to play", dEasy:"Easy", dMedium:"Medium", dHard:"Hard", dExpert:"Expert", noTimer:"No timer", guideLbl:"Guide", guideOff:"off", guideP:"Step-by-step help: the degree, then the chord name, then the keys (8 s each, or Space)", guidePShort:"step by step", hintBtn:"A hint", guideNShort:"notes", guideKShort:"keys", guideNames:"Show the notes before playing", guideKeys:"Light up the keys to play", guideXp:"With the guide on, exercises earn half the XP.",
     optAuto:"Move on to the next exercise automatically", optMidiSound:"Play sound for MIDI notes", optAll:"Unlock everything: every scale, chord and key, without going through the levels", unlockBtn:"Unlock everything", relockBtn:"Back to levels", reset:"Reset progress", confirmReset:"Confirm: erase everything?",
     resetDone:"Progress reset", locked:"locked", lvlShort:"Lvl ", level:"Level ", newScale:"New scale: ", newType:"Unlocked: ",
     lockedHint:n=>"Play a scale 3 times without mistakes to fill its gauge and unlock the next one. "+n+" left to discover.",
     allOpen:"All 12 keys of this type are open.", typeLocked:l=>"This scale type opens at level "+l+".",
     st:["Completed","Perfect","Revealed","Mastered","Success rate"], practiseTip:"Practise ", lockedTip:"Master one more scale to unlock it",
     melDown:" · descends as Minor",
-    titles:["Curious","Apprentice","Nimble fingers","Sharp ear","Harmonist","Beatmaker","Producer","Virtuoso","Maestro"],
     midiBlockedMsg:"The browser refused MIDI access. Click the padlock left of the address to allow it, or choose the on-screen keyboard.",
     dailyResume:"Resume",
-    syncOk:x=>"Saved online "+x+" ✓", syncErr:x=>"Offline: last save "+x+".", agoNever:"unknown", signedOut:"Signed out"}
+    syncOk:x=>"Saved online "+x+" ✓", syncErr:x=>"Offline: last save "+x+".", agoNever:"unknown", signedOut:"Signed out",
+    wrongSr:"Wrong note: ",
+    dailyShort:"Daily"}
 };
 const t = k => TXT[S.settings.lang][k];
 
@@ -1696,9 +1746,11 @@ function earMidis(q){
 const STORE="memo-gammes-v1";
 const clone = o => JSON.parse(JSON.stringify(o)); // works on every iOS version
 let firstVisit=false;
+// First visit: French browsers start in French (and French note names), everyone else in English
+const DEFAULT_LANG=((navigator.language||"en")+"").toLowerCase().startsWith("fr")?"fr":"en";
 const DEFAULTS={xp:0, mastery:{}, stats:{ok:0,perfect:0,revealed:0,errors:0}, streak:{days:0,last:""}, suiteIdx:0, csuiteIdx:0,
   seenTypes:["major","minor","chords:maj","chords:min"], langV2:true, secStats:{}, srs:{}, daily:{}, section:"chords",
-  settings:{lang:"en", mode:"suite", delay:0, notation:"en", dir:"up", octave:true, labels:false, midiSound:true, midiC:true, midiInput:"", autoNext:true, kbdSize:"auto", kbdLow:36, kbdHigh:96, unlockAll:false,
+  settings:{lang:DEFAULT_LANG, mode:"suite", delay:0, notation:DEFAULT_LANG, dir:"up", octave:true, labels:false, midiSound:true, midiC:true, midiInput:"", autoNext:true, kbdSize:"auto", kbdLow:36, kbdHigh:96, unlockAll:false,
     types:["major"], view:"major", ctypes:["maj"], cview:"maj", invs:[0],
     htypes:["maj"], hview:"maj", hdegs:[0,1,2,3,4,5,6], ptypes:["p145","pop"], pview:"pop", vl:false, etypes:["chord","int"], eview:"chord", earV2:true, scMode:"notes", sc7:false, gameLen:10}};
 const SECS=["scales","chords","harmony","prog","ear"];
@@ -1753,7 +1805,7 @@ const SEC = {
   chords: {list:()=>CTYPES,  sel:"ctypes", view:"cview", def:"maj",   name:ty=>S.settings.lang==="fr"?ty.fr:ty.en},
   harmony:{list:()=>HTYPES,  sel:"htypes", view:"hview", def:"maj",   name:ty=>S.settings.lang==="fr"?ty.fr:ty.en},
   prog:   {list:()=>PROGS,   sel:"ptypes", view:"pview", def:"pop",   name:ty=>progName(ty.id)+(ty.scale==="minor"?(S.settings.lang==="fr"?" (Mineur)":" (Minor)"):"")},
-  ear:    {list:()=>EARCATS, sel:"etypes", view:"eview", def:"int",   name:ty=>S.settings.lang==="fr"?ty.fr:ty.en},
+  ear:    {list:()=>EARCATS, sel:"etypes", view:"eview", def:"int",   name:ty=>S.settings.lang==="fr"?ty.fr:ty.en}
 };
 // an "item" is {sec, tid, k, inv?, deg?, root?}
 function mkey(it){
@@ -1917,11 +1969,11 @@ function buildKeyboard(){
   const ww=100/whites.length, bw=ww*.62;
   kbd.style.minWidth = size!=="auto" ? whites.length*(narrowMQ.matches?30:16)+"px" : "";
   whites.forEach((m,i)=>{
-    const el=document.createElement("div"); el.className="wk"; el.dataset.m=m; el.appendChild(document.createElement("span"));
+    const el=document.createElement("div"); el.className="wk"; el.dataset.m=m; el.appendChild(document.createElement("span")); keyA11y(el,m);
     kbd.appendChild(el); keyEls[m]=el;
     if([0,2,5,7,9].includes(m%12) && m+1<=HIGH){
       const b=document.createElement("div"); b.className="bk"; b.dataset.m=m+1; b.style.left=((i+1)*ww-bw/2)+"%"; b.style.width=bw+"%";
-      b.appendChild(document.createElement("span")); kbd.appendChild(b); keyEls[m+1]=b; }
+      b.appendChild(document.createElement("span")); keyA11y(b,m+1); kbd.appendChild(b); keyEls[m+1]=b; }
   });
   labelKeys();
   if(phase==="revealed") showReveal(true);
@@ -1951,6 +2003,9 @@ kbd.addEventListener("pointerdown", e=>{
   const el=e.target.closest("[data-m]"); if(!el) return;
   e.preventDefault(); const m=+el.dataset.m; tone(m); midiIn(m); // same 35 ms grouping as MIDI (two-finger chords)
 });
+// keys are buttons for assistive tech (not in the Tab order: the letter keys are the shortcuts); Enter/Space on a focused key plays it
+function keyA11y(el,m){ el.setAttribute("role","button"); el.tabIndex=-1; el.setAttribute("aria-label",(S.settings.notation==="fr"?PC_FR:PC_EN)[m%12]+" "+(Math.floor(m/12)-1)); }
+kbd.addEventListener("keydown", e=>{ const el=e.target.closest("[data-m]"); if(!el || (e.code!=="Enter" && e.code!=="Space")) return; e.preventDefault(); e.stopPropagation(); const m=+el.dataset.m; tone(m); noteIn(m); });
 function pressKey(m){ const el=keyEls[fold(m)]; if(!el) return; el.classList.add("k-press"); setTimeout(()=>el.classList.remove("k-press"),130); }
 kbd.addEventListener("contextmenu", e=>e.preventDefault());
 const CODE_MAP={KeyA:60,KeyW:61,KeyS:62,KeyE:63,KeyD:64,KeyF:65,KeyT:66,KeyG:67,KeyY:68,KeyH:69,KeyU:70,KeyJ:71,KeyK:72,KeyO:73,KeyL:74,KeyP:75,Semicolon:76};
@@ -2125,6 +2180,8 @@ function hitSlot(j, m){
 }
 function wrongNote(m){
   errors++; flashKey(m,"k-bad",300);
+  const sr=$("srNote"); sr.textContent=""; sr.textContent=t("wrongSr")+(S.settings.notation==="fr"?PC_FR:PC_EN)[m%12]; // screen readers hear the wrong note
+  const mb=$("sbMiss"); mb.textContent=t("errors")(errors); mb.hidden=false;
   const at = chSeq() ? pStep : chordLike(cur.sec) ? found.indexOf(false) : idx;
   const sl=$("slots").children[at]; if(sl){ sl.classList.remove("err","pop"); void sl.offsetWidth; sl.classList.add("err"); }
 }
@@ -2287,7 +2344,7 @@ function switchSection(sec){
 // ---------- Rendering ----------
 function resetScore(){
   const n = seq.length || (chordLike(S.section)?3:S.section==="prog"?4:(S.settings.octave?8:7));
-  $("feedback").className="score-box"; $("sbLabel").textContent=tx("correct");
+  $("feedback").className="score-box"; $("sbLabel").textContent=tx("correct"); $("sbMiss").hidden=true; $("srNote").textContent="";
   if(S.section==="ear"){ $("sbLabel").textContent=t("answerLbl"); $("sbVal").innerHTML="—"; $("sbDetail").textContent=""; return; }
   $("sbVal").innerHTML='—<span class="of"> / '+n+'</span>'; $("sbDetail").textContent="";
 }
@@ -2766,7 +2823,7 @@ function render(){ document.body.classList.toggle("playing", !!game || phase!=="
 
 // ---------- Settings wiring ----------
 $("langSeg").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return;
-  S.settings.lang=b.dataset.v; S.settings.notation=b.dataset.v; save(); closeTypes(); applyStatic(); applySide(); renderGames(); renderInputUI(); if(page==="rank") renderRank(); if(page==="account") renderAccount(); if(helpOpen) renderTut(); renderSettings(); labelKeys(); render(); renderDaily(); if(endOpen&&lastGame) openEnd(lastGame); });
+  S.settings.lang=b.dataset.v; S.settings.notation=b.dataset.v; save(); closeTypes(); applyStatic(); applySide(); renderGames(); renderInputUI(); if(page==="rank") renderRank(); if(page==="account") renderAccount(); if(helpOpen) renderTut(); renderSettings(); labelKeys(); render(); renderDaily(); if(endOpen&&lastGame) openEnd(lastGame); if(page==="play") playOpen(); Object.entries(keyEls).forEach(([m,el])=>keyA11y(el,+m)); });
 function bindSeg(id,key,restart){ $(id).addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return;
   S.settings[key]=b.dataset.v; save(); renderSettings(); labelKeys();
   if(restart && cur && (phase==="listening"||phase==="revealed")) startRound(key==="dir"?{...cur,dir:null}:cur,true); else render(); }); }
@@ -2790,12 +2847,11 @@ $("dpStart").addEventListener("click",()=>{ if(!(game&&game.daily)) openDailyCfg
   $("dTimeline").addEventListener("focusin",e=>show(e.target.closest("li"))); })();
 
 // settings / progress window
-let setOpen=false;
+let setOpen=false; // always false since Settings became a page; still read by keydown/midiStart/noteIn
 // Settings and Progress are pages of their own (the old window's content is moved into them)
 $("setHost").appendChild($("setPane")); $("progHost").appendChild($("progPane"));
 $("setPane").classList.remove("modal-body"); $("progPane").classList.remove("modal-body"); $("progPane").hidden=false; $("setModal").remove();
 function openSet(tab){ closeDrawer(); if(tab==="progress") progSec=S.section; openPage(tab==="progress"?"progress":"settings"); }
-function showSetTab(tab){ openSet(tab); }
 function closeSet(){ if(INFO_PAGES.includes(page)){ page="practice"; returnPage=null; paused=false; render(); renderDaily(); } } // e.g. a tile picked on the Progress page starts that exercise
 $("setBtn").addEventListener("click",()=>openSet("settings")); $("mbSet").addEventListener("click",()=>openSet("settings")); $("progBtn").addEventListener("click",()=>openSet("progress"));
 document.querySelectorAll("[data-back]").forEach(b=>b.addEventListener("click",()=>openPage(returnPage||"practice")));
@@ -2816,7 +2872,7 @@ function setNav(){
   $("side").dataset.mode=mode; $("modeNav").querySelectorAll("button").forEach(b=>mark(b,b.dataset.mode===mode));
   mark($("dailyCard"),page==="daily"); mark($("rankBtn"),page==="rank"); mark($("accountBtn"),page==="account"); mark($("setBtn"),page==="settings"); mark($("progBtn"),page==="progress");
   const pv = page==="practice"?S.section : page==="locked"?lockFor : page;
-  $("mbTitle").textContent = t({chords:"secChords",scales:"secScales",harmony:"secHarmony",prog:"secProg",ear:"secEar",games:"secGames",play:"secPlay",hub:"hub",learn:"learn",daily:"dailyTitle",rank:"secRank",account:"secAccount",settings:"settings",progress:"progress"}[pv]);
+  $("mbTitle").textContent = t({chords:"secChords",scales:"secScales",harmony:"secHarmony",prog:"secProg",ear:"secEar",games:"secGames",play:"secPlay",hub:"hub",learn:"learn",daily:narrowMQ.matches?"dailyShort":"dailyTitle",rank:"secRank",account:"secAccount",settings:"settings",progress:"progress"}[pv]);
   if(page==="locked"){ $("secTabs").querySelectorAll("button").forEach(b=>mark(b,b.dataset.v===lockFor)); mark($("dailyCard"),lockFor==="daily"); }
 }
 function applySide(){
@@ -2874,7 +2930,6 @@ function gameOpen(id){
   else if(id==="speed") spReset(); else mmReset();
 }
 function gameRestart(){ if(!RN.on) return; gameOpen(GM); }
-function runnerOpen(){ gameOpen("runner"); }
 function runnerClose(){ if(!RN.on) return; RN.on=false; clearKeys(); cancelAnimationFrame(SP.raf); clearTimeout(MM.timer); MM.timers.forEach(clearTimeout); MM.timers=[]; cancelAnimationFrame(RN.raf); $("runner").hidden=true; document.body.classList.remove("runner-on"); if(RN.xp){ addXP(RN.xp); RN.xp=0; save(); renderStatus(); } }
 $("rnQuit").addEventListener("click",runnerClose);
 $("rnHelp").addEventListener("change",e=>{ S.settings.rnHint=e.target.checked; save(); RN.hintFor=undefined; });
@@ -3070,30 +3125,33 @@ const TILE_ICON={chords:'<circle cx="7" cy="17" r="2.6"/><circle cx="7" cy="11" 
 // one tile: colored card, dark screen with icon, kicker, name, line, button
 function tile({color,icon,kick,title,desc,btn,rec,soon,onOpen}){
   const c=document.createElement(soon?"div":"button"); c.className="ptile"+(soon?" soon":""); if(!soon) c.type="button"; c.style.setProperty("--tc",color);
-  c.innerHTML='<span class="art"><svg viewBox="0 0 24 24" aria-hidden="true">'+icon+'</svg></span><span class="pk"></span><h3></h3><p></p>'+(rec!=null?'<span class="rec"></span>':'')+(soon?'<span class="rec"></span>':'<span class="go"></span>');
-  c.querySelector(".pk").textContent=kick; c.querySelector("h3").textContent=title; c.querySelector("p").textContent=desc;
+  c.innerHTML='<span class="art"><svg viewBox="0 0 24 24" aria-hidden="true">'+icon+'</svg></span><span class="pk"></span><span class="h3"></span><p></p>'+(rec!=null?'<span class="rec"></span>':'')+(soon?'<span class="rec"></span>':'<span class="go"></span>');
+  c.querySelector(".pk").textContent=kick; c.querySelector(".h3").textContent=title; c.querySelector("p").textContent=desc;
   if(rec!=null) c.querySelector(".rec").textContent=rec; if(soon) c.querySelector(".rec:last-child").textContent=t("soon"); else c.querySelector(".go").textContent=btn||t("rnPlay");
   if(onOpen) c.addEventListener("click",onOpen); return c; }
 const shade=(hex,k)=>{ const n=parseInt(hex.slice(1),16), r=n>>16, g=(n>>8)&255, b=n&255, f=x=>Math.max(0,Math.min(255,Math.round(x))); return "#"+[r,g,b].map(x=>f(x+(k>0?(255-x)*k:x*k)).toString(16).padStart(2,"0")).join(""); };
-const MODE_COL={games:"#3fae7c",play:"#7a5cf5",learn:"#f26a5e"};
-function renderGames(){ const box=$("gameCards"); box.innerHTML=""; const base=MODE_COL.games, sh=[0,-.12,.08,-.22];
+const MODE_COL={games:"#26805a",play:"#7a5bf5",learn:"#c9463c"}; // same as --m-games/--m-play/--m-learn; shades only darken so white text stays ≥ 4.5:1
+function renderGames(){ const box=$("gameCards"), pbox=$("playCards"); box.innerHTML=""; pbox.innerHTML=""; const base=MODE_COL.games, sh=[0,-.12,-.22,-.3];
   const PLAY={runner:TILE_ICON.runner, speed:GAME_ICONS[0], memory:GAME_ICONS[2]};
   t("games").forEach(([title,desc,id],i)=>{ const best=id?((S.gameBest||{})[id]||(id==="runner"?S.runnerBest:0)||0):null;
     box.appendChild(tile({color:shade(base,sh[i%sh.length]),icon:id?PLAY[id]:GAME_ICONS[3],kick:t("secGames"),title,desc,rec:id?t("rnBestL")+" "+best:null,soon:!id,onOpen:id?()=>gameOpen(id):null})); });
-  const h=document.createElement("p"); h.className="gc-head"; h.style.gridColumn="1 / -1"; h.innerHTML="<span></span><small></small>"; h.firstChild.textContent=t("playGamesHead"); h.lastChild.textContent=t("playGamesSub"); box.appendChild(h);
-  t("playGames").forEach(([title,desc,id],i)=>box.appendChild(tile({color:shade(base,sh[(i+1)%sh.length]),icon:TILE_ICON.play,kick:"Play",title,desc,onOpen:()=>openPlayWith("#game="+id)}))); }
-function renderLearn(){ const box=$("learnTiles"); box.innerHTML=""; const base=MODE_COL.learn, sh=[0,-.12,.08,-.22,.16,-.3];
+  const h=$("playHead"); h.firstChild.textContent=t("playGamesHead"); h.lastChild.textContent=t("playGamesSub");
+  t("playGames").forEach(([title,desc,id],i)=>pbox.appendChild(tile({color:shade(base,sh[(i+1)%sh.length]),icon:TILE_ICON.play,kick:"Play",title,desc,onOpen:()=>openPlayWith("#game="+id)}))); }
+function renderLearn(){ const box=$("learnTiles"); box.innerHTML=""; const base=MODE_COL.learn, sh=[0,-.12,-.22,-.3,-.08,-.18];
   t("learnTiles").forEach(([id,title,desc],i)=>box.appendChild(tile({color:shade(base,sh[i%sh.length]),icon:TILE_ICON[id],kick:"Learn",title,desc,btn:t("rnPlay"),
     onOpen:()=>{ if(id==="daily") $("dailyCard").click(); else $("secTabs").querySelector('[data-v="'+id+'"]').click(); }}))); }
-const LOCKED=["games","daily"];
+const LOCKED=[]; // everything is open to guests; the Profile page keeps the invitation to create an account
 let lockFor="";
 const needLogin = pg => LOCKED.includes(pg) && !user && !cloudFail && !guestPass;
 const INFO_PAGES=["settings","progress"];
 let returnPage=null, guestPass=false;
 // Page Play: the Clavio prototype (play/index.html) runs in a frame; notes played here are forwarded to it.
-function playSend(type,m,vel){ const f=$("playFrame"); if(f && f.contentWindow) f.contentWindow.postMessage({source:"piano-challenges",type,m,vel},"*"); }
+const SAME_ORIGIN = location.origin && location.origin!=="null" ? location.origin : "*"; // file:// has no origin
+function playSend(type,m,vel){ const f=$("playFrame"); if(f && f.contentWindow) f.contentWindow.postMessage({source:"piano-challenges",type,m,vel},SAME_ORIGIN); }
 let playHash="#songs"; // #songs = song library, #games = Play games, #game=<id> = that game
-function playOpen(){ const f=$("playFrame"); const src="play/index.html"+playHash; if(f.getAttribute("src")!==src) f.src=src; $("playPanel").hidden=false; }
+function playOpen(){ const f=$("playFrame"); const src="play/index.html"+playHash+"&lang="+(S.settings.lang==="fr"?"fr":"en"); const old=f.getAttribute("src");
+  if(old!==src){ f.onload=()=>{ if(page==="play" && !anyWin()) f.focus(); }; f.src=src; if(old){ try{ f.contentWindow.location.reload(); }catch(e){} } } // a hash-only change would not reload the page: force it
+  $("playPanel").hidden=false; }
 function openPlayWith(h){ playHash=h; if(page==="play"){ playOpen(); setNav(); } else openPage("play"); }
 function goMode(m){ closeDrawer(); if(m==="learn") openPage("learn"); else if(m==="play") openPlayWith("#songs"); else openPage("games"); }
 document.querySelectorAll("[data-mode]").forEach(b=>b.addEventListener("click",()=>{ const m=b.dataset.mode; if(page==="daily" && game && game.daily){ guardLeave(()=>{ game=null; goMode(m); }); return; } goMode(m); }));
@@ -3153,6 +3211,10 @@ function syncText(){ if(lastPushErr) return t("syncErr")(lastPushOk?agoText(last
 const isApp = () => document.documentElement.classList.contains("native");
 function loadSupa(){ return new Promise((res,rej)=>{ if(window.supabase&&window.supabase.createClient) return res(window.supabase);
   const sc=document.createElement("script"); sc.src=SUPA_SRC; sc.async=true; sc.onload=()=>res(window.supabase); sc.onerror=rej; document.head.appendChild(sc); }); }
+// The Supabase SDK (~170 KB) is loaded on demand: at start only when a session or an auth redirect exists, otherwise when Profile / Leaderboard open (ensureCloud)
+let cloudPromise=null;
+function hasSession(){ try{ for(let i=0;i<localStorage.length;i++){ const k=localStorage.key(i)||""; if(k.startsWith("sb-")&&k.endsWith("-auth-token")) return true; } }catch(e){} return /[?&]code=/.test(location.search) || /access_token=/.test(location.hash); }
+function ensureCloud(){ if(!cloudPromise) cloudPromise=initCloud(); return cloudPromise; }
 async function initCloud(){
   try{
     const lib=await loadSupa();
@@ -3271,7 +3333,7 @@ $("wcSignup").addEventListener("click",()=>{ closeMod("welcomeModal"); openPage(
 function renderRankPer(){ const box=$("rankPer"), P=t("periods"), cur=S.settings.rankPer||"week"; box.innerHTML="";
   Object.keys(P).forEach(k=>{ const b=document.createElement("button"); b.type="button"; b.textContent=P[k]; b.setAttribute("aria-pressed",k===cur); b.onclick=()=>{ S.settings.rankPer=k; save(); renderRank(); }; box.appendChild(b); }); }
 async function renderRank(){
-  renderRankPer();
+  renderRankPer(); if(!cloudPromise){ ensureCloud(); } // first opening: load the SDK, initCloud re-renders when ready
   const li=levelInfo(S.xp), ol=$("rankList"); ol.innerHTML="";
   const row=(r,rk,me)=>{ const el=document.createElement("li"); if(me) el.className="me";
     const okPhoto = r.photo && /^https:\/\//.test(r.photo);
@@ -3315,6 +3377,7 @@ async function oauthLogin(provider){
   }catch(err){ const m=String(err&&err.message||err); if(/cancel/i.test(m)) return; loginStep.msg=authMsg(err); loginStep.err=true; renderAccount(); }
 }
 function renderAccount(){
+  if(!cloudPromise){ ensureCloud(); }
   const li=levelInfo(S.xp), ci=charIndex(li.L), c=t("chars")[ci];
   const solved=Object.values(S.secStats||{}).reduce((a,x)=>a+(x.ok||0),0);
   const ph=userPhoto();
@@ -3435,7 +3498,6 @@ $("secTabs").addEventListener("click",e=>{ const b=e.target.closest("button"); i
   if(page==="daily" && game && game.daily){ guardLeave(()=>{ game=null; $("secTabs").querySelector('[data-v="'+b.dataset.v+'"]').click(); }); return; }
   const v=b.dataset.v;
   if(v==="games"){ openPage("games"); return; }
-  if(v==="play"){ openPage("play"); return; }
   if(page!=="practice"){ if(S.section!==v){ S.section=v; save(); returnPage=null; } openPage(INFO_PAGES.includes(page)&&returnPage==="practice"?"practice":"practice"); }
   else switchSection(v);
   autoIntro(v); });
@@ -3644,7 +3706,7 @@ function autoCorrelate(buf,sr){
 let helpOpen=false, pausedLeft=0, tutI=0;
 // any window open: freeze the countdown and auto-advance, keep focus inside the window
 let paused=false, pendingAdv=false, modalFocus=[];
-function anyWin(){ return helpOpen||setOpen||midiOpen||endOpen||openMods.length>0; }
+function anyWin(){ return helpOpen||midiOpen||endOpen||openMods.length>0; }
 function anyModal(){ return anyWin()||INFO_PAGES.includes(page); }
 function pauseRound(){ if(!paused && phase==="listening"){ cancelAnimationFrame(raf); pausedLeft = deadline ? Math.max(0,deadline-performance.now()) : 0; paused=true; } }
 function resumeRound(){
@@ -3653,8 +3715,7 @@ function resumeRound(){
   if(pendingAdv){ pendingAdv=false; setTimeout(()=>{ if(anyModal()){ pendingAdv=true; return; } if(phase==="success") startRound(); else if(phase==="revealed") grade(true); },500); }
 }
 function modalOpened(){ modalFocus.push(document.activeElement); pauseRound(); try{ $("app").inert=true; }catch(e){} }
-let helpAfterInput=false;
-function modalClosed(){ if(typeof maybeAskInput==="function") setTimeout(()=>{ maybeAskInput(); if(helpAfterInput && S.settings.input && !anyModal()){ helpAfterInput=false; openHelp(); } },0); if(!anyWin()){ try{ $("app").inert=false; }catch(e){} modalFocus.length=Math.min(modalFocus.length,1); } const f=modalFocus.pop(); try{ if(f&&f.focus&&!anyWin()&&document.contains(f)) f.focus({preventScroll:true}); }catch(e){} resumeRound(); }
+function modalClosed(){ if(typeof maybeAskInput==="function") setTimeout(()=>{ maybeAskInput(); },0); if(!anyWin()){ try{ $("app").inert=false; }catch(e){} modalFocus.length=Math.min(modalFocus.length,1); } const f=modalFocus.pop(); try{ if(f&&f.focus&&!anyWin()&&document.contains(f)) f.focus({preventScroll:true}); }catch(e){} resumeRound(); }
 // safety net: if no window is open, the app must never stay frozen
 setInterval(()=>{ try{ if(!anyWin() && $("app").inert) $("app").inert=false; }catch(e){} }, 1500);
 const VB='viewBox="0 0 360 190"';
@@ -3678,8 +3739,8 @@ function tutSvg(i){
       +txt(52,86,"s-big",31,scaleName("major","D"))
       +'<rect x="52" y="106" width="256" height="9" rx="4.5" class="s-track"/><rect x="52" y="106" width="168" height="9" rx="4.5" class="s-fill"/>'
       +txt(308,100,"s-m",11,"3,4 s".replace(",",S.settings.lang==="fr"?",":"."),"end")
-      +arrow(id,"M262 176 C 262 150, 236 146, 226 124")
-      +txt(268,180,"s-m",11,"⏱ "+L.count)
+      +arrow(id,"M275 166 C 270 150, 240 146, 226 124")
+      +txt(334,180,"s-m",11,"⏱ "+L.count,"end") // anchored right so the French label is never cut
       +'</svg>';
   }
   if(i===1){
@@ -3769,12 +3830,12 @@ $("helpBody").addEventListener("pointerup",e=>{ if(swipeX==null) return; const d
 // ---------- Boot ----------
 
 applyStatic(); applySide(); buildKeyboard(); renderSettings(); render(); renderDaily(); openPage("hub");
-setTimeout(initCloud, 400);
+setTimeout(()=>{ if(hasSession()) ensureCloud(); }, 400);
 { const sp=$("splash"); if(document.documentElement.classList.contains("native")){ const t0=performance.now(); setTimeout(()=>{ sp.classList.add("out"); setTimeout(()=>sp.remove(),400); }, Math.max(0,1500-t0)); } else sp.remove(); }
 const mobileWeb = (phoneMQ.matches||railMQ.matches) && !document.documentElement.classList.contains("native");
 document.body.classList.add("guest");
 restoreInput();
-if(firstVisit){ save(); if(mobileWeb){ renderWelcome(); openMod("welcomeModal"); } else { helpAfterInput=true; setTimeout(openInputChooser, document.documentElement.classList.contains("native")?1700:300); } }
+if(firstVisit){ save(); if(mobileWeb){ renderWelcome(); openMod("welcomeModal"); } else { setTimeout(openInputChooser, document.documentElement.classList.contains("native")?1700:300); } }
 else maybeAskInput();
 })();
 </script>
