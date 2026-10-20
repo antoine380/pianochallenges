@@ -13,7 +13,7 @@ const guide = () => page.evaluate(() => [...document.querySelectorAll('#kbd [dat
 const WIN = {
   help: { open: () => page.evaluate(() => document.getElementById('helpBtn').click()), close: () => page.keyboard.press('Escape'), id: 'helpModal' },
   midi: { open: () => page.evaluate(() => document.getElementById('midiBtn').click()), close: () => page.keyboard.press('Escape'), id: 'midiModal' },
-  levels: { open: () => page.evaluate(() => document.getElementById('lvlAv').click()), close: () => page.keyboard.press('Escape'), id: 'charModal' },
+  levels: { open: () => page.evaluate(() => document.getElementById('charMore').click()), close: () => page.keyboard.press('Escape'), id: 'charModal' }, // the avatar now opens the progress sheet; « Niveaux » opens the levels window
   input: { open: () => page.evaluate(() => document.getElementById('inChip').click()), close: () => page.keyboard.press('Escape'), id: 'inputModal' },
   settings: { open: () => page.evaluate(() => document.getElementById('setBtn').click()), close: () => page.evaluate(() => document.querySelector('#secTabs [data-v="chords"]').click()), id: 'settingsPage' },
   progress: { open: () => page.evaluate(() => document.getElementById('progBtn').click()), close: () => page.evaluate(() => document.querySelector('#secTabs [data-v="chords"]').click()), id: 'progressPage' },

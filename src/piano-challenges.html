@@ -60,13 +60,8 @@ button:focus-visible, select:focus-visible, input:focus-visible, summary:focus-v
 .lang button[aria-pressed="true"]{background:var(--ink);color:var(--bg);font-weight:700}
 .flag{font-size:1.15em;line-height:1}
 .side-tools{display:flex;align-items:center;gap:8px;margin:8px 10px 2px}
-.lang-btn{font-weight:600;padding:4px 8px 4px 10px;font-size:.88rem}
-.lang-btn svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round}
-.lang-dd .dd-pop{top:auto;bottom:calc(100% + 6px)}
 .side.collapsed .side-tools{justify-content:center;margin-inline:0}
 .side.collapsed .side-tools{gap:4px;margin-inline:0}
-.side.collapsed .lang-btn{padding:5px 5px;height:32px}
-.side.collapsed .lang-btn :is(.ltxt,svg){display:none}
 .side.collapsed .inp-chip{width:30px}
 .side.collapsed .inp-chip>svg{width:19px;height:19px}
 .modal{position:fixed;inset:0;z-index:40;display:flex;align-items:center;justify-content:center;
@@ -364,9 +359,6 @@ body{margin:0;padding:0;overflow:hidden}
 .ptile-grid,.hub-grid{padding:18px 10px 4px 0}
 @media (prefers-reduced-motion:reduce){.ptile,.ptile .obj{transition:none}}
 .ptile.soon{cursor:default;filter:saturate(.55)} .ptile.soon:hover{transform:none} /* greyed, not translucent: the white text keeps its contrast */
-.ptile .art{aspect-ratio:16/9;max-width:100%;border-radius:12px;background:#111016;box-shadow:0 10px 26px #0005,inset 0 0 0 3px #26242e;display:grid;place-items:center;position:relative;overflow:hidden}
-.ptile .art::after{content:"";position:absolute;left:4%;right:4%;bottom:0;height:22%;background:repeating-linear-gradient(90deg,#2b2a31 0 calc(100%/14 - 2px),transparent 0 calc(100%/14));border-radius:3px 3px 0 0}
-.ptile .art svg{width:38%;height:38%;fill:none;stroke:#fff;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;filter:drop-shadow(0 0 16px var(--tc));position:relative;top:-6%}
 .ptile .pk{font-family:var(--f-mono);font-weight:800;font-size:.68rem;letter-spacing:.12em;text-transform:uppercase;opacity:.92}
 .ptile .h3{display:block;margin:0;font-family:var(--f-display);font-weight:700;font-size:1.4rem;letter-spacing:0;line-height:1.1;text-shadow:0 2px 0 rgba(0,0,0,.12)}
 .ptile p{margin:0;font-size:.88rem;line-height:1.4}
@@ -387,14 +379,13 @@ body{margin:0;padding:0;overflow:hidden}
 @media (min-width:1200px){ #gameCards{grid-template-columns:repeat(4,minmax(0,1fr))} #playCards{grid-template-columns:repeat(6,minmax(0,1fr))} }
 .gc-head{margin:6px 0 0;font-family:var(--f-display);font-weight:800;font-size:1.05rem;display:flex;flex-wrap:wrap;align-items:baseline;gap:2px 10px} .gc-head span{white-space:nowrap}
 .gc-head small{font-family:var(--f-body);font-weight:400;color:var(--muted);font-size:.84rem}
-@media (max-width:760px){.ptile-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px} .ptile-grid .ptile .art{display:none} .ptile-grid .ptile{padding:12px 12px 14px;gap:4px} .ptile-grid .ptile .h3{font-size:1rem} .ptile-grid .ptile p{font-size:.76rem} .ptile-grid .ptile .go{padding:6px 11px;font-size:.78rem;margin-top:6px} .hub-grid{grid-template-columns:1fr;gap:12px} .hub-grid .ptile{--os:96px;padding:16px 18px;min-height:110px;justify-content:center} .hub-grid .ptile :is(.h3,p){max-width:calc(100% - 90px)} .hub-grid .ptile .tags{display:none} .mode-page.hub{justify-content:flex-start} .hub-grid .ptile .art{display:none} .hub-grid .ptile{padding:14px 16px;gap:4px} .hub-grid .ptile .h3{font-size:1.3rem} .hub-grid .ptile .tags{display:none}}
+@media (max-width:760px){.ptile-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px} .ptile-grid .ptile{padding:12px 12px 14px;gap:4px} .ptile-grid .ptile .h3{font-size:1rem} .ptile-grid .ptile p{font-size:.76rem} .ptile-grid .ptile .go{padding:6px 11px;font-size:.78rem;margin-top:6px} .hub-grid{grid-template-columns:1fr;gap:12px} .hub-grid .ptile{--os:96px;padding:16px 18px;min-height:110px;justify-content:center} .hub-grid .ptile :is(.h3,p){max-width:calc(100% - 90px)} .hub-grid .ptile .tags{display:none} .mode-page.hub{justify-content:flex-start} .hub-grid .ptile .art{display:none} .hub-grid .ptile{padding:14px 16px;gap:4px} .hub-grid .ptile .h3{font-size:1.3rem} .hub-grid .ptile .tags{display:none}}
 /* Tablets and short screens (iPad 1024×768 and 768×1024, laptops 1280×800): compact tiles without the "screen" art, so Games and Learn fit on one screen */
 @media (max-height:820px), (max-width:900px){
   .ptile-grid{grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:10px}
   #learnTiles{grid-template-columns:repeat(3,minmax(0,1fr))}
   #gameCards{grid-template-columns:repeat(4,minmax(0,1fr))}
   #playCards{grid-template-columns:repeat(3,minmax(0,1fr))}
-  .ptile-grid .ptile .art{display:none}
   .ptile-grid .ptile{padding:14px 14px 14px;gap:5px;border-radius:var(--r-lg);min-height:0;--os:80px}
   .ptile-grid .ptile :is(.pk,.h3){max-width:calc(100% - 58px)}
   .hub-grid .ptile{--os:120px;padding-top:100px;min-height:0}
@@ -563,9 +554,6 @@ body{margin:0;padding:0;overflow:hidden}
 .rn-score{font-size:1.05rem;font-weight:500} .rn-best{color:var(--muted);font-size:.85rem}
 .rn-stage{background:var(--surface);border:1px solid transparent;border-radius:14px;overflow:hidden;height:clamp(170px,30vh,280px);flex:none}
 .rn-stage canvas{display:block;width:100%;height:100%}
-.game-card.play{cursor:pointer;border-color:var(--accent);box-shadow:0 0 0 1px var(--accent)}
-.game-card.play:hover{background:var(--accent-soft)}
-.game-card .go{align-self:flex-start;margin-top:6px}
 body.runner-on #gamesPanel{display:none!important}
 body.runner-on .free-lbl{display:none!important}
 @media (max-height:520px) and (orientation:landscape){ .rn-stage{height:clamp(120px,34vh,180px)} .rn-head b{font-size:1.05rem} }
@@ -753,14 +741,6 @@ html.native .midi-body [data-i="midiHint"]{display:none}
 
 /* Games */
 .games{flex:none;display:flex;flex-direction:column;gap:12px}
-.game-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:10px}
-.game-card{background:var(--surface);border:1px solid transparent;border-radius:12px;padding:12px 14px;display:flex;gap:12px;align-items:flex-start;min-width:0}
-.game-card .gi{width:40px;height:40px;border-radius:10px;background:var(--accent-soft);display:grid;place-items:center;flex:none}
-.game-card .gi svg{width:22px;height:22px;fill:none;stroke:var(--accent);stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
-.game-card .gt{display:flex;flex-direction:column;gap:2px;min-width:0}
-.game-card b{font-family:var(--f-display);font-size:1.02rem;line-height:1.2}
-.game-card p{margin:0;font-size:.84rem;color:var(--muted);line-height:1.35}
-.game-card .soon{align-self:flex-start;font-family:var(--f-mono);font-size:.66rem;text-transform:uppercase;letter-spacing:.08em;color:var(--accent);background:var(--accent-soft);border-radius:999px;padding:1px 7px;margin-top:4px}
 .free-lbl{display:none;margin:0;font-family:var(--f-display);font-weight:700;font-size:1.05rem}
 [data-page="games"] :is(.picker,.gamebar,.prompt-row,.timeline,.slots,.answers,.actions,.hint,.notice){display:none!important}
 [data-page="games"] .free-lbl{display:block}
@@ -1040,6 +1020,71 @@ body:not(.runner-on)[data-page="games"] .stage{display:none!important}
 .pf-journey p,.pf-journey h3{color:#fff}
 .pf-detail-h{margin:6px 0 0;font-family:var(--f-display);font-weight:700;font-size:1.1rem}
 @media (max-width:640px){ .pf-head{padding:12px} .pf-head .av{width:48px;height:48px} .pf-id b{font-size:1.15rem} .pf-row{grid-auto-columns:86%} }
+
+/* ===== v1.4: LEARN start screen, step-by-step card ===== */
+[data-page="practice"] .picker{display:none!important}
+body.setup :is(.stage,.gamebar){display:none!important}
+.su{gap:14px}
+.su-wrap{display:grid;grid-template-columns:minmax(0,1fr) minmax(260px,320px);gap:20px;align-items:start;min-height:0}
+.su-main{display:flex;flex-direction:column;gap:6px;min-width:0}
+.su-h{margin:6px 0 6px;font-family:var(--f-body);font-weight:800;font-size:.8rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.su-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
+.su-card{display:flex;flex-direction:column;align-items:flex-start;gap:2px;text-align:left;border:0;border-radius:var(--r-md);padding:12px 14px;background:var(--surface);color:var(--ink);box-shadow:var(--shadow-card);min-height:62px;transition:transform .15s,box-shadow .15s}
+.su-card b{font-family:var(--f-display);font-weight:600;font-size:1rem;line-height:1.15}
+.su-card small{color:var(--muted);font-size:.74rem;font-weight:700}
+.su-card:not(:disabled):hover{transform:translateY(-2px)}
+.su-card[aria-pressed="true"]{color:#fff;background:linear-gradient(150deg,color-mix(in srgb,var(--mc) 60%,#fff),var(--mc));box-shadow:0 12px 22px -12px var(--mc)}
+.su-card[aria-pressed="true"] small{color:#fff;opacity:.9}
+.su-card:disabled{opacity:.55;cursor:default}
+.su-keys{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:8px}
+.su-key{display:flex;flex-direction:column;align-items:center;gap:4px;border:0;border-radius:14px;padding:10px 2px 8px;background:var(--surface);color:var(--ink);box-shadow:var(--shadow-card);min-height:52px}
+.su-key b{font-family:var(--f-display);font-weight:600;font-size:.95rem;white-space:nowrap}
+.su-key .pips{display:flex;gap:3px} .su-key .pips i{width:5px;height:5px;border-radius:50%;background:var(--line)} .su-key .pips i.f{background:var(--gold)}
+.su-key[aria-pressed="true"]{color:#fff;background:linear-gradient(150deg,color-mix(in srgb,var(--mc) 60%,#fff),var(--mc));box-shadow:0 10px 18px -10px var(--mc)}
+.su-key:disabled{opacity:.4;cursor:default}
+.su-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:10px}
+.su-lbl{font-weight:800;font-size:.8rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.su-chips{display:flex;gap:6px;flex-wrap:wrap}
+.su-chips button{border:0;border-radius:999px;padding:7px 14px;background:var(--surface-2);color:var(--ink);font-weight:700;font-size:.85rem}
+.su-chips button[aria-pressed="true"]{background:var(--brand);color:#fff}
+.su-chips button:disabled{opacity:.45}
+.su-side{display:flex;flex-direction:column;gap:12px}
+.su-box{background:var(--surface);border-radius:var(--r-lg);padding:12px 14px;box-shadow:var(--shadow-card)}
+.su-box .su-h{margin-top:0}
+.su-hh{display:flex;justify-content:space-between;align-items:baseline}
+.su-seg{display:flex}
+.su-seg button{flex:1;white-space:nowrap}
+.su-help{display:flex;gap:10px;align-items:flex-start;padding:8px 6px;border-radius:12px;cursor:pointer}
+.su-help:hover{background:var(--surface-2)}
+.su-help input{width:20px;height:20px;margin-top:2px;accent-color:var(--brand);flex:none}
+.su-help span{display:flex;flex-direction:column;gap:1px;min-width:0}
+.su-help b{font-weight:800;font-size:.9rem} .su-help small{color:var(--muted);font-size:.76rem;line-height:1.3}
+.su-help.mini{padding-block:4px} .su-help.mini b{font-weight:700;font-size:.82rem}
+.su-go{display:flex;align-items:center;justify-content:space-between;gap:12px;border:0;border-radius:var(--r-lg);padding:14px 16px;color:#fff;text-align:left;
+  background:linear-gradient(150deg,color-mix(in srgb,var(--mc) 55%,#fff),var(--mc));box-shadow:0 18px 28px -16px var(--mc),inset 0 1px 0 rgba(255,255,255,.35);transition:transform .15s}
+.su-go:hover{transform:translateY(-2px)}
+.su-go>span:first-child{display:flex;flex-direction:column;min-width:0} .su-go small{font-weight:700;font-size:.76rem;opacity:.92} .su-go b{font-family:var(--f-display);font-weight:700;font-size:1.15rem;line-height:1.15}
+.su-play{flex:none;border-radius:999px;padding:9px 16px;background:#fff;color:#1b1838;font-weight:800;font-size:.9rem}
+@media (max-width:1100px){ .su-keys{grid-template-columns:repeat(6,minmax(0,1fr))} }
+@media (max-width:900px){ .su-wrap{grid-template-columns:1fr} .su-side{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))} .su-go{grid-column:1/-1} }
+@media (max-height:820px){ .su-card{min-height:50px;padding:9px 12px} .su-key{min-height:44px;padding:7px 2px 6px} .su-help{padding:5px 6px} .su-help small{font-size:.72rem} .su-box{padding:10px 12px} .su .mode-h p{display:none} }
+@media (max-width:640px){ .su .mode-h{display:none} .su-side{grid-template-columns:1fr;gap:8px} .su-help small,.su-card small{display:none} .su .mode-h p{display:none} .su-h{margin:2px 0 4px}
+  .su-cards,.su-keys{display:flex;overflow-x:auto;scroll-snap-type:x proximity;gap:6px;padding:2px 2px 6px;scrollbar-width:none} .su-cards::-webkit-scrollbar,.su-keys::-webkit-scrollbar{display:none}
+  .su-card{flex:0 0 auto;min-height:0;padding:9px 14px;scroll-snap-align:start} .su-key{flex:0 0 52px;min-height:0;padding:7px 0 5px} .su-help{padding:4px 6px} .su-box{padding:8px 12px} .su-go{padding:10px 14px} .su-row{margin-top:4px} }
+@media (max-height:420px) and (orientation:landscape){ .su .mode-h{display:none} .su-wrap{grid-template-columns:minmax(0,1fr) 240px;gap:12px} .su-side{display:flex;gap:6px} .su-help small,.su-card small,.su .mode-h p{display:none}
+  .su-cards,.su-keys{display:flex;overflow-x:auto;gap:6px;padding:2px 2px 4px;scrollbar-width:none} .su-card{flex:0 0 auto;min-height:0;padding:7px 12px} .su-key{flex:0 0 46px;min-height:0;padding:5px 0} .su-key .pips{display:none}
+  .su-h{margin:0 0 3px;font-size:.7rem} .su-box{padding:6px 10px} .su-help{padding:2px 4px} .su-help b{font-size:.8rem} .su-go{padding:8px 12px} .su-go small{display:none} .su-row{margin-top:2px} .su{gap:6px} }
+/* the step-by-step card */
+.fiche{margin-top:10px;max-width:360px;padding:10px 12px;border-radius:var(--r-md);background:var(--surface-2)}
+.fc-h{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px} .fc-h b{font-weight:800;font-size:.85rem} .fc-h small{color:var(--muted);font-weight:700;font-size:.76rem}
+.fc-kb svg{display:block;width:100%;height:46px}
+.fc-kb rect{fill:var(--key-white);stroke:none} .fc-kb rect.bk{fill:var(--key-black)} .fc-kb rect.on{filter:drop-shadow(0 0 3px rgba(255,255,255,.4))}
+.fc-n{display:flex;flex-wrap:wrap;gap:4px;margin-top:6px}
+.fc-n span{min-width:30px;text-align:center;border-radius:999px;padding:2px 8px;font-weight:800;font-size:.8rem;background:var(--surface);color:var(--muted)}
+.fc-n span.ok{background:var(--c);color:#15122e}
+body.gp .wk.k-ok,body.gp .bk.k-ok{background:var(--nc)!important;box-shadow:inset 0 -7px 0 rgba(0,0,0,.16),0 0 18px 0 var(--nc)!important}
+body.gp .wk.k-ok span,body.gp .bk.k-ok span{color:#15122e}
+.playpanel{background:var(--bg)!important}
 </style>
 
 <script>if(window.Capacitor&&window.webkit&&window.webkit.messageHandlers&&window.webkit.messageHandlers.bridge)document.documentElement.classList.add("native");</script>
@@ -1180,6 +1225,27 @@ body:not(.runner-on)[data-page="games"] .stage{display:none!important}
     <div class="ptile-grid" id="playSongs"></div>
   </section>
 
+  <section class="mode-page su" id="setupPanel" hidden>
+    <div class="mode-h"><h2 class="mode-big" id="suTitle"><span class="mb-ic" id="suIc"></span><span id="suName"></span></h2><p id="suSub"></p></div>
+    <div class="su-wrap">
+      <div class="su-main">
+        <h3 class="su-h" id="suTypesH"></h3><div class="su-cards" id="suTypes"></div>
+        <div id="suKeysWrap"><h3 class="su-h" data-i="suKey"></h3><div class="su-keys" id="suKeys"></div></div>
+        <div id="suExtra"></div>
+      </div>
+      <aside class="su-side">
+        <section class="su-box"><h3 class="su-h" data-i="suTimer"></h3><div class="seg su-seg" id="suTimer"></div></section>
+        <section class="su-box"><div class="su-hh"><h3 class="su-h" data-i="suHelps"></h3><button class="hs-more" id="suHow" type="button" data-i="suHowT"></button></div>
+          <label class="su-help"><input type="checkbox" id="suHelpN"><span><b data-i="suHelpNT"></b><small data-i="suHelpND"></small></span></label>
+          <label class="su-help"><input type="checkbox" id="suHelpK"><span><b data-i="suHelpKT"></b><small data-i="suHelpKD"></small></span></label>
+          <label class="su-help"><input type="checkbox" id="suHelpP"><span><b data-i="suHelpPT"></b><small data-i="suHelpPD"></small></span></label>
+          <label class="su-help mini"><input type="checkbox" id="suLabels"><span><b data-i="suLabelsT"></b></span></label>
+        </section>
+        <button class="su-go" id="suGo" type="button"><span><small id="suCount"></small><b id="suSum"></b></span><span class="su-play" data-i="suGo"></span></button>
+      </aside>
+    </div>
+  </section>
+
   <section class="mode-page" id="learnPanel" hidden>
     <div class="mode-h"><h2 class="mode-big" style="--mc:var(--m-learn)"><span class="mb-ic"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6.5A2.5 2.5 0 0 1 6.5 4H11v16H6.5A2.5 2.5 0 0 0 4 22zM20 6.5A2.5 2.5 0 0 0 17.5 4H13v16h4.5A2.5 2.5 0 0 1 20 22z"/></svg></span>LEARN</h2><p><span data-i="learnTitle"></span> <span data-i="learnSub"></span></p></div>
     <div class="ptile-grid" id="learnTiles"></div>
@@ -1262,6 +1328,7 @@ body:not(.runner-on)[data-page="games"] .stage{display:none!important}
         <p class="prompt" id="prompt"></p>
         <p class="prompt-sub" id="promptSub"></p>
         <span class="inv-tag" id="invTag" hidden><i></i><span id="invTxt"></span></span>
+        <div class="fiche" id="fiche" hidden></div>
       </div>
       <div class="score-col">
         <div class="score-box" id="feedback">
@@ -1503,6 +1570,7 @@ body:not(.runner-on)[data-page="games"] .stage{display:none!important}
 const TXT = {
   fr:{help:"Aide", helpTitle:"Comment ça marche", helpOk:"C'est parti", tutNext:"Suivant", tutPrev:"Précédent", close:"Fermer", stepOf:(i,n)=>"Étape "+i+" sur "+n,
     tut:[{h:"Lis la consigne",p:"Une gamme, un accord ou une progression s'affiche avec un compte à rebours. Visualise les notes dans ta tête avant que la barre ne se vide."},
+         {h:"Choisis et règle",p:"Avant chaque partie, choisis la gamme ou l'accord en cartes, puis le chrono et tes aides. « Voir les notes » affiche le nom des notes, « Allumer les touches » montre où jouer, et l'« Aide progressive » ne donne rien au départ puis un indice toutes les 8 s ; les notes trouvées restent allumées et une fiche se construit pour les retenir. Moins d'aide = plus d'XP."},
          {h:"Joue sur ton piano",p:"Les gammes de la tonique à l'octave, les accords en partant de leur note la plus grave, les progressions accord après accord. Piano numérique (MIDI), piano acoustique (micro) ou clavier à l'écran : chaque bonne note remplit une case. Le MIDI marche dans Chrome et Edge (pas dans Safari)."},
          {h:"Temps écoulé : la réponse",p:"La réponse s'allume en bleu et se joue. Clique sur « Continuer » pour passer à la suite, ou sur « Réessayer » pour retenter tout de suite."},
          {h:"Progresse et débloque",p:"Chaque réussite sans faute remplit une jauge : 3 crans débloquent la tonalité suivante, et chaque niveau ouvre de nouveaux contenus. L'onglet Oreille se joue sans piano : écoute et choisis la réponse."}],
@@ -1616,7 +1684,13 @@ const TXT = {
     melDown:" · descend en Mineur",
     midiBlockedMsg:"Le navigateur a refusé l'accès MIDI. Clique sur le cadenas à gauche de l'adresse pour l'autoriser, ou choisis le clavier à l'écran.",
     dailyResume:"Reprendre",
-    syncOk:x=>"Sauvegardé en ligne "+x+" ✓", syncErr:x=>"Hors ligne : dernière sauvegarde "+x+".", agoNever:"inconnue", signedOut:"Déconnecté", rights:"Tous droits réservés", themeDay:"Passer en mode jour", themeNight:"Passer en mode nuit", playSub:"Des morceaux qui tombent sur le clavier, à ton rythme. En dessous, le piano pour jouer librement.", freeK:"Jeu libre",
+    syncOk:x=>"Sauvegardé en ligne "+x+" ✓", syncErr:x=>"Hors ligne : dernière sauvegarde "+x+".", agoNever:"inconnue", signedOut:"Déconnecté", rights:"Tous droits réservés", themeDay:"Passer en mode jour", themeNight:"Passer en mode nuit", suKey:"Tonalité", suTimer:"Chrono", suHelps:"Aides", suHowT:"Comment ça marche ?", suGo:"Commencer", suMastered:"maîtrisées", suChange:"Changer de choix",
+    suPickScale:"Quelle gamme ?", suPickChord:"Quel accord ?", suPickProg:"Quelle progression ?", suPickEar:"Qu'est-ce qu'on écoute ?",
+    suSub_scales:"Choisis une gamme et sa tonalité, règle le chrono et les aides, puis joue-la jusqu'à la réussir.", suSub_chords:"Choisis un accord et sa tonalité. Chaque renversement coché est un exercice.", suSub_harmony:"Choisis une tonalité : chaque degré coché est un exercice.", suSub_prog:"Choisis une progression et sa tonalité, puis enchaîne les accords.", suSub_ear:"Choisis ce que tu veux reconnaître : 10 écoutes par partie.",
+    suHelpNT:"Voir les notes", suHelpND:"Le nom de chaque note s'affiche avant que tu joues.", suHelpKT:"Allumer les touches", suHelpKD:"Les touches à jouer s'allument sur le clavier.",
+    suHelpPT:"Aide progressive", suHelpPD:"Rien au départ. Si tu bloques, un indice arrive toutes les 8 s (ou avec Espace) : le degré, puis le nom, puis les touches. Les notes trouvées restent allumées et une fiche se construit pour les retenir.",
+    suLabelsT:"Noms des notes sous toutes les touches", suCount:(n,sec)=>n===1?(sec==="prog"?"1 progression à jouer":sec==="chords"?"1 accord à jouer":"1 gamme à jouer, autant de fois que tu veux"):n+" exercices",
+    ficheT:"À retenir", ficheS:(a,b)=>a+" / "+b+" notes", playSub:"Des morceaux qui tombent sur le clavier, à ton rythme. En dessous, le piano pour jouer librement.", freeK:"Jeu libre",
     pfAch:"Tes réussites", pfJourney:"Ton parcours", pfRecs:"Tes records", pfDetail:"Détail par matière", pfLvl:"Niveau",
     pfSt:["Score total","Exercices réussis","Exercices sans faute","Éléments maîtrisés","Temps de jeu total","Joué aujourd'hui"],
     pfDayS:n=>"Série : "+n+" j", pfWeekS:n=>"Semaines : "+n, pfBest:n=>"Record : "+n, pfJSub:(a,b)=>a+" éléments maîtrisés sur "+b+".", pfRSub:"Tes meilleurs scores dans les jeux et les morceaux.",
@@ -1628,6 +1702,7 @@ const TXT = {
     dailyShort:"Entraînement"},
   en:{help:"Help", helpTitle:"How it works", helpOk:"Let's go", tutNext:"Next", tutPrev:"Previous", close:"Close", stepOf:(i,n)=>"Step "+i+" of "+n,
     tut:[{h:"Read the challenge",p:"A scale, a chord or a progression appears with a countdown. Picture the notes in your head before the bar runs out."},
+         {h:"Pick and set up",p:"Before each game, pick the scale or chord as a card, then the timer and your helps. “Show the notes” shows the note names, “Light up the keys” shows where to play, and “Step-by-step help” gives nothing at first, then a hint every 8 s; the notes you find stay lit and a card builds up to help you remember them. Less help = more XP."},
          {h:"Play it on your piano",p:"Scales from the root up to the octave, chords from their lowest note, progressions chord by chord. Digital piano (MIDI), acoustic piano (mic) or on-screen keys: each correct note fills a box. MIDI works in Chrome and Edge (not in Safari)."},
          {h:"Time's up: the answer",p:"The answer lights up in blue and plays. Press Continue to move on, or Retry to try the same one again right away."},
          {h:"Level up and unlock",p:"Each perfect run fills a gauge: 3 steps unlock the next key, and each level opens new content. The Ear tab works without a piano: listen and pick the answer."}],
@@ -1740,7 +1815,13 @@ const TXT = {
     melDown:" · descends as Minor",
     midiBlockedMsg:"The browser refused MIDI access. Click the padlock left of the address to allow it, or choose the on-screen keyboard.",
     dailyResume:"Resume",
-    syncOk:x=>"Saved online "+x+" ✓", syncErr:x=>"Offline: last save "+x+".", agoNever:"unknown", signedOut:"Signed out", rights:"All rights reserved", themeDay:"Switch to day mode", themeNight:"Switch to night mode", playSub:"Songs that fall onto the keyboard, at your own pace. Below, the piano for free play.", freeK:"Free play",
+    syncOk:x=>"Saved online "+x+" ✓", syncErr:x=>"Offline: last save "+x+".", agoNever:"unknown", signedOut:"Signed out", rights:"All rights reserved", themeDay:"Switch to day mode", themeNight:"Switch to night mode", suKey:"Key", suTimer:"Timer", suHelps:"Helps", suHowT:"How does it work?", suGo:"Start", suMastered:"mastered", suChange:"Change choice",
+    suPickScale:"Which scale?", suPickChord:"Which chord?", suPickProg:"Which progression?", suPickEar:"What do we listen to?",
+    suSub_scales:"Pick a scale and its key, set the timer and the helps, then play it until you nail it.", suSub_chords:"Pick a chord and its key. Each ticked inversion is one exercise.", suSub_harmony:"Pick a key: each ticked degree is one exercise.", suSub_prog:"Pick a progression and its key, then chain the chords.", suSub_ear:"Pick what you want to recognise: 10 listens per game.",
+    suHelpNT:"Show the notes", suHelpND:"Each note's name shows before you play.", suHelpKT:"Light up the keys", suHelpKD:"The keys to play light up on the keyboard.",
+    suHelpPT:"Step-by-step help", suHelpPD:"Nothing at first. If you get stuck, a hint comes every 8 s (or with Space): the degree, then the name, then the keys. The notes you find stay lit and a card builds up to help you remember them.",
+    suLabelsT:"Note names under every key", suCount:(n,sec)=>n===1?(sec==="prog"?"1 progression to play":sec==="chords"?"1 chord to play":"1 scale to play, as many times as you like"):n+" exercises",
+    ficheT:"To remember", ficheS:(a,b)=>a+" / "+b+" notes", playSub:"Songs that fall onto the keyboard, at your own pace. Below, the piano for free play.", freeK:"Free play",
     pfAch:"Your achievements", pfJourney:"Your journey", pfRecs:"Your records", pfDetail:"Detail by topic", pfLvl:"Level",
     pfSt:["Total score","Exercises passed","Perfect exercises","Items mastered","Total time played","Played today"],
     pfDayS:n=>"Streak: "+n+" d", pfWeekS:n=>"Weeks: "+n, pfBest:n=>"Best: "+n, pfJSub:(a,b)=>a+" of "+b+" items mastered.", pfRSub:"Your best scores in games and songs.",
@@ -2323,6 +2404,8 @@ function startRound(item, retry){
   if(!retry){
     if(!game) game=makeGame(null);
     else game.i++;
+    // a game on one chosen scale / chord / progression: play it again until it is nailed (12 tries at most)
+    if(game.single && game.i>=game.total && game.total<12){ const last=game.results[game.total-1]; if(last && last.level!=="good"){ game.queue.push({...game.queue[0]}); game.total++; } }
     if(game.i>=game.total){ finishGame(); return; }
     if(game.queue && !item) item=game.queue[game.i];
   }
@@ -2395,8 +2478,8 @@ function followMidi(n){
 function midiStart(note){
   if(note%12!==0 || !(page==="practice"||page==="daily") || setOpen || openMods.length || helpOpen || midiOpen || S.settings.midiC===false) return false;
   if(page==="daily" && !game && !endOpen){ startDaily(); return true; }
-  if(endOpen){ closeEnd(); if(page==="daily") return true; startRound(); return true; }
-  if(phase==="idle" || phase==="success"){ startRound(); return true; }
+  if(endOpen){ closeEnd(); if(page==="daily") return true; idleStart(); return true; }
+  if(phase==="idle" || phase==="success"){ idleStart(); return true; }
   if(phase==="revealed"){ grade(true); return true; }
   return false;
 }
@@ -2459,7 +2542,7 @@ function noteIn(m){ lastNoteAt=Date.now();
   else if(idx>0 && pc===seq[idx-1].pc){ flashKey(m,"k-hit",150); }
   else wrongNote(m);
 }
-function markPlayed(){ played.forEach(m=>keyEls[fold(m)]?.classList.add("k-ok")); }
+function markPlayed(){ played.forEach(m=>keyEls[fold(m)]?.classList.add("k-ok")); try{ renderFiche2(); }catch(e){} }
 function success(){
   phase="success"; cancelAnimationFrame(raf);
   const secs=(performance.now()-startT)/1000, remaining=deadline?Math.max(0,(deadline-performance.now())/1000):0, perfect=errors===0;
@@ -2564,9 +2647,11 @@ function grade(next){
   if(phase!=="revealed") return;
   if(next){ roundSwitchAt=performance.now(); startRound(); } else startRound({...cur}, true);
 }
+// a Do / Space with nothing running: on the start screen it starts the chosen item (or replays the last one)
+function idleStart(){ if(page==="practice" && !game && phase==="idle"){ suStart(); return; } startRound(); }
 function primaryAction(){
   if(page==="daily" && !game && (phase==="idle"||phase==="success")){ startDaily(); return; }
-  if(phase==="idle"||phase==="success") startRound();
+  if(phase==="idle"||phase==="success") idleStart();
   else if(phase==="listening"){ if(cur.sec==="ear") playScale(0); else if(!(S.settings.guideP && hintMore())) reveal(false); }
   else if(phase==="revealed") grade(true);
 }
@@ -2698,7 +2783,9 @@ function openEnd(g){
   const btn=(lbl,cls,fn)=>{ const b=document.createElement("button"); b.type="button"; b.className="btn "+cls; b.textContent=lbl; b.onclick=fn; foot.appendChild(b); return b; };
   btn(t("closeLbl"),"",closeEnd);
   if(misses.length) btn(t("reworkBtn"),"",()=>{ closeEnd(); page="practice"; game=makeGame(misses.map(r=>r.it)); game.i=-1; startRound(); });
-  const main=btn(t("newGame"),"primary",()=>{ closeEnd(); page="practice"; if(g.sec&&!g.daily&&g.sec!==S.section) switchSection(g.sec); startRound(); });
+  const main=btn(t("newGame"),"primary",()=>{ closeEnd(); page="practice"; if(g.sec&&!g.daily&&g.sec!==S.section) switchSection(g.sec);
+    if(g.label && g.queue){ const q=g.sec==="ear"?suQueue(g.sec):g.single?[{...g.queue[0]}]:g.queue.map(it=>({...it})); game=makeGame(q); game.label=g.label; game.single=!!g.single; game.i=-1; } startRound(); });
+  if(g.label) btn(t("suChange"),"",()=>{ closeEnd(); render(); });
   $("endX").setAttribute("aria-label",t("closeLbl"));
   if(!endOpen) modalOpened(); endOpen=true; $("endModal").hidden=false; main.focus();
   if(n && good/n>=.8) setTimeout(confetti,150);
@@ -2711,6 +2798,7 @@ function renderGameBar(){
   lbl.className="glbl"+(g&&g.daily?" is-daily":""); lbl.innerHTML="";
   const pre = g&&g.daily ? t("dailyLbl")+" · " : "";
   if(!g){ lbl.textContent = isFinite(total) ? t("gameOf")(total) : t("endlessLbl"); }
+  else if(g.label){ lbl.append(g.label); if(total>1){ const b=document.createElement("b"); b.textContent=" · "+(Math.min(g.i,total-1)+1)+" / "+total; lbl.append(b); } }
   else if(isFinite(total)){ lbl.append(pre+t("exercise")+" "); const b=document.createElement("b"); b.textContent=(Math.min(g.i,total-1)+1)+" / "+total; lbl.append(b); }
   else { lbl.append(t("endlessLbl")+" · "+t("exercise")+" "); const b=document.createElement("b"); b.textContent=g.i+1; lbl.append(b); }
   const ts=$("timerSel"), opts=[0,20,10,5]; if(!opts.includes(S.settings.delay)) opts.push(S.settings.delay);
@@ -3056,7 +3144,9 @@ function renderSettings(){
   setNav();
   renderTypes(); renderKeySel();
 }
-function render(){ if(page==="hub") try{ renderHubSide(); }catch(e){} /* the first renders run before the input code is defined */ document.body.classList.toggle("playing", !!game || phase!=="idle"); document.body.dataset.page=page; $("gamesPanel").hidden = page!=="games"; $("hubPanel").hidden = page!=="hub"; $("freePanel").hidden = page!=="free"; $("learnPanel").hidden = page!=="learn"; $("dailyPanel").hidden = page!=="daily"; $("rankPanel").hidden = page!=="rank"; $("accountPanel").hidden = page!=="account"; $("lockPanel").hidden = page!=="locked"; $("settingsPage").hidden = page!=="settings"; $("progressPage").hidden = page!=="progress"; renderDaily(); renderGameBar(); setNav();
+function render(){ if(page==="hub") try{ renderHubSide(); }catch(e){} /* the first renders run before the input code is defined */
+  const suOn = page==="practice" && !game && phase==="idle"; document.body.classList.toggle("setup",suOn); document.body.classList.toggle("gp",!!S.settings.guideP);
+  const sp=document.getElementById("setupPanel"); if(sp){ sp.hidden=!suOn; if(suOn) try{ renderSetup(); }catch(e){ console.warn(e); } try{ renderFiche2(); }catch(e){} } document.body.classList.toggle("playing", !!game || phase!=="idle"); document.body.dataset.page=page; $("gamesPanel").hidden = page!=="games"; $("hubPanel").hidden = page!=="hub"; $("freePanel").hidden = page!=="free"; $("learnPanel").hidden = page!=="learn"; $("dailyPanel").hidden = page!=="daily"; $("rankPanel").hidden = page!=="rank"; $("accountPanel").hidden = page!=="account"; $("lockPanel").hidden = page!=="locked"; $("settingsPage").hidden = page!=="settings"; $("progressPage").hidden = page!=="progress"; renderDaily(); renderGameBar(); setNav();
   if(phase==="idle"||phase==="listening") resetScore(); renderSession(); renderHint(); renderPrompt(); renderTimeline(); renderSlots(); renderActions(); renderStatus(); renderMap(); labelKeys(); }
 
 // ---------- Settings wiring ----------
@@ -3131,7 +3221,6 @@ function closeTypes(){ document.querySelectorAll(".dd-pop").forEach(p=>p.hidden=
 document.querySelectorAll(".dd-btn[data-pop]").forEach(b=>b.addEventListener("click",()=>{
   if(b.id==="langBtn" && document.getElementById("side").classList.contains("collapsed")){ closeTypes(); document.querySelector('#langSeg [data-v="'+(S.settings.lang==="fr"?"en":"fr")+'"]').click(); return; } const p=$(b.dataset.pop), open=p.hidden; closeTypes(); if(open){ p.hidden=false; b.setAttribute("aria-expanded","true"); typesOpen=true; } }));
 document.addEventListener("pointerdown",e=>{ if(typesOpen && !e.target.closest(".dd")) closeTypes(); });
-const GAME_ICONS=['<circle cx="12" cy="13.5" r="7.5"/><path d="M12 9.5v4l2.5 2M10 3h4M12 3v3"/>','<path d="M6 3v6M12 5v8M18 3v5"/><rect x="3" y="16" width="18" height="5" rx="1.5"/>','<rect x="3.5" y="3.5" width="7" height="7" rx="1.5"/><rect x="13.5" y="3.5" width="7" height="7" rx="1.5"/><rect x="3.5" y="13.5" width="7" height="7" rx="1.5"/><rect x="13.5" y="13.5" width="7" height="7" rx="1.5"/>','<path d="M8 4h8v5a4 4 0 0 1-8 0zM8 6H4.5a3 3 0 0 0 3.5 4M16 6h3.5a3 3 0 0 1-3.5 4M12 13v4M8.5 20h7"/>'];
 // ---------- Game: Note Jumper (a running piano jumps over notes when you play the chord shown) ----------
 const RN={on:false,state:"ready",raf:0,obs:[],held:[],t0:0,last:0,dist:0,speed:0,y:0,vy:0,cleared:0,spawnIn:0,crashAt:0,xp:0,newBest:false};
 if(location.search.includes("rndebug")) window.__rn={RN, note:m=>runnerNote(m)};
@@ -3358,8 +3447,6 @@ function gmScore(){
 function rnHintPcs(pcs, force){ clearKeys(); if(!force && S.settings.rnHint===false) return; pcs.forEach(pc=>{ for(let m=LOW;m<=HIGH;m++){ if(m%12===pc && keyEls[m]){ keyEls[m].classList.add("k-rev"); break; } } }); }
 $("gmBoard").addEventListener("pointerdown",()=>{ if(GM==="speed" && SP.state!=="run") spGo(); else if(GM==="memory" && (MM.state==="ready"||MM.state==="over")) mmGo(); });
 document.addEventListener("keydown",e=>{ if(!RN.on || GM==="runner") return; if(e.code==="Space"||e.code==="Enter"){ if(GM==="speed" && SP.state!=="run"){ e.preventDefault(); spGo(); } else if(GM==="memory" && (MM.state==="ready"||MM.state==="over")){ e.preventDefault(); mmGo(); } } });
-const TILE_ICON={chords:'<circle cx="7" cy="17" r="2.6"/><circle cx="7" cy="11" r="2.6"/><circle cx="7" cy="5" r="2.6"/><path d="M9.6 17V5M13 6h8M13 12h8M13 18h8"/>',scales:'<path d="M3 19h3v-3H3zM8 15h3v-3H8zM13 11h3V8h-3zM18 7h3V4h-3z"/>',harmony:'<path d="M3 20h18M5 20V9M10 20V6M15 20V9M20 20V4"/>',prog:'<rect x="2.5" y="8" width="5" height="8" rx="1.5"/><rect x="16.5" y="8" width="5" height="8" rx="1.5"/><path d="M8.5 12h7M12.5 9l3 3-3 3"/>',ear:'<path d="M7 9a5 5 0 1 1 10 0c0 3-3 4-3 7a3 3 0 0 1-5.5 1.6M10 9a2 2 0 1 1 4 0"/>',daily:'<rect x="3.5" y="5" width="17" height="15" rx="3"/><path d="M3.5 10h17M8 3v4M16 3v4M9 15l2 2 4-4"/>',
-  runner:'<rect x="4" y="8" width="13" height="11" rx="2"/><path d="M4 14h13M7.5 14v5M11 14v5M14 14v5M18 6l2-2M19.5 9H22"/>',play:'<path d="M7 4.5l12 7.5-12 7.5z"/>'};
 // one tile: glossy colored card, a 3D-look object overflowing its top-right corner, then kicker, name, line, button
 function tile({color,obj,kick,title,desc,btn,rec,soon,onOpen}){
   const c=document.createElement(soon?"div":"button"); c.className="ptile"+(soon?" soon":""); if(!soon) c.type="button"; c.style.setProperty("--tc",color); c.style.setProperty("--tc2",shade(color,.32));
@@ -3469,6 +3556,78 @@ function renderFiche(){
 $("pfPrev").addEventListener("click",()=>{ pfMonth=new Date(pfMonth.getFullYear(),pfMonth.getMonth()-1,1); renderFiche(); });
 $("pfNext").addEventListener("click",()=>{ pfMonth=new Date(pfMonth.getFullYear(),pfMonth.getMonth()+1,1); renderFiche(); });
 $("pfLevels").addEventListener("click",()=>openChars());
+
+// ----- Start screen of a LEARN game: pick the scale / chord as cards, the timer and the helps, then play that one item -----
+const SU_COL={chords:"#c9463c",scales:"#b4461a",harmony:"#2c56d6",prog:"#6a3fd1",ear:"#0e7490"};
+const SU_NAME={chords:"secChords",scales:"secScales",harmony:"secHarmony",prog:"secProg",ear:"secEar"};
+function suState(sec){ S.settings.su=S.settings.su||{}; const st=S.settings.su[sec]||(S.settings.su[sec]={});
+  const types=typeList(sec); if(!types.some(ty=>ty.id===st.tid) || !typeOpenS(sec,st.tid)) st.tid=(types.find(ty=>ty.id===S.settings[SEC[sec].view] && typeOpenS(sec,ty.id))||types.find(ty=>typeOpenS(sec,ty.id))||types[0]).id;
+  if(sec!=="ear"){ const open=openRoots(sec,st.tid); if(!open.includes(st.k)) st.k=open[0]; }
+  return st; }
+function suQueue(sec){ const st=suState(sec), tid=st.tid, k=st.k;
+  if(sec==="ear"){ const n=S.settings.gameLen&&isFinite(S.settings.gameLen)?S.settings.gameLen:10, ks=openRoots(sec,tid); return Array.from({length:n},()=>({sec,tid,k:ks[Math.floor(Math.random()*ks.length)]})); }
+  if(sec==="chords"){ const ty=typeDef(sec,tid), invs=S.settings.invs.filter(i=>i<ty.iv.length); return (invs.length?invs:[0]).map(inv=>({sec,tid,k,inv})); }
+  if(sec==="harmony") return S.settings.hdegs.slice().sort().map(deg=>({sec,tid,k,deg}));
+  if(sec==="scales" && S.settings.scMode==="chords" && TYPE[tid].iv) return [{sec,tid,k,ch:1}];
+  return [{sec,tid,k}]; }
+function suLabel(sec){ const st=suState(sec), ty=typeDef(sec,st.tid); return sec==="ear" ? SEC[sec].name(ty) : sec==="chords" ? noteName(tonicNote(st.k))+" "+SEC[sec].name(ty) : sec==="harmony" ? noteName(tonicNote(st.k))+" "+(HTYPE[st.tid].scale==="minor"?(S.settings.lang==="fr"?"mineur":"minor"):(S.settings.lang==="fr"?"majeur":"major")) : itemName(suQueue(sec)[0]); }
+function renderSetup(){
+  const sec=S.section, st=suState(sec), col=SU_COL[sec], fr=S.settings.lang==="fr";
+  const h=$("suTitle"); h.style.setProperty("--mc",col); $("suIc").innerHTML=SEC_ICON(sec); $("suName").textContent=t(SU_NAME[sec]); $("suSub").textContent=t("suSub_"+sec);
+  $("suTypesH").textContent=t(sec==="chords"?"suPickChord":sec==="ear"?"suPickEar":sec==="prog"?"suPickProg":"suPickScale");
+  const tb=$("suTypes"); tb.innerHTML=""; tb.style.setProperty("--mc",col);
+  typeList(sec).forEach(ty=>{ const open=typeOpenS(sec,ty.id), b=document.createElement("button"); b.type="button"; b.className="su-card"; b.disabled=!open; b.setAttribute("aria-pressed",ty.id===st.tid);
+    b.innerHTML="<b></b><small></small>"; b.querySelector("b").textContent=SEC[sec].name(ty);
+    b.querySelector("small").textContent= open ? (sec==="ear"?"":rootsOf(sec,ty.id).filter(k=>tileMast(sec,ty.id,k)>=3).length+" / "+rootsOf(sec,ty.id).length+" "+t("suMastered")) : t("lvlShort")+ty.lvl;
+    b.onclick=()=>{ st.tid=ty.id; save(); renderSetup(); }; tb.appendChild(b); });
+  const kw=$("suKeysWrap"); kw.hidden = sec==="ear";
+  if(sec!=="ear"){ const kb=$("suKeys"); kb.innerHTML=""; kb.style.setProperty("--mc",col); const open=openRoots(sec,st.tid);
+    rootsOf(sec,st.tid).forEach(k=>{ const b=document.createElement("button"); b.type="button"; b.className="su-key"; const ok=open.includes(k); b.disabled=!ok; b.setAttribute("aria-pressed",k===st.k);
+      const m=tileMast(sec,st.tid,k); b.innerHTML="<b></b><span class='pips'>"+[0,1,2].map(i=>"<i class='"+(i<Math.min(3,m)?"f":"")+"'></i>").join("")+"</span>"; b.querySelector("b").textContent=noteName(tonicNote(k));
+      b.title= ok ? "" : tx("lockedTip"); b.onclick=()=>{ st.k=k; save(); renderSetup(); }; kb.appendChild(b); }); }
+  // extra choices for some topics
+  const ex=$("suExtra"); ex.innerHTML="";
+  const chipRow=(label,names,key,max)=>{ const w=document.createElement("div"); w.className="su-row"; w.innerHTML="<span class='su-lbl'></span><div class='su-chips'></div>"; w.firstChild.textContent=label;
+    names.slice(0,max).forEach((nm,i)=>{ const b=document.createElement("button"); b.type="button"; b.textContent=nm; b.setAttribute("aria-pressed",S.settings[key].includes(i));
+      b.onclick=()=>{ const set=new Set(S.settings[key]); if(set.has(i)){ if(set.size>1) set.delete(i); } else set.add(i); S.settings[key]=[...set].sort(); save(); renderSetup(); }; w.lastChild.appendChild(b); }); ex.appendChild(w); };
+  if(sec==="chords") chipRow(t("inversions"),t("invNames"),"invs",typeDef(sec,st.tid).iv.length);
+  if(sec==="harmony") chipRow(t("degrees"),ROMAN,"hdegs",7);
+  if(sec==="scales"){ const w=document.createElement("div"); w.className="su-row"; w.innerHTML="<span class='su-lbl'></span><div class='su-chips'></div>"; w.firstChild.textContent=t("scModeLbl");
+    [["notes","scNotes"],["chords","scChords"]].forEach(([v,k])=>{ const b=document.createElement("button"); b.type="button"; b.textContent=t(k); b.setAttribute("aria-pressed",S.settings.scMode===v); if(v==="chords" && !TYPE[st.tid].iv) b.disabled=true;
+      b.onclick=()=>{ S.settings.scMode=v; save(); renderSetup(); }; w.lastChild.appendChild(b); }); ex.appendChild(w); }
+  // timer
+  const tm=$("suTimer"); tm.innerHTML=""; [0,20,10,5].forEach(v=>{ const b=document.createElement("button"); b.type="button"; b.textContent=v?v+" s":t("noTimer"); b.setAttribute("aria-pressed",S.settings.delay===v); b.onclick=()=>{ setDelay(v); renderSetup(); }; tm.appendChild(b); });
+  // helps
+  [["suHelpN","guideN"],["suHelpK","guideK"],["suHelpP","guideP"]].forEach(([id,k])=>{ $(id).checked=!!S.settings[k]; });
+  $("suLabels").checked=!!S.settings.labels;
+  // summary
+  const q=suQueue(sec); $("suSum").textContent=suLabel(sec); $("suCount").textContent=t("suCount")(q.length, sec);
+  $("suGo").style.setProperty("--mc",col);
+}
+function suStart(){ const sec=S.section, st=suState(sec), q=suQueue(sec);
+  S.settings[SEC[sec].view]=st.tid; S.settings[SEC[sec].sel]=[st.tid]; save();
+  game=makeGame(q); game.label=suLabel(sec); game.single=q.length===1; game.i=-1; startRound(); }
+$("suGo").addEventListener("click",suStart);
+[["suHelpN","guideN"],["suHelpK","guideK"],["suHelpP","guideP"]].forEach(([id,k])=>$(id).addEventListener("change",e=>{ S.settings[k]=e.target.checked;
+  if(k==="guideP" && e.target.checked){ S.settings.guideN=false; S.settings.guideK=false; } else if(e.target.checked) S.settings.guideP=false; save(); renderSetup(); renderGameBar(); }));
+$("suLabels").addEventListener("change",e=>{ S.settings.labels=e.target.checked; save(); labelKeys(); renderSettings(); });
+$("suHow").addEventListener("click",()=>{ const b=document.getElementById("helpBtn"); if(b) b.click(); });
+
+// ----- Step-by-step help: a card that builds the picture of the scale / chord as the notes are found -----
+function renderFiche2(){
+  const box=$("fiche"); const on = page==="practice" && cur && cur.sec!=="ear" && S.settings.guideP && phase!=="idle";
+  box.hidden=!on; if(!on) return;
+  const all=revealMidis(), done=phase!=="listening", got=new Set(played.map(m=>m%12));
+  const pcs=[...new Set(all.map(m=>m%12))], lo=Math.min(...all), start=lo-(lo%12), hi=Math.max(...all), octs=Math.max(1,Math.ceil((hi-start+1)/12));
+  const W=[0,2,4,5,7,9,11], wN=octs*7, ww=100/wN; let svg='<svg viewBox="0 0 100 34" preserveAspectRatio="none" aria-hidden="true">';
+  for(let o=0;o<octs;o++) W.forEach((pc,i)=>{ const m=start+o*12+pc, show=all.includes(m)&&(done||got.has(pc)); svg+='<rect x="'+((o*7+i)*ww+.3)+'" y="0" width="'+(ww-.6)+'" height="34" rx="1.6" class="'+(show?"on":"")+'" style="'+(show?"fill:var(--note-"+(NAT_OF(pc))+")":"")+'"/>'; });
+  for(let o=0;o<octs;o++) [1,3,6,8,10].forEach(pc=>{ const m=start+o*12+pc, show=all.includes(m)&&(done||got.has(pc)), wi=W.indexOf(pc-1), x=(o*7+wi+1)*ww-ww*.3; svg+='<rect x="'+x+'" y="0" width="'+(ww*.6)+'" height="21" rx="1.2" class="bk'+(show?" on":"")+'" style="'+(show?"fill:var(--note-"+NAT_OF(pc)+")":"")+'"/>'; });
+  svg+="</svg>";
+  const KN=keyNames(), seen=new Set(), names=[]; all.forEach(m=>{ const pc=m%12; if(seen.has(pc)) return; seen.add(pc); const ok=done||got.has(pc); names.push('<span class="'+(ok?"ok":"")+'" style="'+(ok?"--c:var(--note-"+NAT_OF(pc)+")":"")+'">'+(ok?KN[pc]:"?")+"</span>"); });
+  box.innerHTML='<div class="fc-h"><b></b><small></small></div><div class="fc-kb">'+svg+'</div><div class="fc-n">'+names.join("")+"</div>";
+  box.querySelector("b").textContent=t("ficheT"); box.querySelector("small").textContent=t("ficheS")(done?pcs.length:pcs.filter(p=>got.has(p)).length,pcs.length);
+}
+const NAT_OF = pc => [0,0,2,2,4,5,5,7,7,9,9,11][pc];
 
 // every object is cropped to its own drawing and pinned to the top-right corner of its box, so all objects sit at the same place
 const FIT={};
@@ -4191,7 +4350,7 @@ function renderTut(){
   const steps=t("tut"), n=steps.length;
   $("helpTitle").textContent=t("helpTitle");
   $("helpX").setAttribute("aria-label",t("close"));
-  $("tutFig").innerHTML=tutSvg(tutI);
+  $("tutFig").innerHTML=tutSvg(tutI===0?0:Math.max(0,tutI-1));
   $("tutStep").textContent=t("stepOf")(tutI+1,n);
   $("tutH").textContent=steps[tutI].h; $("tutP").textContent=steps[tutI].p;
   const tx=$("tutStep").parentElement; tx.style.animation="none"; void tx.offsetWidth; tx.style.animation="";

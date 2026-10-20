@@ -5,7 +5,7 @@ Lis ce fichier en entier avant de travailler sur le projet.
 ## Qui, quoi
 - Projet d'Antoine Bernard (Reality Academy). **Toujours répondre en français.** Il itère chaque soir sur l'UX, souvent par listes de retours avec captures d'écran (iPad, iPhone, web).
 - **Piano Challenges** : application gamifiée de théorie musicale. On joue sur un vrai piano (MIDI USB/Bluetooth), au micro, ou sur le clavier à l'écran.
-- Trois modes en tête du menu, une couleur chacun (`#modeNav`, `goMode()`, `MODE_COL`) : **GAMES** (vert, page `games` : jeux maison + les 6 jeux Play qui ouvrent `play/index.html#game=<id>`), **PLAY** (violet, page `play`, morceaux), **LEARN** (corail, page `learn` : tuiles Accords, Gammes, Harmonie, Progressions, Oreille, Entraînement du jour qui lancent directement la catégorie ; `#secTabs` existe encore mais est masqué, les tuiles cliquent ses boutons). Pas de sous-menu. Au lancement et sur clic du logo : page `hub` (choix des trois modes). Les pages de mode sont des grilles de tuiles style Play (`tile()`, `.ptile`). Plus : Entraînement du jour, Classement, Profil, Progression, Réglages, Aide.
+- Trois modes en tête du menu, une couleur chacun (`#modeNav`, `goMode()`, `MODE_COL`) : **GAMES** (vert, page `games` : jeux maison + les 6 jeux Play qui ouvrent `play/index.html#game=<id>` ; le clavier n'y apparaît que pendant une partie), **PLAY** (violet, page `free` : grand titre, tuiles des 5 morceaux `SONGS_H` qui ouvrent `play/index.html#song=<id>`, et le piano libre en dessous), **LEARN** (corail, page `learn` : tuiles Accords, Gammes, Harmonie, Progressions, Oreille, Entraînement du jour). Une matière ouvre d'abord l'**écran de départ** (`body.setup`, `#setupPanel`, `renderSetup()`/`suStart()`) : choix du type et de la tonalité en cartes, chrono, aides ; une partie = un seul élément (`suQueue()` : 1 gamme / 1 progression, 1 exercice par renversement coché, 1 par degré coché, 10 écoutes en Oreille). Accueil `hub` : modes sur 2/3, colonne `#hubSide` (entraînement du jour, clavier MIDI, actualités `hsNews`, classement de la semaine chargé à la demande).
 - Site : https://pianochallenges.com. App iPhone/iPad : Capacitor, dans `app/`.
 
 ## Où est le code
@@ -30,7 +30,7 @@ Lis ce fichier en entier avant de travailler sur le projet.
 
 ## Architecture JS (repères)
 - État persistant `S` dans localStorage `memo-gammes-v1` (réglages dans `S.settings`, XP `S.xp`, XP par jour `S.xpDays`, records de jeux `S.gameBest`, `S.runnerBest`).
-- Navigation : variable `page` (hub|learn|practice|daily|games|play|rank|account|locked|settings|progress), `openPage(pg)`, `body[data-page]`. Le script n'expose pas ses fonctions sur `window` : dans les tests, cliquer sur les boutons (`#homeLink`, `#modeNav [data-mode=learn|play|games]`, `#learnTiles .ptile`, `#gameCards`/`#playCards .ptile`, `#setBtn`, `#rankBtn`, `#accountBtn`, `#progBtn`, `#dailyCard`).
+- Navigation : variable `page` (hub|learn|practice|daily|games|free|play|rank|account|locked|settings|progress), `openPage(pg)`, `body[data-page]`. `free` = page PLAY de l'hôte ; `play` = le lecteur Clavio en iframe (morceau ou jeu Play), qui renvoie `{source:'clavio',type:'home'}` quand on en sort. Le script n'expose pas ses fonctions sur `window` : dans les tests, cliquer sur les boutons (`#homeLink`, `#modeNav [data-mode=learn|play|games]`, `#learnTiles .ptile`, `#suGo`, `#gameCards`/`#playCards`/`#playSongs .ptile`, `#setBtn`, `#rankBtn`, `#accountBtn`, `#lvlAv` (ouvre la fiche Progression), `#dailyCard`, `#themeBtn`).
 - `LOCKED=[]` : tout est ouvert aux invités (Jeux et Entraînement compris) ; seule la page Profil invite à créer un compte. La page `locked` et `needLogin()` existent encore mais ne se déclenchent plus.
 - Langue par défaut à la première visite : `DEFAULT_LANG` (`navigator.language` commençant par `fr` → `lang:"fr", notation:"fr"`, sinon EN) ; un `S.settings.lang` sauvegardé a toujours priorité.
 - Supabase : le SDK (`/assets/js/supabase-2.116.0.js`) n'est chargé qu'à la demande (`ensureCloud()`) : au démarrage seulement si un jeton `sb-…-auth-token` existe ou si l'URL contient `?code=`/`#access_token`, sinon à l'ouverture de Profil ou Classement. `.htaccess` pose une `Content-Security-Policy` (scripts/styles/polices `self`, `connect-src` Supabase, `img-src https:` pour les photos Google) : la vérifier si on ajoute une ressource externe.
@@ -52,6 +52,13 @@ Lis ce fichier en entier avant de travailler sur le projet.
 ## Règles de sécurité (impératif)
 - Ne jamais saisir, répéter ni committer un mot de passe ou un secret (FTP OVH, SMTP, client secret Google…). C'est Antoine qui les tape.
 - Ne jamais committer de clé secrète Supabase (`service_role`).
+
+## Design system (v1, validé le 20/10/2026)
+- Référence complète : artifact « Piano Challenges Design System » (claude.ai/artifact/XnL8bSJqD92mBCn7ghBept). Thème sombre violet nuit `--bg #15122e`, clair lavande `#f1f2fb` ; picto jour/nuit `#themeBtn` (`S.settings.theme`, absent = système), suivi par l'iframe Play.
+- Polices : Fredoka (titres, chiffres) + Nunito (texte), auto-hébergées dans `/assets/fonts` (fontsource, sous-ensemble latin).
+- Tuiles : `tile({color,obj,kick,title,desc,rec,btn,soon,onOpen})`, une teinte par tuile (`TILE_COL`, texte blanc ≥ 4,5:1), ombre colorée, objet 3D vectoriel `OBJ[clé]()` (helpers `O3()`, `ball`, `block`) recadré automatiquement en haut à droite (`FIT`). Petite note douce au survol (souris, son déjà débloqué).
+- Clavier unique violet partout (hôte et lecteur Play) : couleur par note `--note-0…11` (Do rouge → Si violet), ligne de frappe `--hit-line`. Aide progressive : notes trouvées dans leur couleur (`body.gp`) + fiche « À retenir » (`renderFiche2()`).
+- Menu : icônes 38 px sur carré, sélection en contour ; Progression n'est plus dans le menu : clic sur la carte de niveau → fiche (`renderFiche()` : réussites, séries jours/semaines + calendrier, parcours par matière, records). Temps de jeu `S.playSec` (par jour, compté pendant qu'on joue). Langue et mentions légales dans Réglages.
 
 ## Préférences UX d'Antoine
 - Aucun défilement sur iPad ni sur mobile : tout tient sur un écran.

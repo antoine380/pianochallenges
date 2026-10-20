@@ -14,7 +14,7 @@ const NAV = {
   games: () => page.click('.mode-item[data-mode="games"]'),
   rank: () => page.click('#rankBtn'),
   settings: () => page.click('#setBtn'),
-  progress: () => page.click('#progBtn'),
+  progress: () => page.click('#lvlAv'), // the level card opens the progress sheet
 };
 for (const pg of Object.keys(NAV)) {
   await gotoExercise(page, 'chords');
@@ -25,7 +25,7 @@ for (const pg of Object.keys(NAV)) {
   const afterDo = await state(page);
   await page.keyboard.press('Space'); await wait(page, 250);
   const afterSpace = await state(page);
-  check(`page ${pg} : page attendue`, before.page === pg, { page: before.page });
+  check(`page ${pg} : page attendue`, before.page === (pg==='play'?'free':pg), { page: before.page }); // PLAY = host page "free" (song tiles + free piano)
   check(`page ${pg} : un Do MIDI ne démarre pas d’exercice`, !afterDo.playing, { playing: afterDo.playing, prompt: afterDo.prompt });
   check(`page ${pg} : Espace ne démarre pas d’exercice`, !afterSpace.playing, { playing: afterSpace.playing, prompt: afterSpace.prompt });
 }
@@ -35,9 +35,9 @@ await midi.on(page, 60); await wait(page, 250);
 let s = await state(page);
 check('page practice : un Do MIDI démarre l’exercice', s.playing && s.page === 'practice', { page: s.page, playing: s.playing });
 // Play : KeyA côté hôte → relayé au cadre, aucun son côté hôte
-await page.click('.mode-item[data-mode="play"]'); await wait(page, 1500);
+await page.click('.mode-item[data-mode="play"]'); await wait(page, 500);
+await page.locator('#playSongs .ptile').first().click(); await wait(page, 1500); // a song tile opens the song in the Play frame
 const frame = page.frames().find(f => f.url().includes('play/'));
-await frame.locator('#songGrid .tile').first().click(); await wait(page, 400);
 await frame.locator('#go').click(); await wait(page, 2000);
 await page.evaluate(() => { document.getElementById('menuBtn')?.focus(); document.body.focus(); }); await page.mouse.click(600, 5);
 const o0 = (await state(page)).osc;
