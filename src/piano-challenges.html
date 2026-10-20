@@ -10,7 +10,7 @@
   --accent:#5b3fe0; --accent-soft:#e6e0ff; --on-accent:#ffffff; --brand:#6a4bf0;
   --good:#16794e; --good-soft:#d3f1e2; --bad:#c0352f; --bad-soft:#fadcdc; --warn:#b4530a; --warn-soft:#fde6cf;
   --reveal:#3d55d6; --reveal-soft:#dfe4ff; --gold:#f5b62a; --gold-ink:#8a5600;
-  --key-white:#fbfbff; --key-white-edge:#c9c6ea; --key-black:#3b356e; --key-label:#5a567f; --key-label-b:#d9d6f5; --hit-line:#7a5bf5;
+  --key-white:#f1f0fc; --key-white-edge:#c3bfe6; --key-black:#3b356e; --key-label:#5a567f; --key-label-b:#d9d6f5; --hit-line:#7a5bf5;
   --glass:rgba(255,255,255,.72); --glass-edge:rgba(255,255,255,.9); --scrim:rgba(27,24,56,.35);
   --shadow-card:0 18px 40px -20px rgba(70,60,160,.35); --shadow-float:0 30px 80px -24px rgba(70,60,160,.45);
   --note-0:#ff5a6e; --note-2:#ff9a3c; --note-4:#ffd23f; --note-5:#3ddc84; --note-7:#3cc8f0; --note-9:#5b7cff; --note-11:#b26bff;
@@ -985,6 +985,61 @@ body:not(.runner-on)[data-page="games"] .stage{display:none!important}
 .side.collapsed .theme-row{flex-direction:column;gap:6px}
 .side .legal-links{display:none}
 .set-legal{display:block!important;margin:4px 0 0;font-size:.78rem}
+
+/* ===== v1.3: Play home, progress sheet ===== */
+.side #progBtn{display:none}
+.side .lvl-card{cursor:pointer;transition:box-shadow .2s} .side .lvl-card:hover{box-shadow:inset 0 0 0 2px var(--brand)}
+#playSongs{grid-template-columns:repeat(5,minmax(0,1fr))}
+[data-page="free"] .stage{margin-top:4px}
+[data-page="free"] .free-lbl{font-size:1.15rem}
+[data-page="free"] .kbd{height:clamp(130px,30vh,260px)}
+[data-page="free"] .kbd-wrap{flex:none;min-height:0} [data-page="free"] .stage{flex:none!important;height:auto!important;max-height:none!important;min-height:0!important} :root{--key-white-light:#f4f3ff}
+@media (max-width:640px){ [data-page="free"] .kbd{height:130px} }
+#playSongs .ptile .rec{color:#ffe27a;letter-spacing:.12em;font-size:.95rem}
+@media (max-height:820px), (max-width:900px){ #playSongs .ptile{padding-top:64px} #playSongs .ptile :is(.pk,.h3){max-width:none} #playSongs .ptile p{display:none} }
+@media (max-width:900px){ #playSongs{grid-template-columns:repeat(3,minmax(0,1fr))} }
+@media (max-width:640px){ #playSongs{grid-template-columns:repeat(2,minmax(0,1fr))} #playSongs .ptile{min-height:46px;padding:8px 12px;--os:50px} #playSongs .ptile :is(.h3,.rec){max-width:calc(100% - 44px)} [data-page="free"] .kbd{height:120px} }
+@media (max-height:420px) and (orientation:landscape){ #playSongs{grid-template-columns:repeat(5,minmax(0,1fr))} #playSongs .ptile{padding:8px 10px;--os:40px} [data-page="free"] .kbd{height:90px} [data-page="free"] .free-lbl{display:none} }
+/* progress sheet */
+.pf{display:flex;flex-direction:column;gap:14px;margin-bottom:6px}
+.pf-head{display:flex;align-items:center;gap:16px;padding:14px 18px;border-radius:var(--r-lg);color:#fff;background:linear-gradient(140deg,#8a70ff,var(--brand) 60%,#3d2bb0);box-shadow:0 18px 30px -18px var(--brand)}
+.pf-head .av{width:64px;height:64px;border-radius:50%;overflow:hidden;flex:none;background:rgba(255,255,255,.2);box-shadow:0 0 0 3px rgba(255,255,255,.35)} .pf-head .av :is(svg,img){width:100%;height:100%;display:block}
+.pf-id{flex:1;min-width:0;display:flex;flex-direction:column;gap:3px}
+.pf-k{font-weight:800;font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;opacity:.9}
+.pf-id b{font-family:var(--f-display);font-weight:700;font-size:1.5rem;line-height:1.1}
+.pf-id .xpbar{height:8px;border-radius:999px;background:rgba(255,255,255,.25);overflow:hidden;max-width:420px} .pf-id .xpbar i{display:block;height:100%;background:var(--gold);border-radius:inherit}
+.pf-id small{font-weight:700;opacity:.9}
+.pf-head .btn{background:rgba(255,255,255,.95);color:#1b1838}
+.pf-row{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(250px,1fr);gap:14px;overflow-x:auto;scroll-snap-type:x mandatory;padding-bottom:6px;scrollbar-width:thin}
+.pf-card{scroll-snap-align:start;border-radius:var(--r-lg);overflow:hidden;color:#fff;display:flex;flex-direction:column;min-height:300px;box-shadow:var(--shadow-card)}
+.pf-card h3{margin:0;padding:14px 16px 10px;font-family:var(--f-display);font-weight:700;font-size:1.1rem}
+.pf-card p{margin:0;padding:0 16px 8px;font-size:.8rem;opacity:.9}
+.pf-card ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column}
+.pf-stats{background:#221d47} .pf-stats h3{background:#2c56d6}
+.pf-stats li{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 16px;font-weight:700;font-size:.86rem}
+.pf-stats li b{font-family:var(--f-display);font-size:1.2rem;font-variant-numeric:tabular-nums;white-space:nowrap}
+.pf-streak{background:#16764e}
+.pf-sh{display:flex;justify-content:space-between;gap:10px;padding:14px 16px 10px;background:#1f8a5c} .pf-sh div{display:flex;flex-direction:column} .pf-sh .r{text-align:right}
+.pf-sh b{font-weight:800;font-size:.95rem} .pf-sh small{opacity:.85;font-size:.78rem}
+.pf-cal{padding:10px 12px 14px}
+.pf-calh{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px} .pf-calh b{text-transform:capitalize;font-weight:800;font-size:.92rem}
+.pf-calh button{border:0;background:rgba(255,255,255,.15);color:#fff;width:30px;height:30px;border-radius:50%;font-size:1.1rem;line-height:1}
+.pf-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;text-align:center;font-size:.78rem;font-variant-numeric:tabular-nums}
+.pf-grid i{font-style:normal;font-weight:800;opacity:.7;font-size:.68rem}
+.pf-grid span{aspect-ratio:1;display:grid;place-items:center;border-radius:50%;opacity:.75}
+.pf-grid span.on{background:#fff;color:#16764e;font-weight:800;opacity:1}
+.pf-grid span.today{box-shadow:0 0 0 2px #ffe27a;opacity:1;font-weight:800}
+.pf-journey{background:#c9900f} .pf-journey h3{background:#e0a422}
+.pf-journey li{display:flex;flex-direction:column;gap:6px;padding:9px 16px}
+.pj-t{display:flex;justify-content:space-between;font-weight:800;font-size:.9rem} .pj-n{font-variant-numeric:tabular-nums}
+.pf-journey .bar{height:7px;border-radius:999px;background:rgba(0,0,0,.18);overflow:hidden} .pf-journey .bar i{display:block;height:100%;border-radius:inherit;box-shadow:0 0 0 1px rgba(255,255,255,.4)}
+.pf-recs{background:#a9332d} .pf-recs h3{background:#c9463c}
+.pf-recs ul{overflow-y:auto;max-height:240px}
+.pf-recs li{display:flex;justify-content:space-between;gap:10px;padding:7px 16px;font-size:.84rem;font-weight:700}
+.pf-recs li b{font-variant-numeric:tabular-nums;color:#ffe27a;white-space:nowrap}
+.pf-journey p,.pf-journey h3{color:#fff}
+.pf-detail-h{margin:6px 0 0;font-family:var(--f-display);font-weight:700;font-size:1.1rem}
+@media (max-width:640px){ .pf-head{padding:12px} .pf-head .av{width:48px;height:48px} .pf-id b{font-size:1.15rem} .pf-row{grid-auto-columns:86%} }
 </style>
 
 <script>if(window.Capacitor&&window.webkit&&window.webkit.messageHandlers&&window.webkit.messageHandlers.bridge)document.documentElement.classList.add("native");</script>
@@ -1072,7 +1127,7 @@ body:not(.runner-on)[data-page="games"] .stage{display:none!important}
   <button class="mbar-btn" id="menuBtn" type="button" aria-label="Menu" aria-controls="side" aria-expanded="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
   <h1 class="mbar-title" id="mbTitle"></h1>
 <a id="homeLink2" href="/" hidden></a>
-  <button class="mbar-btn ghost" id="mbSet" type="button" aria-label="Settings"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 15.2a3.2 3.2 0 1 0 0-6.4 3.2 3.2 0 0 0 0 6.4z"/><path d="M19.4 13.5a7.6 7.6 0 0 0 0-3l2-1.6-2-3.4-2.4 1a7.5 7.5 0 0 0-2.6-1.5L14 2.5h-4l-.4 2.5A7.5 7.5 0 0 0 7 6.5l-2.4-1-2 3.4 2 1.6a7.6 7.6 0 0 0 0 3l-2 1.6 2 3.4 2.4-1a7.5 7.5 0 0 0 2.6 1.5l.4 2.5h4l.4-2.5a7.5 7.5 0 0 0 2.6-1.5l2.4 1 2-3.4z"/></svg></button>
+  <button class="mbar-btn ghost" id="mbSet" type="button" aria-label="Settings"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10.3 3.2a1.8 1.8 0 0 1 3.4 0l.4 1.2a1.8 1.8 0 0 0 2.4 1l1.1-.6a1.8 1.8 0 0 1 2.4 2.4l-.6 1.1a1.8 1.8 0 0 0 1 2.4l1.2.4a1.8 1.8 0 0 1 0 3.4l-1.2.4a1.8 1.8 0 0 0-1 2.4l.6 1.1a1.8 1.8 0 0 1-2.4 2.4l-1.1-.6a1.8 1.8 0 0 0-2.4 1l-.4 1.2a1.8 1.8 0 0 1-3.4 0l-.4-1.2a1.8 1.8 0 0 0-2.4-1l-1.1.6a1.8 1.8 0 0 1-2.4-2.4l.6-1.1a1.8 1.8 0 0 0-1-2.4l-1.2-.4a1.8 1.8 0 0 1 0-3.4l1.2-.4a1.8 1.8 0 0 0 1-2.4l-.6-1.1a1.8 1.8 0 0 1 2.4-2.4l1.1.6a1.8 1.8 0 0 0 2.4-1z"/><circle cx="12" cy="12" r="3"/></svg></button>
   <button class="mbar-lvl" id="mbLvlBtn" type="button" aria-haspopup="dialog"><span class="av" id="mbAv"></span><span class="mono" id="mbLvl">1</span></button>
 </header>
 <div class="side-scrim" id="sideScrim"></div>
@@ -1120,6 +1175,11 @@ body:not(.runner-on)[data-page="games"] .stage{display:none!important}
    </aside></div>
   </section>
 
+  <section class="mode-page" id="freePanel" hidden>
+    <div class="mode-h"><h2 class="mode-big" style="--mc:var(--m-play)"><span class="mb-ic"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.5l12 7.5-12 7.5z"/></svg></span>PLAY</h2><p data-i="playSub"></p></div>
+    <div class="ptile-grid" id="playSongs"></div>
+  </section>
+
   <section class="mode-page" id="learnPanel" hidden>
     <div class="mode-h"><h2 class="mode-big" style="--mc:var(--m-learn)"><span class="mb-ic"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6.5A2.5 2.5 0 0 1 6.5 4H11v16H6.5A2.5 2.5 0 0 0 4 22zM20 6.5A2.5 2.5 0 0 0 17.5 4H13v16h4.5A2.5 2.5 0 0 1 20 22z"/></svg></span>LEARN</h2><p><span data-i="learnTitle"></span> <span data-i="learnSub"></span></p></div>
     <div class="ptile-grid" id="learnTiles"></div>
@@ -1160,7 +1220,7 @@ body:not(.runner-on)[data-page="games"] .stage{display:none!important}
   </section>
 
   <section class="pane" id="settingsPage" hidden>
-    <div class="pane-head"><h2 class="ph-title"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 15.2a3.2 3.2 0 1 0 0-6.4 3.2 3.2 0 0 0 0 6.4z"/><path d="M19.4 13.5a7.6 7.6 0 0 0 0-3l2-1.6-2-3.4-2.4 1a7.5 7.5 0 0 0-2.6-1.5L14 2.5h-4l-.4 2.5A7.5 7.5 0 0 0 7 6.5l-2.4-1-2 3.4 2 1.6a7.6 7.6 0 0 0 0 3l-2 1.6 2 3.4 2.4-1a7.5 7.5 0 0 0 2.6 1.5l.4 2.5h4l.4-2.5a7.5 7.5 0 0 0 2.6-1.5l2.4 1 2-3.4z"/></svg><span data-i="settings"></span></h2><button class="btn ph-back" type="button" data-back data-i="backPlay"></button></div>
+    <div class="pane-head"><h2 class="ph-title"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10.3 3.2a1.8 1.8 0 0 1 3.4 0l.4 1.2a1.8 1.8 0 0 0 2.4 1l1.1-.6a1.8 1.8 0 0 1 2.4 2.4l-.6 1.1a1.8 1.8 0 0 0 1 2.4l1.2.4a1.8 1.8 0 0 1 0 3.4l-1.2.4a1.8 1.8 0 0 0-1 2.4l.6 1.1a1.8 1.8 0 0 1-2.4 2.4l-1.1-.6a1.8 1.8 0 0 0-2.4 1l-.4 1.2a1.8 1.8 0 0 1-3.4 0l-.4-1.2a1.8 1.8 0 0 0-2.4-1l-1.1.6a1.8 1.8 0 0 1-2.4-2.4l.6-1.1a1.8 1.8 0 0 0-1-2.4l-1.2-.4a1.8 1.8 0 0 1 0-3.4l1.2-.4a1.8 1.8 0 0 0 1-2.4l-.6-1.1a1.8 1.8 0 0 1 2.4-2.4l1.1.6a1.8 1.8 0 0 0 2.4-1z"/><circle cx="12" cy="12" r="3"/></svg><span data-i="settings"></span></h2><button class="btn ph-back" type="button" data-back data-i="backPlay"></button></div>
     <div class="card" id="setHost"></div>
   </section>
 
@@ -1229,7 +1289,7 @@ body:not(.runner-on)[data-page="games"] .stage{display:none!important}
 
     <div class="inputs">
       <span class="pill on"><span class="dot"></span><span data-i="screenKeys"></span></span>
-      <span class="pill-group"><button class="pill" id="midiBtn" type="button"><span class="dot"></span><span id="midiTxt"></span></button><button class="pill gear" id="midiCfg" type="button" aria-haspopup="dialog" aria-label="MIDI settings"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 15.2a3.2 3.2 0 1 0 0-6.4 3.2 3.2 0 0 0 0 6.4z"/><path d="M19.4 13.5a7.6 7.6 0 0 0 0-3l2-1.6-2-3.4-2.4 1a7.5 7.5 0 0 0-2.6-1.5L14 2.5h-4l-.4 2.5A7.5 7.5 0 0 0 7 6.5l-2.4-1-2 3.4 2 1.6a7.6 7.6 0 0 0 0 3l-2 1.6 2 3.4 2.4-1a7.5 7.5 0 0 0 2.6 1.5l.4 2.5h4l.4-2.5a7.5 7.5 0 0 0 2.6-1.5l2.4 1 2-3.4z"/></svg></button></span>
+      <span class="pill-group"><button class="pill" id="midiBtn" type="button"><span class="dot"></span><span id="midiTxt"></span></button><button class="pill gear" id="midiCfg" type="button" aria-haspopup="dialog" aria-label="MIDI settings"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10.3 3.2a1.8 1.8 0 0 1 3.4 0l.4 1.2a1.8 1.8 0 0 0 2.4 1l1.1-.6a1.8 1.8 0 0 1 2.4 2.4l-.6 1.1a1.8 1.8 0 0 0 1 2.4l1.2.4a1.8 1.8 0 0 1 0 3.4l-1.2.4a1.8 1.8 0 0 0-1 2.4l.6 1.1a1.8 1.8 0 0 1-2.4 2.4l-1.1-.6a1.8 1.8 0 0 0-2.4 1l-.4 1.2a1.8 1.8 0 0 1-3.4 0l-.4-1.2a1.8 1.8 0 0 0-2.4-1l-1.1.6a1.8 1.8 0 0 1-2.4-2.4l.6-1.1a1.8 1.8 0 0 0-1-2.4l-1.2-.4a1.8 1.8 0 0 1 0-3.4l1.2-.4a1.8 1.8 0 0 0 1-2.4l-.6-1.1a1.8 1.8 0 0 1 2.4-2.4l1.1.6a1.8 1.8 0 0 0 2.4-1z"/><circle cx="12" cy="12" r="3"/></svg></button></span>
       <button class="pill" id="micBtn" type="button"><span class="dot"></span><span id="micTxt"></span></button>
     </div>
     <p class="notice" id="notice" hidden></p>
@@ -1391,6 +1451,17 @@ body:not(.runner-on)[data-page="games"] .stage{display:none!important}
       <p class="legal-links set-legal"><a href="/mentions-legales.html" data-i="legalNotice"></a> · <a href="/confidentialite.html" data-i="privacy"></a><br>© 2026 Antoine Bernard · <span data-i="rights"></span></p>
     </div>
     <div class="modal-body prog-body" id="progPane" hidden>
+      <div class="pf" id="progFiche">
+        <div class="pf-head"><span class="av" id="pfAv"></span><div class="pf-id"><span class="pf-k" id="pfK"></span><b id="pfName"></b><div class="xpbar"><i id="pfXp"></i></div><small id="pfXpTxt"></small></div><button class="btn" id="pfLevels" type="button" data-i="charMore"></button></div>
+        <div class="pf-row">
+          <section class="pf-card pf-stats"><h3 data-i="pfAch"></h3><ul id="pfStats"></ul></section>
+          <section class="pf-card pf-streak"><div class="pf-sh"><div><b id="pfDay"></b><small id="pfDayBest"></small></div><div class="r"><b id="pfWeek"></b><small id="pfWeekBest"></small></div></div>
+            <div class="pf-cal"><div class="pf-calh"><button type="button" id="pfPrev" aria-label="&lt;">‹</button><b id="pfMonth"></b><button type="button" id="pfNext" aria-label="&gt;">›</button></div><div class="pf-grid" id="pfCal"></div></div></section>
+          <section class="pf-card pf-journey"><h3 data-i="pfJourney"></h3><p id="pfJourneySub"></p><ul id="pfJourney"></ul></section>
+          <section class="pf-card pf-recs"><h3 data-i="pfRecs"></h3><p id="pfRecsSub"></p><ul id="pfRecs"></ul></section>
+        </div>
+        <h3 class="pf-detail-h" data-i="pfDetail"></h3>
+      </div>
       <div class="prog-cats" id="progCats"></div>
       <div class="prog-detail">
         <div class="pd-head"><h3 class="ph-title" id="pdTitle"></h3><div class="types" id="pdTypes"></div><select id="viewSel" hidden></select></div>
@@ -1545,7 +1616,11 @@ const TXT = {
     melDown:" · descend en Mineur",
     midiBlockedMsg:"Le navigateur a refusé l'accès MIDI. Clique sur le cadenas à gauche de l'adresse pour l'autoriser, ou choisis le clavier à l'écran.",
     dailyResume:"Reprendre",
-    syncOk:x=>"Sauvegardé en ligne "+x+" ✓", syncErr:x=>"Hors ligne : dernière sauvegarde "+x+".", agoNever:"inconnue", signedOut:"Déconnecté", rights:"Tous droits réservés", themeDay:"Passer en mode jour", themeNight:"Passer en mode nuit", themeDayS:"Mode jour", themeNightS:"Mode nuit", langLbl:"Langue",
+    syncOk:x=>"Sauvegardé en ligne "+x+" ✓", syncErr:x=>"Hors ligne : dernière sauvegarde "+x+".", agoNever:"inconnue", signedOut:"Déconnecté", rights:"Tous droits réservés", themeDay:"Passer en mode jour", themeNight:"Passer en mode nuit", playSub:"Des morceaux qui tombent sur le clavier, à ton rythme. En dessous, le piano pour jouer librement.", freeK:"Jeu libre",
+    pfAch:"Tes réussites", pfJourney:"Ton parcours", pfRecs:"Tes records", pfDetail:"Détail par matière", pfLvl:"Niveau",
+    pfSt:["Score total","Exercices réussis","Exercices sans faute","Éléments maîtrisés","Temps de jeu total","Joué aujourd'hui"],
+    pfDayS:n=>"Série : "+n+" j", pfWeekS:n=>"Semaines : "+n, pfBest:n=>"Record : "+n, pfJSub:(a,b)=>a+" éléments maîtrisés sur "+b+".", pfRSub:"Tes meilleurs scores dans les jeux et les morceaux.",
+    pfMonths:["janvier","février","mars","avril","mai","juin","juillet","août","septembre","octobre","novembre","décembre"], pfDays:["L","M","M","J","V","S","D"], themeDayS:"Mode jour", themeNightS:"Mode nuit", langLbl:"Langue",
     hsDailyK:"À faire aujourd'hui", hsDailyGo:"C'est parti", hsDailyDone:"Refaire", hsMidiT:"Clavier MIDI", hsMidiOff:"Aucun clavier branché : relie-le en USB ou en Bluetooth.", hsMidiNo:"Ce navigateur ne gère pas le MIDI : joue au micro ou à l'écran.", hsMidiConnect:"Connecter", hsMidiChange:"Changer",
     hsNewsT:"Actualités", hsRankT:"Classement de la semaine", hsRankMore:"Tout voir", hsRankLoad:"Chargement…", hsRankErr:"Classement indisponible pour l'instant.",
     hsNews:[["Nouveau look","Mode jour ou nuit, cartes en 3D : l'app fait peau neuve.","#6a4bf0","M12 3l2.4 5 5.6.8-4 3.9.9 5.5L12 15.6 7.1 18.2l.9-5.5-4-3.9 5.6-.8z"],["Jeux Play","Six mini-jeux sur le clavier lumineux, dans GAMES.","#1f7a52","M6 9h4M8 7v4M15 9h.01M18 11h.01M3 8a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4v5a4 4 0 0 1-7 2.5h-4A4 4 0 0 1 3 13z"],["Jeu libre","Joue ce que tu veux dans PLAY : chaque note s'allume dans sa couleur.","#0e7490","M9 18V5l12-2v13M9 18a3 3 0 1 1-6 0 3 3 0 0 1 6 0zM21 16a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"],["Entraînement du jour","10 exercices mélangés chaque jour pour garder ta série.","#a3306b","M12 3c1 3.5 5 6 5 11a5 5 0 0 1-10 0c0-2.2 1-3.8 2.2-5 .2 1.6 1 2.8 2.3 3.3C11 9.3 11.3 6 12 3z"]],
@@ -1665,7 +1740,11 @@ const TXT = {
     melDown:" · descends as Minor",
     midiBlockedMsg:"The browser refused MIDI access. Click the padlock left of the address to allow it, or choose the on-screen keyboard.",
     dailyResume:"Resume",
-    syncOk:x=>"Saved online "+x+" ✓", syncErr:x=>"Offline: last save "+x+".", agoNever:"unknown", signedOut:"Signed out", rights:"All rights reserved", themeDay:"Switch to day mode", themeNight:"Switch to night mode", themeDayS:"Day mode", themeNightS:"Night mode", langLbl:"Language",
+    syncOk:x=>"Saved online "+x+" ✓", syncErr:x=>"Offline: last save "+x+".", agoNever:"unknown", signedOut:"Signed out", rights:"All rights reserved", themeDay:"Switch to day mode", themeNight:"Switch to night mode", playSub:"Songs that fall onto the keyboard, at your own pace. Below, the piano for free play.", freeK:"Free play",
+    pfAch:"Your achievements", pfJourney:"Your journey", pfRecs:"Your records", pfDetail:"Detail by topic", pfLvl:"Level",
+    pfSt:["Total score","Exercises passed","Perfect exercises","Items mastered","Total time played","Played today"],
+    pfDayS:n=>"Streak: "+n+" d", pfWeekS:n=>"Weeks: "+n, pfBest:n=>"Best: "+n, pfJSub:(a,b)=>a+" of "+b+" items mastered.", pfRSub:"Your best scores in games and songs.",
+    pfMonths:["January","February","March","April","May","June","July","August","September","October","November","December"], pfDays:["M","T","W","T","F","S","S"], themeDayS:"Day mode", themeNightS:"Night mode", langLbl:"Language",
     hsDailyK:"To do today", hsDailyGo:"Let's go", hsDailyDone:"Play again", hsMidiT:"MIDI keyboard", hsMidiOff:"No keyboard connected: plug it in over USB or Bluetooth.", hsMidiNo:"This browser has no MIDI: play with the mic or on screen.", hsMidiConnect:"Connect", hsMidiChange:"Change",
     hsNewsT:"News", hsRankT:"This week's leaderboard", hsRankMore:"See all", hsRankLoad:"Loading…", hsRankErr:"Leaderboard unavailable right now.",
     hsNews:[["New look","Day or night mode and 3D cards: the app gets a makeover.","#6a4bf0","M12 3l2.4 5 5.6.8-4 3.9.9 5.5L12 15.6 7.1 18.2l.9-5.5-4-3.9 5.6-.8z"],["Play games","Six mini-games on the light-up keyboard, in GAMES.","#1f7a52","M6 9h4M8 7v4M15 9h.01M18 11h.01M3 8a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4v5a4 4 0 0 1-7 2.5h-4A4 4 0 0 1 3 13z"],["Free play","Play anything in PLAY: every note lights up in its colour.","#0e7490","M9 18V5l12-2v13M9 18a3 3 0 1 1-6 0 3 3 0 0 1 6 0zM21 16a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"],["Daily practice","10 mixed exercises every day to keep your streak.","#a3306b","M12 3c1 3.5 5 6 5 11a5 5 0 0 1-10 0c0-2.2 1-3.8 2.2-5 .2 1.6 1 2.8 2.3 3.3C11 9.3 11.3 6 12 3z"]],
@@ -2344,7 +2423,7 @@ function wrongNote(m){
   const at = chSeq() ? pStep : chordLike(cur.sec) ? found.indexOf(false) : idx;
   const sl=$("slots").children[at]; if(sl){ sl.classList.remove("err","pop"); void sl.offsetWidth; sl.classList.add("err"); }
 }
-function noteIn(m){
+function noteIn(m){ lastNoteAt=Date.now();
   if(page==="play"){ playSend("noteon",m); setTimeout(()=>playSend("noteoff",m),400); return; } // screen keyboard / mic: no release event, so release after 400 ms
   if(!["practice","daily","games","free"].includes(page)) return; // no exercise on the other pages: nothing to feed
   if(midiOpen){ pressKey(m); flashKey(m,"k-hit"); return; } // MIDI window: the notes only test the keyboard
@@ -2913,7 +2992,7 @@ function renderProgCats(){
     b.onclick=()=>{ progSec=sec; renderMap(); }; box.appendChild(b); });
 }
 function renderMap(){
-  if(!progSec) progSec=S.section;
+  if(!progSec) progSec=S.section; try{ renderFiche(); }catch(e){ console.warn(e); }
   renderProgCats();
   const sec=progSec, cfg=SEC[sec], vk=cfg.view;
   $("pdTitle").innerHTML=SEC_ICON(sec)+"<span></span>"; $("pdTitle").querySelector("span").textContent=t({scales:"secScales",chords:"secChords",harmony:"secHarmony",prog:"secProg",ear:"secEar"}[sec]);
@@ -2977,7 +3056,7 @@ function renderSettings(){
   setNav();
   renderTypes(); renderKeySel();
 }
-function render(){ if(page==="hub") try{ renderHubSide(); }catch(e){} /* the first renders run before the input code is defined */ document.body.classList.toggle("playing", !!game || phase!=="idle"); document.body.dataset.page=page; $("gamesPanel").hidden = page!=="games"; $("hubPanel").hidden = page!=="hub"; $("learnPanel").hidden = page!=="learn"; $("dailyPanel").hidden = page!=="daily"; $("rankPanel").hidden = page!=="rank"; $("accountPanel").hidden = page!=="account"; $("lockPanel").hidden = page!=="locked"; $("settingsPage").hidden = page!=="settings"; $("progressPage").hidden = page!=="progress"; renderDaily(); renderGameBar(); setNav();
+function render(){ if(page==="hub") try{ renderHubSide(); }catch(e){} /* the first renders run before the input code is defined */ document.body.classList.toggle("playing", !!game || phase!=="idle"); document.body.dataset.page=page; $("gamesPanel").hidden = page!=="games"; $("hubPanel").hidden = page!=="hub"; $("freePanel").hidden = page!=="free"; $("learnPanel").hidden = page!=="learn"; $("dailyPanel").hidden = page!=="daily"; $("rankPanel").hidden = page!=="rank"; $("accountPanel").hidden = page!=="account"; $("lockPanel").hidden = page!=="locked"; $("settingsPage").hidden = page!=="settings"; $("progressPage").hidden = page!=="progress"; renderDaily(); renderGameBar(); setNav();
   if(phase==="idle"||phase==="listening") resetScore(); renderSession(); renderHint(); renderPrompt(); renderTimeline(); renderSlots(); renderActions(); renderStatus(); renderMap(); labelKeys(); }
 
 // ---------- Settings wiring ----------
@@ -3031,7 +3110,7 @@ function setNav(){
   $("side").dataset.mode=mode; $("modeNav").querySelectorAll("button").forEach(b=>mark(b,b.dataset.mode===mode));
   mark($("dailyCard"),page==="daily"); mark($("rankBtn"),page==="rank"); mark($("accountBtn"),page==="account"); mark($("setBtn"),page==="settings"); mark($("progBtn"),page==="progress");
   const pv = page==="practice"?S.section : page==="locked"?lockFor : page;
-  $("mbTitle").textContent = t({chords:"secChords",scales:"secScales",harmony:"secHarmony",prog:"secProg",ear:"secEar",games:"secGames",play:"secPlay",hub:"hub",learn:"learn",daily:narrowMQ.matches?"dailyShort":"dailyTitle",rank:"secRank",account:"secAccount",settings:"settings",progress:"progress"}[pv]);
+  $("mbTitle").textContent = t({chords:"secChords",scales:"secScales",harmony:"secHarmony",prog:"secProg",ear:"secEar",games:"secGames",play:"secPlay",free:"secPlay",hub:"hub",learn:"learn",daily:narrowMQ.matches?"dailyShort":"dailyTitle",rank:"secRank",account:"secAccount",settings:"settings",progress:"progress"}[pv]);
   if(page==="locked"){ $("secTabs").querySelectorAll("button").forEach(b=>mark(b,b.dataset.v===lockFor)); mark($("dailyCard"),lockFor==="daily"); }
 }
 function applySide(){
@@ -3325,6 +3404,72 @@ const OBJ={
 };
 
 
+
+// ----- Play home: song tiles (the songs open in the Play frame), the free keyboard below -----
+Object.assign(OBJ,{
+  moon:()=>{ const o=O3(); const g=o.grad("#ffd23f"); return o.raw('<path d="M70 14a46 46 0 1 0 36 66A38 38 0 0 1 70 14z" fill="'+g+'"/><ellipse cx="44" cy="44" rx="9" ry="16" fill="#fff" opacity=".4" transform="rotate(25 44 44)"/>').ball(92,30,6,"#fff3b0").svg(); },
+  star:()=>{ const o=O3(); const g=o.grad("#ffc94a"); return o.raw('<path d="M60 8l14 30 32 4-24 22 6 32-28-16-28 16 6-32L14 42l32-4z" fill="'+g+'" stroke="#e59b12" stroke-width="3" stroke-linejoin="round"/><ellipse cx="50" cy="40" rx="8" ry="5" fill="#fff" opacity=".55" transform="rotate(-25 50 40)"/>').svg(); },
+  bell:()=>{ const o=O3(); const g=o.grad("#ffc94a"); return o.ball(60,104,10,"#e59b12").raw('<path d="M60 12c-22 0-30 20-30 40v22l-10 16h80L90 74V52c0-20-8-40-30-40z" fill="'+g+'"/><ellipse cx="46" cy="40" rx="6" ry="14" fill="#fff" opacity=".45" transform="rotate(15 46 40)"/>').block(52,4,16,12,"#e59b12",5).svg(); },
+  heart:()=>{ const o=O3(); const g=o.grad("#ff5a8a"); return o.raw('<path d="M60 104C30 82 10 64 10 40a24 24 0 0 1 50-10 24 24 0 0 1 50 10c0 24-20 42-50 64z" fill="'+g+'"/><ellipse cx="34" cy="34" rx="10" ry="6" fill="#fff" opacity=".5" transform="rotate(-30 34 34)"/>').svg(); }
+});
+const SONGS_H=[["lune","Au clair de la lune","Au clair de la lune",0,1,"moon","#2c56d6"],["maman","Ah ! vous dirai-je, maman","Twinkle, Twinkle, Little Star",1,1,"star","#6a3fd1"],
+  ["ode","Ode à la joie","Ode to Joy",2,2,"staff","#1f7a52"],["jacques","Frère Jacques","Frère Jacques",0,2,"bell","#b4461a"],["elise","Lettre à Élise","Für Elise",2,3,"heart","#b02a6b"]];
+function renderPlaySongs(){ const box=$("playSongs"); box.innerHTML=""; const fr=S.settings.lang==="fr";
+  let best={}; try{ best=JSON.parse(localStorage.getItem("clavio:best")||"{}")||{}; }catch(e){}
+  const BY=fr?["Traditionnel","Trad. · Mozart","L. van Beethoven"]:["Traditional","Trad. · Mozart","L. van Beethoven"];
+  SONGS_H.forEach(([id,tf,te,by,lvl,obj,col])=>{ const st=best[id]|0;
+    box.appendChild(tile({color:col,obj,kick:t("pfLvl")+" "+lvl,title:fr?tf:te,desc:BY[by],rec:"★".repeat(st)+"☆".repeat(3-st),btn:t("rnPlay"),onOpen:()=>openPlayWith("#song="+id)})); }); }
+
+// ----- time played: counted while notes come in (15 s ticks, 45 s of silence stops the clock) -----
+let lastNoteAt=0, playTick=0;
+setInterval(()=>{ if(document.hidden || Date.now()-lastNoteAt>45000) return; const d=dayStr(); if(!S.playSec||typeof S.playSec!=="object") S.playSec={};
+  S.playSec[d]=(S.playSec[d]|0)+15; if(++playTick%4===0) save(); },15000);
+
+// ----- the light musical touch: a soft note when the pointer passes over a card (only once sound is unlocked) -----
+const HOVER_NOTES=[72,74,76,79,81,84];
+document.addEventListener("pointerover",e=>{ if(e.pointerType!=="mouse") return; const c=e.target.closest(".ptile:not(.soon),.hs-daily"); if(!c || c.contains(e.relatedTarget)) return;
+  if(!ctx || ctx.state!=="running" || S.settings.sound===false) return; const all=[...c.parentNode.children], i=Math.max(0,all.indexOf(c)); tone(HOVER_NOTES[i%HOVER_NOTES.length],0,.5,.045); });
+
+// ----- progress sheet (ROLI-style): level, achievements, streak calendar, journey, records -----
+let pfMonth=null;
+const pDate=s=>{ const [y,m,d]=s.split("-").map(Number); return new Date(y,m-1,d); };
+const wkKey=dt=>{ const d=new Date(dt.getFullYear(),dt.getMonth(),dt.getDate()); d.setDate(d.getDate()-((d.getDay()+6)%7)); return dayStr(d); };
+function streaks(){ const days=Object.keys(S.xpDays||{}).filter(k=>(S.xpDays[k]|0)>0).sort();
+  let best=0,run=0,prev=null; days.forEach(k=>{ const d=pDate(k); run = prev && Math.round((d-prev)/864e5)===1 ? run+1 : 1; best=Math.max(best,run); prev=d; });
+  const set=new Set(days); let cur=0; const d=new Date(); if(!set.has(dayStr(d))) d.setDate(d.getDate()-1); while(set.has(dayStr(d))){ cur++; d.setDate(d.getDate()-1); }
+  cur=Math.max(cur, S.streak&&S.streak.last===dayStr()?S.streak.days|0:0);
+  const wks=[...new Set(days.map(k=>wkKey(pDate(k))))].sort(); let wb=0,wr=0,wp=null; wks.forEach(k=>{ const d=pDate(k); wr = wp && Math.round((d-wp)/864e5)===7 ? wr+1 : 1; wb=Math.max(wb,wr); wp=d; });
+  const ws=new Set(wks); let wc=0; const w=pDate(wkKey(new Date())); if(!ws.has(dayStr(w))) w.setDate(w.getDate()-7); while(ws.has(dayStr(w))){ wc++; w.setDate(w.getDate()-7); }
+  return {cur,best:Math.max(best,cur),wc,wb:Math.max(wb,wc),set}; }
+const fmtDur=sec=>{ const h=Math.floor(sec/3600), m=Math.round(sec%3600/60); return h? h+" h "+String(m).padStart(2,"0")+" min" : m+" min"; };
+function renderFiche(){
+  const li=levelInfo(S.xp), ph=(typeof userPhoto==="function"&&userPhoto())||"";
+  $("pfAv").innerHTML= ph ? photoImg(ph) : avatarSVG(charIndex(li.L));
+  $("pfK").textContent=(typeof user!=="undefined"&&user)?myName():t("you"); $("pfName").textContent=titleFor(li.L);
+  $("pfXp").style.width=(li.into/li.need*100)+"%"; $("pfXpTxt").textContent=li.into+" / "+li.need+" XP";
+  const secs=["chords","scales","harmony","prog","ear"], NM={chords:"secChords",scales:"secScales",harmony:"secHarmony",prog:"secProg",ear:"secEar"}, COL={chords:"#c9463c",scales:"#b4461a",harmony:"#2c56d6",prog:"#6a3fd1",ear:"#0e7490"};
+  let mAll=0,nAll=0; const jr=secs.map(sec=>{ let m=0,n=0; try{ typeList(sec).forEach(ty=>{ const r=rootsOf(sec,ty.id); n+=r.length; m+=r.filter(k=>tileMast(sec,ty.id,k)>=3).length; }); }catch(e){} mAll+=m; nAll+=n; return [sec,m,n]; });
+  const ss=S.secStats||{}, sum=k=>Object.values(ss).reduce((a,v)=>a+((v&&v[k])|0),0);
+  const play=S.playSec||{}, tot=Object.values(play).reduce((a,v)=>a+(v|0),0);
+  const L=t("pfSt"), vals=[S.xp.toLocaleString(S.settings.lang==="fr"?"fr-FR":"en-GB")+" XP",sum("ok"),sum("perfect"),mAll,fmtDur(tot),fmtDur(play[dayStr()]|0)], SC=["#0e7490","#8a3fd1","#6a3fd1","#b4461a","#c9463c","#1f7a52"];
+  const ul=$("pfStats"); ul.innerHTML=""; L.forEach((l,i)=>{ const li2=document.createElement("li"); li2.style.background=SC[i]; li2.innerHTML="<span></span><b></b>"; li2.firstChild.textContent=l; li2.lastChild.textContent=vals[i]; ul.appendChild(li2); });
+  const st=streaks(); $("pfDay").textContent=t("pfDayS")(st.cur); $("pfDayBest").textContent=t("pfBest")(st.best); $("pfWeek").textContent=t("pfWeekS")(st.wc); $("pfWeekBest").textContent=t("pfBest")(st.wb);
+  if(!pfMonth){ const d=new Date(); pfMonth=new Date(d.getFullYear(),d.getMonth(),1); }
+  $("pfMonth").textContent=t("pfMonths")[pfMonth.getMonth()]+" "+pfMonth.getFullYear();
+  const cal=$("pfCal"); cal.innerHTML=t("pfDays").map(x=>"<i>"+x+"</i>").join(""); const first=(pfMonth.getDay()+6)%7, nd=new Date(pfMonth.getFullYear(),pfMonth.getMonth()+1,0).getDate(), today=dayStr();
+  for(let i=0;i<first;i++) cal.appendChild(document.createElement("span"));
+  for(let d=1;d<=nd;d++){ const k=dayStr(new Date(pfMonth.getFullYear(),pfMonth.getMonth(),d)), e=document.createElement("span"); e.textContent=d; if(st.set.has(k)) e.className="on"; if(k===today) e.classList.add("today"); cal.appendChild(e); }
+  $("pfJourneySub").textContent=t("pfJSub")(mAll,nAll); const ju=$("pfJourney"); ju.innerHTML="";
+  jr.forEach(([sec,m,n])=>{ const li2=document.createElement("li"); li2.innerHTML='<span class="pj-t"><b></b><span class="pj-n"></span></span><span class="bar"><i></i></span>'; li2.querySelector("b").textContent=t(NM[sec]); li2.querySelector(".pj-n").textContent=m+" / "+n; const bi=li2.querySelector(".bar i"); bi.style.width=(n?m/n*100:0)+"%"; bi.style.background=COL[sec]; ju.appendChild(li2); });
+  $("pfRecsSub").textContent=t("pfRSub"); const ru=$("pfRecs"); ru.innerHTML=""; let cb={}, cg={}; try{ cb=JSON.parse(localStorage.getItem("clavio:best")||"{}")||{}; cg=JSON.parse(localStorage.getItem("clavio:gbest")||"{}")||{}; }catch(e){}
+  const rows=[]; t("games").forEach(([title,,id])=>{ if(id) rows.push([title,((S.gameBest||{})[id]||(id==="runner"?S.runnerBest:0)||0)]); });
+  t("playGames").forEach(([title,,id])=>rows.push([title,cg[id]|0])); const fr=S.settings.lang==="fr"; SONGS_H.forEach(([id,tf,te])=>rows.push([fr?tf:te,"★".repeat(cb[id]|0)+"☆".repeat(3-(cb[id]|0))]));
+  rows.forEach(([a,b])=>{ const li2=document.createElement("li"); li2.innerHTML="<span></span><b></b>"; li2.firstChild.textContent=a; li2.lastChild.textContent=b; ru.appendChild(li2); });
+}
+$("pfPrev").addEventListener("click",()=>{ pfMonth=new Date(pfMonth.getFullYear(),pfMonth.getMonth()-1,1); renderFiche(); });
+$("pfNext").addEventListener("click",()=>{ pfMonth=new Date(pfMonth.getFullYear(),pfMonth.getMonth()+1,1); renderFiche(); });
+$("pfLevels").addEventListener("click",()=>openChars());
+
 // every object is cropped to its own drawing and pinned to the top-right corner of its box, so all objects sit at the same place
 const FIT={};
 Object.keys(OBJ).forEach(k=>{ const f=OBJ[k]; OBJ[k]=()=>{ const sv=f();
@@ -3397,9 +3542,9 @@ let playHash="#songs"; // #songs = song library, #games = Play games, #game=<id>
 function playOpen(){ const f=$("playFrame"); const src="play/index.html"+playHash+"&lang="+(S.settings.lang==="fr"?"fr":"en"); const old=f.getAttribute("src");
   if(old!==src){ f.onload=()=>{ if(page==="play" && !anyWin()) f.focus(); }; f.src=src; if(old){ try{ f.contentWindow.location.reload(); }catch(e){} } } // a hash-only change would not reload the page: force it
   $("playPanel").hidden=false; }
-addEventListener("message",e=>{ if(SAME_ORIGIN!=="*" && e.origin!==SAME_ORIGIN) return; const d=e.data; if(d && d.source==="clavio" && d.type==="free") openPage("free"); });
+addEventListener("message",e=>{ if(SAME_ORIGIN!=="*" && e.origin!==SAME_ORIGIN) return; const d=e.data; if(d && d.source==="clavio" && d.type==="free") openPage("free"); if(d && d.source==="clavio" && d.type==="home" && page==="play") openPage(playHash.startsWith("#game")?"games":"free"); });
 function openPlayWith(h){ playHash=h; if(page==="play"){ playOpen(); setNav(); } else openPage("play"); }
-function goMode(m){ closeDrawer(); if(m==="learn") openPage("learn"); else if(m==="play") openPlayWith("#songs"); else openPage("games"); }
+function goMode(m){ closeDrawer(); if(m==="learn") openPage("learn"); else if(m==="play") openPage("free"); else openPage("games"); }
 document.querySelectorAll("[data-mode]").forEach(b=>b.addEventListener("click",()=>{ const m=b.dataset.mode; if(page==="daily" && game && game.daily){ guardLeave(()=>{ game=null; goMode(m); }); return; } goMode(m); }));
 function playClose(){ const f=$("playFrame"); if(f.getAttribute("src")) f.removeAttribute("src"); $("playPanel").hidden=true; }
 function openPage(pg){
@@ -3417,7 +3562,7 @@ function openPage(pg){
     phase="idle"; cur=null; seq=[]; found=[]; played=[]; idx=0; errors=0; game=null;
     clearKeys(); $("stage").classList.remove("res-good","res-warn","res-bad");
   }
-  page=pg; if(backFromInfo){ returnPage=null; setTimeout(resumeRound,0); } if(pg==="locked") renderLock(); if(pg==="settings") renderSettings(); if(pg==="progress") renderMap(); if(pg==="games") renderGames(); if(pg==="learn") renderLearn(); if(pg==="rank") renderRank(); if(pg==="account") renderAccount(); if(pg==="daily") dailyPlan();
+  page=pg; if(backFromInfo){ returnPage=null; setTimeout(resumeRound,0); } if(pg==="locked") renderLock(); if(pg==="settings") renderSettings(); if(pg==="progress") renderMap(); if(pg==="games") renderGames(); if(pg==="learn") renderLearn(); if(pg==="free") renderPlaySongs(); if(pg==="rank") renderRank(); if(pg==="account") renderAccount(); if(pg==="daily") dailyPlan();
   if(narrowMQ.matches) buildKeyboard();
   renderSettings(); render(); renderDaily(); $("main").scrollTo({top:0});
   if(["games","daily"].includes(pg)) autoIntro(pg);
@@ -3693,7 +3838,9 @@ function openChars(){
   $("charSub").textContent = nx<0 ? t("charSub")(null) : t("charSub")(t("acctLevel").toLowerCase()+" "+CHAR_LVL[nx], xpForLevel(CHAR_LVL[nx])-S.xp);
   openMod("charModal");
 }
-["lvlAv","charMore","mbLvlBtn"].forEach(id=>$(id).addEventListener("click",openChars));
+$("charMore").addEventListener("click",e=>{ e.stopPropagation(); openChars(); });
+["lvlAv","mbLvlBtn"].forEach(id=>$(id).addEventListener("click",()=>openSet("progress")));
+$("lvlCard").addEventListener("click",e=>{ if(!e.target.closest("button")) openSet("progress"); });
 let dcSel=null, dcLenV=10, dcRev=true;
 function renderDailyCfg(){
   const ok=SECS.filter(sectionUsable), box=$("dcSecs"); box.innerHTML="";
@@ -3796,7 +3943,7 @@ function renderInputUI(){
   if(!midiPossible() && m!=="midi") st+=" "+t("inMidiApp");
   $("inStatus").textContent=st; $("inCfg").textContent=cfg; $("inCfg").hidden=!cfg; if(page==="hub") renderHubSide();
   const ok = m==="screen" || (m==="midi"&&midiReady) || (m==="mic"&&micOn);
-  const chip=$("inChip"); chip.innerHTML=INPUT_ICONS[m]+'<span class="cg"><svg viewBox="0 0 24 24"><path d="M12 15.2a3.2 3.2 0 1 0 0-6.4 3.2 3.2 0 0 0 0 6.4z"/><path d="M19.4 13.5a7.6 7.6 0 0 0 0-3l2-1.6-2-3.4-2.4 1a7.5 7.5 0 0 0-2.6-1.5L14 2.5h-4l-.4 2.5A7.5 7.5 0 0 0 7 6.5l-2.4-1-2 3.4 2 1.6a7.6 7.6 0 0 0 0 3l-2 1.6 2 3.4 2.4-1a7.5 7.5 0 0 0 2.6 1.5l.4 2.5h4l.4-2.5a7.5 7.5 0 0 0 2.6-1.5l2.4 1 2-3.4z"/></svg></span><i class="'+(ok?"on":"off")+'"></i>'; chip.title=M[m][0]+" — "+st; chip.setAttribute("aria-label",chip.title);
+  const chip=$("inChip"); chip.innerHTML=INPUT_ICONS[m]+'<span class="cg"><svg viewBox="0 0 24 24"><path d="M10.3 3.2a1.8 1.8 0 0 1 3.4 0l.4 1.2a1.8 1.8 0 0 0 2.4 1l1.1-.6a1.8 1.8 0 0 1 2.4 2.4l-.6 1.1a1.8 1.8 0 0 0 1 2.4l1.2.4a1.8 1.8 0 0 1 0 3.4l-1.2.4a1.8 1.8 0 0 0-1 2.4l.6 1.1a1.8 1.8 0 0 1-2.4 2.4l-1.1-.6a1.8 1.8 0 0 0-2.4 1l-.4 1.2a1.8 1.8 0 0 1-3.4 0l-.4-1.2a1.8 1.8 0 0 0-2.4-1l-1.1.6a1.8 1.8 0 0 1-2.4-2.4l.6-1.1a1.8 1.8 0 0 0-1-2.4l-1.2-.4a1.8 1.8 0 0 1 0-3.4l1.2-.4a1.8 1.8 0 0 0 1-2.4l-.6-1.1a1.8 1.8 0 0 1 2.4-2.4l1.1.6a1.8 1.8 0 0 0 2.4-1z"/><circle cx="12" cy="12" r="3"/></svg></span><i class="'+(ok?"on":"off")+'"></i>'; chip.title=M[m][0]+" — "+st; chip.setAttribute("aria-label",chip.title);
 }
 let midiSetup=null; // {prev} while the player is connecting a MIDI keyboard after choosing MIDI
 async function setInput(v, fromUser){

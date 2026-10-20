@@ -398,7 +398,7 @@ function fit(){const r=stage.getBoundingClientRect(),d=window.devicePixelRatio||
 new ResizeObserver(fit).observe(stage);
 let wake=null;
 async function keepAwake(){try{wake=await navigator.wakeLock?.request('screen')}catch(e){}}
-function go(s){screen=s;home.hidden=s!=='home';play.hidden=s!=='play';
+function go(s){if(s==='home'&&embedded&&(VIEW.startsWith('song=')||VIEW.startsWith('game='))){try{window.parent.postMessage({source:'clavio',type:'home'},location.origin==='null'?'*':location.origin)}catch(e){}}screen=s;home.hidden=s!=='home';play.hidden=s!=='play';
   if(s==='home'){renderHome();held.forEach(noteOff);setTargets([]);try{wake?.release()}catch(e){}}
   else{requestAnimationFrame(fit);keepAwake()}}
 document.querySelectorAll('[data-home]').forEach(b=>b.addEventListener('click',()=>{P.playing=false;if(mode!=='song')GAME[mode].stop?.();go('home')}));
@@ -418,9 +418,6 @@ function tablet(x){
   return`<div class="tab"><div class="floor">${floor}</div><div class="mini">${mini}</div></div>`}
 function renderHome(){
   const g=$('songGrid');g.innerHTML='';let total=0;
-  if(embedded){const f=document.createElement('button');f.className='tile';f.style.background='linear-gradient(160deg,#9b7bff,#5b3fe0)';
-    f.innerHTML=tablet({notes:[{m:60,s:0,d:1},{m:64,s:1.2,d:1},{m:67,s:2.4,d:1},{m:72,s:3.6,d:1}],lit:[0,4,7]})+`<div class="tile-body"><span class="lvl">${tr('freeK')}</span><h3>${tr('freeT')}</h3><div class="meta"><span>${tr('freeD')}</span></div></div>`;
-    f.addEventListener('click',()=>{try{window.parent.postMessage({source:'clavio',type:'free'},location.origin==='null'?'*':location.origin)}catch(e){}});g.appendChild(f)}
   SONGS.forEach(s=>{const b=best[s.id]||0;total+=b;
     const c=document.createElement('button');c.className='tile';c.style.background=TONE[s.tone];
     const mins=Math.round(s.end/s.bpm*60);
@@ -772,6 +769,7 @@ function frame(now){const dt=Math.min(.05,(now-last)/1000);last=now;
   requestAnimationFrame(frame)}
 renderHome();requestAnimationFrame(frame);
 if(VIEW.startsWith('game=')&&GAMES.some(g=>g.id===VIEW.slice(5)))openGame(VIEW.slice(5));
+if(VIEW.startsWith('song=')){const s=SONGS.find(x=>x.id===VIEW.slice(5));if(s)openSong(s)}
 })();
 </script>
 

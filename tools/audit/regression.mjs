@@ -53,10 +53,11 @@ for(const dark of [false,true]){
   await pg.context().close();
 }
 
-// ---- #15 Play page in the host language
+// ---- #15 Play page in the host language (song titles in the host tiles, the frame's own headings and note names)
 for(const [lang,h2,note] of [['en','Songs','C'],['fr','Morceaux','Do']]){
   const pg=await open({w:1024,h:768,lang});
-  await click(pg,'#modeNav [data-mode=play]'); await pg.waitForTimeout(1500);
+  await click(pg,'#modeNav [data-mode=play]'); await pg.waitForTimeout(400); // PLAY opens the host's song tiles; a song opens in the Play frame
+  await click(pg,'#playSongs .ptile'); await pg.waitForTimeout(1500);
   const f=pg.frame({url:/play\/index/});
   const r=f ? await f.evaluate(()=>({lang:document.documentElement.lang,h2:document.querySelector('#secSongs h2').textContent,key:document.querySelector('#kbd .key.w .lbl').textContent})) : null;
   ok(!!r && r.h2===h2 && r.key===note && r.lang===lang, `Play ${lang}: ${JSON.stringify(r)}`);
