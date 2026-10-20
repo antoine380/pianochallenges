@@ -10,7 +10,7 @@ AFF = D["affiliate"]
 IMG_DIR = ROOT / "assets/claviers"
 esc = lambda s: html.escape(str(s), quote=True)
 
-RETAILERS = [("amazon", "Amazon"), ("thomann", "Thomann"), ("woodbrass", "Woodbrass"), ("gear4music", "Gear4music")]
+RETAILERS = [("amazon", "Amazon"), ("thomann", "Thomann"), ("woodbrass", "Woodbrass"), ("gear4music", "Gear4music"), ("official", None)]
 
 def aff(rid, url):
     """Turn a plain product URL into a tracked affiliate link when the ids are filled in keyboards.json."""
@@ -43,7 +43,7 @@ T = {
    steps=[("En USB","iPad USB-C : un câble USB-C direct. iPad Lightning : l'adaptateur Apple Lightning vers USB 3 pour appareil photo, avec sa prise de recharge."),
           ("En Bluetooth","Allume le clavier, puis appaire-le depuis l'écran MIDI de l'app, et non depuis Réglages › Bluetooth."),
           ("Joue","Lance un défi : l'app reconnaît chaque note jouée. Sur Android, l'USB est plus fiable que le Bluetooth.")],
-   cta="Ouvrir Piano Challenges", buyAt="Voir chez", photo="Photo",
+   cta="Ouvrir Piano Challenges", official="Site officiel", buyAt="Voir chez", photo="Photo",
    drawn="Illustration : clavier {} touches",
    disc1="<strong>Liens affiliés.</strong> Certains liens de cette page sont des liens partenaires : si tu achètes après avoir cliqué, Piano Challenges peut toucher une commission, sans surcoût pour toi. En tant que Partenaire Amazon, nous réalisons un bénéfice sur les achats remplissant les conditions requises.",
    disc2="Prix en fourchettes indicatives, autonomies selon les fabricants. Aucune marque ne publie ses ventes par modèle : le classement est une estimation. Photos : © les fabricants. Mise à jour : {}.",
@@ -69,7 +69,7 @@ T = {
    steps=[("Over USB","USB-C iPad: a direct USB-C cable. Lightning iPad: Apple's Lightning to USB 3 Camera Adapter, with its charging port."),
           ("Over Bluetooth","Turn the keyboard on, then pair it from the app's MIDI screen, not from Settings › Bluetooth."),
           ("Play","Start a challenge: the app recognises every note you play. On Android, USB is more reliable than Bluetooth.")],
-   cta="Open Piano Challenges", buyAt="View at", photo="Photo",
+   cta="Open Piano Challenges", official="Official site", buyAt="View at", photo="Photo",
    drawn="Illustration: {}-key keyboard",
    disc1="<strong>Affiliate links.</strong> Some links on this page are partner links: if you buy after clicking, Piano Challenges may earn a commission at no extra cost to you. As an Amazon Associate we earn from qualifying purchases.",
    disc2="Prices shown as rough ranges, battery life as stated by manufacturers. No brand publishes per-model sales, so the ranking is an estimate. Photos © their manufacturers. Updated: {}.",
@@ -138,6 +138,7 @@ def buy(m, t):
     for i, (rid, name) in enumerate(RETAILERS):
         url = m["links"].get(rid)
         if not url: continue
+        name = name or t["official"]
         out.append(f'<a class="{"main" if not out else ""}" href="{esc(aff(rid, url))}" target="_blank" rel="sponsored noopener" aria-label="{esc(t["buyAt"]+" "+name+" : "+m["brand"]+" "+m["name"])}">{name}</a>')
     return "".join(out)
 

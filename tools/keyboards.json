@@ -62,7 +62,7 @@
     "power": "Powered by the tablet (USB-C)",
     "note": "The world's best-selling controller, now in its 4th generation. One cable and you're playing."
    },
-   "image": null,
+   "image": "https://cdn.builder.io/api/v1/image/assets%2F47c5d023e7b3451a86ac03602c65dce8%2F885b614866794245aed0bd99c590bba2",
    "links": {
     "amazon": "https://www.amazon.fr/dp/B0FT3N7TK1",
     "thomann": "https://www.thomann.fr/akai_professional_mpk_mini_iv_black.htm",
@@ -91,7 +91,7 @@
     "power": "Mains power",
     "note": "88 weighted keys and built-in speakers. The P-145BT version adds Bluetooth."
    },
-   "image": null,
+   "image": "https://vn.yamaha.com/vi/files/P-145_a_0003_tcm153-2016674.jpg",
    "links": {
     "amazon": "https://www.amazon.fr/dp/B0C8TVFVK2",
     "thomann": "https://www.thomann.fr/yamaha_p_145_b_bt.htm",
@@ -119,7 +119,7 @@
     "power": "Powered by the tablet (USB-C)",
     "note": "Great feel for a mini keyboard, powered straight from your iPad."
    },
-   "image": null,
+   "image": "https://medias.arturia.net/cdn-cgi/image/format=auto,quality=80/images/products/minilab-3/gallery/minilab3_01.jpg",
    "links": {
     "amazon": "https://www.amazon.fr/dp/B0BR55ZB9T",
     "thomann": "https://www.thomann.fr/arturia_minilab_3_black.htm",
@@ -147,7 +147,7 @@
     "power": "Powered by the tablet (USB-C)",
     "note": "Three octaves and a sustain pedal input."
    },
-   "image": null,
+   "image": "https://www.voltmusicstore.com/cdn/shop/files/lkm37-mkiv-straight-top-2400-2400-071521722434936.png?v=1772289357&width=2000",
    "links": {
     "amazon": "https://www.amazon.fr/dp/B0D6YY1W6X",
     "thomann": "https://www.thomann.fr/novation_launchkey_mini_37_mk4.htm",
@@ -175,7 +175,7 @@
     "power": "2 AA batteries or USB",
     "note": "Also comes in 25, 37 and 61 keys. About a month at one hour a day."
    },
-   "image": null,
+   "image": "https://cdn.korg.com/us/products/upload/5c6f01e8b69754c7cadbdbc381091915_pc.jpg",
    "links": {
     "amazon": "https://www.amazon.fr/dp/B018ATKMFK",
     "thomann": "https://www.thomann.fr/korg_microkey_air_49.htm",
@@ -204,7 +204,7 @@
     "power": "4 AA batteries or USB",
     "note": "128 built-in sounds and a speaker. Connects to the tablet over USB only."
    },
-   "image": null,
+   "image": "https://cdn.builder.io/api/v1/image/assets%2F47c5d023e7b3451a86ac03602c65dce8%2F1735a735ab724c138607e2cc26343261",
    "links": {
     "amazon": "https://www.amazon.fr/dp/B09NQBDGT3",
     "thomann": "https://www.thomann.fr/akai_professional_mpk_mini_play_mk3.htm",
@@ -234,7 +234,7 @@
     "power": "6 AA batteries or mains",
     "note": "Bluetooth with the WU-BT10 adapter. 76-key version: 8 AA batteries, about 7 hours."
    },
-   "image": null,
+   "image": "https://www.casio.com/content/dam/casio/product-info/locales/intl/en/emi/product/C/CT/CTS/CT-S1BK/assets/CT-S1BK_Seq1.jpg",
    "links": {
     "amazon": "https://www.amazon.fr/dp/B091PD782Y",
     "thomann": "https://www.thomann.fr/casio_ct_s1bk.htm",
@@ -263,7 +263,7 @@
     "power": "6 AA batteries or mains",
     "note": "Arranger keyboard with built-in lessons. Yamaha doesn't publish battery life."
    },
-   "image": null,
+   "image": "https://usa.yamaha.com/files/PSR-E383_a_0001_9c84f28fa30e38694ddf2a051f9be4c4.jpg?impolicy=resize&imwid=735&imhei=735?imbypass=on",
    "links": {
     "amazon": "https://www.amazon.fr/dp/B0CY2Q6DF5",
     "thomann": "https://www.thomann.fr/yamaha_psr_e383.htm",
@@ -293,7 +293,7 @@
     "auto": "10 to 16 h depending on source",
     "note": "The cheapest Bluetooth option. Battery recharges over USB."
    },
-   "image": null,
+   "image": "https://i.ebayimg.com/images/g/wKAAAeSwH5NqOx5K/s-l1600.jpg",
    "links": {
     "amazon": "https://www.amazon.fr/dp/B0CJYJD7CP"
    }
@@ -321,7 +321,7 @@
     "auto": "6 h (alkaline), 7 h (NiMH)",
     "note": "The only 88-key model here that plays unplugged. Keys are not weighted."
    },
-   "image": null,
+   "image": "https://static.roland.com/assets/images/products/gallery/gopiano_go-88px_angle_gal.jpg",
    "links": {
     "amazon": "https://www.amazon.fr/dp/B0F1TRG95C",
     "thomann": "https://www.thomann.fr/roland_go_piano_88.htm",
@@ -351,7 +351,7 @@
     "auto": "12 to 72 h depending on source",
     "note": "Discontinued at some retailers: check stock."
    },
-   "image": null,
+   "image": "https://muzikercdn.com/uploads/products/482/48252/main_f4b47e96.jpg",
    "links": {
     "amazon": "https://www.amazon.fr/dp/B01J66AM0G",
     "gear4music": "https://www.gear4music.fr/fr/Claviers-and-Pianos/Akai-Professional-LPK25-Clavier-Maitre-MIDI-Sans-Fil/1R40"
@@ -379,7 +379,7 @@
     "auto": "10+ hours",
     "note": "Ultra-thin aluminium, full-size short-travel keys. No pedal input."
    },
-   "image": null,
+   "image": "https://www.esi-audiotechnik.com/pictures/xkeyair37_large.jpg",
    "links": {
     "amazon": "https://www.amazon.fr/dp/B01CKGTT6C",
     "thomann": "https://www.thomann.fr/esi_xkey_air_37.htm",
@@ -407,8 +407,10 @@
     "power": "Built-in battery",
     "note": "49 semi-weighted light-up keys: ideal for following a challenge."
    },
-   "image": null,
-   "links": {}
+   "image": "https://d30pueezughrda.cloudfront.net/roli.com/storyblok/p49_c_top_pianomode.20021150.jpg",
+   "links": {
+    "official": "https://roli.com/experience/piano-create"
+   }
   }
  ]
 }
