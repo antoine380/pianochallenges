@@ -347,7 +347,7 @@ body{margin:0;padding:0;overflow:hidden}
 .ptile .art::after{content:"";position:absolute;left:4%;right:4%;bottom:0;height:22%;background:repeating-linear-gradient(90deg,#2b2a31 0 calc(100%/14 - 2px),transparent 0 calc(100%/14));border-radius:3px 3px 0 0}
 .ptile .art svg{width:38%;height:38%;fill:none;stroke:#fff;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;filter:drop-shadow(0 0 16px var(--tc));position:relative;top:-6%}
 .ptile .pk{font-family:var(--f-mono);font-size:.68rem;letter-spacing:.1em;text-transform:uppercase}
-.ptile h3{margin:0;font-family:var(--f-display);font-weight:800;font-size:1.3rem;letter-spacing:-.015em;line-height:1.15}
+.ptile .h3{display:block;margin:0;font-family:var(--f-display);font-weight:800;font-size:1.3rem;letter-spacing:-.015em;line-height:1.15}
 .ptile p{margin:0;font-size:.88rem;line-height:1.4}
 .ptile .go{margin-top:auto;align-self:flex-start;border-radius:999px;padding:8px 14px;background:#fff;color:#161920;font-family:var(--f-display);font-weight:700;font-size:.85rem;border:0}
 .ptile .rec{font-family:var(--f-mono);font-size:.78rem}
@@ -359,13 +359,13 @@ body{margin:0;padding:0;overflow:hidden}
 .mode-h h2{font-family:var(--f-display);font-weight:800;font-size:clamp(1.5rem,3vw,2.3rem);letter-spacing:-.025em;line-height:1.05;margin:0;text-wrap:balance}
 .mode-h p{margin:6px 0 0;color:var(--muted);max-width:62ch}
 .hub-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
-.hub-grid .ptile h3{font-size:1.7rem;letter-spacing:.06em}
+.hub-grid .ptile .h3{font-size:1.7rem;letter-spacing:.06em}
 .hub-grid .ptile .tags{font-family:var(--f-mono);font-size:.72rem;line-height:1.6}
 #gamesPanel .pane-head{display:none!important}
 @media (min-width:1200px){ #gameCards{grid-template-columns:repeat(4,minmax(0,1fr))} #playCards{grid-template-columns:repeat(6,minmax(0,1fr))} }
 .gc-head{margin:6px 0 0;font-family:var(--f-display);font-weight:800;font-size:1.05rem;display:flex;flex-wrap:wrap;align-items:baseline;gap:2px 10px} .gc-head span{white-space:nowrap}
 .gc-head small{font-family:var(--f-body);font-weight:400;color:var(--muted);font-size:.84rem}
-@media (max-width:760px){.ptile-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px} .ptile-grid .ptile .art{display:none} .ptile-grid .ptile{padding:12px 12px 14px;gap:4px} .ptile-grid .ptile h3{font-size:1rem} .ptile-grid .ptile p{font-size:.76rem} .ptile-grid .ptile .go{padding:6px 11px;font-size:.78rem;margin-top:6px} .hub-grid{grid-template-columns:1fr;gap:10px} .mode-page.hub{justify-content:flex-start} .hub-grid .ptile .art{display:none} .hub-grid .ptile{padding:14px 16px;gap:4px} .hub-grid .ptile h3{font-size:1.3rem} .hub-grid .ptile .tags{display:none}}
+@media (max-width:760px){.ptile-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px} .ptile-grid .ptile .art{display:none} .ptile-grid .ptile{padding:12px 12px 14px;gap:4px} .ptile-grid .ptile .h3{font-size:1rem} .ptile-grid .ptile p{font-size:.76rem} .ptile-grid .ptile .go{padding:6px 11px;font-size:.78rem;margin-top:6px} .hub-grid{grid-template-columns:1fr;gap:10px} .mode-page.hub{justify-content:flex-start} .hub-grid .ptile .art{display:none} .hub-grid .ptile{padding:14px 16px;gap:4px} .hub-grid .ptile .h3{font-size:1.3rem} .hub-grid .ptile .tags{display:none}}
 /* Tablets and short screens (iPad 1024×768 and 768×1024, laptops 1280×800): compact tiles without the "screen" art, so Games and Learn fit on one screen */
 @media (max-height:820px), (max-width:900px){
   .ptile-grid{grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:10px}
@@ -375,7 +375,7 @@ body{margin:0;padding:0;overflow:hidden}
   .ptile-grid .ptile .art{display:none}
   .ptile-grid .ptile{padding:12px 14px 14px;gap:5px;border-radius:18px}
   .ptile-grid .ptile .pk{font-size:.62rem}
-  .ptile-grid .ptile h3{font-size:1.05rem}
+  .ptile-grid .ptile .h3{font-size:1.05rem}
   .ptile-grid .ptile p{font-size:.78rem;line-height:1.35}
   .ptile-grid .ptile .rec{font-size:.72rem}
   .ptile-grid .ptile .go{padding:6px 12px;font-size:.78rem;margin-top:6px}
@@ -402,10 +402,10 @@ body{margin:0;padding:0;overflow:hidden}
   .ptile-grid .ptile{padding:8px 10px 9px;gap:2px;border-radius:14px}
   .ptile-grid .ptile :is(.pk,p,.rec:not(:last-child),.go){display:none}
   .ptile-grid .ptile{min-height:44px;justify-content:center}
-  .ptile-grid .ptile h3{font-size:.9rem}
+  .ptile-grid .ptile .h3{font-size:.9rem}
   .gc-head{margin:0;font-size:.9rem}
   .hub-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
-  .hub-grid .ptile .art{display:none} .hub-grid .ptile{padding:10px 12px;gap:3px} .hub-grid .ptile h3{font-size:1.1rem} .hub-grid .ptile .tags{display:none} .hub-grid .ptile p{font-size:.74rem}
+  .hub-grid .ptile .art{display:none} .hub-grid .ptile{padding:10px 12px;gap:3px} .hub-grid .ptile .h3{font-size:1.1rem} .hub-grid .ptile .tags{display:none} .hub-grid .ptile p{font-size:.74rem}
 }
 .side .lvl-card{margin-top:auto}
 .side-foot{display:flex;flex-direction:column;gap:2px;padding-top:10px;border-top:1px solid var(--line)}
@@ -961,9 +961,9 @@ html.native .midi-body [data-i="midiHint"]{display:none}
   <section class="mode-page hub" id="hubPanel" hidden>
     <div class="mode-h"><h2 data-i="hubTitle"></h2><p data-i="hubSub"></p></div>
     <div class="hub-grid">
-      <button class="ptile" type="button" data-mode="games" style="--tc:var(--m-games)"><span class="art"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2.5" y="7" width="19" height="11" rx="5.5"/><path d="M7.5 10.5v4M5.5 12.5h4"/><circle cx="15.5" cy="11.2" r=".9"/><circle cx="17.8" cy="13.8" r=".9"/></svg></span><h3>GAMES</h3><p data-i="hubGames"></p><span class="tags" data-i="hubGamesTags"></span></button>
-      <button class="ptile" type="button" data-mode="play" style="--tc:var(--m-play)"><span class="art"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.5l12 7.5-12 7.5z"/></svg></span><h3>PLAY</h3><p data-i="hubPlay"></p><span class="tags" data-i="hubPlayTags"></span></button>
-      <button class="ptile" type="button" data-mode="learn" style="--tc:var(--m-learn)"><span class="art"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6.5A2.5 2.5 0 0 1 6.5 4H11v16H6.5A2.5 2.5 0 0 0 4 22zM20 6.5A2.5 2.5 0 0 0 17.5 4H13v16h4.5A2.5 2.5 0 0 1 20 22z"/></svg></span><h3>LEARN</h3><p data-i="hubLearn"></p><span class="tags" data-i="hubLearnTags"></span></button>
+      <button class="ptile" type="button" data-mode="games" style="--tc:var(--m-games)"><span class="art"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2.5" y="7" width="19" height="11" rx="5.5"/><path d="M7.5 10.5v4M5.5 12.5h4"/><circle cx="15.5" cy="11.2" r=".9"/><circle cx="17.8" cy="13.8" r=".9"/></svg></span><span class="h3">GAMES</span><p data-i="hubGames"></p><span class="tags" data-i="hubGamesTags"></span></button>
+      <button class="ptile" type="button" data-mode="play" style="--tc:var(--m-play)"><span class="art"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.5l12 7.5-12 7.5z"/></svg></span><span class="h3">PLAY</span><p data-i="hubPlay"></p><span class="tags" data-i="hubPlayTags"></span></button>
+      <button class="ptile" type="button" data-mode="learn" style="--tc:var(--m-learn)"><span class="art"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6.5A2.5 2.5 0 0 1 6.5 4H11v16H6.5A2.5 2.5 0 0 0 4 22zM20 6.5A2.5 2.5 0 0 0 17.5 4H13v16h4.5A2.5 2.5 0 0 1 20 22z"/></svg></span><span class="h3">LEARN</span><p data-i="hubLearn"></p><span class="tags" data-i="hubLearnTags"></span></button>
     </div>
   </section>
 
@@ -1937,11 +1937,11 @@ function buildKeyboard(){
   const ww=100/whites.length, bw=ww*.62;
   kbd.style.minWidth = size!=="auto" ? whites.length*(narrowMQ.matches?30:16)+"px" : "";
   whites.forEach((m,i)=>{
-    const el=document.createElement("div"); el.className="wk"; el.dataset.m=m; el.appendChild(document.createElement("span"));
+    const el=document.createElement("div"); el.className="wk"; el.dataset.m=m; el.appendChild(document.createElement("span")); keyA11y(el,m);
     kbd.appendChild(el); keyEls[m]=el;
     if([0,2,5,7,9].includes(m%12) && m+1<=HIGH){
       const b=document.createElement("div"); b.className="bk"; b.dataset.m=m+1; b.style.left=((i+1)*ww-bw/2)+"%"; b.style.width=bw+"%";
-      b.appendChild(document.createElement("span")); kbd.appendChild(b); keyEls[m+1]=b; }
+      b.appendChild(document.createElement("span")); keyA11y(b,m+1); kbd.appendChild(b); keyEls[m+1]=b; }
   });
   labelKeys();
   if(phase==="revealed") showReveal(true);
@@ -1961,6 +1961,9 @@ kbd.addEventListener("pointerdown", e=>{
   const el=e.target.closest("[data-m]"); if(!el) return;
   e.preventDefault(); const m=+el.dataset.m; tone(m); noteIn(m);
 });
+// keys are buttons for assistive tech (not in the Tab order: the letter keys are the shortcuts); Enter/Space on a focused key plays it
+function keyA11y(el,m){ el.setAttribute("role","button"); el.tabIndex=-1; el.setAttribute("aria-label",(S.settings.notation==="fr"?PC_FR:PC_EN)[m%12]+" "+(Math.floor(m/12)-1)); }
+kbd.addEventListener("keydown", e=>{ const el=e.target.closest("[data-m]"); if(!el || (e.code!=="Enter" && e.code!=="Space")) return; e.preventDefault(); e.stopPropagation(); const m=+el.dataset.m; tone(m); noteIn(m); });
 function pressKey(m){ const el=keyEls[fold(m)]; if(!el) return; el.classList.add("k-press"); setTimeout(()=>el.classList.remove("k-press"),130); }
 kbd.addEventListener("contextmenu", e=>e.preventDefault());
 const CODE_MAP={KeyA:60,KeyW:61,KeyS:62,KeyE:63,KeyD:64,KeyF:65,KeyT:66,KeyG:67,KeyY:68,KeyH:69,KeyU:70,KeyJ:71,KeyK:72,KeyO:73,KeyL:74,KeyP:75,Semicolon:76};
@@ -2746,7 +2749,7 @@ function render(){ document.body.classList.toggle("playing", !!game || phase!=="
 
 // ---------- Settings wiring ----------
 $("langSeg").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return;
-  S.settings.lang=b.dataset.v; S.settings.notation=b.dataset.v; save(); closeTypes(); applyStatic(); applySide(); renderGames(); renderInputUI(); if(page==="rank") renderRank(); if(page==="account") renderAccount(); if(helpOpen) renderTut(); renderSettings(); labelKeys(); render(); renderDaily(); if(endOpen&&lastGame) openEnd(lastGame); if(page==="play") playOpen(); });
+  S.settings.lang=b.dataset.v; S.settings.notation=b.dataset.v; save(); closeTypes(); applyStatic(); applySide(); renderGames(); renderInputUI(); if(page==="rank") renderRank(); if(page==="account") renderAccount(); if(helpOpen) renderTut(); renderSettings(); labelKeys(); render(); renderDaily(); if(endOpen&&lastGame) openEnd(lastGame); if(page==="play") playOpen(); Object.entries(keyEls).forEach(([m,el])=>keyA11y(el,+m)); });
 function bindSeg(id,key,restart){ $(id).addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return;
   S.settings[key]=b.dataset.v; save(); renderSettings(); labelKeys();
   if(restart && cur && (phase==="listening"||phase==="revealed")) startRound(key==="dir"?{...cur,dir:null}:cur,true); else render(); }); }
@@ -3050,8 +3053,8 @@ const TILE_ICON={chords:'<circle cx="7" cy="17" r="2.6"/><circle cx="7" cy="11" 
 // one tile: colored card, dark screen with icon, kicker, name, line, button
 function tile({color,icon,kick,title,desc,btn,rec,soon,onOpen}){
   const c=document.createElement(soon?"div":"button"); c.className="ptile"+(soon?" soon":""); if(!soon) c.type="button"; c.style.setProperty("--tc",color);
-  c.innerHTML='<span class="art"><svg viewBox="0 0 24 24" aria-hidden="true">'+icon+'</svg></span><span class="pk"></span><h3></h3><p></p>'+(rec!=null?'<span class="rec"></span>':'')+(soon?'<span class="rec"></span>':'<span class="go"></span>');
-  c.querySelector(".pk").textContent=kick; c.querySelector("h3").textContent=title; c.querySelector("p").textContent=desc;
+  c.innerHTML='<span class="art"><svg viewBox="0 0 24 24" aria-hidden="true">'+icon+'</svg></span><span class="pk"></span><span class="h3"></span><p></p>'+(rec!=null?'<span class="rec"></span>':'')+(soon?'<span class="rec"></span>':'<span class="go"></span>');
+  c.querySelector(".pk").textContent=kick; c.querySelector(".h3").textContent=title; c.querySelector("p").textContent=desc;
   if(rec!=null) c.querySelector(".rec").textContent=rec; if(soon) c.querySelector(".rec:last-child").textContent=t("soon"); else c.querySelector(".go").textContent=btn||t("rnPlay");
   if(onOpen) c.addEventListener("click",onOpen); return c; }
 const shade=(hex,k)=>{ const n=parseInt(hex.slice(1),16), r=n>>16, g=(n>>8)&255, b=n&255, f=x=>Math.max(0,Math.min(255,Math.round(x))); return "#"+[r,g,b].map(x=>f(x+(k>0?(255-x)*k:x*k)).toString(16).padStart(2,"0")).join(""); };
