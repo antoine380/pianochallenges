@@ -1724,9 +1724,11 @@ function earMidis(q){
 const STORE="memo-gammes-v1";
 const clone = o => JSON.parse(JSON.stringify(o)); // works on every iOS version
 let firstVisit=false;
+// First visit: French browsers start in French (and French note names), everyone else in English
+const DEFAULT_LANG=((navigator.language||"en")+"").toLowerCase().startsWith("fr")?"fr":"en";
 const DEFAULTS={xp:0, mastery:{}, stats:{ok:0,perfect:0,revealed:0,errors:0}, streak:{days:0,last:""}, suiteIdx:0, csuiteIdx:0,
   seenTypes:["major","minor","chords:maj","chords:min"], langV2:true, secStats:{}, srs:{}, daily:{}, section:"chords",
-  settings:{lang:"en", mode:"suite", delay:0, notation:"en", dir:"up", octave:true, labels:false, midiSound:true, midiC:true, midiInput:"", autoNext:true, kbdSize:"auto", kbdLow:36, kbdHigh:96, unlockAll:false,
+  settings:{lang:DEFAULT_LANG, mode:"suite", delay:0, notation:DEFAULT_LANG, dir:"up", octave:true, labels:false, midiSound:true, midiC:true, midiInput:"", autoNext:true, kbdSize:"auto", kbdLow:36, kbdHigh:96, unlockAll:false,
     types:["major"], view:"major", ctypes:["maj"], cview:"maj", invs:[0],
     htypes:["maj"], hview:"maj", hdegs:[0,1,2,3,4,5,6], ptypes:["p145","pop"], pview:"pop", vl:false, etypes:["chord","int"], eview:"chord", earV2:true, scMode:"notes", sc7:false, gameLen:10}};
 const SECS=["scales","chords","harmony","prog","ear"];
