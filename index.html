@@ -3076,7 +3076,7 @@ function openPage(pg){
   const toInfo = INFO_PAGES.includes(pg) && !INFO_PAGES.includes(page);
   const backFromInfo = INFO_PAGES.includes(page) && returnPage && pg===returnPage;
   if(toInfo){ returnPage=page; pauseRound(); }
-  else if(!INFO_PAGES.includes(pg) && !backFromInfo) returnPage=null;
+  else if(!INFO_PAGES.includes(pg) && !backFromInfo){ returnPage=null; if(INFO_PAGES.includes(page)){ paused=false; pendingAdv=false; } } // leaving an info page elsewhere: drop the stale pause
   const keepDaily = (pg==="daily" && game && game.daily) || toInfo || backFromInfo || (INFO_PAGES.includes(pg) && INFO_PAGES.includes(page));
   if(!keepDaily){
     clearTimeout(advanceTimer); cancelAnimationFrame(raf); clearPlayTimers(); closeEnd();
@@ -3518,7 +3518,7 @@ function anyModal(){ return anyWin()||INFO_PAGES.includes(page); }
 function pauseRound(){ if(!paused && phase==="listening"){ cancelAnimationFrame(raf); pausedLeft = deadline ? Math.max(0,deadline-performance.now()) : 0; paused=true; } }
 function resumeRound(){
   if(anyModal()) return;
-  if(paused){ paused=false; if(phase==="listening"){ if(deadline) deadline=performance.now()+pausedLeft; raf=requestAnimationFrame(tick); } }
+  if(paused){ paused=false; if(phase==="listening"){ if(deadline) deadline=performance.now()+pausedLeft; cancelAnimationFrame(raf); raf=requestAnimationFrame(tick); } }
   if(pendingAdv){ pendingAdv=false; setTimeout(()=>{ if(anyModal()){ pendingAdv=true; return; } if(phase==="success") startRound(); else if(phase==="revealed") grade(true); },500); }
 }
 function modalOpened(){ modalFocus.push(document.activeElement); pauseRound(); try{ $("app").inert=true; }catch(e){} }
