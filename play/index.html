@@ -4,30 +4,35 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 <meta name="robots" content="noindex">
-<style>html{color-scheme:light;-webkit-text-size-adjust:100%}body{margin:0}img{max-width:100%}</style>
+<style>html{-webkit-text-size-adjust:100%}body{margin:0}img{max-width:100%}</style>
 <title>Play · Piano Challenges</title>
 <style>
 @font-face{font-family:"Bricolage Grotesque";font-style:normal;font-weight:500;font-display:swap;src:url(../assets/fonts/bricolage-grotesque-latin-500-normal.woff2) format("woff2")}
 @font-face{font-family:"Bricolage Grotesque";font-style:normal;font-weight:700;font-display:swap;src:url(../assets/fonts/bricolage-grotesque-latin-700-normal.woff2) format("woff2")}
 @font-face{font-family:"Bricolage Grotesque";font-style:normal;font-weight:800;font-display:swap;src:url(../assets/fonts/bricolage-grotesque-latin-800-normal.woff2) format("woff2")}
+@font-face{font-family:"Atkinson Hyperlegible";font-style:normal;font-weight:400;font-display:swap;src:url(../assets/fonts/atkinson-hyperlegible-latin-400-normal.woff2) format("woff2")}
+@font-face{font-family:"Atkinson Hyperlegible";font-style:normal;font-weight:700;font-display:swap;src:url(../assets/fonts/atkinson-hyperlegible-latin-700-normal.woff2) format("woff2")}
 @font-face{font-family:"DM Mono";font-style:normal;font-weight:400;font-display:swap;src:url(../assets/fonts/dm-mono-latin-400-normal.woff2) format("woff2")}
 @font-face{font-family:"DM Mono";font-style:normal;font-weight:500;font-display:swap;src:url(../assets/fonts/dm-mono-latin-500-normal.woff2) format("woff2")}
 /* Layout: ROLI-style. Home = cream page, light oversized headline, colored tiles each holding a dark "tablet" with a 3D cascade.
    Play = dark full-bleed stage; notes fall in perspective as extruded pills onto a dark keyboard whose keys light in the note's color. */
 :root{
-  --paper:#f6f2eb; --paper-2:#ebe6dc; --ink:#1c1b1f; --muted:#8c8984; --rule:#dcd6cb;
+  --paper:#eceef2; --paper-2:#ffffff; --ink:#161920; --muted:#5b6271; --rule:#d4d8e0; --accent:#b8740f;
   --coral:#f26a5e; --violet:#7a5cf5; --cyan:#3ab8c8; --sun:#e7c344; --mint:#49c08a;
   --stage:#0f0e14; --stage-2:#1b1a22; --key:#2a292f; --glass:#f4f1ff; --glass-muted:#9b98a8;
   --good:#49c08a; --warn:#e7c344; --bad:#f25c6e;
-  --f:'Bricolage Grotesque','Avenir Next','Helvetica Neue',system-ui,sans-serif;
+  --f:'Bricolage Grotesque','Avenir Next','Segoe UI',system-ui,sans-serif;
+  --f-body:'Atkinson Hyperlegible','Segoe UI',system-ui,sans-serif;
   --f-mono:'DM Mono',ui-monospace,Menlo,monospace;
   --gutter-l:max(20px, env(safe-area-inset-left, 0px));
   --gutter-r:max(20px, env(safe-area-inset-right, 0px));
   color-scheme:light;
 }
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--paper:#111318;--paper-2:#191c23;--ink:#e8eaf0;--muted:#949bab;--rule:#2b303b;--accent:#eaa63c;color-scheme:dark}}
+:root[data-theme="dark"]{--paper:#111318;--paper-2:#191c23;--ink:#e8eaf0;--muted:#949bab;--rule:#2b303b;--accent:#eaa63c;color-scheme:dark}
 [hidden]{display:none!important}
 html,body{height:100%}
-body{background:var(--paper);color:var(--ink);font-family:var(--f);font-size:16px;overflow:hidden;-webkit-tap-highlight-color:transparent;-webkit-user-select:none;user-select:none}
+body{background:var(--paper);color:var(--ink);font-family:var(--f-body);font-size:15px;overflow:hidden;-webkit-tap-highlight-color:transparent;-webkit-user-select:none;user-select:none}
 #app{height:100%;display:flex;flex-direction:column}
 .screen{flex:1;min-height:0;display:flex;flex-direction:column}
 button{font:inherit;color:inherit;cursor:pointer;border:0;background:none}
@@ -38,20 +43,20 @@ button:focus-visible{outline:2px solid var(--coral);outline-offset:3px}
 .home{overflow-y:auto;padding-left:var(--gutter-l);padding-right:var(--gutter-r);padding-block:18px 40px}
 .home-inner{max-width:1180px;margin:0 auto;display:flex;flex-direction:column;gap:34px}
 .top{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
-.brand{display:flex;align-items:center;gap:12px;font-weight:600;font-size:26px;letter-spacing:-.02em}
+.brand{display:flex;align-items:center;gap:12px;font-family:var(--f);font-weight:800;font-size:26px;letter-spacing:-.02em}
 .brand-keys{display:flex;gap:3px;padding:6px 7px;background:var(--ink);border-radius:8px}
 .brand-keys i{width:6px;height:18px;border-radius:1px 1px 3px 3px;display:block}
 .top-right{margin-left:auto;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
-.pill{display:inline-flex;align-items:center;gap:8px;padding:9px 14px;border-radius:999px;background:#fff;border:1px solid var(--rule);font-size:14px;color:var(--muted)}
+.pill{display:inline-flex;align-items:center;gap:8px;padding:9px 14px;border-radius:999px;background:var(--paper-2);border:1px solid var(--rule);font-size:14px;color:var(--muted)}
 .pill .dot{width:8px;height:8px;border-radius:50%;background:var(--rule)}
 .pill.on{color:var(--ink)} .pill.on .dot{background:var(--mint);box-shadow:0 0 8px var(--mint)}
-.btn{padding:11px 18px;border-radius:999px;background:var(--ink);color:var(--paper);font-weight:500;font-size:14px}
+.btn{padding:11px 18px;border-radius:999px;background:var(--ink);color:var(--paper);font-family:var(--f);font-weight:700;font-size:14px}
 .btn:hover{opacity:.9}
-.btn.light{background:#fff;color:var(--ink);border:1px solid var(--rule)}
-.hello h1{font-weight:500;font-size:clamp(38px,5.8vw,72px);letter-spacing:-.035em;line-height:.98;margin:0;text-wrap:balance;max-width:15ch}
-.hello p{margin:14px 0 0;color:var(--muted);max-width:52ch;line-height:1.5;font-size:clamp(16px,1.6vw,20px);font-weight:300}
+.btn.light{background:var(--paper-2);color:var(--ink);border:1px solid var(--rule)}
+.hello h1{font-family:var(--f);font-weight:800;font-size:clamp(30px,4.4vw,52px);letter-spacing:-.03em;line-height:1;margin:0;text-wrap:balance;max-width:15ch}
+.hello p{margin:10px 0 0;color:var(--muted);max-width:60ch;line-height:1.5;font-size:clamp(15px,1.3vw,17px)}
 .sec-h{display:flex;align-items:baseline;gap:14px;margin:0 0 16px}
-.sec-h h2{font-weight:500;font-size:26px;margin:0;letter-spacing:-.02em}
+.sec-h h2{font-family:var(--f);font-weight:800;font-size:22px;margin:0;letter-spacing:-.02em}
 .sec-h span{color:var(--muted);font-size:14px}
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:16px}
 .tile{display:flex;flex-direction:column;text-align:left;border-radius:26px;overflow:hidden;padding:18px 18px 20px;gap:14px;color:#fff;transition:transform .18s;position:relative}
@@ -64,27 +69,27 @@ button:focus-visible{outline:2px solid var(--coral);outline-offset:3px}
 .tab .mini i.lit{box-shadow:inset 0 -6px 0 currentColor}
 .tab .big{position:absolute;inset:0;display:grid;place-items:center;font-weight:600;font-size:clamp(22px,2.4vw,34px);letter-spacing:-.02em;color:#fff;text-shadow:0 0 24px currentColor}
 .tile-body{display:flex;flex-direction:column;gap:4px}
-.tile .lvl{font-size:12px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;opacity:.85}
-.tile h3{margin:0;font-weight:500;font-size:22px;letter-spacing:-.015em;line-height:1.15}
+.tile .lvl{font-family:var(--f-mono);font-size:11px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;opacity:.85}
+.tile h3{margin:0;font-family:var(--f);font-weight:800;font-size:21px;letter-spacing:-.015em;line-height:1.15}
 .tile .meta{display:flex;justify-content:space-between;align-items:center;opacity:.9;font-size:14px;gap:8px;margin-top:4px}
 .stars{letter-spacing:2px;font-size:15px}
 .stars .off{opacity:.3}
-.foot{color:var(--muted);font-size:14px;line-height:1.55;max-width:80ch;border-top:1px solid var(--rule);padding-top:18px;font-weight:300}
+.foot{color:var(--muted);font-size:13px;line-height:1.55;max-width:80ch;border-top:1px solid var(--rule);padding-top:18px}
 
 /* ---------- Play (dark stage) ---------- */
 #play{background:var(--stage);color:var(--glass)}
 .bar{display:flex;align-items:center;gap:8px 14px;flex-wrap:wrap;padding-left:var(--gutter-l);padding-right:var(--gutter-r);padding-block:8px;background:var(--stage)}
 .back{width:40px;height:40px;border-radius:50%;background:var(--stage-2);display:grid;place-items:center;color:var(--glass);font-size:22px;line-height:1;flex:none}
 .ttl{display:flex;flex-direction:column;min-width:0;max-width:34vw}
-.ttl b{font-size:17px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ttl b{font-family:var(--f);font-size:17px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .ttl small{color:var(--glass-muted);font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .prog{flex:1;min-width:60px;height:4px;border-radius:2px;background:var(--stage-2);overflow:hidden}
 .prog i{display:block;height:100%;width:0;background:var(--violet);border-radius:2px}
 .stat{display:flex;flex-direction:column;align-items:center;line-height:1.1;min-width:52px}
-.stat small{font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--glass-muted)}
+.stat small{font-family:var(--f-mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--glass-muted)}
 .stat b{font-family:var(--f-mono);font-size:20px;font-weight:500}
 .tools{display:flex;gap:2px;align-items:flex-start;flex-wrap:wrap;margin-left:auto}
-.tool{display:flex;flex-direction:column;align-items:center;gap:3px;padding:5px 7px;border-radius:12px;min-width:54px;color:var(--glass-muted);font-size:10px;letter-spacing:.04em;text-transform:uppercase}
+.tool{display:flex;flex-direction:column;align-items:center;gap:3px;padding:5px 7px;border-radius:12px;min-width:54px;color:var(--glass-muted);font-family:var(--f-mono);font-size:10px;letter-spacing:.04em;text-transform:uppercase}
 .tool svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
 .tool[aria-pressed="true"]{color:var(--glass);background:var(--stage-2)}
 .tool.speed b{font-family:var(--f-mono);font-size:14px;font-weight:700;height:22px;display:grid;place-items:center;color:inherit}
@@ -112,9 +117,9 @@ button:focus-visible{outline:2px solid var(--coral);outline-offset:3px}
 
 .overlay{position:absolute;inset:0;display:grid;place-items:center;background:#0f0e14b8;backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);z-index:5;padding:16px;overflow:auto}
 .ocard{background:var(--stage-2);border-radius:26px;padding:26px 30px;max-width:470px;width:100%;display:flex;flex-direction:column;gap:12px;text-align:center}
-.ocard .lvl{font-size:12px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--glass-muted)}
-.ocard h2{font-weight:500;font-size:30px;margin:0;letter-spacing:-.025em;text-wrap:balance}
-.ocard p{margin:0;color:var(--glass-muted);line-height:1.5;font-weight:300}
+.ocard .lvl{font-family:var(--f-mono);font-size:11px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--glass-muted)}
+.ocard h2{font-family:var(--f);font-weight:800;font-size:28px;margin:0;letter-spacing:-.025em;text-wrap:balance}
+.ocard p{margin:0;color:var(--glass-muted);line-height:1.5}
 .ocard .row{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:8px}
 .ocard .btn{background:var(--glass);color:var(--stage)}
 .ocard .btn.light{background:transparent;color:var(--glass);border:1px solid #3a3944}
@@ -136,8 +141,8 @@ button:focus-visible{outline:2px solid var(--coral);outline-offset:3px}
 <div id="app">
   <section class="screen home" id="home">
     <div class="home-inner">
-      <header class="top">
-        <div class="brand">
+      <header class="top" id="topBar">
+        <div class="brand" id="brand">
           <span class="brand-keys" aria-hidden="true"><i style="background:#f26a5e"></i><i style="background:#f0a04a"></i><i style="background:#e7c344"></i><i style="background:#49c08a"></i><i style="background:#3ab8c8"></i><i style="background:#7a5cf5"></i></span>
           Clavio
         </div>
@@ -148,14 +153,14 @@ button:focus-visible{outline:2px solid var(--coral);outline-offset:3px}
         </div>
       </header>
       <div class="hello">
-        <h1>Il y a une raison pour qu'on dise « jouer » du piano</h1>
-        <p>Branche n'importe quel clavier MIDI, ou joue sur celui de l'écran. Les notes tombent sur les touches ; à toi de les attraper au bon moment.</p>
+        <h1 id="heroT">Il y a une raison pour qu'on dise « jouer » du piano</h1>
+        <p id="heroP">Branche n'importe quel clavier MIDI, ou joue sur celui de l'écran. Les notes tombent sur les touches ; à toi de les attraper au bon moment.</p>
       </div>
-      <section>
+      <section id="secSongs">
         <div class="sec-h"><h2>Morceaux</h2><span>Domaine public · à ton rythme</span></div>
         <div class="grid" id="songGrid"></div>
       </section>
-      <section>
+      <section id="secGames">
         <div class="sec-h"><h2>Jeux</h2><span>Une compétence par jeu</span></div>
         <div class="grid" id="gameGrid"></div>
       </section>
@@ -306,7 +311,15 @@ addEventListener('pointerdown',()=>audio(),{once:true});
 const midiPill=document.getElementById('midiPill'),midiText=document.getElementById('midiText'),midiBtn=document.getElementById('midiBtn');
 function setMidi(on,text){midiPill.classList.toggle('on',on);midiText.textContent=text}
 const embedded=window.parent!==window;
-if(embedded){midiBtn.hidden=true;setMidi(true,'Notes reçues de Piano Challenges');document.getElementById('foot').hidden=true}
+if(embedded){midiBtn.hidden=true;setMidi(true,'Notes reçues de Piano Challenges');document.getElementById('foot').hidden=true;document.getElementById('brand').hidden=true;
+  // follow the host's theme (same origin)
+  try{const root=window.parent.document.documentElement;const sync=()=>{const th=root.getAttribute('data-theme');if(th)document.documentElement.setAttribute('data-theme',th);else document.documentElement.removeAttribute('data-theme')};sync();new MutationObserver(sync).observe(root,{attributes:true,attributeFilter:['data-theme']})}catch(e){}}
+// View: #songs (library only), #games (games only), #game=<id> (open that game), default = everything
+const VIEW=(location.hash||'#all').slice(1);
+const onlySongs=VIEW==='songs',onlyGames=VIEW==='games'||VIEW.startsWith('game=');
+document.getElementById('secGames').hidden=onlySongs;document.getElementById('secSongs').hidden=onlyGames;
+if(onlySongs){document.getElementById('heroT').textContent='Joue tes premiers morceaux';document.getElementById('heroP').textContent='Les notes tombent sur les touches ; en mode attente, le morceau patiente jusqu\'à ce que tu joues la bonne. Choisis ta vitesse, affiche les noms des notes et les doigtés.'}
+if(onlyGames){document.getElementById('heroT').textContent='Une compétence par jeu';document.getElementById('heroP').textContent='Repérer les notes, tenir le tempo, les accords, les gammes, l\'oreille et la lecture : chaque jeu entraîne une seule chose, sur ton clavier.'}
 addEventListener('message',e=>{const d=e.data;if(!d||d.source!=='piano-challenges')return;
   if(d.type==='noteon')noteOn(d.m,d.vel??.8);else if(d.type==='noteoff')noteOff(d.m);else if(d.type==='midi')setMidi(!!d.on,d.text||'')});
 midiBtn.addEventListener('click',async()=>{audio();
@@ -507,7 +520,7 @@ function drawSong(dt){
   const lg=ctx.createLinearGradient(0,0,SW,0);lg.addColorStop(0,'rgba(244,241,255,0)');lg.addColorStop(.5,`rgba(244,241,255,${.35+.45*pulse})`);lg.addColorStop(1,'rgba(244,241,255,0)');
   ctx.fillStyle=lg;ctx.fillRect(0,SH-5,SW,2);
   if(P.frozen)centerText('Le morceau attend la bonne note',30);
-  if(P.playing&&P.t<0)centerText(Math.ceil(-P.t),SH/2+20,84,300);
+  if(P.playing&&P.t<0)centerText(Math.ceil(-P.t),SH/2+20,84,800);
   drawFx(dt);
 }
 
@@ -658,7 +671,7 @@ GAME.ear={lives:false,timed:false,tools:['names'],
   update(dt){},
   draw(dt){bgDark('#14110a','#2a2210','#3f3314');const cx=SW/2,cy=SH*.46;
     for(let i=0;i<4;i++){const r=40+i*34+(gs.playing?Math.sin(performance.now()/300+i)*6:0);ctx.strokeStyle=`rgba(231,195,68,${.5-i*.11})`;ctx.lineWidth=2;ctx.beginPath();ctx.arc(cx,cy,r,0,7);ctx.stroke()}
-    centerText(gs.playing?'♪':'?',cy+16,46,300);
+    centerText(gs.playing?'♪':'?',cy+16,46,700);
     centerText(gs.msg,SH-40,18,400);
     ctx.textAlign='left';ctx.fillStyle=C.muted;ctx.font='400 14px Bricolage Grotesque, system-ui';ctx.fillText('Question '+gs.q+' / 10',16,30);
     const dots=gs.seq.map((m,i)=>i<gs.got.length?(pc(gs.got[i])===pc(m)?'●':'✕'):'○').join('  ');centerText(dots,cy+70,20,400,C.sun);
@@ -704,6 +717,7 @@ function frame(now){const dt=Math.min(.05,(now-last)/1000);last=now;
   if(screen==='play'){if(mode==='song'){updateSong(dt);drawSong(dt)}else{GAME[mode].update(dt);GAME[mode].draw(dt)}}
   requestAnimationFrame(frame)}
 renderHome();requestAnimationFrame(frame);
+if(VIEW.startsWith('game=')&&GAMES.some(g=>g.id===VIEW.slice(5)))openGame(VIEW.slice(5));
 })();
 </script>
 

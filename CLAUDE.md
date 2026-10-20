@@ -5,7 +5,7 @@ Lis ce fichier en entier avant de travailler sur le projet.
 ## Qui, quoi
 - Projet d'Antoine Bernard (Reality Academy). **Toujours répondre en français.** Il itère chaque soir sur l'UX, souvent par listes de retours avec captures d'écran (iPad, iPhone, web).
 - **Piano Challenges** : application gamifiée de théorie musicale. On joue sur un vrai piano (MIDI USB/Bluetooth), au micro, ou sur le clavier à l'écran.
-- Sections, dans cet ordre : Accords, Gammes, Harmonie, Progressions, Oreille, Jeux, Play. Plus : Entraînement du jour, Classement, Profil, Progression, Réglages, Aide.
+- Trois modes en tête du menu (`#modeNav`, `goMode()`) : **LEARN** (sections Accords, Gammes, Harmonie, Progressions, Oreille dans `#secTabs`, visibles seulement en mode learn), **PLAY** (page `play`, morceaux), **GAMES** (page `games` : jeux maison + les 6 jeux Play qui ouvrent `play/index.html#game=<id>`). Au lancement et sur clic du logo : page `hub` (écran de choix des trois modes). Plus : Entraînement du jour, Classement, Profil, Progression, Réglages, Aide.
 - Site : https://pianochallenges.com. App iPhone/iPad : Capacitor, dans `app/`.
 
 ## Où est le code
@@ -16,7 +16,7 @@ Lis ce fichier en entier avant de travailler sur le projet.
 | `index.html` | **Généré, ne pas éditer à la main.** C'est ce que sert OVH et ce que copie l'app. |
 | `tools/test_windows.py`, `tools/test_buttons.py` | Tests Playwright (gel de l'interface, clic sur tous les boutons, pont iOS simulé). Lancer `python3 -m http.server 8767` à la racine avant. |
 | `supabase/schema.sql` | Tables et fonctions Supabase (à jour). |
-| `play/index.html` | Page **Play** (prototype « Clavio », style ROLI) : morceaux en cascade 3D avec mode attente et doigtés, 6 mini-jeux, clavier lumineux. Fichier autonome chargé dans une iframe par la page `play` ; l'hôte lui relaie les notes (MIDI, micro, clavier écran) par `postMessage` (`playSend`). Polices auto-hébergées via `../assets/fonts`. Copié dans l'app par `copy-web.mjs`. |
+| `play/index.html` | Page **Play** (prototype « Clavio », style ROLI) : morceaux en cascade 3D avec mode attente et doigtés, 6 mini-jeux, clavier lumineux. Fichier autonome chargé dans une iframe par la page `play` (vues par hash : `#songs`, `#games`, `#game=<id>` ; `playHash`, `openPlayWith()`) ; il suit le thème clair/sombre de l'hôte ; l'hôte lui relaie les notes (MIDI, micro, clavier écran) par `postMessage` (`playSend`). Polices auto-hébergées via `../assets/fonts`. Copié dans l'app par `copy-web.mjs`. |
 | `app/` | Projet Capacitor 8.5.3 iOS. `app/ios/App/App/MidiPlugin.swift`, `AuthPlugin.swift`, `MainViewController.swift`. |
 | `mentions-legales.html`, `confidentialite.html` | Pages légales (éditeur : Antoine BERNARD, a.bernard@me.com). |
 
@@ -29,7 +29,7 @@ Lis ce fichier en entier avant de travailler sur le projet.
 
 ## Architecture JS (repères)
 - État persistant `S` dans localStorage `memo-gammes-v1` (réglages dans `S.settings`, XP `S.xp`, XP par jour `S.xpDays`, records de jeux `S.gameBest`, `S.runnerBest`).
-- Navigation : variable `page` (practice|daily|games|play|rank|account|locked|settings|progress), `openPage(pg)`, `body[data-page]`. Le script n'expose pas ses fonctions sur `window` : dans les tests, cliquer sur les boutons (`#setBtn`, `#rankBtn`, `#accountBtn`, `#progBtn`, `[data-v=games]`, `#dailyCard`).
+- Navigation : variable `page` (hub|practice|daily|games|play|rank|account|locked|settings|progress), `openPage(pg)`, `body[data-page]`. Le script n'expose pas ses fonctions sur `window` : dans les tests, cliquer sur les boutons (`#setBtn`, `#rankBtn`, `#accountBtn`, `#progBtn`, `[data-v=games]`, `#dailyCard`).
 - Fenêtres : `openMod/closeMod`. `anyWin()` = vraies fenêtres (inert/focus) ; `anyModal()` inclut aussi les pages info (pause). Ne pas les confondre : un mélange a déjà gelé l'app.
 - Gammes : mode `S.settings.scMode` notes|chords (+ `sc7` pour les accords de 7e). En mode accords, l'item porte `ch:1`, la séquence vient de `scaleChordSteps()` et suit le moteur des progressions (`chSeq()` = prog ou gamme en accords).
 - Textes FR/EN dans le dictionnaire `t()` (ajouter chaque clé dans les deux langues).
