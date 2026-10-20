@@ -1302,7 +1302,7 @@ const TXT = {
       harmony:["L'harmonie",["Chaque tonalité contient <b>7 accords</b>, un par degré, de I à VII.","On te demande un degré : <b>IV de Do majeur</b>, c'est Fa majeur. Joue-le.","Choisis en haut les <b>degrés</b> à travailler pour te concentrer sur I, IV, V… C'est la base pour composer."]],
       prog:["Les progressions",["Une progression est une <b>suite d'accords</b> qui sonne bien, par exemple I – V – vi – IV.","Joue les accords <b>dans l'ordre</b>. Avec l'option d'enchaînement, chaque accord se joue dans le renversement le plus proche du précédent, comme un pianiste.","À la fin, écoute la progression pour entendre ce que tu as construit."]],
       ear:["L'oreille",["Écoute ce qui est joué : un <b>accord</b>, un <b>intervalle</b> ou une <b>gamme</b>.","Choisis la bonne réponse parmi les propositions. Tu peux réécouter autant que tu veux (Espace).","Les catégories se débloquent avec les niveaux."]],
-      games:["Les jeux",["<b>Saute-notes</b> : tu es un piano qui court. Au-dessus de chaque croche est écrit un accord.","Joue cet accord, de préférence quand la note passe dans le <b>cercle</b> (bonus « Parfait ! ») : le piano saute tout seul. Les touches de l'accord s'allument sur le clavier si l'aide est activée.","Joue un <b>Do</b> pour démarrer ou rejouer. D'autres jeux arrivent bientôt."]],
+      games:["Les jeux",["<b>Saute-notes</b> : tu es un piano qui court. Au-dessus de chaque croche est écrit un accord.","Joue cet accord, de préférence quand la note passe dans le <b>cercle</b> (bonus « Parfait ! ») : le piano saute tout seul. Les touches de l'accord s'allument sur le clavier si l'aide est activée.","Joue un <b>{C}</b> pour démarrer ou rejouer. D'autres jeux arrivent bientôt."]],
       daily:["L'entraînement du jour",["Chaque jour, <b>10 exercices</b> mélangés, pris dans toutes les sections.","Les exercices ratés <b>reviennent</b> les jours suivants (répétition espacée) jusqu'à ce qu'ils soient acquis.","La <b>frise</b> en haut montre ton avancée. Va jusqu'au bout pour garder ta série."]]},
     secShort:{scales:"Gamme",chords:"Accord",harmony:"Harmonie",prog:"Progression",ear:"Oreille"},
     dpSubTxt:(d,n,due)=>d+" · "+n+" exercices"+(due?" · "+due+" à revoir":""),
@@ -1324,11 +1324,11 @@ const TXT = {
     gamesTitle:"Jeux", gamesSub:"Des défis au piano pour jouer plus vite et plus juste. Choisis un jeu, ou joue librement sur le piano en dessous.",
     freePlay:"Jeu libre", soon:"Bientôt",
     rnName:"Saute-notes", rnDesc:"Tu es un piano ! Joue l'accord affiché pour sauter par-dessus les croches et les doubles croches.", rnPlay:"Jouer", rnQuit:"Quitter",
-    rnStart:"Joue un Do pour démarrer",
+    get rnStart(){ return "Joue un "+CNAME()+" pour démarrer"; },
     gmDiffL:"Difficulté", gmContL:"Jouer", gmDiffs:{prog:"Progressive",slow:"Lent",mid:"Moyen",fast:"Rapide"}, gmConts:{chords:"Des accords",notes:"Des notes"},
     gmTap:"Touche ici pour démarrer.", gmReady:"Prêt ?", gmOver:"Terminé !", gmChord:"Accord à jouer", gmNote:"Note à jouer",
     spName:"Contre la montre", spHow:s=>"Joue un maximum de bonnes réponses en "+s+" secondes.", spDone:n=>n+" bonne"+(n>1?"s":"")+" réponse"+(n>1?"s":"")+" !",
-    mmName:"Mémoire musicale", mmHow:"Écoute, regarde les touches s'allumer, puis rejoue la suite.", mmListen:"Écoute…", mmYou:"À toi !", mmGood:"Bravo ! Une de plus…", mmRound:n=>"Tour "+n, mmDone:n=>n+" tour"+(n>1?"s":"")+" réussi"+(n>1?"s":"")+".", rnPerfect:"Parfait !", rnHelpLbl:"Montrer les notes", rnTap:"Touche le jeu pour démarrer", rnOverShort:"Aïe !", rnHow:"Joue l'accord écrit au-dessus de la note quand elle passe dans le cercle", rnOver:"Aïe ! Joue un Do pour rejouer", rnBestL:"Record", rnNew:"Nouveau record !",
+    mmName:"Mémoire musicale", mmHow:"Écoute, regarde les touches s'allumer, puis rejoue la suite.", mmListen:"Écoute…", mmYou:"À toi !", mmGood:"Bravo ! Une de plus…", mmRound:n=>"Tour "+n, mmDone:n=>n+" tour"+(n>1?"s":"")+" réussi"+(n>1?"s":"")+".", rnPerfect:"Parfait !", rnHelpLbl:"Montrer les notes", rnTap:"Touche le jeu pour démarrer", rnOverShort:"Aïe !", rnHow:"Joue l'accord écrit au-dessus de la note quand elle passe dans le cercle", get rnOver(){ return "Aïe ! Joue un "+CNAME()+" pour rejouer"; }, rnBestL:"Record", rnNew:"Nouveau record !",
     games:[["Saute-notes","Tu es un piano ! Joue l'accord (ou la note) affiché pour sauter par-dessus les croches.","runner"],["Contre la montre","Joue un maximum d'accords (ou de notes) avant la fin du chrono.","speed"],["Mémoire musicale","Écoute une suite de notes ou d'accords, puis rejoue-la. Elle s'allonge à chaque tour.","memory"],["Défi du jour","Le même défi chronométré pour tout le monde, avec un classement."]],
     degrees:"Degrés travaillés", optVL:"Enchaîner avec les renversements les plus proches", practiseH:"Tonalités travaillées", practiseP:"Progressions travaillées", practiseE:"Catégories travaillées",
     chordOfKey:"Accord de la tonalité", ofKey:" de ", inKey:"en ", progLbl:"Progression", vlOn:"renversements les plus proches", listenLbl:"Écoutez",
@@ -1342,7 +1342,7 @@ const TXT = {
     lockedHintP:n=>"Réussissez 3 fois une progression sans faute pour débloquer la tonalité suivante. Encore "+n+" à découvrir.",
     typeLockedH:l=>"Ces tonalités s'ouvrent au niveau "+l+".", typeLockedP:l=>"Cette progression s'ouvre au niveau "+l+".", typeLockedE:l=>"Cette catégorie s'ouvre au niveau "+l+".",
     earHint:"Touchez une case pour écouter un exemple.", right:"Bonne réponse !", wrong:"Réponse : ", answerLbl:"Réponse",
-    kbdHintE:"Clavier d'ordinateur : rangée Q S D F G H J K pour jouer des notes. Espace : réécouter · Entrée (ou un Do au clavier MIDI) : continuer · ⌫ : réessayer.", playSound:"Écouter",
+    get kbdHintE(){ return "Clavier d'ordinateur : rangée Q S D F G H J K pour jouer des notes. Espace : réécouter · Entrée (ou un "+CNAME()+" au clavier MIDI) : continuer · ⌫ : réessayer."; }, playSound:"Écouter",
     intNames:{m2:"Seconde mineure",M2:"Seconde majeure",m3:"Tierce mineure",M3:"Tierce majeure",P4:"Quarte juste",TT:"Triton",P5:"Quinte juste",m6:"Sixte mineure",M6:"Sixte majeure",m7:"Septième mineure",M7:"Septième majeure",P8:"Octave"},
     intShort:{m2:"2m",M2:"2M",m3:"3m",M3:"3M",P4:"4J",TT:"Triton",P5:"5J",m6:"6m",M6:"6M",m7:"7m",M7:"7M",P8:"8ve"},
     secScales:"Gammes", secChords:"Accords", inversions:"Renversements", chordToPlay:"Accord à jouer",
@@ -1356,11 +1356,11 @@ const TXT = {
     inOrder:"À la suite", random:"Aléatoire", sig:"armure", noAcc:"ni ♯ ni ♭", notes:"notes",
     perfect:"Parfait !", errors:n=>n+" faute"+(n>1?"s":""), inSecs:" en ", correct:"notes justes", missed:n=>n+" manquée"+(n>1?"s":""), missedP:n=>n+" manqué"+(n>1?"s":""), session:"Partie", scalesWord:n=>n+" gamme"+(n>1?"s":""),
     start:"Commencer", giveUp:"Je sèche, montrer", knew:"Continuer", review:"Réessayer", replay:"Écouter la gamme", next:"Suivante",
-    midiStartTip:"Joue un Do sur ton clavier MIDI pour commencer, puis pour continuer.", screenKeys:"Clavier à l'écran", midiOff:"Activer le MIDI", micOff:"Activer le micro", midiNone:"MIDI : aucun appareil", midiDev:"MIDI : ",
+    get midiStartTip(){ return "Joue un "+CNAME()+" sur ton clavier MIDI pour commencer, puis pour continuer."; }, screenKeys:"Clavier à l'écran", midiOff:"Activer le MIDI", micOff:"Activer le micro", midiNone:"MIDI : aucun appareil", midiDev:"MIDI : ",
     midiBlocked:"MIDI bloqué", midiNo:"MIDI non pris en charge", micOn:"Micro : à l'écoute", micBlocked:"Micro bloqué",
     blocked:"Le navigateur a refusé l'accès. Cliquez sur le cadenas à gauche de l'adresse du site pour autoriser le micro ou le MIDI, puis réessayez. Dans l'aperçu claude.ai, ils sont toujours bloqués : utilisez pianochallenges.com.",
     midiUnsupported:"Ce navigateur ne gère pas le MIDI (c'est le cas de Safari, de l'iPhone et de l'iPad). Utilise l'app Piano Challenges, Chrome ou Edge, ou le micro.",
-    kbdHint:"Clavier d'ordinateur : rangée Q S D F G H J K pour les touches blanches, rangée du dessus pour les noires. Espace : révéler / suivant · Entrée (ou un Do au clavier MIDI) : continuer · ⌫ : réessayer.",
+    get kbdHint(){ return "Clavier d'ordinateur : rangée Q S D F G H J K pour les touches blanches, rangée du dessus pour les noires. Espace : révéler / suivant · Entrée (ou un "+CNAME()+" au clavier MIDI) : continuer · ⌫ : réessayer."; },
     progress:"Progression", viewLabel:"Afficher", settings:"Réglages", practise:"Gammes travaillées", order:"Ordre", answerAfter:"Ou réglez le temps précis :",
     never:"jamais", notation:"Notation", direction:"Sens", optOct:"Finir sur l'octave", optLabels:"Noms des notes sur le clavier",
     midiBt:"Rechercher un clavier Bluetooth", midiFound:"Claviers détectés", midiNoneLong:"Aucun clavier détecté pour l'instant.",
@@ -1368,12 +1368,12 @@ const TXT = {
     mcUsbWeb:"Branche ton clavier en USB, puis active le MIDI. Il apparaît dans la liste.",
     mcBtApp:"Allume ton clavier, touche Rechercher et choisis-le dans la liste. Inutile de l'appairer dans les réglages Bluetooth.",
     mcBtWeb:"Appaire d'abord le clavier dans les réglages Bluetooth de ton ordinateur (sur Mac : Configuration audio et MIDI), puis active le MIDI.", midiTitle:"Clavier MIDI", midiInput:"Appareil", midiAll:"Tous les appareils", midiOffState:"MIDI non activé", midiCfgBtn:"Réglages du clavier MIDI",
-    optMidiC:"Un Do sur le clavier MIDI pour commencer et continuer", midiHint:"Le MIDI marche dans Chrome et Edge, en USB ou Bluetooth (pas dans Safari ni sur iPhone/iPad).",
+    get optMidiC(){ return "Un "+CNAME()+" sur le clavier MIDI pour commencer et continuer"; }, midiHint:"Le MIDI marche dans Chrome et Edge, en USB ou Bluetooth (pas dans Safari ni sur iPhone/iPad).",
     keyLbl:"Tonalité", allKeys:"Toutes", dirMix:"Les deux",
     kbLbl:"Clavier à l'écran", kbAuto:"Automatique (3 octaves)", keys:"touches", kbCustom:"Détecté", kbDetect:"Détecter mon clavier MIDI",
     calibLow:"Jouez la touche la plus grave de votre clavier MIDI.", calibHigh:"Maintenant, jouez la touche la plus aiguë.",
     calibListen:"Joue la touche la plus grave et la plus aiguë de ton clavier (dans l'ordre que tu veux), puis touche Valider.", calibLive:(n,a,b)=>n+" touches détectées : "+a+" → "+b+". Touche Valider quand c'est bon.", calibShort:"Pas assez de touches détectées : joue bien la plus grave et la plus aiguë.", kbValidate:"Valider", calibNeedMidi:"Activez d'abord le MIDI (bouton sous le clavier), puis recommencez.",
-    kbRangeTxt:(n,a,b)=>n+" touches, de "+a+" à "+b+". Le Do du milieu est "+(PC_FR[0])+"3.", kbDone:(n,a,b)=>"Clavier détecté : "+n+" touches ("+a+" – "+b+")",
+    kbRangeTxt:(n,a,b)=>n+" touches, de "+a+" à "+b+". Le "+CNAME()+" du milieu est "+CNAME()+"3.", kbDone:(n,a,b)=>"Clavier détecté : "+n+" touches ("+a+" – "+b+")",
     difficulty:"Temps pour jouer", dFree:"Libre", dEasy:"Facile", dMedium:"Moyen", dHard:"Difficile", dExpert:"Expert", noTimer:"Sans chrono", guideLbl:"Guide", guideOff:"non", guideP:"Aide progressive : le degré, puis le nom de l'accord, puis les touches (8 s chacun, ou Espace)", guidePShort:"progressif", hintBtn:"Un indice", guideNShort:"notes", guideKShort:"touches", guideNames:"Voir les notes avant de jouer", guideKeys:"Allumer les touches à jouer", guideXp:"Avec le guide, les exercices rapportent moitié moins d'XP.",
     optAuto:"Passer automatiquement à l'exercice suivant", optMidiSound:"Jouer le son des notes MIDI", optAll:"Tout débloquer : toutes les gammes, accords et tonalités, sans passer par les niveaux", unlockBtn:"Tout débloquer", relockBtn:"Revenir aux niveaux", reset:"Remettre la progression à zéro", confirmReset:"Confirmer : tout effacer ?",
     resetDone:"Progression remise à zéro", locked:"verrouillée", lvlShort:"Niv. ", level:"Niveau ", newScale:"Nouvelle gamme : ", newType:"Débloqué : ",
@@ -1382,7 +1382,9 @@ const TXT = {
     st:["Réussies","Sans faute","Révélées","Maîtrisées","Réussite"], practiseTip:"S'entraîner sur ", lockedTip:"Maîtrisez une gamme de plus pour la débloquer",
     melDown:" · descend en Mineur",
     titles:["Curieux","Apprenti","Doigts agiles","Oreille fine","Harmoniste","Beatmaker","Producteur","Virtuose","Maestro"],
-    midiBlockedMsg:"Le navigateur a refusé l'accès MIDI. Clique sur le cadenas à gauche de l'adresse pour l'autoriser, ou choisis le clavier à l'écran."},
+    midiBlockedMsg:"Le navigateur a refusé l'accès MIDI. Clique sur le cadenas à gauche de l'adresse pour l'autoriser, ou choisis le clavier à l'écran.",
+    dailyResume:"Reprendre",
+    syncOk:x=>"Sauvegardé en ligne "+x+" ✓", syncErr:x=>"Hors ligne : dernière sauvegarde "+x+".", agoNever:"inconnue", signedOut:"Déconnecté"},
   en:{help:"Help", helpTitle:"How it works", helpOk:"Let's go", tutNext:"Next", tutPrev:"Previous", close:"Close", stepOf:(i,n)=>"Step "+i+" of "+n,
     tut:[{h:"Read the challenge",p:"A scale, a chord or a progression appears with a countdown. Picture the notes in your head before the bar runs out."},
          {h:"Play it on your piano",p:"Scales from the root up to the octave, chords from their lowest note, progressions chord by chord. Digital piano (MIDI), acoustic piano (mic) or on-screen keys: each correct note fills a box. MIDI works in Chrome and Edge (not in Safari)."},
@@ -1418,7 +1420,7 @@ const TXT = {
       harmony:["Harmony",["Every key has <b>7 chords</b>, one per degree, from I to VII.","You are asked for a degree: <b>IV of C Major</b> is F Major. Play it.","Pick the <b>degrees</b> to practise at the top to focus on I, IV, V… It is the basis of songwriting."]],
       prog:["Progressions",["A progression is a <b>sequence of chords</b> that works, for example I – V – vi – IV.","Play the chords <b>in order</b>. With voice leading on, each chord is played in the inversion closest to the previous one, like a pianist.","At the end, listen to the progression to hear what you built."]],
       ear:["Ear training",["Listen to what is played: a <b>chord</b>, an <b>interval</b> or a <b>scale</b>.","Pick the right answer. Replay as often as you like (Space).","Categories unlock as you level up."]],
-      games:["Games",["<b>Note Jumper</b>: you are a running piano. A chord is written above each note.","Play that chord, ideally while the note crosses the <b>circle</b> (“Perfect!” bonus): the piano jumps by itself. The chord's keys light up on the keyboard when the hint is on.","Play a <b>C</b> to start or try again. More games are coming soon."]],
+      games:["Games",["<b>Note Jumper</b>: you are a running piano. A chord is written above each note.","Play that chord, ideally while the note crosses the <b>circle</b> (“Perfect!” bonus): the piano jumps by itself. The chord's keys light up on the keyboard when the hint is on.","Play a <b>{C}</b> to start or try again. More games are coming soon."]],
       daily:["Daily practice",["Every day, <b>10 mixed exercises</b> from all sections.","Exercises you miss <b>come back</b> on the following days (spaced repetition) until you know them.","The <b>timeline</b> at the top shows your progress. Finish it to keep your streak."]]},
     secShort:{scales:"Scale",chords:"Chord",harmony:"Harmony",prog:"Progression",ear:"Ear"},
     dpSubTxt:(d,n,due)=>d+" · "+n+" exercises"+(due?" · "+due+" to review":""),
@@ -1440,11 +1442,11 @@ const TXT = {
     gamesTitle:"Games", gamesSub:"Piano challenges to play faster and cleaner. Pick a game, or play freely on the piano below.",
     freePlay:"Free play", soon:"Soon",
     rnName:"Note Jumper", rnDesc:"You are a piano! Play the chord shown to jump over eighth and sixteenth notes.", rnPlay:"Play", rnQuit:"Quit",
-    rnStart:"Play a C to start",
+    get rnStart(){ return "Play a "+CNAME()+" to start"; },
     gmDiffL:"Difficulty", gmContL:"Play", gmDiffs:{prog:"Progressive",slow:"Slow",mid:"Medium",fast:"Fast"}, gmConts:{chords:"Chords",notes:"Notes"},
     gmTap:"Tap here to start.", gmReady:"Ready?", gmOver:"Done!", gmChord:"Chord to play", gmNote:"Note to play",
     spName:"Against the clock", spHow:s=>"Play as many right answers as you can in "+s+" seconds.", spDone:n=>n+" right answer"+(n>1?"s":"")+"!",
-    mmName:"Musical memory", mmHow:"Listen, watch the keys light up, then play the sequence back.", mmListen:"Listen…", mmYou:"Your turn!", mmGood:"Well done! One more…", mmRound:n=>"Round "+n, mmDone:n=>n+" round"+(n>1?"s":"")+" completed.", rnPerfect:"Perfect!", rnHelpLbl:"Show the notes", rnTap:"Tap the game to start", rnOverShort:"Ouch!", rnHow:"Play the chord written above the note as it crosses the circle", rnOver:"Ouch! Play a C to try again", rnBestL:"Best", rnNew:"New record!",
+    mmName:"Musical memory", mmHow:"Listen, watch the keys light up, then play the sequence back.", mmListen:"Listen…", mmYou:"Your turn!", mmGood:"Well done! One more…", mmRound:n=>"Round "+n, mmDone:n=>n+" round"+(n>1?"s":"")+" completed.", rnPerfect:"Perfect!", rnHelpLbl:"Show the notes", rnTap:"Tap the game to start", rnOverShort:"Ouch!", rnHow:"Play the chord written above the note as it crosses the circle", get rnOver(){ return "Ouch! Play a "+CNAME()+" to try again"; }, rnBestL:"Best", rnNew:"New record!",
     games:[["Note Jumper","You are a piano! Play the chord (or note) shown to jump over the notes.","runner"],["Against the clock","Play as many chords (or notes) as you can before time runs out.","speed"],["Musical memory","Listen to a sequence of notes or chords, then play it back. It grows every round.","memory"],["Daily challenge","The same timed challenge for everyone, with a leaderboard."]],
     degrees:"Degrees to practise", optVL:"Chain with the closest inversions (voice leading)", practiseH:"Keys to practise", practiseP:"Progressions to practise", practiseE:"Categories to practise",
     chordOfKey:"Chord of the key", ofKey:" of ", inKey:"in ", progLbl:"Progression", vlOn:"closest inversions", listenLbl:"Listen",
@@ -1458,7 +1460,7 @@ const TXT = {
     lockedHintP:n=>"Play a progression 3 times without mistakes to unlock the next key. "+n+" left to discover.",
     typeLockedH:l=>"These keys open at level "+l+".", typeLockedP:l=>"This progression opens at level "+l+".", typeLockedE:l=>"This category opens at level "+l+".",
     earHint:"Tap a tile to hear an example.", right:"Correct!", wrong:"Answer: ", answerLbl:"Answer",
-    kbdHintE:"Computer keyboard: A S D F G H J K row to play notes. Space: listen again · Enter: continue · ⌫: retry.", playSound:"Play",
+    get kbdHintE(){ return "Computer keyboard: A S D F G H J K row to play notes. Space: listen again · Enter (or a "+CNAME()+" on the MIDI keyboard): continue · ⌫: retry."; }, playSound:"Play",
     intNames:{m2:"Minor 2nd",M2:"Major 2nd",m3:"Minor 3rd",M3:"Major 3rd",P4:"Perfect 4th",TT:"Tritone",P5:"Perfect 5th",m6:"Minor 6th",M6:"Major 6th",m7:"Minor 7th",M7:"Major 7th",P8:"Octave"},
     intShort:{m2:"m2",M2:"M2",m3:"m3",M3:"M3",P4:"P4",TT:"TT",P5:"P5",m6:"m6",M6:"M6",m7:"m7",M7:"M7",P8:"P8"},
     secScales:"Scales", secChords:"Chords", inversions:"Inversions", chordToPlay:"Chord to play",
@@ -1472,11 +1474,11 @@ const TXT = {
     inOrder:"In order", random:"Random", sig:"key signature", noAcc:"no ♯ or ♭", notes:"notes",
     perfect:"Perfect!", errors:n=>n+" mistake"+(n>1?"s":""), inSecs:" in ", correct:"correct notes", missed:n=>n+" missed", missedP:n=>n+" missed", session:"Session", scalesWord:n=>n+" scale"+(n>1?"s":""),
     start:"Start", giveUp:"Show me", knew:"Continue", review:"Retry", replay:"Listen to the scale", next:"Next",
-    midiStartTip:"Play a C on your MIDI keyboard to start, and again to continue.", screenKeys:"On-screen keys", midiOff:"Enable MIDI", micOff:"Enable mic", midiNone:"MIDI: no device", midiDev:"MIDI: ",
+    get midiStartTip(){ return "Play a "+CNAME()+" on your MIDI keyboard to start, and again to continue."; }, screenKeys:"On-screen keys", midiOff:"Enable MIDI", micOff:"Enable mic", midiNone:"MIDI: no device", midiDev:"MIDI: ",
     midiBlocked:"MIDI blocked", midiNo:"MIDI not supported", micOn:"Mic: listening", micBlocked:"Mic blocked",
     blocked:"The browser refused access. Click the padlock left of the site address to allow the mic or MIDI, then try again. Inside the claude.ai preview they are always blocked: use pianochallenges.com.",
     midiUnsupported:"This browser has no MIDI support (Safari, iPhone and iPad don't). Use the Piano Challenges app, Chrome or Edge, or the mic.",
-    kbdHint:"Computer keyboard: A S D F G H J K row for white keys, the row above for black keys. Space: reveal / next · Enter: continue · ⌫: retry.",
+    get kbdHint(){ return "Computer keyboard: A S D F G H J K row for white keys, the row above for black keys. Space: reveal / next · Enter (or a "+CNAME()+" on the MIDI keyboard): continue · ⌫: retry."; },
     progress:"Progress", viewLabel:"Show", settings:"Settings", practise:"Scales to practise", order:"Order", answerAfter:"Or set the exact time:",
     never:"never", notation:"Note names", direction:"Direction", optOct:"End on the octave", optLabels:"Note names on the keys",
     midiBt:"Search for a Bluetooth keyboard", midiFound:"Detected keyboards", midiNoneLong:"No keyboard detected yet.",
@@ -1484,12 +1486,12 @@ const TXT = {
     mcUsbWeb:"Plug your keyboard in with USB, then enable MIDI. It shows up in the list.",
     mcBtApp:"Turn your keyboard on, tap Search and pick it in the list. No need to pair it in Bluetooth settings.",
     mcBtWeb:"First pair the keyboard in your computer's Bluetooth settings (on a Mac: Audio MIDI Setup), then enable MIDI.", midiTitle:"MIDI keyboard", midiInput:"Device", midiAll:"All devices", midiOffState:"MIDI not enabled", midiCfgBtn:"MIDI keyboard settings",
-    optMidiC:"A C on the MIDI keyboard starts and continues", midiHint:"MIDI works in Chrome and Edge, over USB or Bluetooth (not in Safari or on iPhone/iPad).",
+    get optMidiC(){ return "A "+CNAME()+" on the MIDI keyboard starts and continues"; }, midiHint:"MIDI works in Chrome and Edge, over USB or Bluetooth (not in Safari or on iPhone/iPad).",
     keyLbl:"Key", allKeys:"All", dirMix:"Both",
     kbLbl:"On-screen keyboard", kbAuto:"Automatic (3 octaves)", keys:"keys", kbCustom:"Detected", kbDetect:"Detect my MIDI keyboard",
     calibLow:"Play the lowest key of your MIDI keyboard.", calibHigh:"Now play the highest key.",
     calibListen:"Play the lowest and the highest key of your keyboard (any order), then tap Confirm.", calibLive:(n,a,b)=>n+" keys detected: "+a+" → "+b+". Tap Confirm when it's right.", calibShort:"Not enough keys detected: play the lowest and the highest key.", kbValidate:"Confirm", calibNeedMidi:"Enable MIDI first (button under the keyboard), then try again.",
-    kbRangeTxt:(n,a,b)=>n+" keys, from "+a+" to "+b+". Middle C is C4.", kbDone:(n,a,b)=>"Keyboard detected: "+n+" keys ("+a+" – "+b+")",
+    kbRangeTxt:(n,a,b)=>n+" keys, from "+a+" to "+b+". Middle "+CNAME()+" is "+CNAME()+"4.", kbDone:(n,a,b)=>"Keyboard detected: "+n+" keys ("+a+" – "+b+")",
     difficulty:"Time to play", dFree:"Free", dEasy:"Easy", dMedium:"Medium", dHard:"Hard", dExpert:"Expert", noTimer:"No timer", guideLbl:"Guide", guideOff:"off", guideP:"Step-by-step help: the degree, then the chord name, then the keys (8 s each, or Space)", guidePShort:"step by step", hintBtn:"A hint", guideNShort:"notes", guideKShort:"keys", guideNames:"Show the notes before playing", guideKeys:"Light up the keys to play", guideXp:"With the guide on, exercises earn half the XP.",
     optAuto:"Move on to the next exercise automatically", optMidiSound:"Play sound for MIDI notes", optAll:"Unlock everything: every scale, chord and key, without going through the levels", unlockBtn:"Unlock everything", relockBtn:"Back to levels", reset:"Reset progress", confirmReset:"Confirm: erase everything?",
     resetDone:"Progress reset", locked:"locked", lvlShort:"Lvl ", level:"Level ", newScale:"New scale: ", newType:"Unlocked: ",
@@ -1498,7 +1500,9 @@ const TXT = {
     st:["Completed","Perfect","Revealed","Mastered","Success rate"], practiseTip:"Practise ", lockedTip:"Master one more scale to unlock it",
     melDown:" · descends as Minor",
     titles:["Curious","Apprentice","Nimble fingers","Sharp ear","Harmonist","Beatmaker","Producer","Virtuoso","Maestro"],
-    midiBlockedMsg:"The browser refused MIDI access. Click the padlock left of the address to allow it, or choose the on-screen keyboard."}
+    midiBlockedMsg:"The browser refused MIDI access. Click the padlock left of the address to allow it, or choose the on-screen keyboard.",
+    dailyResume:"Resume",
+    syncOk:x=>"Saved online "+x+" ✓", syncErr:x=>"Offline: last save "+x+".", agoNever:"unknown", signedOut:"Signed out"}
 };
 const t = k => TXT[S.settings.lang][k];
 
@@ -1508,6 +1512,7 @@ const NAT = [0,2,4,5,7,9,11];
 const NAME_FR = {C:"Do",D:"Ré",E:"Mi",F:"Fa",G:"Sol",A:"La",B:"Si"};
 const PC_FR = ["Do","Do♯","Ré","Ré♯","Mi","Fa","Fa♯","Sol","Sol♯","La","La♯","Si"];
 const PC_EN = ["C","C♯","D","D♯","E","F","F♯","G","G♯","A","A♯","B"];
+function CNAME(){ return (S.settings.notation==="fr"?PC_FR:PC_EN)[0]; } // name of C in the current notation, for "play a C" texts
 const TYPES = [
   {id:"major", lvl:1, fr:"Majeur",            frP:"Majeures",        en:"Major",            enP:"Major",            iv:[0,2,4,5,7,9,11]},
   {id:"minor", lvl:1, fr:"Mineur",            frP:"Mineures",        en:"Minor",            enP:"Minor",    iv:[0,2,3,5,7,8,10]},
@@ -1557,7 +1562,11 @@ TYPES.forEach(ty=>{
 });
 const accSym = a => a===1?"♯":a===-1?"♭":a===2?"𝄪":a===-2?"𝄫":"";
 const nameIn = (n,not) => (not==="fr"?NAME_FR[n.l]:n.l)+accSym(n.a);
-const noteName = n => nameIn(n, S.settings.notation);
+// simple enharmonic of a double-altered note (F𝄪 → G, B𝄫 → A), in the current notation
+const PC_FR_B = ["Do","Ré♭","Ré","Mi♭","Mi","Fa","Sol♭","Sol","La♭","La","Si♭","Si"];
+const PC_EN_B = ["C","D♭","D","E♭","E","F","G♭","G","A♭","A","B♭","B"];
+const enhName = n => { const ni=NAT.indexOf(n.pc); if(ni>=0) return nameIn({l:LETTERS[ni],a:0,pc:n.pc}, S.settings.notation); return (S.settings.notation==="fr"?(n.a<0?PC_FR_B:PC_FR):(n.a<0?PC_EN_B:PC_EN))[n.pc]; };
+const noteName = n => { const s=nameIn(n, S.settings.notation); return Math.abs(n.a)>=2 ? s+" ("+enhName(n)+")" : s; };
 const tonicNote = tonic => spellIv(tonic,[0])[0];
 function scaleName(tid, tonic){
   const ty=TYPE[tid], lang=S.settings.lang;
@@ -1727,9 +1736,23 @@ const DEFAULTS={xp:0, mastery:{}, stats:{ok:0,perfect:0,revealed:0,errors:0}, st
     htypes:["maj"], hview:"maj", hdegs:[0,1,2,3,4,5,6], ptypes:["p145","pop"], pview:"pop", vl:false, etypes:["chord","int"], eview:"chord", earV2:true, scMode:"notes", sc7:false, gameLen:10}};
 const SECS=["scales","chords","harmony","prog","ear"];
 function load(){
-  try{ const raw=localStorage.getItem(STORE); if(raw){ const d=JSON.parse(raw);
-    const s={...clone(DEFAULTS), ...d, stats:{...DEFAULTS.stats,...d.stats}, settings:{...DEFAULTS.settings,...d.settings}, mastery:{}};
-    Object.entries(d.mastery||{}).forEach(([k,v])=>{ s.mastery[k.includes(":")?k:"major:"+k]=v; });
+  let raw=null;
+  try{ raw=localStorage.getItem(STORE); if(raw){ let d=JSON.parse(raw);
+    if(!d || typeof d!=="object" || Array.isArray(d)) throw new Error("bad state");
+    // defensive normalisation: a field of the wrong type falls back to its default instead of crashing the app
+    const isObj=x=>x && typeof x==="object" && !Array.isArray(x), num=(x,dflt)=>{ const v=typeof x==="string"?parseFloat(x):x; return Number.isFinite(v)?v:dflt; };
+    const s={...clone(DEFAULTS), ...d, stats:{...DEFAULTS.stats,...(isObj(d.stats)?d.stats:{})}, settings:{...DEFAULTS.settings,...(isObj(d.settings)?d.settings:{})}, mastery:{}};
+    ["streak","stats","secStats","srs","daily","xpDays","xpPushed"].forEach(k=>{ if(!isObj(s[k])) s[k]=clone(DEFAULTS[k]||{}); });
+    s.streak={days:num(s.streak.days,0), last:typeof s.streak.last==="string"?s.streak.last:""};
+    if(!isObj(s.dailyPlan)) delete s.dailyPlan; if(!isObj(s.dailyRun)) delete s.dailyRun;
+    s.xp=Math.max(0,num(s.xp,0)); Object.keys(s.xpDays).forEach(k=>{ s.xpDays[k]=num(s.xpDays[k],0); });
+    Object.keys(s.stats).forEach(k=>{ s.stats[k]=num(s.stats[k],0); });
+    Object.keys(s.secStats).forEach(k=>{ if(!isObj(s.secStats[k])) delete s.secStats[k]; });
+    Object.keys(s.srs).forEach(k=>{ const e=s.srs[k]; if(!isObj(e)||!isObj(e.it)||typeof e.due!=="string") delete s.srs[k]; });
+    if(!Array.isArray(s.seenTypes)) s.seenTypes=clone(DEFAULTS.seenTypes); s.seenTypes=s.seenTypes.filter(x=>typeof x==="string");
+    ["types","ctypes","htypes","ptypes","etypes","invs","hdegs"].forEach(k=>{ if(!Array.isArray(s.settings[k])) s.settings[k]=clone(DEFAULTS.settings[k]); });
+    s.settings.delay=num(s.settings.delay,0);
+    Object.entries(isObj(d.mastery)?d.mastery:{}).forEach(([k,v])=>{ const n=num(v,NaN); if(Number.isFinite(n)) s.mastery[k.includes(":")?k:"major:"+k]=n; });
     s.settings.types=(s.settings.types||["major"]).filter(id=>TYPE[id]); if(!s.settings.types.length) s.settings.types=["major"];
     s.settings.ctypes=(s.settings.ctypes||["maj"]).filter(id=>CTYPE[id]); if(!s.settings.ctypes.length) s.settings.ctypes=["maj"];
     s.settings.invs=(s.settings.invs||[0]).filter(i=>i>=0&&i<=3); if(!s.settings.invs.length) s.settings.invs=[0];
@@ -1747,7 +1770,7 @@ function load(){
     if(!s.settings.diffV2){ s.settings.delay=0; s.settings.diffV2=true; }
     if(!s.settings.midiV2){ s.settings.midiSound=true; s.settings.midiV2=true; }
     if(!s.langV2){ s.settings.lang="en"; s.settings.notation="en"; s.langV2=true; }
-    return s; } }catch(e){}
+    return s; } }catch(e){ try{ if(raw) localStorage.setItem(STORE+".bak", raw); }catch(e2){} } // keep an unreadable state aside before it gets overwritten
   firstVisit=true;
   return clone(DEFAULTS);
 }
@@ -1861,9 +1884,9 @@ function addXP(n){
   S.xpDays=S.xpDays||{}; const dk=dayStr(); S.xpDays[dk]=(S.xpDays[dk]||0)+n;
   const before=levelInfo(S.xp).L; S.xp+=n; const after=levelInfo(S.xp).L;
   if(after>before){
-    toast(t("level")+after+" · "+titleFor(after));
+    toast(titleFor(after));
     SECS.forEach(sec=>typeList(sec).forEach(ty=>{ const key=sec==="scales"?ty.id:sec+":"+ty.id;
-      if(typeOpenS(sec,ty.id) && !S.seenTypes.includes(key)){ S.seenTypes.push(key); if(ty.lvl>1) toast(t("newType")+SEC[sec].name(ty)); } }));
+      if(typeOpenS(sec,ty.id) && !S.seenTypes.includes(key)){ S.seenTypes.push(key); if(ty.lvl>1) unlockNote(t("newType")+SEC[sec].name(ty)); } }));
   }
 }
 function bumpStreak(){
@@ -1879,7 +1902,7 @@ function setMastery(it,v){
   openRoots(it.sec,it.tid).filter(x=>!before.includes(x)).forEach(x=>{
     const label = it.sec==="scales" ? t("newScale")+scaleName(it.tid,x) : it.sec==="chords" ? t("newChord")+chordName(it.tid,x)
       : t("newType")+scaleName(it.sec==="harmony"?HTYPE[it.tid].scale:PROG[it.tid].scale, x);
-    toast(label); });
+    unlockNote(label); });
 }
 
 // ---------- Audio ----------
@@ -1937,8 +1960,18 @@ function buildKeyboard(){
   if(phase==="revealed") showReveal(true);
   else markPlayed();
 }
+function keyNames(){
+  // names of the 12 pitch classes: the notes of the current exercise keep their own spelling (E♭ major is written with flats),
+  // the other keys follow the key signature (flats in a flat key, sharps otherwise)
+  const not=S.settings.notation;
+  const notes=[]; if(cur && seq.length) seq.forEach(x=>{ if(x.notes) x.notes.forEach(n=>notes.push(n)); else if(x.pc!=null) notes.push(x); });
+  const flat = notes.some(n=>n.a<0) && !notes.some(n=>n.a>0);
+  const names=(not==="fr" ? (flat?PC_FR_B:PC_FR) : (flat?PC_EN_B:PC_EN)).slice();
+  notes.forEach(n=>{ names[n.pc] = Math.abs(n.a)>=2 ? enhName(n) : nameIn(n,not); }); // a double sharp / flat is labelled by the key it lands on
+  return names;
+}
 function labelKeys(){
-  const names=S.settings.notation==="fr"?PC_FR:PC_EN;
+  const names=keyNames();
   const full=kbFull();
   Object.entries(keyEls).forEach(([m,el])=>{ const pc=m%12; el.querySelector("span").textContent = pc===0 && full ? octName(+m) : (S.settings.labels||pc===0)?names[pc]:""; });
 }
@@ -2041,6 +2074,8 @@ function startRound(item, retry){
     cur={...cur, root:(cur.tid==="scale"?48:52)+Math.floor(Math.random()*(span+1))+(cur.tid==="scale"?Math.floor(Math.random()*8):0)};
   }
   lastId=mkey(cur); seq=buildSeq(); found=seq.map(()=>false); played=[]; idx=0; hintStage=0; hintUsed=false; hintT=performance.now(); errors=0; pStep=0; pFound=new Set(); earPick=null;
+  // retry after a reveal: the answer was shown, so a success now only earns the guided-mode XP
+  if(retry && game && game.results[game.i] && game.results[game.i].solved===false) hintUsed=true;
   phase="listening"; startT=performance.now();
   const per = chSeq() ? seq.length : 1;
   deadline=(S.settings.delay>0 && cur.sec!=="ear") ? startT+S.settings.delay*1000*per : 0;
@@ -2167,7 +2202,11 @@ function success(){
   phase="success"; cancelAnimationFrame(raf);
   const secs=(performance.now()-startT)/1000, remaining=deadline?Math.max(0,(deadline-performance.now())/1000):0, perfect=errors===0;
   combo=perfect?combo+1:0; if(game) game.maxCombo=Math.max(game.maxCombo||0,combo);
-  let gain=10+Math.round(Math.min(remaining,10)*2)+(perfect?5:0)+Math.min(combo,10)*2;
+  // time bonus: share of the allotted time still left (0..10), weighted by the difficulty (5 s x1.5, 10 s x1.2, 20 s x1); no timer: +4 when answered within 8 s
+  let tb=0;
+  if(deadline){ const per=chSeq()?seq.length:1, d=S.settings.delay||1, coef=d<=5?1.5:d<=10?1.2:1; tb=Math.round(Math.round(10*remaining/(d*per))*coef); }
+  else if(secs<8) tb=4;
+  let gain=10+tb+(perfect?5:0)+Math.min(combo,10)*2;
   if(cur.sec==="scales" && seq.length>=8) gain+=2;
   if(cur.sec==="chords" && cur.inv) gain+=3;
   if(cur.sec==="prog") gain+=seq.length*3+(S.settings.vl?6:0);
@@ -2242,7 +2281,7 @@ function markNow(i){ [...$("slots").children].forEach((el,j)=>el.classList.toggl
 function reveal(auto){
   if(phase!=="listening") return;
   phase="revealed"; cancelAnimationFrame(raf); combo=0;
-  bumpStreak(); record(roundLevel(), null); save();
+  record(roundLevel(), null); save(); // no streak credit for a revealed answer
   revealDone=false; playScale(); showReveal();
   if(cur.sec==="ear") showEar(false,0);
   else showScore([seq.length-idx?(chSeq()?t("missedP"):t("missed"))(seq.length-idx):"", errors?t("errors")(errors):""]);
@@ -2290,7 +2329,7 @@ function resetScore(){
 let game=null, endOpen=false, lastGame=null;
 const SRS_DAYS=[0,1,2,4,7,14,30];
 const dayStr = (d=new Date()) => { const z=new Date(d.getTime()-d.getTimezoneOffset()*6e4); return z.toISOString().slice(0,10); };
-const addDays = n => dayStr(new Date(Date.now()+n*864e5));
+const addDays = n => { const d=new Date(); d.setDate(d.getDate()+n); return dayStr(d); }; // calendar days (DST-safe), also used by the SRS
 function makeGame(queue, daily){
   const n = queue ? queue.length : (S.settings.gameLen||Infinity);
   return {queue:queue||null, daily:!!daily, total:n, i:0, results:[], xp0:S.xp, maxCombo:0, sec:S.section};
@@ -2305,6 +2344,7 @@ function record(level, secs){
   if(!game || game.results[game.i]) return false;
   const ok = cur.sec==="ear" ? (level==="good"?1:0) : idx, total = cur.sec==="ear" ? 1 : seq.length;
   game.results[game.i]={it:stripItem(cur), level, ok, total, secs, solved:secs!=null};
+  if(game.daily) S.dailyRun={date:dayStr(), i:game.i, results:game.results, xp0:game.xp0, maxCombo:game.maxCombo||0}; // resumable after a reload
   const ss=secStats();
   if(secs!=null){ ss.ok++; if(level==="good") ss.perfect++; } else ss.revealed++;
   ss.errors+=errors;
@@ -2335,19 +2375,31 @@ function buildDaily(n=S.settings.dailyLen||10){
 }
 function dailyPlan(fresh){
   const today=dayStr();
-  if(fresh || !S.dailyPlan || S.dailyPlan.date!==today){ S.dailyPlan={date:today, items:buildDaily().map(stripItem)}; save(); }
+  if(fresh || !S.dailyPlan || S.dailyPlan.date!==today){ S.dailyPlan={date:today, items:buildDaily().map(stripItem)}; delete S.dailyRun; save(); }
   return S.dailyPlan;
+}
+function pendingDailyRun(){
+  const r=S.dailyRun, today=dayStr();
+  if(!r || r.date!==today || !Array.isArray(r.results) || !S.dailyPlan || S.dailyPlan.date!==today) return null;
+  if(S.daily && S.daily.date===today) return null;
+  return r.results.some(Boolean) ? r : null;
 }
 function startDaily(){
   if(phase==="listening") cancelAnimationFrame(raf); clearTimeout(advanceTimer); clearPlayTimers();
   const done=S.daily&&S.daily.date===dayStr();
-  page="daily"; game=makeGame(dailyPlan(done).items.map(it=>({...it})), true); game.i=-1; startRound(); renderDaily();
+  page="daily"; const plan=dailyPlan(done); game=makeGame(plan.items.map(it=>({...it})), true); game.i=-1;
+  const run=pendingDailyRun();
+  if(run){ // exercises already done today are kept (no XP given twice): resume at the first one left
+    game.results=run.results.slice(0,game.total).map(r=>r||undefined); game.xp0=Math.min(S.xp, run.xp0!=null?run.xp0:S.xp); game.maxCombo=run.maxCombo||0;
+    let j=0; while(j<game.total && game.results[j]) j++; game.i=j-1;
+  }
+  startRound(); renderDaily();
 }
 function finishGame(){
   const g=game; lastGame=g; game=null; phase="idle"; cur=null; seq=[]; found=[]; played=[]; clearKeys();
   $("stage").classList.remove("res-good","res-warn","res-bad");
   const doneN=g.results.filter(Boolean).length; g.complete = g.queue ? doneN>=g.total : true;
-  if(g.daily && g.complete){ const good=g.results.filter(r=>r&&r.level==="good").length; S.daily={date:dayStr(), score:good+"/"+doneN, items:g.queue.map(stripItem), levels:g.queue.map((_,i)=>g.results[i]?g.results[i].level:null)}; }
+  if(g.daily && g.complete){ const good=g.results.filter(r=>r&&r.level==="good").length; S.daily={date:dayStr(), score:good+"/"+doneN, items:g.queue.map(stripItem), levels:g.queue.map((_,i)=>g.results[i]?g.results[i].level:null)}; delete S.dailyRun; }
   save(); render(); renderDaily();
   if(doneN) openEnd(g);
 }
@@ -2546,7 +2598,7 @@ function renderActions(){
     if(k){ const kb=document.createElement("kbd"); kb.textContent=k; b.appendChild(kb); } b.onclick=fn; a.appendChild(b); };
   const sp=()=>{ const s=document.createElement("span"); s.className="spacer"; a.appendChild(s); };
   const kb=hasKeyboard(), space=kb?(S.settings.lang==="fr"?"Espace":"Space"):null, enter=kb?(S.settings.lang==="fr"?"Entrée":"Enter"):null;
-  const cKey = midiMode() && S.settings.midiC!==false ? (S.settings.notation==="fr"?"Do":"C") : null;
+  const cKey = midiMode() && S.settings.midiC!==false ? CNAME() : null;
   if(phase==="idle" && page==="daily" && !game) return; // the header already has "Start"
   if(phase==="idle") mk(t("start"),"primary big",()=>startRound(),cKey||space);
   else if(phase==="listening" && cur.sec==="ear") mk(tx("replay"),"primary",()=>playScale(0),space);
@@ -2743,7 +2795,7 @@ function renderSettings(){
   renderTypes(); renderKeySel();
 }
 function render(){ document.body.classList.toggle("playing", !!game || phase!=="idle"); document.body.dataset.page=page; $("gamesPanel").hidden = page!=="games"; $("hubPanel").hidden = page!=="hub"; $("learnPanel").hidden = page!=="learn"; $("dailyPanel").hidden = page!=="daily"; $("rankPanel").hidden = page!=="rank"; $("accountPanel").hidden = page!=="account"; $("lockPanel").hidden = page!=="locked"; $("settingsPage").hidden = page!=="settings"; $("progressPage").hidden = page!=="progress"; renderDaily(); renderGameBar(); setNav();
-  if(phase==="idle"||phase==="listening") resetScore(); renderSession(); renderHint(); renderPrompt(); renderTimeline(); renderSlots(); renderActions(); renderStatus(); renderMap(); }
+  if(phase==="idle"||phase==="listening") resetScore(); renderSession(); renderHint(); renderPrompt(); renderTimeline(); renderSlots(); renderActions(); renderStatus(); renderMap(); labelKeys(); }
 
 // ---------- Settings wiring ----------
 $("langSeg").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return;
@@ -3103,11 +3155,12 @@ const SEC_ICON = sec => { const b=$("secTabs").querySelector('[data-v="'+sec+'"]
 function renderDailyPanel(){
   const plan=dailyPlan(), run=game&&game.daily, done=S.daily&&S.daily.date===dayStr();
   const shown = !run && done && S.daily.items ? {items:S.daily.items} : plan;
-  const levels = run ? plan.items.map((_,i)=>game.results[i]?game.results[i].level:null) : (done&&S.daily.levels ? S.daily.levels : []);
+  const pend = !run && !done ? pendingDailyRun() : null;
+  const levels = run ? plan.items.map((_,i)=>game.results[i]?game.results[i].level:null) : (done&&S.daily.levels ? S.daily.levels : pend ? plan.items.map((_,i)=>pend.results[i]?pend.results[i].level:null) : []);
   const curI = run ? game.i : -1;
   const dateTxt = new Date().toLocaleDateString(S.settings.lang==="fr"?"fr-FR":"en-GB",{weekday:"long",day:"numeric",month:"long"});
   $("dpSub").textContent = run ? t("dpRun")(Math.min(game.i,game.total-1)+1,game.total) : done ? t("dpDone")(S.daily.score) : t("dpSubTxt")(dateTxt.charAt(0).toUpperCase()+dateTxt.slice(1), plan.items.length, dueItems().length);
-  $("dpStart").hidden = !!run; $("dpCfg").hidden = !!run; $("dpStart").textContent = done ? t("dailyAgain") : t("dailyStart");
+  $("dpStart").hidden = !!run; $("dpCfg").hidden = !!run; $("dpStart").textContent = done ? t("dailyAgain") : pend ? t("dailyResume") : t("dailyStart");
   const ol=$("dTimeline"); ol.innerHTML="";
   const check='<svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>', cross='<svg viewBox="0 0 24 24"><path d="M12 7v6M12 17v.5"/></svg>';
   shown.items.forEach((it,i)=>{ const li=document.createElement("li"), lv=levels[i];
@@ -3126,6 +3179,10 @@ function renderDailyPanel(){
 const SUPA_URL="https://ijdxeasxmgevuchyuenn.supabase.co", SUPA_KEY="sb_publishable_6o1XurqA3viU17YsXJQizg_H7HpMtqC";
 const SUPA_SRC="/assets/js/supabase-2.116.0.js";
 let sb=null, user=null, cloudFail=false, pushT=0, loginStep={email:"",sent:false,msg:"",err:false,busy:false};
+let lastPushOk=0, lastPushErr=null; // real sync state shown in the profile
+let addXpRpc=true; // false once the server says the add_xp function does not exist (migration not applied yet)
+function agoText(ts){ const L=S.settings.lang, m=Math.round((Date.now()-ts)/6e4); if(m<1) return L==="fr"?"à l'instant":"just now"; if(m<60) return L==="fr"?"il y a "+m+" min":m+" min ago"; const h=Math.round(m/60); if(h<24) return L==="fr"?"il y a "+h+" h":h+" h ago"; const d=Math.round(h/24); return L==="fr"?"il y a "+d+" j":d+" d ago"; }
+function syncText(){ if(lastPushErr) return t("syncErr")(lastPushOk?agoText(lastPushOk):t("agoNever")); if(lastPushOk) return t("syncOk")(agoText(lastPushOk)); return t("synced"); }
 const isApp = () => document.documentElement.classList.contains("native");
 function loadSupa(){ return new Promise((res,rej)=>{ if(window.supabase&&window.supabase.createClient) return res(window.supabase);
   const sc=document.createElement("script"); sc.src=SUPA_SRC; sc.async=true; sc.onload=()=>res(window.supabase); sc.onerror=rej; document.head.appendChild(sc); }); }
@@ -3144,32 +3201,98 @@ const myName = () => S.profileName || (user && ((user.user_metadata&&(user.user_
 async function setUser(u){
   user=u; renderStatus(); document.body.classList.toggle("guest",!u);
   if(u && page==="locked" && lockFor) openPage(lockFor);
-  if(u){ try{ await cloudPull(); }catch(e){} }
+  if(u){
+    if(S.ownerId && S.ownerId!==u.id){
+      // another account signs in on this device: its progress must not inherit the previous owner's (settings stay)
+      S={...clone(DEFAULTS), settings:S.settings, introSeen:S.introSeen, langV2:true, ownerId:u.id};
+      try{ localStorage.setItem(STORE, JSON.stringify(S)); }catch(e){}
+      renderStatus(); render(); renderDaily();
+    }
+    try{ await cloudPull(); }catch(e){}
+    if(S.ownerId!==u.id){ S.ownerId=u.id; save(); } // a guest who signs in keeps everything, and the device is now tied to this account
+  }
   if(page==="account") renderAccount(); if(page==="rank") renderRank();
 }
+// field-by-field merge of this device's state with the account's: nothing is ever lost, the settings stay local
+function mergeState(local, cloud){
+  const isObj=x=>x&&typeof x==="object"&&!Array.isArray(x), num=x=>Number.isFinite(+x)?+x:0;
+  const m=clone(local), c=isObj(cloud)?cloud:{};
+  const maxMap=(a,b)=>{ const o={...(isObj(a)?a:{})}; Object.entries(isObj(b)?b:{}).forEach(([k,v])=>{ if(Number.isFinite(+v)) o[k]=Math.max(num(o[k]),num(v)); }); return o; };
+  m.xp=Math.max(num(local.xp),num(c.xp));
+  m.xpDays=maxMap(local.xpDays,c.xpDays); m.xpPushed=maxMap(local.xpPushed,c.xpPushed);
+  m.mastery=maxMap(local.mastery,c.mastery);
+  m.stats=maxMap(local.stats,c.stats);
+  m.secStats={...(isObj(local.secStats)?local.secStats:{})}; Object.entries(isObj(c.secStats)?c.secStats:{}).forEach(([sec,v])=>{ m.secStats[sec]=maxMap(m.secStats[sec],v); });
+  m.srs={...(isObj(local.srs)?local.srs:{})}; Object.entries(isObj(c.srs)?c.srs:{}).forEach(([k,e])=>{ const l=m.srs[k]; if(!l || (isObj(e) && String(e.due||"")>String(l.due||""))) m.srs[k]=e; });
+  const ls=isObj(local.streak)?local.streak:{days:0,last:""}, cs=isObj(c.streak)?c.streak:{days:0,last:""};
+  m.streak = String(cs.last||"")>String(ls.last||"") ? {...cs} : String(cs.last||"")<String(ls.last||"") ? {...ls} : {days:Math.max(num(ls.days),num(cs.days)), last:ls.last||""};
+  m.gameBest=maxMap(local.gameBest,c.gameBest); m.runnerBest=Math.max(num(local.runnerBest),num(c.runnerBest));
+  const newer=(a,b)=>{ if(!isObj(b)) return a; if(!isObj(a)) return b; return String(b.date||"")>String(a.date||"") ? b : a; };
+  m.daily=newer(local.daily,c.daily); m.dailyPlan=newer(local.dailyPlan,c.dailyPlan); m.dailyRun=newer(local.dailyRun,c.dailyRun);
+  if(m.daily==null) delete m.daily; if(m.dailyPlan==null) delete m.dailyPlan; if(m.dailyRun==null) delete m.dailyRun;
+  m.seenTypes=[...new Set([...(Array.isArray(local.seenTypes)?local.seenTypes:[]), ...(Array.isArray(c.seenTypes)?c.seenTypes:[])])];
+  m.introSeen={...(isObj(c.introSeen)?c.introSeen:{}), ...(isObj(local.introSeen)?local.introSeen:{})};
+  m.profileName=c.profileName||local.profileName; if(!m.profileName) delete m.profileName;
+  m.settings={...(isObj(local.settings)?local.settings:{})}; // this device's settings win
+  return {merged:m, changed:JSON.stringify(m)!==JSON.stringify(local)};
+}
+let lastPull=0;
 async function cloudPull(){
+  if(!sb||!user) return;
+  lastPull=Date.now();
   const {data,error}=await sb.from("progress").select("data").eq("user_id",user.id).maybeSingle();
   if(error) throw error;
   const cloud=data&&data.data;
-  if(cloud && (cloud.xp||0) > (S.xp||0)){ // the account has more progress than this device: take it, keep this device's settings
-    const merged={...cloud, settings:{...cloud.settings, ...S.settings}, profileName:cloud.profileName||S.profileName};
-    try{ localStorage.setItem(STORE, JSON.stringify(merged)); }catch(e){}
-    location.reload(); return;
+  if(cloud){
+    const {merged,changed}=mergeState(S,cloud);
+    if(changed){
+      S=merged; let stored=false;
+      try{ localStorage.setItem(STORE, JSON.stringify(S)); stored=true; }catch(e){}
+      try{ await cloudPushNow(); }catch(e){}
+      // reload only when the merged state could be written (#36) and no exercise is running; otherwise apply in memory
+      if(stored && phase==="idle" && !game){ location.reload(); return; }
+      renderSettings(); render(); renderDaily(); if(page==="account") renderAccount();
+      return;
+    }
   }
   await cloudPushNow();
 }
+// pull again when the app comes back to the foreground (another device may have played), at most once a minute
+document.addEventListener("visibilitychange",()=>{ if(document.visibilityState==="visible" && sb && user && Date.now()-lastPull>60000) cloudPull().catch(()=>{}); });
 function cloudPush(){ if(!sb||!user) return; clearTimeout(pushT); pushT=setTimeout(()=>cloudPushNow().catch(()=>{}),3000); }
 async function cloudPushNow(){
   if(!sb||!user) return;
+  try{ await cloudPushRaw(); lastPushOk=Date.now(); lastPushErr=null; }
+  catch(e){ lastPushErr=e; throw e; }
+  finally{ if(page==="account" && user) $("accountPanel").querySelector(".pane-head p").textContent=syncText(); }
+}
+async function cloudPushRaw(){
   const li=levelInfo(S.xp), solved=Object.values(S.secStats||{}).reduce((a,x)=>a+(x.ok||0),0), now=new Date().toISOString();
   const r1=await sb.from("progress").upsert({user_id:user.id, data:S, updated_at:now});
   const r2=await sb.from("profiles").upsert({id:user.id, name:myName().slice(0,24), avatar:charIndex(li.L), photo:userPhoto()||null, xp:S.xp, level:li.L, streak:S.streak.days, solved, updated_at:now});
   if(r1.error||r2.error) throw (r1.error||r2.error);
   // XP earned per day (last 7 days) feeds the day / week / month / year leaderboards
-  const days=Object.entries(S.xpDays||{}).filter(([d])=>d>=addDays(-7)).map(([day,xp])=>({user_id:user.id, day, xp}));
-  if(days.length) await sb.from("xp_log").upsert(days);
+  const since=addDays(-7), today=dayStr();
+  const days=Object.entries(S.xpDays||{}).filter(([d])=>d>=since);
+  if(addXpRpc){
+    // server-side credit (add_xp, see supabase/schema.sql): only the XP earned since the last push is sent, the server caps it per day
+    const pushed={...(S.xpPushed||{})}; Object.keys(pushed).forEach(d=>{ if(d<since) delete pushed[d]; });
+    const todo=days.filter(([d,xp])=>+xp>(pushed[d]||0) || d===today); if(!todo.some(([d])=>d===today)) todo.push([today,S.xpDays&&S.xpDays[today]||0]);
+    let ok=true;
+    for(const [day,xp] of todo){
+      const delta=Math.max(0,Math.min(3000,Math.round(+xp||0)-(pushed[day]||0)));
+      const r=await sb.rpc("add_xp",{delta, day, streak:S.streak.days, solved});
+      if(r.error){ if(r.error.code==="PGRST202" || /could not find the function|does not exist|schema cache/i.test(r.error.message||"")){ addXpRpc=false; ok=false; break; } throw r.error; }
+      pushed[day]=Math.max(pushed[day]||0, Math.round(+xp||0));
+    }
+    if(ok){ S.xpPushed=pushed; try{ localStorage.setItem(STORE, JSON.stringify(S)); }catch(e){} return; }
+  }
+  // fallback while the migration is not applied: write the day totals directly
+  if(days.length){ const r3=await sb.from("xp_log").upsert(days.map(([day,xp])=>({user_id:user.id, day, xp}))); if(r3.error) throw r3.error; }
 }
-function authMsg(err){ const m=(err&&err.message||"").toLowerCase(); if(m.includes("sending")||m.includes("smtp")) return t("mailFail"); return m.includes("rate")||m.includes("too many") ? t("tooMany") : m.includes("token")||m.includes("otp")||m.includes("expired")||m.includes("invalid") ? t("badCode") : (err&&err.message)||t("cloudErr"); }
+function authMsg(err){ const m=(err&&err.message||"").toLowerCase();
+  if(err instanceof TypeError || (err&&err.name==="TypeError") || m.includes("fetch") || m.includes("network") || m.includes("load failed")) return t("cloudErr"); // offline / server unreachable
+  if(m.includes("sending")||m.includes("smtp")) return t("mailFail"); return m.includes("rate")||m.includes("too many") ? t("tooMany") : m.includes("token")||m.includes("otp")||m.includes("expired")||m.includes("invalid") ? t("badCode") : (err&&err.message)||t("cloudErr"); }
 function renderLock(){
   $("lockTitle").textContent=t("lockTitle")(lockFor);
   const ul=$("lockList"); ul.innerHTML=""; t("perks").forEach(x=>{ const li=document.createElement("li"); li.textContent=x; ul.appendChild(li); });
@@ -3215,7 +3338,12 @@ async function oauthLogin(provider){
       if(!code) throw new Error(back.searchParams.get("error_description")||"cancelled");
       const ex=await sb.auth.exchangeCodeForSession(code); if(ex.error) throw ex.error;
     } else {
-      const {error}=await sb.auth.signInWithOAuth({provider, options:{redirectTo:location.origin+location.pathname}}); if(error) throw error;
+      const {data,error}=await sb.auth.signInWithOAuth({provider, options:{redirectTo:location.origin+location.pathname, skipBrowserRedirect:true}}); if(error) throw error;
+      // make sure the auth server answers before leaving the page (otherwise the user lands on a browser error page)
+      const ac=new AbortController(), to=setTimeout(()=>ac.abort(),4000);
+      try{ const h=await fetch(SUPA_URL+"/auth/v1/health",{signal:ac.signal, headers:{apikey:SUPA_KEY}}); if(!h.ok) throw 0; }
+      catch(e){ throw new TypeError("network"); } finally{ clearTimeout(to); }
+      location.assign(data.url);
     }
   }catch(err){ const m=String(err&&err.message||err); if(/cancel/i.test(m)) return; loginStep.msg=authMsg(err); loginStep.err=true; renderAccount(); }
 }
@@ -3228,7 +3356,7 @@ function renderAccount(){
   box.querySelector("small").textContent=c[2];
   const st=box.querySelector(".acct-stats");
   [[t("acctXp"),S.xp],[t("acctStreak"),S.streak.days+" "+t("day")],[t("acctDone"),solved],[t("acctLevel"),li.L]].forEach(([k,v])=>{ const d=document.createElement("div"); d.className="end-stat"; d.innerHTML="<span></span><b></b>"; d.querySelector("span").textContent=k; d.querySelector("b").textContent=v; st.appendChild(d); });
-  $("accountPanel").querySelector(".pane-head p").textContent = user ? t("synced") : t("acctSub");
+  $("accountPanel").querySelector(".pane-head p").textContent = user ? syncText() : t("acctSub");
   const L=$("acctLogin"); L.innerHTML="";
   const h=(tag,txt,cls)=>{ const e=document.createElement(tag); if(txt!=null) e.textContent=txt; if(cls) e.className=cls; L.appendChild(e); return e; };
   if(user){
@@ -3240,7 +3368,7 @@ function renderAccount(){
     const sv=document.createElement("button"); sv.className="btn primary"; sv.type="submit"; sv.textContent=t("saveLbl"); row.appendChild(sv);
     const m=h("p","", "msg");
     f.onsubmit=async e=>{ e.preventDefault(); const v=inp.value.trim().slice(0,24); if(!v) return; S.profileName=v; save(); renderStatus(); try{ await cloudPushNow(); m.className="msg ok"; m.textContent=t("saved"); box.querySelector(".nm").textContent=v; }catch(err){ m.className="msg err"; m.textContent=t("cloudErr"); } };
-    const lo=h("button",t("logout"),"btn"); lo.type="button"; lo.onclick=async()=>{ await sb.auth.signOut(); };
+    const lo=h("button",t("logout"),"btn"); lo.type="button"; lo.onclick=async()=>{ try{ await sb.auth.signOut(); }catch(e){} toast(t("signedOut")); };
     return;
   }
   h("h3",t("loginTitle")); const pk=h("ul",null,"wc-list small"); t("perks").forEach(x=>{ const li=document.createElement("li"); li.textContent=x; pk.appendChild(li); });
@@ -3316,7 +3444,7 @@ function showIntro(key){
   S.introSeen=S.introSeen||{}; S.introSeen[k]=true; save();
   $("introTitle").textContent=d[0];
   $("introIc").innerHTML = k==="daily" ? $("dailyCard").querySelector("svg").outerHTML : SEC_ICON(k);
-  $("introSteps").innerHTML=d[1].map(x=>"<li><span>"+x+"</span></li>").join("");
+  $("introSteps").innerHTML=d[1].map(x=>"<li><span>"+x.replace(/\{C\}/g,CNAME())+"</span></li>").join("");
   openMod("introModal");
 }
 function autoIntro(k){ if(!(S.introSeen||{})[k]) setTimeout(()=>showIntro(k),250); }
@@ -3344,14 +3472,24 @@ $("secTabs").addEventListener("click",e=>{ const b=e.target.closest("button"); i
   if(page!=="practice"){ if(S.section!==v){ S.section=v; save(); returnPage=null; } openPage(INFO_PAGES.includes(page)&&returnPage==="practice"?"practice":"practice"); }
   else switchSection(v);
   autoIntro(v); });
-function setDelay(v){ S.settings.delay=v; save(); renderSettings(); renderGameBar(); if(phase==="listening") startRound(cur,true); else renderTimeline(); }
+function retime(prev){
+  // the timer setting changed during an exercise: rescale the time left, never restart the round
+  if(phase!=="listening" || !cur || cur.sec==="ear"){ renderTimeline(); return; }
+  const per=chSeq()?seq.length:1, d=S.settings.delay, now=performance.now();
+  const left = paused ? pausedLeft : (deadline ? Math.max(0,deadline-now) : 0);
+  let nl=0;
+  if(d>0) nl = (prev>0 && (deadline||paused)) ? left/(prev*1000*per)*d*1000*per : Math.max(1000, startT+d*1000*per-now);
+  if(paused) pausedLeft=nl;
+  deadline = d>0 ? now+nl : 0;
+  renderTimeline();
+}
+function setDelay(v){ const prev=S.settings.delay; S.settings.delay=v; save(); renderSettings(); renderGameBar(); retime(prev); }
 $("timerSel").addEventListener("change",e=>setDelay(+e.target.value));
 $("optGuideN").addEventListener("change",e=>{ S.settings.guideN=e.target.checked; if(e.target.checked) S.settings.guideP=false; save(); render(); });
 $("optGuideK").addEventListener("change",e=>{ S.settings.guideK=e.target.checked; if(e.target.checked) S.settings.guideP=false; save(); render(); });
 $("optGuideP").addEventListener("change",e=>{ S.settings.guideP=e.target.checked; if(e.target.checked){ S.settings.guideN=false; S.settings.guideK=false; } save(); render(); });
 $("segDiff").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; setDelay(+b.dataset.v); });
-$("delay").addEventListener("input",e=>{ S.settings.delay=+e.target.value; save(); renderSettings(); if(phase!=="listening") renderTimeline(); });
-$("delay").addEventListener("change",()=>{ if(phase==="listening") startRound(cur,true); });
+$("delay").addEventListener("input",e=>{ const prev=S.settings.delay; S.settings.delay=+e.target.value; save(); renderSettings(); retime(prev); });
 $("optOct").addEventListener("change",e=>{ S.settings.octave=e.target.checked; save(); if(cur&&phase!=="idle") startRound(cur,true); else render(); });
 $("optLabels").addEventListener("change",e=>{ S.settings.labels=e.target.checked; save(); labelKeys(); });
 $("optMidiSound").addEventListener("change",e=>{ S.settings.midiSound=e.target.checked; save(); });
@@ -3423,7 +3561,18 @@ function restoreInput(){
   renderInputUI();
 }
 // ---------- Toasts & notices ----------
-function toast(x){ /* notifications removed on request: unlocks show in the progress view */ }
+function unlockNote(x){ /* unlock notifications removed on request: unlocks show in the progress view */ }
+let toastT=0;
+function toast(x){
+  // discreet notification (level up, sign-out…), 2.5 s, created on demand
+  let el=$("toast");
+  if(!el){ el=document.createElement("div"); el.id="toast"; el.setAttribute("role","status"); el.setAttribute("aria-live","polite");
+    el.style.cssText="position:fixed;left:50%;bottom:max(18px,env(safe-area-inset-bottom));transform:translateX(-50%) translateY(8px);z-index:400;max-width:min(92vw,420px);padding:9px 14px;border-radius:999px;background:var(--ink);color:var(--surface);font:500 14px/1.3 var(--f-body,system-ui,sans-serif);box-shadow:0 6px 24px rgba(0,0,0,.25);opacity:0;transition:opacity .25s,transform .25s;pointer-events:none;text-align:center";
+    document.body.appendChild(el); }
+  el.textContent=x; clearTimeout(toastT);
+  requestAnimationFrame(()=>{ el.style.opacity="1"; el.style.transform="translateX(-50%) translateY(0)"; });
+  toastT=setTimeout(()=>{ el.style.opacity="0"; el.style.transform="translateX(-50%) translateY(8px)"; },2500);
+}
 function notice(x){ const n=$("notice"); n.textContent=x; n.hidden=!x; }
 
 // ---------- MIDI ----------
