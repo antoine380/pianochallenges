@@ -13,6 +13,9 @@ on:
     paths: [tools/keyboards.json]
 permissions:
   contents: write
+concurrency:
+  group: keyboard-images
+  cancel-in-progress: false
 jobs:
   photos:
     runs-on: ubuntu-latest
@@ -30,4 +33,5 @@ jobs:
           git add assets/claviers clavier keyboard
           if git diff --cached --quiet; then echo "Nothing new"; exit 0; fi
           git commit -m "Guide claviers : photos officielles"
+          git pull --rebase origin main
           git push
