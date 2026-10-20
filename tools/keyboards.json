@@ -1,0 +1,405 @@
+{
+ "_comment": "Source unique du guide claviers (/clavier en FR, /keyboard en EN). Modifier ici puis lancer: python3 tools/build_keyboard_guide.py. 'image' = URL de la photo officielle du fabricant, téléchargée dans /assets/claviers/<id>.jpg par tools/fetch_keyboard_images.py.",
+ "affiliate": {
+  "amazonTag": "",
+  "awinAffId": "",
+  "woodbrassAwinMid": "",
+  "gear4musicAwinMid": "27586"
+ },
+ "top": [
+  {
+   "id": "microkeyair",
+   "fr": [
+    "Le meilleur sans fil",
+    "Bluetooth stable, 30 h sur deux piles AA et 4 octaves : tu le poses à côté de l'iPad, sans aucun câble."
+   ],
+   "en": [
+    "Best wireless",
+    "Stable Bluetooth, 30 hours on two AA batteries and 4 octaves: set it next to your iPad, no cables at all."
+   ]
+  },
+  {
+   "id": "roli",
+   "fr": [
+    "Pour apprendre",
+    "Ses touches s'allument pour guider tes doigts, en pleine taille et sans fil. Le plus ludique de la sélection."
+   ],
+   "en": [
+    "Best for learning",
+    "Its keys light up to guide your fingers, full-size and wireless. The most playful pick of the bunch."
+   ]
+  },
+  {
+   "id": "p145",
+   "fr": [
+    "Le vrai piano",
+    "88 touches lestées au toucher de piano, la référence de Yamaha pour débuter. Se relie à l'iPad en USB."
+   ],
+   "en": [
+    "The real piano",
+    "88 weighted keys with a true piano feel, Yamaha's go-to for beginners. Connects to your iPad over USB."
+   ]
+  }
+ ],
+ "models": [
+  {
+   "id": "mpkmini4",
+   "rank": 1,
+   "brand": "Akai",
+   "name": "MPK Mini IV",
+   "keys": 25,
+   "kk": "mini",
+   "bt": false,
+   "power": "bus",
+   "auto": null,
+   "tier": 1,
+   "body": "#2b2e34",
+   "fr": {
+    "power": "Alimenté par la tablette (USB-C)",
+    "note": "Le contrôleur le plus vendu au monde, 4e génération. Un câble et c'est parti."
+   },
+   "en": {
+    "power": "Powered by the tablet (USB-C)",
+    "note": "The world's best-selling controller, now in its 4th generation. One cable and you're playing."
+   },
+   "image": null,
+   "links": {
+    "amazon": "https://www.amazon.fr/dp/B0FT3N7TK1",
+    "thomann": "https://www.thomann.fr/akai_professional_mpk_mini_iv_black.htm",
+    "gear4music": "https://www.gear4music.fr/fr/Enregistrement-and-ordinateurs/Akai-Professional-MPK-Mini-MK4-Compact-MIDI-Keyboard-and-Pad-Controller-Black/7JND"
+   }
+  },
+  {
+   "id": "p145",
+   "rank": 2,
+   "brand": "Yamaha",
+   "name": "P-145",
+   "keys": 88,
+   "kk": "weighted",
+   "bt": false,
+   "power": "secteur",
+   "auto": null,
+   "tier": 3,
+   "body": "#1c1d20",
+   "speaker": true,
+   "fr": {
+    "power": "Secteur",
+    "note": "88 touches lestées et haut-parleurs intégrés. Version P-145BT avec Bluetooth."
+   },
+   "en": {
+    "power": "Mains power",
+    "note": "88 weighted keys and built-in speakers. The P-145BT version adds Bluetooth."
+   },
+   "image": null,
+   "links": {
+    "amazon": "https://www.amazon.fr/dp/B0C8TVFVK2",
+    "thomann": "https://www.thomann.fr/yamaha_p_145_b_bt.htm",
+    "gear4music": "https://www.gear4music.fr/fr/Claviers-and-Pianos/Piano-numerique-Yamaha-P145BT-avec-Bluetooth-noir/75F5"
+   }
+  },
+  {
+   "id": "minilab3",
+   "rank": 3,
+   "brand": "Arturia",
+   "name": "MiniLab 3",
+   "keys": 25,
+   "kk": "mini",
+   "bt": false,
+   "power": "bus",
+   "auto": null,
+   "tier": 1,
+   "body": "#e6e7ea",
+   "fr": {
+    "power": "Alimenté par la tablette (USB-C)",
+    "note": "Très bon toucher pour un mini-clavier, alimenté directement par l'iPad."
+   },
+   "en": {
+    "power": "Powered by the tablet (USB-C)",
+    "note": "Great feel for a mini keyboard, powered straight from your iPad."
+   },
+   "image": null,
+   "links": {
+    "amazon": "https://www.amazon.fr/dp/B0BR55ZB9T",
+    "thomann": "https://www.thomann.fr/arturia_minilab_3_black.htm",
+    "gear4music": "https://www.gear4music.fr/fr/Enregistrement-and-ordinateurs/Arturia-MiniLab-3-Black/5CNK"
+   }
+  },
+  {
+   "id": "lkmini37",
+   "rank": 4,
+   "brand": "Novation",
+   "name": "Launchkey Mini 37 MK4",
+   "keys": 37,
+   "kk": "mini",
+   "bt": false,
+   "power": "bus",
+   "auto": null,
+   "tier": 1,
+   "body": "#25272b",
+   "fr": {
+    "power": "Alimenté par la tablette (USB-C)",
+    "note": "Trois octaves et une entrée pédale de sustain."
+   },
+   "en": {
+    "power": "Powered by the tablet (USB-C)",
+    "note": "Three octaves and a sustain pedal input."
+   },
+   "image": null,
+   "links": {
+    "amazon": "https://www.amazon.fr/dp/B0D6YY1W6X",
+    "thomann": "https://www.thomann.fr/novation_launchkey_mini_37_mk4.htm",
+    "gear4music": "https://www.gear4music.fr/fr/Claviers-and-Pianos/Novation-Launchkey-Mini-37-MK4/6GXR"
+   }
+  },
+  {
+   "id": "microkeyair",
+   "rank": 5,
+   "brand": "Korg",
+   "name": "microKEY Air 49",
+   "keys": 49,
+   "kk": "mini",
+   "bt": true,
+   "power": "piles",
+   "auto": 30,
+   "tier": 1,
+   "body": "#1f2023",
+   "fr": {
+    "power": "2 piles AA ou USB",
+    "note": "Existe aussi en 25, 37 et 61 touches. Environ un mois à 1 h par jour."
+   },
+   "en": {
+    "power": "2 AA batteries or USB",
+    "note": "Also comes in 25, 37 and 61 keys. About a month at one hour a day."
+   },
+   "image": null,
+   "links": {
+    "amazon": "https://www.amazon.fr/dp/B018ATKMFK",
+    "thomann": "https://www.thomann.fr/korg_microkey_air_49.htm",
+    "gear4music": "https://www.gear4music.fr/fr/Claviers-and-Pianos/Korg-microKEY-2-AIR-Clavier-MIDI-Bluetooth-a-49-Touches/1EYP"
+   }
+  },
+  {
+   "id": "mpkplay",
+   "rank": 6,
+   "brand": "Akai",
+   "name": "MPK Mini Play MK3",
+   "keys": 25,
+   "kk": "mini",
+   "bt": false,
+   "power": "piles",
+   "auto": 14,
+   "tier": 1,
+   "body": "#30333a",
+   "speaker": true,
+   "fr": {
+    "power": "4 piles AA ou USB",
+    "note": "128 sons et haut-parleur intégrés. Connexion à la tablette en USB seulement."
+   },
+   "en": {
+    "power": "4 AA batteries or USB",
+    "note": "128 built-in sounds and a speaker. Connects to the tablet over USB only."
+   },
+   "image": null,
+   "links": {
+    "amazon": "https://www.amazon.fr/dp/B09NQBDGT3",
+    "thomann": "https://www.thomann.fr/akai_professional_mpk_mini_play_mk3.htm",
+    "gear4music": "https://www.gear4music.fr/fr/Claviers-and-Pianos/Akai-Professional-MPK-Mini-Play-MK3-Clavier-et-Controleur-MIDI/4KV1"
+   }
+  },
+  {
+   "id": "cts1",
+   "rank": 7,
+   "brand": "Casio",
+   "name": "CT-S1",
+   "keys": 61,
+   "kk": "full",
+   "bt": true,
+   "btOpt": true,
+   "power": "piles",
+   "auto": 3,
+   "tier": 2,
+   "body": "#ececee",
+   "speaker": true,
+   "fr": {
+    "power": "6 piles AA ou secteur",
+    "note": "Bluetooth avec l'adaptateur WU-BT10. Version 76 touches : 8 piles AA, environ 7 h."
+   },
+   "en": {
+    "power": "6 AA batteries or mains",
+    "note": "Bluetooth with the WU-BT10 adapter. 76-key version: 8 AA batteries, about 7 hours."
+   },
+   "image": null,
+   "links": {
+    "amazon": "https://www.amazon.fr/dp/B091PD782Y",
+    "thomann": "https://www.thomann.fr/casio_ct_s1bk.htm",
+    "gear4music": "https://www.gear4music.fr/fr/Claviers-and-Pianos/Casio-CT-S1-Clavier-Portable-Noir/3QLE"
+   }
+  },
+  {
+   "id": "psre383",
+   "rank": 8,
+   "brand": "Yamaha",
+   "name": "PSR-E383",
+   "keys": 61,
+   "kk": "full",
+   "bt": false,
+   "power": "piles",
+   "auto": null,
+   "tier": 2,
+   "body": "#232428",
+   "speaker": true,
+   "fr": {
+    "power": "6 piles AA ou secteur",
+    "note": "Clavier arrangeur avec leçons intégrées. Autonomie non publiée par Yamaha."
+   },
+   "en": {
+    "power": "6 AA batteries or mains",
+    "note": "Arranger keyboard with built-in lessons. Yamaha doesn't publish battery life."
+   },
+   "image": null,
+   "links": {
+    "amazon": "https://www.amazon.fr/dp/B0CY2Q6DF5",
+    "thomann": "https://www.thomann.fr/yamaha_psr_e383.htm",
+    "gear4music": "https://www.gear4music.fr/fr/Claviers-and-Pianos/Yamaha-PSR-E383-Portable-Keyboard-Black/6EAH"
+   }
+  },
+  {
+   "id": "smk25",
+   "rank": 9,
+   "brand": "M-VAVE",
+   "name": "SMK-25",
+   "keys": 25,
+   "kk": "mini",
+   "bt": true,
+   "power": "interne",
+   "auto": 16,
+   "tier": 1,
+   "body": "#f0f0f2",
+   "fr": {
+    "power": "Batterie 2000 mAh",
+    "auto": "10 à 16 h selon les sources",
+    "note": "Le Bluetooth le moins cher. Batterie rechargeable par USB."
+   },
+   "en": {
+    "power": "2000 mAh battery",
+    "auto": "10 to 16 h depending on source",
+    "note": "The cheapest Bluetooth option. Battery recharges over USB."
+   },
+   "image": null,
+   "links": {
+    "amazon": "https://www.amazon.fr/dp/B0CJYJD7CP"
+   }
+  },
+  {
+   "id": "gopiano88",
+   "rank": 10,
+   "brand": "Roland",
+   "name": "GO:PIANO88",
+   "keys": 88,
+   "kk": "full",
+   "bt": true,
+   "power": "piles",
+   "auto": 6,
+   "tier": 2,
+   "body": "#1d1e21",
+   "speaker": true,
+   "fr": {
+    "power": "Piles AA ou secteur",
+    "auto": "6 h (alcalines), 7 h (NiMH)",
+    "note": "Le seul 88 touches de la liste qui joue sans prise. Touches non lestées."
+   },
+   "en": {
+    "power": "AA batteries or mains",
+    "auto": "6 h (alkaline), 7 h (NiMH)",
+    "note": "The only 88-key model here that plays unplugged. Keys are not weighted."
+   },
+   "image": null,
+   "links": {
+    "amazon": "https://www.amazon.fr/dp/B0F1TRG95C",
+    "thomann": "https://www.thomann.fr/roland_go_piano_88.htm",
+    "gear4music": "https://www.gear4music.fr/fr/Claviers-and-Pianos/Roland-GoPiano-88-PX-Portable-Piano/71D4"
+   }
+  },
+  {
+   "id": "lpk25w",
+   "rank": 11,
+   "brand": "Akai",
+   "name": "LPK25 Wireless",
+   "keys": 25,
+   "kk": "mini",
+   "bt": true,
+   "power": "piles",
+   "auto": 12,
+   "tier": 1,
+   "body": "#2a2c30",
+   "fr": {
+    "power": "3 piles AA ou USB",
+    "auto": "12 à 72 h selon les sources",
+    "note": "Fin de série chez certains revendeurs : vérifie le stock."
+   },
+   "en": {
+    "power": "3 AA batteries or USB",
+    "auto": "12 to 72 h depending on source",
+    "note": "Discontinued at some retailers: check stock."
+   },
+   "image": null,
+   "links": {
+    "amazon": "https://www.amazon.fr/dp/B01J66AM0G",
+    "gear4music": "https://www.gear4music.fr/fr/Claviers-and-Pianos/Akai-Professional-LPK25-Clavier-Maitre-MIDI-Sans-Fil/1R40"
+   }
+  },
+  {
+   "id": "xkeyair",
+   "rank": 12,
+   "brand": "CME / ESI",
+   "name": "Xkey Air 37",
+   "keys": 37,
+   "kk": "full",
+   "bt": true,
+   "power": "interne",
+   "auto": 10,
+   "tier": 3,
+   "body": "#c9ccd1",
+   "fr": {
+    "power": "Batterie lithium",
+    "auto": "Plus de 10 h",
+    "note": "Aluminium ultra-fin, touches pleine taille à course courte. Pas d'entrée pédale."
+   },
+   "en": {
+    "power": "Lithium battery",
+    "auto": "10+ hours",
+    "note": "Ultra-thin aluminium, full-size short-travel keys. No pedal input."
+   },
+   "image": null,
+   "links": {
+    "amazon": "https://www.amazon.fr/dp/B01CKGTT6C",
+    "thomann": "https://www.thomann.fr/esi_xkey_air_37.htm",
+    "gear4music": "https://www.gear4music.fr/fr/Claviers-and-Pianos/CME-Xkey-Air-37-Clavier-Controleur-MIDI-Bluetooth/1IS3"
+   }
+  },
+  {
+   "id": "roli",
+   "rank": 13,
+   "brand": "ROLI",
+   "name": "ROLI Piano",
+   "keys": 49,
+   "kk": "full",
+   "bt": true,
+   "power": "interne",
+   "auto": 6,
+   "tier": 3,
+   "body": "#18191c",
+   "lit": true,
+   "fr": {
+    "power": "Batterie intégrée",
+    "note": "49 touches lumineuses semi-lestées : l'outil idéal pour suivre un défi."
+   },
+   "en": {
+    "power": "Built-in battery",
+    "note": "49 semi-weighted light-up keys: ideal for following a challenge."
+   },
+   "image": null,
+   "links": {}
+  }
+ ]
+}

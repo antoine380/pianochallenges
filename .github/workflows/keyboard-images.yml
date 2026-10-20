@@ -1,0 +1,33 @@
+# Downloads the official keyboard photos into assets/claviers/ and rebuilds /clavier and /keyboard.
+# Runs when tools/keyboards.json changes on main, or by hand (Actions > Keyboard guide photos > Run workflow).
+name: Keyboard guide photos
+on:
+  workflow_dispatch:
+    inputs:
+      force:
+        description: "Re-download every photo"
+        type: boolean
+        default: false
+  push:
+    branches: [main]
+    paths: [tools/keyboards.json]
+permissions:
+  contents: write
+jobs:
+  photos:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install pillow
+      - run: python3 tools/fetch_keyboard_images.py ${{ inputs.force && '--force' || '' }}
+      - name: Commit photos and rebuilt pages
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898732+github-actions[bot]@users.noreply.github.com"
+          git add assets/claviers clavier keyboard
+          if git diff --cached --quiet; then echo "Nothing new"; exit 0; fi
+          git commit -m "Guide claviers : photos officielles"
+          git push
