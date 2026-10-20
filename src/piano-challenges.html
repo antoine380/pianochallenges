@@ -1348,7 +1348,8 @@ const TXT = {
     allOpen:"Les 12 tonalités de ce type sont ouvertes.", typeLocked:l=>"Ce type de gamme s'ouvre au niveau "+l+".",
     st:["Réussies","Sans faute","Révélées","Maîtrisées","Réussite"], practiseTip:"S'entraîner sur ", lockedTip:"Maîtrisez une gamme de plus pour la débloquer",
     melDown:" · descend en Mineur",
-    titles:["Curieux","Apprenti","Doigts agiles","Oreille fine","Harmoniste","Beatmaker","Producteur","Virtuose","Maestro"]},
+    titles:["Curieux","Apprenti","Doigts agiles","Oreille fine","Harmoniste","Beatmaker","Producteur","Virtuose","Maestro"],
+    dailyResume:"Reprendre"},
   en:{help:"Help", helpTitle:"How it works", helpOk:"Let's go", tutNext:"Next", tutPrev:"Previous", close:"Close", stepOf:(i,n)=>"Step "+i+" of "+n,
     tut:[{h:"Read the challenge",p:"A scale, a chord or a progression appears with a countdown. Picture the notes in your head before the bar runs out."},
          {h:"Play it on your piano",p:"Scales from the root up to the octave, chords from their lowest note, progressions chord by chord. Digital piano (MIDI), acoustic piano (mic) or on-screen keys: each correct note fills a box. MIDI works in Chrome and Edge (not in Safari)."},
@@ -1463,7 +1464,8 @@ const TXT = {
     allOpen:"All 12 keys of this type are open.", typeLocked:l=>"This scale type opens at level "+l+".",
     st:["Completed","Perfect","Revealed","Mastered","Success rate"], practiseTip:"Practise ", lockedTip:"Master one more scale to unlock it",
     melDown:" · descends as Minor",
-    titles:["Curious","Apprentice","Nimble fingers","Sharp ear","Harmonist","Beatmaker","Producer","Virtuoso","Maestro"]}
+    titles:["Curious","Apprentice","Nimble fingers","Sharp ear","Harmonist","Beatmaker","Producer","Virtuoso","Maestro"],
+    dailyResume:"Resume"}
 };
 const t = k => TXT[S.settings.lang][k];
 
@@ -2292,6 +2294,7 @@ function record(level, secs){
   if(!game || game.results[game.i]) return false;
   const ok = cur.sec==="ear" ? (level==="good"?1:0) : idx, total = cur.sec==="ear" ? 1 : seq.length;
   game.results[game.i]={it:stripItem(cur), level, ok, total, secs, solved:secs!=null};
+  if(game.daily) S.dailyRun={date:dayStr(), i:game.i, results:game.results, xp0:game.xp0, maxCombo:game.maxCombo||0}; // resumable after a reload
   const ss=secStats();
   if(secs!=null){ ss.ok++; if(level==="good") ss.perfect++; } else ss.revealed++;
   ss.errors+=errors;
@@ -2322,19 +2325,31 @@ function buildDaily(n=S.settings.dailyLen||10){
 }
 function dailyPlan(fresh){
   const today=dayStr();
-  if(fresh || !S.dailyPlan || S.dailyPlan.date!==today){ S.dailyPlan={date:today, items:buildDaily().map(stripItem)}; save(); }
+  if(fresh || !S.dailyPlan || S.dailyPlan.date!==today){ S.dailyPlan={date:today, items:buildDaily().map(stripItem)}; delete S.dailyRun; save(); }
   return S.dailyPlan;
+}
+function pendingDailyRun(){
+  const r=S.dailyRun, today=dayStr();
+  if(!r || r.date!==today || !Array.isArray(r.results) || !S.dailyPlan || S.dailyPlan.date!==today) return null;
+  if(S.daily && S.daily.date===today) return null;
+  return r.results.some(Boolean) ? r : null;
 }
 function startDaily(){
   if(phase==="listening") cancelAnimationFrame(raf); clearTimeout(advanceTimer); clearPlayTimers();
   const done=S.daily&&S.daily.date===dayStr();
-  page="daily"; game=makeGame(dailyPlan(done).items.map(it=>({...it})), true); game.i=-1; startRound(); renderDaily();
+  page="daily"; const plan=dailyPlan(done); game=makeGame(plan.items.map(it=>({...it})), true); game.i=-1;
+  const run=pendingDailyRun();
+  if(run){ // exercises already done today are kept (no XP given twice): resume at the first one left
+    game.results=run.results.slice(0,game.total).map(r=>r||undefined); game.xp0=Math.min(S.xp, run.xp0!=null?run.xp0:S.xp); game.maxCombo=run.maxCombo||0;
+    let j=0; while(j<game.total && game.results[j]) j++; game.i=j-1;
+  }
+  startRound(); renderDaily();
 }
 function finishGame(){
   const g=game; lastGame=g; game=null; phase="idle"; cur=null; seq=[]; found=[]; played=[]; clearKeys();
   $("stage").classList.remove("res-good","res-warn","res-bad");
   const doneN=g.results.filter(Boolean).length; g.complete = g.queue ? doneN>=g.total : true;
-  if(g.daily && g.complete){ const good=g.results.filter(r=>r&&r.level==="good").length; S.daily={date:dayStr(), score:good+"/"+doneN, items:g.queue.map(stripItem), levels:g.queue.map((_,i)=>g.results[i]?g.results[i].level:null)}; }
+  if(g.daily && g.complete){ const good=g.results.filter(r=>r&&r.level==="good").length; S.daily={date:dayStr(), score:good+"/"+doneN, items:g.queue.map(stripItem), levels:g.queue.map((_,i)=>g.results[i]?g.results[i].level:null)}; delete S.dailyRun; }
   save(); render(); renderDaily();
   if(doneN) openEnd(g);
 }
@@ -3090,11 +3105,12 @@ const SEC_ICON = sec => { const b=$("secTabs").querySelector('[data-v="'+sec+'"]
 function renderDailyPanel(){
   const plan=dailyPlan(), run=game&&game.daily, done=S.daily&&S.daily.date===dayStr();
   const shown = !run && done && S.daily.items ? {items:S.daily.items} : plan;
-  const levels = run ? plan.items.map((_,i)=>game.results[i]?game.results[i].level:null) : (done&&S.daily.levels ? S.daily.levels : []);
+  const pend = !run && !done ? pendingDailyRun() : null;
+  const levels = run ? plan.items.map((_,i)=>game.results[i]?game.results[i].level:null) : (done&&S.daily.levels ? S.daily.levels : pend ? plan.items.map((_,i)=>pend.results[i]?pend.results[i].level:null) : []);
   const curI = run ? game.i : -1;
   const dateTxt = new Date().toLocaleDateString(S.settings.lang==="fr"?"fr-FR":"en-GB",{weekday:"long",day:"numeric",month:"long"});
   $("dpSub").textContent = run ? t("dpRun")(Math.min(game.i,game.total-1)+1,game.total) : done ? t("dpDone")(S.daily.score) : t("dpSubTxt")(dateTxt.charAt(0).toUpperCase()+dateTxt.slice(1), plan.items.length, dueItems().length);
-  $("dpStart").hidden = !!run; $("dpCfg").hidden = !!run; $("dpStart").textContent = done ? t("dailyAgain") : t("dailyStart");
+  $("dpStart").hidden = !!run; $("dpCfg").hidden = !!run; $("dpStart").textContent = done ? t("dailyAgain") : pend ? t("dailyResume") : t("dailyStart");
   const ol=$("dTimeline"); ol.innerHTML="";
   const check='<svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>', cross='<svg viewBox="0 0 24 24"><path d="M12 7v6M12 17v.5"/></svg>';
   shown.items.forEach((it,i)=>{ const li=document.createElement("li"), lv=levels[i];
