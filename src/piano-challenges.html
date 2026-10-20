@@ -2248,7 +2248,7 @@ function resetScore(){
 let game=null, endOpen=false, lastGame=null;
 const SRS_DAYS=[0,1,2,4,7,14,30];
 const dayStr = (d=new Date()) => { const z=new Date(d.getTime()-d.getTimezoneOffset()*6e4); return z.toISOString().slice(0,10); };
-const addDays = n => dayStr(new Date(Date.now()+n*864e5));
+const addDays = n => { const d=new Date(); d.setDate(d.getDate()+n); return dayStr(d); }; // calendar days (DST-safe), also used by the SRS
 function makeGame(queue, daily){
   const n = queue ? queue.length : (S.settings.gameLen||Infinity);
   return {queue:queue||null, daily:!!daily, total:n, i:0, results:[], xp0:S.xp, maxCombo:0, sec:S.section};
