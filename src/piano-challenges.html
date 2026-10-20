@@ -2072,7 +2072,16 @@ function midiStart(note){
 }
 // MIDI notes that arrive together (a block chord) are processed lowest first
 let midiBuf=[], midiTimer=0, midiReady=false;
-function midiIn(m){ midiBuf.push(m); clearTimeout(midiTimer); midiTimer=setTimeout(()=>{ const b=midiBuf.sort((a,c)=>a-c); midiBuf=[]; b.forEach(x=>noteIn(x)); },35); }
+// Notes that arrive within 35 ms form one group. A lone C from the MIDI keyboard starts / continues (midiStart); a chord that
+// happens to contain a C does not. Notes received within 300 ms after "continue" (grade(true)) are only shown, not graded.
+let midiBufMidi=true, roundSwitchAt=0;
+function midiIn(m, fromMidi){ midiBuf.push(m); if(!fromMidi) midiBufMidi=false; clearTimeout(midiTimer); midiTimer=setTimeout(midiFlush,35); }
+function midiFlush(){
+  const b=midiBuf.sort((a,c)=>a-c), lone=midiBufMidi && b.length===1; midiBuf=[]; midiBufMidi=true;
+  if(performance.now()-roundSwitchAt<300){ b.forEach(x=>{ pressKey(x); flashKey(x,"k-hit"); }); return; }
+  if(lone && midiStart(b[0])) return;
+  b.forEach(x=>noteIn(x));
+}
 function hitSlot(j, m){
   found[j]=true; if(!chordLike(cur.sec)) hintReset(); idx=found.filter(Boolean).length; played.push(fold(m)); markPlayed(); renderSlots(j);
   if(idx===seq.length) success();
@@ -2217,7 +2226,7 @@ function earAnswer(id){
 function grade(next){
   // after an answer: Continue moves on, Retry replays the same item (same exercise of the game)
   if(phase!=="revealed") return;
-  if(next) startRound(); else startRound({...cur}, true);
+  if(next){ roundSwitchAt=performance.now(); startRound(); } else startRound({...cur}, true);
 }
 function primaryAction(){
   if(page==="daily" && !game && (phase==="idle"||phase==="success")){ startDaily(); return; }
@@ -3429,8 +3438,7 @@ async function enableMidi(){
           if(S.settings.midiSound) tone(note,0,.9,.1+.26*vel/127);
           if(calib){ calibNote(note); return; }
           followMidi(note);
-          if(midiStart(note)) return;
-          midiIn(note); } }; });
+          midiIn(note,true); } }; });
       $("midiBtn").classList.toggle("on",names.length>0); $("midiBtn").classList.remove("err");
       const shown = S.settings.midiInput && names.includes(S.settings.midiInput) ? S.settings.midiInput : names[0];
       $("midiTxt").textContent=names.length ? t("midiDev")+shown : t("midiNone");
