@@ -1269,7 +1269,7 @@ const TXT = {
       harmony:["L'harmonie",["Chaque tonalité contient <b>7 accords</b>, un par degré, de I à VII.","On te demande un degré : <b>IV de Do majeur</b>, c'est Fa majeur. Joue-le.","Choisis en haut les <b>degrés</b> à travailler pour te concentrer sur I, IV, V… C'est la base pour composer."]],
       prog:["Les progressions",["Une progression est une <b>suite d'accords</b> qui sonne bien, par exemple I – V – vi – IV.","Joue les accords <b>dans l'ordre</b>. Avec l'option d'enchaînement, chaque accord se joue dans le renversement le plus proche du précédent, comme un pianiste.","À la fin, écoute la progression pour entendre ce que tu as construit."]],
       ear:["L'oreille",["Écoute ce qui est joué : un <b>accord</b>, un <b>intervalle</b> ou une <b>gamme</b>.","Choisis la bonne réponse parmi les propositions. Tu peux réécouter autant que tu veux (Espace).","Les catégories se débloquent avec les niveaux."]],
-      games:["Les jeux",["<b>Saute-notes</b> : tu es un piano qui court. Au-dessus de chaque croche est écrit un accord.","Joue cet accord, de préférence quand la note passe dans le <b>cercle</b> (bonus « Parfait ! ») : le piano saute tout seul. Les touches de l'accord s'allument sur le clavier si l'aide est activée.","Joue un <b>Do</b> pour démarrer ou rejouer. D'autres jeux arrivent bientôt."]],
+      games:["Les jeux",["<b>Saute-notes</b> : tu es un piano qui court. Au-dessus de chaque croche est écrit un accord.","Joue cet accord, de préférence quand la note passe dans le <b>cercle</b> (bonus « Parfait ! ») : le piano saute tout seul. Les touches de l'accord s'allument sur le clavier si l'aide est activée.","Joue un <b>{C}</b> pour démarrer ou rejouer. D'autres jeux arrivent bientôt."]],
       daily:["L'entraînement du jour",["Chaque jour, <b>10 exercices</b> mélangés, pris dans toutes les sections.","Les exercices ratés <b>reviennent</b> les jours suivants (répétition espacée) jusqu'à ce qu'ils soient acquis.","La <b>frise</b> en haut montre ton avancée. Va jusqu'au bout pour garder ta série."]]},
     secShort:{scales:"Gamme",chords:"Accord",harmony:"Harmonie",prog:"Progression",ear:"Oreille"},
     dpSubTxt:(d,n,due)=>d+" · "+n+" exercices"+(due?" · "+due+" à revoir":""),
@@ -1291,11 +1291,11 @@ const TXT = {
     gamesTitle:"Jeux", gamesSub:"Des défis au piano pour jouer plus vite et plus juste. Choisis un jeu, ou joue librement sur le piano en dessous.",
     freePlay:"Jeu libre", soon:"Bientôt",
     rnName:"Saute-notes", rnDesc:"Tu es un piano ! Joue l'accord affiché pour sauter par-dessus les croches et les doubles croches.", rnPlay:"Jouer", rnQuit:"Quitter",
-    rnStart:"Joue un Do pour démarrer",
+    get rnStart(){ return "Joue un "+CNAME()+" pour démarrer"; },
     gmDiffL:"Difficulté", gmContL:"Jouer", gmDiffs:{prog:"Progressive",slow:"Lent",mid:"Moyen",fast:"Rapide"}, gmConts:{chords:"Des accords",notes:"Des notes"},
     gmTap:"Touche ici pour démarrer.", gmReady:"Prêt ?", gmOver:"Terminé !", gmChord:"Accord à jouer", gmNote:"Note à jouer",
     spName:"Contre la montre", spHow:s=>"Joue un maximum de bonnes réponses en "+s+" secondes.", spDone:n=>n+" bonne"+(n>1?"s":"")+" réponse"+(n>1?"s":"")+" !",
-    mmName:"Mémoire musicale", mmHow:"Écoute, regarde les touches s'allumer, puis rejoue la suite.", mmListen:"Écoute…", mmYou:"À toi !", mmGood:"Bravo ! Une de plus…", mmRound:n=>"Tour "+n, mmDone:n=>n+" tour"+(n>1?"s":"")+" réussi"+(n>1?"s":"")+".", rnPerfect:"Parfait !", rnHelpLbl:"Montrer les notes", rnTap:"Touche le jeu pour démarrer", rnOverShort:"Aïe !", rnHow:"Joue l'accord écrit au-dessus de la note quand elle passe dans le cercle", rnOver:"Aïe ! Joue un Do pour rejouer", rnBestL:"Record", rnNew:"Nouveau record !",
+    mmName:"Mémoire musicale", mmHow:"Écoute, regarde les touches s'allumer, puis rejoue la suite.", mmListen:"Écoute…", mmYou:"À toi !", mmGood:"Bravo ! Une de plus…", mmRound:n=>"Tour "+n, mmDone:n=>n+" tour"+(n>1?"s":"")+" réussi"+(n>1?"s":"")+".", rnPerfect:"Parfait !", rnHelpLbl:"Montrer les notes", rnTap:"Touche le jeu pour démarrer", rnOverShort:"Aïe !", rnHow:"Joue l'accord écrit au-dessus de la note quand elle passe dans le cercle", get rnOver(){ return "Aïe ! Joue un "+CNAME()+" pour rejouer"; }, rnBestL:"Record", rnNew:"Nouveau record !",
     games:[["Saute-notes","Tu es un piano ! Joue l'accord (ou la note) affiché pour sauter par-dessus les croches.","runner"],["Contre la montre","Joue un maximum d'accords (ou de notes) avant la fin du chrono.","speed"],["Mémoire musicale","Écoute une suite de notes ou d'accords, puis rejoue-la. Elle s'allonge à chaque tour.","memory"],["Défi du jour","Le même défi chronométré pour tout le monde, avec un classement."]],
     degrees:"Degrés travaillés", optVL:"Enchaîner avec les renversements les plus proches", practiseH:"Tonalités travaillées", practiseP:"Progressions travaillées", practiseE:"Catégories travaillées",
     chordOfKey:"Accord de la tonalité", ofKey:" de ", inKey:"en ", progLbl:"Progression", vlOn:"renversements les plus proches", listenLbl:"Écoutez",
@@ -1309,7 +1309,7 @@ const TXT = {
     lockedHintP:n=>"Réussissez 3 fois une progression sans faute pour débloquer la tonalité suivante. Encore "+n+" à découvrir.",
     typeLockedH:l=>"Ces tonalités s'ouvrent au niveau "+l+".", typeLockedP:l=>"Cette progression s'ouvre au niveau "+l+".", typeLockedE:l=>"Cette catégorie s'ouvre au niveau "+l+".",
     earHint:"Touchez une case pour écouter un exemple.", right:"Bonne réponse !", wrong:"Réponse : ", answerLbl:"Réponse",
-    kbdHintE:"Clavier d'ordinateur : rangée Q S D F G H J K pour jouer des notes. Espace : réécouter · Entrée (ou un Do au clavier MIDI) : continuer · ⌫ : réessayer.", playSound:"Écouter",
+    get kbdHintE(){ return "Clavier d'ordinateur : rangée Q S D F G H J K pour jouer des notes. Espace : réécouter · Entrée (ou un "+CNAME()+" au clavier MIDI) : continuer · ⌫ : réessayer."; }, playSound:"Écouter",
     intNames:{m2:"Seconde mineure",M2:"Seconde majeure",m3:"Tierce mineure",M3:"Tierce majeure",P4:"Quarte juste",TT:"Triton",P5:"Quinte juste",m6:"Sixte mineure",M6:"Sixte majeure",m7:"Septième mineure",M7:"Septième majeure",P8:"Octave"},
     intShort:{m2:"2m",M2:"2M",m3:"3m",M3:"3M",P4:"4J",TT:"Triton",P5:"5J",m6:"6m",M6:"6M",m7:"7m",M7:"7M",P8:"8ve"},
     secScales:"Gammes", secChords:"Accords", inversions:"Renversements", chordToPlay:"Accord à jouer",
@@ -1323,11 +1323,11 @@ const TXT = {
     inOrder:"À la suite", random:"Aléatoire", sig:"armure", noAcc:"ni ♯ ni ♭", notes:"notes",
     perfect:"Parfait !", errors:n=>n+" faute"+(n>1?"s":""), inSecs:" en ", correct:"notes justes", missed:n=>n+" manquée"+(n>1?"s":""), missedP:n=>n+" manqué"+(n>1?"s":""), session:"Partie", scalesWord:n=>n+" gamme"+(n>1?"s":""),
     start:"Commencer", giveUp:"Je sèche, montrer", knew:"Continuer", review:"Réessayer", replay:"Écouter la gamme", next:"Suivante",
-    midiStartTip:"Joue un Do sur ton clavier MIDI pour commencer, puis pour continuer.", screenKeys:"Clavier à l'écran", midiOff:"Activer le MIDI", micOff:"Activer le micro", midiNone:"MIDI : aucun appareil", midiDev:"MIDI : ",
+    get midiStartTip(){ return "Joue un "+CNAME()+" sur ton clavier MIDI pour commencer, puis pour continuer."; }, screenKeys:"Clavier à l'écran", midiOff:"Activer le MIDI", micOff:"Activer le micro", midiNone:"MIDI : aucun appareil", midiDev:"MIDI : ",
     midiBlocked:"MIDI bloqué", midiNo:"MIDI non pris en charge", micOn:"Micro : à l'écoute", micBlocked:"Micro bloqué",
     blocked:"Le navigateur a refusé l'accès. Cliquez sur le cadenas à gauche de l'adresse du site pour autoriser le micro ou le MIDI, puis réessayez. Dans l'aperçu claude.ai, ils sont toujours bloqués : utilisez pianochallenges.com.",
     midiUnsupported:"Ce navigateur ne gère pas le MIDI (c'est le cas de Safari, de l'iPhone et de l'iPad). Utilise l'app Piano Challenges, Chrome ou Edge, ou le micro.",
-    kbdHint:"Clavier d'ordinateur : rangée Q S D F G H J K pour les touches blanches, rangée du dessus pour les noires. Espace : révéler / suivant · Entrée (ou un Do au clavier MIDI) : continuer · ⌫ : réessayer.",
+    get kbdHint(){ return "Clavier d'ordinateur : rangée Q S D F G H J K pour les touches blanches, rangée du dessus pour les noires. Espace : révéler / suivant · Entrée (ou un "+CNAME()+" au clavier MIDI) : continuer · ⌫ : réessayer."; },
     progress:"Progression", viewLabel:"Afficher", settings:"Réglages", practise:"Gammes travaillées", order:"Ordre", answerAfter:"Ou réglez le temps précis :",
     never:"jamais", notation:"Notation", direction:"Sens", optOct:"Finir sur l'octave", optLabels:"Noms des notes sur le clavier",
     midiBt:"Rechercher un clavier Bluetooth", midiFound:"Claviers détectés", midiNoneLong:"Aucun clavier détecté pour l'instant.",
@@ -1335,12 +1335,12 @@ const TXT = {
     mcUsbWeb:"Branche ton clavier en USB, puis active le MIDI. Il apparaît dans la liste.",
     mcBtApp:"Allume ton clavier, touche Rechercher et choisis-le dans la liste. Inutile de l'appairer dans les réglages Bluetooth.",
     mcBtWeb:"Appaire d'abord le clavier dans les réglages Bluetooth de ton ordinateur (sur Mac : Configuration audio et MIDI), puis active le MIDI.", midiTitle:"Clavier MIDI", midiInput:"Appareil", midiAll:"Tous les appareils", midiOffState:"MIDI non activé", midiCfgBtn:"Réglages du clavier MIDI",
-    optMidiC:"Un Do sur le clavier MIDI pour commencer et continuer", midiHint:"Le MIDI marche dans Chrome et Edge, en USB ou Bluetooth (pas dans Safari ni sur iPhone/iPad).",
+    get optMidiC(){ return "Un "+CNAME()+" sur le clavier MIDI pour commencer et continuer"; }, midiHint:"Le MIDI marche dans Chrome et Edge, en USB ou Bluetooth (pas dans Safari ni sur iPhone/iPad).",
     keyLbl:"Tonalité", allKeys:"Toutes", dirMix:"Les deux",
     kbLbl:"Clavier à l'écran", kbAuto:"Automatique (3 octaves)", keys:"touches", kbCustom:"Détecté", kbDetect:"Détecter mon clavier MIDI",
     calibLow:"Jouez la touche la plus grave de votre clavier MIDI.", calibHigh:"Maintenant, jouez la touche la plus aiguë.",
     calibListen:"Joue la touche la plus grave et la plus aiguë de ton clavier (dans l'ordre que tu veux), puis touche Valider.", calibLive:(n,a,b)=>n+" touches détectées : "+a+" → "+b+". Touche Valider quand c'est bon.", calibShort:"Pas assez de touches détectées : joue bien la plus grave et la plus aiguë.", kbValidate:"Valider", calibNeedMidi:"Activez d'abord le MIDI (bouton sous le clavier), puis recommencez.",
-    kbRangeTxt:(n,a,b)=>n+" touches, de "+a+" à "+b+". Le Do du milieu est "+(PC_FR[0])+"3.", kbDone:(n,a,b)=>"Clavier détecté : "+n+" touches ("+a+" – "+b+")",
+    kbRangeTxt:(n,a,b)=>n+" touches, de "+a+" à "+b+". Le "+CNAME()+" du milieu est "+CNAME()+"3.", kbDone:(n,a,b)=>"Clavier détecté : "+n+" touches ("+a+" – "+b+")",
     difficulty:"Temps pour jouer", dFree:"Libre", dEasy:"Facile", dMedium:"Moyen", dHard:"Difficile", dExpert:"Expert", noTimer:"Sans chrono", guideLbl:"Guide", guideOff:"non", guideP:"Aide progressive : le degré, puis le nom de l'accord, puis les touches (8 s chacun, ou Espace)", guidePShort:"progressif", hintBtn:"Un indice", guideNShort:"notes", guideKShort:"touches", guideNames:"Voir les notes avant de jouer", guideKeys:"Allumer les touches à jouer", guideXp:"Avec le guide, les exercices rapportent moitié moins d'XP.",
     optAuto:"Passer automatiquement à l'exercice suivant", optMidiSound:"Jouer le son des notes MIDI", optAll:"Tout débloquer : toutes les gammes, accords et tonalités, sans passer par les niveaux", unlockBtn:"Tout débloquer", relockBtn:"Revenir aux niveaux", reset:"Remettre la progression à zéro", confirmReset:"Confirmer : tout effacer ?",
     resetDone:"Progression remise à zéro", locked:"verrouillée", lvlShort:"Niv. ", level:"Niveau ", newScale:"Nouvelle gamme : ", newType:"Débloqué : ",
@@ -1384,7 +1384,7 @@ const TXT = {
       harmony:["Harmony",["Every key has <b>7 chords</b>, one per degree, from I to VII.","You are asked for a degree: <b>IV of C Major</b> is F Major. Play it.","Pick the <b>degrees</b> to practise at the top to focus on I, IV, V… It is the basis of songwriting."]],
       prog:["Progressions",["A progression is a <b>sequence of chords</b> that works, for example I – V – vi – IV.","Play the chords <b>in order</b>. With voice leading on, each chord is played in the inversion closest to the previous one, like a pianist.","At the end, listen to the progression to hear what you built."]],
       ear:["Ear training",["Listen to what is played: a <b>chord</b>, an <b>interval</b> or a <b>scale</b>.","Pick the right answer. Replay as often as you like (Space).","Categories unlock as you level up."]],
-      games:["Games",["<b>Note Jumper</b>: you are a running piano. A chord is written above each note.","Play that chord, ideally while the note crosses the <b>circle</b> (“Perfect!” bonus): the piano jumps by itself. The chord's keys light up on the keyboard when the hint is on.","Play a <b>C</b> to start or try again. More games are coming soon."]],
+      games:["Games",["<b>Note Jumper</b>: you are a running piano. A chord is written above each note.","Play that chord, ideally while the note crosses the <b>circle</b> (“Perfect!” bonus): the piano jumps by itself. The chord's keys light up on the keyboard when the hint is on.","Play a <b>{C}</b> to start or try again. More games are coming soon."]],
       daily:["Daily practice",["Every day, <b>10 mixed exercises</b> from all sections.","Exercises you miss <b>come back</b> on the following days (spaced repetition) until you know them.","The <b>timeline</b> at the top shows your progress. Finish it to keep your streak."]]},
     secShort:{scales:"Scale",chords:"Chord",harmony:"Harmony",prog:"Progression",ear:"Ear"},
     dpSubTxt:(d,n,due)=>d+" · "+n+" exercises"+(due?" · "+due+" to review":""),
@@ -1406,11 +1406,11 @@ const TXT = {
     gamesTitle:"Games", gamesSub:"Piano challenges to play faster and cleaner. Pick a game, or play freely on the piano below.",
     freePlay:"Free play", soon:"Soon",
     rnName:"Note Jumper", rnDesc:"You are a piano! Play the chord shown to jump over eighth and sixteenth notes.", rnPlay:"Play", rnQuit:"Quit",
-    rnStart:"Play a C to start",
+    get rnStart(){ return "Play a "+CNAME()+" to start"; },
     gmDiffL:"Difficulty", gmContL:"Play", gmDiffs:{prog:"Progressive",slow:"Slow",mid:"Medium",fast:"Fast"}, gmConts:{chords:"Chords",notes:"Notes"},
     gmTap:"Tap here to start.", gmReady:"Ready?", gmOver:"Done!", gmChord:"Chord to play", gmNote:"Note to play",
     spName:"Against the clock", spHow:s=>"Play as many right answers as you can in "+s+" seconds.", spDone:n=>n+" right answer"+(n>1?"s":"")+"!",
-    mmName:"Musical memory", mmHow:"Listen, watch the keys light up, then play the sequence back.", mmListen:"Listen…", mmYou:"Your turn!", mmGood:"Well done! One more…", mmRound:n=>"Round "+n, mmDone:n=>n+" round"+(n>1?"s":"")+" completed.", rnPerfect:"Perfect!", rnHelpLbl:"Show the notes", rnTap:"Tap the game to start", rnOverShort:"Ouch!", rnHow:"Play the chord written above the note as it crosses the circle", rnOver:"Ouch! Play a C to try again", rnBestL:"Best", rnNew:"New record!",
+    mmName:"Musical memory", mmHow:"Listen, watch the keys light up, then play the sequence back.", mmListen:"Listen…", mmYou:"Your turn!", mmGood:"Well done! One more…", mmRound:n=>"Round "+n, mmDone:n=>n+" round"+(n>1?"s":"")+" completed.", rnPerfect:"Perfect!", rnHelpLbl:"Show the notes", rnTap:"Tap the game to start", rnOverShort:"Ouch!", rnHow:"Play the chord written above the note as it crosses the circle", get rnOver(){ return "Ouch! Play a "+CNAME()+" to try again"; }, rnBestL:"Best", rnNew:"New record!",
     games:[["Note Jumper","You are a piano! Play the chord (or note) shown to jump over the notes.","runner"],["Against the clock","Play as many chords (or notes) as you can before time runs out.","speed"],["Musical memory","Listen to a sequence of notes or chords, then play it back. It grows every round.","memory"],["Daily challenge","The same timed challenge for everyone, with a leaderboard."]],
     degrees:"Degrees to practise", optVL:"Chain with the closest inversions (voice leading)", practiseH:"Keys to practise", practiseP:"Progressions to practise", practiseE:"Categories to practise",
     chordOfKey:"Chord of the key", ofKey:" of ", inKey:"in ", progLbl:"Progression", vlOn:"closest inversions", listenLbl:"Listen",
@@ -1424,7 +1424,7 @@ const TXT = {
     lockedHintP:n=>"Play a progression 3 times without mistakes to unlock the next key. "+n+" left to discover.",
     typeLockedH:l=>"These keys open at level "+l+".", typeLockedP:l=>"This progression opens at level "+l+".", typeLockedE:l=>"This category opens at level "+l+".",
     earHint:"Tap a tile to hear an example.", right:"Correct!", wrong:"Answer: ", answerLbl:"Answer",
-    kbdHintE:"Computer keyboard: A S D F G H J K row to play notes. Space: listen again · Enter: continue · ⌫: retry.", playSound:"Play",
+    get kbdHintE(){ return "Computer keyboard: A S D F G H J K row to play notes. Space: listen again · Enter (or a "+CNAME()+" on the MIDI keyboard): continue · ⌫: retry."; }, playSound:"Play",
     intNames:{m2:"Minor 2nd",M2:"Major 2nd",m3:"Minor 3rd",M3:"Major 3rd",P4:"Perfect 4th",TT:"Tritone",P5:"Perfect 5th",m6:"Minor 6th",M6:"Major 6th",m7:"Minor 7th",M7:"Major 7th",P8:"Octave"},
     intShort:{m2:"m2",M2:"M2",m3:"m3",M3:"M3",P4:"P4",TT:"TT",P5:"P5",m6:"m6",M6:"M6",m7:"m7",M7:"M7",P8:"P8"},
     secScales:"Scales", secChords:"Chords", inversions:"Inversions", chordToPlay:"Chord to play",
@@ -1438,11 +1438,11 @@ const TXT = {
     inOrder:"In order", random:"Random", sig:"key signature", noAcc:"no ♯ or ♭", notes:"notes",
     perfect:"Perfect!", errors:n=>n+" mistake"+(n>1?"s":""), inSecs:" in ", correct:"correct notes", missed:n=>n+" missed", missedP:n=>n+" missed", session:"Session", scalesWord:n=>n+" scale"+(n>1?"s":""),
     start:"Start", giveUp:"Show me", knew:"Continue", review:"Retry", replay:"Listen to the scale", next:"Next",
-    midiStartTip:"Play a C on your MIDI keyboard to start, and again to continue.", screenKeys:"On-screen keys", midiOff:"Enable MIDI", micOff:"Enable mic", midiNone:"MIDI: no device", midiDev:"MIDI: ",
+    get midiStartTip(){ return "Play a "+CNAME()+" on your MIDI keyboard to start, and again to continue."; }, screenKeys:"On-screen keys", midiOff:"Enable MIDI", micOff:"Enable mic", midiNone:"MIDI: no device", midiDev:"MIDI: ",
     midiBlocked:"MIDI blocked", midiNo:"MIDI not supported", micOn:"Mic: listening", micBlocked:"Mic blocked",
     blocked:"The browser refused access. Click the padlock left of the site address to allow the mic or MIDI, then try again. Inside the claude.ai preview they are always blocked: use pianochallenges.com.",
     midiUnsupported:"This browser has no MIDI support (Safari, iPhone and iPad don't). Use the Piano Challenges app, Chrome or Edge, or the mic.",
-    kbdHint:"Computer keyboard: A S D F G H J K row for white keys, the row above for black keys. Space: reveal / next · Enter: continue · ⌫: retry.",
+    get kbdHint(){ return "Computer keyboard: A S D F G H J K row for white keys, the row above for black keys. Space: reveal / next · Enter (or a "+CNAME()+" on the MIDI keyboard): continue · ⌫: retry."; },
     progress:"Progress", viewLabel:"Show", settings:"Settings", practise:"Scales to practise", order:"Order", answerAfter:"Or set the exact time:",
     never:"never", notation:"Note names", direction:"Direction", optOct:"End on the octave", optLabels:"Note names on the keys",
     midiBt:"Search for a Bluetooth keyboard", midiFound:"Detected keyboards", midiNoneLong:"No keyboard detected yet.",
@@ -1450,12 +1450,12 @@ const TXT = {
     mcUsbWeb:"Plug your keyboard in with USB, then enable MIDI. It shows up in the list.",
     mcBtApp:"Turn your keyboard on, tap Search and pick it in the list. No need to pair it in Bluetooth settings.",
     mcBtWeb:"First pair the keyboard in your computer's Bluetooth settings (on a Mac: Audio MIDI Setup), then enable MIDI.", midiTitle:"MIDI keyboard", midiInput:"Device", midiAll:"All devices", midiOffState:"MIDI not enabled", midiCfgBtn:"MIDI keyboard settings",
-    optMidiC:"A C on the MIDI keyboard starts and continues", midiHint:"MIDI works in Chrome and Edge, over USB or Bluetooth (not in Safari or on iPhone/iPad).",
+    get optMidiC(){ return "A "+CNAME()+" on the MIDI keyboard starts and continues"; }, midiHint:"MIDI works in Chrome and Edge, over USB or Bluetooth (not in Safari or on iPhone/iPad).",
     keyLbl:"Key", allKeys:"All", dirMix:"Both",
     kbLbl:"On-screen keyboard", kbAuto:"Automatic (3 octaves)", keys:"keys", kbCustom:"Detected", kbDetect:"Detect my MIDI keyboard",
     calibLow:"Play the lowest key of your MIDI keyboard.", calibHigh:"Now play the highest key.",
     calibListen:"Play the lowest and the highest key of your keyboard (any order), then tap Confirm.", calibLive:(n,a,b)=>n+" keys detected: "+a+" → "+b+". Tap Confirm when it's right.", calibShort:"Not enough keys detected: play the lowest and the highest key.", kbValidate:"Confirm", calibNeedMidi:"Enable MIDI first (button under the keyboard), then try again.",
-    kbRangeTxt:(n,a,b)=>n+" keys, from "+a+" to "+b+". Middle C is C4.", kbDone:(n,a,b)=>"Keyboard detected: "+n+" keys ("+a+" – "+b+")",
+    kbRangeTxt:(n,a,b)=>n+" keys, from "+a+" to "+b+". Middle "+CNAME()+" is "+CNAME()+"4.", kbDone:(n,a,b)=>"Keyboard detected: "+n+" keys ("+a+" – "+b+")",
     difficulty:"Time to play", dFree:"Free", dEasy:"Easy", dMedium:"Medium", dHard:"Hard", dExpert:"Expert", noTimer:"No timer", guideLbl:"Guide", guideOff:"off", guideP:"Step-by-step help: the degree, then the chord name, then the keys (8 s each, or Space)", guidePShort:"step by step", hintBtn:"A hint", guideNShort:"notes", guideKShort:"keys", guideNames:"Show the notes before playing", guideKeys:"Light up the keys to play", guideXp:"With the guide on, exercises earn half the XP.",
     optAuto:"Move on to the next exercise automatically", optMidiSound:"Play sound for MIDI notes", optAll:"Unlock everything: every scale, chord and key, without going through the levels", unlockBtn:"Unlock everything", relockBtn:"Back to levels", reset:"Reset progress", confirmReset:"Confirm: erase everything?",
     resetDone:"Progress reset", locked:"locked", lvlShort:"Lvl ", level:"Level ", newScale:"New scale: ", newType:"Unlocked: ",
@@ -1473,6 +1473,7 @@ const NAT = [0,2,4,5,7,9,11];
 const NAME_FR = {C:"Do",D:"Ré",E:"Mi",F:"Fa",G:"Sol",A:"La",B:"Si"};
 const PC_FR = ["Do","Do♯","Ré","Ré♯","Mi","Fa","Fa♯","Sol","Sol♯","La","La♯","Si"];
 const PC_EN = ["C","C♯","D","D♯","E","F","F♯","G","G♯","A","A♯","B"];
+function CNAME(){ return (S.settings.notation==="fr"?PC_FR:PC_EN)[0]; } // name of C in the current notation, for "play a C" texts
 const TYPES = [
   {id:"major", lvl:1, fr:"Majeur",            frP:"Majeures",        en:"Major",            enP:"Major",            iv:[0,2,4,5,7,9,11]},
   {id:"minor", lvl:1, fr:"Mineur",            frP:"Mineures",        en:"Minor",            enP:"Minor",    iv:[0,2,3,5,7,8,10]},
@@ -2518,7 +2519,7 @@ function renderActions(){
     if(k){ const kb=document.createElement("kbd"); kb.textContent=k; b.appendChild(kb); } b.onclick=fn; a.appendChild(b); };
   const sp=()=>{ const s=document.createElement("span"); s.className="spacer"; a.appendChild(s); };
   const kb=hasKeyboard(), space=kb?(S.settings.lang==="fr"?"Espace":"Space"):null, enter=kb?(S.settings.lang==="fr"?"Entrée":"Enter"):null;
-  const cKey = midiMode() && S.settings.midiC!==false ? (S.settings.notation==="fr"?"Do":"C") : null;
+  const cKey = midiMode() && S.settings.midiC!==false ? CNAME() : null;
   if(phase==="idle" && page==="daily" && !game) return; // the header already has "Start"
   if(phase==="idle") mk(t("start"),"primary big",()=>startRound(),cKey||space);
   else if(phase==="listening" && cur.sec==="ear") mk(tx("replay"),"primary",()=>playScale(0),space);
@@ -3295,7 +3296,7 @@ function showIntro(key){
   S.introSeen=S.introSeen||{}; S.introSeen[k]=true; save();
   $("introTitle").textContent=d[0];
   $("introIc").innerHTML = k==="daily" ? $("dailyCard").querySelector("svg").outerHTML : SEC_ICON(k);
-  $("introSteps").innerHTML=d[1].map(x=>"<li><span>"+x+"</span></li>").join("");
+  $("introSteps").innerHTML=d[1].map(x=>"<li><span>"+x.replace(/\{C\}/g,CNAME())+"</span></li>").join("");
   openMod("introModal");
 }
 function autoIntro(k){ if(!(S.introSeen||{})[k]) setTimeout(()=>showIntro(k),250); }
