@@ -342,7 +342,7 @@ body{margin:0;padding:0;overflow:hidden}
 .ptile-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:14px}
 .ptile{display:flex;flex-direction:column;gap:10px;text-align:left;border:0;border-radius:24px;padding:16px 16px 18px;color:#fff;background:var(--tc,#555);min-width:0;transition:transform .15s;font-family:var(--f-body)}
 .ptile:hover{transform:translateY(-3px)}
-.ptile.soon{cursor:default;opacity:.65} .ptile.soon:hover{transform:none}
+.ptile.soon{cursor:default;filter:saturate(.3)} .ptile.soon:hover{transform:none} /* greyed, not translucent: the white text keeps its contrast */
 .ptile .art{aspect-ratio:16/9;max-width:100%;border-radius:12px;background:#111016;box-shadow:0 10px 26px #0005,inset 0 0 0 3px #26242e;display:grid;place-items:center;position:relative;overflow:hidden}
 .ptile .art::after{content:"";position:absolute;left:4%;right:4%;bottom:0;height:22%;background:repeating-linear-gradient(90deg,#2b2a31 0 calc(100%/14 - 2px),transparent 0 calc(100%/14));border-radius:3px 3px 0 0}
 .ptile .art svg{width:38%;height:38%;fill:none;stroke:#fff;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;filter:drop-shadow(0 0 16px var(--tc));position:relative;top:-6%}
