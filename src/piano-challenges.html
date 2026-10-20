@@ -3419,7 +3419,9 @@ async function enableMidi(){
   if(!navigator.requestMIDIAccess){ $("midiBtn").classList.add("err"); $("midiTxt").textContent=t("midiNo"); notice(t("midiUnsupported")); return; }
   try{
     const acc=await navigator.requestMIDIAccess(); midiAcc=acc;
-    const bind=()=>{ const names=[]; acc.inputs.forEach(inp=>{ names.push(inp.name); inp.onmidimessage=ev=>{
+    const bind=()=>{ const names=[]; acc.inputs.forEach(inp=>{
+        if(inp.state && inp.state!=="connected"){ inp.onmidimessage=null; return; } // Chrome keeps unplugged ports in the map
+        names.push(inp.name); inp.onmidimessage=ev=>{
         if(S.settings.midiInput && inp.name!==S.settings.midiInput) return;
         const [st,note,vel]=ev.data;
         if(page==="play"){ if((st&0xf0)===0x90 && vel>0) playSend("noteon",note,vel/127); else if((st&0xf0)===0x80 || ((st&0xf0)===0x90 && vel===0)) playSend("noteoff",note); return; }
