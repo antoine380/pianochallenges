@@ -2154,7 +2154,11 @@ function success(){
   phase="success"; cancelAnimationFrame(raf);
   const secs=(performance.now()-startT)/1000, remaining=deadline?Math.max(0,(deadline-performance.now())/1000):0, perfect=errors===0;
   combo=perfect?combo+1:0; if(game) game.maxCombo=Math.max(game.maxCombo||0,combo);
-  let gain=10+Math.round(Math.min(remaining,10)*2)+(perfect?5:0)+Math.min(combo,10)*2;
+  // time bonus: share of the allotted time still left (0..10), weighted by the difficulty (5 s x1.5, 10 s x1.2, 20 s x1); no timer: +4 when answered within 8 s
+  let tb=0;
+  if(deadline){ const per=chSeq()?seq.length:1, d=S.settings.delay||1, coef=d<=5?1.5:d<=10?1.2:1; tb=Math.round(Math.round(10*remaining/(d*per))*coef); }
+  else if(secs<8) tb=4;
+  let gain=10+tb+(perfect?5:0)+Math.min(combo,10)*2;
   if(cur.sec==="scales" && seq.length>=8) gain+=2;
   if(cur.sec==="chords" && cur.inv) gain+=3;
   if(cur.sec==="prog") gain+=seq.length*3+(S.settings.vl?6:0);
