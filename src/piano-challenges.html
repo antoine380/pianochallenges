@@ -3458,7 +3458,7 @@ $("micBtn").addEventListener("click", async ()=>{
   const c=audio(); if(!c) return;
   try{
     const stream=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:false,noiseSuppression:false,autoGainControl:false}});
-    const src=c.createMediaStreamSource(stream), an=c.createAnalyser(); an.fftSize=2048; src.connect(an);
+    const src=c.createMediaStreamSource(stream), an=c.createAnalyser(); an.fftSize=1024; src.connect(an); // 1024 samples: enough down to ~100 Hz, autocorrelation 4× cheaper
     const buf=new Float32Array(an.fftSize); let cand=null, count=0, lastEmit=null;
     micStream=stream; micOn=true; $("micBtn").classList.add("on"); $("micBtn").classList.remove("err"); $("micTxt").textContent=t("micOn"); notice("");
     micTimer=setInterval(()=>{
@@ -3467,7 +3467,7 @@ $("micBtn").addEventListener("click", async ()=>{
       if(performance.now()<micMuteUntil) return;
       const m=Math.round(69+12*Math.log2(f/440));
       if(m===cand) count++; else { cand=m; count=1; }
-      if(count===3 && m%12!==lastEmit){ lastEmit=m%12; flashKey(m,"k-hit",150); midiIn(m); }
+      if(count===3 && m!==lastEmit){ lastEmit=m; flashKey(m,"k-hit",150); midiIn(m); } // compare the full note: Do4 then Do5 are two notes
     },25);
   }catch(err){ $("micBtn").classList.add("err"); $("micTxt").textContent=t("micBlocked"); notice(t("blocked")); }
   renderInputUI();
