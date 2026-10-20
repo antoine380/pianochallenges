@@ -210,7 +210,7 @@ fr:{midiScreen:"Clavier à l'écran",midiConnect:"Connecter un clavier MIDI",mid
  heroT:"Il y a une raison pour qu'on dise « jouer » du piano",heroP:"Branche n'importe quel clavier MIDI, ou joue sur celui de l'écran. Les notes tombent sur les touches ; à toi de les attraper au bon moment.",
  heroSongsT:"Joue tes premiers morceaux",heroSongsP:"Les notes tombent sur les touches ; en mode attente, le morceau patiente jusqu'à ce que tu joues la bonne. Choisis ta vitesse, affiche les noms des notes et les doigtés.",
  heroGamesT:"Une compétence par jeu",heroGamesP:"Repérer les notes, tenir le tempo, les accords, les gammes, l'oreille et la lecture : chaque jeu entraîne une seule chose, sur ton clavier.",
- songsH:"Morceaux",songsSub:"Domaine public · à ton rythme",gamesH:"Jeux",gamesSub:"Une compétence par jeu",
+ freeT:"Jeu libre",freeK:"Sans partition",freeD:"Joue ce que tu veux : chaque note s'allume dans sa couleur.",songsH:"Morceaux",songsSub:"Domaine public · à ton rythme",gamesH:"Jeux",gamesSub:"Une compétence par jeu",
  foot:"Prototype. Le son est un synthé intégré ; l'app finale utilisera le piano échantillonné Salamander. Clavier d'ordinateur : Q S D F G H J K L pour les blanches, Z E T Y U O P pour les noires.",
  back:"Retour",kbd:"Clavier",lives:"Vies",time:"Temps",streak:"Série",score:"Score",speed:"Vitesse",names:"Notes",fing:"Doigts",wait:"Attente",listen:"Écouter",metro:"Métro",hint:"Indice",replay:"Rejouer",
  level:"Niveau",levels:['','Débutant','Facile','Intermédiaire'],trad:"Traditionnel",tradMozart:"Traditionnel (var. Mozart)",notes:"notes",record:"Record",play:"Jouer",library:"Bibliothèque",game:"Jeu",
@@ -233,7 +233,7 @@ en:{midiScreen:"On-screen keyboard",midiConnect:"Connect a MIDI keyboard",midiHo
  heroT:"There is a reason we say we \"play\" the piano",heroP:"Plug in any MIDI keyboard, or play the one on screen. Notes fall onto the keys; catch them at the right moment.",
  heroSongsT:"Play your first songs",heroSongsP:"Notes fall onto the keys; in wait mode, the song waits until you play the right one. Pick your speed, show note names and fingering.",
  heroGamesT:"One skill per game",heroGamesP:"Finding notes, keeping the beat, chords, scales, ear and reading: each game trains one thing, on your keyboard.",
- songsH:"Songs",songsSub:"Public domain · at your own pace",gamesH:"Games",gamesSub:"One skill per game",
+ freeT:"Free play",freeK:"No score",freeD:"Play anything: every note lights up in its colour.",songsH:"Songs",songsSub:"Public domain · at your own pace",gamesH:"Games",gamesSub:"One skill per game",
  foot:"Prototype. The sound is a built-in synth; the final app will use the sampled Salamander piano. Computer keyboard: A S D F G H J K L for the white keys, W E T Y U O P for the black keys.",
  back:"Back",kbd:"Keyboard",lives:"Lives",time:"Time",streak:"Streak",score:"Score",speed:"Speed",names:"Names",fing:"Fingers",wait:"Wait",listen:"Listen",metro:"Metro",hint:"Hint",replay:"Replay",
  level:"Level",levels:['','Beginner','Easy','Intermediate'],trad:"Traditional",tradMozart:"Traditional (Mozart var.)",notes:"notes",record:"Best",play:"Play",library:"Library",game:"Game",
@@ -418,6 +418,9 @@ function tablet(x){
   return`<div class="tab"><div class="floor">${floor}</div><div class="mini">${mini}</div></div>`}
 function renderHome(){
   const g=$('songGrid');g.innerHTML='';let total=0;
+  if(embedded){const f=document.createElement('button');f.className='tile';f.style.background='linear-gradient(160deg,#9b7bff,#5b3fe0)';
+    f.innerHTML=tablet({notes:[{m:60,s:0,d:1},{m:64,s:1.2,d:1},{m:67,s:2.4,d:1},{m:72,s:3.6,d:1}],lit:[0,4,7]})+`<div class="tile-body"><span class="lvl">${tr('freeK')}</span><h3>${tr('freeT')}</h3><div class="meta"><span>${tr('freeD')}</span></div></div>`;
+    f.addEventListener('click',()=>{try{window.parent.postMessage({source:'clavio',type:'free'},location.origin==='null'?'*':location.origin)}catch(e){}});g.appendChild(f)}
   SONGS.forEach(s=>{const b=best[s.id]||0;total+=b;
     const c=document.createElement('button');c.className='tile';c.style.background=TONE[s.tone];
     const mins=Math.round(s.end/s.bpm*60);
