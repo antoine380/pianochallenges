@@ -1,0 +1,12 @@
+minilab_02 https://medias.arturia.net/cdn-cgi/image/format=auto,quality=80/images/products/minilab-3/gallery/minilab3_02.jpg
+minilab_03 https://medias.arturia.net/cdn-cgi/image/format=auto,quality=80/images/products/minilab-3/gallery/minilab3_03.jpg
+minilab_04 https://medias.arturia.net/cdn-cgi/image/format=auto,quality=80/images/products/minilab-3/gallery/minilab3_04.jpg
+minilab_05 https://medias.arturia.net/cdn-cgi/image/format=auto,quality=80/images/products/minilab-3/gallery/minilab3_05.jpg
+minilab_06 https://medias.arturia.net/cdn-cgi/image/format=auto,quality=80/images/products/minilab-3/gallery/minilab3_06.jpg
+minilab_07 https://medias.arturia.net/cdn-cgi/image/format=auto,quality=80/images/products/minilab-3/gallery/minilab3_07.jpg
+minilab_08 https://medias.arturia.net/cdn-cgi/image/format=auto,quality=80/images/products/minilab-3/gallery/minilab3_08.jpg
+minilab_09 https://medias.arturia.net/cdn-cgi/image/format=auto,quality=80/images/products/minilab-3/gallery/minilab3_09.jpg
+minilab_big https://medias.arturia.net/cdn-cgi/image/format=auto,quality=80/images/products/minilab-3/big.jpg
+minilab_white https://medias.arturia.net/cdn-cgi/image/quality=80/images/products/minilab-3-white/webstore/01.png
+mvave_site https://themvave.com/wp-content/uploads/2026/04/m-vave-musical-instruments-33.jpg
+korg49_kraft https://kraftmusic.com/cdn/shop/files/kor-mkeyair49.jpg?v=1695405361&width=1000

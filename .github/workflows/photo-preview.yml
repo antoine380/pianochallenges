@@ -1,0 +1,18 @@
+name: Photo preview
+on:
+  push:
+    branches: [photo-preview]
+    paths: [candidates/list.txt]
+permissions:
+  contents: write
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+          UA="Mozilla/5.0 (Macintosh; Intel Mac OS X 14_0) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.0 Safari/605.1.15"
+          while read -r name url; do curl -sSL -A "$UA" -o "candidates/$name.img" "$url" || echo "fail $name"; done < candidates/list.txt
+          ls -la candidates
+          git config user.name "github-actions[bot]"; git config user.email "41898732+github-actions[bot]@users.noreply.github.com"
+          git add candidates && git commit -m "candidates" && git push
