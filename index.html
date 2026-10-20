@@ -2118,7 +2118,8 @@ function wrongNote(m){
 function noteIn(m){
   if(page==="play"){ playSend("noteon",m); setTimeout(()=>playSend("noteoff",m),400); return; } // screen keyboard / mic: no release event, so release after 400 ms
   if(!["practice","daily","games"].includes(page)) return; // no exercise on the other pages: nothing to feed
-  if(helpOpen || setOpen || openMods.length) return;
+  if(midiOpen){ pressKey(m); flashKey(m,"k-hit"); return; } // MIDI window: the notes only test the keyboard
+  if(anyModal()) return; // help, end of game, info pages, any other window: the round is paused
   if(page==="games"){ pressKey(m); flashKey(m,"k-hit"); runnerNote(m); return; }
   if(endOpen) return;
   pressKey(m);
