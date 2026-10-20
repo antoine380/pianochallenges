@@ -972,7 +972,7 @@ html.native .midi-body [data-i="midiHint"]{display:none}
   </section>
 
   <section class="playpanel" id="playPanel" hidden>
-    <iframe id="playFrame" title="Play" tabindex="-1"></iframe>
+    <iframe id="playFrame" title="Play"></iframe>
   </section>
 
   <section class="runner" id="runner" hidden>
@@ -3065,7 +3065,7 @@ let returnPage=null, guestPass=false;
 // Page Play: the Clavio prototype (play/index.html) runs in a frame; notes played here are forwarded to it.
 function playSend(type,m,vel){ const f=$("playFrame"); if(f && f.contentWindow) f.contentWindow.postMessage({source:"piano-challenges",type,m,vel},"*"); }
 let playHash="#songs"; // #songs = song library, #games = Play games, #game=<id> = that game
-function playOpen(){ const f=$("playFrame"); const src="play/index.html"+playHash; if(f.getAttribute("src")!==src) f.src=src; $("playPanel").hidden=false; }
+function playOpen(){ const f=$("playFrame"); const src="play/index.html"+playHash; if(f.getAttribute("src")!==src){ f.onload=()=>{ if(page==="play" && !anyWin()) f.focus(); }; f.src=src; } $("playPanel").hidden=false; }
 function openPlayWith(h){ playHash=h; if(page==="play"){ playOpen(); setNav(); } else openPage("play"); }
 function goMode(m){ closeDrawer(); if(m==="learn") openPage("learn"); else if(m==="play") openPlayWith("#songs"); else openPage("games"); }
 document.querySelectorAll("[data-mode]").forEach(b=>b.addEventListener("click",()=>{ const m=b.dataset.mode; if(page==="daily" && game && game.daily){ guardLeave(()=>{ game=null; goMode(m); }); return; } goMode(m); }));
