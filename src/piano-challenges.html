@@ -322,38 +322,48 @@ body{margin:0;padding:0;overflow:hidden}
 .nav-item:hover{color:var(--ink);background:var(--surface-2)}
 .nav-item[aria-current="page"]{background:var(--ink);color:var(--bg)}
 .side-nav{display:flex;flex-direction:column;gap:2px}
-/* Three modes: LEARN / PLAY / GAMES. LEARN unfolds its sections underneath. */
+/* Three modes, one color each: GAMES (green) / PLAY (violet) / LEARN (coral). The mode pages are tile grids in the Play style. */
+:root{--m-games:#3fae7c;--m-play:#7a5cf5;--m-learn:#f26a5e}
 .mode-nav{display:flex;flex-direction:column;gap:6px}
-.mode-item{display:flex;align-items:center;gap:12px;width:100%;border:1px solid var(--line);background:var(--surface);border-radius:14px;padding:9px 12px;text-align:left;color:var(--ink);min-height:54px}
-.mode-item svg{width:24px;height:24px;flex:none;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.mode-item{display:flex;align-items:center;gap:12px;width:100%;border:1px solid var(--line);background:var(--surface);border-radius:14px;padding:8px 10px;text-align:left;color:var(--ink);min-height:56px}
+.mode-item .mi{width:38px;height:38px;border-radius:12px;background:var(--mc);color:#fff;display:grid;place-items:center;flex:none}
+.mode-item .mi svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
 .mode-item .mt{display:flex;flex-direction:column;min-width:0;line-height:1.15}
 .mode-item .mt b{font-family:var(--f-display);font-weight:800;font-size:.95rem;letter-spacing:.1em;text-transform:uppercase}
 .mode-item .mt small{font-size:.76rem;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.mode-item:hover{background:var(--surface-2)}
-.mode-item[aria-current="page"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
-.mode-item[aria-current="page"] .mt small{color:var(--bg);opacity:.72}
-#secTabs{margin:2px 0 0 16px;padding-left:10px;border-left:2px solid var(--line)}
-.side:not([data-mode="learn"]) #secTabs{display:none}
-#secTabs [data-v="games"], #secTabs [data-v="play"]{display:none!important}
-.side.collapsed .mode-item{justify-content:center;padding:10px 0} .side.collapsed .mode-item .mt{display:none}
-.side.collapsed #secTabs{margin-left:0;padding-left:0;border:0}
-/* Hub: the start screen that picks a mode */
+.mode-item:hover{border-color:var(--mc)}
+.mode-item[aria-current="page"]{background:var(--mc);border-color:var(--mc);color:#fff}
+.mode-item[aria-current="page"] .mi{background:#ffffff2e}
+.mode-item[aria-current="page"] .mt small{color:#fff;opacity:.8}
+#secTabs{display:none!important}
+.side.collapsed .mode-item{justify-content:center;padding:8px 0;min-height:52px} .side.collapsed .mode-item .mt{display:none}
+/* Tiles (Play style): colored card, dark "screen" with the icon, name, line, button */
+.ptile-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:14px}
+.ptile{display:flex;flex-direction:column;gap:10px;text-align:left;border:0;border-radius:24px;padding:16px 16px 18px;color:#fff;background:var(--tc,#555);min-width:0;transition:transform .15s;font-family:var(--f-body)}
+.ptile:hover{transform:translateY(-3px)}
+.ptile.soon{cursor:default;opacity:.65} .ptile.soon:hover{transform:none}
+.ptile .art{aspect-ratio:16/9;max-width:100%;border-radius:12px;background:#111016;box-shadow:0 10px 26px #0005,inset 0 0 0 3px #26242e;display:grid;place-items:center;position:relative;overflow:hidden}
+.ptile .art::after{content:"";position:absolute;left:4%;right:4%;bottom:0;height:22%;background:repeating-linear-gradient(90deg,#2b2a31 0 calc(100%/14 - 2px),transparent 0 calc(100%/14));border-radius:3px 3px 0 0}
+.ptile .art svg{width:38%;height:38%;fill:none;stroke:#fff;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;filter:drop-shadow(0 0 16px var(--tc));position:relative;top:-6%}
+.ptile .pk{font-family:var(--f-mono);font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;opacity:.85}
+.ptile h3{margin:0;font-family:var(--f-display);font-weight:800;font-size:1.3rem;letter-spacing:-.015em;line-height:1.15}
+.ptile p{margin:0;font-size:.88rem;opacity:.92;line-height:1.4}
+.ptile .go{margin-top:auto;align-self:flex-start;border-radius:999px;padding:8px 14px;background:#fff;color:#161920;font-family:var(--f-display);font-weight:700;font-size:.85rem;border:0}
+.ptile .rec{font-family:var(--f-mono);font-size:.78rem;opacity:.9}
+/* Mode pages: hub, learn, games */
 [data-page="hub"] :is(.picker,.stage,.gamebar,.prompt-row,.timeline,.slots,.answers,.actions,.hint,.notice,.pane-head){display:none!important}
-.hub{flex:1;min-height:0;display:flex;flex-direction:column;justify-content:center;gap:20px;padding-block:8px}
-.hub-h h2{font-family:var(--f-display);font-weight:800;font-size:clamp(1.6rem,3.2vw,2.4rem);letter-spacing:-.025em;line-height:1.05;margin:0;text-wrap:balance}
-.hub-h p{margin:6px 0 0;color:var(--muted);max-width:60ch}
+[data-page="learn"] :is(.picker,.stage,.gamebar,.prompt-row,.timeline,.slots,.answers,.actions,.hint,.notice,.pane-head){display:none!important}
+.mode-page{flex:none;display:flex;flex-direction:column;gap:18px;padding-block:6px 10px}
+.mode-page.hub{flex:1;min-height:0;justify-content:center}
+.mode-h h2{font-family:var(--f-display);font-weight:800;font-size:clamp(1.5rem,3vw,2.3rem);letter-spacing:-.025em;line-height:1.05;margin:0;text-wrap:balance}
+.mode-h p{margin:6px 0 0;color:var(--muted);max-width:62ch}
 .hub-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
-.hub-card{display:flex;flex-direction:column;gap:10px;text-align:left;border:1px solid var(--line);border-radius:20px;padding:20px;background:var(--surface);color:var(--ink);min-height:230px;transition:transform .15s,border-color .15s}
-.hub-card:hover{transform:translateY(-2px);border-color:var(--ink)}
-.hub-card .hi{width:52px;height:52px;border-radius:15px;display:grid;place-items:center;color:#fff}
-.hub-card .hi svg{width:28px;height:28px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
-.hub-card b{font-family:var(--f-display);font-weight:800;font-size:1.55rem;letter-spacing:.06em}
-.hub-card p{margin:0;color:var(--muted);font-size:.92rem;line-height:1.45}
-.hub-card .tags{margin-top:auto;font-family:var(--f-mono);font-size:.72rem;color:var(--muted);line-height:1.6}
-.hub-learn .hi{background:var(--accent)} .hub-play .hi{background:#7a5cf5} .hub-games .hi{background:var(--good)}
-.gc-head{margin:14px 0 0;font-family:var(--f-display);font-weight:800;font-size:1.05rem;display:flex;align-items:baseline;gap:10px}
+.hub-grid .ptile h3{font-size:1.7rem;letter-spacing:.06em}
+.hub-grid .ptile .tags{font-family:var(--f-mono);font-size:.72rem;opacity:.85;line-height:1.6}
+#gamesPanel .pane-head{display:none!important}
+.gc-head{margin:6px 0 0;font-family:var(--f-display);font-weight:800;font-size:1.05rem;display:flex;align-items:baseline;gap:10px}
 .gc-head small{font-family:var(--f-body);font-weight:400;color:var(--muted);font-size:.84rem}
-@media (max-width:760px){.hub-grid{grid-template-columns:1fr} .hub{justify-content:flex-start} .hub-card{min-height:0}}
+@media (max-width:760px){.ptile-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px} .ptile-grid .ptile .art{display:none} .ptile-grid .ptile{padding:12px 12px 14px;gap:4px} .ptile-grid .ptile h3{font-size:1rem} .ptile-grid .ptile p{font-size:.76rem} .ptile-grid .ptile .go{padding:6px 11px;font-size:.78rem;margin-top:6px} .hub-grid{grid-template-columns:1fr;gap:10px} .mode-page.hub{justify-content:flex-start} .hub-grid .ptile .art{display:none} .hub-grid .ptile{padding:14px 16px;gap:4px} .hub-grid .ptile h3{font-size:1.3rem} .hub-grid .ptile .tags{display:none}}
 .side .lvl-card{margin-top:auto}
 .side-foot{display:flex;flex-direction:column;gap:2px;padding-top:10px;border-top:1px solid var(--line)}
 /* collapsed rail */
@@ -817,9 +827,9 @@ html.native .midi-body [data-i="midiHint"]{display:none}
   </div>
 
   <nav class="mode-nav" id="modeNav" aria-label="Modes">
-    <button class="mode-item" type="button" data-mode="learn"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6.5A2.5 2.5 0 0 1 6.5 4H11v16H6.5A2.5 2.5 0 0 0 4 22zM20 6.5A2.5 2.5 0 0 0 17.5 4H13v16h4.5A2.5 2.5 0 0 1 20 22z"/></svg><span class="mt"><b>Learn</b><small data-i="modeLearnSub"></small></span></button>
-    <button class="mode-item" type="button" data-mode="play"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.5l12 7.5-12 7.5z"/></svg><span class="mt"><b>Play</b><small data-i="modePlaySub"></small></span></button>
-    <button class="mode-item" type="button" data-mode="games"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2.5" y="7" width="19" height="11" rx="5.5"/><path d="M7.5 10.5v4M5.5 12.5h4"/><circle cx="15.5" cy="11.2" r=".9"/><circle cx="17.8" cy="13.8" r=".9"/></svg><span class="mt"><b>Games</b><small data-i="modeGamesSub"></small></span></button>
+    <button class="mode-item" type="button" data-mode="games" style="--mc:var(--m-games)"><span class="mi"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2.5" y="7" width="19" height="11" rx="5.5"/><path d="M7.5 10.5v4M5.5 12.5h4"/><circle cx="15.5" cy="11.2" r=".9"/><circle cx="17.8" cy="13.8" r=".9"/></svg></span><span class="mt"><b>games</b><small data-i="modeGamesSub"></small></span></button>
+    <button class="mode-item" type="button" data-mode="play" style="--mc:var(--m-play)"><span class="mi"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.5l12 7.5-12 7.5z"/></svg></span><span class="mt"><b>play</b><small data-i="modePlaySub"></small></span></button>
+    <button class="mode-item" type="button" data-mode="learn" style="--mc:var(--m-learn)"><span class="mi"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6.5A2.5 2.5 0 0 1 6.5 4H11v16H6.5A2.5 2.5 0 0 0 4 22zM20 6.5A2.5 2.5 0 0 0 17.5 4H13v16h4.5A2.5 2.5 0 0 1 20 22z"/></svg></span><span class="mt"><b>learn</b><small data-i="modeLearnSub"></small></span></button>
   </nav>
   <nav class="side-nav" id="secTabs" aria-label="Sections">
     <button class="nav-item" type="button" data-v="chords"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="7" cy="17" r="2.6"/><circle cx="7" cy="11" r="2.6"/><circle cx="7" cy="5" r="2.6"/><path d="M9.6 17V5M13 6h8M13 12h8M13 18h8"/></svg><span class="lbl" data-i="secChords"></span></button>
@@ -903,17 +913,23 @@ html.native .midi-body [data-i="midiHint"]{display:none}
   </section>
 
   <section class="games" id="gamesPanel" hidden>
+    <div class="mode-h"><h2 data-i="gamesTitle"></h2><p data-i="gamesSub"></p></div>
     <div class="pane-head"><div><h2 class="ph-title"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2.5" y="7" width="19" height="11" rx="5.5"/><path d="M7.5 10.5v4M5.5 12.5h4"/><circle cx="15.5" cy="11.2" r=".9"/><circle cx="17.8" cy="13.8" r=".9"/></svg><span data-i="gamesTitle"></span></h2><p data-i="gamesSub"></p></div><button class="how-btn" type="button" data-intro="games"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v5.5"/><circle cx="12" cy="7.8" r=".6"/></svg><span data-i="howBtn"></span></button></div>
-    <div class="game-cards" id="gameCards"></div>
+    <div class="ptile-grid" id="gameCards"></div>
   </section>
 
-  <section class="hub" id="hubPanel" hidden>
-    <div class="hub-h"><h2 data-i="hubTitle"></h2><p data-i="hubSub"></p></div>
+  <section class="mode-page hub" id="hubPanel" hidden>
+    <div class="mode-h"><h2 data-i="hubTitle"></h2><p data-i="hubSub"></p></div>
     <div class="hub-grid">
-      <button class="hub-card hub-learn" type="button" data-mode="learn"><span class="hi"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6.5A2.5 2.5 0 0 1 6.5 4H11v16H6.5A2.5 2.5 0 0 0 4 22zM20 6.5A2.5 2.5 0 0 0 17.5 4H13v16h4.5A2.5 2.5 0 0 1 20 22z"/></svg></span><b>LEARN</b><p data-i="hubLearn"></p><span class="tags" data-i="hubLearnTags"></span></button>
-      <button class="hub-card hub-play" type="button" data-mode="play"><span class="hi"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.5l12 7.5-12 7.5z"/></svg></span><b>PLAY</b><p data-i="hubPlay"></p><span class="tags" data-i="hubPlayTags"></span></button>
-      <button class="hub-card hub-games" type="button" data-mode="games"><span class="hi"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2.5" y="7" width="19" height="11" rx="5.5"/><path d="M7.5 10.5v4M5.5 12.5h4"/><circle cx="15.5" cy="11.2" r=".9"/><circle cx="17.8" cy="13.8" r=".9"/></svg></span><b>GAMES</b><p data-i="hubGames"></p><span class="tags" data-i="hubGamesTags"></span></button>
+      <button class="ptile" type="button" data-mode="games" style="--tc:var(--m-games)"><span class="art"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2.5" y="7" width="19" height="11" rx="5.5"/><path d="M7.5 10.5v4M5.5 12.5h4"/><circle cx="15.5" cy="11.2" r=".9"/><circle cx="17.8" cy="13.8" r=".9"/></svg></span><h3>GAMES</h3><p data-i="hubGames"></p><span class="tags" data-i="hubGamesTags"></span></button>
+      <button class="ptile" type="button" data-mode="play" style="--tc:var(--m-play)"><span class="art"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.5l12 7.5-12 7.5z"/></svg></span><h3>PLAY</h3><p data-i="hubPlay"></p><span class="tags" data-i="hubPlayTags"></span></button>
+      <button class="ptile" type="button" data-mode="learn" style="--tc:var(--m-learn)"><span class="art"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6.5A2.5 2.5 0 0 1 6.5 4H11v16H6.5A2.5 2.5 0 0 0 4 22zM20 6.5A2.5 2.5 0 0 0 17.5 4H13v16h4.5A2.5 2.5 0 0 1 20 22z"/></svg></span><h3>LEARN</h3><p data-i="hubLearn"></p><span class="tags" data-i="hubLearnTags"></span></button>
     </div>
+  </section>
+
+  <section class="mode-page" id="learnPanel" hidden>
+    <div class="mode-h"><h2 data-i="learnTitle"></h2><p data-i="learnSub"></p></div>
+    <div class="ptile-grid" id="learnTiles"></div>
   </section>
 
   <section class="playpanel" id="playPanel" hidden>
@@ -1230,7 +1246,7 @@ const TXT = {
     endTitle:"Partie terminée !", endDaily:"Entraînement du jour terminé !", perfectN:"sans faute", warnN:"avec 1 à 3 fautes", badN:"avec plus de 3 fautes",
     accuracy:"Précision", avgTime:"Temps moyen", xpWon:"XP gagnés", bestCombo:"Meilleur combo", toRework:"À retravailler", allPerfect:"Aucune erreur, bravo !",
     reworkBtn:"Retravailler mes erreurs", newGame:"Nouvelle partie", closeLbl:"Fermer", outOf:"exercices sans faute", nextReview:"Prochaine révision : ", tomorrow:"demain", inDays:n=>"dans "+n+" jours",
-    secHarmony:"Harmonie", secProg:"Progressions", secEar:"Oreille", secGames:"Jeux", secPlay:"Play", hub:"Accueil", modeLearnSub:"Théorie et exercices", modePlaySub:"Morceaux en cascade", modeGamesSub:"Mini-jeux", hubTitle:"Qu'est-ce qu'on joue aujourd'hui ?", hubSub:"Trois façons de progresser au piano. Tu peux changer à tout moment depuis le menu.", hubLearn:"Accords, gammes, harmonie, progressions et oreille, avec des exercices corrigés note par note.", hubPlay:"Des morceaux qui tombent sur le clavier, à ta vitesse, avec les doigtés. Le morceau t'attend si tu te trompes.", hubGames:"Des mini-jeux courts pour repérer les notes, tenir le tempo, lire une portée ou tendre l'oreille.", hubLearnTags:"Accords · Gammes · Harmonie · Progressions · Oreille · Entraînement du jour", hubPlayTags:"Cascade 3D · Mode attente · Vitesse · Noms des notes · Doigtés", hubGamesTags:"Saute-notes · Contre la montre · Mémoire · Note Runner · Rythme Pulse · Accord Blaster · Gamme Climber · Oreille d'Or · Partition Express", playGamesHead:"Jeux Play", playGamesSub:"Sur le clavier lumineux, avec les notes qui tombent", playGames:[["Note Runner","Saute les obstacles en jouant la note écrite dessus.","runner"],["Rythme Pulse","Frappe au moment exact où le cercle touche la cible.","pulse"],["Accord Blaster","Joue l'accord affiché pour détruire l'astéroïde.","blaster"],["Gamme Climber","Grimpe la tour en jouant la gamme sans faute.","climber"],["Oreille d'Or","Écoute une note ou une mélodie, puis rejoue-la.","ear"],["Partition Express","Lis les notes qui arrivent sur la portée.","staff"]], secRank:"Classement", secAccount:"Profil",
+    secHarmony:"Harmonie", secProg:"Progressions", secEar:"Oreille", secGames:"Jeux", secPlay:"Play", hub:"Accueil", learn:"Learn", learnTitle:"Qu'est-ce qu'on travaille ?", learnSub:"Choisis une matière : les exercices se jouent sur ton piano et sont corrigés note par note.", learnTiles:[["chords","Accords","Majeurs, mineurs, renversements, accords de 7e."],["scales","Gammes","Majeures, mineures, pentatoniques, en notes ou en accords."],["harmony","Harmonie","Les degrés d'une tonalité et leurs accords."],["prog","Progressions","Les enchaînements d'accords des chansons."],["ear","Oreille","Reconnais intervalles et accords à l'écoute."],["daily","Entraînement du jour","10 exercices mélangés, environ 5 minutes."]], modeLearnSub:"Théorie et exercices", modePlaySub:"Morceaux en cascade", modeGamesSub:"Mini-jeux", hubTitle:"Qu'est-ce qu'on joue aujourd'hui ?", hubSub:"Trois façons de progresser au piano. Tu peux changer à tout moment depuis le menu.", hubLearn:"Accords, gammes, harmonie, progressions et oreille, avec des exercices corrigés note par note.", hubPlay:"Des morceaux qui tombent sur le clavier, à ta vitesse, avec les doigtés. Le morceau t'attend si tu te trompes.", hubGames:"Des mini-jeux courts pour repérer les notes, tenir le tempo, lire une portée ou tendre l'oreille.", hubLearnTags:"Accords · Gammes · Harmonie · Progressions · Oreille · Entraînement du jour", hubPlayTags:"Cascade 3D · Mode attente · Vitesse · Noms des notes · Doigtés", hubGamesTags:"Saute-notes · Contre la montre · Mémoire · Note Runner · Rythme Pulse · Accord Blaster · Gamme Climber · Oreille d'Or · Partition Express", playGamesHead:"Jeux Play", playGamesSub:"Sur le clavier lumineux, avec les notes qui tombent", playGames:[["Note Runner","Saute les obstacles en jouant la note écrite dessus.","runner"],["Rythme Pulse","Frappe au moment exact où le cercle touche la cible.","pulse"],["Accord Blaster","Joue l'accord affiché pour détruire l'astéroïde.","blaster"],["Gamme Climber","Grimpe la tour en jouant la gamme sans faute.","climber"],["Oreille d'Or","Écoute une note ou une mélodie, puis rejoue-la.","ear"],["Partition Express","Lis les notes qui arrivent sur la portée.","staff"]], secRank:"Classement", secAccount:"Profil",
     inTitle:"Comment vas-tu jouer ?", secInter:"Interaction", secGame:"Réglages de jeu", periods:{day:"Jour",week:"Semaine",month:"Mois",year:"Année",all:"Depuis le début"}, rankEmptyP:"Personne n'a encore gagné d'XP sur cette période. À toi de jouer !", pcSolved:n=>n+" réussis", inChange:"Mode de jeu", leaveTitle:"Quitter l'entraînement du jour ?", leaveSub:"Tu es en cours. Si tu quittes, cet entraînement s'arrête et il faudra le recommencer.", leaveStay:"Continuer l'entraînement", leaveGo:"Quitter", dcStart:"Démarrer l'entraînement", inMidiApp:"Un clavier MIDI ? Sur iPhone et iPad, il faut l'app Piano Challenges (le navigateur ne gère pas le MIDI).", midiDone:"Terminer la configuration", midiSetupNeed:"Branche ton clavier en USB ou cherche-le en Bluetooth : il doit apparaître dans la liste pour continuer.", midiSetupOk:"Clavier détecté ! Joue quelques notes pour vérifier, puis termine la configuration.", backPlay:"← Retour", lockGuest:"Continuer sans compte pour l'instant", inSub:"Choisis une fois pour toutes. Tu pourras changer dans les Réglages.", inLbl:"Je joue avec",
     inModes:{screen:["Le clavier à l'écran","Touche les notes à l'écran, ou utilise le clavier de l'ordinateur.","Écran"],midi:["Mon clavier MIDI","Branché en USB ou connecté en Bluetooth. Le plus précis.","MIDI"],mic:["Mon piano, avec le micro","Pour un piano acoustique : l'app écoute les notes que tu joues.","Micro"]},
     inCfgMidi:"Connecter / régler le clavier MIDI", inCfgMic:"Activer le micro", inMidiNo:"Ce navigateur ne gère pas le MIDI : utilise Chrome ou Edge, l'app iPhone/iPad, ou le micro.",
@@ -1345,7 +1361,7 @@ const TXT = {
     endTitle:"Game complete!", endDaily:"Daily practice complete!", perfectN:"perfect", warnN:"with 1–3 mistakes", badN:"with 4+ mistakes",
     accuracy:"Accuracy", avgTime:"Average time", xpWon:"XP earned", bestCombo:"Best combo", toRework:"To rework", allPerfect:"No mistakes, well done!",
     reworkBtn:"Rework my mistakes", newGame:"New game", closeLbl:"Close", outOf:"exercises without mistakes", nextReview:"Next review: ", tomorrow:"tomorrow", inDays:n=>"in "+n+" days",
-    secHarmony:"Harmony", secProg:"Progressions", secEar:"Ear", secGames:"Games", secPlay:"Play", hub:"Home", modeLearnSub:"Theory and exercises", modePlaySub:"Falling-note songs", modeGamesSub:"Mini-games", hubTitle:"What do we play today?", hubSub:"Three ways to get better at the piano. Switch any time from the menu.", hubLearn:"Chords, scales, harmony, progressions and ear training, checked note by note.", hubPlay:"Songs that fall onto the keys at your own speed, with fingering. The song waits for you when you miss.", hubGames:"Short mini-games to find the notes, keep the beat, read the staff or train your ear.", hubLearnTags:"Chords · Scales · Harmony · Progressions · Ear · Daily practice", hubPlayTags:"3D cascade · Wait mode · Speed · Note names · Fingering", hubGamesTags:"Note Jumper · Time attack · Memory · Note Runner · Rhythm Pulse · Chord Blaster · Scale Climber · Golden Ear · Staff Express", playGamesHead:"Play games", playGamesSub:"On the lit keyboard, with falling notes", playGames:[["Note Runner","Jump over obstacles by playing the note written on them.","runner"],["Rhythm Pulse","Hit a key exactly when the ring reaches the target.","pulse"],["Chord Blaster","Play the chord shown to blast the asteroid.","blaster"],["Scale Climber","Climb the tower by playing the scale without a slip.","climber"],["Golden Ear","Listen to a note or a short melody, then play it back.","ear"],["Staff Express","Read the notes as they reach the bar on the staff.","staff"]], secRank:"Leaderboard", secAccount:"Profile",
+    secHarmony:"Harmony", secProg:"Progressions", secEar:"Ear", secGames:"Games", secPlay:"Play", hub:"Home", learn:"Learn", learnTitle:"What do we work on?", learnSub:"Pick a topic: exercises are played on your piano and checked note by note.", learnTiles:[["chords","Chords","Major, minor, inversions, 7th chords."],["scales","Scales","Major, minor, pentatonic, as notes or chords."],["harmony","Harmony","The degrees of a key and their chords."],["prog","Progressions","The chord sequences behind songs."],["ear","Ear","Recognise intervals and chords by ear."],["daily","Daily practice","10 mixed exercises, about 5 minutes."]], modeLearnSub:"Theory and exercises", modePlaySub:"Falling-note songs", modeGamesSub:"Mini-games", hubTitle:"What do we play today?", hubSub:"Three ways to get better at the piano. Switch any time from the menu.", hubLearn:"Chords, scales, harmony, progressions and ear training, checked note by note.", hubPlay:"Songs that fall onto the keys at your own speed, with fingering. The song waits for you when you miss.", hubGames:"Short mini-games to find the notes, keep the beat, read the staff or train your ear.", hubLearnTags:"Chords · Scales · Harmony · Progressions · Ear · Daily practice", hubPlayTags:"3D cascade · Wait mode · Speed · Note names · Fingering", hubGamesTags:"Note Jumper · Time attack · Memory · Note Runner · Rhythm Pulse · Chord Blaster · Scale Climber · Golden Ear · Staff Express", playGamesHead:"Play games", playGamesSub:"On the lit keyboard, with falling notes", playGames:[["Note Runner","Jump over obstacles by playing the note written on them.","runner"],["Rhythm Pulse","Hit a key exactly when the ring reaches the target.","pulse"],["Chord Blaster","Play the chord shown to blast the asteroid.","blaster"],["Scale Climber","Climb the tower by playing the scale without a slip.","climber"],["Golden Ear","Listen to a note or a short melody, then play it back.","ear"],["Staff Express","Read the notes as they reach the bar on the staff.","staff"]], secRank:"Leaderboard", secAccount:"Profile",
     inTitle:"How will you play?", secInter:"Interaction", secGame:"Game settings", periods:{day:"Today",week:"This week",month:"This month",year:"This year",all:"All time"}, rankEmptyP:"Nobody has earned XP in this period yet. Your turn!", pcSolved:n=>n+" solved", inChange:"Play mode", leaveTitle:"Leave the daily practice?", leaveSub:"You are in the middle of it. If you leave, it stops and you will have to start again.", leaveStay:"Keep practising", leaveGo:"Leave", dcStart:"Start the practice", inMidiApp:"A MIDI keyboard? On iPhone and iPad you need the Piano Challenges app (the browser has no MIDI).", midiDone:"Finish set-up", midiSetupNeed:"Plug your keyboard in with USB or search for it over Bluetooth: it must show up in the list to continue.", midiSetupOk:"Keyboard detected! Play a few notes to check, then finish the set-up.", backPlay:"← Back", lockGuest:"Continue without an account for now", inSub:"Choose once. You can change it later in Settings.", inLbl:"I play with",
     inModes:{screen:["The on-screen keyboard","Tap the notes on screen, or use your computer keyboard.","Screen"],midi:["My MIDI keyboard","Plugged in with USB or connected over Bluetooth. The most accurate.","MIDI"],mic:["My piano, with the mic","For an acoustic piano: the app listens to the notes you play.","Mic"]},
     inCfgMidi:"Connect / set up the MIDI keyboard", inCfgMic:"Turn the mic on", inMidiNo:"This browser has no MIDI: use Chrome or Edge, the iPhone/iPad app, or the mic.",
@@ -2678,7 +2694,7 @@ function renderSettings(){
   setNav();
   renderTypes(); renderKeySel();
 }
-function render(){ document.body.classList.toggle("playing", !!game || phase!=="idle"); document.body.dataset.page=page; $("gamesPanel").hidden = page!=="games"; $("hubPanel").hidden = page!=="hub"; $("dailyPanel").hidden = page!=="daily"; $("rankPanel").hidden = page!=="rank"; $("accountPanel").hidden = page!=="account"; $("lockPanel").hidden = page!=="locked"; $("settingsPage").hidden = page!=="settings"; $("progressPage").hidden = page!=="progress"; renderDaily(); renderGameBar(); setNav();
+function render(){ document.body.classList.toggle("playing", !!game || phase!=="idle"); document.body.dataset.page=page; $("gamesPanel").hidden = page!=="games"; $("hubPanel").hidden = page!=="hub"; $("learnPanel").hidden = page!=="learn"; $("dailyPanel").hidden = page!=="daily"; $("rankPanel").hidden = page!=="rank"; $("accountPanel").hidden = page!=="account"; $("lockPanel").hidden = page!=="locked"; $("settingsPage").hidden = page!=="settings"; $("progressPage").hidden = page!=="progress"; renderDaily(); renderGameBar(); setNav();
   if(phase==="idle"||phase==="listening") resetScore(); renderSession(); renderHint(); renderPrompt(); renderTimeline(); renderSlots(); renderActions(); renderStatus(); renderMap(); }
 
 // ---------- Settings wiring ----------
@@ -2733,7 +2749,7 @@ function setNav(){
   $("side").dataset.mode=mode; $("modeNav").querySelectorAll("button").forEach(b=>mark(b,b.dataset.mode===mode));
   mark($("dailyCard"),page==="daily"); mark($("rankBtn"),page==="rank"); mark($("accountBtn"),page==="account"); mark($("setBtn"),page==="settings"); mark($("progBtn"),page==="progress");
   const pv = page==="practice"?S.section : page==="locked"?lockFor : page;
-  $("mbTitle").textContent = t({chords:"secChords",scales:"secScales",harmony:"secHarmony",prog:"secProg",ear:"secEar",games:"secGames",play:"secPlay",hub:"hub",daily:"dailyTitle",rank:"secRank",account:"secAccount",settings:"settings",progress:"progress"}[pv]);
+  $("mbTitle").textContent = t({chords:"secChords",scales:"secScales",harmony:"secHarmony",prog:"secProg",ear:"secEar",games:"secGames",play:"secPlay",hub:"hub",learn:"learn",daily:"dailyTitle",rank:"secRank",account:"secAccount",settings:"settings",progress:"progress"}[pv]);
   if(page==="locked"){ $("secTabs").querySelectorAll("button").forEach(b=>mark(b,b.dataset.v===lockFor)); mark($("dailyCard"),lockFor==="daily"); }
 }
 function applySide(){
@@ -2982,21 +2998,26 @@ function gmScore(){
 function rnHintPcs(pcs, force){ clearKeys(); if(!force && S.settings.rnHint===false) return; pcs.forEach(pc=>{ for(let m=LOW;m<=HIGH;m++){ if(m%12===pc && keyEls[m]){ keyEls[m].classList.add("k-rev"); break; } } }); }
 $("gmBoard").addEventListener("pointerdown",()=>{ if(GM==="speed" && SP.state!=="run") spGo(); else if(GM==="memory" && (MM.state==="ready"||MM.state==="over")) mmGo(); });
 document.addEventListener("keydown",e=>{ if(!RN.on || GM==="runner") return; if(e.code==="Space"||e.code==="Enter"){ if(GM==="speed" && SP.state!=="run"){ e.preventDefault(); spGo(); } else if(GM==="memory" && (MM.state==="ready"||MM.state==="over")){ e.preventDefault(); mmGo(); } } });
-function renderGames(){ const box=$("gameCards"); box.innerHTML="";
-  const PLAY={runner:'<rect x="4" y="8" width="13" height="11" rx="2"/><path d="M4 14h13M7.5 14v5M11 14v5M14 14v5M18 6l2-2M19.5 9H22"/>', speed:GAME_ICONS[0], memory:GAME_ICONS[2]};
-  t("games").forEach(([title,desc,id],i)=>{ const c=document.createElement("div"); c.className="game-card";
-    if(id){ c.classList.add("play"); c.setAttribute("role","button"); c.tabIndex=0;
-      c.innerHTML='<span class="gi"><svg viewBox="0 0 24 24" aria-hidden="true">'+PLAY[id]+'</svg></span><span class="gt"><b></b><p></p><button class="btn primary go" type="button"></button></span>';
-      c.querySelector("b").textContent=title; c.querySelector("p").textContent=desc; c.querySelector(".go").textContent=t("rnPlay");
-      c.onclick=()=>gameOpen(id); c.onkeydown=e=>{ if(e.key==="Enter") gameOpen(id); }; box.appendChild(c); return; }
-    c.innerHTML='<span class="gi"><svg viewBox="0 0 24 24" aria-hidden="true">'+GAME_ICONS[3]+'</svg></span><span class="gt"><b></b><p></p><span class="soon"></span></span>';
-    c.querySelector("b").textContent=title; c.querySelector("p").textContent=desc; c.querySelector(".soon").textContent=t("soon"); box.appendChild(c); });
+const TILE_ICON={chords:'<circle cx="7" cy="17" r="2.6"/><circle cx="7" cy="11" r="2.6"/><circle cx="7" cy="5" r="2.6"/><path d="M9.6 17V5M13 6h8M13 12h8M13 18h8"/>',scales:'<path d="M3 19h3v-3H3zM8 15h3v-3H8zM13 11h3V8h-3zM18 7h3V4h-3z"/>',harmony:'<path d="M3 20h18M5 20V9M10 20V6M15 20V9M20 20V4"/>',prog:'<rect x="2.5" y="8" width="5" height="8" rx="1.5"/><rect x="16.5" y="8" width="5" height="8" rx="1.5"/><path d="M8.5 12h7M12.5 9l3 3-3 3"/>',ear:'<path d="M7 9a5 5 0 1 1 10 0c0 3-3 4-3 7a3 3 0 0 1-5.5 1.6M10 9a2 2 0 1 1 4 0"/>',daily:'<rect x="3.5" y="5" width="17" height="15" rx="3"/><path d="M3.5 10h17M8 3v4M16 3v4M9 15l2 2 4-4"/>',
+  runner:'<rect x="4" y="8" width="13" height="11" rx="2"/><path d="M4 14h13M7.5 14v5M11 14v5M14 14v5M18 6l2-2M19.5 9H22"/>',play:'<path d="M7 4.5l12 7.5-12 7.5z"/>'};
+// one tile: colored card, dark screen with icon, kicker, name, line, button
+function tile({color,icon,kick,title,desc,btn,rec,soon,onOpen}){
+  const c=document.createElement(soon?"div":"button"); c.className="ptile"+(soon?" soon":""); if(!soon) c.type="button"; c.style.setProperty("--tc",color);
+  c.innerHTML='<span class="art"><svg viewBox="0 0 24 24" aria-hidden="true">'+icon+'</svg></span><span class="pk"></span><h3></h3><p></p>'+(rec!=null?'<span class="rec"></span>':'')+(soon?'<span class="rec"></span>':'<span class="go"></span>');
+  c.querySelector(".pk").textContent=kick; c.querySelector("h3").textContent=title; c.querySelector("p").textContent=desc;
+  if(rec!=null) c.querySelector(".rec").textContent=rec; if(soon) c.querySelector(".rec:last-child").textContent=t("soon"); else c.querySelector(".go").textContent=btn||t("rnPlay");
+  if(onOpen) c.addEventListener("click",onOpen); return c; }
+const shade=(hex,k)=>{ const n=parseInt(hex.slice(1),16), r=n>>16, g=(n>>8)&255, b=n&255, f=x=>Math.max(0,Math.min(255,Math.round(x))); return "#"+[r,g,b].map(x=>f(x+(k>0?(255-x)*k:x*k)).toString(16).padStart(2,"0")).join(""); };
+const MODE_COL={games:"#3fae7c",play:"#7a5cf5",learn:"#f26a5e"};
+function renderGames(){ const box=$("gameCards"); box.innerHTML=""; const base=MODE_COL.games, sh=[0,-.12,.08,-.22];
+  const PLAY={runner:TILE_ICON.runner, speed:GAME_ICONS[0], memory:GAME_ICONS[2]};
+  t("games").forEach(([title,desc,id],i)=>{ const best=id?((S.gameBest||{})[id]||(id==="runner"?S.runnerBest:0)||0):null;
+    box.appendChild(tile({color:shade(base,sh[i%sh.length]),icon:id?PLAY[id]:GAME_ICONS[3],kick:t("secGames"),title,desc,rec:id?t("rnBestL")+" "+best:null,soon:!id,onOpen:id?()=>gameOpen(id):null})); });
   const h=document.createElement("p"); h.className="gc-head"; h.style.gridColumn="1 / -1"; h.innerHTML="<span></span><small></small>"; h.firstChild.textContent=t("playGamesHead"); h.lastChild.textContent=t("playGamesSub"); box.appendChild(h);
-  const PI='<path d="M7 4.5l12 7.5-12 7.5z"/>';
-  t("playGames").forEach(([title,desc,id])=>{ const c=document.createElement("div"); c.className="game-card play"; c.setAttribute("role","button"); c.tabIndex=0;
-    c.innerHTML='<span class="gi"><svg viewBox="0 0 24 24" aria-hidden="true">'+PI+'</svg></span><span class="gt"><b></b><p></p><button class="btn primary go" type="button"></button></span>';
-    c.querySelector("b").textContent=title; c.querySelector("p").textContent=desc; c.querySelector(".go").textContent=t("rnPlay");
-    c.onclick=()=>openPlayWith("#game="+id); c.onkeydown=e=>{ if(e.key==="Enter") openPlayWith("#game="+id); }; box.appendChild(c); }); }
+  t("playGames").forEach(([title,desc,id],i)=>box.appendChild(tile({color:shade(base,sh[(i+1)%sh.length]),icon:TILE_ICON.play,kick:"Play",title,desc,onOpen:()=>openPlayWith("#game="+id)}))); }
+function renderLearn(){ const box=$("learnTiles"); box.innerHTML=""; const base=MODE_COL.learn, sh=[0,-.12,.08,-.22,.16,-.3];
+  t("learnTiles").forEach(([id,title,desc],i)=>box.appendChild(tile({color:shade(base,sh[i%sh.length]),icon:TILE_ICON[id],kick:"Learn",title,desc,btn:t("rnPlay"),
+    onOpen:()=>{ if(id==="daily") $("dailyCard").click(); else $("secTabs").querySelector('[data-v="'+id+'"]').click(); }}))); }
 const LOCKED=["games","daily"];
 let lockFor="";
 const needLogin = pg => LOCKED.includes(pg) && !user && !cloudFail && !guestPass;
@@ -3007,7 +3028,7 @@ function playSend(type,m,vel){ const f=$("playFrame"); if(f && f.contentWindow) 
 let playHash="#songs"; // #songs = song library, #games = Play games, #game=<id> = that game
 function playOpen(){ const f=$("playFrame"); const src="play/index.html"+playHash; if(f.getAttribute("src")!==src) f.src=src; $("playPanel").hidden=false; }
 function openPlayWith(h){ playHash=h; if(page==="play"){ playOpen(); setNav(); } else openPage("play"); }
-function goMode(m){ closeDrawer(); if(m==="learn"){ if(page!=="practice") openPage("practice"); } else if(m==="play") openPlayWith("#songs"); else openPage("games"); }
+function goMode(m){ closeDrawer(); if(m==="learn") openPage("learn"); else if(m==="play") openPlayWith("#songs"); else openPage("games"); }
 document.querySelectorAll("[data-mode]").forEach(b=>b.addEventListener("click",()=>{ const m=b.dataset.mode; if(page==="daily" && game && game.daily){ guardLeave(()=>{ game=null; goMode(m); }); return; } goMode(m); }));
 function playClose(){ const f=$("playFrame"); if(f.getAttribute("src")) f.removeAttribute("src"); $("playPanel").hidden=true; }
 function openPage(pg){
@@ -3025,7 +3046,7 @@ function openPage(pg){
     phase="idle"; cur=null; seq=[]; found=[]; played=[]; idx=0; errors=0; game=null;
     clearKeys(); $("stage").classList.remove("res-good","res-warn","res-bad");
   }
-  page=pg; if(backFromInfo){ returnPage=null; setTimeout(resumeRound,0); } if(pg==="locked") renderLock(); if(pg==="settings") renderSettings(); if(pg==="progress") renderMap(); if(pg==="games") renderGames(); if(pg==="rank") renderRank(); if(pg==="account") renderAccount(); if(pg==="daily") dailyPlan();
+  page=pg; if(backFromInfo){ returnPage=null; setTimeout(resumeRound,0); } if(pg==="locked") renderLock(); if(pg==="settings") renderSettings(); if(pg==="progress") renderMap(); if(pg==="games") renderGames(); if(pg==="learn") renderLearn(); if(pg==="rank") renderRank(); if(pg==="account") renderAccount(); if(pg==="daily") dailyPlan();
   if(narrowMQ.matches) buildKeyboard();
   renderSettings(); render(); renderDaily(); $("main").scrollTo({top:0});
   if(["games","daily"].includes(pg)) autoIntro(pg);

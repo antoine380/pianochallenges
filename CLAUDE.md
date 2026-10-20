@@ -5,7 +5,7 @@ Lis ce fichier en entier avant de travailler sur le projet.
 ## Qui, quoi
 - Projet d'Antoine Bernard (Reality Academy). **Toujours répondre en français.** Il itère chaque soir sur l'UX, souvent par listes de retours avec captures d'écran (iPad, iPhone, web).
 - **Piano Challenges** : application gamifiée de théorie musicale. On joue sur un vrai piano (MIDI USB/Bluetooth), au micro, ou sur le clavier à l'écran.
-- Trois modes en tête du menu (`#modeNav`, `goMode()`) : **LEARN** (sections Accords, Gammes, Harmonie, Progressions, Oreille dans `#secTabs`, visibles seulement en mode learn), **PLAY** (page `play`, morceaux), **GAMES** (page `games` : jeux maison + les 6 jeux Play qui ouvrent `play/index.html#game=<id>`). Au lancement et sur clic du logo : page `hub` (écran de choix des trois modes). Plus : Entraînement du jour, Classement, Profil, Progression, Réglages, Aide.
+- Trois modes en tête du menu, une couleur chacun (`#modeNav`, `goMode()`, `MODE_COL`) : **GAMES** (vert, page `games` : jeux maison + les 6 jeux Play qui ouvrent `play/index.html#game=<id>`), **PLAY** (violet, page `play`, morceaux), **LEARN** (corail, page `learn` : tuiles Accords, Gammes, Harmonie, Progressions, Oreille, Entraînement du jour qui lancent directement la catégorie ; `#secTabs` existe encore mais est masqué, les tuiles cliquent ses boutons). Pas de sous-menu. Au lancement et sur clic du logo : page `hub` (choix des trois modes). Les pages de mode sont des grilles de tuiles style Play (`tile()`, `.ptile`). Plus : Entraînement du jour, Classement, Profil, Progression, Réglages, Aide.
 - Site : https://pianochallenges.com. App iPhone/iPad : Capacitor, dans `app/`.
 
 ## Où est le code
@@ -29,7 +29,7 @@ Lis ce fichier en entier avant de travailler sur le projet.
 
 ## Architecture JS (repères)
 - État persistant `S` dans localStorage `memo-gammes-v1` (réglages dans `S.settings`, XP `S.xp`, XP par jour `S.xpDays`, records de jeux `S.gameBest`, `S.runnerBest`).
-- Navigation : variable `page` (hub|practice|daily|games|play|rank|account|locked|settings|progress), `openPage(pg)`, `body[data-page]`. Le script n'expose pas ses fonctions sur `window` : dans les tests, cliquer sur les boutons (`#setBtn`, `#rankBtn`, `#accountBtn`, `#progBtn`, `[data-v=games]`, `#dailyCard`).
+- Navigation : variable `page` (hub|learn|practice|daily|games|play|rank|account|locked|settings|progress), `openPage(pg)`, `body[data-page]`. Le script n'expose pas ses fonctions sur `window` : dans les tests, cliquer sur les boutons (`#setBtn`, `#rankBtn`, `#accountBtn`, `#progBtn`, `[data-v=games]`, `#dailyCard`).
 - Fenêtres : `openMod/closeMod`. `anyWin()` = vraies fenêtres (inert/focus) ; `anyModal()` inclut aussi les pages info (pause). Ne pas les confondre : un mélange a déjà gelé l'app.
 - Gammes : mode `S.settings.scMode` notes|chords (+ `sc7` pour les accords de 7e). En mode accords, l'item porte `ch:1`, la séquence vient de `scaleChordSteps()` et suit le moteur des progressions (`chSeq()` = prog ou gamme en accords).
 - Textes FR/EN dans le dictionnaire `t()` (ajouter chaque clé dans les deux langues).
