@@ -1947,7 +1947,7 @@ function scrollKbdTo(m){
 }
 kbd.addEventListener("pointerdown", e=>{
   const el=e.target.closest("[data-m]"); if(!el) return;
-  e.preventDefault(); const m=+el.dataset.m; tone(m); noteIn(m);
+  e.preventDefault(); const m=+el.dataset.m; tone(m); midiIn(m); // same 35 ms grouping as MIDI (two-finger chords)
 });
 function pressKey(m){ const el=keyEls[fold(m)]; if(!el) return; el.classList.add("k-press"); setTimeout(()=>el.classList.remove("k-press"),130); }
 kbd.addEventListener("contextmenu", e=>e.preventDefault());
@@ -1969,7 +1969,7 @@ document.addEventListener("keydown", e=>{
   if(e.code==="Enter" && phase==="revealed"){ e.preventDefault(); grade(true); return; }
   if(e.code==="Backspace" && phase==="revealed"){ e.preventDefault(); grade(false); return; }
   const m=CODE_MAP[e.code]; if(m==null||e.repeat||e.metaKey||e.ctrlKey||e.altKey) return;
-  const mm=fold(m); tone(mm); noteIn(mm);
+  const mm=fold(m); tone(mm); midiIn(mm);
 });
 function flashKey(m, cls, ms=220){ const el=keyEls[fold(m)]; if(!el) return; el.classList.add(cls); setTimeout(()=>el.classList.remove(cls), ms); }
 function clearKeys(){ Object.values(keyEls).forEach(el=>el.classList.remove("k-ok","k-rev","k-hit","k-bad","k-guide")); }
@@ -3495,7 +3495,7 @@ $("micBtn").addEventListener("click", async ()=>{
       if(performance.now()<micMuteUntil) return;
       const m=Math.round(69+12*Math.log2(f/440));
       if(m===cand) count++; else { cand=m; count=1; }
-      if(count===3 && m%12!==lastEmit){ lastEmit=m%12; flashKey(m,"k-hit",150); noteIn(m); }
+      if(count===3 && m%12!==lastEmit){ lastEmit=m%12; flashKey(m,"k-hit",150); midiIn(m); }
     },25);
   }catch(err){ $("micBtn").classList.add("err"); $("micTxt").textContent=t("micBlocked"); notice(t("blocked")); }
   renderInputUI();
