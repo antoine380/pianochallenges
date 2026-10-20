@@ -996,6 +996,27 @@ body:not(.runner-on)[data-page="games"] .stage{display:none!important}
 [data-page="free"] :is(.picker,.gamebar,.prompt-row,.timeline,.slots,.answers,.actions,.hint,.notice){display:none!important}
 [data-page="free"] .free-lbl{display:block}
 [data-page="free"] .free-lbl{font-size:1.6rem} [data-page="free"] .kbd{height:clamp(170px,46vh,380px)}
+
+/* ===== v1.2 feedback ===== */
+.ptile .obj{right:6px;top:-18px}
+.mode-h .mode-big+p{margin-top:12px}
+#learnTiles{row-gap:34px;margin-top:6px}
+.side.collapsed .brand-h{margin:0 auto} .side.collapsed .brand{justify-content:center}
+.mode-item[aria-current="page"]{background:transparent;color:var(--ink);box-shadow:inset 0 0 0 2px var(--mc);border-color:transparent}
+.mode-item[aria-current="page"] .mi{background:linear-gradient(150deg,color-mix(in srgb,var(--mc) 55%,#fff),var(--mc))}
+.mode-item[aria-current="page"] .mt small{color:var(--muted);opacity:1}
+.mode-item[aria-current="page"] .mt b{font-weight:800}
+.side.collapsed .mode-item[aria-current="page"],.side.collapsed .nav-item[aria-current="page"]{box-shadow:none}
+.side.collapsed .mode-item[aria-current="page"] .mi{outline:2.5px solid var(--mc);outline-offset:3px}
+.nav-item[aria-current="page"]{background:transparent;color:var(--ink);font-weight:800;box-shadow:inset 0 0 0 2px var(--brand)}
+.nav-item[aria-current="page"] svg{background:var(--surface-2);color:var(--accent)}
+.side.collapsed .nav-item[aria-current="page"] svg{outline:2.5px solid var(--brand);outline-offset:3px}
+@media (hover:none){ .nav-item:hover,.mode-item:hover{background:transparent;color:inherit} .nav-item:not([aria-current]):hover{color:var(--muted)} }
+.seg.diff button{flex:1 1 auto;white-space:nowrap;padding:6px 12px}
+.theme-row{display:flex;align-items:center;gap:8px} .theme-row .nav-item{flex:1;min-width:0}
+.side.collapsed .theme-row{flex-direction:column;gap:6px}
+.side .legal-links{display:none}
+.set-legal{display:block!important;margin:4px 0 0;font-size:.78rem}
 </style>
 
 <script>if(window.Capacitor&&window.webkit&&window.webkit.messageHandlers&&window.webkit.messageHandlers.bridge)document.documentElement.classList.add("native");</script>
@@ -1070,12 +1091,10 @@ body:not(.runner-on)[data-page="games"] .stage{display:none!important}
     <button class="nav-item" id="progBtn" type="button" aria-haspopup="dialog"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg><span class="lbl" data-i="progress"></span></button>
     <button class="nav-item" id="setBtn" type="button" aria-haspopup="dialog"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 15.2a3.2 3.2 0 1 0 0-6.4 3.2 3.2 0 0 0 0 6.4z"/><path d="M19.4 13.5a7.6 7.6 0 0 0 0-3l2-1.6-2-3.4-2.4 1a7.5 7.5 0 0 0-2.6-1.5L14 2.5h-4l-.4 2.5A7.5 7.5 0 0 0 7 6.5l-2.4-1-2 3.4 2 1.6a7.6 7.6 0 0 0 0 3l-2 1.6 2 3.4 2.4-1a7.5 7.5 0 0 0 2.6-1.5l.4 2.5h4l.4-2.5a7.5 7.5 0 0 0 2.6-1.5l2.4 1 2-3.4z"/></svg><span class="lbl" data-i="settings"></span></button>
     <button class="nav-item" id="helpBtn" type="button" aria-haspopup="dialog"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M9.6 9.3a2.5 2.5 0 1 1 3.4 2.3c-.7.3-1 .8-1 1.5v.6"/><circle cx="12" cy="16.9" r=".5"/></svg><span class="lbl" data-i="help"></span></button>
-    <button class="nav-item theme-btn" id="themeBtn" type="button"><svg class="i-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.6 1.6M17.1 17.1l1.6 1.6M5.3 18.7l1.6-1.6M17.1 6.9l1.6-1.6"/></svg><svg class="i-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg><span class="lbl" id="themeLbl"></span></button>
+    <div class="theme-row"><button class="nav-item theme-btn" id="themeBtn" type="button"><svg class="i-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.6 1.6M17.1 17.1l1.6 1.6M5.3 18.7l1.6-1.6M17.1 6.9l1.6-1.6"/></svg><svg class="i-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg><span class="lbl" id="themeLbl"></span></button><button class="inp-chip" id="inChip" type="button"></button></div>
     <div class="side-tools">
       <span hidden><button id="langBtn" type="button" data-pop="langPop"></button><span id="langSum"></span><span id="langPop"></span></span>
-      <button class="inp-chip" id="inChip" type="button"></button>
     </div>
-    <p class="legal-links"><a href="/mentions-legales.html" data-i="legalNotice"></a> · <a href="/confidentialite.html" data-i="privacy"></a><br>© 2026 Antoine Bernard · <span data-i="rights"></span></p>
     <button class="nav-item side-toggle" id="sideToggle" type="button" aria-controls="side"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14.5 6l-6 6 6 6M19 6v12"/></svg><span class="lbl" data-i="collapse"></span></button>
   </div>
 </aside>
@@ -1401,6 +1420,7 @@ body:not(.runner-on)[data-page="games"] .stage{display:none!important}
         </div>
       </section>
       <p class="set-reset"><button class="danger" id="resetBtn" type="button"></button></p>
+      <p class="legal-links set-legal"><a href="/mentions-legales.html" data-i="legalNotice"></a> · <a href="/confidentialite.html" data-i="privacy"></a><br>© 2026 Antoine Bernard · <span data-i="rights"></span></p>
     </div>
     <div class="modal-body prog-body" id="progPane" hidden>
       <div class="prog-cats" id="progCats"></div>
@@ -3039,7 +3059,7 @@ const phoneMQ=window.matchMedia("(max-width:640px)"), railMQ=window.matchMedia("
 function setNav(){
   const mark=(el,on)=>{ if(on) el.setAttribute("aria-current","page"); else el.removeAttribute("aria-current"); };
   $("secTabs").querySelectorAll("button").forEach(b=>mark(b, page==="practice" ? b.dataset.v===S.section : b.dataset.v===page));
-  const mode = page==="play"||page==="free" ? (page==="play"&&playHash.startsWith("#game")?"games":"play") : page==="games" ? "games" : page==="hub" ? "" : page==="locked" ? (lockFor==="games"?"games":"learn") : "learn";
+  const mode = page==="play"||page==="free" ? (page==="play"&&playHash.startsWith("#game")?"games":"play") : page==="games" ? "games" : ["hub","settings","rank","account","progress"].includes(page) ? "" : page==="locked" ? (lockFor==="games"?"games":"learn") : "learn";
   $("side").dataset.mode=mode; $("modeNav").querySelectorAll("button").forEach(b=>mark(b,b.dataset.mode===mode));
   mark($("dailyCard"),page==="daily"); mark($("rankBtn"),page==="rank"); mark($("accountBtn"),page==="account"); mark($("setBtn"),page==="settings"); mark($("progBtn"),page==="progress");
   const pv = page==="practice"?S.section : page==="locked"?lockFor : page;
@@ -3316,7 +3336,7 @@ function O3(){ const defs=[], parts=[];
   return o; }
 const NC=["#ff5a6e","#ff9a3c","#ffd23f","#3ddc84","#3cc8f0","#5b7cff","#b26bff"];
 const OBJ={
-  chords:()=>O3().block(78,18,8,74,"#f3f1ff",4).ball(58,92,17,NC[0],13).ball(64,68,17,NC[2],13).ball(70,44,17,NC[4],13).svg(),
+  chords:()=>O3().ball(58,92,17,NC[0],13).ball(64,68,17,NC[2],13).ball(70,44,17,NC[4],13).svg(),
   scales:()=>{ const o=O3(); [0,1,2,3].forEach(i=>o.block(8+i*27,84-i*20,25,26+i*20,NC[i],8)); return o.svg(); },
   harmony:()=>{ const o=O3(); [[18,58,NC[5]],[48,34,NC[4]],[78,48,NC[6]]].forEach(([x,y,c])=>o.block(x,y,24,104-y,c,9).ball(x+12,y-2,13,shade(c,.2))); return o.svg(); },
   prog:()=>{ const o=O3(); [[-16,"I",NC[0]],[0,"IV",NC[4]],[16,"V",NC[2]]].forEach(([r,l,c],i)=>o.raw('<g transform="rotate('+r+' 60 104)">').block(38,26,44,62,"#fbfbff",10).block(44,32,32,14,c,6).raw('<text x="60" y="76" text-anchor="middle" font-family="Fredoka,Nunito,sans-serif" font-weight="700" font-size="20" fill="#2b2560">'+l+'</text></g>')); return o.svg(); },
