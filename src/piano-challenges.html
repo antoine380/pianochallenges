@@ -3189,7 +3189,12 @@ async function oauthLogin(provider){
       if(!code) throw new Error(back.searchParams.get("error_description")||"cancelled");
       const ex=await sb.auth.exchangeCodeForSession(code); if(ex.error) throw ex.error;
     } else {
-      const {error}=await sb.auth.signInWithOAuth({provider, options:{redirectTo:location.origin+location.pathname}}); if(error) throw error;
+      const {data,error}=await sb.auth.signInWithOAuth({provider, options:{redirectTo:location.origin+location.pathname, skipBrowserRedirect:true}}); if(error) throw error;
+      // make sure the auth server answers before leaving the page (otherwise the user lands on a browser error page)
+      const ac=new AbortController(), to=setTimeout(()=>ac.abort(),4000);
+      try{ const h=await fetch(SUPA_URL+"/auth/v1/health",{signal:ac.signal, headers:{apikey:SUPA_KEY}}); if(!h.ok) throw 0; }
+      catch(e){ throw new TypeError("network"); } finally{ clearTimeout(to); }
+      location.assign(data.url);
     }
   }catch(err){ const m=String(err&&err.message||err); if(/cancel/i.test(m)) return; loginStep.msg=authMsg(err); loginStep.err=true; renderAccount(); }
 }
