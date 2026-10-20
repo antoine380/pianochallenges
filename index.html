@@ -3179,6 +3179,10 @@ let sb=null, user=null, cloudFail=false, pushT=0, loginStep={email:"",sent:false
 const isApp = () => document.documentElement.classList.contains("native");
 function loadSupa(){ return new Promise((res,rej)=>{ if(window.supabase&&window.supabase.createClient) return res(window.supabase);
   const sc=document.createElement("script"); sc.src=SUPA_SRC; sc.async=true; sc.onload=()=>res(window.supabase); sc.onerror=rej; document.head.appendChild(sc); }); }
+// The Supabase SDK (~170 KB) is loaded on demand: at start only when a session or an auth redirect exists, otherwise when Profile / Leaderboard open (ensureCloud)
+let cloudPromise=null;
+function hasSession(){ try{ for(let i=0;i<localStorage.length;i++){ const k=localStorage.key(i)||""; if(k.startsWith("sb-")&&k.endsWith("-auth-token")) return true; } }catch(e){} return /[?&]code=/.test(location.search) || /access_token=/.test(location.hash); }
+function ensureCloud(){ if(!cloudPromise) cloudPromise=initCloud(); return cloudPromise; }
 async function initCloud(){
   try{
     const lib=await loadSupa();
@@ -3231,7 +3235,7 @@ $("wcSignup").addEventListener("click",()=>{ closeMod("welcomeModal"); openPage(
 function renderRankPer(){ const box=$("rankPer"), P=t("periods"), cur=S.settings.rankPer||"week"; box.innerHTML="";
   Object.keys(P).forEach(k=>{ const b=document.createElement("button"); b.type="button"; b.textContent=P[k]; b.setAttribute("aria-pressed",k===cur); b.onclick=()=>{ S.settings.rankPer=k; save(); renderRank(); }; box.appendChild(b); }); }
 async function renderRank(){
-  renderRankPer();
+  renderRankPer(); if(!cloudPromise){ ensureCloud(); } // first opening: load the SDK, initCloud re-renders when ready
   const li=levelInfo(S.xp), ol=$("rankList"); ol.innerHTML="";
   const row=(r,rk,me)=>{ const el=document.createElement("li"); if(me) el.className="me";
     const okPhoto = r.photo && /^https:\/\//.test(r.photo);
@@ -3270,6 +3274,7 @@ async function oauthLogin(provider){
   }catch(err){ const m=String(err&&err.message||err); if(/cancel/i.test(m)) return; loginStep.msg=authMsg(err); loginStep.err=true; renderAccount(); }
 }
 function renderAccount(){
+  if(!cloudPromise){ ensureCloud(); }
   const li=levelInfo(S.xp), ci=charIndex(li.L), c=t("chars")[ci];
   const solved=Object.values(S.secStats||{}).reduce((a,x)=>a+(x.ok||0),0);
   const ph=userPhoto();
@@ -3698,7 +3703,7 @@ $("helpBody").addEventListener("pointerup",e=>{ if(swipeX==null) return; const d
 // ---------- Boot ----------
 
 applyStatic(); applySide(); buildKeyboard(); renderSettings(); render(); renderDaily(); openPage("hub");
-setTimeout(initCloud, 400);
+setTimeout(()=>{ if(hasSession()) ensureCloud(); }, 400);
 { const sp=$("splash"); if(document.documentElement.classList.contains("native")){ const t0=performance.now(); setTimeout(()=>{ sp.classList.add("out"); setTimeout(()=>sp.remove(),400); }, Math.max(0,1500-t0)); } else sp.remove(); }
 const mobileWeb = (phoneMQ.matches||railMQ.matches) && !document.documentElement.classList.contains("native");
 document.body.classList.add("guest");
