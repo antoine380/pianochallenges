@@ -125,7 +125,7 @@ button:focus-visible{outline:2px solid var(--coral);outline-offset:3px}
 .ocard .btn{background:var(--glass);color:var(--stage)}
 .ocard .btn.light{background:transparent;color:var(--glass);border:1px solid #3a3944}
 .big-stars{font-size:44px;color:var(--sun);letter-spacing:6px}
-.big-stars .off{color:#2c2b34}
+.big-stars .off{color:#2c2b34} .big-stars span{display:inline-block}
 .res{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
 .res div{background:var(--stage);border-radius:14px;padding:12px 4px}
 .res b{display:block;font-family:var(--f-mono);font-size:22px;font-weight:500}
@@ -530,14 +530,21 @@ function finishSong(){
   const stars=acc>=92?3:acc>=75?2:acc>=45?1:0;
   if(stars>(best[P.song.id]||0)){best[P.song.id]=stars;store.set('best',best)}
   if(stars>=2)fanfare();
-  overlay(`<div class="big-stars">${'★'.repeat(stars)}<span class="off">${'★'.repeat(3-stars)}</span></div>
+  overlay(`<div class="big-stars">${[0,1,2].map(i=>`<span${i<stars?'':' class="off"'}>★</span>`).join('')}</div>
     <h2>${tr('verdicts')[stars]}</h2>
     <p class="mono">${tr('acc')(acc,P.score,P.maxStreak)}</p>
     <div class="res"><div><b style="color:var(--good)">${P.c.p}</b><small>${tr('resPerfect')}</small></div><div><b style="color:var(--warn)">${P.c.b}</b><small>${tr('resGood')}</small></div><div><b style="color:var(--bad)">${P.c.m}</b><small>${tr('resMissed')}</small></div><div><b>${P.c.w}</b><small>${tr('resWrong')}</small></div></div>
     <div class="row"><button class="btn" id="again">${tr('replay')}</button><button class="btn light" data-h>${tr('library')}</button></div>
     ${speed<1?'':`<span class="hint">${tr('tooFast')}</span>`}`);
   $('again').onclick=startSong;
+  starsIn();
 }
+// end of a song (rare): the card rises, the won stars come one by one (120 ms apart), the others only fade to their dim colour; the buttons work at once
+function starsIn(){if(!ovCard.animate)return;const EO='cubic-bezier(0.23,1,0.32,1)';
+  if(RM){ovCard.animate([{opacity:0},{opacity:1}],{duration:200,easing:'ease'});return}
+  ovCard.animate([{opacity:0,transform:'translateY(8px)'},{opacity:1,transform:'none'}],{duration:250,easing:EO});
+  ovCard.querySelectorAll('.big-stars span').forEach((el,i)=>el.animate(el.classList.contains('off')?[{opacity:0},{opacity:1}]:[{opacity:0,transform:'scale(.6)'},{opacity:1,transform:'none'}],
+    {duration:el.classList.contains('off')?200:400,delay:150+i*120,easing:el.classList.contains('off')?'ease':'cubic-bezier(.3,1.6,.5,1)',fill:'backwards'}))}
 
 /* ----- 3D projection: z = beats ahead / visible beats ----- */
 const VIS=3.4;

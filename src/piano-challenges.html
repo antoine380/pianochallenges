@@ -1448,6 +1448,7 @@ body.gate-on{overflow:hidden}
 .end-acct{display:flex;align-items:center;gap:12px;border-radius:16px;padding:10px 12px;margin:0 0 10px;background:color-mix(in srgb,#7a5bf5 10%,var(--surface))}
 .end-acct div{flex:1;min-width:0} .end-acct b{display:block;font-weight:800;font-size:.92rem} .end-acct small{color:var(--muted);font-weight:700;font-size:.78rem}
 .auto-help{position:absolute;left:50%;bottom:14px;transform:translateX(-50%);z-index:6;display:flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:center;width:min(560px,calc(100% - 24px));background:var(--surface);color:var(--ink);border-radius:18px;padding:10px 12px;box-shadow:0 16px 40px -16px rgba(20,12,60,.55);border:2px solid #7a5bf5}
+.auto-help{transition:opacity 200ms var(--ease-out),transform 250ms var(--ease-out)} @starting-style{.auto-help{opacity:0;transform:translateX(-50%) translateY(8px)}} /* fades in; leaves at once (the player chose) */
 .auto-help[hidden]{display:none} .auto-help div{flex:1 1 200px;min-width:0} .auto-help b{display:block;font-weight:800} .auto-help small{color:var(--muted);font-weight:700;font-size:.8rem}
 /* ===== Premium (paywall) and invitations ===== */
 .pw,.inv{position:fixed;inset:0;z-index:9100;display:grid;place-items:center;padding:16px;background:rgba(18,14,44,.58);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
