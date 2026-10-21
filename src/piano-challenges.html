@@ -108,8 +108,8 @@ button:focus-visible, select:focus-visible, input:focus-visible, summary:focus-v
 .stat-txt{display:flex;flex-direction:column;line-height:1.1}
 .stat-txt b{font-family:var(--f-display);font-weight:800;font-size:1.05rem;font-variant-numeric:tabular-nums}
 .stat-txt small{font-size:.66rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
-.stat.pulse svg{animation:pulse .5s ease}
-@keyframes pulse{50%{transform:scale(1.35)}}
+.stat.pulse svg{animation:pulse 300ms var(--ease-out)}
+@keyframes pulse{40%{transform:scale(1.2)}}
 .xp-txt{font-size:.7rem;color:var(--muted)}
 .lvl{display:flex;align-items:center;gap:10px;min-width:0}
 .lvl-meta{display:flex;flex-direction:column;gap:3px;min-width:120px}
@@ -160,11 +160,11 @@ button:focus-visible, select:focus-visible, input:focus-visible, summary:focus-v
 .slot.ok{background:var(--good-soft);border-color:var(--good)} .slot.ok .nn{color:var(--good)}
 .slot.rev{background:var(--reveal-soft);border-color:var(--reveal)} .slot.rev .nn{color:var(--reveal)}
 .slot.err{animation:shake .3s;background:var(--bad-soft);border-color:var(--bad)}
-.slot.pop{animation:popSlot .38s cubic-bezier(.3,1.6,.5,1)}
-.slot.pop .nn{animation:riseIn .3s ease}
+.slot.pop{animation:popSlot 200ms var(--ease-out)}
+.slot.pop .nn{animation:riseIn 160ms var(--ease-out)}
 .slot.rev{animation:revIn .35s ease backwards}
 @keyframes revIn{from{opacity:0;transform:scale(.86)}}
-@keyframes popSlot{0%{transform:scale(.86)}60%{transform:scale(1.08)}100%{transform:none}}
+@keyframes popSlot{from{transform:scale(.94)}} /* every correct note: short, no overshoot */
 @keyframes riseIn{from{transform:translateY(6px);opacity:0}}
 .k-press,.k-down{transform:translateY(2px) scaleY(.985);transform-origin:top;box-shadow:inset 0 -3px 0 rgba(0,0,0,.18)}
 .answers{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px}
@@ -3054,7 +3054,7 @@ function labelKeys(){
 const fold = m => { while(m<LOW) m+=12; while(m>HIGH) m-=12; return m; };
 function scrollKbdTo(m){
   const wrap=$("kbdWrap"), el=keyEls[fold(m)]; if(!el || wrap.scrollWidth<=wrap.clientWidth+2) return;
-  wrap.scrollTo({left:Math.max(0, el.offsetLeft - wrap.clientWidth/2 + 60), behavior:"smooth"});
+  wrap.scrollTo({left:Math.max(0, el.offsetLeft - wrap.clientWidth/2 + 60), behavior:"auto"}); // instant: the player should not wait for the keyboard to stop at the start of a round
 }
 const kbdPtr=new Map(); // pointerId -> key held down (the key stays down until the finger or the mouse is released)
 kbd.addEventListener("pointerdown", e=>{
