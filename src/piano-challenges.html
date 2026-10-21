@@ -4840,6 +4840,9 @@ function suLabel(sec){ const st=suState(sec), q=suQueue(sec), fr=S.settings.lang
   const names=st.tids.map(id=>SEC[sec].name(typeDef(sec,id))), tn = names.length<=2 ? names.join(", ") : names[0]+", "+names[1]+" +"+(names.length-2);
   if(sec==="ear") return tn;
   return tn+" · "+(st.keys==="all" ? t("suKeysAll") : st.keys==="simple" ? t("suKeysSimple") : [...new Set(q.map(it=>noteName(tonicNote(it.k))))].join(", ")); }
+// the full summary (every type and key), for the tooltip of the shortened one
+function suLabelFull(sec){ const st=suState(sec), q=suQueue(sec), names=st.tids.map(id=>SEC[sec].name(typeDef(sec,id))).join(", ");
+  if(sec==="ear") return names; return names+" · "+(st.keys==="all" ? t("suKeysAll") : st.keys==="simple" ? t("suKeysSimple") : [...new Set(q.map(it=>noteName(tonicNote(it.k))))].join(", ")); }
 function renderSetup(){
   const sec=S.section, st=suState(sec), col=SU_COL[sec], re=()=>{ save(); renderSetup(); };
   const h=$("suTitle"); h.style.setProperty("--mc",col); $("suIc").innerHTML=SEC_ICON(sec); $("suName").textContent=t(SU_NAME[sec]); $("suSub").textContent=t("suSub_"+sec);
@@ -4887,7 +4890,8 @@ function renderSetup(){
   [["suHelpN","guideN"],["suHelpK","guideK"],["suHelpP","guideP"]].forEach(([id,k])=>{ $(id).checked=!!S.settings[k]; });
   $("suLabels").checked=!!S.settings.labels; $("suFing").checked=!!S.settings.fing; $("suStaff").checked=!!S.settings.staff;
   // summary
-  const q=suQueue(sec); $("suSum").textContent=suLabel(sec); $("suCount").textContent=q.length ? t("suCount")(q.length, sec) : t("suNone");
+  ["suTypes","suKeys"].forEach(id=>ovFade($(id))); ex.querySelectorAll(".su-chips").forEach(c=>ovFade(c));
+  const q=suQueue(sec); $("suSum").textContent=suLabel(sec); $("suSum").title=suLabelFull(sec); $("suCount").textContent=q.length ? t("suCount")(q.length, sec) : t("suNone");
   $("suGo").disabled=!q.length; $("suGo").style.setProperty("--mc",col);
 }
 function suStart(){ const sec=S.section, st=suState(sec), q=suQueue(sec); if(!q.length) return;
