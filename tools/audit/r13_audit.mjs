@@ -37,6 +37,7 @@ await p.context().close();
 
 // 5) the sign-in screen: Apple says "soon" (provider not turned on) and stays in the app
 p = await open({ width: 1280, height: 800 }); await p.waitForTimeout(800);
+await ev(p, () => document.getElementById('fnLogin')?.click()); await p.waitForTimeout(300); // first screen -> sign in
 await ev(p, () => document.querySelector('.gt-apple').disabled = false); await ev(p, () => document.querySelector('.gt-apple').click()); await p.waitForTimeout(1500);
 check('Apple : message « bientôt » et on reste dans l’app', await ev(p, () => location.origin === 'http://localhost:' + location.port && /bientôt|soon/.test(document.getElementById("gtMsg").textContent)), await ev(p, () => document.getElementById('gtMsg').textContent));
 await p.context().close();
