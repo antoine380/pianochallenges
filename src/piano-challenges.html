@@ -1085,6 +1085,79 @@ body.setup :is(.stage,.gamebar){display:none!important}
 body.gp .wk.k-ok,body.gp .bk.k-ok{background:var(--nc)!important;box-shadow:inset 0 -7px 0 rgba(0,0,0,.16),0 0 18px 0 var(--nc)!important}
 body.gp .wk.k-ok span,body.gp .bk.k-ok span{color:#15122e}
 .playpanel{background:var(--bg)!important}
+
+/* ===== Quiz ===== */
+:root{--m-quiz:#2563eb}
+[data-page="quiz"] :is(.picker,.stage,.gamebar,.prompt-row,.timeline,.slots,.answers,.actions,.hint,.notice,.pane-head){display:none!important}
+.qz{gap:14px}
+.qz-wrap{display:grid;grid-template-columns:minmax(0,1fr) minmax(280px,340px);gap:20px;align-items:start}
+.qz-col{display:flex;flex-direction:column;gap:6px;min-width:0}
+.qz-themes{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
+.qz-theme{position:relative;display:flex;flex-direction:column;align-items:flex-start;justify-content:flex-end;gap:1px;text-align:left;border:0;border-radius:var(--r-md);padding:12px 12px 10px;min-height:76px;color:#fff;
+  background-color:var(--tc);background-image:radial-gradient(120% 80% at 90% -10%,rgba(255,255,255,.3),transparent 55%),linear-gradient(160deg,color-mix(in srgb,var(--tc) 70%,#fff),var(--tc) 64%);box-shadow:0 12px 22px -14px var(--tc);opacity:.78;transition:transform .15s,opacity .15s}
+.qz-theme:hover{transform:translateY(-2px);opacity:1}
+.qz-theme[aria-pressed="true"]{opacity:1;box-shadow:0 0 0 3px var(--bg),0 0 0 5px var(--tc),0 14px 24px -12px var(--tc)}
+.qz-theme b{font-family:var(--f-display);font-weight:600;font-size:.98rem;line-height:1.1;max-width:calc(100% - 34px)}
+.qz-theme small{font-size:.72rem;font-weight:700;opacity:.9}
+.qz-ti{position:absolute;top:-10px;right:4px;width:46px;height:46px;filter:drop-shadow(0 8px 8px rgba(10,6,30,.4))} .qz-ti svg{width:100%;height:100%;display:block}
+.qz-row{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-top:8px}
+.qz-diffs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.qz-diff{display:flex;flex-direction:column;align-items:flex-start;gap:2px;text-align:left;border:0;border-radius:var(--r-md);padding:10px 12px;background:var(--surface);color:var(--ink);box-shadow:var(--shadow-card)}
+.qz-diff b{font-weight:800;font-size:.92rem} .qz-diff small{color:var(--muted);font-size:.74rem;line-height:1.25}
+.qz-diff[aria-pressed="true"]{background:var(--m-quiz);color:#fff} .qz-diff[aria-pressed="true"] small{color:#fff;opacity:.9}
+.qz-pl{display:flex;align-items:center;gap:8px;padding:6px 0}
+.qz-pl>i{width:14px;height:14px;border-radius:50%;background:var(--pc);box-shadow:0 0 0 3px color-mix(in srgb,var(--pc) 30%,transparent);flex:none}
+.qz-pl input{flex:1;min-width:0;font:inherit;font-weight:700;color:var(--ink);background:var(--surface-2);border:0;border-radius:10px;padding:7px 10px}
+.qz-pin{font-size:.76rem;color:var(--muted);font-weight:700;white-space:nowrap} .qz-pin select{max-width:140px}
+.qz-hint{margin:6px 0 0;font-size:.76rem;color:var(--muted)}
+.qz-go{width:100%;--mc:var(--m-quiz)}
+.qz-go:disabled{opacity:.6}
+.qz-load{color:var(--muted);font-weight:700}
+/* a question */
+.qz-top{display:flex;align-items:center;gap:12px}
+.qz-chip{border-radius:999px;padding:5px 12px;background:var(--tc);color:#fff;font-weight:800;font-size:.8rem}
+.qz-num{font-weight:800;color:var(--muted);font-size:.85rem}
+.qz-timer{flex:1;height:8px;border-radius:999px;background:var(--surface-2);overflow:hidden} .qz-timer i{display:block;height:100%;background:linear-gradient(90deg,var(--m-quiz),#6ea0ff);transform-origin:left;border-radius:inherit}
+.qz-q{display:grid;grid-template-columns:auto minmax(0,1fr);gap:18px;align-items:center;background:var(--surface);border-radius:var(--r-lg);padding:16px 20px;box-shadow:var(--shadow-card)}
+.qz-img{width:110px;height:110px;border-radius:26px;display:grid;place-items:center;background:radial-gradient(circle at 35% 30%,color-mix(in srgb,var(--tc) 40%,#fff),var(--tc));box-shadow:0 14px 24px -14px var(--tc)}
+.qz-img svg{width:86%;height:86%;filter:drop-shadow(0 8px 8px rgba(10,6,30,.35))}
+.qz-text{margin:0;font-family:var(--f-display);font-weight:700;font-size:clamp(1.25rem,2.6vw,1.9rem);line-height:1.15;text-wrap:balance}
+.qz-turn{margin:0;font-weight:800;color:var(--pc)}
+.qz-ans{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.qz-a{position:relative;display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:center;gap:12px;text-align:left;border:0;border-radius:var(--r-lg);padding:12px 14px;background:var(--surface);color:var(--ink);box-shadow:var(--shadow-card),inset 4px 0 0 var(--ac);min-height:84px;transition:transform .12s}
+.qz-a:hover{transform:translateY(-2px)}
+.qz-l{width:38px;height:38px;border-radius:12px;display:grid;place-items:center;background:var(--ac);color:#15122e;font-family:var(--f-display);font-weight:700;font-size:1.2rem}
+.qz-at{font-weight:800;font-size:1.02rem;line-height:1.2}
+.qz-play{display:flex;flex-direction:column;align-items:flex-end;gap:3px;min-width:96px} .qz-play small{font-size:.66rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.qz-play b{font-family:var(--f-display);font-weight:600;font-size:.95rem;white-space:nowrap} .qz-play svg{width:84px;height:30px;display:block}
+.qz-who{position:absolute;top:-6px;left:44px;display:flex;gap:3px} .qz-who i{width:16px;height:16px;border-radius:50%;box-shadow:0 0 0 2px var(--surface)}
+.qz-a.right{box-shadow:0 0 0 3px var(--good),0 14px 24px -14px var(--good)} .qz-a.right .qz-l{background:var(--good);color:#fff}
+.qz-a.wrong{opacity:.55}
+.qz-scores{display:flex;gap:10px;flex-wrap:wrap}
+.qz-ps{display:flex;align-items:center;gap:10px;padding:8px 14px;border-radius:999px;background:var(--surface);box-shadow:var(--shadow-card);min-width:150px}
+.qz-ps>i{width:12px;height:12px;border-radius:50%;background:var(--pc);flex:none}
+.qz-ps span{display:flex;flex-direction:column;line-height:1.15;flex:1;min-width:0} .qz-ps b{font-weight:800;font-size:.88rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap} .qz-ps small{font-size:.72rem;color:var(--muted);font-weight:700}
+.qz-pts{font-family:var(--f-display);font-weight:700;font-size:1.15rem;font-variant-numeric:tabular-nums}
+.qz-ps.turn{box-shadow:0 0 0 2px var(--pc),var(--shadow-card)} .qz-ps.ok small{color:var(--good)} .qz-ps.ko small{color:var(--bad)}
+.qz-foot{display:flex;justify-content:space-between;align-items:center;gap:10px}
+/* end */
+.qz-end{align-items:center;text-align:center}
+.qz-endt{margin:0;font-family:var(--f-display);font-weight:700;font-size:clamp(1.6rem,3.4vw,2.4rem)}
+.qz-podium{display:flex;align-items:flex-end;justify-content:center;gap:14px;flex-wrap:wrap}
+.qz-pod{display:flex;flex-direction:column;align-items:center;gap:4px;width:170px;padding:16px 12px;border-radius:var(--r-lg);color:#fff;background:linear-gradient(160deg,color-mix(in srgb,var(--pc) 70%,#fff),color-mix(in srgb,var(--pc) 75%,#15122e));box-shadow:0 18px 30px -16px var(--pc)}
+.qz-pod.r1{padding-block:28px} .qz-rk{width:40px;height:40px;border-radius:50%;display:grid;place-items:center;background:rgba(255,255,255,.95);color:#15122e;font-family:var(--f-display);font-weight:700;font-size:1.2rem}
+.qz-pod b{font-weight:800;font-size:1.05rem;text-shadow:0 1px 2px rgba(0,0,0,.35)} .qz-sc{font-family:var(--f-display);font-weight:700;font-size:1.5rem;text-shadow:0 1px 2px rgba(0,0,0,.35)} .qz-pod small{font-weight:700;text-shadow:0 1px 2px rgba(0,0,0,.35)}
+.qz-endb{display:flex;gap:10px;justify-content:center}
+#qzMode{display:grid;grid-template-columns:repeat(3,minmax(0,1fr))} #qzMode button{white-space:normal;line-height:1.15;font-size:.8rem;padding:7px 6px}
+.qz-ps small{white-space:nowrap} .qz-ps{min-width:170px}
+@media (max-width:1000px){ .qz-wrap{grid-template-columns:1fr;gap:14px} .qz .su-side{display:grid;grid-template-columns:minmax(0,1fr) 230px;align-items:end;gap:12px} .qz .mode-h p{display:none} .qz-theme{min-height:56px;padding:8px 10px} .qz-ti{width:36px;height:36px} .qz-pl{padding:3px 0} .qz-pl input{padding:5px 10px} #qzMidiHint{display:none} }
+@media (max-height:820px){ .qz-themes{grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:8px} .qz-theme{min-height:58px;padding:8px 10px} .qz-ti{width:36px;height:36px} .qz .mode-h p{display:none}
+  .qz-q{padding:12px 16px} .qz-img{width:84px;height:84px;border-radius:20px} .qz-a{min-height:70px;padding:10px 12px} }
+@media (max-width:640px){ .qz .su-side{grid-template-columns:1fr} #qzModeHelp,#qzMidiHint,.qz .su-help.mini{display:none} .qz-diff{padding:7px 10px} .qz-pl{padding:3px 0} .qz .mode-h{display:none} .qz-themes{display:flex;overflow-x:auto;gap:6px;padding:10px 2px 6px;scrollbar-width:none} .qz-theme{flex:0 0 120px} .qz-diffs small{display:none}
+  .qz-q{grid-template-columns:1fr;text-align:center;justify-items:center;padding:10px} .qz-img{width:64px;height:64px;border-radius:16px} .qz-text{font-size:1.15rem}
+  .qz-ans{grid-template-columns:1fr;gap:8px} .qz-a{min-height:56px;padding:8px 10px} .qz-play svg{display:none} .qz-ps{min-width:130px;padding:6px 10px} }
+@media (max-height:420px) and (orientation:landscape){ .qz .su-side{display:flex;flex-direction:column;gap:6px} #qzModeHelp,#qzMidiHint,.qz .su-help.mini,.qz .qz-row .su-lbl{display:none} .qz-diff{padding:5px 8px} .qz-pl{padding:2px 0} .qz-pl input{padding:4px 8px} .qz .su-box{padding:6px 10px} .qz .su-h{margin:0 0 3px} .qz-row{margin-top:4px} .qz .mode-h{display:none} .qz-q{padding:6px 10px;gap:10px} .qz-img{width:48px;height:48px;border-radius:12px} .qz-text{font-size:1rem} .qz-a{min-height:46px;padding:6px 10px} .qz-play svg{display:none} .qz-ans{gap:6px}
+  .qz-themes{display:flex;overflow-x:auto;gap:6px;padding-top:8px} .qz-theme{flex:0 0 120px;min-height:46px} .qz-wrap{grid-template-columns:minmax(0,1fr) 260px;gap:10px} .qz-diffs small{display:none} }
 </style>
 
 <script>if(window.Capacitor&&window.webkit&&window.webkit.messageHandlers&&window.webkit.messageHandlers.bridge)document.documentElement.classList.add("native");</script>
@@ -1118,6 +1191,7 @@ body.gp .wk.k-ok span,body.gp .bk.k-ok span{color:#15122e}
     <button class="mode-item" type="button" data-mode="games" style="--mc:var(--m-games)"><span class="mi"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2.5" y="7" width="19" height="11" rx="5.5"/><path d="M7.5 10.5v4M5.5 12.5h4"/><circle cx="15.5" cy="11.2" r=".9"/><circle cx="17.8" cy="13.8" r=".9"/></svg></span><span class="mt"><b>games</b><small data-i="modeGamesSub"></small></span></button>
     <button class="mode-item" type="button" data-mode="play" style="--mc:var(--m-play)"><span class="mi"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.5l12 7.5-12 7.5z"/></svg></span><span class="mt"><b>play</b><small data-i="modePlaySub"></small></span></button>
     <button class="mode-item" type="button" data-mode="learn" style="--mc:var(--m-learn)"><span class="mi"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6.5A2.5 2.5 0 0 1 6.5 4H11v16H6.5A2.5 2.5 0 0 0 4 22zM20 6.5A2.5 2.5 0 0 0 17.5 4H13v16h4.5A2.5 2.5 0 0 1 20 22z"/></svg></span><span class="mt"><b>learn</b><small data-i="modeLearnSub"></small></span></button>
+    <button class="mode-item" type="button" data-mode="quiz" style="--mc:var(--m-quiz)"><span class="mi"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3h11A2.5 2.5 0 0 1 20 5.5v8a2.5 2.5 0 0 1-2.5 2.5H11l-4.5 4v-4h0A2.5 2.5 0 0 1 4 13.5z"/><path d="M10 8a2 2 0 1 1 2.6 1.9c-.4.1-.6.5-.6.9v.7"/><circle cx="12" cy="13.3" r=".4"/></svg></span><span class="mt"><b>quiz</b><small data-i="modeQuizSub"></small></span></button>
   </nav>
   <nav class="side-nav" id="secTabs" aria-label="Sections">
     <button class="nav-item" type="button" data-v="chords"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="7" cy="17" r="2.6"/><circle cx="7" cy="11" r="2.6"/><circle cx="7" cy="5" r="2.6"/><path d="M9.6 17V5M13 6h8M13 12h8M13 18h8"/></svg><span class="lbl" data-i="secChords"></span></button>
@@ -1243,6 +1317,36 @@ body.gp .wk.k-ok span,body.gp .bk.k-ok span{color:#15122e}
         </section>
         <button class="su-go" id="suGo" type="button"><span><small id="suCount"></small><b id="suSum"></b></span><span class="su-play" data-i="suGo"></span></button>
       </aside>
+    </div>
+  </section>
+
+  <section class="mode-page qz" id="quizPanel" hidden>
+    <div id="qzSetup">
+      <div class="mode-h"><h2 class="mode-big" style="--mc:var(--m-quiz)"><span class="mb-ic"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3h11A2.5 2.5 0 0 1 20 5.5v8a2.5 2.5 0 0 1-2.5 2.5H11l-4.5 4v-4h0A2.5 2.5 0 0 1 4 13.5z"/><path d="M10 8a2 2 0 1 1 2.6 1.9c-.4.1-.6.5-.6.9v.7"/><circle cx="12" cy="13.3" r=".4"/></svg></span>QUIZ</h2><p data-i="qzSub"></p></div>
+      <div class="qz-wrap">
+        <div class="qz-col">
+          <h3 class="su-h" data-i="qzThemeH"></h3><div class="qz-themes" id="qzThemes"></div>
+          <h3 class="su-h" data-i="qzDiffH"></h3><div class="qz-diffs" id="qzDiff"></div>
+          <div class="qz-row"><span class="su-lbl" data-i="qzCountH"></span><div class="seg su-seg" id="qzCount"></div><span class="su-lbl" data-i="qzTimeH"></span><div class="seg su-seg" id="qzTime"></div></div>
+          <label class="su-help mini"><input type="checkbox" id="qzKeysOpt"><span><b data-i="qzKeysT"></b></span></label>
+        </div>
+        <aside class="su-side">
+          <section class="su-box"><h3 class="su-h" data-i="qzPlayersH"></h3><div class="seg su-seg" id="qzN"></div>
+            <div id="qzModeRow"><h3 class="su-h" style="margin-top:10px" data-i="qzModeH"></h3><div class="seg su-seg" id="qzMode"></div><p class="qz-hint" id="qzModeHelp"></p></div>
+            <div id="qzPlayers"></div><p class="qz-hint" id="qzMidiHint"></p></section>
+          <button class="su-go qz-go" id="qzGo" type="button"><span><small data-i="qzReady"></small><b data-i="qzGoT"></b></span><span class="su-play" data-i="suGo"></span></button>
+        </aside>
+      </div>
+    </div>
+    <div id="qzPlay" class="qz-col" hidden>
+      <div class="qz-top"><span class="qz-chip" id="qzTheme"></span><span class="qz-num" id="qzNum"></span><div class="qz-timer"><i id="qzBar"></i></div><button class="btn" id="qzQuit" type="button" data-i="qzQuit"></button></div>
+      <div class="qz-q"><div class="qz-img" id="qzImg"></div><div><p class="qz-turn" id="qzTurn" hidden></p><p class="qz-text" id="qzText"></p></div></div>
+      <div class="qz-ans" id="qzAns"></div>
+      <div class="qz-foot"><div class="qz-scores" id="qzScores"></div><button class="btn primary" id="qzNext" type="button" data-i="qzNextT" hidden></button></div>
+    </div>
+    <div id="qzEnd" class="qz-col qz-end" hidden>
+      <p class="qz-endt" id="qzEndT"></p><div class="qz-podium" id="qzPodium"></div>
+      <div class="qz-endb"><button class="btn" id="qzBack" type="button" data-i="qzSettings"></button><button class="btn primary" id="qzAgain" type="button" data-i="qzAgainT"></button></div>
     </div>
   </section>
 
@@ -1684,7 +1788,14 @@ const TXT = {
     melDown:" · descend en Mineur",
     midiBlockedMsg:"Le navigateur a refusé l'accès MIDI. Clique sur le cadenas à gauche de l'adresse pour l'autoriser, ou choisis le clavier à l'écran.",
     dailyResume:"Reprendre",
-    syncOk:x=>"Sauvegardé en ligne "+x+" ✓", syncErr:x=>"Hors ligne : dernière sauvegarde "+x+".", agoNever:"inconnue", signedOut:"Déconnecté", rights:"Tous droits réservés", themeDay:"Passer en mode jour", themeNight:"Passer en mode nuit", suKey:"Tonalité", suTimer:"Chrono", suHelps:"Aides", suHowT:"Comment ça marche ?", suGo:"Commencer", suMastered:"maîtrisées", suChange:"Changer de choix",
+    syncOk:x=>"Sauvegardé en ligne "+x+" ✓", syncErr:x=>"Hors ligne : dernière sauvegarde "+x+".", agoNever:"inconnue", signedOut:"Déconnecté", rights:"Tous droits réservés", themeDay:"Passer en mode jour", themeNight:"Passer en mode nuit", modeQuizSub:"De 1 à 4 joueurs", quizT:"Quiz", qzSub:"Réponds aux questions en jouant la note ou l'accord de la bonne réponse. Seul ou jusqu'à 4 joueurs.",
+    qzThemeH:"Thème", qzDiffH:"Difficulté", qzCountH:"Questions", qzTimeH:"Temps", qzKeysT:"Montrer les touches à jouer", qzPlayersH:"Joueurs", qzModeH:"Comment jouer à plusieurs ?", qzReady:"Prêt ?", qzGoT:"Lancer le quiz",
+    qzQuestions:"questions", qzLoading:"Chargement des questions…", qzLoadErr:"Impossible de charger les questions. Vérifie ta connexion.",
+    qzDiffs:["Facile","Moyen","Difficile"], qzDiffD:["Une note par réponse : Do, Ré, Mi, Fa","Des accords simples : Do, Fa, Sol, La mineur…","Tous les accords, majeurs, mineurs et de 7e"],
+    qzModes:["Un clavier chacun","Zones d'un piano","Chacun son tour"], qzModeD:["Chaque joueur répond sur son clavier MIDI (ou sur l'écran). Le plus rapide gagne le plus de points.","Un seul piano partagé : chaque joueur joue dans sa zone du clavier.","Un seul clavier : les joueurs répondent à tour de rôle, une question chacun."],
+    qzPlayer:"Joueur", qzKeyboard:"Clavier", qzScreen:"Écran", qzZone:"Zone", qzTurnN:n=>"Joue en "+n+(n===1?"er":"e"), qzMidiOk:n=>n+(n>1?" claviers MIDI détectés":" clavier MIDI détecté"), qzMidiNone:"Aucun clavier MIDI détecté : tu peux répondre en touchant les réponses ou avec le clavier de l'ordinateur.",
+    qzQ:(a,b)=>"Question "+a+" / "+b, qzPlay:"Joue", qzTurnOf:n=>"Au tour de "+n, qzWaiting:"réfléchit…", qzAnswered:"a répondu", qzNoAns:"pas de réponse", qzWrong:"raté", qzQuit:"Quitter", qzNextT:"Question suivante",
+    qzWinner:n=>n+" gagne !", qzSoloEnd:(a,b)=>a+" bonne"+(a>1?"s":"")+" réponse"+(a>1?"s":"")+" sur "+b, qzRight:(a,b)=>a+" / "+b+" bonnes réponses", qzSettings:"Changer les réglages", qzAgainT:"Rejouer", suKey:"Tonalité", suTimer:"Chrono", suHelps:"Aides", suHowT:"Comment ça marche ?", suGo:"Commencer", suMastered:"maîtrisées", suChange:"Changer de choix",
     suPickScale:"Quelle gamme ?", suPickChord:"Quel accord ?", suPickProg:"Quelle progression ?", suPickEar:"Qu'est-ce qu'on écoute ?",
     suSub_scales:"Choisis une gamme et sa tonalité, règle le chrono et les aides, puis joue-la jusqu'à la réussir.", suSub_chords:"Choisis un accord et sa tonalité. Chaque renversement coché est un exercice.", suSub_harmony:"Choisis une tonalité : chaque degré coché est un exercice.", suSub_prog:"Choisis une progression et sa tonalité, puis enchaîne les accords.", suSub_ear:"Choisis ce que tu veux reconnaître : 10 écoutes par partie.",
     suHelpNT:"Voir les notes", suHelpND:"Le nom de chaque note s'affiche avant que tu joues.", suHelpKT:"Allumer les touches", suHelpKD:"Les touches à jouer s'allument sur le clavier.",
@@ -1815,7 +1926,14 @@ const TXT = {
     melDown:" · descends as Minor",
     midiBlockedMsg:"The browser refused MIDI access. Click the padlock left of the address to allow it, or choose the on-screen keyboard.",
     dailyResume:"Resume",
-    syncOk:x=>"Saved online "+x+" ✓", syncErr:x=>"Offline: last save "+x+".", agoNever:"unknown", signedOut:"Signed out", rights:"All rights reserved", themeDay:"Switch to day mode", themeNight:"Switch to night mode", suKey:"Key", suTimer:"Timer", suHelps:"Helps", suHowT:"How does it work?", suGo:"Start", suMastered:"mastered", suChange:"Change choice",
+    syncOk:x=>"Saved online "+x+" ✓", syncErr:x=>"Offline: last save "+x+".", agoNever:"unknown", signedOut:"Signed out", rights:"All rights reserved", themeDay:"Switch to day mode", themeNight:"Switch to night mode", modeQuizSub:"1 to 4 players", quizT:"Quiz", qzSub:"Answer the questions by playing the note or chord of the right answer. On your own or up to 4 players.",
+    qzThemeH:"Topic", qzDiffH:"Difficulty", qzCountH:"Questions", qzTimeH:"Time", qzKeysT:"Show the keys to play", qzPlayersH:"Players", qzModeH:"How do several people play?", qzReady:"Ready?", qzGoT:"Start the quiz",
+    qzQuestions:"questions", qzLoading:"Loading the questions…", qzLoadErr:"Couldn't load the questions. Check your connection.",
+    qzDiffs:["Easy","Medium","Hard"], qzDiffD:["One note per answer: C, D, E, F","Simple chords: C, F, G, A minor…","Every chord: major, minor and 7th"],
+    qzModes:["One keyboard each","Zones of one piano","Take turns"], qzModeD:["Each player answers on their own MIDI keyboard (or on screen). The fastest scores the most.","One shared piano: each player plays in their own part of the keyboard.","One keyboard: players answer in turn, one question each."],
+    qzPlayer:"Player", qzKeyboard:"Keyboard", qzScreen:"Screen", qzZone:"Zone", qzTurnN:n=>"Plays "+["1st","2nd","3rd","4th"][n-1], qzMidiOk:n=>n+(n>1?" MIDI keyboards found":" MIDI keyboard found"), qzMidiNone:"No MIDI keyboard found: you can answer by tapping the answers or with the computer keyboard.",
+    qzQ:(a,b)=>"Question "+a+" / "+b, qzPlay:"Play", qzTurnOf:n=>n+"'s turn", qzWaiting:"thinking…", qzAnswered:"answered", qzNoAns:"no answer", qzWrong:"missed", qzQuit:"Quit", qzNextT:"Next question",
+    qzWinner:n=>n+" wins!", qzSoloEnd:(a,b)=>a+" right answer"+(a>1?"s":"")+" out of "+b, qzRight:(a,b)=>a+" / "+b+" right answers", qzSettings:"Change settings", qzAgainT:"Play again", suKey:"Key", suTimer:"Timer", suHelps:"Helps", suHowT:"How does it work?", suGo:"Start", suMastered:"mastered", suChange:"Change choice",
     suPickScale:"Which scale?", suPickChord:"Which chord?", suPickProg:"Which progression?", suPickEar:"What do we listen to?",
     suSub_scales:"Pick a scale and its key, set the timer and the helps, then play it until you nail it.", suSub_chords:"Pick a chord and its key. Each ticked inversion is one exercise.", suSub_harmony:"Pick a key: each ticked degree is one exercise.", suSub_prog:"Pick a progression and its key, then chain the chords.", suSub_ear:"Pick what you want to recognise: 10 listens per game.",
     suHelpNT:"Show the notes", suHelpND:"Each note's name shows before you play.", suHelpKT:"Light up the keys", suHelpKD:"The keys to play light up on the keyboard.",
@@ -2507,6 +2625,7 @@ function wrongNote(m){
   const sl=$("slots").children[at]; if(sl){ sl.classList.remove("err","pop"); void sl.offsetWidth; sl.classList.add("err"); }
 }
 function noteIn(m){ lastNoteAt=Date.now();
+  if(page==="quiz"){ if(!anyModal()) quizIn("screen",m); return; } // screen keyboard, computer keyboard, mic
   if(page==="play"){ playSend("noteon",m); setTimeout(()=>playSend("noteoff",m),400); return; } // screen keyboard / mic: no release event, so release after 400 ms
   if(!["practice","daily","games","free"].includes(page)) return; // no exercise on the other pages: nothing to feed
   if(midiOpen){ pressKey(m); flashKey(m,"k-hit"); return; } // MIDI window: the notes only test the keyboard
@@ -3146,7 +3265,7 @@ function renderSettings(){
 }
 function render(){ if(page==="hub") try{ renderHubSide(); }catch(e){} /* the first renders run before the input code is defined */
   const suOn = page==="practice" && !game && phase==="idle"; document.body.classList.toggle("setup",suOn); document.body.classList.toggle("gp",!!S.settings.guideP);
-  const sp=document.getElementById("setupPanel"); if(sp){ sp.hidden=!suOn; if(suOn) try{ renderSetup(); }catch(e){ console.warn(e); } try{ renderFiche2(); }catch(e){} } document.body.classList.toggle("playing", !!game || phase!=="idle"); document.body.dataset.page=page; $("gamesPanel").hidden = page!=="games"; $("hubPanel").hidden = page!=="hub"; $("freePanel").hidden = page!=="free"; $("learnPanel").hidden = page!=="learn"; $("dailyPanel").hidden = page!=="daily"; $("rankPanel").hidden = page!=="rank"; $("accountPanel").hidden = page!=="account"; $("lockPanel").hidden = page!=="locked"; $("settingsPage").hidden = page!=="settings"; $("progressPage").hidden = page!=="progress"; renderDaily(); renderGameBar(); setNav();
+  const sp=document.getElementById("setupPanel"); if(sp){ sp.hidden=!suOn; if(suOn) try{ renderSetup(); }catch(e){ console.warn(e); } try{ renderFiche2(); }catch(e){} } document.body.classList.toggle("playing", !!game || phase!=="idle"); document.body.dataset.page=page; $("gamesPanel").hidden = page!=="games"; $("hubPanel").hidden = page!=="hub"; $("quizPanel").hidden = page!=="quiz"; $("freePanel").hidden = page!=="free"; $("learnPanel").hidden = page!=="learn"; $("dailyPanel").hidden = page!=="daily"; $("rankPanel").hidden = page!=="rank"; $("accountPanel").hidden = page!=="account"; $("lockPanel").hidden = page!=="locked"; $("settingsPage").hidden = page!=="settings"; $("progressPage").hidden = page!=="progress"; renderDaily(); renderGameBar(); setNav();
   if(phase==="idle"||phase==="listening") resetScore(); renderSession(); renderHint(); renderPrompt(); renderTimeline(); renderSlots(); renderActions(); renderStatus(); renderMap(); labelKeys(); }
 
 // ---------- Settings wiring ----------
@@ -3196,11 +3315,11 @@ const phoneMQ=window.matchMedia("(max-width:640px)"), railMQ=window.matchMedia("
 function setNav(){
   const mark=(el,on)=>{ if(on) el.setAttribute("aria-current","page"); else el.removeAttribute("aria-current"); };
   $("secTabs").querySelectorAll("button").forEach(b=>mark(b, page==="practice" ? b.dataset.v===S.section : b.dataset.v===page));
-  const mode = page==="play"||page==="free" ? (page==="play"&&playHash.startsWith("#game")?"games":"play") : page==="games" ? "games" : ["hub","settings","rank","account","progress"].includes(page) ? "" : page==="locked" ? (lockFor==="games"?"games":"learn") : "learn";
+  const mode = page==="quiz" ? "quiz" : page==="play"||page==="free" ? (page==="play"&&playHash.startsWith("#game")?"games":"play") : page==="games" ? "games" : ["hub","settings","rank","account","progress"].includes(page) ? "" : page==="locked" ? (lockFor==="games"?"games":"learn") : "learn";
   $("side").dataset.mode=mode; $("modeNav").querySelectorAll("button").forEach(b=>mark(b,b.dataset.mode===mode));
   mark($("dailyCard"),page==="daily"); mark($("rankBtn"),page==="rank"); mark($("accountBtn"),page==="account"); mark($("setBtn"),page==="settings"); mark($("progBtn"),page==="progress");
   const pv = page==="practice"?S.section : page==="locked"?lockFor : page;
-  $("mbTitle").textContent = t({chords:"secChords",scales:"secScales",harmony:"secHarmony",prog:"secProg",ear:"secEar",games:"secGames",play:"secPlay",free:"secPlay",hub:"hub",learn:"learn",daily:narrowMQ.matches?"dailyShort":"dailyTitle",rank:"secRank",account:"secAccount",settings:"settings",progress:"progress"}[pv]);
+  $("mbTitle").textContent = t({chords:"secChords",scales:"secScales",harmony:"secHarmony",prog:"secProg",ear:"secEar",games:"secGames",play:"secPlay",free:"secPlay",quiz:"quizT",hub:"hub",learn:"learn",daily:narrowMQ.matches?"dailyShort":"dailyTitle",rank:"secRank",account:"secAccount",settings:"settings",progress:"progress"}[pv]);
   if(page==="locked"){ $("secTabs").querySelectorAll("button").forEach(b=>mark(b,b.dataset.v===lockFor)); mark($("dailyCard"),lockFor==="daily"); }
 }
 function applySide(){
@@ -3629,12 +3748,187 @@ function renderFiche2(){
 }
 const NAT_OF = pc => [0,0,2,2,4,5,5,7,7,9,9,11][pc];
 
+// ----- illustrations for the quiz (same glossy "toy" style as the tiles) -----
+Object.assign(OBJ,{
+  globe:()=>{ const o=O3(); o.ball(60,58,44,"#3b82ff"); const g=o.grad("#3ddc84"); return o.raw('<path d="M38 30c10-6 22-4 26 4s-6 12-2 20 14 6 12 16-14 14-22 10-4-14-12-16-16-6-14-16 4-14 14-18z" fill="'+g+'" opacity=".95"/><path d="M80 78c6-2 12 2 10 8s-10 6-12 2 0-8 2-10z" fill="'+g+'"/>').ball(42,34,8,"#ffffff").raw('<ellipse cx="60" cy="108" rx="26" ry="5" fill="#000" opacity=".12"/>').svg(); },
+  mountain:()=>{ const o=O3(); const g=o.grad("#5b7cff"), g2=o.grad("#3a3478"); return o.raw('<path d="M8 104l40-66 18 26 12-16 34 56z" fill="'+g+'"/><path d="M48 38l-12 20 8-4 6 6 6-8z" fill="#fff"/><path d="M78 48l-8 10 6-2 4 4 4-4z" fill="#fff"/><path d="M8 104h104" stroke="'+g2+'" stroke-width="6" stroke-linecap="round"/>').ball(96,24,10,"#ffd23f").svg(); },
+  volcano:()=>{ const o=O3(); const g=o.grad("#b4461a"), f=o.grad("#ff5a3c"); return o.raw('<path d="M12 108l30-56h36l30 56z" fill="'+g+'"/><path d="M44 54c6 6 8 18 2 30 10-4 14-14 14-14s4 12 14 14c-6-12-4-24 2-30z" fill="'+f+'"/>').ball(48,30,10,"#9aa3c7").ball(64,20,12,"#c9cde0").ball(80,32,9,"#9aa3c7").svg(); },
+  castle:()=>{ const o=O3(); o.block(20,44,80,62,"#9aa3c7",6); o.block(12,30,22,76,"#b8bfdc",5); o.block(86,30,22,76,"#b8bfdc",5); return o.raw('<path d="M12 30l11-14 11 14zM86 30l11-14 11 14z" fill="#ff5a6e"/><rect x="50" y="76" width="20" height="30" rx="10" fill="#3a3478"/><path d="M60 16v18M60 16l14 5-14 5" stroke="#3a3478" stroke-width="3" fill="#ffd23f"/>').svg(); },
+  crown:()=>{ const o=O3(); const g=o.grad("#ffc94a"); return o.raw('<path d="M14 92l-4-56 26 22 24-34 24 34 26-22-4 56z" fill="'+g+'"/>').block(14,88,92,16,"#e59b12",6).ball(60,74,8,"#ff5a6e").ball(34,78,6,"#3cc8f0").ball(86,78,6,"#3ddc84").svg(); },
+  scroll:()=>{ const o=O3(); o.block(22,22,76,78,"#fff3d6",8); return o.ball(22,24,10,"#e0b46a",10).ball(98,98,10,"#e0b46a",10).raw('<path d="M36 44h48M36 58h48M36 72h32" stroke="#b08a4a" stroke-width="4" stroke-linecap="round"/>').svg(); },
+  flask:()=>{ const o=O3(); const g=o.grad("#3ddc84"); return o.block(48,10,24,34,"#e7f0ff",6).raw('<path d="M48 40L20 98a10 10 0 0 0 9 14h62a10 10 0 0 0 9-14L72 40z" fill="#e7f0ff" opacity=".85"/><path d="M33 72h54l13 26a10 10 0 0 1-9 14H29a10 10 0 0 1-9-14z" fill="'+g+'"/>').ball(52,90,5,"#fff").ball(66,82,4,"#fff").ball(74,96,3,"#fff").svg(); },
+  atom:()=>{ const o=O3(); let s=''; [0,60,120].forEach(r=>s+='<ellipse cx="60" cy="60" rx="50" ry="18" fill="none" stroke="#7a5bf5" stroke-width="5" transform="rotate('+r+' 60 60)"/>'); return o.raw(s).ball(60,60,13,"#ff5a6e").ball(108,58,6,"#3cc8f0").ball(34,20,6,"#ffd23f").svg(); },
+  planet:()=>{ const o=O3(); o.raw('<ellipse cx="60" cy="62" rx="56" ry="14" fill="none" stroke="#ffd23f" stroke-width="6" transform="rotate(-18 60 62)" opacity=".7"/>'); o.ball(60,60,34,"#b26bff"); return o.raw('<path d="M8 74a56 14 -18 0 0 104 -32" fill="none" stroke="#ffd23f" stroke-width="6" stroke-linecap="round" transform="rotate(-6 60 60)"/>').ball(100,20,5,"#fff").ball(18,26,4,"#fff").svg(); },
+  leaf:()=>{ const o=O3(); const g=o.grad("#3ddc84"); return o.raw('<path d="M20 100C20 50 50 18 104 16c0 56-30 86-84 84z" fill="'+g+'"/><path d="M24 96C48 72 70 50 96 26" stroke="#1f7a52" stroke-width="4" stroke-linecap="round" fill="none"/>').svg(); },
+  paw:()=>{ const o=O3(); return o.ball(60,78,26,"#ff9a3c",22).ball(30,44,11,"#ff9a3c",13).ball(50,30,11,"#ff9a3c",13).ball(72,30,11,"#ff9a3c",13).ball(92,44,11,"#ff9a3c",13).svg(); },
+  fish:()=>{ const o=O3(); const g=o.grad("#3cc8f0"); return o.raw('<path d="M84 60l26-24v48z" fill="'+g+'"/>').ball(52,60,38,"#3cc8f0",26).ball(32,52,6,"#ffffff").raw('<circle cx="33" cy="53" r="3" fill="#15122e"/><path d="M60 40q8 20 0 40" stroke="#fff" stroke-width="3" fill="none" opacity=".6"/>').svg(); },
+  ball:()=>{ const o=O3(); o.ball(60,60,46,"#fbfbff"); return o.raw('<path d="M60 40l17 12-6 20H49l-6-20z" fill="#2b2560"/><path d="M60 40V18M77 52l20-8M71 72l12 18M49 72L37 90M43 52l-20-8" stroke="#2b2560" stroke-width="4"/>').svg(); },
+  medal:()=>{ const o=O3(); return o.raw('<path d="M40 8l20 40 20-40h-12l-8 18-8-18z" fill="#ff5a6e"/>').ball(60,74,32,"#ffc94a").raw('<path d="M60 56l5 11 12 1-9 8 3 12-11-6-11 6 3-12-9-8 12-1z" fill="#fff8d6"/>').svg(); },
+  clapper:()=>{ const o=O3(); o.block(16,48,88,58,"#2b2560",8); return o.raw('<g transform="rotate(-14 16 40)"><rect x="16" y="28" width="88" height="18" rx="4" fill="#fbfbff"/><path d="M26 28l10 18M46 28l10 18M66 28l10 18M86 28l10 18" stroke="#2b2560" stroke-width="7"/></g><path d="M28 66h64M28 82h40" stroke="#9d8bff" stroke-width="5" stroke-linecap="round"/>').svg(); },
+  book:()=>{ const o=O3(); o.block(14,26,46,76,"#5b7cff",6); o.block(60,26,46,76,"#3b82ff",6); return o.raw('<path d="M22 34h30v60H22zM68 34h30v60H68z" fill="#fbfbff"/><path d="M28 46h18M28 56h18M28 66h12M74 46h18M74 56h18M74 66h12" stroke="#9aa3c7" stroke-width="3" stroke-linecap="round"/>').svg(); },
+  palette:()=>{ const o=O3(); const g=o.grad("#e0b46a"); return o.raw('<path d="M60 12C28 12 10 36 10 62s20 46 44 46c10 0 12-8 8-14s0-14 10-14h16c16 0 22-12 22-26C110 30 90 12 60 12z" fill="'+g+'"/>').ball(36,50,9,"#ff5a6e").ball(54,32,9,"#ffd23f").ball(78,34,9,"#3ddc84").ball(92,54,9,"#3cc8f0").ball(34,80,9,"#7a5bf5").svg(); },
+  croissant:()=>{ const o=O3(); const g=o.grad("#ffb35c"); return o.raw('<path d="M10 80C14 40 50 22 80 30c-8 8-12 18-8 28 8-6 20-8 32-2C108 92 74 110 46 100c4-8 2-18-6-24-8 4-18 8-30 4z" fill="'+g+'"/><path d="M40 52c4 10 4 22 0 32M60 40c4 14 4 30 0 44M80 52c2 10 0 20-4 30" stroke="#b4661a" stroke-width="3" fill="none" stroke-linecap="round"/>').svg(); },
+  apple:()=>{ const o=O3(); o.ball(60,68,42,"#ff5a6e",40); return o.raw('<path d="M60 30c0-10 4-18 12-22" stroke="#6b4a2a" stroke-width="5" stroke-linecap="round" fill="none"/><path d="M64 24c10-14 28-12 30-4-10 8-22 8-30 4z" fill="#3ddc84"/>').svg(); },
+  pizza:()=>{ const o=O3(); const g=o.grad("#ffd23f"); return o.raw('<path d="M60 112L14 22c28-14 64-14 92 0z" fill="'+g+'"/><path d="M14 22c28-14 64-14 92 0l-6 12c-26-12-54-12-80 0z" fill="#e0a052"/>').ball(48,44,9,"#ff5a6e").ball(72,48,9,"#ff5a6e").ball(60,76,8,"#ff5a6e").svg(); },
+  bulb:()=>{ const o=O3(); o.ball(60,48,38,"#ffd23f"); return o.block(44,84,32,24,"#9aa3c7",6).raw('<path d="M48 92h24M48 100h24" stroke="#6b7194" stroke-width="3"/><path d="M50 58l10-14 10 14" stroke="#fff" stroke-width="4" fill="none" stroke-linecap="round"/>').svg(); },
+  compass:()=>{ const o=O3(); o.ball(60,60,46,"#e0b46a"); return o.raw('<circle cx="60" cy="60" r="36" fill="#fff8e6"/><path d="M60 26l10 34-10 34-10-34z" fill="#ff5a6e"/><path d="M60 60l10 0-10 34-10-34z" fill="#3a3478"/><circle cx="60" cy="60" r="5" fill="#3a3478"/>').svg(); },
+  temple:()=>{ const o=O3(); const g=o.grad("#e8e4f8"); o.raw('<path d="M10 40L60 12l50 28z" fill="'+g+'"/>'); [22,42,62,82].forEach(x=>o.block(x,44,14,52,"#e8e4f8",3)); return o.block(10,96,100,12,"#c9c6ea",3).block(14,38,92,8,"#c9c6ea",2).svg(); },
+  sun:()=>{ const o=O3(); let s=''; for(let i=0;i<12;i++){ const a=i*Math.PI/6; s+='<path d="M'+(60+38*Math.cos(a)).toFixed(1)+' '+(60+38*Math.sin(a)).toFixed(1)+'L'+(60+54*Math.cos(a)).toFixed(1)+' '+(60+54*Math.sin(a)).toFixed(1)+'" stroke="#ffb02e" stroke-width="7" stroke-linecap="round"/>'; } return o.raw(s).ball(60,60,30,"#ffd23f").svg(); },
+  camera:()=>{ const o=O3(); o.block(14,36,92,64,"#3a3478",14); o.block(36,24,30,16,"#3a3478",6); return o.ball(60,68,24,"#9aa3c7").ball(60,68,14,"#2b2560").ball(92,48,5,"#ff5a6e").svg(); },
+  guitar:()=>{ const o=O3(); o.raw('<g transform="rotate(35 60 60)">'); o.block(55,4,10,60,"#6b4a2a",3); o.ball(60,82,26,"#ff9a3c",28).ball(60,62,18,"#ff9a3c",16); return o.raw('<circle cx="60" cy="76" r="7" fill="#3a2410"/><path d="M57 10v86M63 10v86" stroke="#fff" stroke-width="1" opacity=".7"/></g>').svg(); },
+  drum:()=>{ const o=O3(); o.block(16,46,88,52,"#ff5a6e",18); return o.ball(60,46,44,"#f4f3ff",14).raw('<path d="M20 54l20 40M100 54l-20 40M60 60v44" stroke="#fff" stroke-width="3" opacity=".6"/><path d="M30 10l26 30M92 12l-24 30" stroke="#e0b46a" stroke-width="5" stroke-linecap="round"/>').svg(); },
+  tower:()=>{ const o=O3(); const g=o.grad("#9aa3c7"); return o.raw('<path d="M60 8l6 30h-12zM50 40h20l8 36H42zM40 78h40l18 30H74c-4-10-8-14-14-14s-10 4-14 14H22z" fill="'+g+'"/><path d="M46 58h28M40 78h40" stroke="#6b7194" stroke-width="3"/>').svg(); },
+  heartbeat:()=>{ const o=O3(); o.raw('<path d="M60 104C30 82 10 64 10 40a24 24 0 0 1 50-10 24 24 0 0 1 50 10c0 24-20 42-50 64z" fill="'+o.grad("#ff5a6e")+'"/>'); return o.raw('<path d="M18 60h22l8-14 12 28 10-20 6 6h26" stroke="#fff" stroke-width="5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>').svg(); },
+  quiz:()=>{ const o=O3(); o.raw('<path d="M18 22h84a10 10 0 0 1 10 10v44a10 10 0 0 1-10 10H54l-22 18v-18H18A10 10 0 0 1 8 76V32a10 10 0 0 1 10-10z" fill="'+o.grad("#5b7cff")+'"/>'); return o.raw('<text x="60" y="72" text-anchor="middle" font-family="Fredoka,Nunito,sans-serif" font-weight="700" font-size="46" fill="#fff">?</text>').svg(); }
+});
+
 // every object is cropped to its own drawing and pinned to the top-right corner of its box, so all objects sit at the same place
 const FIT={};
 Object.keys(OBJ).forEach(k=>{ const f=OBJ[k]; OBJ[k]=()=>{ const sv=f();
   if(!FIT[k]){ try{ const d=document.createElement("div"); d.style.cssText="position:absolute;left:-9999px;top:0;width:120px;height:120px;visibility:hidden"; d.innerHTML=sv; document.body.appendChild(d);
       const b=d.firstChild.getBBox(); d.remove(); const pad=6, side=Math.max(b.width,b.height)+pad*2; FIT[k]=[(b.x+b.width+pad-side).toFixed(1),(b.y-pad).toFixed(1),side.toFixed(1),side.toFixed(1)].join(" "); }catch(e){ FIT[k]="0 0 120 120"; } }
   return sv.replace('viewBox="0 0 120 120"','viewBox="'+FIT[k]+'" preserveAspectRatio="xMaxYMin meet"'); }; });
+// ===================== QUIZ: 1 to 4 players answer general-knowledge questions with notes or chords =====================
+// Questions live in assets/js/quiz-data.js (loaded on demand: window.QUIZ_DATA = {themes:{id:{fr,en,img,col}}, q:[[theme,img,qFr,[aFr x4],qEn,[aEn x4]]]}, right answer first).
+// Each of the 4 answers is mapped to a note (easy) or a chord (medium, hard); a player answers by playing it.
+// Players: one MIDI keyboard each ("dev"), zones of one keyboard ("zone"), or one after the other ("turn"); the screen counts as a keyboard.
+const QZ_COLORS=["#ff5a6e","#3cc8f0","#ffd23f","#3ddc84"];
+const QZ={view:"setup", data:null, loading:null, list:[], i:0, ans:[], players:[], t0:0, dur:20000, raf:0, done:false, revealT:0, picks:{}, buf:{}, turn:0};
+function qzCfg(){ S.settings.quiz=S.settings.quiz||{}; const c=S.settings.quiz;
+  if(!(c.n>=1&&c.n<=4)) c.n=1; if(!["dev","zone","turn"].includes(c.mode)) c.mode="dev"; if(!["all"].includes(c.theme)&&!(QZ.data&&QZ.data.themes[c.theme])) c.theme=c.theme||"all";
+  if(![5,10,20,30].includes(c.count)) c.count=10; if(![1,2,3].includes(c.diff)) c.diff=1; if(![10,20,30].includes(c.time)) c.time=20; if(c.keys==null) c.keys=true;
+  c.names=c.names||[]; c.devs=c.devs||[]; return c; }
+function qzLoad(){ if(window.QUIZ_DATA){ QZ.data=window.QUIZ_DATA; return Promise.resolve(); }
+  if(!QZ.loading) QZ.loading=new Promise((res,rej)=>{ const sc=document.createElement("script"); sc.src="assets/js/quiz-data.js"; sc.async=true; sc.onload=()=>{ QZ.data=window.QUIZ_DATA; res(); }; sc.onerror=()=>{ QZ.loading=null; rej(); }; document.head.appendChild(sc); });
+  return QZ.loading; }
+const QZ_ROOT={fr:["Do","Do♯","Ré","Mi♭","Mi","Fa","Fa♯","Sol","La♭","La","Si♭","Si"],en:["C","C♯","D","E♭","E","F","F♯","G","A♭","A","B♭","B"]};
+function qzChord(root,kind){ const iv={maj:[0,4,7],min:[0,3,7],dom7:[0,4,7,10]}[kind], fr=S.settings.notation==="fr"||S.settings.lang==="fr" && S.settings.notation!=="en";
+  const R=(S.settings.notation==="fr"?QZ_ROOT.fr:QZ_ROOT.en)[root], lang=S.settings.lang;
+  const name = kind==="maj" ? R+(lang==="fr"?" majeur":" major") : kind==="min" ? R+(lang==="fr"?" mineur":" minor") : R+"7";
+  return {pcs:iv.map(x=>(root+x)%12), mid:iv.map(x=>60+root+x-(root>6?12:0)), name}; }
+function qzNote(pc){ const R=(S.settings.notation==="fr"?QZ_ROOT.fr:QZ_ROOT.en)[pc]; return {pcs:[pc], mid:[60+pc], name:R}; }
+// the 4 things to play for one question
+function qzTargets(diff){
+  if(diff===1) return [0,2,4,5].map(qzNote); // Do Ré Mi Fa
+  const pool = diff===2 ? [[0,"maj"],[5,"maj"],[7,"maj"],[9,"min"],[2,"min"],[4,"min"]]
+    : [...Array(12).keys()].flatMap(r=>[[r,"maj"],[r,"min"],[r,"dom7"]]);
+  const pick=[], keys=new Set(); while(pick.length<4){ const [r,k]=pool[Math.floor(Math.random()*pool.length)], c=qzChord(r,k), key=c.pcs.slice().sort((a,b)=>a-b).join(","); if(keys.has(key)) continue; keys.add(key); pick.push(c); }
+  return pick; }
+function qzShuffle(a){ for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; }
+// mini keyboard (one octave from C) with the keys of a note / chord
+function qzKeys(pcs,col){ const W=[0,2,4,5,7,9,11], B=[[1,0],[3,1],[6,3],[8,4],[10,5]], on=new Set(pcs); let s='<svg viewBox="0 0 70 26" aria-hidden="true">';
+  W.forEach((pc,i)=>{ s+='<rect x="'+(i*10+.4)+'" y="0" width="9.2" height="26" rx="1.6" fill="'+(on.has(pc)?col:"#ecebfa")+'" stroke="#c3bfe6" stroke-width=".5"/>'; });
+  B.forEach(([pc,i])=>{ s+='<rect x="'+(i*10+7)+'" y="0" width="6" height="16" rx="1.2" fill="'+(on.has(pc)?col:"#2b2560")+'"/>'; });
+  return s+"</svg>"; }
+function qzDevices(){ const out=[["screen",t("qzScreen")]]; try{ if(midiAcc) midiAcc.inputs.forEach(inp=>{ if(!inp.state||inp.state==="connected") out.push([String(inp.id||inp.name),inp.name]); }); }catch(e){} return out; }
+function qzZones(n){ const lo=LOW, hi=HIGH, oct=Math.max(n,Math.round((hi-lo+1)/12)), per=Math.max(1,Math.floor(oct/n)); return Array.from({length:n},(_,i)=>{ const a=lo+i*per*12, b=i===n-1?hi:a+per*12-1; return [a,b]; }); }
+const qzMidiName=m=>(S.settings.notation==="fr"?QZ_ROOT.fr:QZ_ROOT.en)[m%12]+(Math.floor(m/12)-1);
+
+// ---------- setup ----------
+function renderQuiz(){ const c=qzCfg();
+  ["qzSetup","qzPlay","qzEnd"].forEach(id=>$(id).hidden = id!=="qz"+QZ.view[0].toUpperCase()+QZ.view.slice(1));
+  if(QZ.view==="setup") renderQzSetup(); else if(QZ.view==="play") renderQzPlay(); else renderQzEnd(); }
+function renderQzSetup(){ const c=qzCfg(), fr=S.settings.lang==="fr";
+  const th=$("qzThemes"); th.innerHTML="";
+  if(!QZ.data){ th.innerHTML='<p class="qz-load">'+t("qzLoading")+"</p>"; qzLoad().then(()=>{ if(page==="quiz") renderQuiz(); }).catch(()=>{ th.innerHTML='<p class="qz-load">'+t("qzLoadErr")+"</p>"; }); }
+  else { const all=[["all",{fr:"Tous les thèmes",en:"All topics",img:"globe",col:"#6a4bf0"}],...Object.entries(QZ.data.themes)];
+    all.forEach(([id,o])=>{ const n = id==="all" ? QZ.data.q.length : QZ.data.q.filter(q=>q[0]===id).length;
+      const b=document.createElement("button"); b.type="button"; b.className="qz-theme"; b.style.setProperty("--tc",o.col); b.setAttribute("aria-pressed",c.theme===id);
+      b.innerHTML='<span class="qz-ti">'+(OBJ[o.img]?OBJ[o.img]():"")+'</span><b></b><small></small>'; b.querySelector("b").textContent=fr?o.fr:o.en; b.querySelector("small").textContent=n+" "+t("qzQuestions");
+      b.onclick=()=>{ c.theme=id; save(); renderQzSetup(); }; th.appendChild(b); }); }
+  const seg=(id,vals,key,lbl)=>{ const box=$(id); box.innerHTML=""; vals.forEach(v=>{ const b=document.createElement("button"); b.type="button"; b.textContent=lbl(v); b.setAttribute("aria-pressed",c[key]===v); b.onclick=()=>{ c[key]=v; save(); renderQzSetup(); }; box.appendChild(b); }); };
+  seg("qzCount",[5,10,20,30],"count",v=>String(v));
+  seg("qzTime",[10,20,30],"time",v=>v+" s");
+  const dl=$("qzDiff"); dl.innerHTML=""; [1,2,3].forEach(v=>{ const b=document.createElement("button"); b.type="button"; b.className="qz-diff"; b.setAttribute("aria-pressed",c.diff===v);
+    b.innerHTML="<b></b><small></small>"; b.querySelector("b").textContent=t("qzDiffs")[v-1]; b.querySelector("small").textContent=t("qzDiffD")[v-1]; b.onclick=()=>{ c.diff=v; save(); renderQzSetup(); }; dl.appendChild(b); });
+  $("qzKeysOpt").checked=!!c.keys;
+  seg("qzN",[1,2,3,4],"n",v=>String(v));
+  $("qzModeRow").hidden = c.n===1;
+  seg("qzMode",["dev","zone","turn"],"mode",v=>t("qzModes")[["dev","zone","turn"].indexOf(v)]);
+  $("qzModeHelp").textContent = c.n===1 ? "" : t("qzModeD")[["dev","zone","turn"].indexOf(c.mode)];
+  const devs=qzDevices(), zones=qzZones(c.n), pl=$("qzPlayers"); pl.innerHTML="";
+  for(let i=0;i<c.n;i++){ const row=document.createElement("div"); row.className="qz-pl"; row.style.setProperty("--pc",QZ_COLORS[i]);
+    row.innerHTML='<i></i><input type="text" maxlength="14"><span class="qz-pin"></span>'; const inp=row.querySelector("input"); inp.id="qzName"+i; inp.value=c.names[i]||t("qzPlayer")+" "+(i+1); inp.setAttribute("aria-label",t("qzPlayer")+" "+(i+1));
+    inp.oninput=()=>{ c.names[i]=inp.value.trim(); save(); };
+    const pin=row.querySelector(".qz-pin");
+    if(c.n>1 && c.mode==="dev"){ const sel=document.createElement("select"); sel.id="qzDev"+i; sel.setAttribute("aria-label",t("qzKeyboard"));
+      devs.forEach(([v,l])=>{ const o=document.createElement("option"); o.value=v; o.textContent=l; sel.appendChild(o); });
+      sel.value = devs.some(d=>d[0]===c.devs[i]) ? c.devs[i] : (devs[i+1]||devs[0])[0]; c.devs[i]=sel.value; sel.onchange=()=>{ c.devs[i]=sel.value; save(); }; pin.appendChild(sel); }
+    else if(c.n>1 && c.mode==="zone") pin.textContent=t("qzZone")+" : "+qzMidiName(zones[i][0])+" – "+qzMidiName(zones[i][1]);
+    else if(c.n>1) pin.textContent=t("qzTurnN")(i+1);
+    pl.appendChild(row); }
+  const midiN=devs.length-1; $("qzMidiHint").textContent = midiN ? t("qzMidiOk")(midiN) : t("qzMidiNone");
+  $("qzGo").disabled=!QZ.data;
+}
+// ---------- a game ----------
+function qzStart(){ const c=qzCfg(); if(!QZ.data) return;
+  const src=QZ.data.q.filter(q=>c.theme==="all"||q[0]===c.theme);
+  QZ.list=qzShuffle(src.slice()).slice(0,Math.min(c.count,src.length));
+  QZ.players=Array.from({length:c.n},(_,i)=>({name:c.names[i]||t("qzPlayer")+" "+(i+1), col:QZ_COLORS[i], dev:c.n===1||c.mode!=="dev"?null:c.devs[i], score:0, ok:0, zone:c.mode==="zone"&&c.n>1?qzZones(c.n)[i]:null}));
+  QZ.mode=c.n===1?"solo":c.mode; QZ.i=-1; QZ.turn=-1; QZ.view="play"; audio(); qzNext(); }
+function qzNext(){ cancelAnimationFrame(QZ.raf); clearTimeout(QZ.revealT); QZ.i++; if(QZ.i>=QZ.list.length){ qzFinish(); return; }
+  const c=qzCfg(), q=QZ.list[QZ.i], fr=S.settings.lang==="fr", answers=(fr?q[3]:q[5]).map((a,k)=>({txt:a, right:k===0}));
+  qzShuffle(answers); const tg=qzTargets(c.diff); answers.forEach((a,k)=>a.tg=tg[k]);
+  QZ.ans=answers; QZ.q=q; QZ.picks={}; QZ.buf={}; QZ.done=false; QZ.turn=(QZ.turn+1)%QZ.players.length; QZ.dur=c.time*1000; QZ.t0=performance.now();
+  renderQuiz(); QZ.raf=requestAnimationFrame(qzTick); }
+function qzTick(){ if(page!=="quiz"||QZ.view!=="play"||QZ.done) return; const left=Math.max(0,1-(performance.now()-QZ.t0)/QZ.dur); const b=$("qzBar"); if(b) b.style.transform="scaleX("+left+")";
+  if(left<=0){ qzReveal(); return; } QZ.raf=requestAnimationFrame(qzTick); }
+// which player played this note?
+function qzWho(dev,m){ const P=QZ.players; if(QZ.mode==="solo") return 0; if(QZ.mode==="turn") return QZ.turn;
+  if(QZ.mode==="zone"){ const i=P.findIndex(p=>m>=p.zone[0]&&m<=p.zone[1]); return i; }
+  const i=P.findIndex(p=>p.dev===dev); return i; }
+function quizIn(dev,m){ if(QZ.view==="end"||QZ.view==="setup"){ return; } if(QZ.view!=="play") return;
+  if(QZ.done){ return; }
+  const pi=qzWho(dev,m); if(pi<0 || QZ.picks[pi]!=null) return;
+  const now=performance.now(), b=QZ.buf[pi]||(QZ.buf[pi]={notes:[],timer:0,at:0}); if(now-b.at>900) b.notes=[]; b.at=now; b.notes.push(m%12);
+  clearTimeout(b.timer); b.timer=setTimeout(()=>{ const set=[...new Set(b.notes)].sort((a,c)=>a-c).join(",");
+    const k=QZ.ans.findIndex(a=>a.tg.pcs.slice().sort((x,y)=>x-y).join(",")===set); if(k<0) return; qzPick(pi,k); },170); }
+function qzPick(pi,k){ if(QZ.done||QZ.picks[pi]!=null) return; const a=QZ.ans[k], p=QZ.players[pi], left=Math.max(0,1-(performance.now()-QZ.t0)/QZ.dur);
+  QZ.picks[pi]=k; if(a.right){ const pts=100+Math.round(100*left); p.score+=pts; p.ok++; p.last=pts; } else p.last=0;
+  const all = QZ.mode==="solo"||QZ.mode==="turn" || QZ.players.every((_,i)=>QZ.picks[i]!=null);
+  if(all) qzReveal(); else renderQzPlay(); }
+function qzReveal(){ if(QZ.done) return; QZ.done=true; cancelAnimationFrame(QZ.raf);
+  const r=QZ.ans.findIndex(a=>a.right); QZ.ans[r].tg.mid.forEach((m,i)=>tone(m,i*.03,.9,.16));
+  renderQzPlay(); QZ.revealT=setTimeout(()=>{ if(page==="quiz"&&QZ.view==="play"&&QZ.done) qzNext(); },4200); }
+function renderQzPlay(){ const q=QZ.q, fr=S.settings.lang==="fr", th=QZ.data.themes[q[0]]||{fr:"",en:"",col:"#6a4bf0"}, c=qzCfg();
+  $("qzTheme").textContent=fr?th.fr:th.en; $("qzTheme").style.setProperty("--tc",th.col);
+  $("qzNum").textContent=t("qzQ")(QZ.i+1,QZ.list.length);
+  $("qzImg").innerHTML=OBJ[q[1]]?OBJ[q[1]]():""; $("qzImg").style.setProperty("--tc",th.col);
+  $("qzText").textContent=fr?q[2]:q[4];
+  $("qzTurn").hidden = QZ.mode!=="turn"; if(QZ.mode==="turn"){ const p=QZ.players[QZ.turn]; $("qzTurn").textContent=t("qzTurnOf")(p.name); $("qzTurn").style.setProperty("--pc",p.col); }
+  const box=$("qzAns"); box.innerHTML="";
+  QZ.ans.forEach((a,k)=>{ const b=document.createElement("button"); b.type="button"; b.className="qz-a"; b.style.setProperty("--ac",["#ff5a6e","#3cc8f0","#ffd23f","#3ddc84"][k]);
+    if(QZ.done) b.classList.add(a.right?"right":"wrong");
+    const who=QZ.players.map((p,i)=>QZ.picks[i]===k?'<i style="background:'+p.col+'" title="'+p.name.replace(/[<>"&]/g,"")+'"></i>':"").join("");
+    b.innerHTML='<span class="qz-l">'+"ABCD"[k]+'</span><span class="qz-at"></span><span class="qz-play"><small>'+t("qzPlay")+'</small><b></b>'+(c.keys||c.diff<3||QZ.done?qzKeys(a.tg.pcs,"#7a5bf5"):"")+'</span><span class="qz-who">'+who+"</span>";
+    b.querySelector(".qz-at").textContent=a.txt; b.querySelector(".qz-play b").textContent=a.tg.name;
+    b.onclick=()=>{ if(QZ.done) return; a.tg.mid.forEach((m,i)=>tone(m,i*.02,.7,.14)); const pi=qzWho("screen",a.tg.mid[0]); if(pi>=0 && (QZ.mode!=="dev" || QZ.players[pi].dev==="screen")) qzPick(pi,k); else if(QZ.mode==="dev"){ const j=QZ.players.findIndex(p=>p.dev==="screen"); if(j>=0) qzPick(j,k); } };
+    box.appendChild(b); });
+  const sb=$("qzScores"); sb.innerHTML="";
+  QZ.players.forEach((p,i)=>{ const d=document.createElement("div"); d.className="qz-ps"; d.style.setProperty("--pc",p.col); const st=QZ.picks[i];
+    if(QZ.mode==="turn" && i===QZ.turn && !QZ.done) d.classList.add("turn");
+    d.innerHTML='<i></i><span><b></b><small></small></span><span class="qz-pts"></span>'; d.querySelector("b").textContent=p.name;
+    d.querySelector("small").textContent = st==null ? (QZ.done?t("qzNoAns"):QZ.mode==="turn"&&i!==QZ.turn?"":t("qzWaiting")) : !QZ.done ? t("qzAnswered") : QZ.ans[st].right ? "+"+p.last : t("qzWrong");
+    if(QZ.done && st!=null) d.classList.add(QZ.ans[st].right?"ok":"ko");
+    d.querySelector(".qz-pts").textContent=p.score; sb.appendChild(d); });
+  $("qzNext").hidden=!QZ.done; $("qzBar").parentElement.hidden=QZ.done;
+}
+function qzFinish(){ QZ.view="end"; const best=Math.max(...QZ.players.map(p=>p.ok)); if(QZ.players.length===1 && QZ.players[0].ok) addXP(Math.min(60,QZ.players[0].ok*3)); save(); renderQuiz(); if(QZ.players.some(p=>p.ok)) setTimeout(confetti,200); }
+function renderQzEnd(){ const P=QZ.players.map((p,i)=>({...p,i})).sort((a,b)=>b.score-a.score), box=$("qzPodium"); box.innerHTML="";
+  $("qzEndT").textContent = P.length>1 ? t("qzWinner")(P[0].name) : t("qzSoloEnd")(P[0].ok,QZ.list.length);
+  P.forEach((p,r)=>{ const d=document.createElement("div"); d.className="qz-pod r"+(r+1); d.style.setProperty("--pc",p.col);
+    d.innerHTML='<span class="qz-rk">'+(r+1)+'</span><b></b><span class="qz-sc"></span><small></small>'; d.querySelector("b").textContent=p.name; d.querySelector(".qz-sc").textContent=p.score+" pts"; d.querySelector("small").textContent=t("qzRight")(p.ok,QZ.list.length); box.appendChild(d); }); }
+function qzQuit(){ cancelAnimationFrame(QZ.raf); clearTimeout(QZ.revealT); QZ.view="setup"; QZ.done=true; renderQuiz(); }
+$("qzGo").addEventListener("click",qzStart);
+$("qzNext").addEventListener("click",()=>{ if(QZ.done) qzNext(); });
+$("qzQuit").addEventListener("click",qzQuit);
+$("qzAgain").addEventListener("click",qzStart);
+$("qzBack").addEventListener("click",()=>{ QZ.view="setup"; renderQuiz(); });
+$("qzKeysOpt").addEventListener("change",e=>{ qzCfg().keys=e.target.checked; save(); });
+document.addEventListener("keydown",e=>{ if(page!=="quiz"||anyModal()) return; if(e.target.closest("input,select,textarea")) return;
+  if((e.code==="Space"||e.code==="Enter") && QZ.view==="play" && QZ.done){ e.preventDefault(); qzNext(); }
+  else if((e.code==="Space"||e.code==="Enter") && QZ.view==="end"){ e.preventDefault(); qzStart(); } });
+
 // Hub side column: daily practice, MIDI keyboard, news slider, weekly leaderboard
 let hsNewsLang="", hsIdx=0, hsTimer=0, hsRankAt=0, hsRankWait=false;
 function hsShow(i){ const sl=document.querySelectorAll("#hsSlides .hs-slide"), dots=document.querySelectorAll("#hsDots button"); if(!sl.length) return; hsIdx=(i+sl.length)%sl.length;
@@ -3677,7 +3971,7 @@ $("hsDaily").addEventListener("click",()=>$("dailyCard").click());
 $("hsRankMore").addEventListener("click",()=>$("rankBtn").click());
 $("hsMidiBtn").addEventListener("click",()=>{ if(midiPossible()) setInput("midi",true); else openInputChooser(true); });
 document.querySelectorAll(".obj[data-obj]").forEach(e=>{ e.innerHTML=OBJ[e.dataset.obj](); });
-const MODE_COL={games:"#26805a",play:"#7a5bf5",learn:"#c9463c"}; // same as --m-games/--m-play/--m-learn; shades only darken so white text stays ≥ 4.5:1
+const MODE_COL={quiz:"#2563eb",games:"#26805a",play:"#7a5bf5",learn:"#c9463c"}; // same as --m-games/--m-play/--m-learn; shades only darken so white text stays ≥ 4.5:1
 // each tile has its own hue (white text ≥ 4.5:1 on each), like a shelf of game boxes
 const TILE_COL={runner:"#1f7a52",speed:"#b4461a",memory:"#6a3fd1",soon:"#a3306b",chords:"#c9463c",scales:"#b4461a",harmony:"#2c56d6",prog:"#6a3fd1",ear:"#0e7490",daily:"#a3306b",
   p_runner:"#0e7490",p_pulse:"#b02a6b",p_blaster:"#2c56d6",p_climber:"#1f7a52",p_ear:"#8a3fd1",p_staff:"#b4461a"};
@@ -3703,13 +3997,14 @@ function playOpen(){ const f=$("playFrame"); const src="play/index.html"+playHas
   $("playPanel").hidden=false; }
 addEventListener("message",e=>{ if(SAME_ORIGIN!=="*" && e.origin!==SAME_ORIGIN) return; const d=e.data; if(d && d.source==="clavio" && d.type==="free") openPage("free"); if(d && d.source==="clavio" && d.type==="home" && page==="play") openPage(playHash.startsWith("#game")?"games":"free"); });
 function openPlayWith(h){ playHash=h; if(page==="play"){ playOpen(); setNav(); } else openPage("play"); }
-function goMode(m){ closeDrawer(); if(m==="learn") openPage("learn"); else if(m==="play") openPage("free"); else openPage("games"); }
+function goMode(m){ closeDrawer(); if(m==="quiz") openPage("quiz"); else if(m==="learn") openPage("learn"); else if(m==="play") openPage("free"); else openPage("games"); }
 document.querySelectorAll("[data-mode]").forEach(b=>b.addEventListener("click",()=>{ const m=b.dataset.mode; if(page==="daily" && game && game.daily){ guardLeave(()=>{ game=null; goMode(m); }); return; } goMode(m); }));
 function playClose(){ const f=$("playFrame"); if(f.getAttribute("src")) f.removeAttribute("src"); $("playPanel").hidden=true; }
 function openPage(pg){
   if(needLogin(pg)){ lockFor=pg; pg="locked"; }
   if(pg===page && pg!=="practice" && pg!=="locked") return;
   if(pg!=="games") runnerClose();
+  if(pg!=="quiz" && typeof QZ!=="undefined"){ cancelAnimationFrame(QZ.raf); clearTimeout(QZ.revealT); if(QZ.view==="play"){ QZ.view="setup"; QZ.done=true; } }
   if(pg==="play") playOpen(); else playClose();
   const toInfo = INFO_PAGES.includes(pg) && !INFO_PAGES.includes(page);
   const backFromInfo = INFO_PAGES.includes(page) && returnPage && pg===returnPage;
@@ -3721,7 +4016,7 @@ function openPage(pg){
     phase="idle"; cur=null; seq=[]; found=[]; played=[]; idx=0; errors=0; game=null;
     clearKeys(); $("stage").classList.remove("res-good","res-warn","res-bad");
   }
-  page=pg; if(backFromInfo){ returnPage=null; setTimeout(resumeRound,0); } if(pg==="locked") renderLock(); if(pg==="settings") renderSettings(); if(pg==="progress") renderMap(); if(pg==="games") renderGames(); if(pg==="learn") renderLearn(); if(pg==="free") renderPlaySongs(); if(pg==="rank") renderRank(); if(pg==="account") renderAccount(); if(pg==="daily") dailyPlan();
+  page=pg; if(backFromInfo){ returnPage=null; setTimeout(resumeRound,0); } if(pg==="locked") renderLock(); if(pg==="settings") renderSettings(); if(pg==="progress") renderMap(); if(pg==="games") renderGames(); if(pg==="learn") renderLearn(); if(pg==="quiz"){ if(QZ.view!=="play") QZ.view="setup"; renderQuiz(); } if(pg==="free") renderPlaySongs(); if(pg==="rank") renderRank(); if(pg==="account") renderAccount(); if(pg==="daily") dailyPlan();
   if(narrowMQ.matches) buildKeyboard();
   renderSettings(); render(); renderDaily(); $("main").scrollTo({top:0});
   if(["games","daily"].includes(pg)) autoIntro(pg);
@@ -4197,8 +4492,9 @@ async function enableMidi(){
     const bind=()=>{ const names=[]; acc.inputs.forEach(inp=>{
         if(inp.state && inp.state!=="connected"){ inp.onmidimessage=null; return; } // Chrome keeps unplugged ports in the map
         names.push(inp.name); inp.onmidimessage=ev=>{
-        if(S.settings.midiInput && inp.name!==S.settings.midiInput) return;
         const [st,note,vel]=ev.data;
+        if(page==="quiz"){ if((st&0xf0)===0x90 && vel>0){ if(S.settings.midiSound) tone(note,0,.9,.1+.26*vel/127); if(!anyModal()) quizIn(String(inp.id||inp.name),note); } return; } // every keyboard counts: one per player
+        if(S.settings.midiInput && inp.name!==S.settings.midiInput) return;
         if(page==="play"){ if((st&0xf0)===0x90 && vel>0) playSend("noteon",note,vel/127); else if((st&0xf0)===0x80 || ((st&0xf0)===0x90 && vel===0)) playSend("noteoff",note); return; }
         if((st&0xf0)===0x90 && vel>0){
           pressKey(note); // light the key at once, before the 35 ms grouping
