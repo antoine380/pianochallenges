@@ -24,4 +24,12 @@ for (const f of ["index.html", join("play", "index.html")]) {
   if (!/<meta name="viewport"[^>]*>/.test(html)) throw new Error("viewport meta not found in " + f);
   writeFileSync(page, html.replace(/<meta name="viewport"[^>]*>/, APP_VIEWPORT));
 }
+// capacitor.config.json turns off the web view's own scrolling (no rubber band on the whole app): every screen scrolls inside
+// its own containers. The legal pages are plain documents, so in the app their body becomes the scroller.
+for (const f of ["mentions-legales.html", "confidentialite.html"]) {
+  const page = join(www, f);
+  if (!existsSync(page)) continue;
+  const html = readFileSync(page, "utf8");
+  writeFileSync(page, html.replace("</style>", "html{height:100%;overflow:hidden}body{height:100%;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;box-sizing:border-box}\n</style>"));
+}
 console.log("Web files copied to", www);
