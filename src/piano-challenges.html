@@ -6305,7 +6305,7 @@ function fnGo(){ fnApply(); fnClose(); setInput(FN.how, FN.how!=="screen");
   // the first game: three major chords in simple keys
   try{ S.section="chords"; const st=suState("chords"); st.tids=["maj"].filter(id=>typeList("chords").some(ty=>ty.id===id)); if(!st.tids.length) st.tids=[typeList("chords")[0].id]; st.keys="simple"; st.shuffle=false; save(); }catch(e){}
   openPage("learn"); setTimeout(()=>{ const b=$("secTabs").querySelector('[data-v="chords"]'); if(b) b.click(); setTimeout(()=>{ try{ suStart(); }catch(e){} },250); },60); }
-function fnSkip(){ fnApply(); fnClose(); openPage("hub"); if(FN.how!=="screen") setInput(FN.how,true); }
+function fnSkip(){ S.gate="guest"; S.onb={done:1, skipped:1, at:Date.now()}; S.tourDone=1; save(); fnClose(); openPage("hub"); maybeAskInput(); } // skip: nothing is set up (like the questionnaire's skip)
 // ---------- Boot ----------
 
 applyStatic(); applySide(); buildKeyboard(); renderSettings(); render(); renderDaily(); openPage("hub");
