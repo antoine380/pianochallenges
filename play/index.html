@@ -51,7 +51,7 @@ button:focus-visible{outline:2px solid var(--coral);outline-offset:3px}
 .pill .dot{width:8px;height:8px;border-radius:50%;background:var(--rule)}
 .pill.on{color:var(--ink)} .pill.on .dot{background:var(--mint);box-shadow:0 0 8px var(--mint)}
 .btn{padding:11px 18px;border-radius:999px;background:var(--ink);color:var(--paper);font-family:var(--f);font-weight:700;font-size:14px}
-.btn:hover{opacity:.9}
+@media (hover:hover) and (pointer:fine){.btn:hover{opacity:.9}}
 .btn.light{background:var(--paper-2);color:var(--ink);border:1px solid var(--rule)}
 .hello h1{font-family:var(--f);font-weight:800;font-size:clamp(30px,4.4vw,52px);letter-spacing:-.03em;line-height:1;margin:0;text-wrap:balance;max-width:15ch}
 .hello p{margin:10px 0 0;color:var(--muted);max-width:60ch;line-height:1.5;font-size:clamp(15px,1.3vw,17px)}
@@ -60,7 +60,7 @@ button:focus-visible{outline:2px solid var(--coral);outline-offset:3px}
 .sec-h span{color:var(--muted);font-size:14px}
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:16px}
 .tile{display:flex;flex-direction:column;text-align:left;border-radius:26px;overflow:hidden;padding:18px 18px 20px;gap:14px;color:#fff;transition:transform .18s;position:relative}
-.tile:hover{transform:translateY(-3px)}
+@media (hover:hover) and (pointer:fine){.tile:hover{transform:translateY(-3px)}}
 .tab{aspect-ratio:16/10;max-width:100%;border-radius:12px;background:#111016;box-shadow:0 10px 26px #0005,inset 0 0 0 3px #26242e;position:relative;overflow:hidden;perspective:420px}
 .tab .floor{position:absolute;inset:0;transform-origin:50% 100%;transform:rotateX(52deg) translateY(-8%);background:repeating-linear-gradient(90deg,transparent 0 calc(100%/14 - 1px),#ffffff18 0 calc(100%/14))}
 .tab .floor i{position:absolute;border-radius:5px;display:block;box-shadow:0 0 10px currentColor,inset 0 -4px 0 #0004}
