@@ -105,7 +105,7 @@ button:focus-visible{outline:2px solid var(--coral);outline-offset:3px}
 .key.w{height:calc(100% - 12px);background:#4b438f;border:0;margin-left:1.5px;box-shadow:inset 0 -7px 0 #2f2966;border-radius:0 0 10px 10px}
 .key.b{height:60%;z-index:2;background:#1e1a42;border:0;border-radius:0 0 7px 7px;box-shadow:inset 0 -5px 0 rgba(255,255,255,.08),0 4px 8px -2px rgba(10,6,30,.45)}
 .key .lbl{position:absolute;left:0;right:0;bottom:12px;text-align:center;font-size:12px;font-weight:800;color:#d6d1ff;pointer-events:none}
-.key.b .lbl{color:#a9a2e0;font-size:9px;bottom:7px}
+.key.b .lbl{color:#a9a2e0;font-size:9px;bottom:7px;letter-spacing:-.02em;white-space:nowrap;overflow:hidden}
 .key .fg{position:absolute;left:50%;top:14%;transform:translateX(-50%);width:22px;height:22px;border-radius:50%;background:#15131c;color:#fff;font-family:var(--f-mono);font-size:12px;font-weight:700;display:none;place-items:center;pointer-events:none}
 .key.b .fg{width:18px;height:18px;font-size:10px}
 .key.target .fg{display:grid}
@@ -339,7 +339,8 @@ for(let m=LOW;m<=HIGH;m++){const L=lane(m),k=document.createElement('div');
   k.style.left=`calc(6px + (100% - 12px) * ${L.x})`;k.style.width=`calc((100% - 12px) * ${L.w} - 2px)`;
   k.style.setProperty('--kc',col(m,isBlack(m)?56:62));k.dataset.m=m;
   k.innerHTML='<span class="lbl"></span><span class="fg"></span>';kbd.appendChild(k);keyEls.set(m,k)}
-function labelKeys(){keyEls.forEach((k,m)=>{k.firstChild.textContent=!showNames?(pc(m)===0?NAMES[0]+(Math.floor(m/12)-1):''):(isBlack(m)?'':NAMES[pc(m)])})}
+const FLATS=LANG==='fr'?['','Ré♭','','Mi♭','','','Sol♭','','La♭','','Si♭','']:['','D♭','','E♭','','','G♭','','A♭','','B♭',''];
+function labelKeys(){keyEls.forEach((k,m)=>{k.firstChild.textContent=!showNames?(pc(m)===0?NAMES[0]+(Math.floor(m/12)-1):''):(isBlack(m)?FLATS[pc(m)]:NAMES[pc(m)])})}
 labelKeys();
 let lastTargets='';
 function setTargets(list){ // [{m,f}]

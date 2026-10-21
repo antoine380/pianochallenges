@@ -1242,6 +1242,110 @@ body.gp .wk.k-ok span,body.gp .bk.k-ok span{color:#15122e}
 @media (max-height:420px) and (orientation:landscape){ .su-go b{-webkit-line-clamp:2;font-size:.8rem;line-height:1.15} }
 @media (max-width:900px){ .su-help small{display:none} .su-help{padding-block:4px} }
 @media (max-width:640px){ .su-go b{-webkit-line-clamp:1;font-size:1rem} .su-row{flex-wrap:nowrap} .su-row .su-lbl{font-size:.7rem} .su-chips{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none} .su-chips button{flex:none;padding:6px 11px;font-size:.8rem} }
+
+/* finger numbers on the keys */
+.fg{position:absolute;left:50%;transform:translateX(-50%);bottom:30px;width:20px;height:20px;border-radius:50%;display:grid;place-items:center;font:700 .74rem/1 var(--f-display);font-style:normal;color:#fff;background:#1b1838;box-shadow:0 0 0 2px #fff,0 3px 6px rgba(10,6,30,.35);pointer-events:none;z-index:3}
+.bk .fg{bottom:22px;width:17px;height:17px;font-size:.66rem;background:#fff;color:#1b1838;box-shadow:0 0 0 2px #1b1838}
+@media (max-height:520px){ .fg{bottom:22px;width:17px;height:17px;font-size:.64rem} .bk .fg{bottom:16px} }
+
+/* duels: lobby (chess.com-like), live score bar, countdown and result */
+.du-av{display:inline-grid;place-items:center;width:40px;height:40px;border-radius:12px;overflow:hidden;flex:none;background:var(--surface-2)} .du-av svg{width:100%;height:100%;display:block}
+body.du-lob #stage{display:none!important}
+.du-lobby{display:grid;grid-template-columns:minmax(0,1fr) 300px;grid-template-rows:minmax(0,1fr);gap:14px;min-height:0;flex:1}
+.du-lobby>.du-modes,.du-lobby>.du-panel{grid-column:1;grid-row:1} .du-side{grid-column:2;grid-row:1;display:flex;flex-direction:column;gap:10px;min-height:0}
+.du-hist{background:var(--surface);border-radius:var(--r-lg);padding:12px 14px;box-shadow:var(--shadow-card);flex:1;min-height:0;overflow:hidden}
+.du-hist h4{margin:0 0 6px;font-size:.72rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.du-hist ol{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px}
+.du-hist li{display:flex;align-items:center;gap:8px;font-size:.84rem} .du-hist li .du-av{width:28px;height:28px;border-radius:8px} .du-hist li b{font-weight:800;flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.du-hist li i{font-style:normal;font-weight:800;font-family:var(--f-display);min-width:3ch;text-align:right} .du-hist li i.up{color:#26805a} .du-hist li i.down{color:var(--bad)}
+.du-hist li span.r{width:18px;height:18px;border-radius:5px;display:grid;place-items:center;color:#fff;font-size:.66rem;font-weight:800;background:var(--muted)} .du-hist li span.r.w{background:#26805a} .du-hist li span.r.l{background:var(--bad)}
+.du-hist p{margin:0;color:var(--muted);font-size:.84rem}
+body.du-lob #runner{flex:1 1 auto}
+.du-top{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.du-rate{display:flex;align-items:center;gap:12px;background:var(--surface);border-radius:var(--r-lg);padding:10px 16px 10px 10px;box-shadow:var(--shadow-card)}
+.du-rate .du-av{width:52px;height:52px;border-radius:16px}
+.du-rt{display:flex;flex-direction:column;line-height:1.1} .du-rt small{font-size:.72rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.du-rt b{font-family:var(--f-display);font-size:2rem;font-weight:700} .du-rt em{font-style:normal;font-size:.78rem;color:var(--muted);font-weight:700}
+.du-cont{width:100%}
+.du-modes{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));grid-auto-rows:minmax(0,1fr);gap:12px;min-height:0}
+.du-mode{--dc:#7a5bf5;position:relative;display:flex;flex-direction:column;align-items:flex-start;gap:4px;text-align:left;border:0;border-radius:var(--r-lg);padding:16px;min-height:150px;color:#fff;
+  background:linear-gradient(155deg,color-mix(in srgb,var(--dc) 62%,#fff),var(--dc) 55%,color-mix(in srgb,var(--dc) 80%,#000));box-shadow:0 18px 30px -18px var(--dc),inset 0 1px 0 rgba(255,255,255,.35);transition:transform .15s}
+.du-mode:hover{transform:translateY(-3px)} .du-mode b{font-family:var(--f-display);font-weight:700;font-size:1.45rem;margin-top:auto} .du-mode small{font-size:.8rem;line-height:1.3;opacity:.92}
+.du-mi{width:52px;height:52px;border-radius:14px;display:grid;place-items:center;background:rgba(255,255,255,.2)} .du-mi svg{width:26px;height:26px;fill:none;stroke:#fff;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+.du-m-online{--dc:#26805a} .du-m-bots{--dc:#7a5bf5} .du-m-friend{--dc:#2563eb} .du-m-solo{--dc:#c9463c}
+.du-panel{background:var(--surface);border-radius:var(--r-lg);padding:12px 14px;box-shadow:var(--shadow-card);display:flex;flex-direction:column;gap:10px;min-height:0}
+.du-ph{display:flex;align-items:center;gap:10px} .du-ph b{font-family:var(--f-display);font-size:1.15rem}
+.du-back{width:34px;height:34px;border-radius:10px;border:0;background:var(--surface-2);display:grid;place-items:center;color:var(--ink)} .du-back svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
+.du-bots{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px}
+.du-bot{position:relative;display:flex;align-items:center;gap:8px;border:0;border-radius:14px;padding:6px 8px;background:var(--surface-2);color:var(--ink);text-align:left}
+.du-bot .du-av{width:36px;height:36px;border-radius:10px} .du-bot b{font-weight:800;font-size:.86rem;display:block} .du-bot small{font-family:var(--f-display);color:var(--muted);font-size:.85rem;margin-left:auto}
+.du-bot em{position:absolute;top:-7px;right:6px;font-style:normal;font-size:.62rem;font-weight:800;background:var(--gold,#ffc94a);color:#1b1838;border-radius:999px;padding:1px 7px}
+.du-bot[aria-pressed="true"]{background:#7a5bf5;color:#fff;box-shadow:0 10px 20px -12px #7a5bf5} .du-bot[aria-pressed="true"] small{color:#fff}
+.du-go{align-self:flex-end;padding:11px 20px}
+.du-row{display:flex;gap:8px;align-items:center;flex-wrap:wrap} .du-row input{width:120px;text-transform:uppercase;letter-spacing:.2em;padding:9px 12px;border-radius:12px;border:1px solid var(--line);background:var(--surface-2);color:var(--ink);font-size:1rem}
+.du-friend,.du-search{display:flex;flex-direction:column;gap:10px;align-items:flex-start}
+.du-or{font-size:.8rem;color:var(--muted);font-weight:700} .du-code{margin:0;display:flex;align-items:baseline;gap:10px} .du-code b{font-size:2rem;letter-spacing:.18em}
+.du-peers{list-style:none;margin:0;padding:0;display:flex;gap:10px;flex-wrap:wrap} .du-peers li{display:flex;align-items:center;gap:8px;background:var(--surface-2);border-radius:12px;padding:5px 10px 5px 5px} .du-peers .du-av{width:30px;height:30px;border-radius:9px} .du-peers small{color:var(--muted);font-family:var(--f-display)}
+.du-err{margin:0;color:var(--bad);font-size:.85rem;font-weight:700} .du-err:empty{display:none}
+.du-search b{font-family:var(--f-display);font-size:1.2rem} .du-search small{color:var(--muted)}
+.du-spin{width:34px;height:34px;border-radius:50%;border:4px solid var(--line);border-top-color:#26805a;animation:duSpin 1s linear infinite} @keyframes duSpin{to{transform:rotate(360deg)}}
+.du-hud{display:flex;align-items:center;gap:10px}
+.du-pl{flex:1;display:flex;align-items:center;gap:10px;background:var(--surface);border-radius:var(--r-lg);padding:6px 12px 6px 6px;box-shadow:var(--shadow-card);min-width:0}
+.du-pl.opp{padding:6px 6px 6px 12px;justify-content:flex-end;text-align:right}
+.du-nm{display:flex;flex-direction:column;min-width:0;line-height:1.15} .du-nm b{font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis} .du-nm small{color:var(--muted);font-family:var(--f-display);font-size:.82rem}
+.du-pl.me .du-nm{margin-right:auto} .du-pl.opp .du-nm{margin-left:auto}
+.du-sc{font-family:var(--f-display);font-weight:700;font-size:1.7rem;min-width:2ch;text-align:center}
+.du-hud[data-lead="me"] .du-pl.me,.du-hud[data-lead="opp"] .du-pl.opp{box-shadow:0 0 0 2px #26805a,var(--shadow-card)}
+.du-vs{font-family:var(--f-display);font-weight:700;color:var(--muted);font-size:.85rem}
+.du-wrap{position:relative;display:flex;flex-direction:column}
+.du-count{position:absolute;inset:0;display:grid;place-items:center;font-family:var(--f-display);font-weight:700;font-size:6rem;color:var(--ink);background:color-mix(in srgb,var(--surface) 75%,transparent);border-radius:14px;z-index:4}
+.du-count.pop{animation:duPop .7s ease} @keyframes duPop{0%{transform:scale(1.6);opacity:0}30%{transform:scale(1);opacity:1}}
+.du-wait{position:absolute;left:50%;bottom:12px;transform:translateX(-50%);margin:0;background:var(--ink);color:var(--bg);border-radius:999px;padding:8px 16px;font-weight:800;font-size:.85rem;z-index:4;white-space:nowrap}
+.du-res{position:absolute;inset:0;display:grid;place-items:center;z-index:5;background:color-mix(in srgb,var(--bg) 55%,transparent);border-radius:14px;padding:8px}
+.du-rcard{background:var(--surface);border-radius:var(--r-lg);padding:14px 20px;box-shadow:0 24px 50px -20px rgba(10,6,30,.45);display:flex;flex-direction:column;align-items:center;gap:6px;text-align:center;max-width:100%}
+.du-rk{margin:0;font-size:.72rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.du-rcard h3{margin:0;font-family:var(--f-display);font-weight:700;font-size:1.8rem}
+.du-res[data-res="win"] h3{color:#26805a} .du-res[data-res="loss"] h3{color:var(--bad)}
+.du-rsc{display:flex;align-items:center;gap:14px} .du-rsc>span{display:flex;align-items:center;gap:10px} .du-rsc b{font-family:var(--f-display);font-size:2rem} .du-rsc i{font-style:normal;color:var(--muted)}
+.du-relo{margin:0;font-weight:800} .du-relo .up{color:#26805a} .du-relo .down{color:var(--bad)}
+.du-res .du-row{justify-content:center}
+.du-res .btn kbd,.du-panel .btn kbd{margin-left:6px}
+@media (max-width:1100px){ .du-lobby{grid-template-columns:minmax(0,1fr) 250px} .du-mode{padding:14px} .du-bots{grid-template-columns:repeat(4,minmax(0,1fr))} .du-bot small{display:none} }
+@media (max-width:900px){ .du-lobby{grid-template-columns:1fr;grid-template-rows:auto auto auto} .du-side{grid-column:1;grid-row:1;display:grid;grid-template-columns:auto minmax(0,1fr);align-items:center} .du-hist{display:none}
+  .du-lobby>.du-modes,.du-lobby>.du-panel{grid-row:2} .du-modes{grid-auto-rows:auto} .du-mode{min-height:120px} }
+@media (max-width:640px){ .du-side{grid-template-columns:1fr;gap:8px} .du-rate{padding:6px 12px 6px 6px} .du-rate .du-av{width:40px;height:40px} .du-rt b{font-size:1.5rem}
+  .du-modes{gap:8px} .du-mode{padding:10px} .du-mi{width:34px;height:34px;border-radius:10px} .du-mi svg{width:20px;height:20px} .du-mode b{font-size:1rem} .du-mode small{display:none}
+  .du-bots{grid-template-columns:repeat(2,minmax(0,1fr));gap:6px} .du-bot{padding:4px 6px} .du-bot .du-av{width:28px;height:28px}
+  .du-hud{gap:6px} .du-pl{padding:4px 8px 4px 4px;gap:6px} .du-pl.opp{padding:4px 4px 4px 8px} .du-pl .du-av{width:30px;height:30px;border-radius:9px} .du-sc{font-size:1.3rem} .du-nm b{font-size:.85rem} .du-vs{display:none} }
+@media (max-height:420px){ .du-lobby{grid-template-columns:minmax(0,1fr) 220px;grid-template-rows:minmax(0,1fr)} .du-side{grid-column:2;grid-row:1;display:flex} .du-lobby>.du-modes,.du-lobby>.du-panel{grid-row:1} .du-hist{display:none} .du-mode{min-height:0;padding:8px 10px;flex-direction:row;align-items:center;gap:8px} .du-mode b{margin-top:0;font-size:.95rem} .du-mode small{display:none} .du-mi{width:30px;height:30px} .du-mi svg{width:18px;height:18px}
+  .du-rate{padding:4px 10px 4px 4px} .du-rate .du-av{width:34px;height:34px} .du-rt b{font-size:1.3rem} .du-rt em{display:none} .du-lobby{gap:8px} .du-panel{padding:8px 10px;gap:6px}
+  .du-bots{grid-template-columns:repeat(5,minmax(0,1fr));gap:5px} .du-bot{padding:3px 5px} .du-bot .du-av{width:26px;height:26px} .du-bot small{display:none} .du-bot b{font-size:.75rem}
+  .du-pl .du-av{width:28px;height:28px} .du-sc{font-size:1.2rem} .du-pl{padding:3px 8px 3px 3px} .du-rcard{padding:8px 14px;gap:3px} .du-rcard h3{font-size:1.3rem} .du-rsc b{font-size:1.4rem} .du-count{font-size:4rem} }
+
+.du-art{position:absolute;top:10px;right:10px;width:46%;max-width:150px;aspect-ratio:1;display:flex;align-items:center;justify-content:center;pointer-events:none;filter:drop-shadow(0 12px 16px rgba(10,6,30,.3))}
+.du-art>svg{width:100%;height:100%}
+.du-art .du-av{width:44%;height:44%;border-radius:22%;box-shadow:0 0 0 3px rgba(255,255,255,.7);margin-left:-12%} .du-art .du-av:first-child{margin-left:0} .du-m-bots .du-art .du-av:nth-child(2){transform:translateY(-14%) scale(1.15);z-index:1}
+.du-pbody{display:flex;flex-direction:column;gap:12px;min-height:0;flex:1}
+.du-bcard{display:flex;align-items:center;gap:16px;background:var(--surface-2);border-radius:var(--r-lg);padding:14px;margin-top:auto}
+.du-bcard>.du-av{width:84px;height:84px;border-radius:24px} .du-bcard>div{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
+.du-bcard b{font-family:var(--f-display);font-size:1.3rem} .du-bcard small{color:var(--muted);font-weight:700} .du-bcard p{margin:4px 0 0;color:var(--muted);font-size:.88rem}
+.du-bcard .du-go{align-self:center;flex:none}
+@media (max-width:900px){ .du-art{width:34%;max-width:96px;top:8px;right:8px} .du-bcard>.du-av{width:56px;height:56px} }
+@media (max-width:640px){ .du-art{width:42%;top:6px;right:6px} }
+@media (max-height:420px){ .du-art{display:none} }
+@media (max-width:640px), (max-height:420px){ .du-art.x{display:none} .du-bcard{padding:8px;gap:10px;flex-wrap:wrap} .du-bcard>.du-av{width:40px;height:40px;border-radius:12px} .du-bcard p{display:none} .du-bcard b{font-size:1rem} .du-bcard .du-go{padding:8px 14px} }
+
+@media (min-width:901px) and (min-height:600px){ .du-bots{grid-template-columns:repeat(5,minmax(0,1fr));gap:10px} .du-bot{flex-direction:column;justify-content:center;gap:4px;padding:12px 6px;text-align:center}
+  .du-bot .du-av{width:58px;height:58px;border-radius:18px} .du-bot small{display:block;margin:0} }
+
+@media (max-width:640px), (max-height:420px){ .du-bcard{flex-wrap:nowrap} .du-bcard b{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:.95rem} .du-bcard .du-go{font-size:.85rem;padding:8px 12px} }
+
+@media (max-width:900px){ .du-panel{min-height:auto} .du-pbody{flex:none} .du-bcard{margin-top:0} }
+
+@media (max-width:900px) and (min-height:421px){ .du-lobby{display:flex;flex-direction:column} .du-side{order:-1;flex:none} .du-modes{flex:1;grid-auto-rows:minmax(0,1fr)} .du-panel{flex:none} }
+@media (max-width:640px){ .du-modes{flex:none;grid-auto-rows:auto} .du-mode{min-height:110px} }
+
+@media (min-width:641px) and (max-width:900px) and (min-height:700px){ .du-art{width:56%;max-width:210px;top:16px;right:16px} .du-mode b{font-size:1.6rem} .du-mode small{font-size:.9rem} }
 </style>
 
 <script>if(window.Capacitor&&window.webkit&&window.webkit.messageHandlers&&window.webkit.messageHandlers.bridge)document.documentElement.classList.add("native");</script>
@@ -1400,6 +1504,7 @@ body.gp .wk.k-ok span,body.gp .bk.k-ok span{color:#15122e}
           <label class="su-help"><input type="checkbox" id="suHelpK"><span><b data-i="suHelpKT"></b><small data-i="suHelpKD"></small></span></label>
           <label class="su-help"><input type="checkbox" id="suHelpP"><span><b data-i="suHelpPT"></b><small data-i="suHelpPD"></small></span></label>
           <label class="su-help mini"><input type="checkbox" id="suLabels"><span><b data-i="suLabelsT"></b></span></label>
+          <label class="su-help mini"><input type="checkbox" id="suFing"><span><b data-i="suFingT"></b></span></label>
         </section>
         <button class="su-go" id="suGo" type="button"><span><small id="suCount"></small><b id="suSum"></b></span><span class="su-play" data-i="suGo"></span></button>
       </aside>
@@ -1470,9 +1575,31 @@ body.gp .wk.k-ok span,body.gp .bk.k-ok span{color:#15122e}
     <div class="rn-head"><b id="rnTitle"></b><span class="rn-score mono" id="rnScore"></span><span class="rn-best mono" id="rnBest"></span><span class="spacer"></span>
       <label class="gm-opt"><span data-i="gmDiffL"></span><select id="gmDiff"></select></label>
       <label class="gm-opt"><span data-i="gmContL"></span><select id="gmCont"></select></label>
-      <label class="check rn-help"><input type="checkbox" id="rnHelp"> <span data-i="rnHelpLbl"></span></label><button class="btn" id="rnQuit" type="button" data-i="rnQuit"></button></div>
+      <label class="check rn-help"><input type="checkbox" id="rnHelp"> <span data-i="rnHelpLbl"></span></label><button class="btn" id="duToLobby" type="button" data-i="duLobby" hidden></button><button class="btn" id="rnQuit" type="button" data-i="rnQuit"></button></div>
+    <div class="du-hud" id="duHud" hidden>
+      <div class="du-pl me"><span class="du-av" id="duMeAv"></span><span class="du-nm"><b id="duMeName"></b><small id="duMeElo"></small></span><span class="du-sc mono" id="duMeSc">0</span></div>
+      <span class="du-vs">VS</span>
+      <div class="du-pl opp"><span class="du-sc mono" id="duOpSc">0</span><span class="du-nm"><b id="duOpName"></b><small id="duOpElo"></small></span><span class="du-av" id="duOpAv"></span></div>
+    </div>
+    <div class="du-lobby" id="duLobby" hidden>
+      <div class="du-modes" id="duModes">
+        <button class="du-mode du-m-online" type="button" data-m="online"><span class="du-art" aria-hidden="true"></span><span class="du-mi"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3 3.2 3 14.8 0 18M12 3c-3 3.2-3 14.8 0 18"/></svg></span><b data-i="duOnline"></b><small data-i="duOnlineD"></small></button>
+        <button class="du-mode du-m-bots" type="button" data-m="bots"><span class="du-art" aria-hidden="true"></span><span class="du-mi"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="8" width="14" height="11" rx="3"/><path d="M12 4v4M9 13h.01M15 13h.01M9.5 16.5h5"/></svg></span><b data-i="duBots"></b><small data-i="duBotsD"></small></button>
+        <button class="du-mode du-m-friend" type="button" data-m="friend"><span class="du-art" aria-hidden="true"></span><span class="du-mi"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="9" r="3.5"/><path d="M3 20c.6-3.4 3-5 6-5s5.4 1.6 6 5"/><circle cx="17" cy="8" r="2.6"/><path d="M16 13.2c2.6-.3 4.6 1.1 5 4"/></svg></span><b data-i="duFriend"></b><small data-i="duFriendD"></small></button>
+        <button class="du-mode du-m-solo" type="button" data-m="solo"><span class="du-art" aria-hidden="true"></span><span class="du-mi"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4.5 21c.8-4.3 3.7-6.5 7.5-6.5s6.7 2.2 7.5 6.5"/></svg></span><b data-i="duSolo"></b><small data-i="duSoloD"></small></button>
+      </div>
+      <div class="du-panel" id="duPanel" hidden><div class="du-ph"><button class="du-back" id="duPBack" type="button" aria-label="Retour"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></button><b id="duPTitle"></b></div><div class="du-pbody" id="duPBody"></div></div>
+      <aside class="du-side">
+        <div class="du-rate"><span class="du-av" id="duRateAv"></span><span class="du-rt"><small id="duRateK"></small><b class="mono" id="duRate"></b><em id="duRec"></em></span></div>
+        <div class="seg du-cont" id="duCont"><button type="button" data-v="chords" data-i="duChords"></button><button type="button" data-v="notes" data-i="duNotes"></button></div>
+        <div class="du-hist"><h4 data-i="duHistT"></h4><ol id="duHist"></ol></div>
+      </aside>
+    </div>
+    <div class="du-wrap" id="duWrap">
     <div class="rn-stage" id="rnStage"><canvas id="rnCanvas" aria-label="Game"></canvas></div>
     <div class="rn-stage gm-board" id="gmBoard" hidden><p class="gm-kick" id="gmKick"></p><p class="gm-big" id="gmBig"></p><p class="gm-sub" id="gmSub"></p><div class="gm-bar"><i id="gmBar"></i></div></div>
+    <div class="du-count" id="duCount" hidden></div><p class="du-wait" id="duWait" hidden></p><div class="du-res" id="duRes" hidden></div>
+    </div>
   </section>
 
   <section class="dpanel" id="dailyPanel" hidden>
@@ -1702,7 +1829,7 @@ body.gp .wk.k-ok span,body.gp .bk.k-ok span{color:#15122e}
           <div class="field"><span data-i="langLbl"></span><div class="seg" id="langSeg" role="group" aria-label="Langue / Language"><button type="button" data-v="fr">🇫🇷 Français</button><button type="button" data-v="en">🇬🇧 English</button></div></div>
           <div class="field"><span data-i="notation"></span><div class="seg" id="segNot"><button type="button" data-v="en">C D E</button><button type="button" data-v="fr">Do Ré Mi</button></div>
         </div>
-          <div class="set-checks"><label class="check"><input type="checkbox" id="optLabels"> <span data-i="optLabels"></span></label><label class="check"><input type="checkbox" id="optUiSound"> <span data-i="optUiSound"></span></label></div>
+          <div class="set-checks"><label class="check"><input type="checkbox" id="optLabels"> <span data-i="optLabels"></span></label><label class="check"><input type="checkbox" id="optFing"> <span data-i="optFing"></span></label><label class="check"><input type="checkbox" id="optUiSound"> <span data-i="optUiSound"></span></label></div>
         </div>
       </section>
       <section class="set-sec"><h3><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M10 8.5l5.5 3.5-5.5 3.5z"/></svg><span data-i="secGame"></span></h3>
@@ -1895,7 +2022,11 @@ const TXT = {
     melDown:" · descend en Mineur",
     midiBlockedMsg:"Le navigateur a refusé l'accès MIDI. Clique sur le cadenas à gauche de l'adresse pour l'autoriser, ou choisis le clavier à l'écran.",
     dailyResume:"Reprendre",
-    syncOk:x=>"Sauvegardé en ligne "+x+" ✓", syncErr:x=>"Hors ligne : dernière sauvegarde "+x+".", agoNever:"inconnue", signedOut:"Déconnecté", rights:"Tous droits réservés", themeDay:"Passer en mode jour", themeNight:"Passer en mode nuit", suKeysH:"Tonalités", suKeysSimple:"Simples", suKeysSimpleD:"Sans dièse ni bémol : Do, Ré, Mi, Fa, Sol, La, Si", suKeysAll:"Toutes", suKeysAllD:"Avec les ♯ et les ♭", suKeysPick:"Au choix", suKeysPickD:"Je choisis les tonalités",
+    syncOk:x=>"Sauvegardé en ligne "+x+" ✓", syncErr:x=>"Hors ligne : dernière sauvegarde "+x+".", agoNever:"inconnue", signedOut:"Déconnecté", rights:"Tous droits réservés", themeDay:"Passer en mode jour", themeNight:"Passer en mode nuit", duBotDesc:["Elle découvre le clavier. Parfaite pour ta première partie.","Il connaît ses premiers accords, mais il hésite encore.","Agile mais distraite : elle fait encore des fautes.","Une bonne oreille et un rythme régulier.","Réfléchi, il se trompe rarement.","Rapide et sûr de lui.","Malin, il enchaîne sans faiblir.","Calme et précis comme un métronome.","Un maestro : il faudra tout donner.","La légende. Presque imbattable."], duHistT:"Dernières parties", duHistNone:"Aucune partie classée pour l'instant.", duW1:"V", duL1:"D", duD1:"N", duLobby:"Salon", duChords:"Accords", duNotes:"Notes", duOnline:"Jouer en ligne", duOnlineD:"Partie classée contre un joueur de ton niveau", duBots:"Contre un bot", duBotsD:"10 adversaires, du débutant au maestro", duFriend:"Avec un ami", duFriendD:"Partage un code ou un lien", duSolo:"Entraînement solo", duSoloD:"Bats ton record, sans adversaire",
+    duYourElo:g=>"Ton ELO · "+g, duRecord:(w,d,l)=>w+" V · "+d+" N · "+l+" D", duNew:"Joue 5 parties pour fixer ton niveau", duNear:"Ton niveau", duPlayVs:(n,e)=>"Jouer contre "+n+" ("+e+")", duShare:"Envoie ce code à ton ami ; la partie démarre quand tu cliques sur Lancer.", duOr:"ou",
+    duFriendHint:"Partie amicale : elle ne compte pas pour l'ELO.", duSearching:"Recherche d'un adversaire…", duWindow:(e,w,n)=>"Ton ELO "+e+(w<9999?" · adversaire entre "+Math.max(100,e-w)+" et "+(e+w):" · tous niveaux")+" · "+Math.max(1,n)+" en ligne", duBotWait:(n,e)=>"Jouer contre "+n+" ("+e+"), un bot de ton niveau",
+    duFriendly:"Amical", duBotTag:"bot", duGone:"a quitté", duOut:"terminé", duRated:"partie classée", duWinForfeit:"Victoire, ton adversaire est parti", duWin:"Victoire !", duLoss:"Défaite", duDraw:"Égalité", duNewElo:"Nouvel ELO", duUnrated:"Partie amicale, ELO inchangé",
+    duNewOpp:"Autre adversaire", duRematch:"Revanche", duRematchSent:"Revanche demandée…", duRematchAccept:"Accepter la revanche", duGoT:"Lancer la partie", duWaitOpp:(n,o,m)=>"Tu as fini avec "+m+". "+n+" joue encore ("+o+")…", eloL:"ELO", suFingT:"Doigtés (main droite)", optFing:"Doigtés sur le clavier (main droite)", suKeysH:"Tonalités", suKeysSimple:"Simples", suKeysSimpleD:"Sans dièse ni bémol : Do, Ré, Mi, Fa, Sol, La, Si", suKeysAll:"Toutes", suKeysAllD:"Avec les ♯ et les ♭", suKeysPick:"Au choix", suKeysPickD:"Je choisis les tonalités",
     suShuffleT:"Mélanger l'ordre", suLockedKeys:n=>n+" tonalité"+(n>1?"s":"")+" encore verrouillée"+(n>1?"s":"")+" (niveaux, ou « Tout débloquer » dans Réglages)", suNone:"Aucune tonalité débloquée dans ce choix", suModeN:"En notes", suModeND:"Do, Ré, Mi… une note après l'autre, de la tonique à l'octave.", suModeC:"En accords", suModeCD:"L'accord de chaque degré, du I au VII, plaqué ou note par note.", suNoChords:"Cette gamme n'a pas d'accords par degré.",
     againB:"Recommencer", nextKeyB:l=>"Suivant : "+l, qzTabQuiz:"Quiz", qzTabPlayers:"Joueurs", qzToPlayersT:"Choisir les joueurs", optUiSound:"Sons de l'interface (survol des cartes, réponses du quiz)", qzAnsH:"Répondre avec", qzNotes:"Des notes", qzChords:"Des accords",
     qzDiffN:["Do, Ré, Mi, Fa","4 notes blanches au hasard","4 notes au hasard, touches noires comprises"], qzDiffC:["Do, Fa, Sol, La mineur","Accords simples au hasard","Tous les accords, majeurs, mineurs et de 7e"],
@@ -1915,7 +2046,7 @@ const TXT = {
     suSub_scales:"Choisis une gamme et sa tonalité, règle le chrono et les aides, puis joue-la jusqu'à la réussir.", suSub_chords:"Choisis un accord et sa tonalité. Chaque renversement coché est un exercice.", suSub_harmony:"Choisis une tonalité : chaque degré coché est un exercice.", suSub_prog:"Choisis une progression et sa tonalité, puis enchaîne les accords.", suSub_ear:"Choisis ce que tu veux reconnaître : 10 écoutes par partie.",
     suHelpNT:"Voir les notes", suHelpND:"Le nom de chaque note s'affiche avant que tu joues.", suHelpKT:"Allumer les touches", suHelpKD:"Les touches à jouer s'allument sur le clavier.",
     suHelpPT:"Aide progressive", suHelpPD:"Rien au départ. Si tu bloques, un indice arrive toutes les 8 s (ou avec Espace) : le degré, puis le nom, puis les touches. Les notes trouvées restent allumées et une fiche se construit pour les retenir.",
-    suLabelsT:"Noms des notes sous toutes les touches", suCount:(n,sec)=>n===1?(sec==="prog"?"1 progression à jouer":sec==="chords"?"1 accord à jouer":"1 gamme, rejouée jusqu'à la réussir"):n+" exercices",
+    suLabelsT:"Noms des notes sur le clavier", suCount:(n,sec)=>n===1?(sec==="prog"?"1 progression à jouer":sec==="chords"?"1 accord à jouer":"1 gamme, rejouée jusqu'à la réussir"):n+" exercices",
     ficheT:"À retenir", ficheS:(a,b)=>a+" / "+b+" notes", playSub:"Des morceaux qui tombent sur le clavier, à ton rythme. En dessous, le piano pour jouer librement.", freeK:"Jeu libre",
     pfAch:"Tes réussites", pfJourney:"Ton parcours", pfRecs:"Tes records", pfDetail:"Détail par matière", pfLvl:"Niveau",
     pfSt:["Score total","Exercices réussis","Exercices sans faute","Éléments maîtrisés","Temps de jeu total","Joué aujourd'hui"],
@@ -2041,7 +2172,11 @@ const TXT = {
     melDown:" · descends as Minor",
     midiBlockedMsg:"The browser refused MIDI access. Click the padlock left of the address to allow it, or choose the on-screen keyboard.",
     dailyResume:"Resume",
-    syncOk:x=>"Saved online "+x+" ✓", syncErr:x=>"Offline: last save "+x+".", agoNever:"unknown", signedOut:"Signed out", rights:"All rights reserved", themeDay:"Switch to day mode", themeNight:"Switch to night mode", suKeysH:"Keys", suKeysSimple:"Simple", suKeysSimpleD:"No sharp or flat: C, D, E, F, G, A, B", suKeysAll:"All", suKeysAllD:"With the ♯ and ♭", suKeysPick:"Pick", suKeysPickD:"I choose the keys",
+    syncOk:x=>"Saved online "+x+" ✓", syncErr:x=>"Offline: last save "+x+".", agoNever:"unknown", signedOut:"Signed out", rights:"All rights reserved", themeDay:"Switch to day mode", themeNight:"Switch to night mode", duBotDesc:["Just discovering the keys. Perfect for your first game.","Knows the first chords, but still hesitates.","Nimble but easily distracted: still makes mistakes.","A good ear and a steady pace.","Thoughtful, rarely wrong.","Fast and confident.","Clever, keeps going without a slip.","Calm and precise like a metronome.","A maestro: you will have to give everything.","The legend. Almost unbeatable."], duHistT:"Recent games", duHistNone:"No rated game yet.", duW1:"W", duL1:"L", duD1:"D", duLobby:"Lobby", duChords:"Chords", duNotes:"Notes", duOnline:"Play online", duOnlineD:"Rated game against a player of your level", duBots:"Play a bot", duBotsD:"10 opponents, from beginner to maestro", duFriend:"Play a friend", duFriendD:"Share a code or a link", duSolo:"Solo practice", duSoloD:"Beat your best, no opponent",
+    duYourElo:g=>"Your ELO · "+g, duRecord:(w,d,l)=>w+" W · "+d+" D · "+l+" L", duNew:"Play 5 games to set your level", duNear:"Your level", duPlayVs:(n,e)=>"Play "+n+" ("+e+")", duShare:"Send this code to your friend; the game starts when you press Start.", duOr:"or",
+    duFriendHint:"Friendly game: it does not count for ELO.", duSearching:"Looking for an opponent…", duWindow:(e,w,n)=>"Your ELO "+e+(w<9999?" · opponent between "+Math.max(100,e-w)+" and "+(e+w):" · any level")+" · "+Math.max(1,n)+" online", duBotWait:(n,e)=>"Play "+n+" ("+e+"), a bot of your level",
+    duFriendly:"Friendly", duBotTag:"bot", duGone:"left", duOut:"finished", duRated:"rated game", duWinForfeit:"You win, your opponent left", duWin:"You win!", duLoss:"You lose", duDraw:"Draw", duNewElo:"New ELO", duUnrated:"Friendly game, ELO unchanged",
+    duNewOpp:"New opponent", duRematch:"Rematch", duRematchSent:"Rematch asked…", duRematchAccept:"Accept the rematch", duGoT:"Start the game", duWaitOpp:(n,o,m)=>"You finished with "+m+". "+n+" is still playing ("+o+")…", eloL:"ELO", suFingT:"Fingering (right hand)", optFing:"Fingering on the keys (right hand)", suKeysH:"Keys", suKeysSimple:"Simple", suKeysSimpleD:"No sharp or flat: C, D, E, F, G, A, B", suKeysAll:"All", suKeysAllD:"With the ♯ and ♭", suKeysPick:"Pick", suKeysPickD:"I choose the keys",
     suShuffleT:"Shuffle the order", suLockedKeys:n=>n+" key"+(n>1?"s":"")+" still locked (levels, or “Unlock everything” in Settings)", suNone:"No unlocked key in this choice", suModeN:"As notes", suModeND:"C, D, E… one note after another, from the root to the octave.", suModeC:"As chords", suModeCD:"The chord of each degree, from I to VII, at once or note by note.", suNoChords:"This scale has no chord per degree.",
     againB:"Start again", nextKeyB:l=>"Next: "+l, qzTabQuiz:"Quiz", qzTabPlayers:"Players", qzToPlayersT:"Choose the players", optUiSound:"Interface sounds (card hover, quiz answers)", qzAnsH:"Answer with", qzNotes:"Notes", qzChords:"Chords",
     qzDiffN:["C, D, E, F","4 random white notes","4 random notes, black keys included"], qzDiffC:["C, F, G, A minor","Random simple chords","Every chord: major, minor and 7th"],
@@ -2061,7 +2196,7 @@ const TXT = {
     suSub_scales:"Pick a scale and its key, set the timer and the helps, then play it until you nail it.", suSub_chords:"Pick a chord and its key. Each ticked inversion is one exercise.", suSub_harmony:"Pick a key: each ticked degree is one exercise.", suSub_prog:"Pick a progression and its key, then chain the chords.", suSub_ear:"Pick what you want to recognise: 10 listens per game.",
     suHelpNT:"Show the notes", suHelpND:"Each note's name shows before you play.", suHelpKT:"Light up the keys", suHelpKD:"The keys to play light up on the keyboard.",
     suHelpPT:"Step-by-step help", suHelpPD:"Nothing at first. If you get stuck, a hint comes every 8 s (or with Space): the degree, then the name, then the keys. The notes you find stay lit and a card builds up to help you remember them.",
-    suLabelsT:"Note names under every key", suCount:(n,sec)=>n===1?(sec==="prog"?"1 progression to play":sec==="chords"?"1 chord to play":"1 scale, replayed until you nail it"):n+" exercises",
+    suLabelsT:"Note names on the keys", suCount:(n,sec)=>n===1?(sec==="prog"?"1 progression to play":sec==="chords"?"1 chord to play":"1 scale, replayed until you nail it"):n+" exercises",
     ficheT:"To remember", ficheS:(a,b)=>a+" / "+b+" notes", playSub:"Songs that fall onto the keyboard, at your own pace. Below, the piano for free play.", freeK:"Free play",
     pfAch:"Your achievements", pfJourney:"Your journey", pfRecs:"Your records", pfDetail:"Detail by topic", pfLvl:"Level",
     pfSt:["Total score","Exercises passed","Perfect exercises","Items mastered","Total time played","Played today"],
@@ -2602,6 +2737,44 @@ function guideKeys(){
   ms.forEach(m=>keyEls[m]?.classList.add("k-guide"));
 }
 
+
+// ---------- Fingering (right hand) shown on the keys that are lit, revealed or already played ----------
+const FG_BLACK=[1,3,6,8,10];
+// scale fingering: thumbs on white keys only, preferably just after a black key or on the tonic, groups of 2-4 fingers (1-2-3, 1-2-3-4)
+function scaleFingers(pcs){ const n=pcs.length; if(!n) return [];
+  const blk=i=>FG_BLACK.includes(((pcs[(i%n+n)%n])%12+12)%12);
+  let best=null;
+  const sets = n<=4 ? [[0]] : (()=>{ const a=[]; for(let i=0;i<n;i++) for(let j=i+1;j<n;j++){ const s1=j-i, s2=n-s1; if(s1>=2&&s1<=4&&s2>=2&&s2<=4) a.push([i,j]); } return a; })();
+  sets.forEach(T=>{ let sc=0; T.forEach(i=>{ if(blk(i)) sc-=10; if(blk(i-1)) sc+=1; if(i===0) sc+=2; }); const s1 = T.length>1 ? T[1]-T[0] : n;
+    const key=[sc, T.includes(0)?1:0, s1===3?1:0, -T[0]], gt=()=>{ for(let k=0;k<key.length;k++) if(key[k]!==best.key[k]) return key[k]>best.key[k]; return false; };
+    if(!best || gt()) best={T,key}; });
+  const T=best.T, f=new Array(n);
+  T.forEach((t,g)=>{ const end = g+1<T.length ? T[g+1] : T[0]+n; for(let i=t,k=1;i<end;i++,k++) f[i%n]=Math.min(5,k); });
+  const top = T.includes(0) ? Math.min(5, f[n-1]+1) : f[0];
+  return [...f, top]; }
+// chord fingering (right hand), notes from low to high
+function chordFingers(ms){ const m=ms.slice().sort((a,b)=>a-b), n=m.length;
+  if(n===1) return [1]; if(n===2){ const d=m[1]-m[0]; return [1, d<=2?2:d<=4?3:d<=7?4:5]; }
+  if(n===3) return m[2]-m[1]>=5 ? [1,2,5] : [1,3,5];
+  if(n===4) return m[3]-m[2]>=3 && m[2]-m[1]<=2 ? [1,2,3,5] : m[2]-m[1]>=3 && m[1]-m[0]<=2 ? [1,2,4,5] : [1,2,3,5];
+  return m.map((x,i)=>Math.min(5,1+Math.round(i*4/(n-1)))); }
+// midi (as shown on the keyboard) -> finger, for the current exercise
+function fgMap(){ const map=new Map(); if(!cur || !seq.length || cur.sec==="ear") return map;
+  try{
+    if(chSeq()){ const v=(seq[pStep]||seq[0]).voicing.slice().sort((a,b)=>a-b), f=chordFingers(v); v.forEach((m,i)=>map.set(fold(m),f[i])); return map; }
+    const rm=revealMidis();
+    if(chordLike(cur.sec)){ const srt=rm.slice().sort((a,b)=>a-b), f=chordFingers(srt); srt.forEach((m,i)=>map.set(fold(m),f[i])); return map; }
+    const asc=rm.slice().sort((a,b)=>a-b), oct = asc.length>1 && (asc[asc.length-1]-asc[0])%12===0 && asc.length>2;
+    const body = oct ? asc.slice(0,-1) : asc, f=scaleFingers(body.map(m=>m%12));
+    body.forEach((m,i)=>map.set(fold(m),f[i])); if(oct) map.set(fold(asc[asc.length-1]),f[f.length-1]);
+  }catch(e){}
+  return map; }
+let fgRaf=0;
+function fgRender(){ fgRaf=0; const on=!!S.settings.fing, map=on?fgMap():null;
+  Object.entries(keyEls).forEach(([m,el])=>{ let b=el.querySelector(".fg"); const show = on && map.has(+m) && /\bk-(guide|rev|ok|hit)\b/.test(el.className);
+    if(!show){ if(b) b.remove(); return; } if(!b){ b=document.createElement("i"); b.className="fg"; b.setAttribute("aria-hidden","true"); el.appendChild(b); } b.textContent=map.get(+m); }); }
+const fgSoon=()=>{ if(!fgRaf) fgRaf=requestAnimationFrame(fgRender); };
+new MutationObserver(muts=>{ if(muts.some(x=>x.attributeName==="class" && x.target.dataset && x.target.dataset.m)) fgSoon(); }).observe(kbd,{attributes:true,subtree:true,attributeFilter:["class"]});
 // ---------- Game ----------
 let phase="idle", cur=null, seq=[], found=[], played=[], idx=0, errors=0, startT=0, deadline=0, combo=0, raf=0, advanceTimer=0, lastId=null;
 let pStep=0, pFound=new Set(), earPick=null, playTimers=[];
@@ -3402,7 +3575,7 @@ function renderSettings(){
   ks.value=S.settings.kbdSize||"auto";
   $("kbRange").textContent = kbFull() ? t("kbRangeTxt")(Object.keys(keyEls).length,octName(LOW),octName(HIGH)) : ""; set("segLen",String(S.settings.gameLen)); set("segNot",S.settings.notation); set("segDir",S.settings.dir); set("langSeg",S.settings.lang);
   $("delay").value=S.settings.delay; $("delayOut").textContent=S.settings.delay?S.settings.delay+" s":t("never");
-  $("optOct").checked=S.settings.octave; $("optUiSound").checked=S.settings.uiSound!==false; $("optLabels").checked=S.settings.labels; $("optMidiSound").checked=S.settings.midiSound; $("optMidiC").checked=S.settings.midiC!==false; $("optAuto").checked=S.settings.autoNext!==false; $("optAll").checked=S.settings.unlockAll;
+  $("optOct").checked=S.settings.octave; $("optUiSound").checked=S.settings.uiSound!==false; $("optLabels").checked=S.settings.labels; $("optFing").checked=!!S.settings.fing; $("optMidiSound").checked=S.settings.midiSound; $("optMidiC").checked=S.settings.midiC!==false; $("optAuto").checked=S.settings.autoNext!==false; $("optAll").checked=S.settings.unlockAll;
   const sec=S.section;
   $("invField").hidden=sec!=="chords"; $("degField").hidden=sec!=="harmony"; $("vlField").hidden=sec!=="prog";
   $("scModeField").hidden=sec!=="scales"; $("sc7Field").hidden=!(sec==="scales" && S.settings.scMode==="chords"); set("segScMode",S.settings.scMode||"notes"); $("optSc7").checked=!!S.settings.sc7;
@@ -3497,7 +3670,7 @@ function rnChords(){
   return out.length?out:[{label:"C",pcs:[0,4,7]}];
 }
 let GM="runner"; // which game is open: runner | speed | memory
-const gmDiff = () => S.settings.gmDiff||"prog", gmCont = () => S.settings.gmCont||"chords";
+const gmDiff = () => DU.mode ? "prog" : S.settings.gmDiff||"prog", gmCont = () => DU.mode ? DU.cont : S.settings.gmCont||"chords";
 function gmFill(){
   const d=$("gmDiff"), c=$("gmCont"), D=t("gmDiffs"), C=t("gmConts");
   d.innerHTML=Object.keys(D).map(k=>'<option value="'+k+'">'+D[k]+'</option>').join(""); d.value=gmDiff();
@@ -3507,6 +3680,7 @@ $("gmDiff").addEventListener("change",e=>{ S.settings.gmDiff=e.target.value; sav
 $("gmCont").addEventListener("change",e=>{ S.settings.gmCont=e.target.value; save(); gameRestart(); });
 // what the games ask for: chords (default) or single notes
 function gmItems(){
+  if(DU.mode) return duPool(DU.cont);
   if(gmCont()==="notes"){
     const easy = gmDiff()==="slow" || gmDiff()==="prog";
     return rootsOf("chords","maj").map(k=>tonicNote(k)).filter(n=>!easy || n.acc===0 || n.acc==null && !/[#b♯♭]/.test(noteName(n)))
@@ -3514,28 +3688,31 @@ function gmItems(){
   }
   return rnChords();
 }
-function gameOpen(id){
-  GM=id; gmFill(); $("rnHelp").checked=S.settings.rnHint!==false;
+function gameOpen(id, keep){
+  if(!keep){ duEnd(); duStopSearch(); DU.view="lobby"; DU.cont=S.settings.duCont==="notes"?"notes":"chords"; }
+  GM=id; DU.game=id; gmFill(); $("rnHelp").checked=S.settings.rnHint!==false;
   document.body.classList.add("runner-on"); $("runner").hidden=false; $("rnQuit").textContent=t("rnQuit");
   $("rnTitle").textContent=t({runner:"rnName",speed:"spName",memory:"mmName"}[id]);
   $("rnStage").hidden = id!=="runner"; $("gmBoard").hidden = id==="runner";
   RN.on=true; clearKeys();
   if(id==="runner"){ rnReset(); RN.state="ready"; cancelAnimationFrame(RN.raf); RN.last=performance.now(); RN.raf=requestAnimationFrame(rnLoop); }
   else if(id==="speed") spReset(); else mmReset();
+  duRender();
 }
-function gameRestart(){ if(!RN.on) return; gameOpen(GM); }
-function runnerClose(){ if(!RN.on) return; RN.on=false; clearKeys(); cancelAnimationFrame(SP.raf); clearTimeout(MM.timer); MM.timers.forEach(clearTimeout); MM.timers=[]; cancelAnimationFrame(RN.raf); $("runner").hidden=true; document.body.classList.remove("runner-on"); if(RN.xp){ addXP(RN.xp); RN.xp=0; save(); renderStatus(); } }
+function gameRestart(){ if(!RN.on) return; gameOpen(GM,true); }
+function runnerClose(){ if(!RN.on) return; duEnd(); duStopSearch(); DU.view="lobby"; document.body.classList.remove("du-lob"); RN.on=false; clearKeys(); cancelAnimationFrame(SP.raf); clearTimeout(MM.timer); MM.timers.forEach(clearTimeout); MM.timers=[]; cancelAnimationFrame(RN.raf); $("runner").hidden=true; document.body.classList.remove("runner-on"); if(RN.xp){ addXP(RN.xp); RN.xp=0; save(); renderStatus(); } }
 $("rnQuit").addEventListener("click",runnerClose);
 $("rnHelp").addEventListener("change",e=>{ S.settings.rnHint=e.target.checked; save(); RN.hintFor=undefined; });
-function rnGo(){ if(RN.state==="run") return; if(RN.state==="over") rnReset(); RN.state="run"; }
+function rnGo(){ if(DU.view!=="solo" && DU.view!=="play") return; if(RN.state==="run") return; if(RN.state==="over") rnReset(); RN.state="run"; }
 $("rnCanvas").addEventListener("pointerdown",()=>{ if(RN.state!=="run" && performance.now()-RN.crashAt>500) rnGo(); });
 document.addEventListener("keydown",e=>{ if(RN.on && RN.state!=="run" && (e.code==="Space"||e.code==="Enter") && performance.now()-RN.crashAt>500){ e.preventDefault(); rnGo(); } });
 function rnReset(){ Object.assign(RN,{obs:[],held:[],dist:0,y:0,vy:0,jump:null,cleared:0,spawnIn:1.2,newBest:false,speed:0,bonus:0,flash:null,hintFor:null,blink:0}); clearKeys(); RN.pool=gmItems(); rnScore(); }
 // show the keys of the chord to play (the next note), in the "reveal" colour, while the hint is on
 function rnHint(o){ clearKeys(); if(!o || S.settings.rnHint===false) return; o.pcs.forEach(pc=>{ for(let m=LOW;m<=HIGH;m++){ if(m%12===pc && keyEls[m]){ keyEls[m].classList.add("k-rev"); break; } } }); }
-function rnScore(){ const sc=RN.cleared*10+(RN.bonus||0)+Math.floor(RN.dist/40); RN.score=sc; $("rnScore").textContent=String(sc).padStart(5,"0"); $("rnBest").textContent=t("rnBestL")+" "+String(S.runnerBest||0).padStart(5,"0"); }
+function rnScore(){ const sc=RN.cleared*10+(RN.bonus||0)+(DU.mode?0:Math.floor(RN.dist/40)); RN.score=sc; if(DU.mode && RN.state==="run") duMe(sc,false); $("rnScore").textContent=String(sc).padStart(5,"0"); $("rnBest").textContent=t("rnBestL")+" "+String(S.runnerBest||0).padStart(5,"0"); }
 function runnerNote(m){
   if(!RN.on) return;
+  if(duNote(m)) return;
   if(GM==="speed") return spNote(m);
   if(GM==="memory") return mmNote(m);
   const pc=((m%12)+12)%12;
@@ -3562,9 +3739,9 @@ function rnLoop(now){
     const dx=RN.speed*dt; RN.dist+=dx;
     RN.spawnIn-=dt;
     if(RN.spawnIn<=0){
-      const ch=RN.pool[Math.floor(Math.random()*RN.pool.length)], dbl=(gmDiff()==="prog"?RN.cleared>=4:gmDiff()!=="slow") && Math.random()<.35;
+      const r1=gRnd(), r2=gRnd(), r3=gRnd(), ch=RN.pool[Math.floor(r1*RN.pool.length)], dbl=(gmDiff()==="prog"?RN.cleared>=4:gmDiff()!=="slow") && r2<.35;
       RN.obs.push({x:W+20*u, w:(dbl?50:24)*u, h:(dbl?50:44)*u, dbl, label:ch.label, pcs:ch.pcs, armed:false, passed:false, jumped:false});
-      const gapT={slow:3.6, mid:2.8, fast:2.1, prog:Math.max(1.9, 3.5-RN.cleared*0.07)}[gmDiff()]; RN.spawnIn=gapT*(0.85+Math.random()*.4);
+      const gapT={slow:3.6, mid:2.8, fast:2.1, prog:Math.max(1.9, 3.5-RN.cleared*0.07)}[gmDiff()]; RN.spawnIn=gapT*(0.85+r3*.4);
     }
     RN.obs.forEach(o=>o.x-=dx);
     const ringX=px+pw+Math.max(18*u,(pw+28*u)*0.5)+70*u;
@@ -3582,7 +3759,7 @@ function rnLoop(now){
     RN.obs.forEach(o=>{
       if(!o.passed && o.x+o.w < px){ o.passed=true; RN.cleared++; RN.xp+=2; tone(84,0,.12,.08); }
       const hit = o.x < px+pw-6*u && o.x+o.w > px+6*u && RN.y < o.h-6*u;
-      if(hit && RN.state==="run"){ RN.state="over"; clearKeys(); RN.crashAt=performance.now(); tone(40,0,.4,.2);
+      if(hit && RN.state==="run"){ RN.state="over"; clearKeys(); RN.crashAt=performance.now(); tone(40,0,.4,.2); if(DU.mode) duMe(RN.score,true);
         if(RN.score>(S.runnerBest||0)){ S.runnerBest=RN.score; RN.newBest=true; } if(RN.xp){ addXP(RN.xp); RN.xp=0; } save(); renderStatus(); }
     });
     RN.obs=RN.obs.filter(o=>o.x+o.w>-40);
@@ -3651,13 +3828,13 @@ function rr(g,x,y,w,h,r){ g.beginPath(); g.moveTo(x+r,y); g.arcTo(x+w,y,x+w,y+h,
 const SP={state:"ready",count:0,end:0,dur:60,target:null,held:[],raf:0,last:-1};
 function spDur(){ return {slow:90, mid:60, fast:40, prog:60}[gmDiff()]; }
 function spReset(){ cancelAnimationFrame(SP.raf); Object.assign(SP,{state:"ready",count:0,held:[],target:null}); SP.pool=gmItems(); gmBoard(); gmScore(); }
-function spGo(){ if(SP.state==="run") return; SP.state="run"; SP.count=0; SP.dur=spDur(); SP.end=performance.now()+SP.dur*1000; spNext(); SP.raf=requestAnimationFrame(spTick); }
-function spNext(){ let n; do{ n=SP.pool[Math.floor(Math.random()*SP.pool.length)]; }while(SP.pool.length>1 && SP.target && n.label===SP.target.label); SP.target=n; SP.held=[]; rnHintPcs(n.pcs); gmBoard(); }
+function spGo(){ if(DU.view!=="solo" && DU.view!=="play") return; if(SP.state==="run") return; SP.state="run"; SP.count=0; SP.dur=spDur(); SP.end=performance.now()+SP.dur*1000; spNext(); SP.raf=requestAnimationFrame(spTick); }
+function spNext(){ let n; do{ n=SP.pool[Math.floor(gRnd()*SP.pool.length)]; }while(SP.pool.length>1 && SP.target && n.label===SP.target.label); SP.target=n; SP.held=[]; rnHintPcs(n.pcs); gmBoard(); }
 function spTick(now){
   if(!RN.on || GM!=="speed" || SP.state!=="run") return;
   let left=(SP.end-now)/1000;
   // progressive: each answer gives back a little time, less and less
-  if(left<=0){ SP.state="over"; clearKeys(); const best=(S.gameBest||{}).speed||0; if(SP.count>best){ S.gameBest={...(S.gameBest||{}),speed:SP.count}; SP.newBest=true; } else SP.newBest=false; if(SP.count){ addXP(SP.count); renderStatus(); } save(); tone(48,0,.4,.15); gmBoard(); gmScore(); return; }
+  if(left<=0){ SP.state="over"; clearKeys(); if(DU.mode) duMe(SP.count,true); const best=(S.gameBest||{}).speed||0; if(SP.count>best){ S.gameBest={...(S.gameBest||{}),speed:SP.count}; SP.newBest=true; } else SP.newBest=false; if(SP.count){ addXP(SP.count); renderStatus(); } save(); tone(48,0,.4,.15); gmBoard(); gmScore(); return; }
   $("gmBar").style.width=(left/SP.dur*100)+"%"; $("gmBar").classList.toggle("low",left<10);
   SP.raf=requestAnimationFrame(spTick);
 }
@@ -3666,14 +3843,14 @@ function spNote(m){
   if(SP.state!=="run"){ if(pc===0 && midiMode()) spGo(); return; }
   const now=performance.now(); SP.held=SP.held.filter(h=>now-h.t<1300); SP.held.push({pc,t:now});
   const have=new Set(SP.held.map(h=>h.pc));
-  if(SP.target && SP.target.pcs.every(p=>have.has(p))){ SP.count++; if(gmDiff()==="prog") SP.end+=Math.max(300,1500-SP.count*60); tone(84,0,.1,.08); gmScore(); $("gmBoard").classList.remove("hit"); void $("gmBoard").offsetWidth; $("gmBoard").classList.add("hit"); spNext(); }
+  if(SP.target && SP.target.pcs.every(p=>have.has(p))){ SP.count++; if(DU.mode) duMe(SP.count,false); if(gmDiff()==="prog") SP.end+=Math.max(300,1500-SP.count*60); tone(84,0,.1,.08); gmScore(); $("gmBoard").classList.remove("hit"); void $("gmBoard").offsetWidth; $("gmBoard").classList.add("hit"); spNext(); }
 }
 // ---------- Game: Musical memory (repeat a growing sequence) ----------
 const MM={state:"ready",seq:[],step:0,round:0,timer:0,timers:[],held:[]};
 function mmTempo(){ return {slow:950, mid:680, fast:460, prog:Math.max(380, 900-MM.round*45)}[gmDiff()]; }
 function mmReset(){ MM.timers.forEach(clearTimeout); MM.timers=[]; Object.assign(MM,{state:"ready",seq:[],step:0,round:0,held:[]}); MM.pool=gmItems(); gmBoard(); gmScore(); }
-function mmGo(){ if(MM.state==="listen"||MM.state==="input") return; MM.seq=[]; MM.round=0; mmAdd(); mmPlay(); }
-function mmAdd(){ MM.seq.push(MM.pool[Math.floor(Math.random()*MM.pool.length)]); }
+function mmGo(){ if(DU.view!=="solo" && DU.view!=="play") return; if(MM.state==="listen"||MM.state==="input") return; MM.seq=[]; MM.round=0; mmAdd(); mmPlay(); }
+function mmAdd(){ MM.seq.push(MM.pool[Math.floor(gRnd()*MM.pool.length)]); }
 function mmPlay(){
   MM.state="listen"; MM.step=0; gmBoard(); clearKeys();
   const tp=mmTempo();
@@ -3686,11 +3863,11 @@ function mmNote(m){
   if(MM.state==="ready"||MM.state==="over"){ if(pc===0 && midiMode()) mmGo(); return; }
   if(MM.state!=="input") return;
   const it=MM.seq[MM.step], now=performance.now();
-  if(!it.pcs.includes(pc)){ MM.state="over"; tone(40,0,.4,.2); const best=(S.gameBest||{}).memory||0; MM.newBest=MM.round>best; if(MM.newBest) S.gameBest={...(S.gameBest||{}),memory:MM.round}; if(MM.round){ addXP(MM.round*2); renderStatus(); } save(); gmBoard(); gmScore(); return; }
+  if(!it.pcs.includes(pc)){ MM.state="over"; tone(40,0,.4,.2); if(DU.mode) duMe(MM.round,true); const best=(S.gameBest||{}).memory||0; MM.newBest=MM.round>best; if(MM.newBest) S.gameBest={...(S.gameBest||{}),memory:MM.round}; if(MM.round){ addXP(MM.round*2); renderStatus(); } save(); gmBoard(); gmScore(); return; }
   MM.held=MM.held.filter(h=>now-h.t<1500); MM.held.push({pc,t:now});
   const have=new Set(MM.held.map(h=>h.pc));
   if(it.pcs.every(p=>have.has(p))){ MM.step++; MM.held=[]; $("gmBig").textContent=MM.step+" / "+MM.seq.length;
-    if(MM.step>=MM.seq.length){ MM.round++; gmScore(); MM.state="listen"; $("gmSub").textContent=t("mmGood"); mmAdd(); MM.timers.push(setTimeout(mmPlay, 900)); } }
+    if(MM.step>=MM.seq.length){ MM.round++; gmScore(); if(DU.mode) duMe(MM.round,false); MM.state="listen"; $("gmSub").textContent=t("mmGood"); mmAdd(); MM.timers.push(setTimeout(mmPlay, 900)); } }
 }
 // shared board text for the two DOM games
 function gmBoard(){
@@ -3714,6 +3891,225 @@ function gmScore(){
 function rnHintPcs(pcs, force){ clearKeys(); if(!force && S.settings.rnHint===false) return; pcs.forEach(pc=>{ for(let m=LOW;m<=HIGH;m++){ if(m%12===pc && keyEls[m]){ keyEls[m].classList.add("k-rev"); break; } } }); }
 $("gmBoard").addEventListener("pointerdown",()=>{ if(GM==="speed" && SP.state!=="run") spGo(); else if(GM==="memory" && (MM.state==="ready"||MM.state==="over")) mmGo(); });
 document.addEventListener("keydown",e=>{ if(!RN.on || GM==="runner") return; if(e.code==="Space"||e.code==="Enter"){ if(GM==="speed" && SP.state!=="run"){ e.preventDefault(); spGo(); } else if(GM==="memory" && (MM.state==="ready"||MM.state==="over")){ e.preventDefault(); mmGo(); } } });
+// ---------- Duels (multiplayer in every game, chess.com-like): online against a player of your level, a bot, or a friend; ELO per game ----------
+// Both players get the same challenge (same random seed: same chords in the same order, same tempo) and see each other's score live.
+// Rating: S.elo["<game>-<cont>"] = {r, n, w, d, l, h:[{d,r,o,res,bot}]}; online and bot games are rated, friend games are not.
+// Online: lobby channel "pcd-lobby" (presence {id,name,elo,av,game,cont,wait,at}): waiting players of the same game are paired when their ratings
+// are close (the window grows with the waiting time); the older one creates the room "pcd-room-<CODE>" and sends {match}. In the room the host sends
+// {t:"start"}, both send {t:"sc"} (score, finished), {t:"re"} asks for a rematch. Everything received is checked.
+const DU_GAMES=["runner","speed","memory"];
+const DU_BOTS=[250,500,700,900,1100,1300,1500,1750,2000,2300]; // one bot per character of the levels (Mimi ... Draco)
+const DU={view:"lobby",game:"runner",cont:"chords",mode:null,rated:false,opp:null,me:{score:0,done:false},seed:0,t0:0,sim:0,
+  ch:null,lobby:null,code:"",host:false,peers:[],searching:false,searchAt:0,err:"",res:null,botPick:null,want:false,oppWant:false,online:0,countT:0};
+let gRnd=Math.random;
+function duRng(seed){ let a=seed>>>0; return ()=>{ a|=0; a=a+0x6D2B79F5|0; let t=Math.imul(a^a>>>15,1|a); t=t+Math.imul(t^t>>>7,61|t)^t; return ((t^t>>>14)>>>0)/4294967296; }; }
+const duKey = (g,c) => (g||DU.game)+"-"+(c||DU.cont);
+function eloGet(key){ S.elo=S.elo||{}; const e=S.elo[key||duKey()]; return e && Number.isFinite(e.r) ? e : {r:800,n:0,w:0,d:0,l:0,h:[]}; }
+const eloProv = e => e.n<5; // provisional rating, shown with a "?" like chess.com
+function eloApply(key, opp, res, bot, nm, av){ const e={...eloGet(key)}; e.h=(e.h||[]).slice(-19);
+  const E=1/(1+Math.pow(10,(opp-e.r)/400)), K = e.n<10?40 : e.n<30?24 : 16, d=Math.round(K*(res-E));
+  const before=e.r; e.r=Math.max(100,e.r+d); e.n++; if(res===1) e.w++; else if(res===0) e.l++; else e.d++;
+  e.h.push({d:dayStr(),r:e.r,o:Math.round(opp),res,bot:!!bot,nm:qzSafe(nm),av:av|0,dd:e.r-before}); S.elo={...(S.elo||{}),[key]:e}; save(); return {before, after:e.r, d:e.r-before}; }
+function duGameName(g){ return t({runner:"rnName",speed:"spName",memory:"mmName"}[g||DU.game]); }
+function duMyAv(){ return charIndex(levelInfo(S.xp).L); }
+function duMyName(){ return typeof netName==="function" ? netName() : t("qzYou"); }
+// the challenge is the same for everybody: natural notes, or major and minor chords on the natural notes
+function duPool(cont){
+  const nat=k=>tonicNote(k).a===0;
+  if(cont==="notes") return rootsOf("chords","maj").filter(nat).map(k=>tonicNote(k)).filter((n,i,a)=>a.findIndex(x=>x.pc===n.pc)===i).map(n=>({label:noteName(n),pcs:[n.pc],note:true}));
+  const out=[]; ["maj","min"].forEach(tid=>rootsOf("chords",tid).filter(nat).forEach(k=>out.push({label:chordSym(tid,k), pcs:[...new Set(spellChord(tid,k,0).map(n=>n.pc))]})));
+  return out; }
+// ---- bots: the score they reach and when, from their rating ----
+function duBotFor(elo){ let best=0; DU_BOTS.forEach((r,i)=>{ if(Math.abs(r-elo)<Math.abs(DU_BOTS[best]-elo)) best=i; }); return best; }
+function duBotPlan(elo, game, seed){ const r=duRng(seed^0x5bd1e995), s=Math.max(0,Math.min(1,(elo-100)/2100)), gauss=()=>{ let u=0; for(let i=0;i<6;i++) u+=r(); return u-3; };
+  const ev=[]; // [time (ms after the start), score]
+  if(game==="speed"){ let tm=0, end=60000, n=0; while(true){ const mean=(4.6-3.6*s)*1000; tm+=mean*(0.6+r()*0.8); if(tm>end) break; n++; ev.push([tm,n]); end+=Math.max(300,1500-n*60); } ev.push([end,n,1]); }
+  else if(game==="memory"){ const R=Math.max(0,Math.round(1.5+13*s+gauss()*1.2)); let tm=0; for(let k=1;k<=R+1;k++){ const tp=Math.max(380,900-(k-1)*45); tm+=500+k*tp+k*tp*(1.6-0.8*s)+900; if(k<=R) ev.push([tm,k]); else ev.push([tm,R,1]); } }
+  else { const k=Math.max(0,Math.round(2+35*Math.pow(s,1.2)+gauss()*(1.5+3*s))), p=0.15+0.6*s; let tm=5600, sc=0; for(let i=0;i<=k;i++){ const gap=Math.max(1.9,3.5-i*0.07)*(0.85+r()*0.4)*1000;
+      if(i<k){ sc+=10+(r()<p?5:0); ev.push([tm,sc]); tm+=gap; } else ev.push([tm-gap*0.4,sc,1]); } }
+  return ev; }
+// ---- views ----
+function duOpen(game){ DU.game=game; if(!DU.mode){ DU.cont=(S.settings.duCont==="notes")?"notes":"chords"; DU.view="lobby"; } duRender(); }
+function duSet(view){ DU.view=view; duRender(); }
+function duRender(){ if(!RN.on) return;
+  const lob = DU.view==="lobby"||DU.view==="bots"||DU.view==="friend"||DU.view==="search";
+  document.body.classList.toggle("du-lob", lob); $("duLobby").hidden=!lob; $("duWrap").hidden=lob;
+  const duel = !!DU.mode && !lob;
+  $("duHud").hidden=!duel; document.querySelectorAll("#runner .gm-opt, #runner .rn-help").forEach(e=>e.hidden=duel||lob);
+  $("rnScore").hidden=duel||lob; $("rnBest").hidden=duel||lob; $("duToLobby").hidden = lob || duel;
+  $("duCount").hidden = DU.view!=="count"; $("duRes").hidden = DU.view!=="result";
+  if(lob) duRenderLobby(); if(duel) duHud(); if(DU.view==="result") duRenderRes(); }
+function duAv(i){ return avatarSVG(Math.max(0,Math.min(9,i|0))); }
+function duArt(){ const a=q=>document.querySelector("#duModes .du-m-"+q+" .du-art");
+  a("online").innerHTML=OBJ.globe(); a("solo").innerHTML=(OBJ[DU.game]||OBJ.games)();
+  a("bots").innerHTML=[0,4,9].map(i=>'<span class="du-av">'+duAv(i)+'</span>').join(""); a("friend").innerHTML=[duMyAv(),3].map(i=>'<span class="du-av">'+duAv(i)+'</span>').join(""); }
+function duRenderLobby(){ duArt();
+  const e=eloGet(); $("duRateAv").innerHTML=duAv(duMyAv()); $("duRate").textContent=e.r+(eloProv(e)?"?":"");
+  $("duRateK").textContent=t("duYourElo")(duGameName()); $("duRec").textContent=e.n ? t("duRecord")(e.w,e.d,e.l) : t("duNew");
+  document.querySelectorAll("#duCont button").forEach(b=>b.setAttribute("aria-pressed",b.dataset.v===DU.cont));
+  const hl=$("duHist"); hl.innerHTML=""; const H=(e.h||[]).slice(-6).reverse();
+  if(!H.length){ const li=document.createElement("li"); li.innerHTML="<p></p>"; li.firstChild.textContent=t("duHistNone"); hl.appendChild(li); }
+  H.forEach(x=>{ const li=document.createElement("li"); li.innerHTML='<span class="r"></span><span class="du-av"></span><b></b><i></i>'; const r=li.querySelector(".r"); r.className="r "+(x.res===1?"w":x.res===0?"l":"d"); r.textContent=x.res===1?t("duW1"):x.res===0?t("duL1"):t("duD1");
+    li.querySelector(".du-av").innerHTML=duAv(x.av); li.querySelector("b").textContent=(x.nm||"?")+" ("+x.o+")"; const i=li.querySelector("i"); if(x.dd!=null){ i.textContent=(x.dd>=0?"+":"")+x.dd; i.className=x.dd>=0?"up":"down"; } hl.appendChild(li); });
+  const sub = DU.view!=="lobby"; $("duModes").hidden=sub; $("duPanel").hidden=!sub;
+  if(!sub) return;
+  const body=$("duPBody"); body.innerHTML=""; $("duPTitle").textContent=t({bots:"duBots",friend:"duFriend",search:"duOnline"}[DU.view]);
+  if(DU.view==="bots"){ const me=eloGet().r, near=duBotFor(me), g=document.createElement("div"); g.className="du-bots";
+    if(DU.botPick==null) DU.botPick=near;
+    DU_BOTS.forEach((r,i)=>{ const b=document.createElement("button"); b.type="button"; b.className="du-bot"; b.setAttribute("aria-pressed",DU.botPick===i);
+      b.innerHTML='<span class="du-av"></span><b></b><small></small>'+(i===near?'<em></em>':''); b.querySelector(".du-av").innerHTML=duAv(i); b.querySelector("b").textContent=t("chars")[i][0]; b.querySelector("small").textContent=r;
+      if(i===near) b.querySelector("em").textContent=t("duNear"); b.onclick=()=>{ DU.botPick=i; duRender(); }; g.appendChild(b); });
+    body.appendChild(g); const card=document.createElement("div"); card.className="du-bcard";
+    card.innerHTML='<span class="du-av"></span><div><b></b><small class="mono"></small><p></p></div>'; card.querySelector(".du-av").innerHTML=duAv(DU.botPick);
+    card.querySelector("b").textContent=t("chars")[DU.botPick][0]+" · "+t("chars")[DU.botPick][1]; card.querySelector("small").textContent="ELO "+DU_BOTS[DU.botPick]; card.querySelector("p").textContent=t("duBotDesc")[DU.botPick];
+    const go=document.createElement("button"); go.type="button"; go.className="btn primary du-go"; go.id="duBotGo";
+    go.textContent=t("duPlayVs")(t("chars")[DU.botPick][0], DU_BOTS[DU.botPick]); duKbd(go,CNAME()); go.onclick=()=>duStartBot(DU.botPick); card.appendChild(go); body.appendChild(card); return; }
+  if(DU.view==="friend"){ const w=document.createElement("div"); w.className="du-friend";
+    if(DU.ch && !DU.auto){ w.innerHTML='<p class="du-code"><span></span><b class="mono"></b></p><p class="qz-hint"></p><ul class="du-peers"></ul><div class="du-row"><button class="btn" type="button" data-a="copy"></button><button class="btn" type="button" data-a="leave"></button><button class="btn primary" type="button" data-a="go"></button></div>';
+      w.querySelector(".du-code span").textContent=t("qzCodeL"); w.querySelector(".du-code b").textContent=DU.code;
+      w.querySelector(".qz-hint").textContent = DU.host ? t("duShare") : t("qzWaitHost");
+      DU.peers.slice(0,2).forEach(p=>{ const li=document.createElement("li"); li.innerHTML='<span class="du-av"></span><b></b><small></small>'; li.querySelector(".du-av").innerHTML=duAv(p.av); li.querySelector("b").textContent=p.name+(p.id===netId()?" ("+t("qzYou")+")":""); li.querySelector("small").textContent=p.elo; w.querySelector("ul").appendChild(li); });
+      const [cp,lv,go]=w.querySelectorAll(".du-row button"); cp.textContent=t("qzCopyT"); lv.textContent=t("qzLeaveT"); go.textContent=t("duGoT");
+      cp.onclick=()=>{ const link=location.origin+location.pathname+"#duel-"+DU.code; try{ navigator.clipboard.writeText(link).then(()=>{ cp.textContent=t("qzCopied"); setTimeout(()=>cp.textContent=t("qzCopyT"),1800); },()=>{}); }catch(e){} };
+      lv.onclick=()=>{ duLeaveRoom(); duRender(); }; go.hidden=!DU.host; go.disabled=DU.peers.length<2; go.onclick=duHostStart; }
+    else { w.innerHTML='<button class="btn primary" type="button" data-a="create"></button><span class="du-or"></span><div class="du-row"><input class="mono" maxlength="5" autocomplete="off" spellcheck="false"><button class="btn" type="button" data-a="join"></button></div><p class="qz-hint"></p>';
+      const [cr,jn]=w.querySelectorAll("button"), inp=w.querySelector("input"); cr.textContent=t("qzCreateT"); jn.textContent=t("qzJoinT"); inp.placeholder="CODE"; w.querySelector(".du-or").textContent=t("duOr"); w.querySelector(".qz-hint").textContent=t("duFriendHint");
+      cr.onclick=()=>duJoin(netCode(),true,false); jn.onclick=()=>{ const c=inp.value.toUpperCase().replace(/[^A-Z2-9]/g,""); if(c.length!==5){ DU.err=t("qzBadCode"); duRender(); return; } duJoin(c,false,false); };
+      inp.addEventListener("keydown",e=>{ if(e.key==="Enter") jn.click(); }); }
+    const m=document.createElement("p"); m.className="du-err"; m.textContent=DU.err||""; w.appendChild(m); body.appendChild(w); return; }
+  if(DU.view==="search"){ const w=document.createElement("div"); w.className="du-search"; const secs=Math.floor((Date.now()-DU.searchAt)/1000), me=eloGet().r;
+    w.innerHTML='<span class="du-spin"></span><b></b><small></small><div class="du-row"><button class="btn" type="button"></button></div><p class="du-err"></p>';
+    w.querySelector("b").textContent = DU.lobby ? t("duSearching") : t("qzConnecting"); w.querySelector("small").textContent=t("duWindow")(me, duWin(secs), DU.online);
+    const c=w.querySelector(".du-row button"); c.textContent=t("qzCancelT"); c.onclick=()=>{ duStopSearch(); duSet("lobby"); };
+    if(secs>=20){ const bi=duBotFor(me), b=document.createElement("button"); b.type="button"; b.className="btn primary"; b.id="duSearchBot"; b.textContent=t("duBotWait")(t("chars")[bi][0],DU_BOTS[bi]); duKbd(b,CNAME()); b.onclick=()=>{ duStopSearch(); duStartBot(bi); }; w.querySelector(".du-row").appendChild(b); }
+    w.querySelector(".du-err").textContent=DU.err||""; body.appendChild(w); } }
+function duKbd(b,k){ if(midiMode() && S.settings.midiC!==false){ const kb=document.createElement("kbd"); kb.textContent=k; b.appendChild(kb); } return b; }
+function duHud(){ const o=DU.opp||{}, me=DU.me;
+  $("duMeAv").innerHTML=duAv(duMyAv()); $("duMeName").textContent=duMyName(); $("duMeElo").textContent = DU.rated ? String(eloGet().r) : t("duFriendly");
+  $("duOpAv").innerHTML=duAv(o.av); $("duOpName").textContent=(o.name||"?")+(o.bot?" · "+t("duBotTag"):""); $("duOpElo").textContent = o.gone ? t("duGone") : o.done ? t("duOut") : (o.elo!=null?String(o.elo):"");
+  $("duMeSc").textContent=me.score; $("duOpSc").textContent=o.score||0;
+  $("duHud").dataset.lead = me.score>(o.score||0) ? "me" : me.score<(o.score||0) ? "opp" : ""; }
+// ---- a duel ----
+function duBegin(o){ // o: {mode, seed, opp, rated, game, cont}
+  clearInterval(DU.sim); clearTimeout(DU.countT);
+  Object.assign(DU,{mode:o.mode, seed:o.seed>>>0, opp:{...o.opp, score:0, done:false}, rated:!!o.rated, me:{score:0,done:false}, res:null, want:false, oppWant:false, game:o.game||DU.game, cont:o.cont||DU.cont});
+  gRnd=duRng(DU.seed); GM=DU.game; gameOpen(DU.game, true); // resets the game with the shared pool
+  gRnd=duRng(DU.seed);
+  DU.view="count"; duRender(); let n=3; const cd=$("duCount");
+  const tick=()=>{ if(!RN.on||DU.view!=="count") return; if(n>0){ cd.textContent=n; cd.classList.remove("pop"); void cd.offsetWidth; cd.classList.add("pop"); tone(n===1?79:72,0,.12,.1); n--; DU.countT=setTimeout(tick,800); } else duGo(); };
+  tick(); }
+function duGo(){ DU.view="play"; DU.t0=performance.now(); duRender(); audio();
+  if(DU.game==="runner"){ RN.state="ready"; rnGo(); } else if(DU.game==="speed") spGo(); else mmGo();
+  if(DU.opp.bot!=null && DU.opp.plan){ let i=0; DU.sim=setInterval(()=>{ if(DU.view!=="play"&&DU.view!=="wait"){ clearInterval(DU.sim); return; } const el=performance.now()-DU.t0, P=DU.opp.plan;
+      while(i<P.length && P[i][0]<=el){ DU.opp.score=P[i][1]; if(P[i][2]) DU.opp.done=true; i++; } duHud(); duCheck(); },200); } }
+function duMe(score, done){ if(!DU.mode || (DU.view!=="play"&&DU.view!=="wait")) return; if(score===DU.me.score && done===DU.me.done) return;
+  DU.me={score, done:DU.me.done||done}; if(DU.mode!=="bot") duSend({t:"sc",s:score,d:DU.me.done});
+  if(DU.me.done && DU.view==="play"){ DU.view="wait"; } duHud(); duCheck(); }
+// the duel is over when both have finished, or when the one still playing has already passed the other's final score
+function duCheck(){ if(DU.view!=="play"&&DU.view!=="wait") return; const me=DU.me, o=DU.opp;
+  const over = (me.done&&o.done) || (o.done&&me.score>o.score) || (me.done&&o.score>me.score);
+  if(!over) { if(DU.view==="wait"){ $("duWait").hidden=false; $("duWait").textContent=t("duWaitOpp")(o.name, o.score||0, me.score); } return; }
+  duFinish(me.score>o.score?1:me.score<o.score?0:.5); }
+function duStopGame(){ clearInterval(DU.sim); clearTimeout(DU.countT); cancelAnimationFrame(SP.raf); MM.timers.forEach(clearTimeout); MM.timers=[]; clearKeys();
+  if(RN.state==="run") RN.state="over"; if(SP.state==="run") SP.state="over"; if(MM.state!=="ready") MM.state="over"; }
+function duFinish(res, why){ duStopGame(); $("duWait").hidden=true;
+  const key=duKey(); DU.res={res, why:why||"", me:DU.me.score, opp:DU.opp.score, elo: DU.rated ? eloApply(key, DU.opp.elo, res, DU.opp.bot!=null, DU.opp.name, DU.opp.av) : null};
+  if(res===1) tone(84,0,.2,.12), tone(88,.12,.3,.12); else if(res===0) tone(52,0,.4,.15);
+  if(DU.me.score){ addXP(Math.min(30,Math.round(DU.me.score/(DU.game==="runner"?10:1)))+(res===1?5:0)); renderStatus(); }
+  DU.view="result"; duRender(); }
+function duRenderRes(){ const r=DU.res, o=DU.opp, box=$("duRes"); if(!r) return;
+  box.dataset.res = r.res===1?"win":r.res===0?"loss":"draw";
+  box.innerHTML='<div class="du-rcard"><p class="du-rk"></p><h3></h3><div class="du-rsc"><span><span class="du-av"></span><b class="mono"></b></span><i>–</i><span><b class="mono"></b><span class="du-av"></span></span></div><p class="du-relo"></p><div class="du-row"></div></div>';
+  box.querySelector(".du-rk").textContent=duGameName()+" · "+t(DU.cont==="notes"?"duNotes":"duChords")+(DU.rated?" · "+t("duRated"):"");
+  box.querySelector("h3").textContent = r.why==="forfeit" ? t("duWinForfeit") : r.res===1 ? t("duWin") : r.res===0 ? t("duLoss") : t("duDraw");
+  const av=box.querySelectorAll(".du-av"), sc=box.querySelectorAll(".du-rsc b"); av[0].innerHTML=duAv(duMyAv()); av[1].innerHTML=duAv(o.av); sc[0].textContent=r.me; sc[1].textContent=r.opp;
+  const el=box.querySelector(".du-relo"); if(r.elo){ el.innerHTML='<span></span> <b></b>'; el.firstChild.textContent=t("duNewElo")+" "+r.elo.after; el.lastChild.textContent=(r.elo.d>=0?"+":"")+r.elo.d; el.lastChild.className=r.elo.d>=0?"up":"down"; }
+  else el.textContent=t("duUnrated");
+  const row=box.querySelector(".du-row"), btn=(txt,cls,fn,k)=>{ const b=document.createElement("button"); b.type="button"; b.className="btn "+cls; b.textContent=txt; b.onclick=fn; if(k) duKbd(b,k); row.appendChild(b); return b; };
+  btn(t("duLobby"),"",()=>{ duEnd(); duSet("lobby"); },BNAME()).id="duResLobby";
+  if(DU.mode==="bot"){ btn(t("duNewOpp"),"",()=>{ duEnd(); DU.view="bots"; duRender(); }); btn(t("duRematch"),"primary",()=>duStartBot(DU.opp.bot),CNAME()).id="duRematch"; }
+  else if(DU.ch && !DU.opp.gone){ if(DU.mode==="online") btn(t("duNewOpp"),"",()=>{ duEnd(); duSearch(); });
+    const rm=btn(DU.want?t("duRematchSent"):DU.oppWant?t("duRematchAccept"):t("duRematch"),"primary",duRematch,CNAME()); rm.id="duRematch"; rm.disabled=DU.want; }
+  else if(DU.mode==="online") btn(t("duNewOpp"),"primary",()=>{ duEnd(); duSearch(); },CNAME()).id="duRematch"; }
+function duEnd(){ if(DU.mode && DU.rated && DU.opp && !DU.opp.gone && ["count","play","wait"].includes(DU.view)){ eloApply(duKey(), DU.opp.elo, 0, DU.opp.bot!=null, DU.opp.name, DU.opp.av); duSend({t:"sc",s:DU.me.score,d:true,quit:1}); } // leaving a rated game counts as a loss
+  duStopGame(); if(DU.mode && DU.mode!=="bot") duLeaveRoom(); DU.mode=null; DU.opp=null; gRnd=Math.random; }
+function duStartBot(i){ duEnd(); const seed=(Math.random()*4294967296)>>>0, elo=DU_BOTS[i];
+  duBegin({mode:"bot", seed, rated:true, opp:{name:t("chars")[i][0], elo, av:i, bot:i, plan:duBotPlan(elo,DU.game,seed)}}); }
+// MIDI: a lone C plays (quick game against the bot of your level, rematch), a lone B goes back to the lobby
+const duBlocks = () => DU.view!=="play" && DU.view!=="solo"; // the game itself only takes notes while it is played
+function duNote(m){ const pc=((m%12)+12)%12; if(pc!==0&&pc!==11 || !midiMode() || S.settings.midiC===false) return duBlocks();
+  if(DU.view==="result"){ const b=$(pc===0?"duRematch":"duResLobby"); if(b&&!b.disabled) b.click(); return true; }
+  if(DU.view==="bots" && pc===0){ $("duBotGo")?.click(); return true; }
+  if(DU.view==="search" && pc===0 && $("duSearchBot")){ $("duSearchBot").click(); return true; }
+  if(DU.view==="lobby" && pc===0){ duStartBot(DU.botPick??duBotFor(eloGet().r)); return true; }
+  if(pc===11 && ["bots","friend","search"].includes(DU.view)){ duStopSearch(); duSet("lobby"); return true; }
+  return duBlocks(); }
+// ---- online ----
+const duWin = secs => secs>=45 ? 9999 : 120+secs*12; // rating window of the matchmaking, wider and wider
+function duSafeElo(x){ x=Math.round(+x); return Number.isFinite(x) ? Math.max(100,Math.min(3500,x)) : 800; }
+function duPeersOf(ch){ try{ return Object.values(ch.presenceState()).map(a=>a&&a[0]).filter(x=>x&&typeof x.id==="string"&&/^p[a-z0-9]{8}$/.test(x.id))
+  .map(x=>({id:x.id,name:qzSafe(x.name)||"?",elo:duSafeElo(x.elo),av:Math.max(0,Math.min(9,x.av|0)),host:!!x.host,wait:!!x.wait,at:+x.at||0,
+    game:DU_GAMES.includes(x.game)?x.game:"",cont:x.cont==="notes"?"notes":"chords"})).sort((a,b)=>(b.host-a.host)||(a.at-b.at)||(a.id<b.id?-1:1)); }catch(e){ return []; } }
+const duMeta = extra => ({id:netId(),name:duMyName(),elo:eloGet().r,av:duMyAv(),game:DU.game,cont:DU.cont,at:DU.searchAt||Date.now(),...extra});
+async function duLobbyJoin(){ if(DU.lobby) return; try{ const c=await netSb(); const lb=c.channel("pcd-lobby",{config:{broadcast:{self:false},presence:{key:netId()}}}); DU.lobby=lb;
+    lb.on("presence",{event:"sync"},()=>{ const ps=duPeersOf(lb); DU.online=ps.length; duPair(ps); if(DU.view==="search") duRender(); });
+    lb.on("broadcast",{event:"match"},({payload:p})=>{ if(!p||p.b!==netId()||!DU.searching||typeof p.room!=="string"||!/^[A-Z2-9]{5}$/.test(p.room)) return;
+      DU.searching=false; lb.track(duMeta({wait:false})); duJoin(p.room,false,true); });
+    await netSubscribe(lb); await lb.track(duMeta({wait:DU.searching}));
+  }catch(e){ DU.lobby=null; DU.err=t("qzNetErr"); DU.searching=false; duRender(); } }
+async function duSearch(){ DU.err=""; DU.searching=true; DU.searchAt=Date.now(); DU.view="search"; duRender(); clearInterval(DU.searchTick);
+  DU.searchTick=setInterval(()=>{ if(DU.view!=="search"){ clearInterval(DU.searchTick); return; } if(DU.lobby) duPair(duPeersOf(DU.lobby)); duRender(); },1000);
+  await duLobbyJoin(); if(DU.lobby && DU.searching) DU.lobby.track(duMeta({wait:true})); }
+function duStopSearch(){ DU.searching=false; clearInterval(DU.searchTick); if(DU.lobby) netDrop(DU.lobby); DU.lobby=null; }
+// greedy pairing in arrival order, the same on every client: the older player of a pair creates the room
+function duPair(ps){ if(!DU.searching) return; const now=Date.now(), w=ps.filter(p=>p.wait&&p.game===DU.game&&p.cont===DU.cont).sort((a,b)=>(a.at-b.at)||(a.id<b.id?-1:1)), used=new Set();
+  for(const a of w){ if(used.has(a.id)) continue; const win=duWin((now-a.at)/1000); const b=w.find(x=>x.id!==a.id&&!used.has(x.id)&&Math.abs(x.elo-a.elo)<=win); if(!b) continue; used.add(a.id); used.add(b.id);
+    if(a.id===netId()){ const room=netCode(); DU.searching=false; DU.lobby.send({type:"broadcast",event:"match",payload:{room,a:a.id,b:b.id}}); DU.lobby.track(duMeta({wait:false})); duJoin(room,true,true); return; }
+    if(b.id===netId()) return; } }
+async function duJoin(code,asHost,auto){ try{ const c=await netSb(); if(DU.ch) netDrop(DU.ch);
+    const ch=c.channel("pcd-room-"+code,{config:{broadcast:{self:false},presence:{key:netId()}}});
+    Object.assign(DU,{ch,code,host:asHost,auto,peers:[],err:""}); if(!auto) DU.view="friend";
+    ch.on("broadcast",{event:"m"},({payload})=>duRecv(payload));
+    ch.on("presence",{event:"sync"},()=>{ DU.peers=duPeersOf(ch); duPeers(); });
+    await netSubscribe(ch); await ch.track(duMeta({host:asHost})); duRender();
+    setTimeout(()=>{ if(DU.ch===ch && !asHost && !DU.peers.some(p=>p.host)){ DU.err=t("qzNoRoom"); duLeaveRoom(); duSet(auto?"lobby":"friend"); } },5000);
+    if(auto && asHost) setTimeout(()=>{ if(DU.ch===ch && DU.peers.length<2 && !DU.mode){ duLeaveRoom(); duSearch(); } },6000); // the other one never came: search again
+  }catch(e){ DU.err=t("qzNetErr"); duRender(); } }
+function duSend(p){ if(DU.ch) try{ DU.ch.send({type:"broadcast",event:"m",payload:p}); }catch(e){} }
+function duLeaveRoom(){ if(DU.ch) netDrop(DU.ch); Object.assign(DU,{ch:null,code:"",host:false,peers:[],auto:false}); }
+function duPeers(){ const P=DU.peers;
+  if(DU.mode && DU.mode!=="bot" && DU.opp && !DU.opp.gone && !P.some(p=>p.id===DU.opp.id)){ // the other one left
+    DU.opp.gone=true; if(DU.view==="play"||DU.view==="wait"||DU.view==="count"){ duFinish(1,"forfeit"); return; } if(DU.view==="result"){ duRender(); return; } }
+  if(DU.host && DU.auto && P.length>=2 && !DU.mode){ duHostStart(); return; }
+  if(DU.view==="friend") duRender(); }
+function duHostStart(){ if(!DU.host||DU.peers.length<2) return; const opp=DU.peers.find(p=>p.id!==netId()); if(!opp) return;
+  const me=DU.peers.find(p=>p.id===netId())||duMeta({});
+  const p={t:"start",seed:(Math.random()*4294967296)>>>0,game:DU.game,cont:DU.cont,rated:!!DU.auto,players:[{id:me.id,name:me.name,elo:eloGet().r,av:duMyAv()},{id:opp.id,name:opp.name,elo:opp.elo,av:opp.av}]};
+  duSend(p); duStartOnline(p); }
+function duStartOnline(p){ const opp=p.players.find(x=>x.id!==netId()); if(!opp) return;
+  duBegin({mode:p.rated?"online":"friend", seed:p.seed, rated:p.rated, game:p.game, cont:p.cont, opp:{id:opp.id,name:opp.name,elo:opp.elo,av:opp.av}}); }
+function duRecv(m){ if(!m||typeof m!=="object") return;
+  if(m.t==="start" && !DU.host){ if(!DU_GAMES.includes(m.game)||!Number.isInteger(m.seed)||!Array.isArray(m.players)||m.players.length!==2) return;
+    const players=m.players.filter(x=>x&&typeof x.id==="string").map(x=>({id:x.id,name:qzSafe(x.name)||"?",elo:duSafeElo(x.elo),av:Math.max(0,Math.min(9,x.av|0))}));
+    if(!players.some(x=>x.id===netId())) return; if(DU.game!==m.game){ DU.game=m.game; }
+    duStartOnline({seed:m.seed>>>0,game:m.game,cont:m.cont==="notes"?"notes":"chords",rated:!!m.rated&&!!DU.auto,players}); return; }
+  if(!DU.mode||!DU.opp) return;
+  if(m.t==="sc" && m.quit && !DU.opp.gone){ DU.opp.gone=true; if(["count","play","wait"].includes(DU.view)) duFinish(1,"forfeit"); else duRender(); return; }
+  if(m.t==="sc" && Number.isInteger(m.s) && m.s>=0 && m.s<100000){ DU.opp.score=m.s; if(m.d) DU.opp.done=true; duHud(); duCheck(); return; }
+  if(m.t==="re" && DU.view==="result"){ DU.oppWant=true; if(DU.want && DU.host) duHostStart(); else duRender(); } }
+function duRematch(){ if(DU.mode==="bot"){ duStartBot(DU.opp.bot); return; } DU.want=true; duSend({t:"re"}); if(DU.oppWant && DU.host){ DU.mode=null; duHostStart(); } else duRender(); }
+// a shared link pianochallenges.com/#duel-ABCDE opens the games and joins that room (the host picks the game)
+function duFromHash(){ const m=/^#duel-([A-Z2-9]{5})$/.exec(location.hash||""); if(!m) return; history.replaceState(null,"",location.pathname+location.search);
+  openPage("games"); gameOpen("runner"); duJoin(m[1],false,false); }
+setTimeout(duFromHash,0);
+// ---- lobby buttons ----
+$("duModes").addEventListener("click",e=>{ const b=e.target.closest("[data-m]"); if(!b) return; const m=b.dataset.m; DU.err="";
+  if(m==="solo"){ DU.view="solo"; duRender(); gameOpen(DU.game,true); return; }
+  if(m==="online"){ duSearch(); return; } if(m==="bots"){ DU.botPick=null; duSet("bots"); return; } duSet("friend"); });
+$("duCont").addEventListener("click",e=>{ const b=e.target.closest("[data-v]"); if(!b) return; DU.cont=b.dataset.v; S.settings.duCont=DU.cont; save(); DU.botPick=null; duRender(); });
+$("duPBack").addEventListener("click",()=>{ duStopSearch(); if(DU.ch && !DU.mode) duLeaveRoom(); duSet("lobby"); });
+$("duToLobby").addEventListener("click",()=>{ duEnd(); gameOpen(DU.game,true); duSet("lobby"); });
+
 // one tile: glossy colored card, a 3D-look object overflowing its top-right corner, then kicker, name, line, button
 function tile({color,obj,kick,title,desc,btn,rec,soon,onOpen}){
   const c=document.createElement(soon?"div":"button"); c.className="ptile"+(soon?" soon":""); if(!soon) c.type="button"; c.style.setProperty("--tc",color); c.style.setProperty("--tc2",shade(color,.32));
@@ -3817,6 +4213,7 @@ function renderFiche(){
   jr.forEach(([sec,m,n])=>{ const li2=document.createElement("li"); li2.innerHTML='<span class="pj-t"><b></b><span class="pj-n"></span></span><span class="bar"><i></i></span>'; li2.querySelector("b").textContent=t(NM[sec]); li2.querySelector(".pj-n").textContent=m+" / "+n; const bi=li2.querySelector(".bar i"); bi.style.width=(n?m/n*100:0)+"%"; bi.style.background=COL[sec]; ju.appendChild(li2); });
   $("pfRecsSub").textContent=t("pfRSub"); const ru=$("pfRecs"); ru.innerHTML=""; let cb={}, cg={}; try{ cb=JSON.parse(localStorage.getItem("clavio:best")||"{}")||{}; cg=JSON.parse(localStorage.getItem("clavio:gbest")||"{}")||{}; }catch(e){}
   const rows=[]; t("games").forEach(([title,,id])=>{ if(id) rows.push([title,((S.gameBest||{})[id]||(id==="runner"?S.runnerBest:0)||0)]); });
+  Object.entries(S.elo||{}).filter(([,e])=>e&&e.n).forEach(([k,e])=>{ const [g,c]=k.split("-"); if(DU_GAMES.includes(g)) rows.push([duGameName(g)+" · "+t(c==="notes"?"duNotes":"duChords")+" · ELO", e.r+(eloProv(e)?"?":"")+" ("+t("duRecord")(e.w,e.d,e.l)+")"]); });
   t("playGames").forEach(([title,,id])=>rows.push([title,cg[id]|0])); const fr=S.settings.lang==="fr"; SONGS_H.forEach(([id,tf,te])=>rows.push([fr?tf:te,"★".repeat(cb[id]|0)+"☆".repeat(3-(cb[id]|0))]));
   rows.forEach(([a,b])=>{ const li2=document.createElement("li"); li2.innerHTML="<span></span><b></b>"; li2.firstChild.textContent=a; li2.lastChild.textContent=b; ru.appendChild(li2); });
 }
@@ -3896,7 +4293,7 @@ function renderSetup(){
   // 4. timer and helps
   const tm=$("suTimer"); tm.innerHTML=""; [0,20,10,5].forEach(v=>{ const b=document.createElement("button"); b.type="button"; b.textContent=v?v+" s":t("noTimer"); b.setAttribute("aria-pressed",S.settings.delay===v); b.onclick=()=>{ setDelay(v); renderSetup(); }; tm.appendChild(b); });
   [["suHelpN","guideN"],["suHelpK","guideK"],["suHelpP","guideP"]].forEach(([id,k])=>{ $(id).checked=!!S.settings[k]; });
-  $("suLabels").checked=!!S.settings.labels;
+  $("suLabels").checked=!!S.settings.labels; $("suFing").checked=!!S.settings.fing;
   // summary
   const q=suQueue(sec); $("suSum").textContent=suLabel(sec); $("suCount").textContent=q.length ? t("suCount")(q.length, sec) : t("suNone");
   $("suGo").disabled=!q.length; $("suGo").style.setProperty("--mc",col);
@@ -3910,6 +4307,7 @@ $("suGo").addEventListener("click",suStart);
 [["suHelpN","guideN"],["suHelpK","guideK"],["suHelpP","guideP"]].forEach(([id,k])=>$(id).addEventListener("change",e=>{ S.settings[k]=e.target.checked;
   if(k==="guideP" && e.target.checked){ S.settings.guideN=false; S.settings.guideK=false; } else if(e.target.checked) S.settings.guideP=false; save(); renderSetup(); renderGameBar(); }));
 $("suLabels").addEventListener("change",e=>{ S.settings.labels=e.target.checked; save(); labelKeys(); renderSettings(); });
+$("suFing").addEventListener("change",e=>{ S.settings.fing=e.target.checked; save(); fgRender(); renderSettings(); });
 $("suHow").addEventListener("click",()=>{ const b=document.getElementById("helpBtn"); if(b) b.click(); });
 
 // ----- Step-by-step help: a card that builds the picture of the scale / chord as the notes are found -----
@@ -4292,7 +4690,7 @@ const TILE_COL={runner:"#1f7a52",speed:"#b4461a",memory:"#6a3fd1",soon:"#a3306b"
   p_runner:"#0e7490",p_pulse:"#b02a6b",p_blaster:"#2c56d6",p_climber:"#1f7a52",p_ear:"#8a3fd1",p_staff:"#b4461a"};
 function renderGames(){ const box=$("gameCards"), pbox=$("playCards"); box.innerHTML=""; pbox.innerHTML="";
   t("games").forEach(([title,desc,id],i)=>{ const best=id?((S.gameBest||{})[id]||(id==="runner"?S.runnerBest:0)||0):null;
-    box.appendChild(tile({color:TILE_COL[id||"soon"],obj:id||"soon",kick:t("secGames"),title,desc,rec:id?t("rnBestL")+" "+best:null,soon:!id,onOpen:id?()=>gameOpen(id):null})); });
+    box.appendChild(tile({color:TILE_COL[id||"soon"],obj:id||"soon",kick:t("secGames"),title,desc,rec:id?t("rnBestL")+" "+best+(DU_GAMES.includes(id)?" · ELO "+eloGet(id+"-"+(S.settings.duCont==="notes"?"notes":"chords")).r:""):null,soon:!id,onOpen:id?()=>gameOpen(id):null})); });
   const h=$("playHead"); h.firstChild.textContent=t("playGamesHead"); h.lastChild.textContent=t("playGamesSub");
   t("playGames").forEach(([title,desc,id],i)=>pbox.appendChild(tile({color:TILE_COL["p_"+id]||MODE_COL.play,obj:id,kick:"Play",title,desc,onOpen:()=>openPlayWith("#game="+id)}))); }
 function renderLearn(){ const box=$("learnTiles"); box.innerHTML="";
@@ -4415,6 +4813,7 @@ function mergeState(local, cloud){
   m.srs={...(isObj(local.srs)?local.srs:{})}; Object.entries(isObj(c.srs)?c.srs:{}).forEach(([k,e])=>{ const l=m.srs[k]; if(!l || (isObj(e) && String(e.due||"")>String(l.due||""))) m.srs[k]=e; });
   const ls=isObj(local.streak)?local.streak:{days:0,last:""}, cs=isObj(c.streak)?c.streak:{days:0,last:""};
   m.streak = String(cs.last||"")>String(ls.last||"") ? {...cs} : String(cs.last||"")<String(ls.last||"") ? {...ls} : {days:Math.max(num(ls.days),num(cs.days)), last:ls.last||""};
+  m.elo={...(isObj(local.elo)?local.elo:{})}; Object.entries(isObj(c.elo)?c.elo:{}).forEach(([k,e])=>{ if(isObj(e) && Number.isFinite(+e.r) && num(e.n)>num((m.elo[k]||{}).n)) m.elo[k]=e; }); if(!Object.keys(m.elo).length) delete m.elo; // ratings: the device with more games wins
   m.gameBest=maxMap(local.gameBest,c.gameBest); m.runnerBest=Math.max(num(local.runnerBest),num(c.runnerBest));
   const newer=(a,b)=>{ if(!isObj(b)) return a; if(!isObj(a)) return b; return String(b.date||"")>String(a.date||"") ? b : a; };
   m.daily=newer(local.daily,c.daily); m.dailyPlan=newer(local.dailyPlan,c.dailyPlan); m.dailyRun=newer(local.dailyRun,c.dailyRun);
@@ -4683,6 +5082,7 @@ $("segDiff").addEventListener("click",e=>{ const b=e.target.closest("button"); i
 $("delay").addEventListener("input",e=>{ const prev=S.settings.delay; S.settings.delay=+e.target.value; save(); renderSettings(); retime(prev); });
 $("optOct").addEventListener("change",e=>{ S.settings.octave=e.target.checked; save(); if(cur&&phase!=="idle") startRound(cur,true); else render(); });
 $("optLabels").addEventListener("change",e=>{ S.settings.labels=e.target.checked; save(); labelKeys(); });
+$("optFing").addEventListener("change",e=>{ S.settings.fing=e.target.checked; save(); fgRender(); });
 $("optUiSound").addEventListener("change",e=>{ S.settings.uiSound=e.target.checked; save(); });
 $("optMidiSound").addEventListener("change",e=>{ S.settings.midiSound=e.target.checked; save(); });
 $("optAuto").addEventListener("change",e=>{ S.settings.autoNext=e.target.checked; save(); if(!e.target.checked) clearTimeout(advanceTimer); });
