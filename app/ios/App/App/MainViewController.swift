@@ -11,7 +11,8 @@ class MainViewController: CAPBridgeViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = UIColor(red: 0x16 / 255, green: 0x19 / 255, blue: 0x20 / 255, alpha: 1)
+        // Same night violet as the web app (--bg #15122e) and capacitor.config.json backgroundColor.
+        view.backgroundColor = UIColor(red: 0x15 / 255, green: 0x12 / 255, blue: 0x2e / 255, alpha: 1)
         webView?.isOpaque = false
         webView?.scrollView.contentInsetAdjustmentBehavior = .never
     }
@@ -20,6 +21,12 @@ class MainViewController: CAPBridgeViewController {
         super.viewDidAppear(animated)
         // Keep the screen awake while practising.
         UIApplication.shared.isIdleTimerDisabled = true
+    }
+
+    // Full-screen game: no status bar on iPhone or iPad (matches UIStatusBarHidden in Info.plist;
+    // UIViewControllerBasedStatusBarAppearance is true, so this controller decides).
+    override var prefersStatusBarHidden: Bool {
+        return true
     }
 
 }
