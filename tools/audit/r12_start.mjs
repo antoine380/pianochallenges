@@ -27,12 +27,13 @@ await ev(() => document.getElementById('onbNext').click()); await wait(page, 200
 check('résumé : programme prêt', await ev(() => document.querySelectorAll('.onb-li').length >= 3));
 await ev(() => document.getElementById('onbNext').click()); await wait(page, 800);
 const S1 = await ev(() => JSON.parse(localStorage.getItem('memo-gammes-v1')));
-check('réglages appliqués (débutant, écran, accords)', S1.onb.level === 'debut' && S1.settings.guideK === true && S1.settings.fing === true && S1.settings.input === 'screen' && S1.settings.gmCont === 'chords' && S1.eloStart === 600, { onb: S1.onb, input: S1.settings.input });
+check('réglages appliqués (débutant, écran, accords)', S1.onb.level === 'debut' && S1.settings.guideK === true && S1.settings.fing === true && S1.settings.gmCont === 'chords' && S1.eloStart === 600, { onb: S1.onb, input: S1.settings.input });
 check('tutoriel : bulle sur LEARN', await vis('tour') && await ev(() => document.getElementById('tourH').textContent === 'LEARN'));
 await ev(() => document.getElementById('tourNext').click()); await wait(page, 350);
 check('Suivant : bulle sur GAMES', await ev(() => document.getElementById('tourH').textContent === 'GAMES'));
 await ev(() => document.getElementById('tourX').click()); await wait(page, 200);
 check('croix : tutoriel fermé et mémorisé', !(await vis('tour')) && await ev(() => JSON.parse(localStorage.getItem('memo-gammes-v1')).tourDone === 1));
+check('mode de jeu appliqué après le tutoriel (écran)', await ev(() => JSON.parse(localStorage.getItem('memo-gammes-v1')).settings.input === 'screen'));
 await page.reload(); await wait(page, 1500);
 check('deuxième visite : plus rien ne s’affiche', !(await vis('gate')) && !(await vis('onb')) && !(await vis('tour')));
 await ev(() => document.getElementById('setBtn').click()); await wait(page, 300); await ev(() => document.getElementById('tourAgain').click()); await wait(page, 600);

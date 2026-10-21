@@ -43,7 +43,9 @@ create policy "notif_prefs own update" on public.notif_prefs for update using (a
 revoke all on public.notif_prefs from anon, authenticated;
 grant select (user_id, email_weekly, email_streak, email_social, email_news, lang, updated_at) on public.notif_prefs to authenticated;
 grant insert (user_id, email_weekly, email_streak, email_social, email_news, lang, updated_at) on public.notif_prefs to authenticated;
-grant update (email_weekly, email_streak, email_social, email_news, lang, updated_at) on public.notif_prefs to authenticated;
+-- user_id is in the update list because the app upserts (ON CONFLICT … DO UPDATE sets every sent column); RLS still limits it to the own row
+grant update (user_id, email_weekly, email_streak, email_social, email_news, lang, updated_at) on public.notif_prefs to authenticated;
+create index if not exists notif_prefs_unsub_idx on public.notif_prefs (unsub_token);
 
 -- 3. envois planifiés (pg_cron + pg_net) vers la fonction notify.
 --    Avant : créer le secret partagé dans le coffre (Antoine le tape, il ne va pas dans le dépôt) :
@@ -56,13 +58,14 @@ returns void language sql security definer set search_path = public as $$
   select net.http_post(
     url := 'https://ijdxeasxmgevuchyuenn.supabase.co/functions/v1/notify',
     headers := jsonb_build_object('Content-Type','application/json',
-      'x-notify-secret', (select decrypted_secret from vault.decrypted_secrets where name = 'notify_secret')),
+      'x-notify-secret', coalesce((select decrypted_secret from vault.decrypted_secrets where name = 'notify_secret'), '')),
     body := jsonb_build_object('job', job),
-    timeout_milliseconds := 60000);
+    timeout_milliseconds := 150000);
 $$;
 revoke all on function public.notify_call(text) from public, anon, authenticated;
 -- heures en UTC : 17 h UTC = 19 h à Paris en été, 18 h en hiver
 select cron.unschedule(jobname) from cron.job where jobname in ('pc-welcome','pc-streak','pc-weekly');
-select cron.schedule('pc-welcome', '*/30 * * * *', $$ select public.notify_call('welcome') $$);
+-- the welcome job runs at :15 and :45 so it never sends at the same time as the other two (Resend: 2 requests a second)
+select cron.schedule('pc-welcome', '15,45 * * * *', $$ select public.notify_call('welcome') $$);
 select cron.schedule('pc-streak',  '0 17 * * *',  $$ select public.notify_call('streak') $$);
 select cron.schedule('pc-weekly',  '0 16 * * 0',  $$ select public.notify_call('weekly') $$);

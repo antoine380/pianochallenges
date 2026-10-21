@@ -4,7 +4,8 @@
 //   streak  : streak of 3 days or more, played yesterday but not yet today (sent around 19:00 Paris time)
 //   weekly  : Sunday recap for the players active in the last 4 weeks
 //   preview : {job:"preview", user_id} sends the three e-mails to one account, to check them
-// Unsubscribe (GET or one-click POST): /functions/v1/notify?unsub=<token>&k=weekly|streak|social|news|all
+// Unsubscribe: the link (GET) only redirects to the site, which asks for a confirmation and then POSTs here (mail link scanners do not unsubscribe anyone);
+// mail clients' one-click unsubscribe (RFC 8058) POSTs directly: /functions/v1/notify?unsub=<token>&k=weekly|streak|social|news|all
 // Secrets: RESEND_API_KEY, NOTIFY_SECRET (SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY are provided by Supabase).
 // Deploy with "Verify JWT" off: the function checks the shared secret itself, and the unsubscribe links have no token.
 import { createClient } from "npm:@supabase/supabase-js@2";
@@ -16,7 +17,7 @@ const SECRET = Deno.env.get("NOTIFY_SECRET") || "";
 const FROM = Deno.env.get("NOTIFY_FROM") || "Piano Challenges <noreply@pianochallenges.com>";
 const SITE = "https://pianochallenges.com/";
 const FN = URL_ + "/functions/v1/notify";
-const MAX_PER_RUN = 90; // Resend free plan: 100 e-mails a day
+const MAX_PER_RUN = 90; // per job run (the Resend free plan allows 100 e-mails a day in all)
 
 type Lang = "fr" | "en";
 type Prefs = { user_id: string; email_weekly: boolean; email_streak: boolean; email_social: boolean; email_news: boolean; lang: Lang;
@@ -30,6 +31,15 @@ const esc = (s: unknown) => String(s ?? "").replace(/[&<>"']/g, c => ({ "&": "&a
 const sleep = (ms: number) => new Promise(r => setTimeout(r, ms));
 
 // ---------- data ----------
+// every row of a query (PostgREST returns 1000 rows at most per request)
+async function allRows<T>(q: () => any): Promise<T[]> {
+  const out: T[] = []; for (let from = 0; from < 100000; from += 1000) { const { data, error } = await q().range(from, from + 999); if (error || !data) break; out.push(...data); if (data.length < 1000) break; }
+  return out;
+}
+async function profilesOf(ids: string[], cols: string) {
+  const out: any[] = []; for (let i = 0; i < ids.length; i += 200) { const { data } = await db.from("profiles").select(cols).in("id", ids.slice(i, i + 200)); out.push(...(data || [])); }
+  return out;
+}
 async function prefsFor(ids: string[]): Promise<Map<string, Prefs>> {
   const m = new Map<string, Prefs>(); if (!ids.length) return m;
   for (let i = 0; i < ids.length; i += 200) {
@@ -65,7 +75,7 @@ const T = {
     unsubOne: "Stop this kind of e-mail", unsubAll: "Stop all e-mails", settings: "Choose your e-mails in the app (Settings › Notifications)" },
 };
 function layout(lang: Lang, p: Prefs, kind: string, title: string, inner: string, cta = SITE) {
-  const t = T[lang], u1 = `${FN}?unsub=${p.unsub_token}&k=${kind}`, u2 = `${FN}?unsub=${p.unsub_token}&k=all`;
+  const t = T[lang], u1 = `${FN}?unsub=${p.unsub_token}&k=${kind}`, u2 = `${FN}?unsub=${p.unsub_token}&k=all`, one = kind === "news"; // the welcome e-mail: only "all"
   const html = `<!doctype html><html lang="${lang}"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>${esc(title)}</title></head>
 <body style="margin:0;background:#f1f2fb;font-family:Nunito,Segoe UI,Helvetica,Arial,sans-serif;color:#1b1838">
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#f1f2fb"><tr><td align="center" style="padding:24px 12px">
@@ -74,17 +84,22 @@ function layout(lang: Lang, p: Prefs, kind: string, title: string, inner: string
 <tr><td style="padding:26px 28px 8px;font-size:16px;line-height:1.55">${inner}</td></tr>
 <tr><td style="padding:10px 28px 28px"><a href="${cta}" style="display:inline-block;background:#6a4bf0;color:#fff;text-decoration:none;font-weight:800;padding:13px 26px;border-radius:999px">${t.play}</a></td></tr>
 </table>
-<p style="max-width:560px;font-size:12px;line-height:1.5;color:#6b6890;margin:16px auto 0">${t.why}<br><a href="${u1}" style="color:#6b6890">${t.unsubOne}</a> · <a href="${u2}" style="color:#6b6890">${t.unsubAll}</a><br>${t.settings}</p>
+<p style="max-width:560px;font-size:12px;line-height:1.5;color:#6b6890;margin:16px auto 0">${t.why}<br>${one ? "" : `<a href="${u1}" style="color:#6b6890">${t.unsubOne}</a> · `}<a href="${u2}" style="color:#6b6890">${t.unsubAll}</a><br>${t.settings}</p>
 </td></tr></table></body></html>`;
-  return { html, unsub: u1 };
+  return { html, unsub: one ? u2 : u1 };
 }
 let sentThisRun = 0;
 async function send(to: string, subject: string, html: string, text: string, unsub: string) {
   if (!RESEND) throw new Error("RESEND_API_KEY missing");
   if (sentThisRun >= MAX_PER_RUN) return false;
-  const r = await fetch("https://api.resend.com/emails", { method: "POST", headers: { "Authorization": "Bearer " + RESEND, "Content-Type": "application/json" },
-    body: JSON.stringify({ from: FROM, to: [to], subject, html, text, headers: { "List-Unsubscribe": `<${unsub}>`, "List-Unsubscribe-Post": "List-Unsubscribe=One-Click" } }) });
+  const body = JSON.stringify({ from: FROM, to: [to], subject, html, text, headers: { "List-Unsubscribe": `<${unsub}>`, "List-Unsubscribe-Post": "List-Unsubscribe=One-Click" } });
+  let r: Response | null = null;
+  for (let tries = 0; tries < 3; tries++) { // a 429 (too many requests) is tried again a bit later
+    r = await fetch("https://api.resend.com/emails", { method: "POST", headers: { "Authorization": "Bearer " + RESEND, "Content-Type": "application/json" }, body });
+    if (r.status !== 429) break; await sleep(1500 * (tries + 1));
+  }
   sentThisRun++; await sleep(550); // 2 requests per second at most
+  if (!r) return false;
   if (!r.ok) { console.error("resend", r.status, await r.text()); return false; }
   return true;
 }
@@ -149,17 +164,17 @@ async function jobWelcome() {
 }
 async function jobStreak() {
   const today = parisDay(), yest = addDays(today, -1);
-  const { data: y } = await db.from("xp_log").select("user_id").eq("day", yest).gt("xp", 0);
-  const { data: tdy } = await db.from("xp_log").select("user_id").eq("day", today).gt("xp", 0);
-  const playedToday = new Set((tdy || []).map((r: { user_id: string }) => r.user_id));
-  const ids = [...new Set((y || []).map((r: { user_id: string }) => r.user_id))].filter(id => !playedToday.has(id)); if (!ids.length) return { sent: 0 };
-  const { data: profs } = await db.from("profiles").select("id,name,streak").in("id", ids).gte("streak", 3);
+  const y = await allRows<{ user_id: string }>(() => db.from("xp_log").select("user_id").eq("day", yest).gt("xp", 0));
+  const tdy = await allRows<{ user_id: string }>(() => db.from("xp_log").select("user_id").eq("day", today).gt("xp", 0));
+  const playedToday = new Set(tdy.map(r => r.user_id));
+  const ids = [...new Set(y.map(r => r.user_id))].filter(id => !playedToday.has(id)); if (!ids.length) return { sent: 0 };
+  const profs = (await profilesOf(ids, "id,name,streak")).filter((p: { streak: number }) => (p.streak || 0) >= 3);
   const prefs = await prefsFor(ids); let sent = 0;
   for (const pr of profs || []) {
     let p = prefs.get(pr.id); if (p && (!p.email_streak || p.last_streak_mail === today || p.last_weekly_mail === today)) continue;
     const email = await emailOf(pr.id); if (!email) continue;
     if (!p) p = await ensurePrefs(pr.id, await langOf(pr.id));
-    const m = streakMail(p.lang, pr.name, pr.streak), l = layout(p.lang, p, "streak", m.subject, m.inner);
+    const m = streakMail(p.lang, pr.name || (p.lang === "fr" ? "musicien" : "musician"), pr.streak), l = layout(p.lang, p, "streak", m.subject, m.inner);
     await notifyRow(pr.id, "streak", "remind", p.lang === "fr" ? `Ta série de ${pr.streak} jours est en danger` : `Your ${pr.streak}-day streak is in danger`, p.lang === "fr" ? "Joue un exercice avant minuit pour la garder." : "Play one exercise before midnight to keep it.", "daily");
     if (await send(email, m.subject, l.html, m.text, l.unsub)) { sent++; await db.from("notif_prefs").update({ last_streak_mail: today }).eq("user_id", pr.id); }
   }
@@ -185,7 +200,7 @@ async function jobWeekly(only?: string) {
   const today = parisDay(), since = addDays(today, -6), active = addDays(today, -27);
   let ids: string[];
   if (only) ids = [only];
-  else { const { data } = await db.from("xp_log").select("user_id").gte("day", active).gt("xp", 0); ids = [...new Set((data || []).map((r: { user_id: string }) => r.user_id))]; }
+  else { const data = await allRows<{ user_id: string }>(() => db.from("xp_log").select("user_id").gte("day", active).gt("xp", 0)); ids = [...new Set(data.map(r => r.user_id))]; }
   const { data: lb } = await db.rpc("leaderboard", { since }); const rankMap = new Map<string, number>(); (lb || []).forEach((r: { id: string }, i: number) => rankMap.set(r.id, i + 1));
   const prefs = await prefsFor(ids); let sent = 0;
   for (const id of ids) {
@@ -194,7 +209,7 @@ async function jobWeekly(only?: string) {
     if (!p) p = await ensurePrefs(id, await langOf(id));
     const { data: prof } = await db.from("profiles").select("name").eq("id", id).maybeSingle();
     const w = await weekOf(id, since, rankMap, p.lang); if (!only && w.xp <= 0) continue;
-    const m = weeklyMail(p.lang, prof?.name || "", w), l = layout(p.lang, p, "weekly", m.subject, m.inner);
+    const m = weeklyMail(p.lang, prof?.name || (p.lang === "fr" ? "musicien" : "musician"), w), l = layout(p.lang, p, "weekly", m.subject, m.inner);
     await notifyRow(id, "recap", "progress", p.lang === "fr" ? "Ton récap de la semaine" : "Your weekly recap", p.lang === "fr" ? `${w.xp} XP, ${w.days}/7 jours, série de ${w.streak}.` : `${w.xp} XP, ${w.days}/7 days, ${w.streak}-day streak.`, "progress");
     if (await send(email, m.subject, l.html, m.text, l.unsub)) { sent++; if (!only) await db.from("notif_prefs").update({ last_weekly_mail: today }).eq("user_id", id); }
   }
@@ -203,8 +218,8 @@ async function jobWeekly(only?: string) {
 async function jobPreview(id: string) {
   const email = await emailOf(id); if (!email) return { error: "no confirmed e-mail" };
   const p = await ensurePrefs(id, await langOf(id)); const { data: prof } = await db.from("profiles").select("name,streak").eq("id", id).maybeSingle();
-  const w = welcomeMail(p.lang, p, prof?.name || ""), lw = layout(p.lang, p, "news", w.subject, w.inner); await send(email, "[test] " + w.subject, lw.html, w.text, lw.unsub);
-  const s = streakMail(p.lang, prof?.name || "", Math.max(3, prof?.streak || 3)), ls = layout(p.lang, p, "streak", s.subject, s.inner); await send(email, "[test] " + s.subject, ls.html, s.text, ls.unsub);
+  const nm = prof?.name || (p.lang === "fr" ? "musicien" : "musician"), w = welcomeMail(p.lang, p, nm), lw = layout(p.lang, p, "news", w.subject, w.inner); await send(email, "[test] " + w.subject, lw.html, w.text, lw.unsub);
+  const s = streakMail(p.lang, nm, Math.max(3, prof?.streak || 3)), ls = layout(p.lang, p, "streak", s.subject, s.inner); await send(email, "[test] " + s.subject, ls.html, s.text, ls.unsub);
   return { weekly: await jobWeekly(id) };
 }
 
@@ -216,20 +231,19 @@ async function unsubscribe(token: string, k: string) {
   const { data } = await db.from("notif_prefs").update(upd).eq("unsub_token", token).select("lang").maybeSingle();
   return data ? (data.lang === "en" ? "en" : "fr") as Lang : null;
 }
-function page(lang: Lang, ok: boolean) {
-  const fr = lang === "fr";
-  const msg = ok ? (fr ? "C'est noté : tu ne recevras plus ces e-mails. Tu peux les réactiver dans l'app, Réglages › Notifications." : "Done: you will not get these e-mails any more. You can turn them back on in the app, Settings › Notifications.")
-    : (fr ? "Ce lien n'est plus valable." : "This link is no longer valid.");
-  return new Response(`<!doctype html><html lang="${lang}"><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>Piano Challenges</title>
-<body style="margin:0;min-height:100vh;display:grid;place-items:center;background:#f1f2fb;font-family:Nunito,Segoe UI,Arial,sans-serif;color:#1b1838">
-<div style="max-width:420px;margin:20px;background:#fff;border-radius:24px;padding:28px;box-shadow:0 12px 30px rgba(43,37,96,.12)"><h1 style="font-size:22px;margin:0 0 10px">🎹 Piano Challenges</h1><p>${msg}</p><p><a href="${SITE}" style="color:#6a4bf0;font-weight:800">${fr ? "Retour à l'app" : "Back to the app"}</a></p></div></body></html>`,
-    { headers: { "Content-Type": "text/html; charset=utf-8" } });
-}
+const CORS = { "Access-Control-Allow-Origin": "https://pianochallenges.com", "Access-Control-Allow-Methods": "POST, OPTIONS", "Access-Control-Allow-Headers": "content-type", "Vary": "Origin" };
+const same = (a: string, b: string) => { if (a.length !== b.length) return false; let d = 0; for (let i = 0; i < a.length; i++) d |= a.charCodeAt(i) ^ b.charCodeAt(i); return d === 0; }; // constant time
 
 Deno.serve(async (req) => {
-  const url = new URL(req.url), token = url.searchParams.get("unsub");
-  if (token) { const k = url.searchParams.get("k") || "all"; const lang = await unsubscribe(token, k); return page(lang || "fr", !!lang); }
-  if (req.method !== "POST" || !SECRET || req.headers.get("x-notify-secret") !== SECRET) return new Response("forbidden", { status: 403 });
+  sentThisRun = 0; // the worker is reused between requests: the cap is per run
+  const url = new URL(req.url), token = url.searchParams.get("unsub"), k = url.searchParams.get("k") || "all";
+  if (req.method === "OPTIONS") return new Response(null, { headers: CORS });
+  if (token && req.method === "GET") { // the link in the e-mail: confirmation on the site
+    const to = new URL(SITE); to.searchParams.set("unsub", token); to.searchParams.set("k", COLS[k] ? k : "all");
+    return new Response(null, { status: 302, headers: { Location: to.toString() } });
+  }
+  if (token && req.method === "POST") { const lang = await unsubscribe(token, k); return Response.json({ ok: !!lang, lang }, { headers: CORS }); }
+  if (req.method !== "POST" || !SECRET || !same(req.headers.get("x-notify-secret") || "", SECRET)) return new Response("forbidden", { status: 403 });
   let body: { job?: string; user_id?: string } = {}; try { body = await req.json(); } catch (_) { /* empty */ }
   try {
     const out = body.job === "welcome" ? await jobWelcome() : body.job === "streak" ? await jobStreak() : body.job === "weekly" ? await jobWeekly()

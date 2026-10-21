@@ -1127,9 +1127,9 @@ body.gp .wk.k-ok span,body.gp .bk.k-ok span{color:#15122e}
 .qz-col{display:flex;flex-direction:column;gap:6px;min-width:0}
 .qz-themes{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
 .qz-theme{position:relative;display:flex;flex-direction:column;align-items:flex-start;justify-content:flex-end;gap:1px;text-align:left;border:0;border-radius:var(--r-md);padding:12px 12px 10px;min-height:76px;color:#fff;
-  background-color:var(--tc);background-image:radial-gradient(120% 80% at 90% -10%,rgba(255,255,255,.3),transparent 55%),linear-gradient(160deg,color-mix(in srgb,var(--tc) 70%,#fff),var(--tc) 64%);box-shadow:0 12px 22px -14px var(--tc);opacity:.78;transition:transform .15s,opacity .15s}
-.qz-theme:hover{transform:translateY(-2px);opacity:1}
-.qz-theme[aria-pressed="true"]{opacity:1;box-shadow:0 0 0 3px var(--bg),0 0 0 5px var(--tc),0 14px 24px -12px var(--tc)}
+  background-color:var(--tc);background-image:radial-gradient(120% 80% at 90% -10%,rgba(255,255,255,.3),transparent 55%),linear-gradient(160deg,color-mix(in srgb,var(--tc) 70%,#fff),var(--tc) 64%);box-shadow:0 12px 22px -14px var(--tc);filter:saturate(.6);transition:transform .15s,filter .15s}
+.qz-theme:hover{transform:translateY(-2px);filter:none}
+.qz-theme[aria-pressed="true"]{filter:none;box-shadow:0 0 0 3px var(--bg),0 0 0 5px var(--tc),0 14px 24px -12px var(--tc)}
 .qz-theme b{font-family:var(--f-display);font-weight:600;font-size:.98rem;line-height:1.1;max-width:calc(100% - 34px)}
 .qz-theme small{font-size:.72rem;font-weight:700;opacity:.9}
 .qz-ti{position:absolute;top:-10px;right:4px;width:46px;height:46px;filter:drop-shadow(0 8px 8px rgba(10,6,30,.4))} .qz-ti svg{width:100%;height:100%;display:block}
@@ -1507,6 +1507,21 @@ body.gate-on{overflow:hidden}
 @media (max-height:520px){ .gt-form .gt-h{display:none} .gt-tabs{justify-self:center;grid-column:1/-1} .gt-form{row-gap:8px} }
 
 @media (max-width:900px) and (min-height:700px) and (min-width:641px){ .gt-avs,.gt-o.o5{display:none} .gt-big{top:12%} }
+
+/* pages shown on top of a game, the quiz or a song (they keep running underneath) */
+body[data-page="settings"] :is(#runner,#playPanel,#quizPanel), body[data-page="progress"] :is(#runner,#playPanel,#quizPanel){display:none!important}
+html,body{overflow-x:clip}
+/* onboarding on phones: everything on one screen */
+@media (max-width:640px){ .onb-card{height:100dvh;min-height:0;box-sizing:border-box} .onb-body{min-height:0;flex:1}
+  .onb-opts.six .onb-opt{flex-direction:row;text-align:left;gap:10px;padding:10px} .onb-opts.six{grid-template-columns:1fr 1fr;gap:8px} .onb-opts.six .onb-ic{width:36px;height:36px} .onb-opts.six .onb-ot small{display:none}
+  .onb-li{padding:8px 10px;gap:10px} .onb-li .onb-ic{width:36px;height:36px} }
+@media (max-height:520px){ .onb-card{height:100dvh;min-height:0;box-sizing:border-box} .onb-body{min-height:0;flex:1;overflow:hidden} .onb-sum{gap:6px} .onb-li{padding:6px 10px;font-size:.9rem} .onb-li .onb-ic{width:30px;height:30px} .onb-k{display:none} }
+@media (min-width:641px) and (max-width:900px) and (min-height:700px){ .gt-card{height:calc(100dvh - 40px);overflow:hidden} .gt-form{overflow:auto} }
+.qz-ps{flex:1 1 170px;max-width:260px}
+
+.unsub-card{min-height:0;max-width:460px;text-align:center} .unsub-card .onb-ic{width:72px;height:72px;margin:0 auto}
+
+@media (max-height:520px){ .onb-sum{display:grid;grid-template-columns:1fr 1fr;max-width:none} .onb-sub{display:none} }
 </style>
 
 <script>if(window.Capacitor&&window.webkit&&window.webkit.messageHandlers&&window.webkit.messageHandlers.bridge)document.documentElement.classList.add("native");</script>
@@ -2196,7 +2211,7 @@ const TXT = {
     melDown:" · descend en Mineur",
     midiBlockedMsg:"Le navigateur a refusé l'accès MIDI. Clique sur le cadenas à gauche de l'adresse pour l'autoriser, ou choisis le clavier à l'écran.",
     dailyResume:"Reprendre",
-    syncOk:x=>"Sauvegardé en ligne "+x+" ✓", syncErr:x=>"Hors ligne : dernière sauvegarde "+x+".", agoNever:"inconnue", signedOut:"Déconnecté", rights:"Tous droits réservés", themeDay:"Passer en mode jour", themeNight:"Passer en mode nuit", gtBig:"100 % gratuit", gtBigSub:"sur ton vrai piano", gtPoints:["5 matières : accords, gammes, harmonie, progressions, oreille", "Des duels en ligne avec un classement ELO", "Ton clavier MIDI, ton piano au micro ou l'écran"], gtTitleUp:"Inscris-toi et joue gratuitement", gtTitleIn:"Content de te revoir !", gtSignup:"Créer un compte", gtLogin:"Se connecter", gtName:"Ton prénom ou pseudo", gtPwd:"Mot de passe (8 caractères min.)", gtShowPwd:"Afficher le mot de passe", gtAccept:"J'accepte la", gtPrivacy:"politique de confidentialité", gtCreate:"Créer mon compte", gtSignIn:"Se connecter", gtUseCode:"Recevoir plutôt un code par e-mail", gtBackPwd:"Revenir au mot de passe", gtOtpIntro:"Entre ton e-mail : on t'envoie un code pour te connecter, sans mot de passe.", gtWith:p=>"Continuer avec "+p, gtGuest:"Continuer en invité", gtBadMail:"Cette adresse e-mail ne semble pas valide.", gtBadPwd:"Le mot de passe doit faire au moins 8 caractères.", gtNeedOk:"Accepte la politique de confidentialité pour créer ton compte.", gtConfirm:e=>"Presque fini ! Un e-mail de confirmation est parti à "+e+". Clique sur le lien, ou entre ici le code qu'il contient.", gtBadLogin:"E-mail ou mot de passe incorrect.", gtExists:"Un compte existe déjà avec cet e-mail : connecte-toi.", gtNotConfirmed:"Confirme d'abord ton adresse avec l'e-mail reçu (ou connecte-toi avec un code).", gtSoonProv:"Cette connexion arrive bientôt. Utilise Google, ton e-mail, ou continue en invité.", onbPrev:"Précédent", onbNextT:"Suivant", onbSkip:"Passer", onbStep:(i,n)=>"Question "+i+" sur "+n, onbQ_why:"Pourquoi veux-tu apprendre le piano ?", onbS_why:"Plusieurs réponses possibles.", onbQ_level:"Quel est ton niveau ?", onbS_level:"On règle les aides et ton classement de départ.", onbQ_how:"Comment vas-tu jouer ?", onbS_how:"Tu pourras changer à tout moment, en bas du menu.", onbQ_cont:"Tu veux travailler…", onbS_cont:"Les jeux, les gammes et le quiz partiront de ce choix.", onbQ_friends:"Invite tes amis", onbS_friends:"Joue en duel avec eux et comparez vos progrès au classement.", onbO_why:{"fun": ["Pour le plaisir", "Me détendre en jouant"], "songs": ["Jouer mes morceaux", "Les chansons que j'aime"], "theory": ["Comprendre la musique", "Accords, gammes, harmonie"], "accomp": ["Accompagner des chansons", "Seul ou avec des amis"], "create": ["Composer et improviser", "Créer ma musique"], "school": ["Pour mes cours", "Conservatoire, école, prof"]}, onbO_level:{"debut": ["Je débute", "Je n'ai jamais joué"], "notes": ["Je connais quelques notes", "Je trouve Do, Ré, Mi sur le clavier"], "simple": ["Je joue des morceaux simples", "Et quelques accords"], "adv": ["Je joue déjà bien", "Je veux aller plus loin"]}, onbO_how:{"midi": ["Clavier MIDI", "Branché en USB ou en Bluetooth"], "mic": ["Piano acoustique", "L'app écoute avec le micro"], "screen": ["Sur l'écran", "Je joue directement dans l'app"]}, onbO_cont:{"notes": ["Juste les notes", "Une note à la fois, pour bien démarrer"], "chords": ["Les notes et la grille d'accords", "Plus complet, pour aller plus loin"]}, onbShare:"Partager le lien", onbShareTxt:"Viens jouer du piano avec moi sur Piano Challenges !", onbLater:"Plus tard", onbDoneK:"C'est prêt", onbDoneH:"Ton programme est prêt", onbDoneSub:"On a réglé l'app pour toi. Tu peux tout changer dans Réglages.", onbTour:"Découvrir l'app", onbNoTour:"Passer la présentation", onbSumLevel:{"debut": "Aides activées : touches allumées, noms des notes et doigtés.", "notes": "Aide progressive, noms des notes et doigtés activés.", "simple": "Aide progressive activée, sans les noms des notes.", "adv": "Tous les exercices sont débloqués, sans aide."}, onbSumHow:{"midi": "Ton clavier MIDI sera détecté dès que tu le branches.", "mic": "L'app écoutera ton piano avec le micro.", "screen": "Tu joues sur le clavier à l'écran."}, onbSumCont:{"notes": "Jeux et gammes en notes pour commencer.", "chords": "Jeux, gammes et quiz avec les accords."}, onbSumWhy:{"songs": "Va dans PLAY pour tes premiers morceaux.", "theory": "Commence par LEARN : accords et gammes.", "fun": "Chaque jour, l'entraînement du jour te fait progresser en 5 minutes."}, tourDone:"C'est parti !", tourSkipT:"Passer", tourAgainT:"Revoir la présentation", onbAgainT:"Refaire le questionnaire", tourT:{learn:["LEARN",["Accords, gammes, harmonie, progressions et oreille","Tu choisis l'exercice, il est corrigé note par note"]],games:["GAMES",["Des mini-jeux rapides","Des duels en ligne, contre un ami ou un bot, avec ton ELO"]],play:["PLAY",["Des morceaux en cascade, à ta vitesse","Le piano libre pour jouer ce que tu veux"]],quiz:["QUIZ",["Réponds en jouant la bonne note ou le bon accord","Jusqu'à 4 joueurs, ou en ligne"]],daily:["Entraînement du jour",["10 exercices, environ 5 minutes","Il garde ta série de jours en vie"]],level:["Ton niveau",["Gagne de l'XP pour débloquer les 10 personnages","Touche-le pour voir ta progression"]],ntf:["Notifications",["Tes défis, tes progrès et les nouveautés","Règle-les dans Réglages"]],rank:["Classement",["Compare-toi aux autres joueurs","Par jour, semaine, mois ou année"]],input:["Ton instrument",["Clavier MIDI, micro ou écran","Touche ici pour changer"]],settings:["Réglages",["Langue, aides, doigtés, notifications","Tu peux revoir cette présentation ici"]]}, ntfTitle:"Notifications", ntfSub:"Tes défis, tes progrès et les nouveautés de l'app.", ntfAllReadT:"Tout marquer comme lu", ntfSetT:"Réglages", ntfAll:"Tout",
+    syncOk:x=>"Sauvegardé en ligne "+x+" ✓", syncErr:x=>"Hors ligne : dernière sauvegarde "+x+".", agoNever:"inconnue", signedOut:"Déconnecté", rights:"Tous droits réservés", themeDay:"Passer en mode jour", themeNight:"Passer en mode nuit", unsubT:"Tes e-mails", unsubQ:w=>"Ne plus recevoir "+w+" ?", unsubWhat:{weekly:"le récap de la semaine",streak:"les rappels de série",social:"les e-mails de défis",news:"les nouveautés",all:"aucun e-mail de Piano Challenges"}, unsubYes:"Oui, me désinscrire", unsubKeep:"Non, garder", unsubDone:"C'est noté. Tu peux les réactiver dans Réglages › Notifications.", unsubBad:"Ce lien n'est plus valable.", unsubClose:"Fermer", gtRetry:"Réessayer", onbFinishT:"Terminer", gtBig:"100 % gratuit", gtBigSub:"sur ton vrai piano", gtPoints:["5 matières : accords, gammes, harmonie, progressions, oreille", "Des duels en ligne avec un classement ELO", "Ton clavier MIDI, ton piano au micro ou l'écran"], gtTitleUp:"Inscris-toi et joue gratuitement", gtTitleIn:"Content de te revoir !", gtSignup:"Créer un compte", gtLogin:"Se connecter", gtName:"Ton prénom ou pseudo", gtPwd:"Mot de passe (8 caractères min.)", gtShowPwd:"Afficher le mot de passe", gtAccept:"J'accepte la", gtPrivacy:"politique de confidentialité", gtCreate:"Créer mon compte", gtSignIn:"Se connecter", gtUseCode:"Recevoir plutôt un code par e-mail", gtBackPwd:"Revenir au mot de passe", gtOtpIntro:"Entre ton e-mail : on t'envoie un code pour te connecter, sans mot de passe.", gtWith:p=>"Continuer avec "+p, gtGuest:"Continuer en invité", gtBadMail:"Cette adresse e-mail ne semble pas valide.", gtBadPwd:"Le mot de passe doit faire au moins 8 caractères.", gtNeedOk:"Accepte la politique de confidentialité pour créer ton compte.", gtConfirm:e=>"Presque fini ! Un e-mail de confirmation est parti à "+e+". Clique sur le lien, ou entre ici le code qu'il contient.", gtBadLogin:"E-mail ou mot de passe incorrect.", gtExists:"Un compte existe déjà avec cet e-mail : connecte-toi.", gtNotConfirmed:"Confirme d'abord ton adresse avec l'e-mail reçu (ou connecte-toi avec un code).", gtSoonProv:"Cette connexion arrive bientôt. Utilise Google, ton e-mail, ou continue en invité.", onbPrev:"Précédent", onbNextT:"Suivant", onbSkip:"Passer", onbStep:(i,n)=>"Question "+i+" sur "+n, onbQ_why:"Pourquoi veux-tu apprendre le piano ?", onbS_why:"Plusieurs réponses possibles.", onbQ_level:"Quel est ton niveau ?", onbS_level:"On règle les aides et ton classement de départ.", onbQ_how:"Comment vas-tu jouer ?", onbS_how:"Tu pourras changer à tout moment, en bas du menu.", onbQ_cont:"Tu veux travailler…", onbS_cont:"Les jeux, les gammes et le quiz partiront de ce choix.", onbQ_friends:"Invite tes amis", onbS_friends:"Joue en duel avec eux et comparez vos progrès au classement.", onbO_why:{"fun": ["Pour le plaisir", "Me détendre en jouant"], "songs": ["Jouer mes morceaux", "Les chansons que j'aime"], "theory": ["Comprendre la musique", "Accords, gammes, harmonie"], "accomp": ["Accompagner des chansons", "Seul ou avec des amis"], "create": ["Composer et improviser", "Créer ma musique"], "school": ["Pour mes cours", "Conservatoire, école, prof"]}, onbO_level:{"debut": ["Je débute", "Je n'ai jamais joué"], "notes": ["Je connais quelques notes", "Je trouve Do, Ré, Mi sur le clavier"], "simple": ["Je joue des morceaux simples", "Et quelques accords"], "adv": ["Je joue déjà bien", "Je veux aller plus loin"]}, onbO_how:{"midi": ["Clavier MIDI", "Branché en USB ou en Bluetooth"], "mic": ["Piano acoustique", "L'app écoute avec le micro"], "screen": ["Sur l'écran", "Je joue directement dans l'app"]}, onbO_cont:{"notes": ["Juste les notes", "Une note à la fois, pour bien démarrer"], "chords": ["Les notes et la grille d'accords", "Plus complet, pour aller plus loin"]}, onbShare:"Partager le lien", onbShareTxt:"Viens jouer du piano avec moi sur Piano Challenges !", onbLater:"Plus tard", onbDoneK:"C'est prêt", onbDoneH:"Ton programme est prêt", onbDoneSub:"On a réglé l'app pour toi. Tu peux tout changer dans Réglages.", onbTour:"Découvrir l'app", onbNoTour:"Passer la présentation", onbSumLevel:{"debut": "Aides activées : touches allumées, noms des notes et doigtés.", "notes": "Aide progressive, noms des notes et doigtés activés.", "simple": "Aide progressive activée, sans les noms des notes.", "adv": "Tous les exercices sont débloqués, sans aide."}, onbSumHow:{"midi": "Ton clavier MIDI sera détecté dès que tu le branches.", "mic": "L'app écoutera ton piano avec le micro.", "screen": "Tu joues sur le clavier à l'écran."}, onbSumCont:{"notes": "Jeux et gammes en notes pour commencer.", "chords": "Jeux, gammes et quiz avec les accords."}, onbSumWhy:{"songs": "Va dans PLAY pour tes premiers morceaux.", "theory": "Commence par LEARN : accords et gammes.", "fun": "Chaque jour, l'entraînement du jour te fait progresser en 5 minutes."}, tourDone:"C'est parti !", tourSkipT:"Passer", tourAgainT:"Revoir la présentation", onbAgainT:"Refaire le questionnaire", tourT:{learn:["LEARN",["Accords, gammes, harmonie, progressions et oreille","Tu choisis l'exercice, il est corrigé note par note"]],games:["GAMES",["Des mini-jeux rapides","Des duels en ligne, contre un ami ou un bot, avec ton ELO"]],play:["PLAY",["Des morceaux en cascade, à ta vitesse","Le piano libre pour jouer ce que tu veux"]],quiz:["QUIZ",["Réponds en jouant la bonne note ou le bon accord","Jusqu'à 4 joueurs, ou en ligne"]],daily:["Entraînement du jour",["10 exercices, environ 5 minutes","Il garde ta série de jours en vie"]],level:["Ton niveau",["Gagne de l'XP pour passer les 10 niveaux","Touche-le pour voir ta progression"]],ntf:["Notifications",["Tes défis, tes progrès et les nouveautés","Règle-les dans Réglages"]],rank:["Classement",["Compare-toi aux autres joueurs","Par jour, semaine, mois ou année"]],input:["Ton instrument",["Clavier MIDI, micro ou écran","Touche ici pour changer"]],settings:["Réglages",["Langue, aides, doigtés, notifications","Tu peux revoir cette présentation ici"]]}, ntfTitle:"Notifications", ntfSub:"Tes défis, tes progrès et les nouveautés de l'app.", ntfAllReadT:"Tout marquer comme lu", ntfSetT:"Réglages", ntfAll:"Tout",
     ntfCat_social:"Défis", ntfCat_progress:"Progrès", ntfCat_remind:"Rappels", ntfCat_news:"Nouveautés",
     ntfCatD_social:"Duels, revanches, classement de la semaine", ntfCatD_progress:"Niveaux, déblocages, records d'ELO", ntfCatD_remind:"Entraînement du jour, série en danger", ntfCatD_news:"Nouveaux morceaux, jeux et questions",
     ntfWeeklyT:"Récap de la semaine", ntfWeeklyD:"Le dimanche : XP, série, ELO et ton objectif", ntfApp:"Dans l'app", ntfMail:"E-mail",
@@ -2210,7 +2225,7 @@ const TXT = {
     ntfEloT:r=>"Nouveau record d'ELO : "+r, ntfRankT:n=>n+" t'a dépassé", ntfRankX:p=>"Tu es "+p+(p===1?"er":"e")+" au classement de la semaine.", duBotDesc:["Elle découvre le clavier. Parfaite pour ta première partie.","Il connaît ses premiers accords, mais il hésite encore.","Agile mais distraite : elle fait encore des fautes.","Une bonne oreille et un rythme régulier.","Réfléchi, il se trompe rarement.","Rapide et sûr de lui.","Malin, il enchaîne sans faiblir.","Calme et précis comme un métronome.","Un maestro : il faudra tout donner.","La légende. Presque imbattable."], duHistT:"Dernières parties", duHistNone:"Aucune partie classée pour l'instant.", duW1:"V", duL1:"D", duD1:"N", duLobby:"Salon", duChords:"Accords", duNotes:"Notes", duOnline:"Jouer en ligne", duOnlineD:"Partie classée contre un joueur de ton niveau", duBots:"Contre un bot", duBotsD:"10 adversaires, du débutant au maestro", duFriend:"Avec un ami", duFriendD:"Partage un code ou un lien", duSolo:"Entraînement solo", duSoloD:"Bats ton record, sans adversaire",
     duYourElo:g=>"Ton ELO · "+g, duRecord:(w,d,l)=>w+" V · "+d+" N · "+l+" D", duNew:"Joue 5 parties pour fixer ton niveau", duNear:"Ton niveau", duPlayVs:(n,e)=>"Jouer contre "+n+" ("+e+")", duShare:"Envoie ce code à ton ami ; la partie démarre quand tu cliques sur Lancer.", duOr:"ou",
     duFriendHint:"Partie amicale : elle ne compte pas pour l'ELO.", duSearching:"Recherche d'un adversaire…", duWindow:(e,w,n)=>"Ton ELO "+e+(w<9999?" · adversaire entre "+Math.max(100,e-w)+" et "+(e+w):" · tous niveaux")+" · "+Math.max(1,n)+" en ligne", duBotWait:(n,e)=>"Jouer contre "+n+" ("+e+"), un bot de ton niveau",
-    duFriendly:"Amical", duBotTag:"bot", duGone:"a quitté", duOut:"terminé", duRated:"partie classée", duWinForfeit:"Victoire, ton adversaire est parti", duWin:"Victoire !", duLoss:"Défaite", duDraw:"Égalité", duNewElo:"Nouvel ELO", duUnrated:"Partie amicale, ELO inchangé",
+    duFriendly:"Amical", duBotTag:"bot", duGone:"a quitté", duOut:"terminé", duRated:"partie classée", duWinForfeit:"Victoire, ton adversaire est parti", duStalled:"Défaite : plus de nouvelles de toi pendant la partie", duWin:"Victoire !", duLoss:"Défaite", duDraw:"Égalité", duNewElo:"Nouvel ELO", duUnrated:"Partie amicale, ELO inchangé",
     duNewOpp:"Autre adversaire", duRematch:"Revanche", duRematchSent:"Revanche demandée…", duRematchAccept:"Accepter la revanche", duGoT:"Lancer la partie", duWaitOpp:(n,o,m)=>"Tu as fini avec "+m+". "+n+" joue encore ("+o+")…", eloL:"ELO", suFingT:"Doigtés (main droite)", optFing:"Doigtés sur le clavier (main droite)", suKeysH:"Tonalités", suKeysSimple:"Simples", suKeysSimpleD:"Sans dièse ni bémol : Do, Ré, Mi, Fa, Sol, La, Si", suKeysAll:"Toutes", suKeysAllD:"Avec les ♯ et les ♭", suKeysPick:"Au choix", suKeysPickD:"Je choisis les tonalités",
     suShuffleT:"Mélanger l'ordre", suLockedKeys:n=>n+" tonalité"+(n>1?"s":"")+" encore verrouillée"+(n>1?"s":"")+" (niveaux, ou « Tout débloquer » dans Réglages)", suNone:"Aucune tonalité débloquée dans ce choix", suModeN:"En notes", suModeND:"Do, Ré, Mi… une note après l'autre, de la tonique à l'octave.", suModeC:"En accords", suModeCD:"L'accord de chaque degré, du I au VII, plaqué ou note par note.", suNoChords:"Cette gamme n'a pas d'accords par degré.",
     againB:"Recommencer", nextKeyB:l=>"Suivant : "+l, qzTabQuiz:"Quiz", qzTabPlayers:"Joueurs", qzToPlayersT:"Choisir les joueurs", optUiSound:"Sons de l'interface (survol des cartes, réponses du quiz)", qzAnsH:"Répondre avec", qzNotes:"Des notes", qzChords:"Des accords",
@@ -2357,7 +2372,7 @@ const TXT = {
     melDown:" · descends as Minor",
     midiBlockedMsg:"The browser refused MIDI access. Click the padlock left of the address to allow it, or choose the on-screen keyboard.",
     dailyResume:"Resume",
-    syncOk:x=>"Saved online "+x+" ✓", syncErr:x=>"Offline: last save "+x+".", agoNever:"unknown", signedOut:"Signed out", rights:"All rights reserved", themeDay:"Switch to day mode", themeNight:"Switch to night mode", gtBig:"100% free", gtBigSub:"on your real piano", gtPoints:["5 topics: chords, scales, harmony, progressions, ear", "Online duels with an ELO rating", "Your MIDI keyboard, your piano through the mic, or the screen"], gtTitleUp:"Sign up and play for free", gtTitleIn:"Good to see you again!", gtSignup:"Create an account", gtLogin:"Sign in", gtName:"Your first name or nickname", gtPwd:"Password (8 characters min.)", gtShowPwd:"Show password", gtAccept:"I accept the", gtPrivacy:"privacy policy", gtCreate:"Create my account", gtSignIn:"Sign in", gtUseCode:"Get a code by e-mail instead", gtBackPwd:"Back to the password", gtOtpIntro:"Enter your e-mail: we send you a code to sign in, no password needed.", gtWith:p=>"Continue with "+p, gtGuest:"Continue as a guest", gtBadMail:"This e-mail address does not look valid.", gtBadPwd:"The password needs at least 8 characters.", gtNeedOk:"Accept the privacy policy to create your account.", gtConfirm:e=>"Almost done! A confirmation e-mail went to "+e+". Click the link, or enter the code it contains here.", gtBadLogin:"Wrong e-mail or password.", gtExists:"An account already uses this e-mail: sign in.", gtNotConfirmed:"First confirm your address with the e-mail you got (or sign in with a code).", gtSoonProv:"This sign-in is coming soon. Use Google, your e-mail, or continue as a guest.", onbPrev:"Back", onbNextT:"Next", onbSkip:"Skip", onbStep:(i,n)=>"Question "+i+" of "+n, onbQ_why:"Why do you want to learn the piano?", onbS_why:"Pick as many as you like.", onbQ_level:"What is your level?", onbS_level:"We set the helps and your starting rating.", onbQ_how:"How will you play?", onbS_how:"You can change it any time, at the bottom of the menu.", onbQ_cont:"You want to work on…", onbS_cont:"Games, scales and the quiz will start from this choice.", onbQ_friends:"Invite your friends", onbS_friends:"Play duels with them and compare your progress on the leaderboard.", onbO_why:{"fun": ["For fun", "To relax while playing"], "songs": ["Play my songs", "The music I love"], "theory": ["Understand music", "Chords, scales, harmony"], "accomp": ["Accompany songs", "Alone or with friends"], "create": ["Compose and improvise", "Make my own music"], "school": ["For my lessons", "School, conservatory, teacher"]}, onbO_level:{"debut": ["I'm a beginner", "I have never played"], "notes": ["I know a few notes", "I can find C, D, E on the keys"], "simple": ["I play simple songs", "And a few chords"], "adv": ["I already play well", "I want to go further"]}, onbO_how:{"midi": ["MIDI keyboard", "Plugged in with USB or Bluetooth"], "mic": ["Acoustic piano", "The app listens with the mic"], "screen": ["On the screen", "I play right in the app"]}, onbO_cont:{"notes": ["Just the notes", "One note at a time, to start well"], "chords": ["Notes and the chord chart", "More complete, to go further"]}, onbShare:"Share the link", onbShareTxt:"Come and play the piano with me on Piano Challenges!", onbLater:"Later", onbDoneK:"All set", onbDoneH:"Your plan is ready", onbDoneSub:"We set the app up for you. You can change everything in Settings.", onbTour:"Discover the app", onbNoTour:"Skip the tour", onbSumLevel:{"debut": "Helps on: lit keys, note names and fingering.", "notes": "Progressive help, note names and fingering on.", "simple": "Progressive help on, without note names.", "adv": "Every exercise unlocked, no help."}, onbSumHow:{"midi": "Your MIDI keyboard is detected as soon as you plug it in.", "mic": "The app will listen to your piano with the mic.", "screen": "You play on the on-screen keyboard."}, onbSumCont:{"notes": "Games and scales with notes to start.", "chords": "Games, scales and the quiz with chords."}, onbSumWhy:{"songs": "Go to PLAY for your first songs.", "theory": "Start with LEARN: chords and scales.", "fun": "Every day, the daily practice gets you better in 5 minutes."}, tourDone:"Let's go!", tourSkipT:"Skip", tourAgainT:"Replay the tour", onbAgainT:"Redo the questions", tourT:{learn:["LEARN",["Chords, scales, harmony, progressions and ear","Pick an exercise, it is checked note by note"]],games:["GAMES",["Quick mini-games","Online duels, against a friend or a bot, with your ELO"]],play:["PLAY",["Falling-note songs at your own speed","Free piano to play anything"]],quiz:["QUIZ",["Answer by playing the right note or chord","Up to 4 players, or online"]],daily:["Daily practice",["10 exercises, about 5 minutes","It keeps your streak alive"]],level:["Your level",["Earn XP to unlock the 10 characters","Tap it to see your progress"]],ntf:["Notifications",["Your challenges, progress and news","Set them up in Settings"]],rank:["Leaderboard",["Compare yourself with other players","By day, week, month or year"]],input:["Your instrument",["MIDI keyboard, mic or screen","Tap here to change"]],settings:["Settings",["Language, helps, fingering, notifications","You can replay this tour here"]]}, ntfTitle:"Notifications", ntfSub:"Your challenges, your progress and what's new in the app.", ntfAllReadT:"Mark all as read", ntfSetT:"Settings", ntfAll:"All",
+    syncOk:x=>"Saved online "+x+" ✓", syncErr:x=>"Offline: last save "+x+".", agoNever:"unknown", signedOut:"Signed out", rights:"All rights reserved", themeDay:"Switch to day mode", themeNight:"Switch to night mode", unsubT:"Your e-mails", unsubQ:w=>"Stop getting "+w+"?", unsubWhat:{weekly:"the weekly recap",streak:"the streak reminders",social:"challenge e-mails",news:"the news",all:"any e-mail from Piano Challenges"}, unsubYes:"Yes, unsubscribe", unsubKeep:"No, keep them", unsubDone:"Done. You can turn them back on in Settings › Notifications.", unsubBad:"This link is no longer valid.", unsubClose:"Close", gtRetry:"Try again", onbFinishT:"Done", gtBig:"100% free", gtBigSub:"on your real piano", gtPoints:["5 topics: chords, scales, harmony, progressions, ear", "Online duels with an ELO rating", "Your MIDI keyboard, your piano through the mic, or the screen"], gtTitleUp:"Sign up and play for free", gtTitleIn:"Good to see you again!", gtSignup:"Create an account", gtLogin:"Sign in", gtName:"Your first name or nickname", gtPwd:"Password (8 characters min.)", gtShowPwd:"Show password", gtAccept:"I accept the", gtPrivacy:"privacy policy", gtCreate:"Create my account", gtSignIn:"Sign in", gtUseCode:"Get a code by e-mail instead", gtBackPwd:"Back to the password", gtOtpIntro:"Enter your e-mail: we send you a code to sign in, no password needed.", gtWith:p=>"Continue with "+p, gtGuest:"Continue as a guest", gtBadMail:"This e-mail address does not look valid.", gtBadPwd:"The password needs at least 8 characters.", gtNeedOk:"Accept the privacy policy to create your account.", gtConfirm:e=>"Almost done! A confirmation e-mail went to "+e+". Click the link, or enter the code it contains here.", gtBadLogin:"Wrong e-mail or password.", gtExists:"An account already uses this e-mail: sign in.", gtNotConfirmed:"First confirm your address with the e-mail you got (or sign in with a code).", gtSoonProv:"This sign-in is coming soon. Use Google, your e-mail, or continue as a guest.", onbPrev:"Back", onbNextT:"Next", onbSkip:"Skip", onbStep:(i,n)=>"Question "+i+" of "+n, onbQ_why:"Why do you want to learn the piano?", onbS_why:"Pick as many as you like.", onbQ_level:"What is your level?", onbS_level:"We set the helps and your starting rating.", onbQ_how:"How will you play?", onbS_how:"You can change it any time, at the bottom of the menu.", onbQ_cont:"You want to work on…", onbS_cont:"Games, scales and the quiz will start from this choice.", onbQ_friends:"Invite your friends", onbS_friends:"Play duels with them and compare your progress on the leaderboard.", onbO_why:{"fun": ["For fun", "To relax while playing"], "songs": ["Play my songs", "The music I love"], "theory": ["Understand music", "Chords, scales, harmony"], "accomp": ["Accompany songs", "Alone or with friends"], "create": ["Compose and improvise", "Make my own music"], "school": ["For my lessons", "School, conservatory, teacher"]}, onbO_level:{"debut": ["I'm a beginner", "I have never played"], "notes": ["I know a few notes", "I can find C, D, E on the keys"], "simple": ["I play simple songs", "And a few chords"], "adv": ["I already play well", "I want to go further"]}, onbO_how:{"midi": ["MIDI keyboard", "Plugged in with USB or Bluetooth"], "mic": ["Acoustic piano", "The app listens with the mic"], "screen": ["On the screen", "I play right in the app"]}, onbO_cont:{"notes": ["Just the notes", "One note at a time, to start well"], "chords": ["Notes and the chord chart", "More complete, to go further"]}, onbShare:"Share the link", onbShareTxt:"Come and play the piano with me on Piano Challenges!", onbLater:"Later", onbDoneK:"All set", onbDoneH:"Your plan is ready", onbDoneSub:"We set the app up for you. You can change everything in Settings.", onbTour:"Discover the app", onbNoTour:"Skip the tour", onbSumLevel:{"debut": "Helps on: lit keys, note names and fingering.", "notes": "Progressive help, note names and fingering on.", "simple": "Progressive help on, without note names.", "adv": "Every exercise unlocked, no help."}, onbSumHow:{"midi": "Your MIDI keyboard is detected as soon as you plug it in.", "mic": "The app will listen to your piano with the mic.", "screen": "You play on the on-screen keyboard."}, onbSumCont:{"notes": "Games and scales with notes to start.", "chords": "Games, scales and the quiz with chords."}, onbSumWhy:{"songs": "Go to PLAY for your first songs.", "theory": "Start with LEARN: chords and scales.", "fun": "Every day, the daily practice gets you better in 5 minutes."}, tourDone:"Let's go!", tourSkipT:"Skip", tourAgainT:"Replay the tour", onbAgainT:"Redo the questions", tourT:{learn:["LEARN",["Chords, scales, harmony, progressions and ear","Pick an exercise, it is checked note by note"]],games:["GAMES",["Quick mini-games","Online duels, against a friend or a bot, with your ELO"]],play:["PLAY",["Falling-note songs at your own speed","Free piano to play anything"]],quiz:["QUIZ",["Answer by playing the right note or chord","Up to 4 players, or online"]],daily:["Daily practice",["10 exercises, about 5 minutes","It keeps your streak alive"]],level:["Your level",["Earn XP to go through the 10 levels","Tap it to see your progress"]],ntf:["Notifications",["Your challenges, progress and news","Set them up in Settings"]],rank:["Leaderboard",["Compare yourself with other players","By day, week, month or year"]],input:["Your instrument",["MIDI keyboard, mic or screen","Tap here to change"]],settings:["Settings",["Language, helps, fingering, notifications","You can replay this tour here"]]}, ntfTitle:"Notifications", ntfSub:"Your challenges, your progress and what's new in the app.", ntfAllReadT:"Mark all as read", ntfSetT:"Settings", ntfAll:"All",
     ntfCat_social:"Challenges", ntfCat_progress:"Progress", ntfCat_remind:"Reminders", ntfCat_news:"What's new",
     ntfCatD_social:"Duels, rematches, weekly leaderboard", ntfCatD_progress:"Levels, unlocks, ELO records", ntfCatD_remind:"Daily practice, streak in danger", ntfCatD_news:"New songs, games and questions",
     ntfWeeklyT:"Weekly recap", ntfWeeklyD:"On Sundays: XP, streak, ELO and your goal", ntfApp:"In the app", ntfMail:"E-mail",
@@ -2371,7 +2386,7 @@ const TXT = {
     ntfEloT:r=>"New ELO record: "+r, ntfRankT:n=>n+" passed you", ntfRankX:p=>"You are #"+p+" on the weekly leaderboard.", duBotDesc:["Just discovering the keys. Perfect for your first game.","Knows the first chords, but still hesitates.","Nimble but easily distracted: still makes mistakes.","A good ear and a steady pace.","Thoughtful, rarely wrong.","Fast and confident.","Clever, keeps going without a slip.","Calm and precise like a metronome.","A maestro: you will have to give everything.","The legend. Almost unbeatable."], duHistT:"Recent games", duHistNone:"No rated game yet.", duW1:"W", duL1:"L", duD1:"D", duLobby:"Lobby", duChords:"Chords", duNotes:"Notes", duOnline:"Play online", duOnlineD:"Rated game against a player of your level", duBots:"Play a bot", duBotsD:"10 opponents, from beginner to maestro", duFriend:"Play a friend", duFriendD:"Share a code or a link", duSolo:"Solo practice", duSoloD:"Beat your best, no opponent",
     duYourElo:g=>"Your ELO · "+g, duRecord:(w,d,l)=>w+" W · "+d+" D · "+l+" L", duNew:"Play 5 games to set your level", duNear:"Your level", duPlayVs:(n,e)=>"Play "+n+" ("+e+")", duShare:"Send this code to your friend; the game starts when you press Start.", duOr:"or",
     duFriendHint:"Friendly game: it does not count for ELO.", duSearching:"Looking for an opponent…", duWindow:(e,w,n)=>"Your ELO "+e+(w<9999?" · opponent between "+Math.max(100,e-w)+" and "+(e+w):" · any level")+" · "+Math.max(1,n)+" online", duBotWait:(n,e)=>"Play "+n+" ("+e+"), a bot of your level",
-    duFriendly:"Friendly", duBotTag:"bot", duGone:"left", duOut:"finished", duRated:"rated game", duWinForfeit:"You win, your opponent left", duWin:"You win!", duLoss:"You lose", duDraw:"Draw", duNewElo:"New ELO", duUnrated:"Friendly game, ELO unchanged",
+    duFriendly:"Friendly", duBotTag:"bot", duGone:"left", duOut:"finished", duRated:"rated game", duWinForfeit:"You win, your opponent left", duStalled:"You lose: no sign of you during the game", duWin:"You win!", duLoss:"You lose", duDraw:"Draw", duNewElo:"New ELO", duUnrated:"Friendly game, ELO unchanged",
     duNewOpp:"New opponent", duRematch:"Rematch", duRematchSent:"Rematch asked…", duRematchAccept:"Accept the rematch", duGoT:"Start the game", duWaitOpp:(n,o,m)=>"You finished with "+m+". "+n+" is still playing ("+o+")…", eloL:"ELO", suFingT:"Fingering (right hand)", optFing:"Fingering on the keys (right hand)", suKeysH:"Keys", suKeysSimple:"Simple", suKeysSimpleD:"No sharp or flat: C, D, E, F, G, A, B", suKeysAll:"All", suKeysAllD:"With the ♯ and ♭", suKeysPick:"Pick", suKeysPickD:"I choose the keys",
     suShuffleT:"Shuffle the order", suLockedKeys:n=>n+" key"+(n>1?"s":"")+" still locked (levels, or “Unlock everything” in Settings)", suNone:"No unlocked key in this choice", suModeN:"As notes", suModeND:"C, D, E… one note after another, from the root to the octave.", suModeC:"As chords", suModeCD:"The chord of each degree, from I to VII, at once or note by note.", suNoChords:"This scale has no chord per degree.",
     againB:"Start again", nextKeyB:l=>"Next: "+l, qzTabQuiz:"Quiz", qzTabPlayers:"Players", qzToPlayersT:"Choose the players", optUiSound:"Interface sounds (card hover, quiz answers)", qzAnsH:"Answer with", qzNotes:"Notes", qzChords:"Chords",
@@ -2673,6 +2688,7 @@ function load(){
     if(!s.settings.diffV2){ s.settings.delay=0; s.settings.diffV2=true; }
     if(!s.settings.midiV2){ s.settings.midiSound=true; s.settings.midiV2=true; }
     if(!s.langV2){ s.settings.lang="en"; s.settings.notation="en"; s.langV2=true; }
+    if(d.gate===undefined && !d.onb) s.onb={done:1, legacy:1}; // played before the start screens existed: no questionnaire (their settings stay), the sign-in screen and the tour once
     return s; } }catch(e){ try{ if(raw) localStorage.setItem(STORE+".bak", raw); }catch(e2){} } // keep an unreadable state aside before it gets overwritten
   firstVisit=true;
   return clone(DEFAULTS);
@@ -2723,7 +2739,7 @@ const typeList = sec => SEC[sec].list();
 function tileMast(sec,tid,k){
   if(sec==="chords") return Math.max(...[0,1,2,3].map(inv=>mastI({sec,tid,k,inv})));
   if(sec==="harmony"){ let sum=0; for(let d=0;d<7;d++) sum+=mastI({sec,tid,k,deg:d}); return Math.min(5,Math.floor(sum/4)); }
-  if(sec==="scales" && S.settings.scMode==="chords") return mastI({sec,tid,k,ch:1});
+  if(sec==="scales" && S.settings.scMode==="chords" && TYPE[tid].iv) return mastI({sec,tid,k,ch:1});
   return mastI({sec,tid,k});
 }
 function itemName(it){
@@ -2788,10 +2804,11 @@ function poolAll(){
     else if(sec==="scales" && S.settings.scMode==="chords"){ if(TYPE[ty.id].iv) out.push({sec,tid:ty.id,k,ch:1}); } // pentatonic / blues scales have no chord per degree
     else out.push({sec,tid:ty.id,k});
   });
-  if(!out.length && sec==="scales"){ S.settings.scMode="notes"; return poolAll(); }
+  if(!out.length && sec==="scales" && S.settings.scMode==="chords"){ const m=S.settings.scMode; S.settings.scMode="notes"; const o=poolAll(); S.settings.scMode=m; return o; }
   return out;
 }
 function addXP(n){
+  if(n>0) bumpStreak();
   S.xpDays=S.xpDays||{}; const dk=dayStr(); S.xpDays[dk]=(S.xpDays[dk]||0)+n;
   const before=levelInfo(S.xp).L; S.xp+=n; const after=levelInfo(S.xp).L;
   if(after>before){
@@ -2800,6 +2817,7 @@ function addXP(n){
       if(typeOpenS(sec,ty.id) && !S.seenTypes.includes(key)){ S.seenTypes.push(key); if(ty.lvl>1) unlockNote(t("newType")+SEC[sec].name(ty)); } }));
   }
 }
+const effStreak = () => S.streak && (S.streak.last===dayStr()||S.streak.last===addDays(-1)) ? S.streak.days|0 : 0; // a streak not kept yesterday is over
 function bumpStreak(){
   const today=dayStr();
   if(S.streak.last===today) return;
@@ -2912,6 +2930,7 @@ document.addEventListener("keydown", e=>{
   if(e.code==="Escape" && typesOpen){ closeTypes(); return; }
   // Play: only the note letters are forwarded to the frame (no host sound); other pages without an exercise ignore the keyboard
   if(page==="play"){ const m=CODE_MAP[e.code]; if(m!=null && !e.repeat && !e.metaKey && !e.ctrlKey && !e.altKey) noteIn(fold(m)); return; }
+  if(page==="quiz"){ const m=CODE_MAP[e.code]; if(m!=null && !e.repeat && !e.metaKey && !e.ctrlKey && !e.altKey) midiIn(fold(m)); return; }
   if(!["practice","daily","games","free"].includes(page)) return;
   if((page==="games"||page==="free") && (e.code==="Space"||e.code==="Enter"||e.code==="Backspace")) return;
   if(e.code==="Space"){ e.preventDefault(); primaryAction(); return; }
@@ -2955,9 +2974,10 @@ function chordFingers(ms){ const m=ms.slice().sort((a,b)=>a-b), n=m.length;
   if(n===4) return m[3]-m[2]>=3 && m[2]-m[1]<=2 ? [1,2,3,5] : m[2]-m[1]>=3 && m[1]-m[0]<=2 ? [1,2,4,5] : [1,2,3,5];
   return m.map((x,i)=>Math.min(5,1+Math.round(i*4/(n-1)))); }
 // midi (as shown on the keyboard) -> finger, for the current exercise
+let fgStep=-1; // chord of a sequence being played back (reveal / replay), -1 = the one the player is on
 function fgMap(){ const map=new Map(); if(!cur || !seq.length || cur.sec==="ear") return map;
   try{
-    if(chSeq()){ const v=(seq[pStep]||seq[0]).voicing.slice().sort((a,b)=>a-b), f=chordFingers(v); v.forEach((m,i)=>map.set(fold(m),f[i])); return map; }
+    if(chSeq()){ const v=(seq[fgStep>=0?fgStep:Math.min(pStep,seq.length-1)]||seq[0]).voicing.slice().sort((a,b)=>a-b), f=chordFingers(v); v.forEach((m,i)=>map.set(fold(m),f[i])); return map; }
     const rm=revealMidis();
     if(chordLike(cur.sec)){ const srt=rm.slice().sort((a,b)=>a-b), f=chordFingers(srt); srt.forEach((m,i)=>map.set(fold(m),f[i])); return map; }
     const asc=rm.slice().sort((a,b)=>a-b), oct = asc.length>1 && (asc[asc.length-1]-asc[0])%12===0 && asc.length>2;
@@ -3011,6 +3031,7 @@ function seqMidis(){
 }
 function clearPlayTimers(){ playTimers.forEach(clearTimeout); playTimers=[]; }
 function startRound(item, retry){
+  fgStep=-1;
   clearTimeout(advanceTimer); clearPlayTimers(); audio();
   if(!retry){
     if(!game) game=makeGame(null);
@@ -3229,7 +3250,7 @@ function playScale(delay=.15){
   clearPlayTimers();
   if(chSeq()){
     seq.forEach((st,i)=>{ const at=delay+i*1.1; st.voicing.forEach(m=>tone(m,at,1.0,.17)); tone(st.voicing[0]-12,at,1.0,.12);
-      if(phase!=="listening") playTimers.push(setTimeout(()=>{ lightChord(st.voicing,"k-rev"); markNow(i); }, at*1000)); });
+      if(phase!=="listening") playTimers.push(setTimeout(()=>{ fgStep=i; lightChord(st.voicing,"k-rev"); markNow(i); }, at*1000)); });
     if(phase!=="listening") playTimers.push(setTimeout(()=>markNow(-1), (delay+seq.length*1.1)*1000));
     return;
   }
@@ -3242,7 +3263,7 @@ function playScale(delay=.15){
   if(chordLike(cur.sec)){ ms.forEach((m,i)=>tone(m,delay+i*.22,.45,.22)); ms.forEach(m=>tone(m,delay+ms.length*.22+.1,1.3,.18)); return; }
   ms.forEach((m,i)=>tone(m,delay+i*.3,.5,.24));
 }
-function markNow(i){ [...$("slots").children].forEach((el,j)=>el.classList.toggle("now",j===i)); }
+function markNow(i){ if(i<0) fgStep=-1; [...$("slots").children].forEach((el,j)=>el.classList.toggle("now",j===i)); }
 function reveal(auto){
   if(phase!=="listening") return;
   phase="revealed"; cancelAnimationFrame(raf); combo=0;
@@ -3391,7 +3412,7 @@ function openEnd(g){
   // one line per item, keeping its worst result
   const rank={good:0,warn:1,bad:2}, byKey=new Map();
   R.filter(r=>r.level!=="good").forEach(r=>{ const k=mkey(r.it), o=byKey.get(k); if(!o||rank[r.level]>rank[o.level]) byKey.set(k,r); });
-  const misses=[...byKey.values()];
+  const misses = g.single ? R.slice(-1).filter(r=>r.level!=="good") : [...byKey.values()]; // one item replayed until nailed: its last try counts
   const h=document.createElement("h3"); h.textContent = misses.length ? t("toRework") : t("allPerfect"); body.appendChild(h);
   if(misses.length){
     const ul=document.createElement("ul"); ul.className="end-list";
@@ -3405,26 +3426,25 @@ function openEnd(g){
   if(g.label){ // a game chosen on the start screen: change, start again (B), next key (C, one item) or play again (C, several)
     btn(t("suChange"),"",()=>{ closeEnd(); render(); });
     if(g.single) hint(btn(t("againB"),"",()=>endReplay(g)),BNAME());
-    else if(misses.length){ const rw=hint(btn(t("reworkBtn"),"",()=>{ closeEnd(); page="practice"; game=makeGame(misses.map(r=>r.it)); game.label=g.label; game.i=-1; startRound(); }),BNAME()); rw.id="endRework"; }
+    else if(misses.length){ const rw=hint(btn(t("reworkBtn"),"",()=>{ closeEnd(); page="practice"; game=makeGame(misses.map(r=>r.it)); game.label=g.label; game.orig=g.orig||g.queue; game.i=-1; startRound(); }),BNAME()); rw.id="endRework"; }
     const nx = g.single ? hint(btn(t("nextKeyB")(endNextLabel(g)),"primary",()=>endNext(g)),CNAME()) : hint(btn(t("newGame"),"primary",()=>endReplay(g)),CNAME());
     $("endX").setAttribute("aria-label",t("closeLbl")); if(!endOpen) modalOpened(); endOpen=true; $("endModal").hidden=false; nx.focus(); if(n && good/n>=.8) setTimeout(confetti,150); return; }
   btn(t("closeLbl"),"",closeEnd);
-  if(misses.length) btn(t("reworkBtn"),"",()=>{ closeEnd(); page="practice"; game=makeGame(misses.map(r=>r.it)); game.i=-1; startRound(); });
+  if(misses.length){ const rw=hint(btn(t("reworkBtn"),"",()=>{ closeEnd(); page="practice"; game=makeGame(misses.map(r=>r.it)); game.i=-1; startRound(); }),BNAME()); rw.id="endRework"; }
   const main=btn(t("newGame"),"primary",()=>{ closeEnd(); page="practice"; if(g.sec&&!g.daily&&g.sec!==S.section) switchSection(g.sec);
-    if(g.label && g.queue){ const q=g.sec==="ear"?suQueue(g.sec):g.single?[{...g.queue[0]}]:g.queue.map(it=>({...it})); game=makeGame(q); game.label=g.label; game.single=!!g.single; game.i=-1; } startRound(); });
+    startRound(); });
 
   $("endX").setAttribute("aria-label",t("closeLbl"));
   if(!endOpen) modalOpened(); endOpen=true; $("endModal").hidden=false; main.focus();
   if(n && good/n>=.8) setTimeout(confetti,150);
 }
-// the next open key of the same scale / chord / progression (ear: a new game)
 // one-item game: the next open key of the same scale / chord / progression
 function endNextKey(g){ const it=g.queue[0], open=openRoots(it.sec,it.tid); const i=open.indexOf(it.k); return open[(i+1)%open.length]; }
-function endNextLabel(g){ const it={...g.queue[0], k:endNextKey(g)}, sec=it.sec, ty=typeDef(sec,it.tid), fr=S.settings.lang==="fr";
-  return sec==="chords" ? noteName(tonicNote(it.k))+" "+SEC[sec].name(ty) : sec==="harmony" ? noteName(tonicNote(it.k))+" "+(HTYPE[it.tid].scale==="minor"?(fr?"mineur":"minor"):(fr?"majeur":"major")) : itemName(it); }
-function endNext(g){ closeEnd(); page="practice"; if(g.sec!==S.section) switchSection(g.sec); const it=g.queue[0], st=suState(g.sec), k=endNextKey(g);
-  st.tids=[it.tid]; st.keys="pick"; st.picked=[keyPc(k)]; save(); suStart(); }
+function endNextLabel(g){ return suItemLabel({...g.queue[0], k:endNextKey(g)}); }
+function endNext(g){ closeEnd(); page="practice"; if(g.sec!==S.section) switchSection(g.sec); const it={...g.queue[0], k:endNextKey(g)};
+  game=makeGame([it]); game.label=suItemLabel(it); game.single=true; game.i=-1; startRound(); }
 function endReplay(g){ closeEnd(); page="practice"; if(g.sec!==S.section) switchSection(g.sec);
+  if(g.orig || (!g.single && g.sec!=="ear" && suState(g.sec).shuffle)){ if(g.orig){ game=makeGame(g.orig.map(it=>({...it}))); game.label=g.label; game.i=-1; startRound(); } else suStart(); return; } // the whole choice again (shuffled again)
   const q=g.sec==="ear"?suQueue(g.sec):g.single?[{...g.queue[0]}]:g.queue.map(it=>({...it})); game=makeGame(q); game.label=g.label; game.single=!!g.single; game.i=-1; startRound(); }
 function closeEnd(){ if(!endOpen) return; endOpen=false; $("endModal").hidden=true; modalClosed(); }
 function renderGameBar(){
@@ -3827,7 +3847,7 @@ $("homeLink2").addEventListener("click",e=>{ e.preventDefault(); goHome(); openP
 
 // leaving a daily practice in progress asks first
 let leaveFn=null;
-function guardLeave(fn){ if(game && game.daily && game.i>=0 && page==="daily"){ leaveFn=fn; closeDrawer(); openMod("leaveModal"); return true; } fn(); return false; }
+function guardLeave(fn){ if(game && game.daily && game.i>=0 && (page==="daily" || (INFO_PAGES.includes(page) && returnPage==="daily"))){ leaveFn=fn; closeDrawer(); openMod("leaveModal"); return true; } fn(); return false; }
 // ---------- Sidebar, drawer, games page ----------
 const phoneMQ=window.matchMedia("(max-width:640px)"), railMQ=window.matchMedia("(max-height:520px) and (orientation:landscape)");
 function setNav(){
@@ -3897,12 +3917,14 @@ function gameOpen(id, keep){
   duRender();
 }
 function gameRestart(){ if(!RN.on) return; gameOpen(GM,true); }
-function runnerClose(){ if(!RN.on) return; duEnd(); duStopSearch(); DU.view="lobby"; document.body.classList.remove("du-lob"); RN.on=false; clearKeys(); cancelAnimationFrame(SP.raf); clearTimeout(MM.timer); MM.timers.forEach(clearTimeout); MM.timers=[]; cancelAnimationFrame(RN.raf); $("runner").hidden=true; document.body.classList.remove("runner-on"); if(RN.xp){ addXP(RN.xp); RN.xp=0; save(); renderStatus(); } }
+function runnerClose(){ if(!RN.on) return; duEnd(); duStopSearch(); DU.view="lobby"; document.body.classList.remove("du-lob"); RN.on=false; clearKeys(); cancelAnimationFrame(SP.raf); clearTimeout(MM.inT); MM.timers.forEach(clearTimeout); MM.timers=[]; cancelAnimationFrame(RN.raf); $("runner").hidden=true; document.body.classList.remove("runner-on"); if(RN.xp){ addXP(RN.xp); RN.xp=0; save(); renderStatus(); } if(page==="games") renderGames(); }
 $("rnQuit").addEventListener("click",runnerClose);
 $("rnHelp").addEventListener("change",e=>{ S.settings.rnHint=e.target.checked; save(); RN.hintFor=undefined; });
 function rnGo(){ if(DU.view!=="solo" && DU.view!=="play") return; if(RN.state==="run") return; if(RN.state==="over") rnReset(); RN.state="run"; }
 $("rnCanvas").addEventListener("pointerdown",()=>{ if(RN.state!=="run" && performance.now()-RN.crashAt>500) rnGo(); });
-document.addEventListener("keydown",e=>{ if(RN.on && RN.state!=="run" && (e.code==="Space"||e.code==="Enter") && performance.now()-RN.crashAt>500){ e.preventDefault(); rnGo(); } });
+// Space / Enter start a game, unless a button / field has the focus, a window or the start screens are open, or a lobby is shown
+const gmKeyFree = e => !(anyWin() || document.body.classList.contains("gate-on") || ($("tour") && !$("tour").hidden) || (e.target && e.target.closest && e.target.closest("button,a,input,select,textarea,[role=button]")) || (DU.view!=="solo" && DU.view!=="play"));
+document.addEventListener("keydown",e=>{ if(RN.on && GM==="runner" && RN.state!=="run" && (e.code==="Space"||e.code==="Enter") && performance.now()-RN.crashAt>500 && gmKeyFree(e)){ e.preventDefault(); rnGo(); } });
 function rnReset(){ Object.assign(RN,{obs:[],held:[],dist:0,y:0,vy:0,jump:null,cleared:0,spawnIn:1.2,newBest:false,speed:0,bonus:0,flash:null,hintFor:null,blink:0}); clearKeys(); RN.pool=gmItems(); rnScore(); }
 // show the keys of the chord to play (the next note), in the "reveal" colour, while the hint is on
 function rnHint(o){ clearKeys(); if(!o || S.settings.rnHint===false) return; o.pcs.forEach(pc=>{ for(let m=LOW;m<=HIGH;m++){ if(m%12===pc && keyEls[m]){ keyEls[m].classList.add("k-rev"); break; } } }); }
@@ -3932,7 +3954,7 @@ function rnLoop(now){
   if(RN.state==="run"){
     const df=gmDiff(), base={slow:W/5.6, mid:W/4, fast:W/2.9, prog:W/5.6}[df];
     if(!RN.speed) RN.speed=base;
-    if(df==="prog" && RN.cleared>=3) RN.speed=Math.min(W/2.4, RN.speed + dt*5*u);
+    if(df==="prog" && RN.cleared>=3) RN.speed=Math.min(W/2.4, RN.speed + dt*W*0.0064);
     const dx=RN.speed*dt; RN.dist+=dx;
     RN.spawnIn-=dt;
     if(RN.spawnIn<=0){
@@ -3954,15 +3976,15 @@ function rnLoop(now){
     }
     if(RN.jump){ const j=RN.jump; j.t+=dt; const k=j.t/j.T; if(k>=1){ RN.jump=null; RN.y=0; } else RN.y=j.top*4*k*(1-k); }
     RN.obs.forEach(o=>{
-      if(!o.passed && o.x+o.w < px){ o.passed=true; RN.cleared++; RN.xp+=2; tone(84,0,.12,.08); }
+      if(!o.passed && o.x+o.w < px){ o.passed=true; RN.cleared++; if(!DU.mode) RN.xp+=2; tone(84,0,.12,.08); }
       const hit = o.x < px+pw-6*u && o.x+o.w > px+6*u && RN.y < o.h-6*u;
       if(hit && RN.state==="run"){ RN.state="over"; clearKeys(); RN.crashAt=performance.now(); tone(40,0,.4,.2); if(DU.mode) duMe(RN.score,true);
-        if(RN.score>(S.runnerBest||0)){ S.runnerBest=RN.score; RN.newBest=true; } if(RN.xp){ addXP(RN.xp); RN.xp=0; } save(); renderStatus(); }
+        if(!DU.mode && RN.score>(S.runnerBest||0)){ S.runnerBest=RN.score; RN.newBest=true; } if(RN.xp){ addXP(RN.xp); RN.xp=0; } save(); renderStatus(); }
     });
     RN.obs=RN.obs.filter(o=>o.x+o.w>-40);
     rnScore();
   }
-  rnDraw(g,W,H,u,ground,px,pw,ph);
+  if(!document.body.classList.contains("du-lob")) rnDraw(g,W,H,u,ground,px,pw,ph);
   RN.raf=requestAnimationFrame(rnLoop);
 }
 function rnDraw(g,W,H,u,ground,px,pw,ph){
@@ -4031,7 +4053,7 @@ function spTick(now){
   if(!RN.on || GM!=="speed" || SP.state!=="run") return;
   let left=(SP.end-now)/1000;
   // progressive: each answer gives back a little time, less and less
-  if(left<=0){ SP.state="over"; clearKeys(); if(DU.mode) duMe(SP.count,true); const best=(S.gameBest||{}).speed||0; if(SP.count>best){ S.gameBest={...(S.gameBest||{}),speed:SP.count}; SP.newBest=true; } else SP.newBest=false; if(SP.count){ addXP(SP.count); renderStatus(); } save(); tone(48,0,.4,.15); gmBoard(); gmScore(); return; }
+  if(left<=0){ SP.state="over"; clearKeys(); if(DU.mode) duMe(SP.count,true); const best=(S.gameBest||{}).speed||0; SP.newBest=false; if(!DU.mode){ if(SP.count>best){ S.gameBest={...(S.gameBest||{}),speed:SP.count}; SP.newBest=true; } if(SP.count){ addXP(SP.count); renderStatus(); } } save(); tone(48,0,.4,.15); gmBoard(); gmScore(); return; }
   $("gmBar").style.width=(left/SP.dur*100)+"%"; $("gmBar").classList.toggle("low",left<10);
   SP.raf=requestAnimationFrame(spTick);
 }
@@ -4053,17 +4075,18 @@ function mmPlay(){
   const tp=mmTempo();
   MM.seq.forEach((it,i)=>{ MM.timers.push(setTimeout(()=>{ if(!RN.on||GM!=="memory") return; clearKeys(); it.pcs.forEach((pc,j)=>tone(60+pc,0,.55,.16)); rnHintPcs(it.pcs, true); $("gmBig").textContent=it.label; }, 500+i*tp));
     MM.timers.push(setTimeout(()=>clearKeys(), 500+i*tp+tp*0.7)); });
-  MM.timers.push(setTimeout(()=>{ if(!RN.on||GM!=="memory") return; MM.state="input"; MM.held=[]; clearKeys(); gmBoard(); }, 500+MM.seq.length*tp));
+  MM.timers.push(setTimeout(()=>{ if(!RN.on||GM!=="memory") return; MM.state="input"; MM.held=[]; clearKeys(); gmBoard(); mmIdle(); }, 500+MM.seq.length*tp));
 }
+function mmIdle(){ clearTimeout(MM.inT); if(!DU.mode) return; MM.inT=setTimeout(()=>{ if(MM.state!=="input") return; const it=MM.seq[MM.step], pc=[...Array(12).keys()].find(x=>!it.pcs.includes(x)); mmNote(60+pc); },10000); }
 function mmNote(m){
   const pc=((m%12)+12)%12;
   if(MM.state==="ready"||MM.state==="over"){ if(pc===0 && midiMode()) mmGo(); return; }
   if(MM.state!=="input") return;
   const it=MM.seq[MM.step], now=performance.now();
-  if(!it.pcs.includes(pc)){ MM.state="over"; tone(40,0,.4,.2); if(DU.mode) duMe(MM.round,true); const best=(S.gameBest||{}).memory||0; MM.newBest=MM.round>best; if(MM.newBest) S.gameBest={...(S.gameBest||{}),memory:MM.round}; if(MM.round){ addXP(MM.round*2); renderStatus(); } save(); gmBoard(); gmScore(); return; }
+  if(!it.pcs.includes(pc)){ MM.state="over"; tone(40,0,.4,.2); if(DU.mode) duMe(MM.round,true); clearTimeout(MM.inT); const best=(S.gameBest||{}).memory||0; MM.newBest=!DU.mode && MM.round>best; if(MM.newBest) S.gameBest={...(S.gameBest||{}),memory:MM.round}; if(MM.round && !DU.mode){ addXP(MM.round*2); renderStatus(); } save(); gmBoard(); gmScore(); return; }
   MM.held=MM.held.filter(h=>now-h.t<1500); MM.held.push({pc,t:now});
   const have=new Set(MM.held.map(h=>h.pc));
-  if(it.pcs.every(p=>have.has(p))){ MM.step++; MM.held=[]; $("gmBig").textContent=MM.step+" / "+MM.seq.length;
+  if(it.pcs.every(p=>have.has(p))){ MM.step++; MM.held=[]; mmIdle(); $("gmBig").textContent=MM.step+" / "+MM.seq.length;
     if(MM.step>=MM.seq.length){ MM.round++; gmScore(); if(DU.mode) duMe(MM.round,false); MM.state="listen"; $("gmSub").textContent=t("mmGood"); mmAdd(); MM.timers.push(setTimeout(mmPlay, 900)); } }
 }
 // shared board text for the two DOM games
@@ -4087,7 +4110,7 @@ function gmScore(){
 }
 function rnHintPcs(pcs, force){ clearKeys(); if(!force && S.settings.rnHint===false) return; pcs.forEach(pc=>{ for(let m=LOW;m<=HIGH;m++){ if(m%12===pc && keyEls[m]){ keyEls[m].classList.add("k-rev"); break; } } }); }
 $("gmBoard").addEventListener("pointerdown",()=>{ if(GM==="speed" && SP.state!=="run") spGo(); else if(GM==="memory" && (MM.state==="ready"||MM.state==="over")) mmGo(); });
-document.addEventListener("keydown",e=>{ if(!RN.on || GM==="runner") return; if(e.code==="Space"||e.code==="Enter"){ if(GM==="speed" && SP.state!=="run"){ e.preventDefault(); spGo(); } else if(GM==="memory" && (MM.state==="ready"||MM.state==="over")){ e.preventDefault(); mmGo(); } } });
+document.addEventListener("keydown",e=>{ if(!RN.on || GM==="runner" || !gmKeyFree(e)) return; if(e.code==="Space"||e.code==="Enter"){ if(GM==="speed" && SP.state!=="run"){ e.preventDefault(); spGo(); } else if(GM==="memory" && (MM.state==="ready"||MM.state==="over")){ e.preventDefault(); mmGo(); } } });
 // ---------- Duels (multiplayer in every game, chess.com-like): online against a player of your level, a bot, or a friend; ELO per game ----------
 // Both players get the same challenge (same random seed: same chords in the same order, same tempo) and see each other's score live.
 // Rating: S.elo["<game>-<cont>"] = {r, n, w, d, l, h:[{d,r,o,res,bot}]}; online and bot games are rated, friend games are not.
@@ -4126,7 +4149,6 @@ function duBotPlan(elo, game, seed){ const r=duRng(seed^0x5bd1e995), s=Math.max(
       if(i<k){ sc+=10+(r()<p?5:0); ev.push([tm,sc]); tm+=gap; } else ev.push([tm-gap*0.4,sc,1]); } }
   return ev; }
 // ---- views ----
-function duOpen(game){ DU.game=game; if(!DU.mode){ DU.cont=(S.settings.duCont==="notes")?"notes":"chords"; DU.view="lobby"; } duRender(); }
 function duSet(view){ DU.view=view; duRender(); }
 function duRender(){ if(!RN.on) return;
   const lob = DU.view==="lobby"||DU.view==="bots"||DU.view==="friend"||DU.view==="search";
@@ -4143,7 +4165,7 @@ function duArt(){ const a=q=>document.querySelector("#duModes .du-m-"+q+" .du-ar
 function duRenderLobby(){ duArt();
   const e=eloGet(); $("duRateAv").innerHTML=duAv(duMyAv()); $("duRate").textContent=e.r+(eloProv(e)?"?":"");
   $("duRateK").textContent=t("duYourElo")(duGameName()); $("duRec").textContent=e.n ? t("duRecord")(e.w,e.d,e.l) : t("duNew");
-  document.querySelectorAll("#duCont button").forEach(b=>b.setAttribute("aria-pressed",b.dataset.v===DU.cont));
+  document.querySelectorAll("#duCont button").forEach(b=>b.setAttribute("aria-pressed",b.dataset.v===DU.cont)); $("duCont").hidden = DU.view!=="lobby";
   const hl=$("duHist"); hl.innerHTML=""; const H=(e.h||[]).slice(-6).reverse();
   if(!H.length){ const li=document.createElement("li"); li.innerHTML="<p></p>"; li.firstChild.textContent=t("duHistNone"); hl.appendChild(li); }
   H.forEach(x=>{ const li=document.createElement("li"); li.innerHTML='<span class="r"></span><span class="du-av"></span><b></b><i></i>'; const r=li.querySelector(".r"); r.className="r "+(x.res===1?"w":x.res===0?"l":"d"); r.textContent=x.res===1?t("duW1"):x.res===0?t("duL1"):t("duD1");
@@ -4167,7 +4189,7 @@ function duRenderLobby(){ duArt();
       w.querySelector(".qz-hint").textContent = DU.host ? t("duShare") : t("qzWaitHost");
       DU.peers.slice(0,2).forEach(p=>{ const li=document.createElement("li"); li.innerHTML='<span class="du-av"></span><b></b><small></small>'; li.querySelector(".du-av").innerHTML=duAv(p.av); li.querySelector("b").textContent=p.name+(p.id===netId()?" ("+t("qzYou")+")":""); li.querySelector("small").textContent=p.elo; w.querySelector("ul").appendChild(li); });
       const [cp,lv,go]=w.querySelectorAll(".du-row button"); cp.textContent=t("qzCopyT"); lv.textContent=t("qzLeaveT"); go.textContent=t("duGoT");
-      cp.onclick=()=>{ const link=location.origin+location.pathname+"#duel-"+DU.code; try{ navigator.clipboard.writeText(link).then(()=>{ cp.textContent=t("qzCopied"); setTimeout(()=>cp.textContent=t("qzCopyT"),1800); },()=>{}); }catch(e){} };
+      cp.onclick=()=>{ const link=SITE_URL()+"#duel-"+DU.code; try{ navigator.clipboard.writeText(link).then(()=>{ cp.textContent=t("qzCopied"); setTimeout(()=>cp.textContent=t("qzCopyT"),1800); },()=>{}); }catch(e){} };
       lv.onclick=()=>{ duLeaveRoom(); duRender(); }; go.hidden=!DU.host; go.disabled=DU.peers.length<2; go.onclick=duHostStart; }
     else { w.innerHTML='<button class="btn primary" type="button" data-a="create"></button><span class="du-or"></span><div class="du-row"><input class="mono" maxlength="5" autocomplete="off" spellcheck="false"><button class="btn" type="button" data-a="join"></button></div><p class="qz-hint"></p>';
       const [cr,jn]=w.querySelectorAll("button"), inp=w.querySelector("input"); cr.textContent=t("qzCreateT"); jn.textContent=t("qzJoinT"); inp.placeholder="CODE"; w.querySelector(".du-or").textContent=t("duOr"); w.querySelector(".qz-hint").textContent=t("duFriendHint");
@@ -4190,12 +4212,16 @@ function duHud(){ const o=DU.opp||{}, me=DU.me;
 function duBegin(o){ // o: {mode, seed, opp, rated, game, cont}
   clearInterval(DU.sim); clearTimeout(DU.countT);
   Object.assign(DU,{mode:o.mode, seed:o.seed>>>0, opp:{...o.opp, score:0, done:false}, rated:!!o.rated, me:{score:0,done:false}, res:null, want:false, oppWant:false, game:o.game||DU.game, cont:o.cont||DU.cont});
+  if(DU.rated){ S.duPend={key:duKey(), o:DU.opp.elo, bot:DU.opp.bot!=null, nm:DU.opp.name, av:DU.opp.av}; save(); }
+  DU.opp.lastAt=Date.now();
   gRnd=duRng(DU.seed); GM=DU.game; gameOpen(DU.game, true); // resets the game with the shared pool
   gRnd=duRng(DU.seed);
   DU.view="count"; duRender(); let n=3; const cd=$("duCount");
   const tick=()=>{ if(!RN.on||DU.view!=="count") return; if(n>0){ cd.textContent=n; cd.classList.remove("pop"); void cd.offsetWidth; cd.classList.add("pop"); tone(n===1?79:72,0,.12,.1); n--; DU.countT=setTimeout(tick,800); } else duGo(); };
   tick(); }
 function duGo(){ DU.view="play"; DU.t0=performance.now(); duRender(); audio();
+  clearInterval(DU.hb); if(DU.mode!=="bot"){ DU.opp.lastAt=Date.now(); DU.hb=setInterval(()=>{ if(DU.view!=="play"&&DU.view!=="wait"){ clearInterval(DU.hb); return; } duSend({t:"hb"});
+      if(!DU.opp.done && Date.now()-DU.opp.lastAt>25000){ duSend({t:"stall"}); duFinish(1,"forfeit"); } },4000); }
   if(DU.game==="runner"){ RN.state="ready"; rnGo(); } else if(DU.game==="speed") spGo(); else mmGo();
   if(DU.opp.bot!=null && DU.opp.plan){ let i=0; DU.sim=setInterval(()=>{ if(DU.view!=="play"&&DU.view!=="wait"){ clearInterval(DU.sim); return; } const el=performance.now()-DU.t0, P=DU.opp.plan;
       while(i<P.length && P[i][0]<=el){ DU.opp.score=P[i][1]; if(P[i][2]) DU.opp.done=true; i++; } duHud(); duCheck(); },200); } }
@@ -4207,18 +4233,19 @@ function duCheck(){ if(DU.view!=="play"&&DU.view!=="wait") return; const me=DU.m
   const over = (me.done&&o.done) || (o.done&&me.score>o.score) || (me.done&&o.score>me.score);
   if(!over) { if(DU.view==="wait"){ $("duWait").hidden=false; $("duWait").textContent=t("duWaitOpp")(o.name, o.score||0, me.score); } return; }
   duFinish(me.score>o.score?1:me.score<o.score?0:.5); }
-function duStopGame(){ clearInterval(DU.sim); clearTimeout(DU.countT); cancelAnimationFrame(SP.raf); MM.timers.forEach(clearTimeout); MM.timers=[]; clearKeys();
+function duStopGame(){ clearInterval(DU.sim); clearInterval(DU.hb); clearTimeout(DU.countT); clearTimeout(MM.inT); cancelAnimationFrame(SP.raf); MM.timers.forEach(clearTimeout); MM.timers=[]; clearKeys();
   if(RN.state==="run") RN.state="over"; if(SP.state==="run") SP.state="over"; if(MM.state!=="ready") MM.state="over"; }
-function duFinish(res, why){ duStopGame(); $("duWait").hidden=true;
+function duFinish(res, why){ duStopGame(); $("duWait").hidden=true; delete S.duPend; DU.resAt=performance.now();
   const key=duKey(); DU.res={res, why:why||"", me:DU.me.score, opp:DU.opp.score, elo: DU.rated ? eloApply(key, DU.opp.elo, res, DU.opp.bot!=null, DU.opp.name, DU.opp.av) : null};
   if(res===1) tone(84,0,.2,.12), tone(88,.12,.3,.12); else if(res===0) tone(52,0,.4,.15);
   if(DU.me.score){ addXP(Math.min(30,Math.round(DU.me.score/(DU.game==="runner"?10:1)))+(res===1?5:0)); renderStatus(); }
-  DU.view="result"; duRender(); }
+  DU.view="result"; duRender();
+  if(DU.ch) try{ DU.ch.track(duMeta({host:DU.host})); }catch(e){} } // the new rating, for a rematch
 function duRenderRes(){ const r=DU.res, o=DU.opp, box=$("duRes"); if(!r) return;
   box.dataset.res = r.res===1?"win":r.res===0?"loss":"draw";
   box.innerHTML='<div class="du-rcard"><p class="du-rk"></p><h3></h3><div class="du-rsc"><span><span class="du-av"></span><b class="mono"></b></span><i>–</i><span><b class="mono"></b><span class="du-av"></span></span></div><p class="du-relo"></p><div class="du-row"></div></div>';
   box.querySelector(".du-rk").textContent=duGameName()+" · "+t(DU.cont==="notes"?"duNotes":"duChords")+(DU.rated?" · "+t("duRated"):"");
-  box.querySelector("h3").textContent = r.why==="forfeit" ? t("duWinForfeit") : r.res===1 ? t("duWin") : r.res===0 ? t("duLoss") : t("duDraw");
+  box.querySelector("h3").textContent = r.why==="forfeit" ? t("duWinForfeit") : r.why==="stalled" ? t("duStalled") : r.res===1 ? t("duWin") : r.res===0 ? t("duLoss") : t("duDraw");
   const av=box.querySelectorAll(".du-av"), sc=box.querySelectorAll(".du-rsc b"); av[0].innerHTML=duAv(duMyAv()); av[1].innerHTML=duAv(o.av); sc[0].textContent=r.me; sc[1].textContent=r.opp;
   const el=box.querySelector(".du-relo"); if(r.elo){ el.innerHTML='<span></span> <b></b>'; el.firstChild.textContent=t("duNewElo")+" "+r.elo.after; el.lastChild.textContent=(r.elo.d>=0?"+":"")+r.elo.d; el.lastChild.className=r.elo.d>=0?"up":"down"; }
   else el.textContent=t("duUnrated");
@@ -4229,18 +4256,23 @@ function duRenderRes(){ const r=DU.res, o=DU.opp, box=$("duRes"); if(!r) return;
     const rm=btn(DU.want?t("duRematchSent"):DU.oppWant?t("duRematchAccept"):t("duRematch"),"primary",duRematch,CNAME()); rm.id="duRematch"; rm.disabled=DU.want; }
   else if(DU.mode==="online") btn(t("duNewOpp"),"primary",()=>{ duEnd(); duSearch(); },CNAME()).id="duRematch"; }
 function duEnd(){ if(DU.mode && DU.rated && DU.opp && !DU.opp.gone && ["count","play","wait"].includes(DU.view)){ eloApply(duKey(), DU.opp.elo, 0, DU.opp.bot!=null, DU.opp.name, DU.opp.av); duSend({t:"sc",s:DU.me.score,d:true,quit:1}); } // leaving a rated game counts as a loss
-  duStopGame(); if(DU.mode && DU.mode!=="bot") duLeaveRoom(); DU.mode=null; DU.opp=null; gRnd=Math.random; }
+  delete S.duPend; duStopGame(); if(DU.ch) duLeaveRoom(); DU.mode=null; DU.opp=null; gRnd=Math.random; }
 function duStartBot(i){ duEnd(); const seed=(Math.random()*4294967296)>>>0, elo=DU_BOTS[i];
   duBegin({mode:"bot", seed, rated:true, opp:{name:t("chars")[i][0], elo, av:i, bot:i, plan:duBotPlan(elo,DU.game,seed)}}); }
 // MIDI: a lone C plays (quick game against the bot of your level, rematch), a lone B goes back to the lobby
 const duBlocks = () => DU.view!=="play" && DU.view!=="solo"; // the game itself only takes notes while it is played
-function duNote(m){ const pc=((m%12)+12)%12; if(pc!==0&&pc!==11 || !midiMode() || S.settings.midiC===false) return duBlocks();
+function duNote(m){ const pc=((m%12)+12)%12, now=performance.now(), prev=DU.lastNote||0; DU.lastNote=now;
+  if(DU.cmdT){ clearTimeout(DU.cmdT); DU.cmdT=0; return duBlocks(); } // a second note: it was a chord
+  if(pc!==0&&pc!==11 || !midiMode() || S.settings.midiC===false || now-prev<120 || duBlocks()===false) return duBlocks();
+  if(DU.view==="result" && now-(DU.resAt||0)<900) return true;
+  DU.cmdT=setTimeout(()=>{ DU.cmdT=0; duCmd(pc); },90); return true; }
+function duCmd(pc){
   if(DU.view==="result"){ const b=$(pc===0?"duRematch":"duResLobby"); if(b&&!b.disabled) b.click(); return true; }
   if(DU.view==="bots" && pc===0){ $("duBotGo")?.click(); return true; }
   if(DU.view==="search" && pc===0 && $("duSearchBot")){ $("duSearchBot").click(); return true; }
   if(DU.view==="lobby" && pc===0){ duStartBot(DU.botPick??duBotFor(eloGet().r)); return true; }
-  if(pc===11 && ["bots","friend","search"].includes(DU.view)){ duStopSearch(); duSet("lobby"); return true; }
-  return duBlocks(); }
+  if(pc===11 && ["bots","friend","search"].includes(DU.view)){ duStopSearch(); if(DU.ch && !DU.mode) duLeaveRoom(); duSet("lobby"); return true; }
+  return false; }
 // ---- online ----
 const duWin = secs => secs>=45 ? 9999 : 120+secs*12; // rating window of the matchmaking, wider and wider
 function duSafeElo(x){ x=Math.round(+x); return Number.isFinite(x) ? Math.max(100,Math.min(3500,x)) : 800; }
@@ -4248,31 +4280,31 @@ function duPeersOf(ch){ try{ return Object.values(ch.presenceState()).map(a=>a&&
   .map(x=>({id:x.id,name:qzSafe(x.name)||"?",elo:duSafeElo(x.elo),av:Math.max(0,Math.min(9,x.av|0)),host:!!x.host,wait:!!x.wait,at:+x.at||0,
     game:DU_GAMES.includes(x.game)?x.game:"",cont:x.cont==="notes"?"notes":"chords"})).sort((a,b)=>(b.host-a.host)||(a.at-b.at)||(a.id<b.id?-1:1)); }catch(e){ return []; } }
 const duMeta = extra => ({id:netId(),name:duMyName(),elo:eloGet().r,av:duMyAv(),game:DU.game,cont:DU.cont,at:DU.searchAt||Date.now(),...extra});
-async function duLobbyJoin(){ if(DU.lobby) return; try{ const c=await netSb(); const lb=c.channel("pcd-lobby",{config:{broadcast:{self:false},presence:{key:netId()}}}); DU.lobby=lb;
+async function duLobbyJoin(){ if(DU.lobby) return; try{ const c=await netSb(); if(!RN.on || !DU.searching || DU.lobby) return; const lb=c.channel("pcd-lobby",{config:{broadcast:{self:false},presence:{key:netId()}}}); DU.lobby=lb;
     lb.on("presence",{event:"sync"},()=>{ const ps=duPeersOf(lb); DU.online=ps.length; duPair(ps); if(DU.view==="search") duRender(); });
     lb.on("broadcast",{event:"match"},({payload:p})=>{ if(!p||p.b!==netId()||!DU.searching||typeof p.room!=="string"||!/^[A-Z2-9]{5}$/.test(p.room)) return;
-      DU.searching=false; lb.track(duMeta({wait:false})); duJoin(p.room,false,true); });
-    await netSubscribe(lb); await lb.track(duMeta({wait:DU.searching}));
+      DU.searching=false; clearInterval(DU.searchTick); netDrop(lb); DU.lobby=null; duJoin(p.room,false,true); });
+    await netSubscribe(lb); if(DU.lobby!==lb) return; await lb.track(duMeta({wait:DU.searching}));
   }catch(e){ DU.lobby=null; DU.err=t("qzNetErr"); DU.searching=false; duRender(); } }
 async function duSearch(){ DU.err=""; DU.searching=true; DU.searchAt=Date.now(); DU.view="search"; duRender(); clearInterval(DU.searchTick);
   DU.searchTick=setInterval(()=>{ if(DU.view!=="search"){ clearInterval(DU.searchTick); return; } if(DU.lobby) duPair(duPeersOf(DU.lobby)); duRender(); },1000);
   await duLobbyJoin(); if(DU.lobby && DU.searching) DU.lobby.track(duMeta({wait:true})); }
-function duStopSearch(){ DU.searching=false; clearInterval(DU.searchTick); if(DU.lobby) netDrop(DU.lobby); DU.lobby=null; }
+function duStopSearch(){ DU.searching=false; clearInterval(DU.searchTick); if(DU.lobby) netDrop(DU.lobby); DU.lobby=null; if(DU.ch && DU.auto && !DU.mode) duLeaveRoom(); }
 // greedy pairing in arrival order, the same on every client: the older player of a pair creates the room
 function duPair(ps){ if(!DU.searching) return; const now=Date.now(), w=ps.filter(p=>p.wait&&p.game===DU.game&&p.cont===DU.cont).sort((a,b)=>(a.at-b.at)||(a.id<b.id?-1:1)), used=new Set();
   for(const a of w){ if(used.has(a.id)) continue; const win=duWin((now-a.at)/1000); const b=w.find(x=>x.id!==a.id&&!used.has(x.id)&&Math.abs(x.elo-a.elo)<=win); if(!b) continue; used.add(a.id); used.add(b.id);
-    if(a.id===netId()){ const room=netCode(); DU.searching=false; DU.lobby.send({type:"broadcast",event:"match",payload:{room,a:a.id,b:b.id}}); DU.lobby.track(duMeta({wait:false})); duJoin(room,true,true); return; }
+    if(a.id===netId()){ const room=netCode(), lb=DU.lobby; DU.searching=false; clearInterval(DU.searchTick); lb.send({type:"broadcast",event:"match",payload:{room,a:a.id,b:b.id}}); setTimeout(()=>netDrop(lb),1500); DU.lobby=null; duJoin(room,true,true); return; }
     if(b.id===netId()) return; } }
-async function duJoin(code,asHost,auto){ try{ const c=await netSb(); if(DU.ch) netDrop(DU.ch);
+async function duJoin(code,asHost,auto){ try{ const c=await netSb(); if(!RN.on) return; if(DU.ch) netDrop(DU.ch);
     const ch=c.channel("pcd-room-"+code,{config:{broadcast:{self:false},presence:{key:netId()}}});
     Object.assign(DU,{ch,code,host:asHost,auto,peers:[],err:""}); if(!auto) DU.view="friend";
     ch.on("broadcast",{event:"m"},({payload})=>duRecv(payload));
     ch.on("presence",{event:"sync"},()=>{ DU.peers=duPeersOf(ch); duPeers(); });
     await netSubscribe(ch); await ch.track(duMeta({host:asHost})); duRender();
-    setTimeout(()=>{ if(DU.ch===ch && !asHost && !DU.peers.some(p=>p.host)){ DU.err=t("qzNoRoom"); duLeaveRoom(); duSet(auto?"lobby":"friend"); } },5000);
+    setTimeout(()=>{ if(DU.ch===ch && !asHost && !DU.peers.some(p=>p.host)){ duLeaveRoom(); if(auto){ duSearch(); return; } DU.err=t("qzNoRoom"); duSet("friend"); } },5000);
     if(auto && asHost) setTimeout(()=>{ if(DU.ch===ch && DU.peers.length<2 && !DU.mode){ duLeaveRoom(); duSearch(); } },6000); // the other one never came: search again
   }catch(e){ DU.err=t("qzNetErr"); duRender(); } }
-function duSend(p){ if(DU.ch) try{ DU.ch.send({type:"broadcast",event:"m",payload:p}); }catch(e){} }
+function duSend(p){ if(DU.ch) try{ DU.ch.send({type:"broadcast",event:"m",payload:{...p, from:netId()}}); }catch(e){} }
 function duLeaveRoom(){ if(DU.ch) netDrop(DU.ch); Object.assign(DU,{ch:null,code:"",host:false,peers:[],auto:false}); }
 function duPeers(){ const P=DU.peers;
   if(DU.mode && DU.mode!=="bot" && DU.opp && !DU.opp.gone && !P.some(p=>p.id===DU.opp.id)){ // the other one left
@@ -4286,19 +4318,23 @@ function duHostStart(){ if(!DU.host||DU.peers.length<2) return; const opp=DU.pee
 function duStartOnline(p){ const opp=p.players.find(x=>x.id!==netId()); if(!opp) return;
   duBegin({mode:p.rated?"online":"friend", seed:p.seed, rated:p.rated, game:p.game, cont:p.cont, opp:{id:opp.id,name:opp.name,elo:opp.elo,av:opp.av}}); }
 function duRecv(m){ if(!m||typeof m!=="object") return;
-  if(m.t==="start" && !DU.host){ if(!DU_GAMES.includes(m.game)||!Number.isInteger(m.seed)||!Array.isArray(m.players)||m.players.length!==2) return;
+  if(m.t==="start" && !DU.host){ if(typeof m.from!=="string" || m.from===netId() || !Array.isArray(m.players) || !m.players.some(x=>x&&x.id===m.from) || (DU.peers.length && !DU.peers.some(p=>p.host && p.id===m.from)) || (DU.mode && DU.view!=="result") || !["friend","search","result","lobby"].includes(DU.view)) return;
+    if(!DU_GAMES.includes(m.game)||!Number.isInteger(m.seed)||!Array.isArray(m.players)||m.players.length!==2) return;
     const players=m.players.filter(x=>x&&typeof x.id==="string").map(x=>({id:x.id,name:qzSafe(x.name)||"?",elo:duSafeElo(x.elo),av:Math.max(0,Math.min(9,x.av|0))}));
-    if(!players.some(x=>x.id===netId())) return; if(DU.game!==m.game){ DU.game=m.game; }
+    if(!players.some(x=>x.id===netId())) return;
     duStartOnline({seed:m.seed>>>0,game:m.game,cont:m.cont==="notes"?"notes":"chords",rated:!!m.rated&&!!DU.auto,players}); return; }
-  if(!DU.mode||!DU.opp) return;
+  if(!DU.mode||!DU.opp||m.from!==DU.opp.id) return;
+  DU.opp.lastAt=Date.now();
+  if(m.t==="stall" && ["play","wait"].includes(DU.view)){ duFinish(0,"stalled"); return; }
   if(m.t==="sc" && m.quit && !DU.opp.gone){ DU.opp.gone=true; if(["count","play","wait"].includes(DU.view)) duFinish(1,"forfeit"); else duRender(); return; }
   if(m.t==="sc" && Number.isInteger(m.s) && m.s>=0 && m.s<100000){ DU.opp.score=m.s; if(m.d) DU.opp.done=true; duHud(); duCheck(); return; }
   if(m.t==="re" && DU.view==="result"){ DU.oppWant=true; if(DU.want && DU.host) duHostStart(); else duRender(); } }
-function duRematch(){ if(DU.mode==="bot"){ duStartBot(DU.opp.bot); return; } DU.want=true; duSend({t:"re"}); if(DU.oppWant && DU.host){ DU.mode=null; duHostStart(); } else duRender(); }
+function duRematch(){ if(DU.mode==="bot"){ duStartBot(DU.opp.bot); return; } DU.want=true; duSend({t:"re"}); if(DU.oppWant && DU.host) duHostStart(); else duRender(); }
 // a shared link pianochallenges.com/#duel-ABCDE opens the games and joins that room (the host picks the game)
 function duFromHash(){ const m=/^#duel-([A-Z2-9]{5})$/.exec(location.hash||""); if(!m) return; history.replaceState(null,"",location.pathname+location.search);
   openPage("games"); gameOpen("runner"); duJoin(m[1],false,false); }
 setTimeout(duFromHash,0);
+if(S.duPend){ const pd=S.duPend; delete S.duPend; try{ eloApply(pd.key, pd.o, 0, pd.bot, pd.nm, pd.av); }catch(e){} save(); } // a rated duel left by closing the app
 // ---- lobby buttons ----
 $("duModes").addEventListener("click",e=>{ const b=e.target.closest("[data-m]"); if(!b) return; const m=b.dataset.m; DU.err="";
   if(m==="solo"){ DU.view="solo"; duRender(); gameOpen(DU.game,true); return; }
@@ -4318,10 +4354,10 @@ function ntfPrefs(){ const d={social:{app:true,mail:true},progress:{app:true,mai
 function ntfStore(){ if(!S.notifs||!Array.isArray(S.notifs.list)) S.notifs={list:[],keys:{}}; if(!S.notifs.keys) S.notifs.keys={}; return S.notifs; }
 // add one notification (once per key); silent=true for the first fill so old news do not pile up
 function ntfAdd(o, silent){ const st=ntfStore(), key=o.key||(o.type+"-"+Date.now()); if(st.keys[key]) return false; st.keys[key]=Date.now();
-  const ks=Object.entries(st.keys); if(ks.length>300){ ks.sort((a,b)=>a[1]-b[1]).slice(0,ks.length-300).forEach(([k])=>delete st.keys[k]); }
+  const old=Date.now()-90*86400000; Object.entries(st.keys).forEach(([k,v])=>{ if(v<old && !k.startsWith("news-") && k!=="welcome") delete st.keys[k]; });
   if(silent || !ntfPrefs()[o.cat||"progress"].app){ save(); return false; }
   st.list.unshift({id:key, cat:o.cat||"progress", type:o.type, t:o.t||Date.now(), ti:String(o.ti||"").slice(0,90), tx:String(o.tx||"").slice(0,200), act:o.act||null, read:false});
-  st.list=st.list.slice(0,60); save(); ntfBadge(); if(page==="notif") renderNotifs(); return true; }
+  st.list.sort((a,b)=>b.t-a.t); st.list=st.list.slice(0,60); save(); ntfBadge(); if(page==="notif") renderNotifs(); return true; }
 function ntfUnread(){ return ntfStore().list.filter(n=>!n.read).length; }
 function ntfBadge(){ const n=ntfUnread(); ["ntfBadge","mbNtfBadge"].forEach(id=>{ const b=$(id); if(!b) return; b.hidden=!n; b.textContent=n>9?"9+":n; });
   $("ntfBtn")?.setAttribute("aria-label", t("ntfTitle")+(n?" ("+n+")":"")); $("mbNtf")?.setAttribute("aria-label", t("ntfTitle")+(n?" ("+n+")":"")); }
@@ -4346,11 +4382,13 @@ function ntfDo(a){ if(!a) return; const k=a.k;
   if(k==="daily") guardLeave(()=>openPage("daily")); else if(k==="rank") openPage("rank"); else if(k==="game"){ openPage("games"); if(DU_GAMES.includes(a.v)) gameOpen(a.v); }
   else if(k==="learn") openPage("learn"); else if(k==="free") openPage("free"); else if(k==="progress") openSet("progress"); else if(k==="settings") openSet("settings"); else if(k==="hub") openPage("hub"); }
 // ---- what the app itself notices ----
+const ntfNewsKey = n => { let h=0; const x=n[3]||n[0]; for(let i=0;i<x.length;i++) h=(h*31+x.charCodeAt(i))|0; return "news-"+(h>>>0).toString(36); }; // from the icon: the same in every language
 function ntfCheck(){ const st=ntfStore(), first=!S.notifs.init, today=dayStr(), h=new Date().getHours();
-  if(first){ S.notifs.init=1; t("hsNews").forEach(([ti])=>ntfAdd({key:"news-"+ti, cat:"news", type:"news", ti}, true));
+  if(!st.nv2){ st.nv2=1; t("hsNews").forEach(n=>ntfAdd({key:ntfNewsKey(n), cat:"news", type:"news", ti:n[0]}, true)); } // news already listed before: no flood
+  if(first){ S.notifs.init=1;
     ntfAdd({key:"welcome", cat:"news", type:"welcome", ti:t("ntfWelcomeT"), tx:t("ntfWelcomeX"), act:{k:"settings",l:"ntfSetGo"}}); }
   // news of the home page that this player has not seen yet
-  t("hsNews").forEach(([ti,su])=>ntfAdd({key:"news-"+ti, cat:"news", type:"news", ti, tx:su, act:{k:"hub",l:"ntfOpen"}}));
+  t("hsNews").forEach(n=>ntfAdd({key:ntfNewsKey(n), cat:"news", type:"news", ti:n[0], tx:n[1], act:{k:"hub",l:"ntfOpen"}}));
   // the daily practice of the day
   if(!(S.daily&&S.daily.date===today)) ntfAdd({key:"daily-"+today, cat:"remind", type:"daily", ti:t("ntfDailyT"), tx:t("ntfDailyX"), act:{k:"daily",l:"ntfPlay"}});
   // the streak is in danger in the evening
@@ -4369,21 +4407,30 @@ async function ntfCloud(){ if(!sb||!user) return;
   try{ const since=new Date(Date.now()-30*86400000).toISOString();
     const {data,error}=await sb.from("notifications").select("id,cat,kind,title,body,action,created_at").eq("user_id",user.id).gte("created_at",since).order("created_at",{ascending:true}).limit(50);
     if(!error && Array.isArray(data)) data.forEach(r=>{ const act = typeof r.action==="string" && /^(daily|rank|learn|free|progress|hub|game:(runner|speed|memory))$/.test(r.action) ? (r.action.startsWith("game:")?{k:"game",v:r.action.slice(5),l:"ntfPlay"}:{k:r.action,l:"ntfOpen"}) : null;
-      ntfAdd({key:"srv-"+r.id, cat:NTF_CATS.includes(r.cat)?r.cat:"news", type:NTF_ICON[r.kind]?r.kind:"news", ti:r.title, tx:r.body, t:Date.parse(r.created_at)||Date.now(), act}); });
+      const ts=Date.parse(r.created_at)||Date.now(), day=dayStr(new Date(ts));
+      if(r.kind==="streak"){ if(S.streak&&S.streak.last===dayStr()) return; ntfAdd({key:"streak-"+day, cat:"remind", type:"streak", ti:r.title, tx:r.body, t:ts, act}); return; } // the same reminder as the app's own
+      ntfAdd({key:"srv-"+r.id, cat:NTF_CATS.includes(r.cat)?r.cat:"news", type:NTF_ICON[r.kind]?r.kind:"news", ti:r.title, tx:r.body, t:ts, act}); });
   }catch(e){}
-  ntfSavePrefs(); }
+  try{ const {data:pr,error}=await sb.from("notif_prefs").select("email_weekly,email_streak,email_social,email_news,lang,updated_at").eq("user_id",user.id).maybeSingle();
+    if(error) return;
+    if(!pr){ ntfSavePrefs(); return; } // first time: the server gets this device's choice
+    const at=Date.parse(pr.updated_at)||0; if(at>(S.settings.ntfAt||0)){ const n=S.settings.ntf=S.settings.ntf||{};
+      n.weekly=!!pr.email_weekly; n.remind={...ntfPrefs().remind, mail:!!pr.email_streak}; n.social={...ntfPrefs().social, mail:!!pr.email_social}; n.news={...ntfPrefs().news, mail:!!pr.email_news};
+      S.settings.ntfAt=at; save(); renderNtfSet(); }
+  }catch(e){} }
 let ntfPrefT=0;
-function ntfSavePrefs(){ clearTimeout(ntfPrefT); ntfPrefT=setTimeout(async()=>{ if(!sb||!user) return; const p=ntfPrefs();
-  try{ await sb.from("notif_prefs").upsert({user_id:user.id, email_weekly:p.weekly, email_streak:p.remind.mail, email_social:p.social.mail, email_news:p.news.mail, lang:S.settings.lang==="en"?"en":"fr", updated_at:new Date().toISOString()},{onConflict:"user_id"}); }catch(e){} },800); }
+function ntfSavePrefs(){ clearTimeout(ntfPrefT); ntfPrefT=setTimeout(async()=>{ if(!sb||!user) return; const p=ntfPrefs(), now=new Date();
+  try{ const {error}=await sb.from("notif_prefs").upsert({user_id:user.id, email_weekly:p.weekly, email_streak:p.remind.mail, email_social:p.social.mail, email_news:p.news.mail, lang:S.settings.lang==="en"?"en":"fr", updated_at:now.toISOString()},{onConflict:"user_id"});
+    if(error) console.warn("notif_prefs", error.message); else { S.settings.ntfAt=now.getTime(); save(); } }catch(e){} },800); }
 // ---- settings: categories x channels ----
 function renderNtfSet(){ const box=$("ntfSet"); if(!box) return; const p=ntfPrefs(); box.innerHTML="";
   const head=document.createElement("div"); head.className="ntf-row ntf-hd"; head.innerHTML="<span></span><b></b><b></b>"; head.children[1].textContent=t("ntfApp"); head.children[2].textContent=t("ntfMail"); box.appendChild(head);
   const row=(label,sub,app,mail,onApp,onMail)=>{ const r=document.createElement("div"); r.className="ntf-row"; r.innerHTML='<span><b></b><small></small></span><label class="sw"><input type="checkbox"><i></i></label><label class="sw"><input type="checkbox"><i></i></label>';
     r.querySelector("b").textContent=label; r.querySelector("small").textContent=sub; const [a,m]=r.querySelectorAll("input");
     if(app==null){ a.closest("label").style.visibility="hidden"; } else { a.checked=app; a.onchange=()=>onApp(a.checked); a.setAttribute("aria-label",label+" · "+t("ntfApp")); }
-    m.checked=mail; m.disabled=!user; m.onchange=()=>onMail(m.checked); m.setAttribute("aria-label",label+" · "+t("ntfMail")); box.appendChild(r); };
+    if(mail==null){ m.disabled=true; m.closest("label").style.visibility="hidden"; } else { m.checked=mail; m.disabled=!user; m.onchange=()=>onMail(m.checked); m.setAttribute("aria-label",label+" · "+t("ntfMail")); } box.appendChild(r); };
   const set=(c,ch,v)=>{ S.settings.ntf=S.settings.ntf||{}; S.settings.ntf[c]={...ntfPrefs()[c],[ch]:v}; save(); ntfSavePrefs(); renderNtfSet(); };
-  NTF_CATS.forEach(c=>row(t("ntfCat_"+c), t("ntfCatD_"+c), p[c].app, p[c].mail, v=>set(c,"app",v), v=>set(c,"mail",v)));
+  NTF_CATS.forEach(c=>row(t("ntfCat_"+c), t("ntfCatD_"+c), p[c].app, c==="remind"?p[c].mail:null, v=>set(c,"app",v), v=>set(c,"mail",v)));
   row(t("ntfWeeklyT"), t("ntfWeeklyD"), null, p.weekly, null, v=>{ S.settings.ntf=S.settings.ntf||{}; S.settings.ntf.weekly=v; save(); ntfSavePrefs(); renderNtfSet(); });
   const n=document.createElement("p"); n.className="qz-hint ntf-note"; n.textContent = user ? t("ntfMailNote") : t("ntfMailGuest"); box.appendChild(n); }
 // ---- buttons ----
@@ -4529,11 +4576,14 @@ function suQueue(sec){ const st=suState(sec), out=[];
     else if(sec==="scales" && S.settings.scMode==="chords" && TYPE[tid].iv) out.push({sec,tid,k,ch:1});
     else out.push({sec,tid,k}); }));
   return st.shuffle ? qzShuffle(out) : out; }
+function suItemLabel(it){ const sec=it.sec, ty=typeDef(sec,it.tid);
+  if(sec==="chords") return noteName(tonicNote(it.k))+" "+SEC[sec].name(ty)+(it.inv?" · "+t("invNames")[it.inv]:"");
+  return itemName(it); }
 function suLabel(sec){ const st=suState(sec), q=suQueue(sec), fr=S.settings.lang==="fr";
-  if(q.length===1 && sec!=="ear"){ const it=q[0], ty=typeDef(sec,it.tid); return sec==="chords" ? noteName(tonicNote(it.k))+" "+SEC[sec].name(ty) : sec==="harmony" ? noteName(tonicNote(it.k))+" "+(HTYPE[it.tid].scale==="minor"?(fr?"mineur":"minor"):(fr?"majeur":"major")) : itemName(it); }
+  if(q.length===1 && sec!=="ear") return suItemLabel(q[0]);
   const names=st.tids.map(id=>SEC[sec].name(typeDef(sec,id))), tn = names.length<=2 ? names.join(", ") : names[0]+", "+names[1]+" +"+(names.length-2);
   if(sec==="ear") return tn;
-  return tn+" · "+(st.keys==="all" ? t("suKeysAll") : st.keys==="simple" ? t("suKeysSimple") : st.picked.map(pc=>qzRoots()[pc]).join(", ")); }
+  return tn+" · "+(st.keys==="all" ? t("suKeysAll") : st.keys==="simple" ? t("suKeysSimple") : [...new Set(q.map(it=>noteName(tonicNote(it.k))))].join(", ")); }
 function renderSetup(){
   const sec=S.section, st=suState(sec), col=SU_COL[sec], re=()=>{ save(); renderSetup(); };
   const h=$("suTitle"); h.style.setProperty("--mc",col); $("suIc").innerHTML=SEC_ICON(sec); $("suName").textContent=t(SU_NAME[sec]); $("suSub").textContent=t("suSub_"+sec);
@@ -4686,7 +4736,7 @@ function qzKeys(pcs,col){ const W=[0,2,4,5,7,9,11], B=[[1,0],[3,1],[6,3],[8,4],[
   B.forEach(([pc,i])=>{ s+='<rect x="'+(i*10+7)+'" y="0" width="6" height="16" rx="1.2" fill="'+(on.has(pc)?col:"#2b2560")+'"/>'; });
   return s+"</svg>"; }
 function qzDevices(){ const out=[["screen",t("qzScreen")]]; try{ if(midiAcc) midiAcc.inputs.forEach(inp=>{ if(!inp.state||inp.state==="connected") out.push([String(inp.id||inp.name),inp.name]); }); }catch(e){} return out; }
-function qzZones(n){ const lo=LOW, hi=HIGH, oct=Math.max(n,Math.round((hi-lo+1)/12)), per=Math.max(1,Math.floor(oct/n)); return Array.from({length:n},(_,i)=>{ const a=lo+i*per*12, b=i===n-1?hi:a+per*12-1; return [a,b]; }); }
+function qzZones(n){ const [lo,hi] = S.settings.kbdSize && S.settings.kbdSize!=="auto" ? [LOW,HIGH] : midiReady ? [36,96] : [48,84], oct=Math.max(n,Math.round((hi-lo+1)/12)), per=Math.max(1,Math.floor(oct/n)); return Array.from({length:n},(_,i)=>{ const a=lo+i*per*12, b=i===n-1?hi:a+per*12-1; return [a,b]; }); }
 const qzMidiName=m=>qzRoots()[m%12]+(Math.floor(m/12)-1);
 const QZ_BOTS=["Robo Mozart","Robo Chopin","Robo Bach"];
 const qzSafe = s => String(s==null?"":s).replace(/[\u0000-\u001f<>]/g,"").trim().slice(0,14);
@@ -4766,7 +4816,7 @@ function quizIn(dev,m){ if(S.settings.midiC!==false && (QZ.view==="end" || (QZ.v
   const pi=qzWho(dev,m); if(pi==null||pi<0 || QZ.picks[pi]!=null) return;
   const now=performance.now(), b=QZ.buf[pi]||(QZ.buf[pi]={notes:[],timer:0,at:0}); if(now-b.at>900) b.notes=[]; b.at=now; b.notes.push(m%12);
   clearTimeout(b.timer); b.timer=setTimeout(()=>{ const set=[...new Set(b.notes)].sort((a,c)=>a-c).join(",");
-    const k=QZ.ans.findIndex(a=>a.tg.pcs.slice().sort((x,y)=>x-y).join(",")===set); if(k<0) return; qzLocalPick(pi,k); },170); }
+    const k=QZ.ans.findIndex(a=>a.tg.pcs.slice().sort((x,y)=>x-y).join(",")===set); if(k<0){ b.notes=[]; return; } qzLocalPick(pi,k); },170); }
 // after the answer is shown: a lone C = next question; at the end: C or B = play again (a chord is ignored)
 function qzShortcut(m){ const b=QZ.sc||(QZ.sc={notes:[],t:0,at:0}), now=performance.now(); if(now-b.at>400) b.notes=[]; b.at=now; b.notes.push(m%12); clearTimeout(b.t);
   b.t=setTimeout(()=>{ if(b.notes.length!==1) return; const pc=b.notes[0];
@@ -4777,7 +4827,8 @@ function qzLocalPick(pi,k){ if(QZ.done||QZ.picks[pi]!=null) return; const ms=per
 function qzPick(pi,k,ms){ if(QZ.done||QZ.picks[pi]!=null||!QZ.ans[k]) return; const a=QZ.ans[k], p=QZ.players[pi], left=Math.max(0,1-ms/QZ.dur);
   QZ.picks[pi]=k; if(a.right){ const pts=100+Math.round(100*left); p.score+=pts; p.ok++; p.last=pts; } else p.last=0;
   const live=QZ.players.map((p,i)=>i).filter(i=>!QZ.players[i].gone);
-  const all = QZ.mode==="solo"||QZ.mode==="turn" || live.every(i=>QZ.picks[i]!=null);
+  const exp = QZ.mode==="solo"||QZ.mode==="turn" ? live.filter(i=>QZ.players[i].bot || i===qzWho("",0)) : live; // solo / turn: the human who answers and the bots
+  const all = exp.every(i=>QZ.picks[i]!=null);
   if(all && (QZ.mode!=="online"||NET.host)) qzReveal(); else renderQzPlay(); }
 function qzReveal(fromNet){ if(QZ.done) return; QZ.done=true; QZ.doneAt=performance.now(); qzClearTimers();
   if(QZ.mode==="online" && NET.host && !fromNet) netSend({type:"reveal",i:QZ.i});
@@ -4797,6 +4848,7 @@ function renderQzPlay(){ if(!QZ.q) return; const q=QZ.q, fr=S.settings.lang==="f
     b.querySelector(".qz-at").textContent=a.txt; b.querySelector(".qz-play b").textContent=a.tg.name;
     const who=b.querySelector(".qz-who"); QZ.players.forEach((p,i)=>{ if(QZ.picks[i]===k){ const d=document.createElement("i"); d.style.background=p.col; d.title=p.name; who.appendChild(d); } });
     b.onclick=()=>{ if(QZ.done) return; if(uiSound()) a.tg.mid.forEach((m,i)=>tone(m,i*.02,.7,.14));
+      if(QZ.mode==="zone") return; // one shared piano: a tap cannot tell who answered
       let pi = QZ.mode==="dev" ? QZ.players.findIndex(p=>!p.bot&&p.dev==="screen") : qzWho("screen",a.tg.mid[0]);
       if(QZ.mode==="dev" && pi<0) return; if(pi!=null && pi>=0) qzLocalPick(pi,k); };
     box.appendChild(b); });
@@ -4847,7 +4899,8 @@ function netDrop(ch){ try{ ch.untrack&&ch.untrack(); }catch(e){} try{ sb&&sb.rem
 function netLeave(){ if(NET.ch) netDrop(NET.ch); if(NET.lobby) netDrop(NET.lobby); clearTimeout(NET.searchT);
   Object.assign(NET,{ch:null,lobby:null,host:false,code:"",peers:[],searching:false,auto:false,state:"idle",err:""}); }
 // see how many people are on the online tab (and be ready to search)
-async function netLobbyPeek(){ if(NET.lobby) return; try{ const c=await netSb(); const lb=c.channel("pcq-lobby",{config:{broadcast:{self:false},presence:{key:netId()}}}); NET.lobby=lb;
+async function netLobbyPeek(){ if(NET.lobby) return; if(NET.lobbyP) return NET.lobbyP; NET.lobbyP=netLobbyOpen(); try{ await NET.lobbyP; } finally{ NET.lobbyP=null; } }
+async function netLobbyOpen(){ try{ const c=await netSb(); if(NET.lobby) return; const lb=c.channel("pcq-lobby",{config:{broadcast:{self:false},presence:{key:netId()}}}); NET.lobby=lb;
     lb.on("presence",{event:"sync"},()=>{ const ps=netPeersOf(lb); NET.online=ps.length; netPair(ps); if(page==="quiz"&&QZ.view==="setup") renderQzNet(); });
     lb.on("broadcast",{event:"match"},({payload:p})=>{ if(!p||p.b!==netId()||!NET.searching||typeof p.room!=="string"||!/^[A-Z2-9]{5}$/.test(p.room)) return;
       NET.searching=false; lb.track({id:netId(),name:netName(),lvl:levelInfo(S.xp).L,wait:false,at:Date.now()}); netJoin(p.room,false); });
@@ -4914,7 +4967,7 @@ $("qzJoin").addEventListener("click",()=>{ const code=$("qzCodeIn").value.toUppe
 $("qzCodeIn").addEventListener("keydown",e=>{ if(e.key==="Enter") $("qzJoin").click(); });
 $("qzRoomLeave").addEventListener("click",()=>{ if(NET.ch) netDrop(NET.ch); Object.assign(NET,{ch:null,host:false,code:"",peers:[],state:"idle",auto:false}); renderQzNet(); });
 $("qzRoomGo").addEventListener("click",netStartGame);
-$("qzCopy").addEventListener("click",()=>{ const link=location.origin+location.pathname+"#quiz-"+NET.code; const done=()=>{ $("qzCopy").textContent=t("qzCopied"); setTimeout(()=>{ $("qzCopy").textContent=t("qzCopyT"); },1800); };
+$("qzCopy").addEventListener("click",()=>{ const link=SITE_URL()+"#quiz-"+NET.code; const done=()=>{ $("qzCopy").textContent=t("qzCopied"); setTimeout(()=>{ $("qzCopy").textContent=t("qzCopyT"); },1800); };
   try{ navigator.clipboard.writeText(link).then(done,()=>{}); }catch(e){} });
 $("qzSearchBtn").addEventListener("click",netSearch);
 $("qzSearchCancel").addEventListener("click",netStopSearch);
@@ -5001,9 +5054,10 @@ function playClose(){ const f=$("playFrame"); if(f.getAttribute("src")) f.remove
 function openPage(pg){
   if(needLogin(pg)){ lockFor=pg; pg="locked"; }
   if(pg===page && pg!=="practice" && pg!=="locked") return;
-  if(pg!=="games") runnerClose();
-  if(pg!=="quiz" && typeof QZ!=="undefined"){ qzClearTimers(); if(QZ.view==="play"){ QZ.view="setup"; QZ.done=true; } if(NET.ch||NET.lobby) netLeave(); }
-  if(pg==="play") playOpen(); else playClose();
+  const info=INFO_PAGES.includes(pg);
+  if(pg!=="games" && !info) runnerClose();
+  if(pg!=="quiz" && !info && typeof QZ!=="undefined"){ qzClearTimers(); if(QZ.view==="play"){ QZ.view="setup"; QZ.done=true; } if(NET.ch||NET.lobby) netLeave(); }
+  if(pg==="play") playOpen(); else if(!info) playClose();
   const toInfo = INFO_PAGES.includes(pg) && !INFO_PAGES.includes(page);
   const backFromInfo = INFO_PAGES.includes(page) && returnPage && pg===returnPage;
   if(toInfo){ returnPage=page; pauseRound(); }
@@ -5076,7 +5130,7 @@ async function setUser(u){
   if(u){
     if(S.ownerId && S.ownerId!==u.id){
       // another account signs in on this device: its progress must not inherit the previous owner's (settings stay)
-      S={...clone(DEFAULTS), settings:S.settings, introSeen:S.introSeen, langV2:true, ownerId:u.id};
+      S={...clone(DEFAULTS), settings:S.settings, introSeen:S.introSeen, langV2:true, ownerId:u.id, gate:S.gate, onb:S.onb, tourDone:S.tourDone};
       try{ localStorage.setItem(STORE, JSON.stringify(S)); }catch(e){}
       renderStatus(); render(); renderDaily();
     }
@@ -5110,6 +5164,7 @@ function mergeState(local, cloud){
   if(m.daily==null) delete m.daily; if(m.dailyPlan==null) delete m.dailyPlan; if(m.dailyRun==null) delete m.dailyRun;
   m.seenTypes=[...new Set([...(Array.isArray(local.seenTypes)?local.seenTypes:[]), ...(Array.isArray(c.seenTypes)?c.seenTypes:[])])];
   m.introSeen={...(isObj(c.introSeen)?c.introSeen:{}), ...(isObj(local.introSeen)?local.introSeen:{})};
+  if(!(isObj(m.onb)&&m.onb.done) && isObj(c.onb)) m.onb=c.onb; if(!m.tourDone && c.tourDone) m.tourDone=c.tourDone; if(m.eloStart==null && c.eloStart!=null) m.eloStart=c.eloStart;
   m.profileName=c.profileName||local.profileName; if(!m.profileName) delete m.profileName;
   m.settings={...(isObj(local.settings)?local.settings:{})}; // this device's settings win
   return {merged:m, changed:JSON.stringify(m)!==JSON.stringify(local)};
@@ -5128,8 +5183,8 @@ async function cloudPull(){
       try{ localStorage.setItem(STORE, JSON.stringify(S)); stored=true; }catch(e){}
       try{ await cloudPushNow(); }catch(e){}
       // reload only when the merged state could be written (#36) and no exercise is running; otherwise apply in memory
-      if(stored && phase==="idle" && !game){ location.reload(); return; }
-      renderSettings(); render(); renderDaily(); if(page==="account") renderAccount();
+      if(stored && phase==="idle" && !game && !startUI()){ location.reload(); return; }
+      renderSettings(); render(); renderDaily(); if(page==="account") renderAccount(); try{ ntfBadge(); }catch(e){}
       return;
     }
   }
@@ -5147,7 +5202,7 @@ async function cloudPushNow(){
 async function cloudPushRaw(){
   const li=levelInfo(S.xp), solved=Object.values(S.secStats||{}).reduce((a,x)=>a+(x.ok||0),0), now=new Date().toISOString();
   const r1=await sb.from("progress").upsert({user_id:user.id, data:S, updated_at:now});
-  const r2=await sb.from("profiles").upsert({id:user.id, name:myName().slice(0,24), avatar:charIndex(li.L), photo:userPhoto()||null, xp:S.xp, level:li.L, streak:S.streak.days, solved, updated_at:now});
+  const r2=await sb.from("profiles").upsert({id:user.id, name:myName().slice(0,24), avatar:charIndex(li.L), photo:userPhoto()||null, xp:S.xp, level:li.L, streak:effStreak(), solved, updated_at:now});
   if(r1.error||r2.error) throw (r1.error||r2.error);
   // XP earned per day (last 7 days) feeds the day / week / month / year leaderboards
   const since=addDays(-7), today=dayStr();
@@ -5159,7 +5214,7 @@ async function cloudPushRaw(){
     let ok=true;
     for(const [day,xp] of todo){
       const delta=Math.max(0,Math.min(3000,Math.round(+xp||0)-(pushed[day]||0)));
-      const r=await sb.rpc("add_xp",{delta, day, streak:S.streak.days, solved});
+      const r=await sb.rpc("add_xp",{delta, day, streak:effStreak(), solved});
       if(r.error){ if(r.error.code==="PGRST202" || /could not find the function|does not exist|schema cache/i.test(r.error.message||"")){ addXpRpc=false; ok=false; break; } throw r.error; }
       pushed[day]=Math.max(pushed[day]||0, Math.round(+xp||0));
     }
@@ -5561,7 +5616,7 @@ let helpOpen=false, pausedLeft=0, tutI=0;
 // any window open: freeze the countdown and auto-advance, keep focus inside the window
 let paused=false, pendingAdv=false, modalFocus=[];
 function anyWin(){ return helpOpen||midiOpen||endOpen||openMods.length>0; }
-function anyModal(){ return anyWin()||INFO_PAGES.includes(page); }
+function anyModal(){ return anyWin()||INFO_PAGES.includes(page)||(typeof startUI==="function"&&startUI()); }
 function pauseRound(){ if(!paused && phase==="listening"){ cancelAnimationFrame(raf); pausedLeft = deadline ? Math.max(0,deadline-performance.now()) : 0; paused=true; } }
 function resumeRound(){
   if(anyModal()) return;
@@ -5681,10 +5736,24 @@ $("helpBody").addEventListener("pointerdown",e=>{ swipeX=e.clientX; });
 $("helpBody").addEventListener("pointerup",e=>{ if(swipeX==null) return; const dx=e.clientX-swipeX; swipeX=null;
   if(Math.abs(dx)>50){ if(dx<0 && tutI<t("tut").length-1) tutGo(1); else if(dx>0) tutGo(-1); } });
 
+// ---------- Unsubscribe link of an e-mail (?unsub=<token>&k=<kind>): ask, then tell the server ----------
+const UNSUB = (()=>{ const q=new URLSearchParams(location.search), tk=q.get("unsub"), k=q.get("k")||"all";
+  if(!tk || !/^[0-9a-f-]{36}$/i.test(tk)) return null; history.replaceState(null,"",location.pathname+location.hash); return {tk, k:["weekly","streak","social","news","all"].includes(k)?k:"all"}; })();
+function unsubOpen(){ if(!UNSUB) return; const o=document.createElement("div"); o.className="onb"; o.id="unsubBox"; o.setAttribute("role","dialog"); o.setAttribute("aria-modal","true");
+  const what=t("unsubWhat")[UNSUB.k]||t("unsubWhat").all;
+  o.innerHTML='<div class="onb-card unsub-card"><div class="onb-body"><span class="onb-ic">'+OBJ.bell()+'</span><h2 class="onb-h"></h2><p class="onb-sub"></p></div><div class="onb-foot"><button class="gt-go" type="button" id="unsubGo"></button><button class="gt-link" type="button" id="unsubNo"></button></div></div>';
+  o.querySelector(".onb-h").textContent=t("unsubT"); o.querySelector(".onb-sub").textContent=t("unsubQ")(what);
+  document.body.appendChild(o); $("unsubGo").textContent=t("unsubYes"); $("unsubNo").textContent=t("unsubKeep");
+  const done=txt=>{ o.querySelector(".onb-sub").textContent=txt; $("unsubGo").textContent=t("unsubClose"); $("unsubGo").onclick=()=>o.remove(); $("unsubNo").hidden=true; };
+  $("unsubNo").onclick=()=>o.remove();
+  $("unsubGo").onclick=async()=>{ $("unsubGo").disabled=true;
+    try{ const r=await fetch(SUPA_URL+"/functions/v1/notify?unsub="+encodeURIComponent(UNSUB.tk)+"&k="+UNSUB.k,{method:"POST"}); const j=await r.json(); $("unsubGo").disabled=false; done(j&&j.ok?t("unsubDone"):t("unsubBad")); }
+    catch(e){ $("unsubGo").disabled=false; done(t("cloudErr")); } }; }
+setTimeout(unsubOpen,500);
 // ---------- Start: sign-in screen, onboarding (5 questions that set the app up), guided tour ----------
 // Shown once: S.gate = "guest" | "account" once passed; S.onb = {done, why, level, how, cont}; S.tourDone. Each step can be skipped.
 const GATE={mode:"signup", busy:false, msg:"", err:false, otp:false, sent:false, email:"", confirm:false};
-function gateNeeded(){ return !S.gate && !hasSession() && !/^#(quiz|duel)-/.test(location.hash||""); }
+function gateNeeded(){ return !S.gate && !hasSession() && !/^#(quiz|duel)-/.test(location.hash||"") && !UNSUB; }
 function gateArt(){ // the right half: night scene with the 3D objects, level characters and the piano character
   const av=i=>'<span class="gt-av" style="--i:'+i+'">'+avatarSVG(i)+'</span>';
   return '<div class="gt-art" aria-hidden="true"><div class="gt-glow"></div>'
@@ -5693,10 +5762,21 @@ function gateArt(){ // the right half: night scene with the 3D objects, level ch
     +'<div class="gt-big"><b>'+esc(t("gtBig"))+'</b><span>'+esc(t("gtBigSub"))+'</span></div>'
     +'<span class="gt-hero">'+OBJ.runner()+'</span>'
     +'<ul class="gt-pts">'+t("gtPoints").map(x=>'<li>'+esc(x)+'</li>').join("")+'</ul></div>'; }
+// the start screens cover the app: it does not take the keyboard, MIDI or the Tab key while they are open
+const startUI = () => document.body.classList.contains("gate-on") || !!($("tour") && !$("tour").hidden);
+function startInert(){ const on=document.body.classList.contains("gate-on"); [$("side"),$("shell")].forEach(e=>{ if(e) e.inert=on; }); }
+const SITE_URL = () => isApp() || !/^https?:/.test(location.protocol) ? "https://pianochallenges.com/" : location.origin+location.pathname;
+// keys typed on the start screens stay there (fields keep working: only the app's shortcuts are stopped)
+document.addEventListener("keydown",e=>{ if(document.body.classList.contains("gate-on")) e.stopImmediatePropagation(); },true);
 function gateOpen(){ let g=$("gate"); if(!g){ g=document.createElement("div"); g.id="gate"; g.className="gate"; g.setAttribute("role","dialog"); g.setAttribute("aria-modal","true"); document.body.appendChild(g); }
-  document.body.classList.add("gate-on"); g.hidden=false; gateRender(); ensureCloud().then(()=>{ if(!$("gate").hidden) gateRender(); }).catch(()=>{}); }
-function gateClose(){ const g=$("gate"); if(g) g.hidden=true; document.body.classList.remove("gate-on"); }
-function gateRender(){ const g=$("gate"), m=GATE.mode, mark=$("homeLink").querySelector("svg").outerHTML;
+  document.body.classList.add("gate-on"); startInert(); g.hidden=false; gateRender(); gateConnect();
+  if(matchMedia("(pointer:fine)").matches) setTimeout(()=>($("gtName")||$("gtEmail"))?.focus(),50); }
+// the buttons wait for the sign-in service; offline: a message and "try again"
+function gateConnect(){ ensureCloud().then(()=>{ if(!$("gate")||$("gate").hidden) return; if(cloudFail){ GATE.msg=t("cloudErr"); GATE.err=true; GATE.retry=true; }
+    else { GATE.retry=false; if(GATE.msg===t("cloudErr")) GATE.msg=""; } gateRender(); }).catch(()=>{}); }
+function gateClose(){ const g=$("gate"); if(g) g.hidden=true; document.body.classList.remove("gate-on"); startInert(); }
+function gateKeep(){ ["Email","Name"].forEach(k=>{ const e=$("gt"+k); if(e) GATE[k==="Email"?"email":"name"]=e.value.trim(); }); } // keep what was typed through a re-render
+function gateRender(){ gateKeep(); const g=$("gate"), m=GATE.mode, mark=$("homeLink").querySelector("svg").outerHTML;
   g.innerHTML='<div class="gt-card"><div class="gt-form"><div class="gt-top"><span class="gt-logo">'+mark+'<b>Piano Challenges</b></span><button class="gt-lang" type="button" id="gtLang">'+(S.settings.lang==="fr"?"EN":"FR")+'</button></div>'
     +'<h2 class="gt-h"></h2><div class="seg gt-tabs"><button type="button" data-m="signup"></button><button type="button" data-m="login"></button></div>'
     +'<form class="gt-f" id="gtForm" novalidate></form><p class="gt-msg" id="gtMsg" role="status"></p>'
@@ -5717,17 +5797,19 @@ function gateField(f, type, ph, val, ac, id){ const i=document.createElement("in
 function gateForm(){ const f=$("gtForm"); f.innerHTML=""; const m=GATE.mode;
   const msg=$("gtMsg"); msg.textContent=GATE.msg||""; msg.className="gt-msg"+(GATE.err?" err":GATE.msg?" ok":"");
   if(!sb && !cloudFail){ const p=document.createElement("p"); p.className="gt-wait"; p.textContent=t("rankLoading"); f.appendChild(p); }
+  if(GATE.retry){ const r=document.createElement("button"); r.type="button"; r.className="gt-link"; r.textContent=t("gtRetry"); r.onclick=()=>{ cloudPromise=null; cloudFail=false; GATE.msg=""; GATE.err=false; GATE.retry=false; gateRender(); gateConnect(); }; f.appendChild(r); }
   if(GATE.otp || GATE.confirm){ // code received by e-mail (sign-in without password, or the confirmation of a new account)
     const p=document.createElement("p"); p.className="gt-note"; p.textContent = GATE.sent ? t("codeSent")(GATE.email) : t("gtOtpIntro"); f.appendChild(p);
     const em=GATE.sent?null:gateField(f,"email",t("emailPh"),GATE.email,"email","gtEmail");
     const cd=GATE.sent?gateField(f,"text",t("codePh"),"","one-time-code","gtCode"):null; if(cd){ cd.inputMode="numeric"; cd.maxLength=10; }
     const b=document.createElement("button"); b.type="submit"; b.className="gt-go"; b.textContent=GATE.sent?t("verify"):t("sendCode"); b.disabled=GATE.busy||!sb; f.appendChild(b);
     const back=document.createElement("button"); back.type="button"; back.className="gt-link"; back.textContent=t("gtBackPwd"); back.onclick=()=>{ Object.assign(GATE,{otp:false,sent:false,confirm:false,msg:"",err:false}); gateRender(); }; f.appendChild(back);
-    f.onsubmit=async e=>{ e.preventDefault(); if(!sb) return; GATE.busy=true; gateForm();
+    f.onsubmit=async e=>{ e.preventDefault(); if(!sb) return; GATE.busy=true; gateForm(); try{
       if(!GATE.sent){ GATE.email=em.value.trim(); const {error}=await sb.auth.signInWithOtp({email:GATE.email, options:{shouldCreateUser:true, emailRedirectTo: isApp()?undefined:location.origin+location.pathname}});
         GATE.busy=false; if(error){ GATE.msg=authMsg(error); GATE.err=true; } else { GATE.sent=true; GATE.msg=""; GATE.err=false; } gateRender(); return; }
       const token=cd.value.replace(/\D/g,""); const {error}=await sb.auth.verifyOtp({email:GATE.email, token, type:GATE.confirm?"signup":"email"});
-      GATE.busy=false; if(error){ GATE.msg=authMsg(error); GATE.err=true; gateRender(); } }; // success: setUser() closes the gate
+      GATE.busy=false; if(error){ GATE.msg=authMsg(error); GATE.err=true; gateRender(); }
+      }catch(err){ GATE.busy=false; GATE.msg=authMsg(err); GATE.err=true; gateRender(); } }; // success: setUser() closes the gate
     return; }
   const name = m==="signup" ? gateField(f,"text",t("gtName"),GATE.name,"nickname","gtName") : null; if(name) name.maxLength=24;
   const em=gateField(f,"email",t("emailPh"),GATE.email,"email","gtEmail");
@@ -5742,17 +5824,23 @@ function gateForm(){ const f=$("gtForm"); f.innerHTML=""; const m=GATE.mode;
     const bad = !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(GATE.email) ? "gtBadMail" : pw.value.length<8 ? "gtBadPwd" : m==="signup"&&!ok.checked ? "gtNeedOk" : "";
     if(bad){ GATE.msg=t(bad); GATE.err=true; gateForm(); return; }
     GATE.busy=true; GATE.msg=""; gateForm();
-    try{ if(m==="signup"){ if(GATE.name){ S.profileName=GATE.name.slice(0,24); save(); }
+    try{ if(m==="signup"){
         const {data,error}=await sb.auth.signUp({email:GATE.email, password:pw.value, options:{data:{name:GATE.name||undefined}, emailRedirectTo: isApp()?undefined:location.origin+location.pathname}}); if(error) throw error;
+        if(data.user && Array.isArray(data.user.identities) && !data.user.identities.length) throw new Error("already registered"); // Supabase does not say it otherwise
+        if(GATE.name){ S.profileName=GATE.name.slice(0,24); save(); }
         if(!data.session){ Object.assign(GATE,{confirm:true,sent:true,busy:false,msg:t("gtConfirm")(GATE.email),err:false}); gateRender(); return; } }
       else { const {error}=await sb.auth.signInWithPassword({email:GATE.email, password:pw.value}); if(error) throw error; }
       GATE.busy=false; // setUser() closes the gate
     }catch(err){ GATE.busy=false; const s=String(err&&err.message||""); GATE.msg = /invalid login|credentials/i.test(s) ? t("gtBadLogin") : /already registered|already exists/i.test(s) ? t("gtExists") : /not confirmed/i.test(s) ? t("gtNotConfirmed") : authMsg(err); GATE.err=true; gateRender(); } }; }
-async function gateOAuth(pv){ if(!sb) return; GATE.msg=""; try{ await oauthLogin(pv); }catch(e){}
+async function gateOAuth(pv){ if(!sb) return; GATE.msg=""; gateKeep();
+  if(pv!=="google"){ let on=false; try{ const r=await fetch(SUPA_URL+"/auth/v1/settings",{headers:{apikey:SUPA_KEY}}); const j=await r.json(); on=!!(j&&j.external&&j.external[pv]); }catch(e){}
+    if(!on){ GATE.msg=t("gtSoonProv"); GATE.err=true; gateRender(); return; } }
+  try{ await oauthLogin(pv); }catch(e){}
   if(loginStep.err && loginStep.msg){ GATE.msg = /not enabled|unsupported provider|provider/i.test(loginStep.msg) ? t("gtSoonProv") : loginStep.msg; GATE.err=true; loginStep.msg=""; loginStep.err=false; gateRender(); } }
 function gateGuest(){ S.gate="guest"; save(); gateClose(); startFlow(); }
 // after the gate: the onboarding questions, then the tour
-function startFlow(){ if(!(S.onb&&S.onb.done)) onbOpen(); else if(!S.tourDone) tourStart(); else maybeAskInput(); }
+let deepLink=/^#(quiz|duel)-/.test(location.hash||"") || !!UNSUB;
+function startFlow(){ if(deepLink) return; if(!(S.onb&&S.onb.done)) onbOpen(); else if(!S.tourDone) tourStart(); else maybeAskInput(); }
 
 // ---------- Onboarding ----------
 const ONB={i:0, a:{why:[], level:null, how:null, cont:null}};
@@ -5763,8 +5851,8 @@ function onbQs(){ return [
   {k:"cont", opts:[["notes","star"],["chords","harmony"]]},
   {k:"friends"} ]; }
 function onbOpen(){ let o=$("onb"); if(!o){ o=document.createElement("div"); o.id="onb"; o.className="onb"; o.setAttribute("role","dialog"); o.setAttribute("aria-modal","true"); document.body.appendChild(o); }
-  o.hidden=false; document.body.classList.add("gate-on"); ONB.i=0; onbRender(); }
-function onbClose(){ $("onb").hidden=true; document.body.classList.remove("gate-on"); }
+  o.hidden=false; document.body.classList.add("gate-on"); startInert(); ONB.i=0; onbRender(); }
+function onbClose(){ $("onb").hidden=true; document.body.classList.remove("gate-on"); startInert(); }
 function onbRender(){ const o=$("onb"), Q=onbQs(), n=Q.length, i=ONB.i, fin=i>=n;
   o.innerHTML='<div class="onb-card"><div class="onb-top"><button class="onb-back" type="button" id="onbBack"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></button><div class="onb-bar"><i></i></div><button class="gt-link onb-skip" type="button" id="onbSkip"></button></div>'
     +'<div class="onb-body"><p class="onb-k"></p><h2 class="onb-h"></h2><p class="onb-sub"></p><div class="onb-opts" id="onbOpts"></div></div><div class="onb-foot"><button class="gt-go onb-next" type="button" id="onbNext"></button></div></div>';
@@ -5773,10 +5861,11 @@ function onbRender(){ const o=$("onb"), Q=onbQs(), n=Q.length, i=ONB.i, fin=i>=n
   const box=$("onbOpts"), next=$("onbNext");
   if(fin){ o.querySelector(".onb-k").textContent=t("onbDoneK"); o.querySelector(".onb-h").textContent=t("onbDoneH"); o.querySelector(".onb-sub").textContent=t("onbDoneSub");
     box.className="onb-sum"; onbSummary().forEach(([ic,tx])=>{ const d=document.createElement("div"); d.className="onb-li"; d.innerHTML='<span class="onb-ic">'+OBJ[ic]()+'</span><span></span>'; d.lastChild.textContent=tx; box.appendChild(d); });
+    if(ONB.redo){ next.textContent=t("onbFinishT"); next.onclick=()=>{ ONB.redo=false; onbFinish(false,true); }; $("onbSkip").hidden=true; return; }
     next.textContent=t("onbTour"); next.onclick=()=>onbFinish(false);
     const sk=document.createElement("button"); sk.type="button"; sk.className="gt-link"; sk.id="onbNoTour"; sk.textContent=t("onbNoTour"); sk.onclick=()=>{ S.tourDone=1; onbFinish(false,true); }; o.querySelector(".onb-foot").appendChild(sk); $("onbSkip").hidden=true; return; }
   const q=Q[i]; o.querySelector(".onb-k").textContent=t("onbStep")(i+1,n); o.querySelector(".onb-h").textContent=t("onbQ_"+q.k); o.querySelector(".onb-sub").textContent=t("onbS_"+q.k);
-  if(q.k==="friends"){ box.className="onb-friends"; const link=location.origin+"/?ref="+netId();
+  if(q.k==="friends"){ box.className="onb-friends"; const link="https://pianochallenges.com/?ref="+netId();
     box.innerHTML='<div class="onb-avs">'+[1,3,5].map(x=>'<span class="gt-av">'+avatarSVG(x)+'</span>').join("")+'</div><div class="onb-link"><input readonly class="mono"><button class="btn" type="button" id="onbCopy"></button></div><button class="gt-go onb-share" type="button" id="onbShare"></button>';
     box.querySelector("input").value=link; $("onbCopy").textContent=t("qzCopyT"); $("onbShare").textContent=t("onbShare");
     $("onbCopy").onclick=()=>{ try{ navigator.clipboard.writeText(link).then(()=>{ $("onbCopy").textContent=t("qzCopied"); },()=>{}); }catch(e){} };
@@ -5792,46 +5881,52 @@ function onbRender(){ const o=$("onb"), Q=onbQs(), n=Q.length, i=ONB.i, fin=i>=n
 const ONB_ELO={debut:600, notes:800, simple:1000, adv:1200};
 function onbApply(){ const a=ONB.a, st=S.settings;
   if(a.level){ const L=a.level; st.guideK = L==="debut"; st.labels = L==="debut"||L==="notes"; st.fing = L!=="adv"; st.guideP = L!=="adv"; st.guideN = false;
-    if(L==="adv") st.unlockAll=true; S.eloStart=ONB_ELO[L]; }
+    st.unlockAll = L==="adv"; S.eloStart=ONB_ELO[L]; }
   if(a.cont){ st.gmCont=a.cont; st.duCont=a.cont; st.scMode=a.cont==="chords"?"chords":"notes"; st.quiz={...(st.quiz||{}), ans:a.cont}; }
   S.onb={done:1, why:a.why, level:a.level, how:a.how, cont:a.cont, at:Date.now()}; save(); renderSettings(); render();
-  if(a.how) setInput(a.how,true); }
+  if(a.how) ONB.pendIn=a.how; } // applied once the onboarding and the tour are closed (the MIDI window must not open under them)
+function onbInput(){ const v=ONB.pendIn; ONB.pendIn=null; if(v) setInput(v,true); else if(!S.settings.input) maybeAskInput(); }
 function onbSummary(){ const a=ONB.a, out=[], L=a.level;
   if(L) out.push(["learn", t("onbSumLevel")[L]]);
   if(a.how) out.push([{midi:"games",mic:"bell",screen:"play"}[a.how], t("onbSumHow")[a.how]]);
   if(a.cont) out.push([a.cont==="chords"?"harmony":"star", t("onbSumCont")[a.cont]]);
   const w=a.why; if(w.includes("songs")) out.push(["play", t("onbSumWhy").songs]); else if(w.includes("theory")||w.includes("school")) out.push(["scales", t("onbSumWhy").theory]); else if(w.length) out.push(["daily", t("onbSumWhy").fun]);
   if(!out.length) out.push(["daily", t("onbSumWhy").fun]); return out; }
-function onbFinish(skipped, noTour){ if(skipped) S.onb={done:1, skipped:1, at:Date.now()}; else onbApply(); save(); onbClose();
-  const w=(S.onb&&S.onb.why)||[]; if(!skipped) openPage(w.includes("songs")?"free":"hub");
-  if(!noTour && !S.tourDone) tourStart(); else if(!S.onb.how) maybeAskInput(); }
+function onbFinish(skipped, noTour){ if(skipped) S.onb={...(S.onb&&S.onb.done?S.onb:{}), done:1, skipped:1, at:Date.now()}; else onbApply(); save(); onbClose();
+  const w=(!skipped&&S.onb&&S.onb.why)||[]; TOUR.after = w.includes("songs") ? "free" : null;
+  if(!noTour && !S.tourDone) tourStart(); else { if(TOUR.after){ openPage(TOUR.after); TOUR.after=null; } onbInput(); } }
 
 // ---------- Guided tour: a bubble on each part of the app (next / close) ----------
 const TOUR={i:0, steps:[]};
 function tourSteps(){ return [["#modeNav [data-mode=learn]","learn"],["#modeNav [data-mode=games]","games"],["#modeNav [data-mode=play]","play"],["#modeNav [data-mode=quiz]","quiz"],
-  ["#dailyCard","daily"],["#lvlAv","level"],["#ntfBtn","ntf"],["#rankBtn","rank"],["#inChip","input"],["#setBtn","settings"]]; }
-function tourStart(){ if(page!=="hub") openPage("hub"); TOUR.steps=tourSteps(); TOUR.i=0; let o=$("tour"); if(!o){ o=document.createElement("div"); o.id="tour"; o.className="tour"; document.body.appendChild(o);
+  ["#hsDaily","daily"],["#lvlAv","level"],["#ntfBtn","ntf"],["#rankBtn","rank"],["#inChip","input"],["#setBtn","settings"]]; }
+const menuIsDrawer = () => !!($("menuBtn") && $("menuBtn").offsetParent);
+function tourStart(){ if(page!=="hub" && !(NET.ch||NET.lobby||DU.ch||DU.mode)) openPage("hub"); TOUR.steps=tourSteps(); TOUR.i=0; let o=$("tour"); if(!o){ o=document.createElement("div"); o.id="tour"; o.className="tour"; document.body.appendChild(o);
     o.innerHTML='<div class="tour-hole" id="tourHole"></div><div class="tour-tip" id="tourTip" role="dialog" aria-live="polite"><button class="tour-x" type="button" id="tourX"></button><p class="tour-k" id="tourK"></p><h3 id="tourH"></h3><ul id="tourL"></ul><div class="tour-foot"><button class="gt-link" type="button" id="tourSkip"></button><button class="btn" type="button" id="tourPrev"></button><button class="btn primary" type="button" id="tourNext"></button></div></div>';
     $("tourX").innerHTML="×"; $("tourX").onclick=tourEnd; $("tourSkip").onclick=tourEnd; $("tourNext").onclick=()=>tourGo(1); $("tourPrev").onclick=()=>tourGo(-1);
-    addEventListener("resize",()=>{ if(!$("tour").hidden) tourShow(); }); document.addEventListener("keydown",e=>{ if($("tour").hidden) return; if(e.key==="Escape") tourEnd(); else if(e.key==="ArrowRight") tourGo(1); else if(e.key==="ArrowLeft") tourGo(-1); },true); }
-  o.hidden=false; if(phoneMQ.matches) openDrawer(); setTimeout(tourShow,phoneMQ.matches?320:0); }
+    addEventListener("resize",()=>{ if(!$("tour").hidden) tourShow(); }); document.addEventListener("keydown",e=>{ if($("tour").hidden) return; const k=e.key;
+      if(k==="Escape"||k==="ArrowRight"||k==="ArrowLeft"){ e.preventDefault(); if(k==="Escape") tourEnd(); else tourGo(k==="ArrowRight"?1:-1); }
+      else if(!(e.target.closest && e.target.closest("#tour"))) e.preventDefault(); // nothing reaches the app behind the tour
+      e.stopImmediatePropagation(); },true); }
+  o.hidden=false; const dr=menuIsDrawer(); if(dr) openDrawer(); setTimeout(tourShow,dr?340:0); }
 function tourGo(d){ const n=TOUR.steps.length; TOUR.i+=d; if(TOUR.i>=n){ tourEnd(); return; } TOUR.i=Math.max(0,TOUR.i); tourShow(); }
-function tourEnd(){ $("tour").hidden=true; S.tourDone=1; save(); closeDrawer(); if(!S.settings.input) maybeAskInput(); }
+function tourEnd(){ $("tour").hidden=true; S.tourDone=1; save(); closeDrawer(); if(TOUR.after){ openPage(TOUR.after); TOUR.after=null; } onbInput(); }
 function tourShow(){ const st=TOUR.steps[TOUR.i]; if(!st) return tourEnd(); const el=document.querySelector(st[0]);
   if(!el || !el.getClientRects().length){ TOUR.steps.splice(TOUR.i,1); return tourShow(); }
+  try{ el.scrollIntoView({block:"nearest",inline:"nearest"}); }catch(e){}
   const r=el.getBoundingClientRect(), pad=6, hole=$("tourHole"), tip=$("tourTip"), n=TOUR.steps.length;
   Object.assign(hole.style,{left:(r.left-pad)+"px",top:(r.top-pad)+"px",width:(r.width+pad*2)+"px",height:(r.height+pad*2)+"px"});
   $("tourK").textContent=(TOUR.i+1)+" / "+n; const d=t("tourT")[st[1]]; $("tourH").textContent=d[0];
   const ul=$("tourL"); ul.innerHTML=""; d[1].forEach(x=>{ const li=document.createElement("li"); li.textContent=x; ul.appendChild(li); });
   $("tourNext").textContent = TOUR.i===n-1 ? t("tourDone") : t("onbNextT"); $("tourPrev").textContent=t("onbPrev"); $("tourPrev").hidden=!TOUR.i; $("tourSkip").textContent=t("tourSkipT"); $("tourX").setAttribute("aria-label",t("close"));
   // place the bubble next to the element: on the right of the menu, otherwise below / above
-  const W=innerWidth, H=innerHeight; tip.style.maxWidth=Math.min(340,W-24)+"px"; const tw=Math.min(340,W-24), th=tip.offsetHeight||200; let x,y; tip.dataset.side="";
-  if(r.right+16+tw<W && r.left<W/2){ x=r.right+16; y=Math.max(12,Math.min(H-th-12, r.top+r.height/2-th/2)); tip.dataset.side="right"; }
+  const W=document.documentElement.clientWidth, H=innerHeight; tip.style.maxWidth=Math.min(340,W-24)+"px"; const tw=Math.min(340,W-24), th=tip.offsetHeight||200; let x,y; tip.dataset.side="";
+  if(r.right+16+tw<W && r.left<W/2 && r.right>0){ x=r.right+16; y=Math.max(12,Math.min(H-th-12, r.top+r.height/2-th/2)); tip.dataset.side="right"; }
   else if(r.bottom+16+th<H){ x=Math.max(12,Math.min(W-tw-12, r.left+r.width/2-tw/2)); y=r.bottom+14; tip.dataset.side="below"; }
   else { x=Math.max(12,Math.min(W-tw-12, r.left+r.width/2-tw/2)); y=Math.max(12,r.top-th-14); tip.dataset.side="above"; }
-  tip.style.left=x+"px"; tip.style.top=y+"px"; $("tourNext").focus({preventScroll:true}); }
+  x=Math.max(12,Math.min(W-tw-12,x)); tip.style.left=x+"px"; tip.style.top=y+"px"; $("tourNext").focus({preventScroll:true}); }
 $("tourAgain").addEventListener("click",()=>{ S.tourDone=0; save(); tourStart(); });
-$("onbAgain").addEventListener("click",()=>{ ONB.a={why:[],level:null,how:null,cont:null}; S.tourDone=1; onbOpen(); });
+$("onbAgain").addEventListener("click",()=>{ ONB.a={why:[],level:null,how:null,cont:null}; ONB.redo=true; onbOpen(); });
 
 // ---------- Boot ----------
 
@@ -5841,9 +5936,10 @@ setTimeout(()=>{ if(hasSession()) ensureCloud(); }, 400);
 const mobileWeb = (phoneMQ.matches||railMQ.matches) && !document.documentElement.classList.contains("native");
 document.body.classList.add("guest");
 restoreInput();
-if(gateNeeded()){ save(); gateOpen(); }
-else if(!(S.onb&&S.onb.done) || !S.tourDone){ save(); setTimeout(startFlow, document.documentElement.classList.contains("native")?1700:300); }
-else maybeAskInput();
+{ const nat=isApp(), wait=nat?1600:300;
+  if(gateNeeded()){ save(); if(nat) setTimeout(gateOpen,wait); else gateOpen(); }
+  else if(!(S.onb&&S.onb.done) || !S.tourDone){ save(); if(hasSession()) ensureCloud().finally(()=>setTimeout(startFlow,wait)); else setTimeout(startFlow,wait); }
+  else maybeAskInput(); }
 })();
 </script>
 
