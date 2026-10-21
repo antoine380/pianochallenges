@@ -47,6 +47,7 @@ img{max-width:100%}
   --shadow-card:0 18px 40px -20px rgba(70,60,160,.35); --shadow-float:0 30px 80px -24px rgba(70,60,160,.45);
   --note-0:#ff5a6e; --note-2:#ff9a3c; --note-4:#ffd23f; --note-5:#3ddc84; --note-7:#3cc8f0; --note-9:#5b7cff; --note-11:#b26bff;
   --r-sm:10px; --r-md:16px; --r-lg:24px; --r-xl:32px;
+  --ease-out:cubic-bezier(0.23,1,0.32,1); --ease-in-out:cubic-bezier(0.77,0,0.175,1); --ease-drawer:cubic-bezier(0.32,0.72,0,1); --ease-pop:cubic-bezier(.3,1.6,.5,1); /* motion: entrances, on-screen moves, drawer, rare celebrations only */
   --f-display:"Fredoka", "Nunito", "Avenir Next Rounded", system-ui, sans-serif;
   --f-body:"Nunito", "Avenir Next", "Segoe UI", system-ui, sans-serif;
   --f-mono:"Nunito", "Avenir Next", "Segoe UI", system-ui, sans-serif;
@@ -99,7 +100,7 @@ button:focus-visible, select:focus-visible, input:focus-visible, summary:focus-v
 .modal{position:fixed;inset:0;z-index:40;display:flex;align-items:center;justify-content:center;
   padding:calc(16px + env(safe-area-inset-top, 0px)) max(16px, env(safe-area-inset-right, 0px)) calc(16px + env(safe-area-inset-bottom, 0px)) max(16px, env(safe-area-inset-left, 0px))}
 .modal-bg{position:absolute;inset:0;background:var(--scrim)}
-.modal-card{position:relative;background:var(--glass);-webkit-backdrop-filter:blur(18px);backdrop-filter:blur(18px);border:0;box-shadow:inset 0 0 0 1px var(--glass-edge),var(--shadow-float);border-radius:var(--r-lg);width:min(620px,100%);max-height:100%;display:flex;flex-direction:column;animation:pop .25s ease}
+.modal-card{position:relative;background:var(--glass);-webkit-backdrop-filter:blur(18px);backdrop-filter:blur(18px);border:0;box-shadow:inset 0 0 0 1px var(--glass-edge),var(--shadow-float);border-radius:var(--r-lg);width:min(620px,100%);max-height:100%;display:flex;flex-direction:column;animation:pop 220ms var(--ease-out)}
 .modal-head{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:16px 20px;border-bottom:1px solid var(--line)}
 .modal-head h2{font-family:var(--f-display);font-weight:800;font-size:1.3rem;margin:0}
 .modal-close{border:1px solid transparent;background:var(--surface-2);border-radius:10px;width:44px;height:44px;font-size:1.4rem;line-height:1;flex:none}
@@ -108,7 +109,7 @@ button:focus-visible, select:focus-visible, input:focus-visible, summary:focus-v
 .modal-foot{padding:12px 20px;border-top:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;gap:12px}
 .tut-fig{background:var(--surface-2);border:1px solid transparent;border-radius:12px;padding:6px}
 .tut-svg{display:block;width:100%;height:auto;max-height:42vh}
-.tut-text{display:flex;flex-direction:column;gap:4px;animation:fade .25s ease}
+.tut-text{display:flex;flex-direction:column;gap:4px;animation:fade 200ms var(--ease-out)}
 .tut-step{margin:0;font-family:var(--f-mono);font-size:.75rem;color:var(--accent);text-transform:uppercase;letter-spacing:.08em}
 .tut-text h3{font-family:var(--f-display);font-weight:800;font-size:1.25rem;margin:0}
 .tut-text p:last-child{margin:0;max-width:60ch}
@@ -139,14 +140,14 @@ button:focus-visible, select:focus-visible, input:focus-visible, summary:focus-v
 .stat-txt{display:flex;flex-direction:column;line-height:1.1}
 .stat-txt b{font-family:var(--f-display);font-weight:800;font-size:1.05rem;font-variant-numeric:tabular-nums}
 .stat-txt small{font-size:.66rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
-.stat.pulse svg{animation:pulse .5s ease}
-@keyframes pulse{50%{transform:scale(1.35)}}
+.stat.pulse svg{animation:pulse 300ms var(--ease-out)}
+@keyframes pulse{40%{transform:scale(1.2)}}
 .xp-txt{font-size:.7rem;color:var(--muted)}
 .lvl{display:flex;align-items:center;gap:10px;min-width:0}
 .lvl-meta{display:flex;flex-direction:column;gap:3px;min-width:120px}
 .lvl-title{font-size:.75rem;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;white-space:nowrap}
 .xpbar{height:6px;background:var(--line);border-radius:3px;overflow:hidden}
-.xpbar i{display:block;height:100%;width:0;background:var(--accent);transition:width .5s ease}
+.xpbar i{display:block;height:100%;width:100%;transform:scaleX(0);transform-origin:left;background:var(--accent);transition:transform 300ms var(--ease-out)}
 .chip{font-family:var(--f-mono);font-size:.82rem;color:var(--muted);white-space:nowrap}
 .chip b{color:var(--ink);font-weight:500}
 
@@ -191,13 +192,13 @@ button:focus-visible, select:focus-visible, input:focus-visible, summary:focus-v
 .slot.ok{background:var(--good-soft);border-color:var(--good)} .slot.ok .nn{color:var(--good)}
 .slot.rev{background:var(--reveal-soft);border-color:var(--reveal)} .slot.rev .nn{color:var(--reveal)}
 .slot.err{animation:shake .3s;background:var(--bad-soft);border-color:var(--bad)}
-.slot.pop{animation:popSlot .38s cubic-bezier(.3,1.6,.5,1)}
-.slot.pop .nn{animation:riseIn .3s ease}
+.slot.pop{animation:popSlot 200ms var(--ease-out)}
+.slot.pop .nn{animation:riseIn 160ms var(--ease-out)}
 .slot.rev{animation:revIn .35s ease backwards}
 @keyframes revIn{from{opacity:0;transform:scale(.86)}}
-@keyframes popSlot{0%{transform:scale(.86)}60%{transform:scale(1.08)}100%{transform:none}}
+@keyframes popSlot{from{transform:scale(.94)}} /* every correct note: short, no overshoot */
 @keyframes riseIn{from{transform:translateY(6px);opacity:0}}
-.k-press{transform:translateY(2px) scaleY(.985);transform-origin:top;box-shadow:inset 0 -3px 0 rgba(0,0,0,.18)}
+.k-press,.k-down{transform:translateY(2px) scaleY(.985);transform-origin:top;box-shadow:inset 0 -3px 0 rgba(0,0,0,.18)}
 .answers{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px}
 .answers button{border:1px solid transparent;background:var(--surface-2);border-radius:10px;padding:12px 10px;font-family:var(--f-display);font-weight:700;font-size:1rem;min-height:52px}
 .answers button:hover:not(:disabled){border-color:var(--ink)}
@@ -272,7 +273,7 @@ button:focus-visible, select:focus-visible, input:focus-visible, summary:focus-v
 .bk{position:absolute;top:0;height:60%;background:var(--key-black);border-radius:0 0 7px 7px;z-index:2;border:0;box-shadow:inset 0 -5px 0 rgba(255,255,255,.08),0 4px 8px -2px rgba(10,6,30,.45)}
 .wk span,.bk span{font-family:var(--f-mono);font-weight:800;font-size:.66rem;color:var(--key-label);pointer-events:none}
 .bk span{position:absolute;bottom:6px;left:0;right:0;text-align:center;color:var(--key-label-b)}
-.wk,.bk{transition:background .08s,transform .08s,box-shadow .08s}
+.wk,.bk{transition:background 140ms ease,transform 100ms ease-out,box-shadow 140ms ease}
 .k-hit{background:var(--nc,var(--accent))!important;box-shadow:inset 0 -7px 0 rgba(0,0,0,.16),0 0 22px 1px var(--nc,var(--accent))!important}
 .bk.k-hit{filter:saturate(.9) brightness(.82)}
 .k-ok{background:var(--good)!important}
@@ -284,6 +285,7 @@ button:focus-visible, select:focus-visible, input:focus-visible, summary:focus-v
 .wk.k-hit span,.bk.k-hit span{color:#15122e}
 .k-ok{box-shadow:inset 0 -7px 0 rgba(0,0,0,.16),0 0 20px 0 var(--good)!important}
 .k-bad{box-shadow:inset 0 -7px 0 rgba(0,0,0,.16),0 0 20px 0 var(--bad)!important}
+.wk:is(.k-press,.k-down,.k-hit,.k-ok,.k-bad),.bk:is(.k-press,.k-down,.k-hit,.k-ok,.k-bad){transition:none} /* a key lights at once; only the release fades */
 
 .actions{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
 .btn{border:0;background:var(--surface-2);border-radius:999px;padding:10px 18px;font-weight:800;min-height:44px}
@@ -344,6 +346,7 @@ select{font:inherit;color:var(--ink);background:var(--surface-2);border:1px soli
 .danger{background:none;border:0;color:var(--muted);text-decoration:underline;font-size:.8rem;align-self:flex-start;padding:0}
 
 @keyframes pop{from{transform:translateY(8px);opacity:0}}
+@keyframes ddIn{from{opacity:0;transform:translateY(-4px) scale(.97)}} /* a menu comes out of its button, downwards */
 
 /* ---------- App shell: sidebar + main, sized to the screen ---------- */
 html,body{height:100%}
@@ -385,7 +388,7 @@ body{margin:0;padding:0;overflow:hidden}
 .ptile-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:14px}
 .ptile{position:relative;isolation:isolate;overflow:visible;display:flex;flex-direction:column;justify-content:flex-end;gap:8px;text-align:left;border:0;border-radius:var(--r-xl);padding:118px 18px 18px;min-height:250px;color:#fff;min-width:0;transition:transform .2s,box-shadow .2s;background-color:var(--tc,#555);background-image:radial-gradient(120% 80% at 90% -10%,rgba(255,255,255,.32),transparent 55%),radial-gradient(60% 50% at 0% 100%,rgba(0,0,0,.18),transparent 70%),linear-gradient(160deg,var(--tc2,var(--tc)),var(--tc) 64%);box-shadow:0 22px 34px -18px var(--tc),0 8px 16px -10px rgba(10,6,30,.35),inset 0 1px 0 rgba(255,255,255,.4),inset 0 0 0 1px rgba(255,255,255,.12);--os:132px;font-family:var(--f-body)}
 .ptile:hover{transform:translateY(-4px);box-shadow:0 30px 40px -18px var(--tc),0 10px 20px -10px rgba(10,6,30,.4),inset 0 1px 0 rgba(255,255,255,.4),inset 0 0 0 1px rgba(255,255,255,.12)}
-.ptile .obj{position:absolute;top:-20px;right:-10px;width:var(--os);height:var(--os);pointer-events:none;z-index:1;filter:drop-shadow(0 16px 14px rgba(10,6,30,.45));transition:transform .3s cubic-bezier(.3,1.6,.5,1)}
+.ptile .obj{position:absolute;top:-20px;right:-10px;width:var(--os);height:var(--os);pointer-events:none;z-index:1;filter:drop-shadow(0 16px 14px rgba(10,6,30,.45));transition:transform .3s var(--ease-pop)}
 .ptile .obj svg{display:block;width:100%;height:100%}
 .ptile:hover .obj{transform:translateY(-6px) rotate(-4deg) scale(1.05)}
 .ptile-grid,.hub-grid{padding:18px 10px 4px 0}
@@ -395,7 +398,7 @@ body{margin:0;padding:0;overflow:hidden}
 .ptile .h3{display:block;margin:0;font-family:var(--f-display);font-weight:700;font-size:1.4rem;letter-spacing:0;line-height:1.1;text-shadow:0 2px 0 rgba(0,0,0,.12)}
 .ptile p{margin:0;font-size:.88rem;line-height:1.4}
 .ptile .go{margin-top:6px;align-self:flex-start;border-radius:999px;padding:8px 16px;background:rgba(255,255,255,.95);color:#1b1838;font-family:var(--f-body);font-weight:800;font-size:.85rem;border:0;box-shadow:0 6px 14px -6px rgba(10,6,30,.5)}
-.ptile .rec{font-family:var(--f-mono);font-size:.78rem}
+.ptile .rec{font-family:var(--f-mono);font-size:.78rem;font-variant-numeric:tabular-nums}
 /* Mode pages: hub, learn, games */
 [data-page="hub"] :is(.picker,.stage,.gamebar,.prompt-row,.timeline,.slots,.answers,.actions,.hint,.notice,.pane-head){display:none!important}
 [data-page="learn"] :is(.picker,.stage,.gamebar,.prompt-row,.timeline,.slots,.answers,.actions,.hint,.notice,.pane-head){display:none!important}
@@ -444,6 +447,7 @@ body{margin:0;padding:0;overflow:hidden}
   .hub-grid .ptile{min-height:0;padding:12px 16px;--os:80px} .hub-grid .ptile p{font-size:.8rem;line-height:1.35} .hub-grid .ptile .h3{font-size:1.5rem}
   .ptile-grid .ptile :is(.h3,.rec){max-width:calc(100% - 44px)}
   #learnTiles .ptile{--os:62px;padding-top:12px}
+  :is(#gameCards,#playCards) .ptile .h3{padding-right:calc(var(--os) - 6px)} /* the 3D object no longer hides the end of the title */
   .ptile,.ptile:hover{box-shadow:0 10px 16px -12px var(--tc),inset 0 1px 0 rgba(255,255,255,.4),inset 0 0 0 1px rgba(255,255,255,.12)}
   .gc-head{margin:0;font-size:.95rem} .gc-head small{display:none}
   .mode-h p{display:none}
@@ -541,6 +545,11 @@ body{margin:0;padding:0;overflow:hidden}
 .rank-list .num{font-family:var(--f-mono);font-size:.86rem;text-align:right;white-space:nowrap}
 .rank-list .skel{height:10px;border-radius:5px;background:var(--line);opacity:.6}
 .rank-list .skel-av{width:40px;height:40px;border-radius:50%;background:var(--line);opacity:.6}
+.rank-list :is(b,small){display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap} .rank-list li>span:nth-child(3){min-width:0} .rank-list .av{border-radius:50%;overflow:hidden}
+.rank-list .num{font-variant-numeric:tabular-nums} .rank-list li.sep{display:block;background:transparent;padding:0 12px;text-align:center;color:var(--muted);font-weight:800;letter-spacing:.2em}
+@media (max-width:640px){ .rank-list li{grid-template-columns:24px 32px minmax(0,1fr) auto;grid-template-rows:auto auto;gap:0 8px;padding:7px 10px}
+  .rank-list li>:is(.rk,.av){grid-row:1/3} .rank-list li>span:nth-child(3){grid-row:1/3;min-width:0} .rank-list li>.num{grid-column:4;line-height:1.25} .rank-list li>.num:last-child{font-size:.76rem;color:var(--muted)}
+  .rank-list .av{width:32px;height:32px} .rank-list .rk{font-size:.85rem} }
 .rank-cta{display:flex;align-items:center;gap:12px;flex-wrap:wrap;justify-content:space-between;border-top:1px solid var(--line);padding-top:14px}
 .rank-cta p{margin:0;color:var(--muted);max-width:60ch}
 .acct-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:12px}
@@ -643,7 +652,7 @@ body.runner-on .free-lbl{display:none!important}
 .pc-card{display:grid;grid-template-columns:28px minmax(0,1fr) auto;grid-template-rows:auto auto;align-items:center;gap:6px 10px;text-align:left;border:1px solid transparent;background:var(--surface-2);border-radius:14px;padding:12px}
 .pc-card svg{width:26px;height:26px;fill:none;stroke:var(--accent);stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;grid-row:1}
 .pc-t{display:flex;flex-direction:column;line-height:1.2} .pc-t b{font-family:var(--f-display);font-size:1.02rem} .pc-t small{color:var(--muted);font-size:.78rem}
-.pc-n{font-size:.9rem;font-weight:500}
+.pc-n{font-size:.9rem;font-weight:500;font-variant-numeric:tabular-nums}
 .pc-bar{grid-column:1 / -1;height:6px;border-radius:3px;background:var(--line);overflow:hidden} .pc-bar i{display:block;height:100%;background:var(--good)}
 .pc-card[aria-pressed="true"]{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent);background:var(--accent-soft)}
 .prog-detail{display:flex;flex-direction:column;gap:12px}
@@ -670,7 +679,7 @@ body.runner-on .free-lbl{display:none!important}
 .gm-big{margin:0;font-family:var(--f-display);font-weight:800;font-size:clamp(2.2rem,8vh,4rem);line-height:1}
 .gm-sub{margin:0;color:var(--muted);font-size:.9rem;max-width:46ch}
 .gm-bar{width:min(420px,80%);height:8px;border-radius:4px;background:var(--line);overflow:hidden;margin-top:6px}
-.gm-bar i{display:block;height:100%;width:100%;background:var(--accent);transition:width .1s linear} .gm-bar i.low{background:var(--bad)}
+.gm-bar i{display:block;height:100%;width:100%;transform-origin:left;background:var(--accent)} .gm-bar i.low{background:var(--bad)}
 .gm-board.hit{animation:gmHit .3s ease} @keyframes gmHit{40%{background:var(--good-soft)}}
 @media (max-width:640px){ .gm-opt span{display:none} .rn-head{gap:8px} }
 .set-body{display:flex!important;flex-direction:column;align-items:stretch!important;gap:26px}
@@ -765,7 +774,7 @@ html.native .midi-body [data-i="midiHint"]{display:none}
 .dd-btn span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .dd-btn svg{width:16px;height:16px;flex:none;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;transition:transform .15s}
 .dd-btn[aria-expanded="true"]{border-color:var(--ink)} .dd-btn[aria-expanded="true"] svg{transform:rotate(180deg)}
-.dd-pop{position:absolute;top:calc(100% + 6px);left:0;z-index:25;background:var(--surface);border:1px solid transparent;border-radius:12px;box-shadow:0 14px 40px rgba(0,0,0,.18);padding:10px;width:max-content;max-width:min(460px,calc(100vw - 40px));animation:pop .15s ease}
+.dd-pop{position:absolute;top:calc(100% + 6px);left:0;z-index:25;background:var(--surface);border:1px solid transparent;border-radius:12px;box-shadow:0 14px 40px rgba(0,0,0,.18);padding:10px;width:max-content;max-width:min(460px,calc(100vw - 40px));transform-origin:top left;animation:ddIn 160ms var(--ease-out)}
 
 /* Stage fills the remaining height; the keyboard gives way first */
 .stage{flex:0 1 auto;min-height:0;overflow:visible;gap:14px}
@@ -788,7 +797,7 @@ html.native .midi-body [data-i="midiHint"]{display:none}
     padding:calc(14px + env(safe-area-inset-top, 0px)) 12px calc(12px + env(safe-area-inset-bottom, 0px)) max(12px, env(safe-area-inset-left, 0px))}
   .side.collapsed{--sw:min(280px,80vw)}
   .side-toggle{display:none!important}
-  .shell{position:relative;z-index:2;height:100vh;height:100dvh;transition:transform .32s cubic-bezier(.2,.8,.2,1),border-radius .32s;will-change:transform}
+  .shell{position:relative;z-index:2;height:100vh;height:100dvh;transition:transform 320ms var(--ease-drawer),border-radius 320ms var(--ease-drawer);will-change:transform}
   body.drawer .shell{transform:translateX(min(280px,80vw));border-radius:22px;overflow:hidden;box-shadow:-10px 0 40px rgba(0,0,0,.28)}
   body.drawer .side-scrim{display:block;position:absolute;inset:0;z-index:30;background:transparent}
   .mbar{display:flex;align-items:center;gap:12px;flex:none;padding:calc(8px + env(safe-area-inset-top, 0px)) max(14px, env(safe-area-inset-right, 0px)) 8px max(14px, env(safe-area-inset-left, 0px));background:var(--bg)}
@@ -892,7 +901,13 @@ html.native .midi-body [data-i="midiHint"]{display:none}
   .prompt{font-size:clamp(1.9rem,4.4vw,2.8rem)}
   .hint.keys{display:none}
 }
-@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.sp-k,.sp-b,.sp-wm{opacity:1!important;transform:none!important}}
+/* reduced motion = fewer and gentler, not zero: no movement (keyframes, transform/size/position transitions), fades of opacity and colour kept */
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none!important;transition-property:opacity,color,background-color,border-color,box-shadow!important}
+  .sp-k,.sp-b,.sp-wm{opacity:1!important;transform:none!important}
+  .modal-card,.dd-pop,.tut-text{animation:rmFade 150ms ease!important}
+}
+@keyframes rmFade{from{opacity:0}}
 
 /* ===== Design system v1.1: aligned menu, hub 2/3 + side column, big mode titles ===== */
 .side .side-daily{display:none!important} /* the daily practice lives in Learn and on the hub */
@@ -939,7 +954,7 @@ html.native .midi-body [data-i="midiHint"]{display:none}
 .hs-t b{font-weight:800;font-size:.95rem} .hs-t small{color:var(--muted);font-size:.78rem;line-height:1.3;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
 .hs-midi .btn{min-height:36px;padding:6px 14px;font-size:.82rem;flex:none}
 .hs-slides{position:relative;min-height:62px}
-.hs-slide{position:absolute;inset:0;display:flex;gap:12px;align-items:center;opacity:0;transform:translateX(16px);transition:opacity .4s,transform .4s;pointer-events:none}
+.hs-slide{position:absolute;inset:0;display:flex;gap:12px;align-items:center;opacity:0;transform:translateX(16px);transition:opacity 300ms var(--ease-out),transform 300ms var(--ease-out);pointer-events:none}
 .hs-slide.on{opacity:1;transform:none;pointer-events:auto}
 .hs-slide .nb{width:46px;height:46px;border-radius:14px;flex:none;display:grid;place-items:center;box-shadow:inset 0 1px 0 rgba(255,255,255,.35)}
 .hs-slide .nb svg{width:24px;height:24px;fill:none;stroke:#fff;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
@@ -1020,10 +1035,18 @@ body:not(.runner-on)[data-page="games"] .stage{display:none!important}
 .pf-id{flex:1;min-width:0;display:flex;flex-direction:column;gap:3px}
 .pf-k{font-weight:800;font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;opacity:.9}
 .pf-id b{font-family:var(--f-display);font-weight:700;font-size:1.5rem;line-height:1.1}
-.pf-id .xpbar{height:8px;border-radius:999px;background:rgba(255,255,255,.25);overflow:hidden;max-width:420px} .pf-id .xpbar i{display:block;height:100%;background:var(--gold);border-radius:inherit}
+.pf-id .xpbar{height:8px;border-radius:999px;background:rgba(255,255,255,.25);overflow:hidden;max-width:420px} .pf-id .xpbar i{display:block;height:100%;background:var(--gold);border-radius:inherit;transform-origin:left}
 .pf-id small{font-weight:700;opacity:.9}
 .pf-head .btn{background:rgba(255,255,255,.95);color:#1b1838}
-.pf-row{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(250px,1fr);gap:14px;overflow-x:auto;scroll-snap-type:x mandatory;padding-bottom:6px;scrollbar-width:thin}
+.pf{container:pf/inline-size}
+.pf-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;padding-bottom:6px}
+@container pf (min-width:641px){ .pf-row{grid-template-columns:repeat(2,minmax(0,1fr))} } /* 2 × 2, never 3 + 1 alone */
+@container pf (min-width:940px){ .pf-row{grid-template-columns:repeat(4,minmax(0,1fr))} }
+.pf-dots{display:none}
+/* overflowing horizontal rows: fade on the edge that hides more (data-ov = "r", "l" or "lr", set by ovFade) */
+:is(.pf-row,.su-cards,.su-keys,.su-chips)[data-ov="r"]{-webkit-mask-image:linear-gradient(90deg,#000 calc(100% - 44px),transparent);mask-image:linear-gradient(90deg,#000 calc(100% - 44px),transparent)}
+:is(.pf-row,.su-cards,.su-keys,.su-chips)[data-ov="l"]{-webkit-mask-image:linear-gradient(90deg,transparent,#000 44px);mask-image:linear-gradient(90deg,transparent,#000 44px)}
+:is(.pf-row,.su-cards,.su-keys,.su-chips)[data-ov="lr"]{-webkit-mask-image:linear-gradient(90deg,transparent,#000 44px,#000 calc(100% - 44px),transparent);mask-image:linear-gradient(90deg,transparent,#000 44px,#000 calc(100% - 44px),transparent)}
 .pf-card{scroll-snap-align:start;border-radius:var(--r-lg);overflow:hidden;color:#fff;display:flex;flex-direction:column;min-height:300px;box-shadow:var(--shadow-card)}
 .pf-card h3{margin:0;padding:14px 16px 10px;font-family:var(--f-display);font-weight:700;font-size:1.1rem}
 .pf-card p{margin:0;padding:0 16px 8px;font-size:.8rem;opacity:.9}
@@ -1033,7 +1056,7 @@ body:not(.runner-on)[data-page="games"] .stage{display:none!important}
 .pf-stats li b{font-family:var(--f-display);font-size:1.2rem;font-variant-numeric:tabular-nums;white-space:nowrap}
 .pf-streak{background:#16764e}
 .pf-sh{display:flex;justify-content:space-between;gap:10px;padding:14px 16px 10px;background:#1f8a5c} .pf-sh div{display:flex;flex-direction:column} .pf-sh .r{text-align:right}
-.pf-sh b{font-weight:800;font-size:.95rem} .pf-sh small{opacity:.85;font-size:.78rem}
+.pf-sh{flex-wrap:wrap;row-gap:6px} .pf-sh b{font-weight:800;font-size:.95rem;white-space:nowrap} .pf-sh small{opacity:.85;font-size:.78rem}
 .pf-cal{padding:10px 12px 14px}
 .pf-calh{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px} .pf-calh b{text-transform:capitalize;font-weight:800;font-size:.92rem}
 .pf-calh button{border:0;background:rgba(255,255,255,.15);color:#fff;width:30px;height:30px;border-radius:50%;font-size:1.1rem;line-height:1}
@@ -1048,11 +1071,13 @@ body:not(.runner-on)[data-page="games"] .stage{display:none!important}
 .pf-journey .bar{height:7px;border-radius:999px;background:rgba(0,0,0,.18);overflow:hidden} .pf-journey .bar i{display:block;height:100%;border-radius:inherit;box-shadow:0 0 0 1px rgba(255,255,255,.4)}
 .pf-recs{background:#a9332d} .pf-recs h3{background:#c9463c}
 .pf-recs ul{overflow-y:auto;max-height:240px}
-.pf-recs li{display:flex;justify-content:space-between;gap:10px;padding:7px 16px;font-size:.84rem;font-weight:700}
-.pf-recs li b{font-variant-numeric:tabular-nums;color:#ffe27a;white-space:nowrap}
+.pf-recs li{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:baseline;gap:0 10px;padding:7px 16px;font-size:.84rem;font-weight:700}
+.pf-recs li b{font-variant-numeric:tabular-nums;color:#ffe27a;white-space:nowrap;text-align:right}
+.pf-recs li small{grid-column:2;text-align:right;font-size:.72rem;font-weight:700;opacity:.85;white-space:nowrap;font-variant-numeric:tabular-nums}
 .pf-journey p,.pf-journey h3{color:#fff}
 .pf-detail-h{margin:6px 0 0;font-family:var(--f-display);font-weight:700;font-size:1.1rem}
-@media (max-width:640px){ .pf-head{padding:12px} .pf-head .av{width:48px;height:48px} .pf-id b{font-size:1.15rem} .pf-row{grid-auto-columns:86%} }
+@media (max-width:640px){ .pf-head{padding:12px} .pf-head .av{width:48px;height:48px} .pf-id b{font-size:1.15rem} .pf-row{grid-template-columns:none;grid-auto-flow:column;grid-auto-columns:86%;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;overscroll-behavior-x:contain} .pf-row::-webkit-scrollbar{display:none}
+  .pf-dots{display:flex;justify-content:center;gap:8px;margin-top:-6px} .pf-dots button{width:8px;height:8px;padding:0;border:0;border-radius:50%;background:var(--line)} .pf-dots button[aria-current="true"]{background:var(--brand);width:20px;border-radius:4px} }
 
 /* ===== v1.4: LEARN start screen, step-by-step card ===== */
 [data-page="practice"] .picker{display:none!important}
@@ -1175,12 +1200,15 @@ body.gp .wk.k-ok span,body.gp .bk.k-ok span{color:#15122e}
 .qz-foot{display:flex;justify-content:space-between;align-items:center;gap:10px}
 /* end */
 .qz-end{align-items:center;text-align:center}
-.qz-endt{margin:0;font-family:var(--f-display);font-weight:700;font-size:clamp(1.6rem,3.4vw,2.4rem)}
+.qz-endt{margin:0;font-family:var(--f-display);font-weight:700;font-size:clamp(1.6rem,3.4vw,2.4rem);overflow-wrap:anywhere}
 .qz-podium{display:flex;align-items:flex-end;justify-content:center;gap:14px;flex-wrap:wrap}
 .qz-pod{display:flex;flex-direction:column;align-items:center;gap:4px;width:170px;padding:16px 12px;border-radius:var(--r-lg);color:#fff;background:linear-gradient(160deg,color-mix(in srgb,var(--pc) 70%,#fff),color-mix(in srgb,var(--pc) 75%,#15122e));box-shadow:0 18px 30px -16px var(--pc)}
 .qz-pod.r1{padding-block:28px} .qz-rk{width:40px;height:40px;border-radius:50%;display:grid;place-items:center;background:rgba(255,255,255,.95);color:#15122e;font-family:var(--f-display);font-weight:700;font-size:1.2rem}
 .qz-pod b{font-weight:800;font-size:1.05rem;text-shadow:0 1px 2px rgba(0,0,0,.35)} .qz-sc{font-family:var(--f-display);font-weight:700;font-size:1.5rem;text-shadow:0 1px 2px rgba(0,0,0,.35)} .qz-pod small{font-weight:700;text-shadow:0 1px 2px rgba(0,0,0,.35)}
 .qz-endb{display:flex;gap:10px;justify-content:center}
+@media (max-width:640px){ .qz-endt{font-size:clamp(1.2rem,5vw,2rem)}
+  .qz-podium{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;width:100%;align-items:stretch} .qz-pod{width:auto;min-width:0;padding:12px 10px} .qz-pod.r1{padding-block:12px}
+  .qz-pod b{max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap} .qz-rk{width:32px;height:32px;font-size:1rem} .qz-sc{font-size:1.25rem} }
 #qzMode{display:grid;grid-template-columns:repeat(3,minmax(0,1fr))} #qzMode button{white-space:normal;line-height:1.15;font-size:.8rem;padding:7px 6px}
 .qz-ps small{white-space:nowrap} .qz-ps{min-width:170px}
 @media (max-width:1000px){ .qz-wrap{grid-template-columns:1fr;gap:14px} .qz .su-side{display:grid;grid-template-columns:minmax(0,1fr) 230px;align-items:end;gap:12px} .qz .mode-h p{display:none} .qz-theme{min-height:56px;padding:8px 10px} .qz-ti{width:36px;height:36px} .qz-pl{padding:3px 0} .qz-pl input{padding:5px 10px} #qzMidiHint{display:none} }
@@ -1327,7 +1355,8 @@ body.du-lob #runner{flex:1 1 auto}
 .du-pl.opp{padding:6px 6px 6px 12px;justify-content:flex-end;text-align:right}
 .du-nm{display:flex;flex-direction:column;min-width:0;line-height:1.15} .du-nm b{font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis} .du-nm small{color:var(--muted);font-family:var(--f-display);font-size:.82rem}
 .du-pl.me .du-nm{margin-right:auto} .du-pl.opp .du-nm{margin-left:auto}
-.du-sc{font-family:var(--f-display);font-weight:700;font-size:1.7rem;min-width:2ch;text-align:center}
+.du-sc{font-family:var(--f-display);font-weight:700;font-size:1.7rem;min-width:2ch;text-align:center;flex:none;font-variant-numeric:tabular-nums;white-space:nowrap}
+.du-pl .du-nm{flex:1 1 0} .du-sc[data-long]{font-size:1.35rem}
 .du-hud[data-lead="me"] .du-pl.me,.du-hud[data-lead="opp"] .du-pl.opp{box-shadow:0 0 0 2px #26805a,var(--shadow-card)}
 .du-vs{font-family:var(--f-display);font-weight:700;color:var(--muted);font-size:.85rem}
 .du-wrap{position:relative;display:flex;flex-direction:column}
@@ -1340,7 +1369,7 @@ body.du-lob #runner{flex:1 1 auto}
 .du-rcard h3{margin:0;font-family:var(--f-display);font-weight:700;font-size:1.8rem}
 .du-res[data-res="win"] h3{color:#26805a} .du-res[data-res="loss"] h3{color:var(--bad)}
 .du-rsc{display:flex;align-items:center;gap:14px} .du-rsc>span{display:flex;align-items:center;gap:10px} .du-rsc b{font-family:var(--f-display);font-size:2rem} .du-rsc i{font-style:normal;color:var(--muted)}
-.du-relo{margin:0;font-weight:800} .du-relo .up{color:#26805a} .du-relo .down{color:var(--bad)}
+.du-relo{margin:0;font-weight:800} .du-relo .up{color:#26805a} .du-relo .down{color:var(--bad)} .du-relo b{display:inline-block}
 .du-res .du-row{justify-content:center}
 .du-res .btn kbd,.du-panel .btn kbd{margin-left:6px}
 @media (max-width:1100px){ .du-lobby{grid-template-columns:minmax(0,1fr) 250px} .du-mode{padding:14px} .du-bots{grid-template-columns:repeat(4,minmax(0,1fr))} .du-bot small{display:none} }
@@ -1349,11 +1378,11 @@ body.du-lob #runner{flex:1 1 auto}
 @media (max-width:640px){ .du-side{grid-template-columns:1fr;gap:8px} .du-rate{padding:6px 12px 6px 6px} .du-rate .du-av{width:40px;height:40px} .du-rt b{font-size:1.5rem}
   .du-modes{gap:8px} .du-mode{padding:10px} .du-mi{width:34px;height:34px;border-radius:10px} .du-mi svg{width:20px;height:20px} .du-mode b{font-size:1rem} .du-mode small{display:none}
   .du-bots{grid-template-columns:repeat(2,minmax(0,1fr));gap:6px} .du-bot{padding:4px 6px} .du-bot .du-av{width:28px;height:28px}
-  .du-hud{gap:6px} .du-pl{padding:4px 8px 4px 4px;gap:6px} .du-pl.opp{padding:4px 4px 4px 8px} .du-pl .du-av{width:30px;height:30px;border-radius:9px} .du-sc{font-size:1.3rem} .du-nm b{font-size:.85rem} .du-vs{display:none} }
+  .du-hud{gap:6px} .du-pl{padding:4px 8px 4px 4px;gap:6px} .du-pl.opp{padding:4px 4px 4px 8px} .du-pl .du-av{width:30px;height:30px;border-radius:9px} .du-sc{font-size:1.3rem} .du-sc[data-long]{font-size:1.1rem} .du-nm b{font-size:.85rem} .du-vs{display:none} }
 @media (max-height:420px){ .du-lobby{grid-template-columns:minmax(0,1fr) 220px;grid-template-rows:minmax(0,1fr)} .du-side{grid-column:2;grid-row:1;display:flex} .du-lobby>.du-modes,.du-lobby>.du-panel{grid-row:1} .du-hist{display:none} .du-mode{min-height:0;padding:8px 10px;flex-direction:row;align-items:center;gap:8px} .du-mode b{margin-top:0;font-size:.95rem} .du-mode small{display:none} .du-mi{width:30px;height:30px} .du-mi svg{width:18px;height:18px}
   .du-rate{padding:4px 10px 4px 4px} .du-rate .du-av{width:34px;height:34px} .du-rt b{font-size:1.3rem} .du-rt em{display:none} .du-lobby{gap:8px} .du-panel{padding:8px 10px;gap:6px}
   .du-bots{grid-template-columns:repeat(5,minmax(0,1fr));gap:5px} .du-bot{padding:3px 5px} .du-bot .du-av{width:26px;height:26px} .du-bot small{display:none} .du-bot b{font-size:.75rem}
-  .du-pl .du-av{width:28px;height:28px} .du-sc{font-size:1.2rem} .du-pl{padding:3px 8px 3px 3px} .du-rcard{padding:8px 14px;gap:3px} .du-rcard h3{font-size:1.3rem} .du-rsc b{font-size:1.4rem} .du-count{font-size:4rem} }
+  .du-pl .du-av{width:28px;height:28px} .du-sc{font-size:1.2rem} .du-sc[data-long]{font-size:1rem} .du-pl{padding:3px 8px 3px 3px} .du-rcard{padding:8px 14px;gap:3px} .du-rcard h3{font-size:1.3rem} .du-rsc b{font-size:1.4rem} .du-count{font-size:4rem} }
 
 .du-art{position:absolute;top:10px;right:10px;width:46%;max-width:150px;aspect-ratio:1;display:flex;align-items:center;justify-content:center;pointer-events:none;filter:drop-shadow(0 12px 16px rgba(10,6,30,.3))}
 .du-art>svg{width:100%;height:100%}
@@ -1396,7 +1425,7 @@ body.du-lob #runner{flex:1 1 auto}
 .ntf-ic{width:46px;height:46px;flex:none;border-radius:14px;background:var(--surface-2);display:grid;place-items:center;padding:4px} .ntf-ic svg{width:100%;height:100%}
 .ntf-it[data-cat="social"] .ntf-ic{background:color-mix(in srgb,#2563eb 14%,var(--surface))} .ntf-it[data-cat="progress"] .ntf-ic{background:color-mix(in srgb,#7a5bf5 14%,var(--surface))}
 .ntf-it[data-cat="remind"] .ntf-ic{background:color-mix(in srgb,#ff8a2a 16%,var(--surface))} .ntf-it[data-cat="news"] .ntf-ic{background:color-mix(in srgb,#26805a 14%,var(--surface))}
-.ntf-tx{flex:1;min-width:0;display:flex;flex-direction:column;gap:1px} .ntf-tx b{font-weight:800} .ntf-tx span{color:var(--muted);font-size:.88rem} .ntf-tx small{color:var(--muted);font-size:.74rem;font-weight:700}
+.ntf-tx{flex:1;min-width:0;display:flex;flex-direction:column;gap:1px} .ntf-tx b{font-weight:800;overflow-wrap:anywhere} .ntf-tx span{color:var(--muted);font-size:.88rem;overflow-wrap:anywhere;display:-webkit-box;-webkit-line-clamp:2;line-clamp:2;-webkit-box-orient:vertical;overflow:hidden} .ntf-tx small{color:var(--muted);font-size:.74rem;font-weight:700}
 .ntf-go{flex:none;padding:7px 14px}
 .ntf-dot{position:absolute;right:12px;top:50%;width:10px;height:10px;border-radius:50%;background:#ff5a6e;transform:translateY(-50%);display:none} .ntf-it.unread .ntf-dot{display:block}
 .ntf-empty{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;text-align:center;padding:30px;flex:1} .ntf-empty p{margin:0;color:var(--muted)}
@@ -1439,7 +1468,7 @@ body.gate-on{overflow:hidden}
 .fn-in[aria-pressed="true"]{border-color:#7a5bf5;box-shadow:0 0 0 4px color-mix(in srgb,#7a5bf5 18%,transparent)}
 .fn-lv{display:flex;gap:8px} .fn-lv button{flex:1;border:2px solid var(--line);background:var(--surface);color:var(--ink);border-radius:999px;padding:9px 6px;font-weight:800;font-size:.88rem;cursor:pointer}
 .fn-lv button[aria-pressed="true"]{background:#7a5bf5;border-color:#7a5bf5;color:#fff}
-.fn-prompt{display:flex;align-items:center;gap:14px;background:var(--surface-2);border-radius:18px;padding:12px 16px;min-height:72px}
+.fn-prompt{display:flex;align-items:center;gap:14px;background:var(--surface-2);border-radius:18px;padding:12px 16px;min-height:72px;transition:background-color 200ms ease}
 .fn-prompt .fn-big{font-family:var(--f-display);font-weight:700;font-size:2.4rem;color:var(--note-0,#f2545b);flex:none}
 .fn-prompt b{display:block;font-weight:800} .fn-prompt small{display:block;color:var(--muted);font-weight:700;font-size:.82rem}
 .fn-prompt.ok{background:color-mix(in srgb,#26805a 14%,var(--surface))} .fn-prompt.ok .fn-big{color:#26805a} .fn-prompt.bad small{color:var(--bad)}
@@ -1450,6 +1479,9 @@ body.gate-on{overflow:hidden}
 .fn-kb .fn-hint{background:#f2545b;color:#fff;box-shadow:0 0 18px #f2545b} .fn-kb .fn-down{filter:brightness(1.3)} .fn-kb .fn-bad{background:var(--bad)!important}
 .fn-kb .fn-good{background:#26805a!important;color:#fff;box-shadow:0 0 20px #26805a}
 .fn-go{width:100%} .fn-go[hidden]{display:none}
+/* the first C (once per player): the big C pops, the button rises in after it; usable at once */
+.fn-prompt.fn-win .fn-big{animation:popWin 380ms var(--ease-pop)} .fn-go.fn-enter{animation:riseIn8 300ms var(--ease-out) 120ms backwards}
+@keyframes popWin{0%{transform:scale(.86)}60%{transform:scale(1.08)}100%{transform:none}} @keyframes riseIn8{from{opacity:0;transform:translateY(8px)}}
 .fn-foot{display:flex;justify-content:space-between;align-items:center;gap:10px;font-weight:800;font-size:.86rem;color:var(--muted);margin-top:auto}
 .fn-foot button{border:0;background:none;color:#7a5bf5;font:inherit;font-weight:800;cursor:pointer;padding:2px}
 .fn-oct2{display:contents}
@@ -1461,11 +1493,14 @@ body.gate-on{overflow:hidden}
   .fn-play{padding:12px 18px;gap:7px} .fn-play h2{font-size:1.3rem} .fn-step{font-size:.66rem} .fn-lbl{display:none} .fn-in{padding:5px 9px} .fn-in small{display:none} .fn-lv button{padding:5px} .fn-prompt{min-height:0;padding:6px 10px} .fn-prompt .fn-big{font-size:1.6rem} .fn-kb{height:96px} .fn-foot{font-size:.76rem} }
 /* end of a game: what comes next */
 .end-next{display:flex;flex-direction:column;gap:4px;margin:2px 0 10px} .end-next .en-row{display:flex;align-items:center;gap:12px} .end-next b{font-weight:800;font-size:.9rem;white-space:nowrap}
-.end-next .en-bar{flex:1;height:8px;border-radius:99px;background:var(--surface-2);overflow:hidden} .end-next .en-bar i{display:block;height:100%;background:#7a5bf5;border-radius:99px}
+.end-next .en-bar{flex:1;height:8px;border-radius:99px;background:var(--surface-2);overflow:hidden} .end-next .en-bar i{display:block;height:100%;width:100%;transform-origin:left;background:#7a5bf5;border-radius:99px}
+.end-next .en-lvl{display:flex;align-items:center;gap:10px;transform-origin:left center} .end-next .en-lvl .av{width:40px;height:40px;flex:none} .end-next .en-lvl b{font-family:var(--f-display);font-weight:700;font-size:1.05rem}
+.lvl-av.pulse,.mbar-lvl.pulse{animation:pulse 500ms var(--ease-out)}
 .end-next p{margin:0;color:var(--muted);font-weight:700;font-size:.84rem} .end-next p:empty{display:none}
 .end-acct{display:flex;align-items:center;gap:12px;border-radius:16px;padding:10px 12px;margin:0 0 10px;background:color-mix(in srgb,#7a5bf5 10%,var(--surface))}
 .end-acct div{flex:1;min-width:0} .end-acct b{display:block;font-weight:800;font-size:.92rem} .end-acct small{color:var(--muted);font-weight:700;font-size:.78rem}
 .auto-help{position:absolute;left:50%;bottom:14px;transform:translateX(-50%);z-index:6;display:flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:center;width:min(560px,calc(100% - 24px));background:var(--surface);color:var(--ink);border-radius:18px;padding:10px 12px;box-shadow:0 16px 40px -16px rgba(20,12,60,.55);border:2px solid #7a5bf5}
+.auto-help{transition:opacity 200ms var(--ease-out),transform 250ms var(--ease-out)} @starting-style{.auto-help{opacity:0;transform:translateX(-50%) translateY(8px)}} /* fades in; leaves at once (the player chose) */
 .auto-help[hidden]{display:none} .auto-help div{flex:1 1 200px;min-width:0} .auto-help b{display:block;font-weight:800} .auto-help small{color:var(--muted);font-weight:700;font-size:.8rem}
 /* ===== Premium (paywall) and invitations ===== */
 .pw,.inv{position:fixed;inset:0;z-index:9100;display:grid;place-items:center;padding:16px;background:rgba(18,14,44,.58);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
@@ -1546,7 +1581,7 @@ body.gate-on{overflow:hidden}
 .inv-quick a i{width:10px;height:10px;border-radius:50%;background:var(--c)}
 .inv-stats{display:grid;grid-template-columns:1fr 1fr;gap:8px}
 .inv-stats div{border-radius:16px;padding:10px 14px;background:color-mix(in srgb,#e04f7a 9%,var(--surface));display:flex;flex-direction:column}
-.inv-stats b{font-family:var(--f-display);font-size:1.6rem;font-weight:700} .inv-stats small{color:var(--muted);font-weight:700;font-size:.78rem}
+.inv-stats b{font-family:var(--f-display);font-size:1.6rem;font-weight:700;font-variant-numeric:tabular-nums} .inv-stats small{color:var(--muted);font-weight:700;font-size:.78rem}
 .inv-x{position:absolute;top:12px;right:12px;width:36px;height:36px;border-radius:50%;border:0;background:rgba(255,255,255,.2);color:#fff;font-size:1.2rem;cursor:pointer;z-index:2}
 @media (max-width:640px){ .inv{padding:0} .inv-card{border-radius:0;width:100%;height:100dvh;max-height:none} .inv-top{padding:18px 18px 16px} .inv-top h2{font-size:1.5rem} .inv-top .obj{width:70px;height:70px;top:38px} .inv-body{padding:14px 16px;gap:11px} .inv-steps li{font-size:.74rem;padding:8px} }
 .hs-inv{display:grid;grid-template-columns:auto 1fr;grid-template-rows:auto auto;column-gap:12px;align-items:center;color:#fff;cursor:pointer;background:#1b1838;padding:10px 14px}
@@ -1555,7 +1590,8 @@ body.gate-on{overflow:hidden}
 .gt-ref svg{width:20px;height:20px;flex:none;fill:none;stroke:#e04f7a;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
 .end-share{display:inline-flex;align-items:center;gap:6px;margin-left:auto;align-self:flex-start;border:0;border-radius:999px;padding:7px 12px;background:var(--surface-2);color:var(--ink);font-weight:800;font-size:.82rem;cursor:pointer}
 .end-share svg,.du-share svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
-.du-rcard{position:relative} .du-share{position:absolute;top:12px;right:12px;display:inline-flex;align-items:center;gap:6px;border:0;border-radius:999px;padding:6px 11px;background:var(--surface-2);color:var(--ink);font-weight:800;font-size:.8rem;cursor:pointer}
+.du-rcard{position:relative} .du-share{order:-1;align-self:flex-end;margin:-4px -10px 0 0;flex:none;display:inline-flex;align-items:center;gap:6px;border:0;border-radius:999px;padding:6px 11px;background:var(--surface-2);color:var(--ink);font-weight:800;font-size:.8rem;cursor:pointer}
+@media (max-height:420px){ .du-share{position:absolute;top:6px;right:8px;margin:0;padding:4px 9px;font-size:.74rem} .du-share span{display:none} .du-rcard .du-rk{padding-inline:40px} } /* short landscape: icon only, the kicker keeps room for it */
 .du-chal{border:0;background:none;color:#7a5bf5;font-weight:800;font-size:.86rem;cursor:pointer;padding:4px;margin-top:2px}
 .set-prem{display:flex;flex-wrap:wrap;align-items:center;gap:10px} .set-prem.off .sp-st,.set-prem.off #spSee{display:none} .set-prem .sp-st{flex:1 1 220px;font-weight:800} .set-prem .sp-st small{display:block;color:var(--muted);font-weight:600}
 .set-prem label{flex:1 1 100%;display:flex;gap:8px;align-items:center;font-size:.86rem;font-weight:700;color:var(--muted)}
@@ -1634,8 +1670,8 @@ body.gate-on{overflow:hidden}
   .onb-opt{padding:8px 10px;gap:10px} .onb-opts.six .onb-opt{padding:8px;flex-direction:row;text-align:left} .onb-ic{width:40px;height:40px} .onb-ot small{display:none} .onb-next{padding:10px} }
 /* tour */
 .tour{position:fixed;inset:0;z-index:8500}
-.tour-hole{position:fixed;border-radius:16px;box-shadow:0 0 0 4px #ffc94a,0 0 0 9999px rgba(15,10,40,.62);transition:all .3s ease;pointer-events:none}
-.tour-tip{position:fixed;width:340px;background:var(--surface);color:var(--ink);border-radius:22px;padding:16px 18px 14px;box-shadow:0 30px 60px -20px rgba(10,6,30,.6);transition:left .3s,top .3s}
+.tour-hole{position:fixed;border-radius:16px;box-shadow:0 0 0 4px #ffc94a,0 0 0 9999px rgba(15,10,40,.62);transition:left 250ms var(--ease-in-out),top 250ms var(--ease-in-out),width 250ms var(--ease-in-out),height 250ms var(--ease-in-out);pointer-events:none}
+.tour-tip{position:fixed;width:340px;background:var(--surface);color:var(--ink);border-radius:22px;padding:16px 18px 14px;box-shadow:0 30px 60px -20px rgba(10,6,30,.6);transition:left 250ms var(--ease-in-out),top 250ms var(--ease-in-out)}
 .tour-tip::before{content:"";position:absolute;width:16px;height:16px;background:var(--surface);transform:rotate(45deg);display:none}
 .tour-tip[data-side="right"]::before{display:block;left:-7px;top:calc(50% - 8px)} .tour-tip[data-side="below"]::before{display:block;top:-7px;left:calc(50% - 8px)} .tour-tip[data-side="above"]::before{display:block;bottom:-7px;left:calc(50% - 8px)}
 .tour-x{position:absolute;top:8px;right:10px;width:30px;height:30px;border-radius:50%;border:0;background:var(--surface-2);color:var(--ink);font-size:1.2rem;line-height:1;cursor:pointer}
@@ -2209,6 +2245,7 @@ body.staff-on.staff-seq .slots{display:none} #clefField[hidden]{display:none}
           <section class="pf-card pf-journey"><h3 data-i="pfJourney"></h3><p id="pfJourneySub"></p><ul id="pfJourney"></ul></section>
           <section class="pf-card pf-recs"><h3 data-i="pfRecs"></h3><p id="pfRecsSub"></p><ul id="pfRecs"></ul></section>
         </div>
+        <div class="pf-dots" id="pfDots"></div>
         <h3 class="pf-detail-h" data-i="pfDetail"></h3>
       </div>
       <div class="prog-cats" id="progCats"></div>
@@ -2265,7 +2302,7 @@ const TXT = {
     accuracy:"Précision", avgTime:"Temps moyen", xpWon:"XP gagnés", bestCombo:"Meilleur combo", toRework:"À retravailler", allPerfect:"Aucune erreur, bravo !",
     reworkBtn:"Retravailler mes erreurs", newGame:"Nouvelle partie", closeLbl:"Fermer", outOf:"exercices sans faute", tomorrow:"demain",
     secHarmony:"Harmonie", secProg:"Progressions", secEar:"Oreille", secGames:"Jeux", secPlay:"Play", hub:"Accueil", learn:"Learn", learnTitle:"Qu'est-ce qu'on travaille ?", learnSub:"Choisis une matière : les exercices se jouent sur ton piano et sont corrigés note par note.", learnTiles:[["chords","Accords","Majeurs, mineurs, renversements, accords de 7e."],["scales","Gammes","Majeures, mineures, pentatoniques, en notes ou en accords."],["harmony","Harmonie","Les degrés d'une tonalité et leurs accords."],["prog","Progressions","Les enchaînements d'accords des chansons."],["ear","Oreille","Reconnais intervalles et accords à l'écoute."],["daily","Entraînement du jour","10 exercices mélangés, environ 5 minutes."]], modeLearnSub:"Théorie et exercices", modePlaySub:"Morceaux en cascade", modeGamesSub:"Mini-jeux", hubTitle:"Qu'est-ce qu'on joue aujourd'hui ?", hubSub:"Trois façons de progresser au piano. Tu peux changer à tout moment depuis le menu.", hubLearn:"Accords, gammes, harmonie, progressions et oreille, avec des exercices corrigés note par note.", hubPlay:"Des morceaux qui tombent sur le clavier, à ta vitesse, avec les doigtés. Le morceau t'attend si tu te trompes.", hubGames:"Des mini-jeux courts pour repérer les notes, tenir le tempo, lire une portée ou tendre l'oreille.", hubLearnTags:"Accords · Gammes · Harmonie · Progressions · Oreille · Entraînement du jour", hubPlayTags:"Cascade 3D · Mode attente · Vitesse · Noms des notes · Doigtés", hubGamesTags:"Saute-notes · Contre la montre · Mémoire · Note Runner · Rythme Pulse · Accord Blaster · Gamme Climber · Oreille d'Or · Partition Express", playGamesHead:"Jeux Play", playGamesSub:"Sur le clavier lumineux, avec les notes qui tombent", playGames:[["Note Runner","Saute les obstacles en jouant la note écrite dessus.","runner"],["Rythme Pulse","Frappe au moment exact où le cercle touche la cible.","pulse"],["Accord Blaster","Joue l'accord affiché pour détruire l'astéroïde.","blaster"],["Gamme Climber","Grimpe la tour en jouant la gamme sans faute.","climber"],["Oreille d'Or","Écoute une note ou une mélodie, puis rejoue-la.","ear"],["Partition Express","Lis les notes qui arrivent sur la portée.","staff"]], secRank:"Classement", secAccount:"Profil",
-    inTitle:"Comment vas-tu jouer ?", secInter:"Interaction", secGame:"Réglages de jeu", periods:{day:"Jour",week:"Semaine",month:"Mois",year:"Année",all:"Depuis le début"}, rankEmptyP:"Personne n'a encore gagné d'XP sur cette période. À toi de jouer !", pcSolved:n=>n+" réussis", inChange:"Mode de jeu", leaveTitle:"Quitter l'entraînement du jour ?", leaveSub:"Tu es en cours. Si tu quittes, cet entraînement s'arrête et il faudra le recommencer.", leaveStay:"Continuer l'entraînement", leaveGo:"Quitter", dcStart:"Démarrer l'entraînement", inMidiApp:"Un clavier MIDI ? Sur iPhone et iPad, il faut l'app Piano Challenges (le navigateur ne gère pas le MIDI).", midiDone:"Terminer la configuration", midiSetupNeed:"Branche ton clavier en USB ou cherche-le en Bluetooth : il doit apparaître dans la liste pour continuer.", midiSetupOk:"Clavier détecté ! Joue quelques notes pour vérifier, puis termine la configuration.", backPlay:"← Retour", lockGuest:"Continuer sans compte pour l'instant", inSub:"Choisis une fois pour toutes. Tu pourras changer dans les Réglages.", inLbl:"Je joue avec",
+    inTitle:"Comment vas-tu jouer ?", secInter:"Interaction", secGame:"Réglages de jeu", periods:{day:"Jour",week:"Semaine",month:"Mois",year:"Année",all:"Depuis le début"}, rankEmptyP:"Personne n'a encore gagné d'XP sur cette période. À toi de jouer !", pcSolved:n=>fmtN(n)+(n>1?" réussis":" réussi"), inChange:"Mode de jeu", leaveTitle:"Quitter l'entraînement du jour ?", leaveSub:"Tu es en cours. Si tu quittes, cet entraînement s'arrête et il faudra le recommencer.", leaveStay:"Continuer l'entraînement", leaveGo:"Quitter", dcStart:"Démarrer l'entraînement", inMidiApp:"Un clavier MIDI ? Sur iPhone et iPad, il faut l'app Piano Challenges (le navigateur ne gère pas le MIDI).", midiDone:"Terminer la configuration", midiSetupNeed:"Branche ton clavier en USB ou cherche-le en Bluetooth : il doit apparaître dans la liste pour continuer.", midiSetupOk:"Clavier détecté ! Joue quelques notes pour vérifier, puis termine la configuration.", backPlay:"← Retour", lockGuest:"Continuer sans compte pour l'instant", inSub:"Choisis une fois pour toutes. Tu pourras changer dans les Réglages.", inLbl:"Je joue avec",
     inModes:{screen:["Le clavier à l'écran","Touche les notes à l'écran, ou utilise le clavier de l'ordinateur.","Écran"],midi:["Mon clavier MIDI","Branché en USB ou connecté en Bluetooth. Le plus précis.","MIDI"],mic:["Mon piano, avec le micro","Pour un piano acoustique : l'app écoute les notes que tu joues.","Micro"]},
     inCfgMidi:"Connecter / régler le clavier MIDI", inCfgMic:"Activer le micro", inMidiNo:"Ce navigateur ne gère pas le MIDI : utilise Chrome ou Edge, l'app iPhone/iPad, ou le micro.",
     inMidiOk:n=>"Connecté : "+n, inMidiNone:"Aucun clavier détecté : branche-le ou connecte-le en Bluetooth.", inMicOk:"Le micro écoute.", inMicOff:"Micro pas encore activé.", inScreenOk:"Touche les notes à l'écran.",
@@ -2367,7 +2404,7 @@ const TXT = {
     melDown:" · descend en Mineur",
     midiBlockedMsg:"Le navigateur a refusé l'accès MIDI. Clique sur le cadenas à gauche de l'adresse pour l'autoriser, ou choisis le clavier à l'écran.",
     dailyResume:"Reprendre",
-    syncOk:x=>"Sauvegardé en ligne "+x+" ✓", syncErr:x=>"Hors ligne : dernière sauvegarde "+x+".", agoNever:"inconnue", signedOut:"Déconnecté", rights:"Tous droits réservés", themeDay:"Passer en mode jour", themeNight:"Passer en mode nuit", fnT:"Le piano devient <em>un jeu</em>.", fnP:"Joue sur ton vrai piano, progresse à ton rythme et défie toute la communauté, que tu débutes ou que tu joues depuis des années.", fnPills:["Duels en ligne","Classement","Entraînement du jour","MIDI · micro · écran"], fnTrust:["Gratuit pour commencer","Sans compte"], fnStep:"Étape 1 sur 2 · environ 20 secondes", fnH:"Joue ta première note", fnLvlL:"Ton niveau", fnLvl:["Je débute","J'ai des bases","Confirmé"], fnInL:"Tu joues avec", fnIn:{midi:["Clavier MIDI","USB ou Bluetooth"],mic:["Micro","Ton piano acoustique"],screen:["Écran","Touche le clavier"]}, fnMidiOk:n=>"Détecté : "+n, fnMidiWait:"Branche ton clavier…", fnPrompt:"Joue un Do, n'importe lequel", fnPromptS:"La touche blanche juste à gauche des deux touches noires.", fnMicS:"Autorise le micro, puis joue un Do sur ton piano.", fnWrong:n=>"Presque : c'est un "+n+". Le Do est juste à gauche des deux touches noires.", fnOk:"Bravo, c'est un Do !", fnOkS:"Étape 2 : trois accords pour te lancer.", fnGo:"Jouer mes 3 premiers accords", fnLogin:"Déjà un compte ?", fnLoginB:"Se connecter", fnSkip:"Passer", endNext:(n,L)=>"Encore "+n+" XP avant le niveau "+L, endStreak:n=>"Série : "+n+" jour"+(n>1?"s":"")+". Reviens demain pour la garder.", endAcct:"Garde ta série et entre au classement", endAcctS:"Ton compte garde ta progression sur tous tes appareils.", endAcctB:"Créer mon compte", helpT:"Besoin d'un coup de main ?", helpS:"Tu peux voir la réponse, l'écouter, puis réessayer.", helpShow:"Montre-moi", helpTry:"Encore un essai", invSubF:"Joue en duel avec tes amis et comparez vos progrès au classement.", invStepsF:["Partage ton lien","Ton ami crée son compte","Défiez-vous en duel"], invHubSF:"Défiez-vous en duel", onbS_friendsP:"Pour chaque ami qui s'inscrit, vous gagnez 1 mois de Premium chacun.", pwKick:"Piano Challenges Premium", pwTitle:"Débloque tout le piano", pwBen:["Toutes les tonalités, avec ♯ et ♭","Tous les accords, gammes, harmonies et progressions","Les 5 morceaux, en cascade ou en partition","Duels en ligne et contre les bots, sans limite","Tous les nouveaux morceaux et jeux à venir"], pwWhy:{success:"Bien joué ! Continue avec toutes les tonalités, tous les types et tous les morceaux.",keys:"Les tonalités avec ♯ et ♭ font partie de Premium.",types:"Ce type d'exercice fait partie de Premium.",songs:"Ce morceau fait partie de Premium.",duels:"Tu as joué tes 3 duels gratuits du jour.",onb:"Ton programme est prêt : essaie-le en entier pendant 7 jours.",menu:""}, pwYear:"Annuel", pwYearP:"139 €", pwYearPer:"/ an", pwYearSub:"soit 11,58 € par mois · 7 jours gratuits", pwBest:"Le plus populaire", pwSave:"−36 %", pwMonth:"Mensuel", pwMonthP:"17,99 €", pwMonthPer:"/ mois", pwMonthSub:"Sans engagement", pwTl:[["Aujourd'hui","Tout Premium est débloqué"],["Jour 5","On te prévient avant la fin de l'essai"],["Jour 7","Début de l'abonnement, sauf si tu annules"]], pwCtaTrial:"Commencer mes 7 jours gratuits", pwCtaMonth:"S'abonner pour 17,99 €/mois", pwFineY:"Gratuit pendant 7 jours, puis 139 € par an, renouvelé automatiquement. Annule quand tu veux, en deux clics.", pwFineM:"17,99 € par mois, renouvelé automatiquement. Annule quand tu veux, en deux clics.", pwFineApp:"Paiement sur ton compte Apple. Gestion dans Réglages › ton nom › Abonnements.", pwRestore:"Restaurer mes achats", pwTerms:"Mentions légales", pwPrivacy:"Confidentialité", pwLater:"Plus tard", pwInvite:"Ou invite un ami : 1 mois offert à vous deux", pwPreview:"Aperçu : le paiement n'est pas encore branché, l'essai est simulé sur cet appareil.", pwOkT:"Bienvenue dans Premium !", pwOkP:n=>"Tout est débloqué. Ton essai gratuit se termine dans "+n+" jours ; on te prévient 2 jours avant.", pwOkPM:"Tout est débloqué. Bon entraînement !", pwOkGo:"C'est parti", pwRestoreNone:"Aucun achat à restaurer sur ce compte.", premMenu:"Passer à Premium", premSub:"7 jours gratuits", premSubTrial:n=>"Essai : encore "+n+" j", setPremH:"Abonnement", setPremFree:"Formule gratuite", setPremFreeD:"Tonalités simples, 2 types par matière, 2 morceaux, 3 duels par jour.", setPremTrial:n=>"Essai Premium : encore "+n+" jour"+(n>1?"s":""), setPremOn:"Premium actif", setPremOnD:"Tout est débloqué.", setPremSee:"Voir les offres", setPremManage:"Gérer mon abonnement", setPremPreview:"Aperçu de l'offre Premium (avant le lancement)", setPremReset:"Repasser en gratuit", duFreeLeft:n=>n+" duel"+(n>1?"s":"")+" gratuit"+(n>1?"s":"")+" aujourd'hui", lockT:"Premium", invTitle:"Invite tes amis", invSub:"Pour chaque ami qui crée son compte et fait son premier exercice, vous gagnez 1 mois de Premium chacun.", invSteps:["Partage ton lien","Ton ami crée son compte et joue","1 mois de Premium offert à vous deux"], invShare:"Partager mon lien", invCopy:"Copier", invCopied:"Copié !", invMsg:"Je progresse au piano avec Piano Challenges, on se lance des défis ? Avec mon lien, tu as 1 mois de Premium offert :", invMail:"On joue du piano ensemble ?", invStatF:"Amis inscrits", invStatM:"Mois offerts gagnés", invStatNote:"Le compteur se met à jour quand tes amis créent leur compte.", invRef:"Un ami t'a invité : 1 mois de Premium offert à la création de ton compte.", invHubT:"Invite tes amis", invHubS:"1 mois de Premium offert à vous deux", invBtn:"Inviter des amis", shareBtn:"Partager", shareChal:"Défier un ami sur ce jeu", shareCopied:"Copié : colle-le où tu veux.", shareEnd:(g,n,l)=>"J'ai réussi "+g+" sur "+n+" ("+l+") sur Piano Challenges. À toi de jouer !", shareDu:(w,g,a,b,o)=>(w===1?"J'ai battu ":w===0?"J'ai perdu contre ":"Égalité avec ")+o+" à "+g+" ("+a+" – "+b+") sur Piano Challenges. Tu me défies ?", shareImgK:"Piano Challenges", shareImgCta:"Rejoins-moi sur pianochallenges.com", shareImgEnd:"bonnes réponses", shareImgDu:{1:"Victoire",0:"Défaite",.5:"Égalité"}, staffLbl:"Solfège : notes sur la portée", staffOff:"Sans", staffOnT:"Portée", staffReadT:"Lecture", clefLbl:"Clés", clefAuto:"Auto", clefG:"Sol", clefF:"Fa", clefGF:"Sol + Fa", suStaffT:"Notes sur la portée",
+    syncOk:x=>"Sauvegardé en ligne "+x+" ✓", syncErr:x=>"Hors ligne : dernière sauvegarde "+x+".", agoNever:"inconnue", signedOut:"Déconnecté", rights:"Tous droits réservés", themeDay:"Passer en mode jour", themeNight:"Passer en mode nuit", fnT:"Le piano devient <em>un jeu</em>.", fnP:"Joue sur ton vrai piano, progresse à ton rythme et défie toute la communauté, que tu débutes ou que tu joues depuis des années.", fnPills:["Duels en ligne","Classement","Entraînement du jour","MIDI · micro · écran"], fnTrust:["Gratuit pour commencer","Sans compte"], fnStep:"Étape 1 sur 2 · environ 20 secondes", fnH:"Joue ta première note", fnLvlL:"Ton niveau", fnLvl:["Je débute","J'ai des bases","Confirmé"], fnInL:"Tu joues avec", fnIn:{midi:["Clavier MIDI","USB ou Bluetooth"],mic:["Micro","Ton piano acoustique"],screen:["Écran","Touche le clavier"]}, fnMidiOk:n=>"Détecté : "+n, fnMidiWait:"Branche ton clavier…", fnPrompt:"Joue un Do, n'importe lequel", fnPromptS:"La touche blanche juste à gauche des deux touches noires.", fnMicS:"Autorise le micro, puis joue un Do sur ton piano.", fnWrong:n=>"Presque : c'est un "+n+". Le Do est juste à gauche des deux touches noires.", fnOk:"Bravo, c'est un Do !", fnOkS:"Étape 2 : trois accords pour te lancer.", fnGo:"Jouer mes 3 premiers accords", fnLogin:"Déjà un compte ?", fnLoginB:"Se connecter", fnSkip:"Passer", endNext:(n,L)=>"Encore "+n+" XP avant le niveau "+L, endStreak:n=>"Série : "+n+" jour"+(n>1?"s":"")+". Reviens demain pour la garder.", endAcct:"Garde ta série et entre au classement", endAcctS:"Ton compte garde ta progression sur tous tes appareils.", endAcctB:"Créer mon compte", helpT:"Besoin d'un coup de main ?", helpS:"Tu peux voir la réponse, l'écouter, puis réessayer.", helpShow:"Montre-moi", helpTry:"Encore un essai", invSubF:"Joue en duel avec tes amis et comparez vos progrès au classement.", invStepsF:["Partage ton lien","Ton ami crée son compte","Défiez-vous en duel"], invHubSF:"Défiez-vous en duel", onbS_friendsP:"Pour chaque ami qui s'inscrit, vous gagnez 1 mois de Premium chacun.", pwKick:"Piano Challenges Premium", pwTitle:"Débloque tout le piano", pwBen:["Toutes les tonalités, avec ♯ et ♭","Tous les accords, gammes, harmonies et progressions","Les 5 morceaux, en cascade ou en partition","Duels en ligne et contre les bots, sans limite","Tous les nouveaux morceaux et jeux à venir"], pwWhy:{success:"Bien joué ! Continue avec toutes les tonalités, tous les types et tous les morceaux.",keys:"Les tonalités avec ♯ et ♭ font partie de Premium.",types:"Ce type d'exercice fait partie de Premium.",songs:"Ce morceau fait partie de Premium.",duels:"Tu as joué tes 3 duels gratuits du jour.",onb:"Ton programme est prêt : essaie-le en entier pendant 7 jours.",menu:""}, pwYear:"Annuel", pwYearP:"139 €", pwYearPer:"/ an", pwYearSub:"soit 11,58 € par mois · 7 jours gratuits", pwBest:"Le plus populaire", pwSave:"−36 %", pwMonth:"Mensuel", pwMonthP:"17,99 €", pwMonthPer:"/ mois", pwMonthSub:"Sans engagement", pwTl:[["Aujourd'hui","Tout Premium est débloqué"],["Jour 5","On te prévient avant la fin de l'essai"],["Jour 7","Début de l'abonnement, sauf si tu annules"]], pwCtaTrial:"Commencer mes 7 jours gratuits", pwCtaMonth:"S'abonner pour 17,99 €/mois", pwFineY:"Gratuit pendant 7 jours, puis 139 € par an, renouvelé automatiquement. Annule quand tu veux, en deux clics.", pwFineM:"17,99 € par mois, renouvelé automatiquement. Annule quand tu veux, en deux clics.", pwFineApp:"Paiement sur ton compte Apple. Gestion dans Réglages › ton nom › Abonnements.", pwRestore:"Restaurer mes achats", pwTerms:"Mentions légales", pwPrivacy:"Confidentialité", pwLater:"Plus tard", pwInvite:"Ou invite un ami : 1 mois offert à vous deux", pwPreview:"Aperçu : le paiement n'est pas encore branché, l'essai est simulé sur cet appareil.", pwOkT:"Bienvenue dans Premium !", pwOkP:n=>"Tout est débloqué. Ton essai gratuit se termine dans "+n+(n>1?" jours":" jour")+" ; on te prévient 2 jours avant.", pwOkPM:"Tout est débloqué. Bon entraînement !", pwOkGo:"C'est parti", pwRestoreNone:"Aucun achat à restaurer sur ce compte.", premMenu:"Passer à Premium", premSub:"7 jours gratuits", premSubTrial:n=>"Essai : encore "+n+" j", setPremH:"Abonnement", setPremFree:"Formule gratuite", setPremFreeD:"Tonalités simples, 2 types par matière, 2 morceaux, 3 duels par jour.", setPremTrial:n=>"Essai Premium : encore "+n+" jour"+(n>1?"s":""), setPremOn:"Premium actif", setPremOnD:"Tout est débloqué.", setPremSee:"Voir les offres", setPremManage:"Gérer mon abonnement", setPremPreview:"Aperçu de l'offre Premium (avant le lancement)", setPremReset:"Repasser en gratuit", duFreeLeft:n=>n+" duel"+(n>1?"s":"")+" gratuit"+(n>1?"s":"")+" aujourd'hui", lockT:"Premium", invTitle:"Invite tes amis", invSub:"Pour chaque ami qui crée son compte et fait son premier exercice, vous gagnez 1 mois de Premium chacun.", invSteps:["Partage ton lien","Ton ami crée son compte et joue","1 mois de Premium offert à vous deux"], invShare:"Partager mon lien", invCopy:"Copier", invCopied:"Copié !", invMsg:"Je progresse au piano avec Piano Challenges, on se lance des défis ? Avec mon lien, tu as 1 mois de Premium offert :", invMail:"On joue du piano ensemble ?", invStatF:n=>n>1?"Amis inscrits":"Ami inscrit", invStatM:n=>n>1?"Mois offerts gagnés":"Mois offert gagné", invStatNote:"Le compteur se met à jour quand tes amis créent leur compte.", invRef:"Un ami t'a invité : 1 mois de Premium offert à la création de ton compte.", invHubT:"Invite tes amis", invHubS:"1 mois de Premium offert à vous deux", invBtn:"Inviter des amis", shareBtn:"Partager", shareChal:"Défier un ami sur ce jeu", shareCopied:"Copié : colle-le où tu veux.", shareEnd:(g,n,l)=>"J'ai réussi "+g+" sur "+n+" ("+l+") sur Piano Challenges. À toi de jouer !", shareDu:(w,g,a,b,o)=>(w===1?"J'ai battu ":w===0?"J'ai perdu contre ":"Égalité avec ")+o+" à "+g+" ("+a+" – "+b+") sur Piano Challenges. Tu me défies ?", shareImgK:"Piano Challenges", shareImgCta:"Rejoins-moi sur pianochallenges.com", shareImgEnd:"bonnes réponses", shareImgDu:{1:"Victoire",0:"Défaite",.5:"Égalité"}, staffLbl:"Solfège : notes sur la portée", staffOff:"Sans", staffOnT:"Portée", staffReadT:"Lecture", clefLbl:"Clés", clefAuto:"Auto", clefG:"Sol", clefF:"Fa", clefGF:"Sol + Fa", suStaffT:"Notes sur la portée",
     staffAria:"Les notes sur la portée", readT:"Lis la portée et joue", onbQ_staff:"Sais-tu lire les notes sur une portée ?", onbS_staff:"Le solfège reste facultatif : tu peux l'activer ou le couper dans Réglages.",
     onbO_staff:{yes:["Oui, je lis les notes","Clé de sol, clé de fa"],learn:["Un peu, je veux apprendre","Les noms s'affichent sous les notes"],no:["Non, je préfère sans","L'app reste simple, sans portée"]},
     onbSumStaff:{yes:"Les notes s'écrivent sur la portée dans LEARN, GAMES et PLAY.",learn:"La portée s'affiche, avec le nom sous chaque note pour apprendre.",no:"Pas de portée : tu joues avec les noms des notes."}, unsubT:"Tes e-mails", unsubQ:w=>"Ne plus recevoir "+w+" ?", unsubWhat:{weekly:"le récap de la semaine",streak:"les rappels de série",social:"les e-mails de défis",news:"les nouveautés",all:"aucun e-mail de Piano Challenges"}, unsubYes:"Oui, me désinscrire", unsubKeep:"Non, garder", unsubDone:"C'est noté. Tu peux les réactiver dans Réglages › Notifications.", unsubBad:"Ce lien n'est plus valable.", unsubClose:"Fermer", gtRetry:"Réessayer", onbFinishT:"Terminer", gtBig:"Le piano devient un jeu", gtBigSub:"Gratuit pour commencer", gtPoints:["5 matières : accords, gammes, harmonie, progressions, oreille", "Des duels en ligne avec un classement ELO", "Ton clavier MIDI, ton piano au micro ou l'écran"], gtTitleUp:"Inscris-toi et joue gratuitement", gtTitleIn:"Content de te revoir !", gtSignup:"Créer un compte", gtLogin:"Se connecter", gtName:"Ton prénom ou pseudo", gtPwd:"Mot de passe (8 caractères min.)", gtShowPwd:"Afficher le mot de passe", gtAccept:"J'accepte la", gtPrivacy:"politique de confidentialité", gtCreate:"Créer mon compte", gtSignIn:"Se connecter", gtUseCode:"Recevoir plutôt un code par e-mail", gtBackPwd:"Revenir au mot de passe", gtOtpIntro:"Entre ton e-mail : on t'envoie un code pour te connecter, sans mot de passe.", gtWith:p=>"Continuer avec "+p, gtGuest:"Continuer en invité", gtBadMail:"Cette adresse e-mail ne semble pas valide.", gtBadPwd:"Le mot de passe doit faire au moins 8 caractères.", gtNeedOk:"Accepte la politique de confidentialité pour créer ton compte.", gtConfirm:e=>"Presque fini ! Un e-mail de confirmation est parti à "+e+". Clique sur le lien, ou entre ici le code qu'il contient.", gtBadLogin:"E-mail ou mot de passe incorrect.", gtExists:"Un compte existe déjà avec cet e-mail : connecte-toi.", gtNotConfirmed:"Confirme d'abord ton adresse avec l'e-mail reçu (ou connecte-toi avec un code).", gtSoonProv:"Cette connexion arrive bientôt. Utilise Google, ton e-mail, ou continue en invité.", onbPrev:"Précédent", onbNextT:"Suivant", onbSkip:"Passer", onbStep:(i,n)=>"Question "+i+" sur "+n, onbQ_why:"Pourquoi veux-tu apprendre le piano ?", onbS_why:"Plusieurs réponses possibles.", onbQ_level:"Quel est ton niveau ?", onbS_level:"On règle les aides et ton classement de départ.", onbQ_how:"Comment vas-tu jouer ?", onbS_how:"Tu pourras changer à tout moment, en bas du menu.", onbQ_cont:"Tu veux travailler…", onbS_cont:"Les jeux, les gammes et le quiz partiront de ce choix.", onbQ_friends:"Invite tes amis", onbS_friends:"Joue en duel avec eux et comparez vos progrès au classement.", onbO_why:{"fun": ["Pour le plaisir", "Me détendre en jouant"], "songs": ["Jouer mes morceaux", "Les chansons que j'aime"], "theory": ["Comprendre la musique", "Accords, gammes, harmonie"], "accomp": ["Accompagner des chansons", "Seul ou avec des amis"], "create": ["Composer et improviser", "Créer ma musique"], "school": ["Pour mes cours", "Conservatoire, école, prof"]}, onbO_level:{"debut": ["Je débute", "Je n'ai jamais joué"], "notes": ["Je connais quelques notes", "Je trouve Do, Ré, Mi sur le clavier"], "simple": ["Je joue des morceaux simples", "Et quelques accords"], "adv": ["Je joue déjà bien", "Je veux aller plus loin"]}, onbO_how:{"midi": ["Clavier MIDI", "Branché en USB ou en Bluetooth"], "mic": ["Piano acoustique", "L'app écoute avec le micro"], "screen": ["Sur l'écran", "Je joue directement dans l'app"]}, onbO_cont:{"notes": ["Juste les notes", "Une note à la fois, pour bien démarrer"], "chords": ["Les notes et la grille d'accords", "Plus complet, pour aller plus loin"]}, onbShare:"Partager le lien", onbShareTxt:"Viens jouer du piano avec moi sur Piano Challenges !", onbLater:"Plus tard", onbDoneK:"C'est prêt", onbDoneH:"Ton programme est prêt", onbDoneSub:"On a réglé l'app pour toi. Tu peux tout changer dans Réglages.", onbTour:"Découvrir l'app", onbNoTour:"Passer la présentation", onbSumLevel:{"debut": "Aides activées : touches allumées, noms des notes et doigtés.", "notes": "Aide progressive, noms des notes et doigtés activés.", "simple": "Aide progressive activée, sans les noms des notes.", "adv": "Tous les exercices sont débloqués, sans aide."}, onbSumHow:{"midi": "Ton clavier MIDI sera détecté dès que tu le branches.", "mic": "L'app écoutera ton piano avec le micro.", "screen": "Tu joues sur le clavier à l'écran."}, onbSumCont:{"notes": "Jeux et gammes en notes pour commencer.", "chords": "Jeux, gammes et quiz avec les accords."}, onbSumWhy:{"songs": "Va dans PLAY pour tes premiers morceaux.", "theory": "Commence par LEARN : accords et gammes.", "fun": "Chaque jour, l'entraînement du jour te fait progresser en 5 minutes."}, tourDone:"C'est parti !", tourSkipT:"Passer", tourAgainT:"Revoir la présentation", onbAgainT:"Refaire le questionnaire", tourT:{learn:["LEARN",["Accords, gammes, harmonie, progressions et oreille","Tu choisis l'exercice, il est corrigé note par note"]],games:["GAMES",["Des mini-jeux rapides","Des duels en ligne, contre un ami ou un bot, avec ton ELO"]],play:["PLAY",["Des morceaux en cascade, à ta vitesse","Le piano libre pour jouer ce que tu veux"]],quiz:["QUIZ",["Réponds en jouant la bonne note ou le bon accord","Jusqu'à 4 joueurs, ou en ligne"]],daily:["Entraînement du jour",["10 exercices, environ 5 minutes","Il garde ta série de jours en vie"]],level:["Ton niveau",["Gagne de l'XP pour passer les 10 niveaux","Touche-le pour voir ta progression"]],ntf:["Notifications",["Tes défis, tes progrès et les nouveautés","Règle-les dans Réglages"]],rank:["Classement",["Compare-toi aux autres joueurs","Par jour, semaine, mois ou année"]],input:["Ton instrument",["Clavier MIDI, micro ou écran","Touche ici pour changer"]],settings:["Réglages",["Langue, aides, doigtés, notifications","Tu peux revoir cette présentation ici"]]}, ntfTitle:"Notifications", ntfSub:"Tes défis, tes progrès et les nouveautés de l'app.", ntfAllReadT:"Tout marquer comme lu", ntfSetT:"Réglages", ntfAll:"Tout",
@@ -2407,12 +2444,13 @@ const TXT = {
     suHelpPT:"Aide progressive", suHelpPD:"Rien au départ. Si tu bloques, un indice arrive toutes les 8 s (ou avec Espace) : le degré, puis le nom, puis les touches. Les notes trouvées restent allumées et une fiche se construit pour les retenir.",
     suLabelsT:"Noms des notes sur le clavier", suCount:(n,sec)=>n===1?(sec==="prog"?"1 progression à jouer":sec==="chords"?"1 accord à jouer":"1 gamme, rejouée jusqu'à la réussir"):n+" exercices",
     ficheT:"À retenir", ficheS:(a,b)=>a+" / "+b+" notes", playSub:"Des morceaux qui tombent sur le clavier, à ton rythme. En dessous, le piano pour jouer librement.", freeK:"Jeu libre",
-    pfAch:"Tes réussites", pfJourney:"Ton parcours", pfRecs:"Tes records", pfDetail:"Détail par matière", pfLvl:"Niveau",
+    pfEloL:(g,c)=>g+" ("+c.toLowerCase()+")", pfAch:"Tes réussites", pfJourney:"Ton parcours", pfRecs:"Tes records", pfDetail:"Détail par matière", pfLvl:"Niveau",
     pfSt:["Score total","Exercices réussis","Exercices sans faute","Éléments maîtrisés","Temps de jeu total","Joué aujourd'hui"],
-    pfDayS:n=>"Série : "+n+" j", pfWeekS:n=>"Semaines : "+n, pfBest:n=>"Record : "+n, pfJSub:(a,b)=>a+" éléments maîtrisés sur "+b+".", pfRSub:"Tes meilleurs scores dans les jeux et les morceaux.",
+    pfDayS:n=>"Série : "+n+" j", pfWeekS:n=>"Semaines : "+n, pfBest:n=>"Record : "+n, pfJSub:(a,b)=>fmtN(a)+(a>1?" éléments maîtrisés":" élément maîtrisé")+" sur "+fmtN(b)+".", pfRSub:"Tes meilleurs scores dans les jeux et les morceaux.",
     pfMonths:["janvier","février","mars","avril","mai","juin","juillet","août","septembre","octobre","novembre","décembre"], pfDays:["L","M","M","J","V","S","D"], themeDayS:"Mode jour", themeNightS:"Mode nuit", langLbl:"Langue",
     hsDailyK:"À faire aujourd'hui", hsDailyGo:"C'est parti", hsDailyDone:"Refaire", hsMidiT:"Clavier MIDI", hsMidiOff:"Aucun clavier branché : relie-le en USB ou en Bluetooth.", hsMidiNo:"Ce navigateur ne gère pas le MIDI : joue au micro ou à l'écran.", hsMidiConnect:"Connecter", hsMidiChange:"Changer",
-    hsNewsT:"Actualités", hsRankT:"Classement de la semaine", hsRankMore:"Tout voir", hsRankLoad:"Chargement…", hsRankErr:"Classement indisponible pour l'instant.",
+    pseudoShort:"Ton pseudo doit faire au moins 2 caractères.", pseudoLong:"Ton pseudo doit faire 24 caractères au plus.", pseudoBad:"Ton pseudo contient des caractères invisibles ou de contrôle : retire-les.",
+    rankOrd:n=>ordFr(n), hsNewsT:"Actualités", hsRankT:"Classement de la semaine", hsRankMore:"Tout voir", hsRankLoad:"Chargement…", hsRankErr:"Classement indisponible pour l'instant.",
     hsNews:[["Nouveau look","Mode jour ou nuit, cartes en 3D : l'app fait peau neuve.","#6a4bf0","M12 3l2.4 5 5.6.8-4 3.9.9 5.5L12 15.6 7.1 18.2l.9-5.5-4-3.9 5.6-.8z"],["Jeux Play","Six mini-jeux sur le clavier lumineux, dans GAMES.","#1f7a52","M6 9h4M8 7v4M15 9h.01M18 11h.01M3 8a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4v5a4 4 0 0 1-7 2.5h-4A4 4 0 0 1 3 13z"],["Jeu libre","Joue ce que tu veux dans PLAY : chaque note s'allume dans sa couleur.","#0e7490","M9 18V5l12-2v13M9 18a3 3 0 1 1-6 0 3 3 0 0 1 6 0zM21 16a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"],["Entraînement du jour","10 exercices mélangés chaque jour pour garder ta série.","#a3306b","M12 3c1 3.5 5 6 5 11a5 5 0 0 1-10 0c0-2.2 1-3.8 2.2-5 .2 1.6 1 2.8 2.3 3.3C11 9.3 11.3 6 12 3z"]],
     wrongSr:"Fausse note : ",
     dailyShort:"Entraînement"},
@@ -2430,7 +2468,7 @@ const TXT = {
     accuracy:"Accuracy", avgTime:"Average time", xpWon:"XP earned", bestCombo:"Best combo", toRework:"To rework", allPerfect:"No mistakes, well done!",
     reworkBtn:"Rework my mistakes", newGame:"New game", closeLbl:"Close", outOf:"exercises without mistakes", tomorrow:"tomorrow",
     secHarmony:"Harmony", secProg:"Progressions", secEar:"Ear", secGames:"Games", secPlay:"Play", hub:"Home", learn:"Learn", learnTitle:"What do we work on?", learnSub:"Pick a topic: exercises are played on your piano and checked note by note.", learnTiles:[["chords","Chords","Major, minor, inversions, 7th chords."],["scales","Scales","Major, minor, pentatonic, as notes or chords."],["harmony","Harmony","The degrees of a key and their chords."],["prog","Progressions","The chord sequences behind songs."],["ear","Ear","Recognise intervals and chords by ear."],["daily","Daily practice","10 mixed exercises, about 5 minutes."]], modeLearnSub:"Theory and exercises", modePlaySub:"Falling-note songs", modeGamesSub:"Mini-games", hubTitle:"What do we play today?", hubSub:"Three ways to get better at the piano. Switch any time from the menu.", hubLearn:"Chords, scales, harmony, progressions and ear training, checked note by note.", hubPlay:"Songs that fall onto the keys at your own speed, with fingering. The song waits for you when you miss.", hubGames:"Short mini-games to find the notes, keep the beat, read the staff or train your ear.", hubLearnTags:"Chords · Scales · Harmony · Progressions · Ear · Daily practice", hubPlayTags:"3D cascade · Wait mode · Speed · Note names · Fingering", hubGamesTags:"Note Jumper · Time attack · Memory · Note Runner · Rhythm Pulse · Chord Blaster · Scale Climber · Golden Ear · Staff Express", playGamesHead:"Play games", playGamesSub:"On the lit keyboard, with falling notes", playGames:[["Note Runner","Jump over obstacles by playing the note written on them.","runner"],["Rhythm Pulse","Hit a key exactly when the ring reaches the target.","pulse"],["Chord Blaster","Play the chord shown to blast the asteroid.","blaster"],["Scale Climber","Climb the tower by playing the scale without a slip.","climber"],["Golden Ear","Listen to a note or a short melody, then play it back.","ear"],["Staff Express","Read the notes as they reach the bar on the staff.","staff"]], secRank:"Leaderboard", secAccount:"Profile",
-    inTitle:"How will you play?", secInter:"Interaction", secGame:"Game settings", periods:{day:"Today",week:"This week",month:"This month",year:"This year",all:"All time"}, rankEmptyP:"Nobody has earned XP in this period yet. Your turn!", pcSolved:n=>n+" solved", inChange:"Play mode", leaveTitle:"Leave the daily practice?", leaveSub:"You are in the middle of it. If you leave, it stops and you will have to start again.", leaveStay:"Keep practising", leaveGo:"Leave", dcStart:"Start the practice", inMidiApp:"A MIDI keyboard? On iPhone and iPad you need the Piano Challenges app (the browser has no MIDI).", midiDone:"Finish set-up", midiSetupNeed:"Plug your keyboard in with USB or search for it over Bluetooth: it must show up in the list to continue.", midiSetupOk:"Keyboard detected! Play a few notes to check, then finish the set-up.", backPlay:"← Back", lockGuest:"Continue without an account for now", inSub:"Choose once. You can change it later in Settings.", inLbl:"I play with",
+    inTitle:"How will you play?", secInter:"Interaction", secGame:"Game settings", periods:{day:"Today",week:"This week",month:"This month",year:"This year",all:"All time"}, rankEmptyP:"Nobody has earned XP in this period yet. Your turn!", pcSolved:n=>fmtN(n)+" solved", inChange:"Play mode", leaveTitle:"Leave the daily practice?", leaveSub:"You are in the middle of it. If you leave, it stops and you will have to start again.", leaveStay:"Keep practising", leaveGo:"Leave", dcStart:"Start the practice", inMidiApp:"A MIDI keyboard? On iPhone and iPad you need the Piano Challenges app (the browser has no MIDI).", midiDone:"Finish set-up", midiSetupNeed:"Plug your keyboard in with USB or search for it over Bluetooth: it must show up in the list to continue.", midiSetupOk:"Keyboard detected! Play a few notes to check, then finish the set-up.", backPlay:"← Back", lockGuest:"Continue without an account for now", inSub:"Choose once. You can change it later in Settings.", inLbl:"I play with",
     inModes:{screen:["The on-screen keyboard","Tap the notes on screen, or use your computer keyboard.","Screen"],midi:["My MIDI keyboard","Plugged in with USB or connected over Bluetooth. The most accurate.","MIDI"],mic:["My piano, with the mic","For an acoustic piano: the app listens to the notes you play.","Mic"]},
     inCfgMidi:"Connect / set up the MIDI keyboard", inCfgMic:"Turn the mic on", inMidiNo:"This browser has no MIDI: use Chrome or Edge, the iPhone/iPad app, or the mic.",
     inMidiOk:n=>"Connected: "+n, inMidiNone:"No keyboard detected: plug it in or connect it over Bluetooth.", inMicOk:"The mic is listening.", inMicOff:"Mic not turned on yet.", inScreenOk:"Tap the notes on screen.",
@@ -2476,8 +2514,8 @@ const TXT = {
     get rnStart(){ return "Play a "+CNAME()+" to start"; },
     gmDiffL:"Difficulty", gmContL:"Play", gmDiffs:{prog:"Progressive",slow:"Slow",mid:"Medium",fast:"Fast"}, gmConts:{chords:"Chords",notes:"Notes"},
     gmTap:"Tap here to start.", gmReady:"Ready?", gmOver:"Done!", gmChord:"Chord to play", gmNote:"Note to play",
-    spName:"Against the clock", spHow:s=>"Play as many right answers as you can in "+s+" seconds.", spDone:n=>n+" right answer"+(n>1?"s":"")+"!",
-    mmName:"Musical memory", mmHow:"Listen, watch the keys light up, then play the sequence back.", mmListen:"Listen…", mmYou:"Your turn!", mmGood:"Well done! One more…", mmRound:n=>"Round "+n, mmDone:n=>n+" round"+(n>1?"s":"")+" completed.", rnPerfect:"Perfect!", rnHelpLbl:"Show the notes", rnTap:"Tap the game to start", rnOverShort:"Ouch!", rnHow:"Play the chord written above the note as it crosses the circle", get rnOver(){ return "Ouch! Play a "+CNAME()+" to try again"; }, rnBestL:"Best", rnNew:"New record!",
+    spName:"Against the clock", spHow:s=>"Play as many right answers as you can in "+s+" seconds.", spDone:n=>n+" right answer"+(n!==1?"s":"")+"!",
+    mmName:"Musical memory", mmHow:"Listen, watch the keys light up, then play the sequence back.", mmListen:"Listen…", mmYou:"Your turn!", mmGood:"Well done! One more…", mmRound:n=>"Round "+n, mmDone:n=>n+" round"+(n!==1?"s":"")+" completed.", rnPerfect:"Perfect!", rnHelpLbl:"Show the notes", rnTap:"Tap the game to start", rnOverShort:"Ouch!", rnHow:"Play the chord written above the note as it crosses the circle", get rnOver(){ return "Ouch! Play a "+CNAME()+" to try again"; }, rnBestL:"Best", rnNew:"New record!",
     games:[["Note Jumper","You are a piano! Play the chord (or note) shown to jump over the notes.","runner"],["Against the clock","Play as many chords (or notes) as you can before time runs out.","speed"],["Musical memory","Listen to a sequence of notes or chords, then play it back. It grows every round.","memory"],["Daily challenge","The same timed challenge for everyone, with a leaderboard."]],
     degrees:"Degrees to practise", optVL:"Chain with the closest inversions (voice leading)", practiseH:"Keys to practise", practiseP:"Progressions to practise", practiseE:"Categories to practise",
     chordOfKey:"Chord of the key", ofKey:" of ", inKey:"in ", progLbl:"Progression", vlOn:"closest inversions", listenLbl:"Listen",
@@ -2486,7 +2524,7 @@ const TXT = {
     idleSubE:"Listen and name what you hear. No piano needed.",
     replayH:"Listen to the chord", replayP:"Listen to the progression", replayE:"Listen again",
     correctP:"correct chords", correctE:"correct answers", whichE:{int:"Which interval?",chord:"Which chord?",scale:"Which scale?"},
-    itemsWordH:n=>n+" chord"+(n>1?"s":""), itemsWordP:n=>n+" progression"+(n>1?"s":""), itemsWordE:n=>n+" question"+(n>1?"s":""),
+    itemsWordH:n=>n+" chord"+(n!==1?"s":""), itemsWordP:n=>n+" progression"+(n!==1?"s":""), itemsWordE:n=>n+" question"+(n!==1?"s":""),
     lockedHintH:n=>"Fill the degree gauges of a key to unlock the next one. "+n+" left to discover.",
     lockedHintP:n=>"Play a progression 3 times without mistakes to unlock the next key. "+n+" left to discover.",
     typeLockedH:l=>"These keys open at level "+l+".", typeLockedP:l=>"This progression opens at level "+l+".", typeLockedE:l=>"This category opens at level "+l+".",
@@ -2496,14 +2534,14 @@ const TXT = {
     intShort:{m2:"m2",M2:"M2",m3:"m3",M3:"M3",P4:"P4",TT:"TT",P5:"P5",m6:"m6",M6:"M6",m7:"m7",M7:"M7",P8:"P8"},
     secScales:"Scales", secChords:"Chords", inversions:"Inversions", chordToPlay:"Chord to play",
     idleSubC:"Play the chord starting from its lowest note: all at once (MIDI) or one note at a time.", replayC:"Listen to the chord",
-    practiseS:"Scales to practise", replaySC:"Listen to the chords", idleSubSC:"Play the chords of the scale one after another, from degree I to VII (all at once in MIDI, or note by note).", scModeLbl:"Play", scNotes:"Notes", scChords:"Chords", optSc7:"7th chords", scChordsOf:" · chords", scChordsLbl:"Chords of the scale", chordsN:n=>n+" chord"+(n>1?"s":""), practiseC:"Chords to practise", newChord:"New chord: ",
+    practiseS:"Scales to practise", replaySC:"Listen to the chords", idleSubSC:"Play the chords of the scale one after another, from degree I to VII (all at once in MIDI, or note by note).", scModeLbl:"Play", scNotes:"Notes", scChords:"Chords", optSc7:"7th chords", scChordsOf:" · chords", scChordsLbl:"Chords of the scale", chordsN:n=>n+" chord"+(n!==1?"s":""), practiseC:"Chords to practise", newChord:"New chord: ",
     lockedHintC:n=>"Play a chord 3 times without mistakes to unlock the next root. "+n+" left to discover.",
     typeLockedC:l=>"This chord type opens at level "+l+".", lockedTipC:"Master one more chord to unlock it",
     invNames:["Root position","1st inversion","2nd inversion","3rd inversion"], rootLbl:"R",
     combo:"Combo", streak:"Streak", day:"d", scaleToPlay:"Scale to play", ready:"Ready?",
     idleSub:"Play the scale on your piano, from the root up to the octave.", ascending:"Ascending", descending:"Descending",
     inOrder:"In order", random:"Random", noAcc:"no ♯ or ♭", notes:"notes",
-    perfect:"Perfect!", errors:n=>n+" mistake"+(n>1?"s":""), correct:"correct notes", missed:n=>n+" missed", missedP:n=>n+" missed", session:"Session",
+    perfect:"Perfect!", errors:n=>n+" mistake"+(n!==1?"s":""), correct:"correct notes", missed:n=>n+" missed", missedP:n=>n+" missed", session:"Session",
     start:"Start", giveUp:"Show me", knew:"Continue", review:"Retry", replay:"Listen to the scale", next:"Next",
     get midiStartTip(){ return "Play a "+CNAME()+" on your MIDI keyboard to start, and again to continue."; }, screenKeys:"On-screen keys", midiOff:"Enable MIDI", micOff:"Enable mic", midiNone:"MIDI: no device", midiDev:"MIDI: ",
     midiBlocked:"MIDI blocked", midiNo:"MIDI not supported", micOn:"Mic: listening", micBlocked:"Mic blocked",
@@ -2531,7 +2569,7 @@ const TXT = {
     melDown:" · descends as Minor",
     midiBlockedMsg:"The browser refused MIDI access. Click the padlock left of the address to allow it, or choose the on-screen keyboard.",
     dailyResume:"Resume",
-    syncOk:x=>"Saved online "+x+" ✓", syncErr:x=>"Offline: last save "+x+".", agoNever:"unknown", signedOut:"Signed out", rights:"All rights reserved", themeDay:"Switch to day mode", themeNight:"Switch to night mode", fnT:"Piano becomes <em>a game</em>.", fnP:"Play on your real piano, progress at your own pace and challenge the whole community, whether you're starting out or have played for years.", fnPills:["Online duels","Leaderboard","Daily practice","MIDI · mic · screen"], fnTrust:["Free to start","No account needed"], fnStep:"Step 1 of 2 · about 20 seconds", fnH:"Play your first note", fnLvlL:"Your level", fnLvl:["I'm starting","I know the basics","Advanced"], fnInL:"You play with", fnIn:{midi:["MIDI keyboard","USB or Bluetooth"],mic:["Microphone","Your acoustic piano"],screen:["Screen","Tap the keyboard"]}, fnMidiOk:n=>"Found: "+n, fnMidiWait:"Plug in your keyboard…", fnPrompt:"Play a C, any C", fnPromptS:"The white key just left of the two black keys.", fnMicS:"Allow the microphone, then play a C on your piano.", fnWrong:n=>"Almost: that's "+n+". C is just left of the two black keys.", fnOk:"Well done, that's a C!", fnOkS:"Step 2: three chords to get you going.", fnGo:"Play my first 3 chords", fnLogin:"Already have an account?", fnLoginB:"Sign in", fnSkip:"Skip", endNext:(n,L)=>n+" XP to level "+L, endStreak:n=>"Streak: "+n+" day"+(n>1?"s":"")+". Come back tomorrow to keep it.", endAcct:"Keep your streak and join the leaderboard", endAcctS:"Your account keeps your progress on all your devices.", endAcctB:"Create my account", helpT:"Need a hand?", helpS:"You can see the answer, listen to it, then try again.", helpShow:"Show me", helpTry:"Try again", invSubF:"Play duels with your friends and compare your progress on the leaderboard.", invStepsF:["Share your link","Your friend signs up","Challenge each other in duels"], invHubSF:"Challenge each other in duels", onbS_friendsP:"For each friend who signs up, you both get 1 month of Premium.", pwKick:"Piano Challenges Premium", pwTitle:"Unlock the whole piano", pwBen:["Every key, with ♯ and ♭","Every chord, scale, harmony and progression","All 5 songs, as a cascade or as sheet music","Online and bot duels, unlimited","Every new song and game to come"], pwWhy:{success:"Well played! Keep going with every key, every type and every song.",keys:"Keys with ♯ and ♭ are part of Premium.",types:"This kind of exercise is part of Premium.",songs:"This song is part of Premium.",duels:"You've played your 3 free duels today.",onb:"Your plan is ready: try all of it free for 7 days.",menu:""}, pwYear:"Yearly", pwYearP:"€139", pwYearPer:"/ year", pwYearSub:"just €11.58 a month · 7 days free", pwBest:"Most popular", pwSave:"−36%", pwMonth:"Monthly", pwMonthP:"€17.99", pwMonthPer:"/ month", pwMonthSub:"No commitment", pwTl:[["Today","All of Premium is unlocked"],["Day 5","We remind you before the trial ends"],["Day 7","Your subscription starts, unless you cancel"]], pwCtaTrial:"Start my 7-day free trial", pwCtaMonth:"Subscribe for €17.99/month", pwFineY:"Free for 7 days, then €139 a year, renewed automatically. Cancel anytime in two taps.", pwFineM:"€17.99 a month, renewed automatically. Cancel anytime in two taps.", pwFineApp:"Charged to your Apple account. Manage it in Settings › your name › Subscriptions.", pwRestore:"Restore purchases", pwTerms:"Legal notice", pwPrivacy:"Privacy", pwLater:"Not now", pwInvite:"Or invite a friend: 1 month free for both of you", pwPreview:"Preview: payment isn't connected yet, the trial is simulated on this device.", pwOkT:"Welcome to Premium!", pwOkP:n=>"Everything is unlocked. Your free trial ends in "+n+" days; we'll remind you 2 days before.", pwOkPM:"Everything is unlocked. Enjoy your practice!", pwOkGo:"Let's go", pwRestoreNone:"No purchase to restore on this account.", premMenu:"Go Premium", premSub:"7 days free", premSubTrial:n=>"Trial: "+n+" days left", setPremH:"Subscription", setPremFree:"Free plan", setPremFreeD:"Simple keys, 2 types per topic, 2 songs, 3 duels a day.", setPremTrial:n=>"Premium trial: "+n+" day"+(n>1?"s":"")+" left", setPremOn:"Premium active", setPremOnD:"Everything is unlocked.", setPremSee:"See the plans", setPremManage:"Manage my subscription", setPremPreview:"Premium preview (before launch)", setPremReset:"Back to free", duFreeLeft:n=>n+" free duel"+(n>1?"s":"")+" today", lockT:"Premium", invTitle:"Invite your friends", invSub:"For each friend who creates an account and does a first exercise, you both get 1 month of Premium.", invSteps:["Share your link","Your friend signs up and plays","1 month of Premium for both of you"], invShare:"Share my link", invCopy:"Copy", invCopied:"Copied!", invMsg:"I'm getting better at piano with Piano Challenges, want to challenge me? With my link you get 1 month of Premium free:", invMail:"Shall we play piano together?", invStatF:"Friends joined", invStatM:"Free months earned", invStatNote:"The counter updates when your friends create their account.", invRef:"A friend invited you: 1 month of Premium free when you create your account.", invHubT:"Invite your friends", invHubS:"1 month of Premium free for both of you", invBtn:"Invite friends", shareBtn:"Share", shareChal:"Challenge a friend on this game", shareCopied:"Copied: paste it anywhere.", shareEnd:(g,n,l)=>"I got "+g+" out of "+n+" ("+l+") on Piano Challenges. Your turn!", shareDu:(w,g,a,b,o)=>(w===1?"I beat ":w===0?"I lost to ":"Draw with ")+o+" at "+g+" ("+a+" – "+b+") on Piano Challenges. Want to challenge me?", shareImgK:"Piano Challenges", shareImgCta:"Join me on pianochallenges.com", shareImgEnd:"correct answers", shareImgDu:{1:"Victory",0:"Defeat",.5:"Draw"}, staffLbl:"Sheet music: notes on the staff", staffOff:"Off", staffOnT:"Staff", staffReadT:"Reading", clefLbl:"Clefs", clefAuto:"Auto", clefG:"Treble", clefF:"Bass", clefGF:"Grand staff", suStaffT:"Notes on the staff",
+    syncOk:x=>"Saved online "+x+" ✓", syncErr:x=>"Offline: last save "+x+".", agoNever:"unknown", signedOut:"Signed out", rights:"All rights reserved", themeDay:"Switch to day mode", themeNight:"Switch to night mode", fnT:"Piano becomes <em>a game</em>.", fnP:"Play on your real piano, progress at your own pace and challenge the whole community, whether you're starting out or have played for years.", fnPills:["Online duels","Leaderboard","Daily practice","MIDI · mic · screen"], fnTrust:["Free to start","No account needed"], fnStep:"Step 1 of 2 · about 20 seconds", fnH:"Play your first note", fnLvlL:"Your level", fnLvl:["I'm starting","I know the basics","Advanced"], fnInL:"You play with", fnIn:{midi:["MIDI keyboard","USB or Bluetooth"],mic:["Microphone","Your acoustic piano"],screen:["Screen","Tap the keyboard"]}, fnMidiOk:n=>"Found: "+n, fnMidiWait:"Plug in your keyboard…", fnPrompt:"Play a C, any C", fnPromptS:"The white key just left of the two black keys.", fnMicS:"Allow the microphone, then play a C on your piano.", fnWrong:n=>"Almost: that's "+n+". C is just left of the two black keys.", fnOk:"Well done, that's a C!", fnOkS:"Step 2: three chords to get you going.", fnGo:"Play my first 3 chords", fnLogin:"Already have an account?", fnLoginB:"Sign in", fnSkip:"Skip", endNext:(n,L)=>n+" XP to level "+L, endStreak:n=>"Streak: "+n+" day"+(n!==1?"s":"")+". Come back tomorrow to keep it.", endAcct:"Keep your streak and join the leaderboard", endAcctS:"Your account keeps your progress on all your devices.", endAcctB:"Create my account", helpT:"Need a hand?", helpS:"You can see the answer, listen to it, then try again.", helpShow:"Show me", helpTry:"Try again", invSubF:"Play duels with your friends and compare your progress on the leaderboard.", invStepsF:["Share your link","Your friend signs up","Challenge each other in duels"], invHubSF:"Challenge each other in duels", onbS_friendsP:"For each friend who signs up, you both get 1 month of Premium.", pwKick:"Piano Challenges Premium", pwTitle:"Unlock the whole piano", pwBen:["Every key, with ♯ and ♭","Every chord, scale, harmony and progression","All 5 songs, as a cascade or as sheet music","Online and bot duels, unlimited","Every new song and game to come"], pwWhy:{success:"Well played! Keep going with every key, every type and every song.",keys:"Keys with ♯ and ♭ are part of Premium.",types:"This kind of exercise is part of Premium.",songs:"This song is part of Premium.",duels:"You've played your 3 free duels today.",onb:"Your plan is ready: try all of it free for 7 days.",menu:""}, pwYear:"Yearly", pwYearP:"€139", pwYearPer:"/ year", pwYearSub:"just €11.58 a month · 7 days free", pwBest:"Most popular", pwSave:"−36%", pwMonth:"Monthly", pwMonthP:"€17.99", pwMonthPer:"/ month", pwMonthSub:"No commitment", pwTl:[["Today","All of Premium is unlocked"],["Day 5","We remind you before the trial ends"],["Day 7","Your subscription starts, unless you cancel"]], pwCtaTrial:"Start my 7-day free trial", pwCtaMonth:"Subscribe for €17.99/month", pwFineY:"Free for 7 days, then €139 a year, renewed automatically. Cancel anytime in two taps.", pwFineM:"€17.99 a month, renewed automatically. Cancel anytime in two taps.", pwFineApp:"Charged to your Apple account. Manage it in Settings › your name › Subscriptions.", pwRestore:"Restore purchases", pwTerms:"Legal notice", pwPrivacy:"Privacy", pwLater:"Not now", pwInvite:"Or invite a friend: 1 month free for both of you", pwPreview:"Preview: payment isn't connected yet, the trial is simulated on this device.", pwOkT:"Welcome to Premium!", pwOkP:n=>"Everything is unlocked. Your free trial ends in "+n+(n!==1?" days":" day")+"; we'll remind you 2 days before.", pwOkPM:"Everything is unlocked. Enjoy your practice!", pwOkGo:"Let's go", pwRestoreNone:"No purchase to restore on this account.", premMenu:"Go Premium", premSub:"7 days free", premSubTrial:n=>"Trial: "+n+" days left", setPremH:"Subscription", setPremFree:"Free plan", setPremFreeD:"Simple keys, 2 types per topic, 2 songs, 3 duels a day.", setPremTrial:n=>"Premium trial: "+n+" day"+(n!==1?"s":"")+" left", setPremOn:"Premium active", setPremOnD:"Everything is unlocked.", setPremSee:"See the plans", setPremManage:"Manage my subscription", setPremPreview:"Premium preview (before launch)", setPremReset:"Back to free", duFreeLeft:n=>n+" free duel"+(n!==1?"s":"")+" today", lockT:"Premium", invTitle:"Invite your friends", invSub:"For each friend who creates an account and does a first exercise, you both get 1 month of Premium.", invSteps:["Share your link","Your friend signs up and plays","1 month of Premium for both of you"], invShare:"Share my link", invCopy:"Copy", invCopied:"Copied!", invMsg:"I'm getting better at piano with Piano Challenges, want to challenge me? With my link you get 1 month of Premium free:", invMail:"Shall we play piano together?", invStatF:n=>n===1?"Friend joined":"Friends joined", invStatM:n=>n===1?"Free month earned":"Free months earned", invStatNote:"The counter updates when your friends create their account.", invRef:"A friend invited you: 1 month of Premium free when you create your account.", invHubT:"Invite your friends", invHubS:"1 month of Premium free for both of you", invBtn:"Invite friends", shareBtn:"Share", shareChal:"Challenge a friend on this game", shareCopied:"Copied: paste it anywhere.", shareEnd:(g,n,l)=>"I got "+g+" out of "+n+" ("+l+") on Piano Challenges. Your turn!", shareDu:(w,g,a,b,o)=>(w===1?"I beat ":w===0?"I lost to ":"Draw with ")+o+" at "+g+" ("+a+" – "+b+") on Piano Challenges. Want to challenge me?", shareImgK:"Piano Challenges", shareImgCta:"Join me on pianochallenges.com", shareImgEnd:"correct answers", shareImgDu:{1:"Victory",0:"Defeat",.5:"Draw"}, staffLbl:"Sheet music: notes on the staff", staffOff:"Off", staffOnT:"Staff", staffReadT:"Reading", clefLbl:"Clefs", clefAuto:"Auto", clefG:"Treble", clefF:"Bass", clefGF:"Grand staff", suStaffT:"Notes on the staff",
     staffAria:"The notes on the staff", readT:"Read the staff and play", onbQ_staff:"Can you read notes on a staff?", onbS_staff:"Sheet music is optional: turn it on or off in Settings.",
     onbO_staff:{yes:["Yes, I read music","Treble and bass clef"],learn:["A bit, I want to learn","Names are shown under the notes"],no:["No, I'd rather not","The app stays simple, no staff"]},
     onbSumStaff:{yes:"Notes are written on the staff in LEARN, GAMES and PLAY.",learn:"The staff is shown, with the name under each note to learn.",no:"No staff: you play with the note names."}, unsubT:"Your e-mails", unsubQ:w=>"Stop getting "+w+"?", unsubWhat:{weekly:"the weekly recap",streak:"the streak reminders",social:"challenge e-mails",news:"the news",all:"any e-mail from Piano Challenges"}, unsubYes:"Yes, unsubscribe", unsubKeep:"No, keep them", unsubDone:"Done. You can turn them back on in Settings › Notifications.", unsubBad:"This link is no longer valid.", unsubClose:"Close", gtRetry:"Try again", onbFinishT:"Done", gtBig:"Piano becomes a game", gtBigSub:"Free to start", gtPoints:["5 topics: chords, scales, harmony, progressions, ear", "Online duels with an ELO rating", "Your MIDI keyboard, your piano through the mic, or the screen"], gtTitleUp:"Sign up and play for free", gtTitleIn:"Good to see you again!", gtSignup:"Create an account", gtLogin:"Sign in", gtName:"Your first name or nickname", gtPwd:"Password (8 characters min.)", gtShowPwd:"Show password", gtAccept:"I accept the", gtPrivacy:"privacy policy", gtCreate:"Create my account", gtSignIn:"Sign in", gtUseCode:"Get a code by e-mail instead", gtBackPwd:"Back to the password", gtOtpIntro:"Enter your e-mail: we send you a code to sign in, no password needed.", gtWith:p=>"Continue with "+p, gtGuest:"Continue as a guest", gtBadMail:"This e-mail address does not look valid.", gtBadPwd:"The password needs at least 8 characters.", gtNeedOk:"Accept the privacy policy to create your account.", gtConfirm:e=>"Almost done! A confirmation e-mail went to "+e+". Click the link, or enter the code it contains here.", gtBadLogin:"Wrong e-mail or password.", gtExists:"An account already uses this e-mail: sign in.", gtNotConfirmed:"First confirm your address with the e-mail you got (or sign in with a code).", gtSoonProv:"This sign-in is coming soon. Use Google, your e-mail, or continue as a guest.", onbPrev:"Back", onbNextT:"Next", onbSkip:"Skip", onbStep:(i,n)=>"Question "+i+" of "+n, onbQ_why:"Why do you want to learn the piano?", onbS_why:"Pick as many as you like.", onbQ_level:"What is your level?", onbS_level:"We set the helps and your starting rating.", onbQ_how:"How will you play?", onbS_how:"You can change it any time, at the bottom of the menu.", onbQ_cont:"You want to work on…", onbS_cont:"Games, scales and the quiz will start from this choice.", onbQ_friends:"Invite your friends", onbS_friends:"Play duels with them and compare your progress on the leaderboard.", onbO_why:{"fun": ["For fun", "To relax while playing"], "songs": ["Play my songs", "The music I love"], "theory": ["Understand music", "Chords, scales, harmony"], "accomp": ["Accompany songs", "Alone or with friends"], "create": ["Compose and improvise", "Make my own music"], "school": ["For my lessons", "School, conservatory, teacher"]}, onbO_level:{"debut": ["I'm a beginner", "I have never played"], "notes": ["I know a few notes", "I can find C, D, E on the keys"], "simple": ["I play simple songs", "And a few chords"], "adv": ["I already play well", "I want to go further"]}, onbO_how:{"midi": ["MIDI keyboard", "Plugged in with USB or Bluetooth"], "mic": ["Acoustic piano", "The app listens with the mic"], "screen": ["On the screen", "I play right in the app"]}, onbO_cont:{"notes": ["Just the notes", "One note at a time, to start well"], "chords": ["Notes and the chord chart", "More complete, to go further"]}, onbShare:"Share the link", onbShareTxt:"Come and play the piano with me on Piano Challenges!", onbLater:"Later", onbDoneK:"All set", onbDoneH:"Your plan is ready", onbDoneSub:"We set the app up for you. You can change everything in Settings.", onbTour:"Discover the app", onbNoTour:"Skip the tour", onbSumLevel:{"debut": "Helps on: lit keys, note names and fingering.", "notes": "Progressive help, note names and fingering on.", "simple": "Progressive help on, without note names.", "adv": "Every exercise unlocked, no help."}, onbSumHow:{"midi": "Your MIDI keyboard is detected as soon as you plug it in.", "mic": "The app will listen to your piano with the mic.", "screen": "You play on the on-screen keyboard."}, onbSumCont:{"notes": "Games and scales with notes to start.", "chords": "Games, scales and the quiz with chords."}, onbSumWhy:{"songs": "Go to PLAY for your first songs.", "theory": "Start with LEARN: chords and scales.", "fun": "Every day, the daily practice gets you better in 5 minutes."}, tourDone:"Let's go!", tourSkipT:"Skip", tourAgainT:"Replay the tour", onbAgainT:"Redo the questions", tourT:{learn:["LEARN",["Chords, scales, harmony, progressions and ear","Pick an exercise, it is checked note by note"]],games:["GAMES",["Quick mini-games","Online duels, against a friend or a bot, with your ELO"]],play:["PLAY",["Falling-note songs at your own speed","Free piano to play anything"]],quiz:["QUIZ",["Answer by playing the right note or chord","Up to 4 players, or online"]],daily:["Daily practice",["10 exercises, about 5 minutes","It keeps your streak alive"]],level:["Your level",["Earn XP to go through the 10 levels","Tap it to see your progress"]],ntf:["Notifications",["Your challenges, progress and news","Set them up in Settings"]],rank:["Leaderboard",["Compare yourself with other players","By day, week, month or year"]],input:["Your instrument",["MIDI keyboard, mic or screen","Tap here to change"]],settings:["Settings",["Language, helps, fingering, notifications","You can replay this tour here"]]}, ntfTitle:"Notifications", ntfSub:"Your challenges, your progress and what's new in the app.", ntfAllReadT:"Mark all as read", ntfSetT:"Settings", ntfAll:"All",
@@ -2550,7 +2588,7 @@ const TXT = {
     duFriendHint:"Friendly game: it does not count for ELO.", duSearching:"Looking for an opponent…", duWindow:(e,w,n)=>"Your ELO "+e+(w<9999?" · opponent between "+Math.max(100,e-w)+" and "+(e+w):" · any level")+" · "+Math.max(1,n)+" online", duBotWait:(n,e)=>"Play "+n+" ("+e+"), a bot of your level",
     duFriendly:"Friendly", duBotTag:"bot", duGone:"left", duOut:"finished", duRated:"rated game", duWinForfeit:"You win, your opponent left", duStalled:"You lose: no sign of you during the game", duWin:"You win!", duLoss:"You lose", duDraw:"Draw", duNewElo:"New ELO", duUnrated:"Friendly game, ELO unchanged",
     duNewOpp:"New opponent", duRematch:"Rematch", duRematchSent:"Rematch asked…", duRematchAccept:"Accept the rematch", duGoT:"Start the game", duWaitOpp:(n,o,m)=>"You finished with "+m+". "+n+" is still playing ("+o+")…", eloL:"ELO", suFingT:"Fingering (right hand)", optFing:"Fingering on the keys (right hand)", suKeysH:"Keys", suKeysSimple:"Simple", suKeysSimpleD:"No sharp or flat: C, D, E, F, G, A, B", suKeysAll:"All", suKeysAllD:"With the ♯ and ♭", suKeysPick:"Pick", suKeysPickD:"I choose the keys",
-    suShuffleT:"Shuffle the order", suLockedKeys:n=>n+" key"+(n>1?"s":"")+" still locked (levels, or “Unlock everything” in Settings)", suNone:"No unlocked key in this choice", suModeN:"As notes", suModeND:"C, D, E… one note after another, from the root to the octave.", suModeC:"As chords", suModeCD:"The chord of each degree, from I to VII, at once or note by note.", suNoChords:"This scale has no chord per degree.",
+    suShuffleT:"Shuffle the order", suLockedKeys:n=>n+" key"+(n!==1?"s":"")+" still locked (levels, or “Unlock everything” in Settings)", suNone:"No unlocked key in this choice", suModeN:"As notes", suModeND:"C, D, E… one note after another, from the root to the octave.", suModeC:"As chords", suModeCD:"The chord of each degree, from I to VII, at once or note by note.", suNoChords:"This scale has no chord per degree.",
     againB:"Start again", nextKeyB:l=>"Next: "+l, qzTabQuiz:"Quiz", qzTabPlayers:"Players", qzToPlayersT:"Choose the players", optUiSound:"Interface sounds (card hover, quiz answers)", qzAnsH:"Answer with", qzNotes:"Notes", qzChords:"Chords",
     qzDiffN:["C, D, E, F","4 random white notes","4 random notes, black keys included"], qzDiffC:["C, F, G, A minor","Random simple chords","Every chord: major, minor and 7th"],
     qzBotsH:"Bots", qzBotLvlH:"Level", qzBotLvls:["Easy","Medium","Strong"], qzBotThinks:"thinking…", qzYou:"you", qzLeft:"left",
@@ -2564,24 +2602,47 @@ const TXT = {
     qzModes:["One keyboard each","Zones of one piano","Take turns"], qzModeD:["Each player answers on their own MIDI keyboard (or on screen). The fastest scores the most.","One shared piano: each player plays in their own part of the keyboard.","One keyboard: players answer in turn, one question each."],
     qzPlayer:"Player", qzKeyboard:"Keyboard", qzScreen:"Screen", qzZone:"Zone", qzTurnN:n=>"Plays "+["1st","2nd","3rd","4th"][n-1], qzMidiOk:n=>n+(n>1?" MIDI keyboards found":" MIDI keyboard found"), qzMidiNone:"No MIDI keyboard found: you can answer by tapping the answers or with the computer keyboard.",
     qzQ:(a,b)=>"Question "+a+" / "+b, qzPlay:"Play", qzTurnOf:n=>n+"'s turn", qzWaiting:"thinking…", qzAnswered:"answered", qzNoAns:"no answer", qzWrong:"missed", qzQuit:"Quit", qzNextT:"Next question",
-    qzWinner:n=>n+" wins!", qzSoloEnd:(a,b)=>a+" right answer"+(a>1?"s":"")+" out of "+b, qzRight:(a,b)=>a+" / "+b+" right answers", qzSettings:"Change settings", qzAgainT:"Play again", suKey:"Key", suTimer:"Timer", suHelps:"Helps", suHowT:"How does it work?", suGo:"Start", suMastered:"mastered", suChange:"Change choice",
+    qzWinner:n=>n+" wins!", qzSoloEnd:(a,b)=>a+" right answer"+(a!==1?"s":"")+" out of "+b, qzRight:(a,b)=>a+" / "+b+" right answers", qzSettings:"Change settings", qzAgainT:"Play again", suKey:"Key", suTimer:"Timer", suHelps:"Helps", suHowT:"How does it work?", suGo:"Start", suMastered:"mastered", suChange:"Change choice",
     suPickScale:"Which scale?", suPickChord:"Which chord?", suPickProg:"Which progression?", suPickEar:"What do we listen to?",
     suSub_scales:"Pick a scale and its key, set the timer and the helps, then play it until you nail it.", suSub_chords:"Pick a chord and its key. Each ticked inversion is one exercise.", suSub_harmony:"Pick a key: each ticked degree is one exercise.", suSub_prog:"Pick a progression and its key, then chain the chords.", suSub_ear:"Pick what you want to recognise: 10 listens per game.",
     suHelpNT:"Show the notes", suHelpND:"Each note's name shows before you play.", suHelpKT:"Light up the keys", suHelpKD:"The keys to play light up on the keyboard.",
     suHelpPT:"Step-by-step help", suHelpPD:"Nothing at first. If you get stuck, a hint comes every 8 s (or with Space): the degree, then the name, then the keys. The notes you find stay lit and a card builds up to help you remember them.",
     suLabelsT:"Note names on the keys", suCount:(n,sec)=>n===1?(sec==="prog"?"1 progression to play":sec==="chords"?"1 chord to play":"1 scale, replayed until you nail it"):n+" exercises",
     ficheT:"To remember", ficheS:(a,b)=>a+" / "+b+" notes", playSub:"Songs that fall onto the keyboard, at your own pace. Below, the piano for free play.", freeK:"Free play",
-    pfAch:"Your achievements", pfJourney:"Your journey", pfRecs:"Your records", pfDetail:"Detail by topic", pfLvl:"Level",
+    pfEloL:(g,c)=>g+" ("+c.toLowerCase()+")", pfAch:"Your achievements", pfJourney:"Your journey", pfRecs:"Your records", pfDetail:"Detail by topic", pfLvl:"Level",
     pfSt:["Total score","Exercises passed","Perfect exercises","Items mastered","Total time played","Played today"],
-    pfDayS:n=>"Streak: "+n+" d", pfWeekS:n=>"Weeks: "+n, pfBest:n=>"Best: "+n, pfJSub:(a,b)=>a+" of "+b+" items mastered.", pfRSub:"Your best scores in games and songs.",
+    pfDayS:n=>"Streak: "+n+" d", pfWeekS:n=>"Weeks: "+n, pfBest:n=>"Best: "+n, pfJSub:(a,b)=>fmtN(a)+" of "+fmtN(b)+(b!==1?" items":" item")+" mastered.", pfRSub:"Your best scores in games and songs.",
     pfMonths:["January","February","March","April","May","June","July","August","September","October","November","December"], pfDays:["M","T","W","T","F","S","S"], themeDayS:"Day mode", themeNightS:"Night mode", langLbl:"Language",
     hsDailyK:"To do today", hsDailyGo:"Let's go", hsDailyDone:"Play again", hsMidiT:"MIDI keyboard", hsMidiOff:"No keyboard connected: plug it in over USB or Bluetooth.", hsMidiNo:"This browser has no MIDI: play with the mic or on screen.", hsMidiConnect:"Connect", hsMidiChange:"Change",
-    hsNewsT:"News", hsRankT:"This week's leaderboard", hsRankMore:"See all", hsRankLoad:"Loading…", hsRankErr:"Leaderboard unavailable right now.",
+    pseudoShort:"Your nickname needs at least 2 characters.", pseudoLong:"Your nickname can be 24 characters at most.", pseudoBad:"Your nickname contains invisible or control characters: please remove them.",
+    rankOrd:n=>ordEn(n), hsNewsT:"News", hsRankT:"This week's leaderboard", hsRankMore:"See all", hsRankLoad:"Loading…", hsRankErr:"Leaderboard unavailable right now.",
     hsNews:[["New look","Day or night mode and 3D cards: the app gets a makeover.","#6a4bf0","M12 3l2.4 5 5.6.8-4 3.9.9 5.5L12 15.6 7.1 18.2l.9-5.5-4-3.9 5.6-.8z"],["Play games","Six mini-games on the light-up keyboard, in GAMES.","#1f7a52","M6 9h4M8 7v4M15 9h.01M18 11h.01M3 8a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4v5a4 4 0 0 1-7 2.5h-4A4 4 0 0 1 3 13z"],["Free play","Play anything in PLAY: every note lights up in its colour.","#0e7490","M9 18V5l12-2v13M9 18a3 3 0 1 1-6 0 3 3 0 0 1 6 0zM21 16a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"],["Daily practice","10 mixed exercises every day to keep your streak.","#a3306b","M12 3c1 3.5 5 6 5 11a5 5 0 0 1-10 0c0-2.2 1-3.8 2.2-5 .2 1.6 1 2.8 2.3 3.3C11 9.3 11.3 6 12 3z"]],
     wrongSr:"Wrong note: ",
     dailyShort:"Daily"}
 };
 const t = k => TXT[S.settings.lang][k];
+// data shown to people (scores, XP, other players' names): thousands separators in the app's language,
+// cuts by grapheme (never half an emoji), names isolated from the text around them (<bdi>) and without bidi controls
+const fmtN = n => (+n||0).toLocaleString(S.settings.lang==="fr"?"fr-FR":"en-GB");
+const BIDI_G = /[‎‏‪-‮⁦-⁩]/g, BIDI_1 = /[‎‏‪-‮⁦-⁩]/, CTRL_1 = /[\u0000-\u001f\u007f]/;
+const gSeg = (typeof Intl!=="undefined" && Intl.Segmenter) ? new Intl.Segmenter() : null;
+function gCut(s,n,cp){ s=String(s==null?"":s); const parts=gSeg?Array.from(gSeg.segment(s),x=>x.segment):Array.from(s); let out="", k=0, c=0;
+  for(const p of parts){ const l=Array.from(p).length; if(k>=n || (cp && c+l>cp)) break; out+=p; k++; c+=l; } return out; }
+const gLen = s => gSeg ? Array.from(gSeg.segment(String(s))).length : Array.from(String(s)).length;
+const pName = s => String(s==null?"":s).replace(BIDI_G,"").replace(/[\u0000-\u001f\u007f]/g,"").trim() || t("qzPlayer");
+function nmPut(el,s,suf){ const v=pName(s), bd=document.createElement("bdi"); bd.textContent=v; el.textContent=""; el.appendChild(bd); if(suf) el.appendChild(document.createTextNode(suf)); el.title=v+(suf||""); return v; }
+function nmFill(el,fn,s){ const v=pName(s), parts=String(fn("⁣")).split("⁣"), bd=document.createElement("bdi"); bd.textContent=v; el.textContent=parts[0]||""; el.appendChild(bd); if(parts[1]) el.appendChild(document.createTextNode(parts[1])); }
+// one's own nickname: 2 to 24 characters, no control or text-direction characters (same rule as the profiles_name_clean check in SQL)
+const nameErr = s => { const v=String(s==null?"":s).trim(); return BIDI_1.test(v)||CTRL_1.test(v) ? "pseudoBad" : gLen(v)<2 ? "pseudoShort" : ""; };
+// avatar: a photo built with the DOM (never concatenated HTML), the drawn character if it fails to load
+function avFill(el,photo,ci){ el.textContent=""; const svg=()=>{ el.innerHTML=avatarSVG(Math.max(0,Math.min(9,ci|0))); };
+  if(!(photo && /^https:\/\//.test(photo))){ svg(); return el; }
+  const img=document.createElement("img"); img.className="photo"; img.alt=""; img.referrerPolicy="no-referrer"; img.addEventListener("error",svg,{once:true}); img.src=photo; el.appendChild(img); return el; }
+// a horizontal row that scrolls: fade the edge(s) that hide content, updated on scroll and resize
+function ovFade(el,cb){ if(!el) return; const up=()=>{ const max=el.scrollWidth-el.clientWidth, x=Math.abs(el.scrollLeft); const v=max>2 ? (x>2?"l":"")+(x<max-2?"r":"") : ""; if(v) el.dataset.ov=v; else delete el.dataset.ov; if(cb) cb(el); };
+  if(!el._ov){ el._ov=up; el.addEventListener("scroll",()=>requestAnimationFrame(up),{passive:true}); OV_ROWS.add(el); } else el._ov=up; requestAnimationFrame(up); }
+const OV_ROWS=new Set(); addEventListener("resize",()=>OV_ROWS.forEach(el=>el._ov&&el._ov()));
+const ordFr = n => fmtN(n)+(n===1?"er":"e"), ordEn = n => fmtN(n)+((n%100>=11&&n%100<=13)?"th":["th","st","nd","rd"][n%10]||"th");
 
 // ---------- Music theory ----------
 const LETTERS = ["C","D","E","F","G","A","B"];
@@ -2969,12 +3030,14 @@ function poolAll(){
   if(!out.length && sec==="scales" && S.settings.scMode==="chords"){ const m=S.settings.scMode; S.settings.scMode="notes"; const o=poolAll(); S.settings.scMode=m; return o; }
   return out;
 }
+let lvlUp=0; // level reached during the current LEARN game (not saved): celebrated when the game ends, then #lvlAv pulses once
 function addXP(n){
   if(n>0) bumpStreak();
   S.xpDays=S.xpDays||{}; const dk=dayStr(); S.xpDays[dk]=(S.xpDays[dk]||0)+n;
   const before=levelInfo(S.xp).L; S.xp+=n; const after=levelInfo(S.xp).L;
   if(after>before){
-    toast(titleFor(after)); try{ ntfLevel(after); }catch(e){}
+    if(game && (page==="practice"||page==="daily")) lvlUp=after; else toast(titleFor(after)); // LEARN: celebrated in #endNext at the end of the game
+    try{ ntfLevel(after); }catch(e){}
     SECS.forEach(sec=>typeList(sec).forEach(ty=>{ const key=sec==="scales"?ty.id:sec+":"+ty.id;
       if(typeOpenS(sec,ty.id) && !S.seenTypes.includes(key)){ S.seenTypes.push(key); if(ty.lvl>1) unlockNote(t("newType")+SEC[sec].name(ty)); } }));
   }
@@ -3069,16 +3132,21 @@ function labelKeys(){
 const fold = m => { while(m<LOW) m+=12; while(m>HIGH) m-=12; return m; };
 function scrollKbdTo(m){
   const wrap=$("kbdWrap"), el=keyEls[fold(m)]; if(!el || wrap.scrollWidth<=wrap.clientWidth+2) return;
-  wrap.scrollTo({left:Math.max(0, el.offsetLeft - wrap.clientWidth/2 + 60), behavior:"smooth"});
+  wrap.scrollTo({left:Math.max(0, el.offsetLeft - wrap.clientWidth/2 + 60), behavior:"auto"}); // instant: the player should not wait for the keyboard to stop at the start of a round
 }
+const kbdPtr=new Map(); // pointerId -> key held down (the key stays down until the finger or the mouse is released)
 kbd.addEventListener("pointerdown", e=>{
   const el=e.target.closest("[data-m]"); if(!el) return;
-  e.preventDefault(); const m=+el.dataset.m; tone(m); midiIn(m); // same 35 ms grouping as MIDI (two-finger chords)
+  e.preventDefault(); const m=+el.dataset.m; keyDown(m,true); kbdPtr.set(e.pointerId,m); pressKey(m); tone(m); midiIn(m); // key lit before the grouping; same 35 ms grouping as MIDI (two-finger chords)
 });
 // keys are buttons for assistive tech (not in the Tab order: the letter keys are the shortcuts); Enter/Space on a focused key plays it
 function keyA11y(el,m){ el.setAttribute("role","button"); el.tabIndex=-1; el.setAttribute("aria-label",(S.settings.notation==="fr"?PC_FR:PC_EN)[m%12]+" "+(Math.floor(m/12)-1)); }
 kbd.addEventListener("keydown", e=>{ const el=e.target.closest("[data-m]"); if(!el || (e.code!=="Enter" && e.code!=="Space")) return; e.preventDefault(); e.stopPropagation(); const m=+el.dataset.m; tone(m); noteIn(m); });
 function pressKey(m){ const el=keyEls[fold(m)]; if(!el) return; el.classList.add("k-press"); setTimeout(()=>el.classList.remove("k-press"),130); }
+// k-down: the key stays down while the note is held (MIDI note-off, pointer up, key up); k-press (130 ms) stays for the mic
+function keyDown(m,on){ const el=keyEls[fold(m)]; if(el) el.classList.toggle("k-down",on); }
+["pointerup","pointercancel","pointerleave"].forEach(ty=>kbd.addEventListener(ty,e=>{ const m=kbdPtr.get(e.pointerId); if(m!=null){ kbdPtr.delete(e.pointerId); keyDown(m,false); } }));
+document.addEventListener("keyup",e=>{ const m=CODE_MAP[e.code]; if(m!=null) keyDown(fold(m),false); });
 kbd.addEventListener("contextmenu", e=>e.preventDefault());
 const CODE_MAP={KeyA:60,KeyW:61,KeyS:62,KeyE:63,KeyD:64,KeyF:65,KeyT:66,KeyG:67,KeyY:68,KeyH:69,KeyU:70,KeyJ:71,KeyK:72,KeyO:73,KeyL:74,KeyP:75,Semicolon:76};
 document.addEventListener("keydown", e=>{
@@ -3099,7 +3167,7 @@ document.addEventListener("keydown", e=>{
   if(e.code==="Enter" && phase==="revealed"){ e.preventDefault(); grade(true); return; }
   if(e.code==="Backspace" && phase==="revealed"){ e.preventDefault(); grade(false); return; }
   const m=CODE_MAP[e.code]; if(m==null||e.repeat||e.metaKey||e.ctrlKey||e.altKey) return;
-  const mm=fold(m); tone(mm); midiIn(mm);
+  const mm=fold(m); pressKey(mm); keyDown(mm,true); tone(mm); midiIn(mm);
 });
 function flashKey(m, cls, ms=220){ const el=keyEls[fold(m)]; if(!el) return; el.classList.add(cls); setTimeout(()=>el.classList.remove(cls), ms); }
 function clearKeys(){ Object.values(keyEls).forEach(el=>el.classList.remove("k-ok","k-rev","k-hit","k-bad","k-guide")); }
@@ -3540,8 +3608,9 @@ const SRS_DAYS=[0,1,2,4,7,14,30];
 const dayStr = (d=new Date()) => { const z=new Date(d.getTime()-d.getTimezoneOffset()*6e4); return z.toISOString().slice(0,10); };
 const addDays = n => { const d=new Date(); d.setDate(d.getDate()+n); return dayStr(d); }; // calendar days (DST-safe), also used by the SRS
 function makeGame(queue, daily){
+  lvlUp=0;
   const n = queue ? queue.length : (S.settings.gameLen||Infinity);
-  return {queue:queue||null, daily:!!daily, total:n, i:0, results:[], xp0:S.xp, maxCombo:0, sec:S.section};
+  return {queue:queue||null, daily:!!daily, total:n, i:0, results:[], xp0:S.xp, sk0:effStreak(), maxCombo:0, sec:S.section};
 }
 function roundLevel(){
   if(cur.sec==="ear") return errors?"bad":"good";
@@ -3612,6 +3681,27 @@ function finishGame(){
   save(); render(); renderDaily();
   if(doneN) openEnd(g);
 }
+// #endNext: the XP bar fills from where the game started (g.xp0); a level reached in the game is celebrated here (bar to the end,
+// "Level N reached" with the new avatar, confetti, then the bar starts again); the streak line enters if the game raised it.
+// Nothing waits for it: focus and the C/B shortcuts work at once. Reduced motion: final state, the level line only fades in.
+function endNextMotion(nx, g, li, sk){
+  const bar=nx.querySelector("i"), fin=li.into/li.need, L0=levelInfo(g.xp0||0), up=li.L>L0.L?li.L:0;
+  const b0=up ? L0.into/L0.need : Math.min(fin, Math.max(0,(g.xp0||0)-(S.xp-li.into))/li.need);
+  bar.style.transform="scaleX("+fin+")"; lvlUp=up;
+  const RM=matchMedia("(prefers-reduced-motion: reduce)").matches, cs=getComputedStyle(document.documentElement);
+  const EO=cs.getPropertyValue("--ease-out").trim()||"ease-out", EP=cs.getPropertyValue("--ease-pop").trim()||"ease-out";
+  const grew = g.sk0!=null && sk>g.sk0, p=nx.querySelector("p");
+  let lv=null;
+  if(up){ lv=document.createElement("div"); lv.className="en-lvl"; lv.innerHTML='<span class="av"></span><b></b>'; lv.firstChild.innerHTML=avatarSVG(charIndex(up)); lv.lastChild.textContent=t("ntfLvlT")(up); nx.prepend(lv); }
+  if(!bar.animate) return;
+  if(RM){ if(lv) lv.animate([{opacity:0},{opacity:1}],{duration:200,easing:"ease"}); return; }
+  if(up){
+    bar.animate([{transform:"scaleX("+b0+")",easing:EO},{transform:"scaleX(1)",offset:.33},{transform:"scaleX(1)",offset:.75},{transform:"scaleX(0)",offset:.75,easing:EO},{transform:"scaleX("+fin+")"}],{duration:1200,delay:150,fill:"backwards"});
+    lv.animate([{opacity:0,transform:"scale(.9)"},{opacity:1,transform:"none"}],{duration:500,delay:550,easing:EP,fill:"backwards"});
+    setTimeout(()=>{ if(endOpen && lv.isConnected) confetti($("endModal"), lv.firstChild, 70, 1300); },550);
+  } else if(fin>b0+.005) bar.animate([{transform:"scaleX("+b0+")"},{transform:"scaleX("+fin+")"}],{duration:400,delay:150,easing:EO,fill:"backwards"});
+  if(grew && p.textContent) p.animate([{opacity:0,transform:"translateY(4px)"},{opacity:1,transform:"none"}],{duration:200,delay:up?1350:400,easing:EO,fill:"backwards"});
+}
 function openEnd(g){
   const L=S.settings.lang, R=g.results.filter(Boolean), n=R.length;
   const cnt=lv=>R.filter(r=>r.level===lv).length, good=cnt("good");
@@ -3632,8 +3722,9 @@ function openEnd(g){
     .forEach(([a,b])=>{ const d=document.createElement("div"); d.className="end-stat"; d.innerHTML="<span></span><b></b>"; d.children[0].textContent=a; d.children[1].textContent=b; stats.appendChild(d); });
   body.appendChild(stats);
   { const li=levelInfo(S.xp), nx=document.createElement("div"); nx.className="end-next"; nx.id="endNext";
-    nx.innerHTML='<div class="en-row"><b></b><span class="en-bar"><i></i></span></div><p></p>'; nx.querySelector("b").textContent=t("endNext")(li.need-li.into, li.L+1);
-    nx.querySelector("i").style.width=Math.round(li.into/li.need*100)+"%"; const sk=effStreak(); nx.querySelector("p").textContent = sk ? t("endStreak")(sk) : ""; body.appendChild(nx);
+    nx.innerHTML='<div class="en-row"><b></b><span class="en-bar"><i></i></span></div><p></p>'; nx.querySelector("b").textContent=t("endNext")(fmtN(li.need-li.into), fmtN(li.L+1));
+    const sk=effStreak(); nx.querySelector("p").textContent = sk ? t("endStreak")(sk) : ""; body.appendChild(nx);
+    endNextMotion(nx, g, li, sk); 
     if(!user){ const ac=document.createElement("div"); ac.className="end-acct"; ac.id="endAcct"; ac.innerHTML='<div><b></b><small></small></div><button class="btn primary" type="button"></button>';
       ac.querySelector("b").textContent=t("endAcct"); ac.querySelector("small").textContent=t("endAcctS"); const ab=ac.querySelector("button"); ab.textContent=t("endAcctB");
       ab.onclick=()=>{ closeEnd(); PW.pending=false; GATE.mode="signup"; gateOpen(); }; body.appendChild(ac); }
@@ -3657,7 +3748,7 @@ function openEnd(g){
     if(g.single) hint(btn(t("againB"),"",()=>endReplay(g)),BNAME());
     else if(misses.length){ const rw=hint(btn(t("reworkBtn"),"",()=>{ closeEnd(); page="practice"; game=makeGame(misses.map(r=>r.it)); game.label=g.label; game.orig=g.orig||g.queue; game.i=-1; startRound(); }),BNAME()); rw.id="endRework"; }
     const nx = g.single ? hint(btn(t("nextKeyB")(endNextLabel(g)),"primary",()=>endNext(g)),CNAME()) : hint(btn(t("newGame"),"primary",()=>endReplay(g)),CNAME());
-    $("endX").setAttribute("aria-label",t("closeLbl")); if(!endOpen) modalOpened(); endOpen=true; $("endModal").hidden=false; nx.focus(); if(n && good/n>=.8) setTimeout(confetti,150); return; }
+    $("endX").setAttribute("aria-label",t("closeLbl")); if(!endOpen) modalOpened(); endOpen=true; $("endModal").hidden=false; nx.focus(); if(n && good/n>=.8 && !lvlUp) setTimeout(()=>confetti(),150); return; }
   btn(t("closeLbl"),"",closeEnd);
   if(misses.length){ const rw=hint(btn(t("reworkBtn"),"",()=>{ closeEnd(); page="practice"; game=makeGame(misses.map(r=>r.it)); game.i=-1; startRound(); }),BNAME()); rw.id="endRework"; }
   const main=btn(t("newGame"),"primary",()=>{ closeEnd(); page="practice"; if(g.sec&&!g.daily&&g.sec!==S.section) switchSection(g.sec);
@@ -3665,7 +3756,7 @@ function openEnd(g){
 
   $("endX").setAttribute("aria-label",t("closeLbl"));
   if(!endOpen) modalOpened(); endOpen=true; $("endModal").hidden=false; main.focus();
-  if(n && good/n>=.8) setTimeout(confetti,150);
+  if(n && good/n>=.8 && !lvlUp) setTimeout(()=>confetti(),150);
 }
 // one-item game: the next open key of the same scale / chord / progression
 function endNextKey(g){ const it=g.queue[0], open=openRoots(it.sec,it.tid); const i=open.indexOf(it.k); return open[(i+1)%open.length]; }
@@ -3676,6 +3767,7 @@ function endReplay(g){ closeEnd(); page="practice"; if(g.sec!==S.section) switch
   if(g.orig || (!g.single && g.sec!=="ear" && suState(g.sec).shuffle)){ if(g.orig){ game=makeGame(g.orig.map(it=>({...it}))); game.label=g.label; game.i=-1; startRound(); } else suStart(); return; } // the whole choice again (shuffled again)
   const q=g.sec==="ear"?suQueue(g.sec):g.single?[{...g.queue[0]}]:g.queue.map(it=>({...it})); game=makeGame(q); game.label=g.label; game.single=!!g.single; game.i=-1; startRound(); }
 function closeEnd(){ if(!endOpen) return; endOpen=false; $("endModal").hidden=true; modalClosed();
+  if(lvlUp){ lvlUp=0; ["lvlAv","mbLvlBtn"].forEach(id=>{ const a=$(id); if(!a) return; a.classList.remove("pulse"); void a.offsetWidth; a.classList.add("pulse"); a.addEventListener("animationend",()=>a.classList.remove("pulse"),{once:true}); }); }
   if(PW.pending){ PW.pending=false; S.pwShown=1; save(); setTimeout(()=>{ if(!anyModal()) pwOpen("success"); },350); } } // the offer, once, after a first game played well
 function renderGameBar(){
   const bar=$("gamebar"), segs=$("segs"), lbl=$("gameLbl"), end=$("gameEnd");
@@ -3723,7 +3815,6 @@ function showScore(detailParts){
   $("sbDetail").textContent=detailParts.filter(Boolean).join(" · ");
   const st=$("stage"); st.classList.remove("res-good","res-warn","res-bad"); st.classList.add("res-"+level);
   renderSession();
-  if(level==="good") confetti();
   return level;
 }
 function showEar(ok,gain){
@@ -3732,7 +3823,7 @@ function showEar(ok,gain){
   $("sbVal").textContent = ok ? "✓" : "✗";
   $("sbDetail").textContent = ok ? t("right")+" · +"+gain+" XP" : t("wrong")+earLabel(cur.tid,cur.k);
   const st=$("stage"); st.classList.remove("res-good","res-warn","res-bad"); st.classList.add("res-"+level);
-  renderSession(); if(ok) confetti();
+  renderSession();
 }
 function renderSession(){
   // running total for the current game
@@ -3742,21 +3833,22 @@ function renderSession(){
   const b=document.createElement("b"); b.textContent=ok+"/"+tot; el.append(b);
   el.append(" ("+pct+(S.settings.lang==="fr"?" %":"%")+")");
 }
-function confetti(){
+// host: the positioned element to draw in (default the exercise stage), from: the element the burst starts from, n particles, dur ms
+function confetti(host, from, n=90, dur=1500){
   if(window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-  const st=$("stage"), cv=document.createElement("canvas"); cv.className="confetti"; st.appendChild(cv);
+  const st=host||$("stage"), cv=document.createElement("canvas"); cv.className="confetti"; st.appendChild(cv);
   const r=st.getBoundingClientRect(), dpr=Math.min(2,window.devicePixelRatio||1);
   cv.width=r.width*dpr; cv.height=r.height*dpr; const c=cv.getContext("2d"); c.scale(dpr,dpr);
   const cs=getComputedStyle(document.documentElement), cols=["--good","--accent","--reveal","--warn","--bad"].map(v=>cs.getPropertyValue(v).trim()||"#e9a33a");
-  const fb=$("feedback").getBoundingClientRect(), ox=fb.left-r.left+fb.width/2, oy=fb.top-r.top+fb.height/2;
-  const P=Array.from({length:90},()=>{ const a=Math.random()*Math.PI*2, v=3+Math.random()*7;
+  const fb=(from||$("feedback")).getBoundingClientRect(), ox=fb.left-r.left+fb.width/2, oy=fb.top-r.top+fb.height/2;
+  const P=Array.from({length:n},()=>{ const a=Math.random()*Math.PI*2, v=3+Math.random()*7;
     return {x:ox,y:oy,vx:Math.cos(a)*v,vy:Math.sin(a)*v-4,w:5+Math.random()*5,h:3+Math.random()*4,r:Math.random()*6,vr:(Math.random()-.5)*.4,c:cols[Math.random()*cols.length|0]}; });
   const t0=performance.now();
   (function frame(now){
     const el=now-t0; c.clearRect(0,0,r.width,r.height);
     P.forEach(p=>{ p.vy+=.25; p.vx*=.985; p.x+=p.vx; p.y+=p.vy; p.r+=p.vr;
-      c.save(); c.globalAlpha=Math.max(0,1-el/1500); c.translate(p.x,p.y); c.rotate(p.r); c.fillStyle=p.c; c.fillRect(-p.w/2,-p.h/2,p.w,p.h); c.restore(); });
-    if(el<1500) requestAnimationFrame(frame); else cv.remove();
+      c.save(); c.globalAlpha=Math.max(0,1-el/dur); c.translate(p.x,p.y); c.rotate(p.r); c.fillStyle=p.c; c.fillRect(-p.w/2,-p.h/2,p.w,p.h); c.restore(); });
+    if(el<dur) requestAnimationFrame(frame); else cv.remove();
   })(t0);
 }
 function applyStatic(){
@@ -3896,14 +3988,14 @@ function renderStatus(){
   const li=levelInfo(S.xp);
   $("lvlNum").textContent=li.L; $("mbLvl").textContent=li.L; $("lvlTitle").textContent=titleFor(li.L);
   const ci=charIndex(li.L), ph=(typeof userPhoto==="function"&&userPhoto())||"", key=ph||String(ci);
-  if($("lvlAvatar").dataset.c!==key){ $("lvlAvatar").innerHTML=$("mbAv").innerHTML = ph ? photoImg(ph) : avatarSVG(ci); $("lvlAvatar").dataset.c=key; }
+  if($("lvlAvatar").dataset.c!==key){ avFill($("lvlAvatar"),ph,ci); avFill($("mbAv"),ph,ci); $("lvlAvatar").dataset.c=key; }
   if(typeof user!=="undefined" && user) $("lvlTitle").textContent=myName();
   $("lvlAv").setAttribute("aria-label",titleFor(li.L)+" · "+t("charMore"));
-  $("xpFill").style.width=(li.into/li.need*100)+"%"; $("xpTxt").textContent=li.into+" / "+li.need+" XP";
+  $("xpFill").style.transform="scaleX("+(li.into/li.need)+")"; $("xpTxt").textContent=fmtN(li.into)+" / "+fmtN(li.need)+" XP"; 
   const cEl=$("combo"), prevC=cEl.textContent; cEl.textContent="×"+combo;
   $("comboStat").classList.toggle("off",combo===0);
   if(prevC!==cEl.textContent && combo>0){ const st=$("comboStat"); st.classList.remove("pulse"); void st.offsetWidth; st.classList.add("pulse"); }
-  $("streak").textContent=S.streak.days+" "+t("day"); $("streakStat").classList.toggle("off",S.streak.days===0);
+  $("streak").textContent=fmtN(S.streak.days)+" "+t("day"); $("streakStat").classList.toggle("off",S.streak.days===0);
 }
 function renderTypes(){
   const sec=S.section, cfg=SEC[sec], box=$("types"); box.innerHTML="";
@@ -4287,7 +4379,7 @@ function spTick(now){
   let left=(SP.end-now)/1000;
   // progressive: each answer gives back a little time, less and less
   if(left<=0){ SP.state="over"; clearKeys(); if(DU.mode) duMe(SP.count,true); const best=(S.gameBest||{}).speed||0; SP.newBest=false; if(!DU.mode){ if(SP.count>best){ S.gameBest={...(S.gameBest||{}),speed:SP.count}; SP.newBest=true; } if(SP.count){ addXP(SP.count); renderStatus(); } } save(); tone(48,0,.4,.15); gmBoard(); gmScore(); return; }
-  $("gmBar").style.width=(left/SP.dur*100)+"%"; $("gmBar").classList.toggle("low",left<10);
+  $("gmBar").style.transform="scaleX("+Math.max(0,left/SP.dur)+")"; $("gmBar").classList.toggle("low",left<10);
   SP.raf=requestAnimationFrame(spTick);
 }
 function spNote(m){
@@ -4327,7 +4419,7 @@ function gmBoard(){
   const k=$("gmKick"), big=$("gmBig"), sub=$("gmSub"), startTxt = midiMode()?t("rnStart"):t("gmTap");
   $("gmBar").parentElement.hidden = GM!=="speed";
   if(GM==="speed"){
-    if(SP.state==="ready"){ k.textContent=t("spName"); big.textContent=t("gmReady"); sub.textContent=t("spHow")(spDur())+" "+startTxt; $("gmBar").style.width="100%"; }
+    if(SP.state==="ready"){ k.textContent=t("spName"); big.textContent=t("gmReady"); sub.textContent=t("spHow")(spDur())+" "+startTxt; $("gmBar").style.transform="scaleX(1)"; }
     else if(SP.state==="run"){ k.textContent=SP.target&&SP.target.note?t("gmNote"):t("gmChord"); const st=staffTargetSVG(SP.target,200,9); if(st){ big.innerHTML='<span class="gm-staff">'+st+'</span>'; sub.textContent=S.settings.labels?SP.target.label:""; } else { big.textContent=SP.target?SP.target.label:""; sub.textContent=""; } }
     else { k.textContent=SP.newBest?t("rnNew"):t("gmOver"); big.textContent=String(SP.count); sub.textContent=t("spDone")(SP.count)+" "+startTxt; }
   } else {
@@ -4402,7 +4494,7 @@ function duRenderLobby(){ duArt();
   const hl=$("duHist"); hl.innerHTML=""; const H=(e.h||[]).slice(-6).reverse();
   if(!H.length){ const li=document.createElement("li"); li.innerHTML="<p></p>"; li.firstChild.textContent=t("duHistNone"); hl.appendChild(li); }
   H.forEach(x=>{ const li=document.createElement("li"); li.innerHTML='<span class="r"></span><span class="du-av"></span><b></b><i></i>'; const r=li.querySelector(".r"); r.className="r "+(x.res===1?"w":x.res===0?"l":"d"); r.textContent=x.res===1?t("duW1"):x.res===0?t("duL1"):t("duD1");
-    li.querySelector(".du-av").innerHTML=duAv(x.av); li.querySelector("b").textContent=(x.nm||"?")+" ("+x.o+")"; const i=li.querySelector("i"); if(x.dd!=null){ i.textContent=(x.dd>=0?"+":"")+x.dd; i.className=x.dd>=0?"up":"down"; } hl.appendChild(li); });
+    li.querySelector(".du-av").innerHTML=duAv(x.av); nmPut(li.querySelector("b"),x.nm," ("+x.o+")"); const i=li.querySelector("i"); if(x.dd!=null){ i.textContent=(x.dd>=0?"+":"")+x.dd; i.className=x.dd>=0?"up":"down"; } hl.appendChild(li); });
   const sub = DU.view!=="lobby"; $("duModes").hidden=sub; $("duPanel").hidden=!sub;
   if(!sub) return;
   const body=$("duPBody"); body.innerHTML=""; $("duPTitle").textContent=t({bots:"duBots",friend:"duFriend",search:"duOnline"}[DU.view]);
@@ -4420,7 +4512,7 @@ function duRenderLobby(){ duArt();
     if(DU.ch && !DU.auto){ w.innerHTML='<p class="du-code"><span></span><b class="mono"></b></p><p class="qz-hint"></p><ul class="du-peers"></ul><div class="du-row"><button class="btn" type="button" data-a="copy"></button><button class="btn" type="button" data-a="leave"></button><button class="btn primary" type="button" data-a="go"></button></div>';
       w.querySelector(".du-code span").textContent=t("qzCodeL"); w.querySelector(".du-code b").textContent=DU.code;
       w.querySelector(".qz-hint").textContent = DU.host ? t("duShare") : t("qzWaitHost");
-      DU.peers.slice(0,2).forEach(p=>{ const li=document.createElement("li"); li.innerHTML='<span class="du-av"></span><b></b><small></small>'; li.querySelector(".du-av").innerHTML=duAv(p.av); li.querySelector("b").textContent=p.name+(p.id===netId()?" ("+t("qzYou")+")":""); li.querySelector("small").textContent=p.elo; w.querySelector("ul").appendChild(li); });
+      DU.peers.slice(0,2).forEach(p=>{ const li=document.createElement("li"); li.innerHTML='<span class="du-av"></span><b></b><small></small>'; li.querySelector(".du-av").innerHTML=duAv(p.av); nmPut(li.querySelector("b"),p.name,p.id===netId()?" ("+t("qzYou")+")":""); li.querySelector("small").textContent=p.elo; w.querySelector("ul").appendChild(li); });
       const [cp,lv,go]=w.querySelectorAll(".du-row button"); cp.textContent=t("qzCopyT"); lv.textContent=t("qzLeaveT"); go.textContent=t("duGoT");
       cp.onclick=()=>{ const link=SITE_URL()+"#duel-"+DU.code; try{ navigator.clipboard.writeText(link).then(()=>{ cp.textContent=t("qzCopied"); setTimeout(()=>cp.textContent=t("qzCopyT"),1800); },()=>{}); }catch(e){} };
       lv.onclick=()=>{ duLeaveRoom(); duRender(); }; go.hidden=!DU.host; go.disabled=DU.peers.length<2; go.onclick=duHostStart; }
@@ -4437,9 +4529,9 @@ function duRenderLobby(){ duArt();
     w.querySelector(".du-err").textContent=DU.err||""; body.appendChild(w); } }
 function duKbd(b,k){ if(midiMode() && S.settings.midiC!==false){ const kb=document.createElement("kbd"); kb.textContent=k; b.appendChild(kb); } return b; }
 function duHud(){ const o=DU.opp||{}, me=DU.me;
-  $("duMeAv").innerHTML=duAv(duMyAv()); $("duMeName").textContent=duMyName(); $("duMeElo").textContent = DU.rated ? String(eloGet().r) : t("duFriendly");
-  $("duOpAv").innerHTML=duAv(o.av); $("duOpName").textContent=(o.name||"?")+(o.bot?" · "+t("duBotTag"):""); $("duOpElo").textContent = o.gone ? t("duGone") : o.done ? t("duOut") : (o.elo!=null?String(o.elo):"");
-  $("duMeSc").textContent=me.score; $("duOpSc").textContent=o.score||0;
+  $("duMeAv").innerHTML=duAv(duMyAv()); nmPut($("duMeName"),duMyName()); $("duMeElo").textContent = DU.rated ? String(eloGet().r) : t("duFriendly");
+  $("duOpAv").innerHTML=duAv(o.av); nmPut($("duOpName"),o.name,o.bot?" · "+t("duBotTag"):""); $("duOpElo").textContent = o.gone ? t("duGone") : o.done ? t("duOut") : (o.elo!=null?String(o.elo):"");
+  [["duMeSc",me.score],["duOpSc",o.score||0]].forEach(([id,v])=>{ const e=$(id); e.textContent=fmtN(v); if(String(v|0).length>4) e.dataset.long=""; else delete e.dataset.long; });
   $("duHud").dataset.lead = me.score>(o.score||0) ? "me" : me.score<(o.score||0) ? "opp" : ""; }
 // ---- a duel ----
 function duBegin(o){ // o: {mode, seed, opp, rated, game, cont}
@@ -4465,7 +4557,7 @@ function duMe(score, done){ if(!DU.mode || (DU.view!=="play"&&DU.view!=="wait"))
 // the duel is over when both have finished, or when the one still playing has already passed the other's final score
 function duCheck(){ if(DU.view!=="play"&&DU.view!=="wait") return; const me=DU.me, o=DU.opp;
   const over = (me.done&&o.done) || (o.done&&me.score>o.score) || (me.done&&o.score>me.score);
-  if(!over) { if(DU.view==="wait"){ $("duWait").hidden=false; $("duWait").textContent=t("duWaitOpp")(o.name, o.score||0, me.score); } return; }
+  if(!over) { if(DU.view==="wait"){ $("duWait").hidden=false; nmFill($("duWait"),n=>t("duWaitOpp")(n, fmtN(o.score||0), fmtN(me.score)),o.name); } return; }
   duFinish(me.score>o.score?1:me.score<o.score?0:.5); }
 function duStopGame(){ clearInterval(DU.sim); clearInterval(DU.hb); clearTimeout(DU.countT); clearTimeout(MM.inT); cancelAnimationFrame(SP.raf); MM.timers.forEach(clearTimeout); MM.timers=[]; clearKeys();
   if(RN.state==="run") RN.state="over"; if(SP.state==="run") SP.state="over"; if(MM.state!=="ready") MM.state="over"; }
@@ -4489,9 +4581,18 @@ function duRenderRes(){ const r=DU.res, o=DU.opp, box=$("duRes"); if(!r) return;
   else if(DU.ch && !DU.opp.gone){ if(DU.mode==="online") btn(t("duNewOpp"),"",()=>{ duEnd(); duSearch(); });
     const rm=btn(DU.want?t("duRematchSent"):DU.oppWant?t("duRematchAccept"):t("duRematch"),"primary",duRematch,CNAME()); rm.id="duRematch"; rm.disabled=DU.want; }
   else if(DU.mode==="online") btn(t("duNewOpp"),"primary",()=>{ duEnd(); duSearch(); },CNAME()).id="duRematch";
-  const card=box.querySelector(".du-rcard"), sh=document.createElement("button"); sh.type="button"; sh.className="du-share"; sh.id="duShare"; sh.innerHTML=pwI("share")+"<span></span>"; sh.lastChild.textContent=t("shareBtn");
+  const card=box.querySelector(".du-rcard"), sh=document.createElement("button"); sh.type="button"; sh.className="du-share"; sh.id="duShare"; sh.innerHTML=pwI("share")+"<span></span>"; sh.lastChild.textContent=t("shareBtn"); sh.setAttribute("aria-label",t("shareBtn"));
   sh.onclick=()=>shareDuel(); card.appendChild(sh);
-  if(DU.mode!=="friend"){ const ch=document.createElement("button"); ch.type="button"; ch.className="du-chal"; ch.id="duChal"; ch.textContent=t("shareChal"); ch.onclick=()=>{ duEnd(); DU.view="friend"; duRender(); duJoin(netCode(),true,false); }; card.appendChild(ch); } }
+  if(DU.mode!=="friend"){ const ch=document.createElement("button"); ch.type="button"; ch.className="du-chal"; ch.id="duChal"; ch.textContent=t("shareChal"); ch.onclick=()=>{ duEnd(); DU.view="friend"; duRender(); duJoin(netCode(),true,false); }; card.appendChild(ch); }
+  if(box._r!==r){ box._r=r; duResIn(box, r.res===1); } } // enters once per result (re-renders for a rematch request stay still)
+// the result enters (the buttons and C/B work at once): backdrop fade, card rises, ELO change after it, a win's title pops. Reduced motion: fades only.
+function duResIn(box, win){ if(!box.animate) return; const cs=getComputedStyle(document.documentElement), EO=cs.getPropertyValue("--ease-out").trim()||"ease-out", EP=cs.getPropertyValue("--ease-pop").trim()||"ease-out";
+  const card=box.querySelector(".du-rcard"), d=box.querySelector(".du-relo b"), h=box.querySelector("h3");
+  if(matchMedia("(prefers-reduced-motion: reduce)").matches){ box.animate([{opacity:0},{opacity:1}],{duration:150,easing:"ease"}); return; }
+  box.animate([{opacity:0},{opacity:1}],{duration:200,easing:"ease"});
+  card.animate([{opacity:0,transform:"translateY(8px) scale(.97)"},{opacity:1,transform:"none"}],{duration:300,easing:EO});
+  if(d) d.animate([{opacity:0,transform:"translateY(4px)"},{opacity:1,transform:"none"}],{duration:200,delay:250,easing:EO,fill:"backwards"});
+  if(win) h.animate([{transform:"scale(.86)"},{transform:"scale(1.08)",offset:.6},{transform:"none"}],{duration:380,easing:EP}); }
 function duEnd(){ if(DU.mode && DU.rated && DU.opp && !DU.opp.gone && ["count","play","wait"].includes(DU.view)){ eloApply(duKey(), DU.opp.elo, 0, DU.opp.bot!=null, DU.opp.name, DU.opp.av); duSend({t:"sc",s:DU.me.score,d:true,quit:1}); } // leaving a rated game counts as a loss
   delete S.duPend; duStopGame(); if(DU.ch) duLeaveRoom(); DU.mode=null; DU.opp=null; gRnd=Math.random; }
 function duStartBot(i){ if(!duelGate()) return; duEnd(); const seed=(Math.random()*4294967296)>>>0, elo=DU_BOTS[i];
@@ -4611,7 +4712,7 @@ function renderNotifs(){ const st=ntfStore(), ul=$("ntfList"); ul.innerHTML="";
   let g=""; L.forEach(n=>{ const gg=ntfGroup(n.t); if(gg!==g){ g=gg; const h=document.createElement("li"); h.className="ntf-g"; h.textContent=t(gg); ul.appendChild(h); }
     const li=document.createElement("li"); li.className="ntf-it"+(n.read?"":" unread"); li.dataset.cat=n.cat;
     li.innerHTML='<span class="ntf-ic"></span><span class="ntf-tx"><b></b><span></span><small></small></span>'+(n.act?'<button class="btn ntf-go" type="button"></button>':'')+'<i class="ntf-dot" aria-hidden="true"></i>';
-    li.querySelector(".ntf-ic").innerHTML=(OBJ[NTF_ICON[n.type]]||OBJ.bell)(); li.querySelector("b").textContent=n.ti; li.querySelector(".ntf-tx span").textContent=n.tx; li.querySelector("small").textContent=ntfAgo(n.t);
+    li.querySelector(".ntf-ic").innerHTML=(OBJ[NTF_ICON[n.type]]||OBJ.bell)(); li.querySelector("b").textContent=n.ti; li.querySelector(".ntf-tx span").textContent=n.tx; li.querySelector(".ntf-tx span").title=n.tx||""; li.querySelector("small").textContent=ntfAgo(n.t);
     if(n.act){ const b=li.querySelector(".ntf-go"); b.textContent=t(n.act.l||"ntfOpen"); b.onclick=e=>{ e.stopPropagation(); n.read=true; save(); ntfBadge(); ntfDo(n.act); }; }
     li.onclick=()=>{ if(!n.read){ n.read=true; save(); ntfBadge(); renderNotifs(); } };
     ul.appendChild(li); });
@@ -4764,29 +4865,36 @@ function streaks(){ const days=Object.keys(S.xpDays||{}).filter(k=>(S.xpDays[k]|
 const fmtDur=sec=>{ const h=Math.floor(sec/3600), m=Math.round(sec%3600/60); return h? h+" h "+String(m).padStart(2,"0")+" min" : m+" min"; };
 function renderFiche(){
   const li=levelInfo(S.xp), ph=(typeof userPhoto==="function"&&userPhoto())||"";
-  $("pfAv").innerHTML= ph ? photoImg(ph) : avatarSVG(charIndex(li.L));
+  avFill($("pfAv"),ph,charIndex(li.L));
   $("pfK").textContent=(typeof user!=="undefined"&&user)?myName():t("you"); $("pfName").textContent=titleFor(li.L);
-  $("pfXp").style.width=(li.into/li.need*100)+"%"; $("pfXpTxt").textContent=li.into+" / "+li.need+" XP";
+  $("pfXp").style.transform="scaleX("+(li.into/li.need)+")"; $("pfXpTxt").textContent=fmtN(li.into)+" / "+fmtN(li.need)+" XP"; 
   const secs=["chords","scales","harmony","prog","ear"], NM={chords:"secChords",scales:"secScales",harmony:"secHarmony",prog:"secProg",ear:"secEar"}, COL={chords:"#c9463c",scales:"#b4461a",harmony:"#2c56d6",prog:"#6a3fd1",ear:"#0e7490"};
   let mAll=0,nAll=0; const jr=secs.map(sec=>{ let m=0,n=0; try{ typeList(sec).forEach(ty=>{ const r=rootsOf(sec,ty.id); n+=r.length; m+=r.filter(k=>tileMast(sec,ty.id,k)>=3).length; }); }catch(e){} mAll+=m; nAll+=n; return [sec,m,n]; });
   const ss=S.secStats||{}, sum=k=>Object.values(ss).reduce((a,v)=>a+((v&&v[k])|0),0);
   const play=S.playSec||{}, tot=Object.values(play).reduce((a,v)=>a+(v|0),0);
-  const L=t("pfSt"), vals=[S.xp.toLocaleString(S.settings.lang==="fr"?"fr-FR":"en-GB")+" XP",sum("ok"),sum("perfect"),mAll,fmtDur(tot),fmtDur(play[dayStr()]|0)], SC=["#0e7490","#8a3fd1","#6a3fd1","#b4461a","#c9463c","#1f7a52"];
+  const L=t("pfSt"), vals=[fmtN(S.xp)+" XP",fmtN(sum("ok")),fmtN(sum("perfect")),fmtN(mAll),fmtDur(tot),fmtDur(play[dayStr()]|0)], SC=["#0e7490","#8a3fd1","#6a3fd1","#b4461a","#c9463c","#1f7a52"];
   const ul=$("pfStats"); ul.innerHTML=""; L.forEach((l,i)=>{ const li2=document.createElement("li"); li2.style.background=SC[i]; li2.innerHTML="<span></span><b></b>"; li2.firstChild.textContent=l; li2.lastChild.textContent=vals[i]; ul.appendChild(li2); });
-  const st=streaks(); $("pfDay").textContent=t("pfDayS")(st.cur); $("pfDayBest").textContent=t("pfBest")(st.best); $("pfWeek").textContent=t("pfWeekS")(st.wc); $("pfWeekBest").textContent=t("pfBest")(st.wb);
+  const st=streaks(); $("pfDay").textContent=t("pfDayS")(fmtN(st.cur)); $("pfDayBest").textContent=t("pfBest")(fmtN(st.best)); $("pfWeek").textContent=t("pfWeekS")(fmtN(st.wc)); $("pfWeekBest").textContent=t("pfBest")(fmtN(st.wb));
   if(!pfMonth){ const d=new Date(); pfMonth=new Date(d.getFullYear(),d.getMonth(),1); }
   $("pfMonth").textContent=t("pfMonths")[pfMonth.getMonth()]+" "+pfMonth.getFullYear();
   const cal=$("pfCal"); cal.innerHTML=t("pfDays").map(x=>"<i>"+x+"</i>").join(""); const first=(pfMonth.getDay()+6)%7, nd=new Date(pfMonth.getFullYear(),pfMonth.getMonth()+1,0).getDate(), today=dayStr();
   for(let i=0;i<first;i++) cal.appendChild(document.createElement("span"));
   for(let d=1;d<=nd;d++){ const k=dayStr(new Date(pfMonth.getFullYear(),pfMonth.getMonth(),d)), e=document.createElement("span"); e.textContent=d; if(st.set.has(k)) e.className="on"; if(k===today) e.classList.add("today"); cal.appendChild(e); }
   $("pfJourneySub").textContent=t("pfJSub")(mAll,nAll); const ju=$("pfJourney"); ju.innerHTML="";
-  jr.forEach(([sec,m,n])=>{ const li2=document.createElement("li"); li2.innerHTML='<span class="pj-t"><b></b><span class="pj-n"></span></span><span class="bar"><i></i></span>'; li2.querySelector("b").textContent=t(NM[sec]); li2.querySelector(".pj-n").textContent=m+" / "+n; const bi=li2.querySelector(".bar i"); bi.style.width=(n?m/n*100:0)+"%"; bi.style.background=COL[sec]; ju.appendChild(li2); });
+  jr.forEach(([sec,m,n])=>{ const li2=document.createElement("li"); li2.innerHTML='<span class="pj-t"><b></b><span class="pj-n"></span></span><span class="bar"><i></i></span>'; li2.querySelector("b").textContent=t(NM[sec]); li2.querySelector(".pj-n").textContent=fmtN(m)+" / "+fmtN(n); const bi=li2.querySelector(".bar i"); bi.style.width=(n?m/n*100:0)+"%"; bi.style.background=COL[sec]; ju.appendChild(li2); });
   $("pfRecsSub").textContent=t("pfRSub"); const ru=$("pfRecs"); ru.innerHTML=""; let cb={}, cg={}; try{ cb=JSON.parse(localStorage.getItem("clavio:best")||"{}")||{}; cg=JSON.parse(localStorage.getItem("clavio:gbest")||"{}")||{}; }catch(e){}
-  const rows=[]; t("games").forEach(([title,,id])=>{ if(id) rows.push([title,((S.gameBest||{})[id]||(id==="runner"?S.runnerBest:0)||0)]); });
-  Object.entries(S.elo||{}).filter(([,e])=>e&&e.n).forEach(([k,e])=>{ const [g,c]=k.split("-"); if(DU_GAMES.includes(g)) rows.push([duGameName(g)+" · "+t(c==="notes"?"duNotes":"duChords")+" · ELO", e.r+(eloProv(e)?"?":"")+" ("+t("duRecord")(e.w,e.d,e.l)+")"]); });
-  t("playGames").forEach(([title,,id])=>rows.push([title,cg[id]|0])); const fr=S.settings.lang==="fr"; SONGS_H.forEach(([id,tf,te])=>rows.push([fr?tf:te,"★".repeat(cb[id]|0)+"☆".repeat(3-(cb[id]|0))]));
-  rows.forEach(([a,b])=>{ const li2=document.createElement("li"); li2.innerHTML="<span></span><b></b>"; li2.firstChild.textContent=a; li2.lastChild.textContent=b; ru.appendChild(li2); });
+  const rows=[]; t("games").forEach(([title,,id])=>{ if(id) rows.push([title,fmtN((S.gameBest||{})[id]||(id==="runner"?S.runnerBest:0)||0)]); });
+  Object.entries(S.elo||{}).filter(([,e])=>e&&e.n).forEach(([k,e])=>{ const [g,c]=k.split("-"); if(DU_GAMES.includes(g)) rows.push([t("pfEloL")(duGameName(g),t(c==="notes"?"duNotes":"duChords")), "ELO "+fmtN(e.r)+(eloProv(e)?"?":""), t("duRecord")(fmtN(e.w),fmtN(e.d),fmtN(e.l))]); });
+  t("playGames").forEach(([title,,id])=>rows.push([title,fmtN(cg[id]|0)])); const fr=S.settings.lang==="fr"; SONGS_H.forEach(([id,tf,te])=>rows.push([fr?tf:te,"★".repeat(cb[id]|0)+"☆".repeat(3-(cb[id]|0))]));
+  rows.forEach(([a,b,c])=>{ const li2=document.createElement("li"); li2.innerHTML="<span></span><b></b>"+(c?"<small></small>":""); li2.firstChild.textContent=a; li2.children[1].textContent=b; if(c) li2.children[2].textContent=c; ru.appendChild(li2); });
+  pfDotsInit();
 }
+// phone: the 4 cards are a swipeable row, with a fade on the edge and one dot per card
+function pfDotsInit(){ const row=document.querySelector("#progFiche .pf-row"), dots=$("pfDots"); if(!row||!dots) return; const cards=[...row.children];
+  if(dots.children.length!==cards.length){ dots.innerHTML=""; cards.forEach((c,i)=>{ const b=document.createElement("button"); b.type="button"; b.setAttribute("aria-label",(c.querySelector("h3")||{}).textContent||t("acctStreak"));
+    b.onclick=()=>row.scrollTo({left:c.offsetLeft-row.offsetLeft,behavior:matchMedia("(prefers-reduced-motion: reduce)").matches?"auto":"smooth"}); dots.appendChild(b); }); }
+  cards.forEach((c,i)=>{ const b=dots.children[i]; if(b) b.setAttribute("aria-label",(c.querySelector("h3")||{}).textContent||t("acctStreak")); });
+  ovFade(row,()=>{ const w=cards[0]?cards[0].offsetWidth+14:1, i=Math.max(0,Math.min(cards.length-1,Math.round(row.scrollLeft/w))); [...dots.children].forEach((b,j)=>b.setAttribute("aria-current",j===i)); }); }
 $("pfPrev").addEventListener("click",()=>{ pfMonth=new Date(pfMonth.getFullYear(),pfMonth.getMonth()-1,1); renderFiche(); });
 $("pfNext").addEventListener("click",()=>{ pfMonth=new Date(pfMonth.getFullYear(),pfMonth.getMonth()+1,1); renderFiche(); });
 $("pfLevels").addEventListener("click",()=>openChars());
@@ -4824,6 +4932,9 @@ function suLabel(sec){ const st=suState(sec), q=suQueue(sec), fr=S.settings.lang
   const names=st.tids.map(id=>SEC[sec].name(typeDef(sec,id))), tn = names.length<=2 ? names.join(", ") : names[0]+", "+names[1]+" +"+(names.length-2);
   if(sec==="ear") return tn;
   return tn+" · "+(st.keys==="all" ? t("suKeysAll") : st.keys==="simple" ? t("suKeysSimple") : [...new Set(q.map(it=>noteName(tonicNote(it.k))))].join(", ")); }
+// the full summary (every type and key), for the tooltip of the shortened one
+function suLabelFull(sec){ const st=suState(sec), q=suQueue(sec), names=st.tids.map(id=>SEC[sec].name(typeDef(sec,id))).join(", ");
+  if(sec==="ear") return names; return names+" · "+(st.keys==="all" ? t("suKeysAll") : st.keys==="simple" ? t("suKeysSimple") : [...new Set(q.map(it=>noteName(tonicNote(it.k))))].join(", ")); }
 function renderSetup(){
   const sec=S.section, st=suState(sec), col=SU_COL[sec], re=()=>{ save(); renderSetup(); };
   const h=$("suTitle"); h.style.setProperty("--mc",col); $("suIc").innerHTML=SEC_ICON(sec); $("suName").textContent=t(SU_NAME[sec]); $("suSub").textContent=t("suSub_"+sec);
@@ -4871,7 +4982,8 @@ function renderSetup(){
   [["suHelpN","guideN"],["suHelpK","guideK"],["suHelpP","guideP"]].forEach(([id,k])=>{ $(id).checked=!!S.settings[k]; });
   $("suLabels").checked=!!S.settings.labels; $("suFing").checked=!!S.settings.fing; $("suStaff").checked=!!S.settings.staff;
   // summary
-  const q=suQueue(sec); $("suSum").textContent=suLabel(sec); $("suCount").textContent=q.length ? t("suCount")(q.length, sec) : t("suNone");
+  ["suTypes","suKeys"].forEach(id=>ovFade($(id))); ex.querySelectorAll(".su-chips").forEach(c=>ovFade(c));
+  const q=suQueue(sec); $("suSum").textContent=suLabel(sec); $("suSum").title=suLabelFull(sec); $("suCount").textContent=q.length ? t("suCount")(q.length, sec) : t("suNone");
   $("suGo").disabled=!q.length; $("suGo").style.setProperty("--mc",col);
 }
 function suStart(){ const sec=S.section, st=suState(sec), q=suQueue(sec); if(!q.length) return;
@@ -4983,7 +5095,7 @@ function qzDevices(){ const out=[["screen",t("qzScreen")]]; try{ if(midiAcc) mid
 function qzZones(n){ const [lo,hi] = S.settings.kbdSize && S.settings.kbdSize!=="auto" ? [LOW,HIGH] : midiReady ? [36,96] : [48,84], oct=Math.max(n,Math.round((hi-lo+1)/12)), per=Math.max(1,Math.floor(oct/n)); return Array.from({length:n},(_,i)=>{ const a=lo+i*per*12, b=i===n-1?hi:a+per*12-1; return [a,b]; }); }
 const qzMidiName=m=>qzRoots()[m%12]+(Math.floor(m/12)-1);
 const QZ_BOTS=["Robo Mozart","Robo Chopin","Robo Bach"];
-const qzSafe = s => String(s==null?"":s).replace(/[\u0000-\u001f<>]/g,"").trim().slice(0,14);
+const qzSafe = s => gCut(String(s==null?"":s).replace(/[\u0000-\u001f\u007f<>]/g,"").replace(BIDI_G,"").trim(),14,48).trim(); // 14 graphemes, never half an emoji
 
 // ---------- setup ----------
 function renderQuiz(){ ["qzSetup","qzPlay","qzEnd"].forEach(id=>$(id).hidden = id!=="qz"+QZ.view[0].toUpperCase()+QZ.view.slice(1));
@@ -5084,13 +5196,13 @@ function renderQzPlay(){ if(!QZ.q) return; const q=QZ.q, fr=S.settings.lang==="f
   $("qzImg").innerHTML=OBJ[q[1]]?OBJ[q[1]]():""; $("qzImg").style.setProperty("--tc",th.col);
   $("qzText").textContent=fr?q[2]:q[4];
   const turnP = QZ.mode==="turn" ? QZ.players[qzWho("",0)] : null;
-  $("qzTurn").hidden = !turnP; if(turnP){ $("qzTurn").textContent=t("qzTurnOf")(turnP.name); $("qzTurn").style.setProperty("--pc",turnP.col); }
+  $("qzTurn").hidden = !turnP; if(turnP){ nmFill($("qzTurn"),t("qzTurnOf"),turnP.name); $("qzTurn").style.setProperty("--pc",turnP.col); }
   const box=$("qzAns"); box.innerHTML="";
   QZ.ans.forEach((a,k)=>{ const b=document.createElement("button"); b.type="button"; b.className="qz-a"; b.style.setProperty("--ac",["#ff5a6e","#3cc8f0","#ffd23f","#3ddc84"][k]);
     if(QZ.done) b.classList.add(a.right?"right":"wrong");
     b.innerHTML='<span class="qz-l">'+"ABCD"[k]+'</span><span class="qz-at"></span><span class="qz-play"><small>'+t("qzPlay")+'</small><b></b>'+(cf.keys||cf.diff<3||QZ.done?qzKeys(a.tg.pcs,"#7a5bf5"):"")+'</span><span class="qz-who"></span>';
     b.querySelector(".qz-at").textContent=a.txt; b.querySelector(".qz-play b").textContent=a.tg.name;
-    const who=b.querySelector(".qz-who"); QZ.players.forEach((p,i)=>{ if(QZ.picks[i]===k){ const d=document.createElement("i"); d.style.background=p.col; d.title=p.name; who.appendChild(d); } });
+    const who=b.querySelector(".qz-who"); QZ.players.forEach((p,i)=>{ if(QZ.picks[i]===k){ const d=document.createElement("i"); d.style.background=p.col; d.title=pName(p.name); who.appendChild(d); } });
     b.onclick=()=>{ if(QZ.done) return; if(uiSound()) a.tg.mid.forEach((m,i)=>tone(m,i*.02,.7,.14));
       if(QZ.mode==="zone") return; // one shared piano: a tap cannot tell who answered
       let pi = QZ.mode==="dev" ? QZ.players.findIndex(p=>!p.bot&&p.dev==="screen") : qzWho("screen",a.tg.mid[0]);
@@ -5099,20 +5211,20 @@ function renderQzPlay(){ if(!QZ.q) return; const q=QZ.q, fr=S.settings.lang==="f
   const sb=$("qzScores"); sb.innerHTML="";
   QZ.players.forEach((p,i)=>{ const d=document.createElement("div"); d.className="qz-ps"+(p.gone?" gone":""); d.style.setProperty("--pc",p.col); const st=QZ.picks[i];
     if(turnP===p && !QZ.done) d.classList.add("turn");
-    d.innerHTML='<i></i><span><b></b><small></small></span><span class="qz-pts"></span>'; d.querySelector("b").textContent=p.name+(p.me?" ("+t("qzYou")+")":"");
+    d.innerHTML='<i></i><span><b></b><small></small></span><span class="qz-pts"></span>'; nmPut(d.querySelector("b"),p.name,p.me?" ("+t("qzYou")+")":"");
     d.querySelector("small").textContent = p.gone ? t("qzLeft") : st==null ? (QZ.done?t("qzNoAns"):(turnP&&turnP!==p)?"":p.bot?t("qzBotThinks"):t("qzWaiting")) : !QZ.done ? t("qzAnswered") : QZ.ans[st].right ? "+"+p.last : t("qzWrong");
     if(QZ.done && st!=null) d.classList.add(QZ.ans[st].right?"ok":"ko");
-    d.querySelector(".qz-pts").textContent=p.score; sb.appendChild(d); });
+    d.querySelector(".qz-pts").textContent=fmtN(p.score); sb.appendChild(d); });
   $("qzNext").hidden=!QZ.done || (QZ.mode==="online" && !NET.host); $("qzBar").parentElement.hidden=QZ.done;
   $("qzNext").textContent=t("qzNextT"); if(midiReady && S.settings.midiC!==false){ const kb=document.createElement("kbd"); kb.textContent=CNAME(); $("qzNext").appendChild(kb); }
 }
 function qzFinish(){ qzClearTimers(); QZ.view="end"; const me=QZ.players.filter(p=>!p.bot&&!p.remote);
-  if(me.length===1 && me[0].ok) addXP(Math.min(60,me[0].ok*3)); save(); renderQuiz(); if(QZ.players.some(p=>p.ok) && uiSound()) setTimeout(confetti,200); }
+  if(me.length===1 && me[0].ok) addXP(Math.min(60,me[0].ok*3)); save(); renderQuiz(); if(QZ.players.some(p=>p.ok) && uiSound()) setTimeout(()=>confetti(),200); }
 function renderQzEnd(){ const P=QZ.players.map((p,i)=>({...p,i})).sort((a,b)=>b.score-a.score), box=$("qzPodium"); box.innerHTML="";
   const humans=QZ.players.filter(p=>!p.bot).length;
-  $("qzEndT").textContent = QZ.players.length>1 ? t("qzWinner")(P[0].name) : t("qzSoloEnd")(P[0].ok,QZ.list.length);
+  if(QZ.players.length>1) nmFill($("qzEndT"),t("qzWinner"),P[0].name); else $("qzEndT").textContent=t("qzSoloEnd")(P[0].ok,QZ.list.length);
   P.forEach((p,r)=>{ const d=document.createElement("div"); d.className="qz-pod r"+(r+1); d.style.setProperty("--pc",p.col);
-    d.innerHTML='<span class="qz-rk">'+(r+1)+'</span><b></b><span class="qz-sc"></span><small></small>'; d.querySelector("b").textContent=p.name; d.querySelector(".qz-sc").textContent=p.score+" pts"; d.querySelector("small").textContent=t("qzRight")(p.ok,QZ.list.length); box.appendChild(d); });
+    d.innerHTML='<span class="qz-rk">'+(r+1)+'</span><b></b><span class="qz-sc"></span><small></small>'; nmPut(d.querySelector("b"),p.name); d.querySelector(".qz-sc").textContent=fmtN(p.score)+" pts"; d.querySelector("small").textContent=t("qzRight")(p.ok,QZ.list.length); box.appendChild(d); });
   $("qzAgain").hidden = QZ.mode==="online" && !NET.host; $("qzAgain").textContent=t("qzAgainT"); if(midiReady && S.settings.midiC!==false){ const kb=document.createElement("kbd"); kb.textContent=CNAME()+" / "+BNAME(); $("qzAgain").appendChild(kb); } }
 function qzQuit(){ qzClearTimers(); if(QZ.mode==="online") netLeave(); QZ.view="setup"; QZ.done=true; renderQuiz(); }
 $("qzGo").addEventListener("click",qzStart);
@@ -5200,7 +5312,7 @@ function renderQzNet(){ if(page!=="quiz"||QZ.view!=="setup"||qzCfg().where!=="on
   $("qzNetName").value = document.activeElement===$("qzNetName") ? $("qzNetName").value : netName();
   $("qzFriendIdle").hidden = inRoom; $("qzFriendRoom").hidden = !inRoom || NET.auto;
   if(inRoom){ $("qzRoomCode").textContent=NET.code; $("qzRoomHint").textContent = NET.host ? t("qzShareCode") : t("qzWaitHost");
-    const ul=$("qzRoomPl"); ul.innerHTML=""; P.slice(0,4).forEach((p,i)=>{ const li=document.createElement("li"); li.style.setProperty("--pc",QZ_COLORS[i]); li.innerHTML="<i></i><b></b><small></small>"; li.querySelector("b").textContent=p.name+(p.id===netId()?" ("+t("qzYou")+")":""); li.querySelector("small").textContent=(p.host?t("qzHost")+" · ":"")+t("pfLvl")+" "+p.lvl; ul.appendChild(li); });
+    const ul=$("qzRoomPl"); ul.innerHTML=""; P.slice(0,4).forEach((p,i)=>{ const li=document.createElement("li"); li.style.setProperty("--pc",QZ_COLORS[i]); li.innerHTML="<i></i><b></b><small></small>"; nmPut(li.querySelector("b"),p.name,p.id===netId()?" ("+t("qzYou")+")":""); li.querySelector("small").textContent=(p.host?t("qzHost")+" · ":"")+t("pfLvl")+" "+p.lvl; ul.appendChild(li); });
     $("qzRoomGo").hidden=!NET.host; $("qzRoomGo").disabled=P.length<2 || !QZ.data; }
   $("qzSearchBtn").hidden = NET.searching || st==="nobody"; $("qzSearching").hidden = !NET.searching && st!=="nobody";
   $("qzSearchTxt").textContent = st==="nobody" ? t("qzNobody") : t("qzSearchingT"); $("qzSearchBot").hidden = st!=="nobody";
@@ -5244,8 +5356,8 @@ function renderHubSide(){
   renderHubRank();
 }
 function hsRow(r,rk,me){ const li=document.createElement("li"); if(me) li.className="me"; const okPhoto=r.photo && /^https:\/\//.test(r.photo);
-  li.innerHTML='<span class="rk"></span><span class="av">'+(okPhoto?photoImg(r.photo):avatarSVG(Math.max(0,Math.min(9,r.avatar|0))))+'</span><b></b><span class="num"></span>';
-  li.querySelector(".rk").textContent=rk; li.querySelector("b").textContent=r.name; li.querySelector(".num").textContent=(r.xp|0)+" XP"; return li; }
+  li.innerHTML='<span class="rk"></span><span class="av"></span><b></b><span class="num"></span>'; avFill(li.querySelector(".av"),okPhoto?r.photo:"",r.avatar);
+  li.querySelector(".rk").textContent=typeof rk==="number"?fmtN(rk):rk; nmPut(li.querySelector("b"),r.name); li.querySelector(".num").textContent=fmtN(r.xp)+" XP"; return li; }
 async function renderHubRank(){
   const ol=$("hsRank"); if(getComputedStyle($("hsRank").closest(".hs-card")).display==="none") return;
   const li0=levelInfo(S.xp), now=new Date(), since=addDays(-((now.getDay()+6)%7));
@@ -5259,9 +5371,17 @@ async function renderHubRank(){
   const {data,error}=await Promise.race([sb.rpc("leaderboard",{since}), new Promise(r=>setTimeout(()=>r({data:null,error:1}),8000))]);
   ol.innerHTML="";
   try{ ntfRank(data,since); }catch(e){}
-  const list=(data||[]).slice(0,5); list.forEach((r,i)=>ol.appendChild(hsRow(r,i+1,user&&r.id===user.id)));
-  if(error) ol.appendChild(msg("hsRankErr")); else if(!user || !list.some(r=>r.id===user.id)) ol.appendChild(mine());
+  const all=data||[], list=all.slice(0,5); list.forEach((r,i)=>ol.appendChild(hsRow(r,i+1,user&&r.id===user.id)));
+  if(error) ol.appendChild(msg("hsRankErr")); else if(!user || !list.some(r=>r.id===user.id)){
+    const at=user?all.findIndex(r=>r.id===user.id):-1, row=mine(); ol.appendChild(row);
+    const put=(rk,xp)=>{ row.querySelector(".rk").textContent=""; const b=row.querySelector("b"); b.textContent=t("rankOrd")(rk)+" · "+t("you"); b.title=b.textContent; row.querySelector(".num").textContent=fmtN(xp)+" XP"; };
+    if(at>=0) put(at+1,all[at].xp); else if(user){ const m=await myRank(since); if(m && ol.contains(row)) put(m.rank,m.xp); } }
 }
+// my_rank(since): the signed-in player's own rank and XP when outside the top 50 (supabase/migrations/2026-10-21_my_rank.sql).
+// Not installed yet, offline or no XP in the period: null, and nothing is shown.
+async function myRank(since){ if(!sb||!user) return null;
+  try{ const {data,error}=await Promise.race([sb.rpc("my_rank",{since:since||null}), new Promise(r=>setTimeout(()=>r({data:null,error:1}),6000))]);
+    const r=Array.isArray(data)?data[0]:data; if(error||!r||!(+r.rank>0)) return null; return {rank:+r.rank|0, xp:+r.xp||0}; }catch(e){ return null; } }
 $("hsDaily").addEventListener("click",()=>$("dailyCard").click());
 $("hsRankMore").addEventListener("click",()=>$("rankBtn").click());
 $("hsMidiBtn").addEventListener("click",()=>{ if(midiPossible()) setInput("midi",true); else openInputChooser(true); });
@@ -5272,7 +5392,7 @@ const TILE_COL={runner:"#1f7a52",speed:"#b4461a",memory:"#6a3fd1",soon:"#a3306b"
   p_runner:"#0e7490",p_pulse:"#b02a6b",p_blaster:"#2c56d6",p_climber:"#1f7a52",p_ear:"#8a3fd1",p_staff:"#b4461a"};
 function renderGames(){ const box=$("gameCards"), pbox=$("playCards"); box.innerHTML=""; pbox.innerHTML="";
   t("games").forEach(([title,desc,id],i)=>{ const best=id?((S.gameBest||{})[id]||(id==="runner"?S.runnerBest:0)||0):null;
-    box.appendChild(tile({color:TILE_COL[id||"soon"],obj:id||"soon",kick:t("secGames"),title,desc,rec:id?t("rnBestL")+" "+best+(DU_GAMES.includes(id)?" · ELO "+eloGet(id+"-"+(S.settings.duCont==="notes"?"notes":"chords")).r:""):null,soon:!id,onOpen:id?()=>gameOpen(id):null})); });
+    box.appendChild(tile({color:TILE_COL[id||"soon"],obj:id||"soon",kick:t("secGames"),title,desc,rec:id?t("rnBestL")+" "+fmtN(best)+(DU_GAMES.includes(id)?(e=>" · ELO "+fmtN(e.r)+(eloProv(e)?"?":""))(eloGet(id+"-"+(S.settings.duCont==="notes"?"notes":"chords"))):""):null,soon:!id,onOpen:id?()=>gameOpen(id):null})); });
   const h=$("playHead"); h.firstChild.textContent=t("playGamesHead"); h.lastChild.textContent=t("playGamesSub");
   t("playGames").forEach(([title,desc,id],i)=>pbox.appendChild(tile({color:TILE_COL["p_"+id]||MODE_COL.play,obj:id,kick:"Play",title,desc,onOpen:()=>openPlayWith("#game="+id)}))); }
 function renderLearn(){ const box=$("learnTiles"); box.innerHTML="";
@@ -5367,7 +5487,10 @@ async function initCloud(){
   }catch(e){ cloudFail=true; }
   if(page==="account") renderAccount(); if(page==="rank") renderRank();
 }
-const myName = () => S.profileName || (user && ((user.user_metadata&&(user.user_metadata.full_name||user.user_metadata.name||[user.user_metadata.given_name,user.user_metadata.family_name].filter(Boolean).join(" "))) || (user.email||"").split("@")[0])) || t("you");
+const myNameRaw = () => S.profileName || (user && ((user.user_metadata&&(user.user_metadata.full_name||user.user_metadata.name||[user.user_metadata.given_name,user.user_metadata.family_name].filter(Boolean).join(" "))) || (user.email||"").split("@")[0])) || t("you");
+const myName = () => gCut(String(myNameRaw()).replace(BIDI_G,"").replace(/[\u0000-\u001f\u007f]/g,"").trim(),24,24).trim() || t("you");
+// the name sent to profiles: 2 to 24 characters, no control or direction characters (check profiles_name_clean)
+const myNameDb = () => { const v=myName(); return nameErr(v) ? t("qzPlayer") : v; };
 async function setUser(u){
   user=u; renderStatus(); document.body.classList.toggle("guest",!u);
   if(u && page==="locked" && lockFor) openPage(lockFor);
@@ -5446,7 +5569,7 @@ async function cloudPushNow(){
 async function cloudPushRaw(){
   const li=levelInfo(S.xp), solved=Object.values(S.secStats||{}).reduce((a,x)=>a+(x.ok||0),0), now=new Date().toISOString();
   const r1=await sb.from("progress").upsert({user_id:user.id, data:S, updated_at:now});
-  const r2=await sb.from("profiles").upsert({id:user.id, name:myName().slice(0,24), avatar:charIndex(li.L), photo:userPhoto()||null, xp:S.xp, level:li.L, streak:effStreak(), solved, updated_at:now});
+  const r2=await sb.from("profiles").upsert({id:user.id, name:myNameDb(), avatar:charIndex(li.L), photo:userPhoto()||null, xp:S.xp, level:li.L, streak:effStreak(), solved, updated_at:now});
   if(r1.error||r2.error) throw (r1.error||r2.error);
   // XP earned per day (last 7 days) feeds the day / week / month / year leaderboards
   const since=addDays(-7), today=dayStr();
@@ -5480,14 +5603,15 @@ function renderWelcome(){ const ul=$("wcList"); ul.innerHTML=""; t("perks").forE
 $("wcSignup").addEventListener("click",()=>{ closeMod("welcomeModal"); openPage("account"); });
 function renderRankPer(){ const box=$("rankPer"), P=t("periods"), cur=S.settings.rankPer||"week"; box.innerHTML="";
   Object.keys(P).forEach(k=>{ const b=document.createElement("button"); b.type="button"; b.textContent=P[k]; b.setAttribute("aria-pressed",k===cur); b.onclick=()=>{ S.settings.rankPer=k; save(); renderRank(); }; box.appendChild(b); }); }
-async function renderRank(){
+let rankTok=0;
+async function renderRank(){ const tok=++rankTok;
   renderRankPer(); if(!cloudPromise){ ensureCloud(); } // first opening: load the SDK, initCloud re-renders when ready
   const li=levelInfo(S.xp), ol=$("rankList"); ol.innerHTML="";
   const row=(r,rk,me)=>{ const el=document.createElement("li"); if(me) el.className="me";
     const okPhoto = r.photo && /^https:\/\//.test(r.photo);
-    el.innerHTML='<span class="rk"></span><span class="av">'+(okPhoto?photoImg(r.photo):avatarSVG(Math.max(0,Math.min(9,r.avatar|0))))+'</span><span><b></b><small></small></span><span class="num"></span><span class="num"></span>';
-    el.querySelector(".rk").textContent=rk; el.querySelector("b").textContent=r.name; el.querySelector("small").textContent=t("acctLevel")+" "+r.level+" · "+t("chars")[Math.max(0,Math.min(9,r.avatar|0))][2];
-    const n=el.querySelectorAll(".num"); n[0].textContent=r.xp+" XP"; n[1].textContent="🔥 "+r.streak+" "+t("day"); return el; };
+    el.innerHTML='<span class="rk"></span><span class="av"></span><span><b></b><small></small></span><span class="num"></span><span class="num"></span>'; avFill(el.querySelector(".av"),okPhoto?r.photo:"",r.avatar);
+    el.querySelector(".rk").textContent=typeof rk==="number"?fmtN(rk):rk; nmPut(el.querySelector("b"),r.name); const sm=el.querySelector("small"); sm.textContent=t("acctLevel")+" "+fmtN(r.level)+" · "+t("chars")[Math.max(0,Math.min(9,r.avatar|0))][2]; sm.title=sm.textContent;
+    const n=el.querySelectorAll(".num"); n[0].textContent=fmtN(r.xp)+" XP"; n[1].textContent="🔥 "+fmtN(r.streak)+" "+t("day"); return el; };
   const cta=document.querySelector(".rank-cta"); cta.hidden=!!user;
   $("rankPanel").querySelector(".pane-head p").textContent = user ? t("rankSubIn") : t("rankSub");
   const per=S.settings.rankPer||"week", now=new Date();
@@ -5501,9 +5625,14 @@ async function renderRank(){
   if(page!=="rank") return;
   ol.innerHTML="";
   if(error){ const p=document.createElement("p"); p.className="rank-msg"; p.textContent=t("rankErr"); ol.appendChild(p); }
-  const list=data||[]; list.forEach((r,i)=>ol.appendChild(row(r,i+1,user&&r.id===user.id)));
+  const list=(data||[]).slice(0,50); list.forEach((r,i)=>ol.appendChild(row(r,i+1,user&&r.id===user.id)));
   if(!list.length && !error){ const p=document.createElement("p"); p.className="rank-msg"; p.textContent=since?t("rankEmptyP"):t("rankEmpty"); ol.appendChild(p); }
   if(!user) ol.appendChild(row({name:t("you"),avatar:charIndex(li.L),level:li.L,xp:myXP,streak:S.streak.days},"—",true));
+  else if(!error && list.length && !list.some(r=>r.id===user.id)){ // outside the top 50: "…" then "1 284th · You"
+    const m=await myRank(since); if(!m || page!=="rank" || tok!==rankTok) return;
+    const sep=document.createElement("li"); sep.className="sep"; sep.setAttribute("aria-hidden","true"); sep.textContent="…"; ol.appendChild(sep);
+    const me=row({name:t("you"),avatar:charIndex(li.L),photo:userPhoto(),level:li.L,xp:m.xp,streak:effStreak()},"",true); me.classList.add("out");
+    me.querySelector("b").textContent=t("rankOrd")(m.rank)+" · "+t("you"); me.querySelector("b").title=me.querySelector("b").textContent; ol.appendChild(me); }
 }
 async function oauthLogin(provider){
   try{
@@ -5529,11 +5658,11 @@ function renderAccount(){
   const li=levelInfo(S.xp), ci=charIndex(li.L), c=t("chars")[ci];
   const solved=Object.values(S.secStats||{}).reduce((a,x)=>a+(x.ok||0),0);
   const ph=userPhoto();
-  const box=$("acctMe"); box.innerHTML='<div class="acct-top"><span class="av">'+(ph?photoImg(ph):avatarSVG(ci))+'</span><div><b><span class="nm"></span><span class="lvl-chip"></span></b><small></small></div></div><div class="acct-stats"></div>';
-  box.querySelector(".nm").textContent = user ? myName() : c[0]+" "+c[1]; box.querySelector(".lvl-chip").textContent=t("acctLevel")+" "+li.L;
+  const box=$("acctMe"); box.innerHTML='<div class="acct-top"><span class="av"></span><div><b><span class="nm"></span><span class="lvl-chip"></span></b><small></small></div></div><div class="acct-stats"></div>';
+  avFill(box.querySelector(".acct-top .av"),ph,ci); box.querySelector(".nm").textContent = user ? myName() : c[0]+" "+c[1]; box.querySelector(".lvl-chip").textContent=t("acctLevel")+" "+li.L;
   box.querySelector("small").textContent=c[2];
   const st=box.querySelector(".acct-stats");
-  [[t("acctXp"),S.xp],[t("acctStreak"),S.streak.days+" "+t("day")],[t("acctDone"),solved],[t("acctLevel"),li.L]].forEach(([k,v])=>{ const d=document.createElement("div"); d.className="end-stat"; d.innerHTML="<span></span><b></b>"; d.querySelector("span").textContent=k; d.querySelector("b").textContent=v; st.appendChild(d); });
+  [[t("acctXp"),fmtN(S.xp)],[t("acctStreak"),fmtN(S.streak.days)+" "+t("day")],[t("acctDone"),fmtN(solved)],[t("acctLevel"),fmtN(li.L)]].forEach(([k,v])=>{ const d=document.createElement("div"); d.className="end-stat"; d.innerHTML="<span></span><b></b>"; d.querySelector("span").textContent=k; d.querySelector("b").textContent=v; st.appendChild(d); });
   $("accountPanel").querySelector(".pane-head p").textContent = user ? syncText() : t("acctSub");
   const L=$("acctLogin"); L.innerHTML="";
   const h=(tag,txt,cls)=>{ const e=document.createElement(tag); if(txt!=null) e.textContent=txt; if(cls) e.className=cls; L.appendChild(e); return e; };
@@ -5545,7 +5674,7 @@ function renderAccount(){
     const inp=document.createElement("input"); inp.type="text"; inp.maxLength=24; inp.value=myName(); row.appendChild(inp);
     const sv=document.createElement("button"); sv.className="btn primary"; sv.type="submit"; sv.textContent=t("saveLbl"); row.appendChild(sv);
     const m=h("p","", "msg");
-    f.onsubmit=async e=>{ e.preventDefault(); const v=inp.value.trim().slice(0,24); if(!v) return; S.profileName=v; save(); renderStatus(); try{ await cloudPushNow(); m.className="msg ok"; m.textContent=t("saved"); box.querySelector(".nm").textContent=v; }catch(err){ m.className="msg err"; m.textContent=t("cloudErr"); } };
+    f.onsubmit=async e=>{ e.preventDefault(); const v=inp.value.trim(), er=nameErr(v)||(gLen(v)>24||Array.from(v).length>24?"pseudoLong":""); if(er){ m.className="msg err"; m.textContent=t(er); inp.focus(); return; } S.profileName=v; save(); renderStatus(); try{ await cloudPushNow(); m.className="msg ok"; m.textContent=t("saved"); box.querySelector(".nm").textContent=v; }catch(err){ m.className="msg err"; m.textContent=t("cloudErr"); } };
     const lo=h("button",t("logout"),"btn"); lo.type="button"; lo.onclick=async()=>{ try{ await sb.auth.signOut(); }catch(e){} toast(t("signedOut")); };
     return;
   }
@@ -5590,7 +5719,7 @@ function openChars(){
     d.className="char"+(got?" got":" locked")+(i===ci?" me":"");
     d.innerHTML='<span class="lv-n"></span><span class="av">'+avatarSVG(i)+'</span><b></b><span class="ct"></span><span class="cx"></span>';
     d.querySelector(".lv-n").textContent=t("acctLevel")+" "+CHAR_LVL[i]; d.querySelector("b").textContent=c[2]; d.querySelector(".ct").textContent=c[0]+" "+c[1];
-    d.querySelector(".cx").textContent= got ? t("charGot") : xpForLevel(CHAR_LVL[i])+" XP"; g.appendChild(d); });
+    d.querySelector(".cx").textContent= got ? t("charGot") : fmtN(xpForLevel(CHAR_LVL[i]))+" XP"; g.appendChild(d); });
   const nx=ci+1<CHAR_LVL.length ? ci+1 : -1;
   $("charSub").textContent = nx<0 ? t("charSub")(null) : t("charSub")(t("acctLevel").toLowerCase()+" "+CHAR_LVL[nx], xpForLevel(CHAR_LVL[nx])-S.xp);
   openMod("charModal");
@@ -5618,7 +5747,6 @@ $("dcReview").addEventListener("change",e=>{ dcRev=e.target.checked; });
 $("dcOk").addEventListener("click",()=>{ S.settings.dailySecs=SECS.filter(x=>dcSel.includes(x)); S.settings.dailyLen=dcLenV; S.settings.dailyReview=dcRev; const changed=JSON.stringify([S.settings.dailySecs,S.settings.dailyLen,S.settings.dailyReview])!==JSON.stringify([dcPrev&&dcPrev[0],dcPrev&&dcPrev[1],dcPrev&&dcPrev[2]]); save(); closeMod("dailyCfgModal");
   if(dcStartAfter){ dcStartAfter=false; if(changed) dailyPlan(true); startDaily(); return; } if(!(game&&game.daily)){ dailyPlan(true); renderDaily(); } });
 const userPhoto = () => user && user.user_metadata && (user.user_metadata.avatar_url || user.user_metadata.picture) || "";
-const photoImg = url => '<img class="photo" alt="" referrerpolicy="no-referrer" src="'+String(url).replace(/"/g,"&quot;")+'">';
 function showIntro(key){
   const k = key==="section" ? (page==="practice"?S.section:page) : key, d=t("intro")[k]; if(!d) return;
   S.introSeen=S.introSeen||{}; S.introSeen[k]=true; save();
@@ -5750,7 +5878,7 @@ function toast(x){
   // discreet notification (level up, sign-out…), 2.5 s, created on demand
   let el=$("toast");
   if(!el){ el=document.createElement("div"); el.id="toast"; el.setAttribute("role","status"); el.setAttribute("aria-live","polite");
-    el.style.cssText="position:fixed;left:50%;bottom:max(18px,env(safe-area-inset-bottom));transform:translateX(-50%) translateY(8px);z-index:400;max-width:min(92vw,420px);padding:9px 14px;border-radius:999px;background:var(--ink);color:var(--surface);font:500 14px/1.3 var(--f-body,system-ui,sans-serif);box-shadow:0 6px 24px rgba(0,0,0,.25);opacity:0;transition:opacity .25s,transform .25s;pointer-events:none;text-align:center";
+    el.style.cssText="position:fixed;left:50%;bottom:max(18px,env(safe-area-inset-bottom));transform:translateX(-50%) translateY(8px);z-index:400;max-width:min(92vw,420px);padding:9px 14px;border-radius:999px;background:var(--ink);color:var(--surface);font:500 14px/1.3 var(--f-body,system-ui,sans-serif);box-shadow:0 6px 24px rgba(0,0,0,.25);opacity:0;transition:opacity 250ms var(--ease-out),transform 250ms var(--ease-out);pointer-events:none;text-align:center";
     document.body.appendChild(el); }
   el.textContent=x; clearTimeout(toastT);
   requestAnimationFrame(()=>{ el.style.opacity="1"; el.style.transform="translateX(-50%) translateY(0)"; });
@@ -5796,15 +5924,16 @@ async function enableMidi(){
   if(!navigator.requestMIDIAccess){ $("midiBtn").classList.add("err"); $("midiTxt").textContent=t("midiNo"); notice(t("midiUnsupported")); return; }
   try{
     const acc=await navigator.requestMIDIAccess(); midiAcc=acc;
-    const bind=()=>{ const names=[]; acc.inputs.forEach(inp=>{
+    const bind=()=>{ document.querySelectorAll("#kbd .k-down").forEach(e=>e.classList.remove("k-down")); const names=[]; acc.inputs.forEach(inp=>{
         if(inp.state && inp.state!=="connected"){ inp.onmidimessage=null; return; } // Chrome keeps unplugged ports in the map
         names.push(inp.name); inp.onmidimessage=ev=>{
         const [st,note,vel]=ev.data;
         if(page==="quiz"){ if((st&0xf0)===0x90 && vel>0){ if(S.settings.midiSound) tone(note,0,.9,.1+.26*vel/127); if(!anyModal()) quizIn(String(inp.id||inp.name),note); } return; } // every keyboard counts: one per player
         if(S.settings.midiInput && inp.name!==S.settings.midiInput) return;
         if(page==="play"){ if((st&0xf0)===0x90 && vel>0) playSend("noteon",note,vel/127); else if((st&0xf0)===0x80 || ((st&0xf0)===0x90 && vel===0)) playSend("noteoff",note); return; }
+        if((st&0xf0)===0x80 || ((st&0xf0)===0x90 && vel===0)){ keyDown(note,false); return; }
         if((st&0xf0)===0x90 && vel>0){
-          pressKey(note); // light the key at once, before the 35 ms grouping
+          pressKey(note); keyDown(note,true); // light the key at once, before the 35 ms grouping
           if(S.settings.midiSound) tone(note,0,.9,.1+.26*vel/127);
           if(calib){ calibNote(note); return; }
           followMidi(note);
@@ -6068,13 +6197,13 @@ function gateForm(){ const f=$("gtForm"); f.innerHTML=""; const m=GATE.mode;
   const b=document.createElement("button"); b.type="submit"; b.className="gt-go"; b.id="gtGo"; b.textContent=t(m==="signup"?"gtCreate":"gtSignIn"); b.disabled=GATE.busy||!sb; f.appendChild(b);
   const alt=document.createElement("button"); alt.type="button"; alt.className="gt-link"; alt.textContent=t("gtUseCode"); alt.onclick=()=>{ GATE.email=em.value.trim(); Object.assign(GATE,{otp:true,sent:false,msg:"",err:false}); gateRender(); }; f.appendChild(alt);
   f.onsubmit=async e=>{ e.preventDefault(); if(!sb) return; GATE.email=em.value.trim(); if(name) GATE.name=name.value.trim();
-    const bad = !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(GATE.email) ? "gtBadMail" : pw.value.length<8 ? "gtBadPwd" : m==="signup"&&!ok.checked ? "gtNeedOk" : "";
+    const bad = !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(GATE.email) ? "gtBadMail" : pw.value.length<8 ? "gtBadPwd" : m==="signup"&&GATE.name&&nameErr(GATE.name) ? nameErr(GATE.name) : m==="signup"&&!ok.checked ? "gtNeedOk" : "";
     if(bad){ GATE.msg=t(bad); GATE.err=true; gateForm(); return; }
     GATE.busy=true; GATE.msg=""; gateForm();
     try{ if(m==="signup"){
         const {data,error}=await sb.auth.signUp({email:GATE.email, password:pw.value, options:{data:{name:GATE.name||undefined}, emailRedirectTo: isApp()?undefined:location.origin+location.pathname}}); if(error) throw error;
         if(data.user && Array.isArray(data.user.identities) && !data.user.identities.length) throw new Error("already registered"); // Supabase does not say it otherwise
-        if(GATE.name){ S.profileName=GATE.name.slice(0,24); save(); }
+        if(GATE.name){ S.profileName=gCut(GATE.name,24,24); save(); }
         if(!data.session){ Object.assign(GATE,{confirm:true,sent:true,busy:false,msg:t("gtConfirm")(GATE.email),err:false}); gateRender(); return; } }
       else { const {error}=await sb.auth.signInWithPassword({email:GATE.email, password:pw.value}); if(error) throw error; }
       GATE.busy=false; // setUser() closes the gate
@@ -6229,7 +6358,7 @@ function pwRender(){ const o=$("pw"); if(!o) return; const y=PW.plan==="year", a
 function payStart(plan){ const now=Date.now(), D=864e5;
   if(PAY_LIVE){ /* to come: isApp() ? native StoreKit purchase : Stripe Checkout session from a Supabase function */ return; }
   S.prem={...(S.prem||{}), plan, preview:1, trialEnd: plan==="year" ? now+7*D : 0, until: plan==="month" ? now+30*D : 0, at:now}; save();
-  PW.done=true; pwRender(); confetti&&setTimeout(confetti,120); }
+  PW.done=true; pwRender(); setTimeout(()=>confetti(),120); }
 function premRefresh(){ const hs=$("hsInv"); if(hs){ const sm=hs.querySelector("small"); if(sm) sm.textContent=t(paywallOn()?"invHubS":"invHubSF"); } const b=$("premBtn"); if(b){ b.hidden=!paywallOn() || (premUntil()>Date.now() && !(S.prem&&S.prem.trialEnd>Date.now()));
     $("premSub").textContent = S.prem&&S.prem.trialEnd>Date.now() ? t("premSubTrial")(premDays()) : t("premSub"); }
   try{ if(document.body.classList.contains("setup")) renderSetup(); }catch(e){} try{ renderPlaySongs(); }catch(e){} try{ if(RN.on&&DU.view==="lobby") duRender(); }catch(e){} try{ renderSetPrem(); }catch(e){} }
@@ -6253,7 +6382,7 @@ function invRender(){ const o=$("inv"), link=refLink(), msg=t("invMsg"), r=S.ref
     +'<button class="gt-go" type="button" id="invShare">'+esc(t("invShare"))+'</button>'
     +'<div class="inv-link"><input readonly class="mono" id="invLink" aria-label="Link"><button class="btn" type="button" id="invCopy">'+esc(t("invCopy"))+'</button></div>'
     +'<div class="inv-quick"><a id="invWa" target="_blank" rel="noopener" style="--c:#25d366"><i></i>WhatsApp</a><a id="invSms" style="--c:#3cc8f0"><i></i>SMS</a><a id="invMail" style="--c:#7a5bf5"><i></i>E-mail</a></div>'
-    +'<div class="inv-stats"><div><b>'+(r.n|0)+'</b><small>'+esc(t("invStatF"))+'</small></div>'+(paywallOn()?'<div><b>'+(r.m|0)+'</b><small>'+esc(t("invStatM"))+'</small></div>':'')+'</div>'
+    +'<div class="inv-stats"><div><b>'+esc(fmtN(r.n|0))+'</b><small>'+esc(t("invStatF")((r.n|0)))+'</small></div>'+(paywallOn()?'<div><b>'+esc(fmtN(r.m|0))+'</b><small>'+esc(t("invStatM")((r.m|0)))+'</small></div>':'')+'</div>'
     +'<p class="pw-fine">'+esc(t("invStatNote"))+'</p></div></div>';
   o.setAttribute("aria-labelledby","invH");
   $("invLink").value=link; $("invX").onclick=invClose;
@@ -6273,16 +6402,20 @@ function shareCard(k,big,sub,col){ return new Promise(res=>{ try{ const c=docume
     const bg=g.createLinearGradient(0,0,1080,1080); bg.addColorStop(0,"#2b1f74"); bg.addColorStop(1,col||"#7a5bf5"); g.fillStyle=bg; g.fillRect(0,0,1080,1080);
     g.globalAlpha=.18; g.fillStyle="#fff"; for(let i=0;i<14;i++){ g.fillRect(60+i*70,820,60,200); } g.globalAlpha=.3; g.fillStyle="#15122e"; for(let i=0;i<14;i++){ if([2,6,9,13].includes(i)) continue; g.fillRect(105+i*70,820,30,120); } g.globalAlpha=1;
     g.fillStyle="#ffd77a"; g.font="800 40px Nunito, system-ui, sans-serif"; g.fillText(t("shareImgK").toUpperCase(),80,130);
-    g.fillStyle="#fff"; g.font="700 64px Fredoka, Nunito, system-ui, sans-serif"; wrapTxt(g,k,80,230,920,72);
-    g.font="700 260px Fredoka, Nunito, system-ui, sans-serif"; g.fillText(big,72,560);
+    g.fillStyle="#fff"; g.font="700 64px Fredoka, Nunito, system-ui, sans-serif"; wrapTxt(g,k,80,230,920,72,2);
+    let fs=260; g.font="700 "+fs+"px Fredoka, Nunito, system-ui, sans-serif"; while(g.measureText(big).width>920 && fs>80){ fs-=10; g.font="700 "+fs+"px Fredoka, Nunito, system-ui, sans-serif"; } g.fillText(big,72,560);
     g.font="700 48px Nunito, system-ui, sans-serif"; g.fillStyle="#e9e4ff"; wrapTxt(g,sub,80,650,920,58);
     g.font="800 40px Nunito, system-ui, sans-serif"; g.fillStyle="#fff"; g.fillText(t("shareImgCta"),80,790);
     c.toBlob(b=>res(b?new File([b],"piano-challenges.png",{type:"image/png"}):null),"image/png"); }catch(e){ res(null); } }); }
-function wrapTxt(g,s,x,y,w,lh){ const ws=String(s).split(" "); let line=""; ws.forEach(word=>{ const tt=line?line+" "+word:word; if(g.measureText(tt).width>w && line){ g.fillText(line,x,y); y+=lh; line=word; } else line=tt; }); if(line) g.fillText(line,x,y); }
-async function shareEnd(g,good,n){ const lbl=g.label||t("endTitle"), file=await shareCard(lbl,good+" / "+n,t("shareImgEnd"),"#c9463c");
+function wrapTxt(g,s,x,y,w,lh,max){ const lines=[]; let line=""; String(s).split(" ").forEach(word=>{ const tt=line?line+" "+word:word; if(g.measureText(tt).width>w && line){ lines.push(line); line=word; } else line=tt; }); if(line) lines.push(line);
+  // a word wider than the card (no space to break on) is cut by grapheme
+  const fit=l=>{ if(g.measureText(l).width<=w) return l; let n=gLen(l); while(n>1 && g.measureText(gCut(l,n)+"…").width>w) n--; return gCut(l,n)+"…"; };
+  let out=lines.map(fit); if(max && out.length>max){ out=out.slice(0,max); let l=lines[max-1]; while(l && g.measureText(l+"…").width>w) l=gCut(l,gLen(l)-1); out[max-1]=(l||"")+"…"; }
+  out.forEach((l,i)=>g.fillText(l,x,y+i*lh)); }
+async function shareEnd(g,good,n){ const lbl=g.label||t("endTitle"), file=await shareCard(lbl,fmtN(good)+" / "+fmtN(n),t("shareImgEnd"),"#c9463c");
   shareIt({text:t("shareEnd")(good,n,lbl),url:refLink(),file}); }
-async function shareDuel(){ const r=DU.res, o=DU.opp; if(!r||!o) return; const gn=duGameName(), w=r.res, file=await shareCard(gn+" · "+(o.name||""),r.me+" – "+r.opp,(t("shareImgDu")[w]||"")+(r.elo?" · ELO "+r.elo.after:""),"#26805a");
-  shareIt({text:t("shareDu")(w,gn,r.me,r.opp,o.name||"?"),url:refLink(),file}); }
+async function shareDuel(){ const r=DU.res, o=DU.opp; if(!r||!o) return; const gn=duGameName(), w=r.res, file=await shareCard(gn+" · "+pName(o.name),fmtN(r.me)+" – "+fmtN(r.opp),(t("shareImgDu")[w]||"")+(r.elo?" · ELO "+fmtN(r.elo.after):""),"#26805a");
+  shareIt({text:t("shareDu")(w,gn,r.me,r.opp,pName(o.name)),url:refLink(),file}); }
 // a friend's link: remembered for the sign-up (the server credits both accounts)
 (()=>{ try{ const rf=new URLSearchParams(location.search).get("ref"); if(rf && /^p[a-z0-9]{8}$/.test(rf) && rf!==S.netId && !S.refBy){ S.refBy=rf; save(); } }catch(e){} })();
 document.addEventListener("keydown",e=>{ if(!document.body.classList.contains("pw-on")) return; if(e.key==="Escape"){ e.preventDefault(); if($("inv")&&!$("inv").hidden) invClose(); else pwClose(); } e.stopImmediatePropagation(); },true);
@@ -6326,7 +6459,10 @@ function fnRender(){ const g=$("gate"); if(!g||!FN.on) return; const mark=$("hom
 function fnNote(m, el){ if(!FN.on) return; const kb=$("fnKb"); const pc=((m%12)+12)%12;
   if(FN.done){ if(pc===0 && el===undefined) fnGo(); return; } // MIDI: a C again carries on
   const k = el || (kb && (kb.querySelector('[data-m="'+m+'"]') || kb.querySelector('[data-m="'+(60+pc)+'"]')));
-  if(pc===0){ FN.done=true; FN.wrong=""; fnRender(); const k2=$("fnKb").querySelector('[data-m="'+(m>=72&&m<84?72:60)+'"]'); if(k2) k2.classList.add("fn-good"); setTimeout(()=>$("fnGo")&&$("fnGo").focus(),30); try{ confetti(); }catch(e){} return; }
+  if(pc===0){ FN.done=true; FN.wrong=""; fnRender(); const k2=$("fnKb").querySelector('[data-m="'+(m>=72&&m<84?72:60)+'"]'); if(k2) k2.classList.add("fn-good"); setTimeout(()=>$("fnGo")&&$("fnGo").focus(),30);
+    // the moment (once): the prompt turns green (colour fade), the big C pops, the button rises in; confetti from the C, inside the card (the stage is under the gate)
+    const pr=$("fnPrompt"); pr.classList.remove("ok"); void pr.offsetWidth; pr.classList.add("ok","fn-win"); $("fnGo").classList.add("fn-enter");
+    try{ confetti($("gate").querySelector(".fn-card"), k2||pr, 60, 1200); }catch(e){} return; }
   FN.wrong=(S.settings.notation==="fr"?PC_FR:PC_EN)[pc]; const pr=$("fnPrompt"); if(pr){ pr.classList.add("bad"); pr.querySelector("small").textContent=t("fnWrong")(FN.wrong); }
   if(k){ k.classList.add("fn-bad"); setTimeout(()=>k.classList.remove("fn-bad"),320); } }
 function fnClose(){ FN.on=false; const g=$("gate"); if(g){ g.hidden=true; g.innerHTML=""; } document.body.classList.remove("gate-on"); startInert(); }
