@@ -57,6 +57,11 @@ await page.reload(); await wait(page, 1500);
 check('deuxième visite : plus rien ne s’affiche', !(await vis('gate')) && !(await vis('onb')) && !(await vis('tour')));
 await ev(() => document.getElementById('setBtn').click()); await wait(page, 300); await ev(() => document.getElementById('tourAgain').click()); await wait(page, 600);
 check('Réglages : revoir la présentation', await vis('tour'));
+// a player from before the start screens (no gate, no onb in the saved state): the sign-in screen once, settings kept, no first-note screen
+await ev(() => { localStorage.setItem('memo-gammes-v1', JSON.stringify({ xp: 500, settings: { lang: 'fr', notation: 'fr', input: 'screen', fing: true } })); }); await page.reload(); await wait(page, 1500);
+check('ancien joueur : écran de connexion, pas « Joue ta première note »', await vis('gate') && await ev(() => !!document.getElementById('gateGuest') && !document.getElementById('fnGo')));
+await ev(() => document.getElementById('gateGuest').click()); await wait(page, 600);
+check('ancien joueur : réglages gardés, pas de questionnaire', !(await vis('onb')) && await ev(() => { const S = JSON.parse(localStorage.getItem('memo-gammes-v1')); return S.settings.fing === true && S.xp === 500; }));
 check('aucune erreur JS', (await ev(() => window.__cnt.consoleErrors)).length === 0, await ev(() => window.__cnt.consoleErrors));
 await browser.close();
 if (fails.length) { console.log('\nECHEC r12 :', fails); process.exit(1); }

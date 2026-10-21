@@ -6315,7 +6315,7 @@ const mobileWeb = (phoneMQ.matches||railMQ.matches) && !document.documentElement
 document.body.classList.add("guest");
 restoreInput();
 { const nat=isApp(), wait=nat?1600:300;
-  if(gateNeeded()){ save(); if(nat) setTimeout(fnOpen,wait); else fnOpen(); }
+  if(gateNeeded()){ save(); const op=(S.onb&&S.onb.legacy)?gateOpen:fnOpen; /* older players keep their settings: the sign-in screen once, not the first-note screen */ if(nat) setTimeout(op,wait); else op(); }
   else if(!(S.onb&&S.onb.done) || !S.tourDone){ save(); if(hasSession()) ensureCloud().finally(()=>setTimeout(startFlow,wait)); else setTimeout(startFlow,wait); }
   else maybeAskInput(); }
 

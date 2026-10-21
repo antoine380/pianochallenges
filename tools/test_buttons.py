@@ -17,7 +17,7 @@ async def run(native):
     if native: await pg.add_init_script(mock)
     await pg.goto(f"http://localhost:{PORT}/"); await pg.wait_for_timeout(2300)
     # start screen (sign-in), onboarding questions and tour: continue as a guest and skip
-    for sel in ("#gateGuest","#onbSkip","#tourX"):
+    for sel in ("#fnSkip","#gateGuest","#onbSkip","#tourX"):
       if await pg.is_visible(sel): await pg.click(sel); await pg.wait_for_timeout(700)
     for _ in range(3): await pg.keyboard.press("Escape"); await pg.wait_for_timeout(150)
     # first visit: pick the play mode once (MIDI with the mocked bridge, the screen keyboard on the web)
@@ -49,7 +49,7 @@ async def run(native):
         except Exception as ex: print("  not clickable:", mid, txt, str(ex).splitlines()[0][:160]); problems.append(("not clickable",mid,txt))
         await pg.wait_for_timeout(120)
         # "replay the tour" / "redo the questions" (Settings) open full-screen layers: close them
-        for sel in ("#onbSkip","#tourX"):
+        for sel in ("#onbSkip","#tourX","#invX","#pwX"):
           if await pg.is_visible(sel): await pg.click(sel); await pg.wait_for_timeout(250)
         # a click may open another window (MIDI set-up, play mode, leave?): close it
         for _ in range(2):
