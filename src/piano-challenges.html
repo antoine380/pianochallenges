@@ -3701,7 +3701,6 @@ function showScore(detailParts){
   $("sbDetail").textContent=detailParts.filter(Boolean).join(" · ");
   const st=$("stage"); st.classList.remove("res-good","res-warn","res-bad"); st.classList.add("res-"+level);
   renderSession();
-  if(level==="good") confetti();
   return level;
 }
 function showEar(ok,gain){
@@ -3710,7 +3709,7 @@ function showEar(ok,gain){
   $("sbVal").textContent = ok ? "✓" : "✗";
   $("sbDetail").textContent = ok ? t("right")+" · +"+gain+" XP" : t("wrong")+earLabel(cur.tid,cur.k);
   const st=$("stage"); st.classList.remove("res-good","res-warn","res-bad"); st.classList.add("res-"+level);
-  renderSession(); if(ok) confetti();
+  renderSession();
 }
 function renderSession(){
   // running total for the current game
