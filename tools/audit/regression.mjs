@@ -34,6 +34,35 @@ for(const v of [{w:1024,h:768},{w:768,h:1024},{w:1280,h:800},{w:812,h:375,mobile
   }
 }
 
+// ---- mobile-native audit: the first run "Play your first note" (before and after the first C) and the start screen of a subject fit
+//      on small phones; the Start button (#suGo) and the "Continue" button (#fnGo) are on screen without scrolling
+const inView=(pg,sel)=>pg.evaluate(s=>{ const e=document.querySelector(s); if(!e||e.hidden||!e.offsetParent) return null; const r=e.getBoundingClientRect(); return {top:Math.round(r.top),bottom:Math.round(r.bottom),H:innerHeight,ok:r.top>=0&&r.bottom<=innerHeight+1}; },sel);
+for(const v of [{w:375,h:667},{w:667,h:375},{w:812,h:375}]){
+  const c=await b.newContext({viewport:{width:v.w,height:v.h},isMobile:true,hasTouch:true,locale:'fr-FR'}); const pg=await c.newPage();
+  await pg.goto(BASE); await pg.waitForTimeout(900);
+  const fit=()=>pg.evaluate(()=>{ const p=document.querySelector('.fn-play'), d=document.scrollingElement; return {p:p.scrollHeight<=p.clientHeight+1, d:d.scrollHeight<=innerHeight+1, sh:p.scrollHeight, ch:p.clientHeight}; });
+  let f=await fit(), k=await inView(pg,'.fn-kb'), ft=await inView(pg,'.fn-foot');
+  ok(f.p && f.d && k&&k.ok && ft&&ft.ok, `${v.w}×${v.h} first run: one screen, keys and "Se connecter" visible (${f.sh}/${f.ch}, keys ${k&&k.bottom}, foot ${ft&&ft.bottom}/${v.h})`);
+  await pg.evaluate(()=>{ const k=document.querySelector('#fnKb [data-m="60"]'); k.dispatchEvent(new PointerEvent('pointerdown',{bubbles:true,cancelable:true})); }); await pg.waitForTimeout(400);
+  f=await fit(); const g=await inView(pg,'#fnGo');
+  ok(f.d && g&&g.ok, `${v.w}×${v.h} first run after the C: "Jouer mes 3 premiers accords" visible (${JSON.stringify(g)})`);
+  await c.close();
+}
+for(const v of [{w:812,h:375},{w:667,h:375},{w:375,h:667}]){
+  for(const lang of ['fr','en']){
+    const pg=await open({...v,lang,mobile:true});
+    await click(pg,GO.learn); await pg.waitForTimeout(300);
+    for(let i=0;i<5;i++){
+      const n=await pg.evaluate(i=>{ const t=document.querySelectorAll('#learnTiles .ptile:not(.soon)')[i]; if(!t) return null; t.click(); return t.querySelector('.h3')?.textContent||''; },i); if(n==null) break;
+      await pg.waitForTimeout(450);
+      const g=await inView(pg,'#suGo');
+      ok(!!g && g.ok, `${v.w}×${v.h} ${lang} start screen "${n}": Start button on screen (${JSON.stringify(g)})`);
+      await click(pg,GO.learn); await pg.waitForTimeout(300);
+    }
+    await pg.context().close();
+  }
+}
+
 // ---- #16 contrast of white text on the tiles (hub, Learn, Games), light and dark
 const lum=c=>{ const [r,g,b]=c.map(v=>{ v/=255; return v<=0.03928?v/12.92:Math.pow((v+0.055)/1.055,2.4); }); return 0.2126*r+0.7152*g+0.0722*b; };
 const ratio=(a,b)=>{ const l1=lum(a),l2=lum(b); return (Math.max(l1,l2)+0.05)/(Math.min(l1,l2)+0.05); };
