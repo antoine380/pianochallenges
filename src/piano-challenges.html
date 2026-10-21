@@ -1310,7 +1310,8 @@ body.du-lob #runner{flex:1 1 auto}
 .du-pl.opp{padding:6px 6px 6px 12px;justify-content:flex-end;text-align:right}
 .du-nm{display:flex;flex-direction:column;min-width:0;line-height:1.15} .du-nm b{font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis} .du-nm small{color:var(--muted);font-family:var(--f-display);font-size:.82rem}
 .du-pl.me .du-nm{margin-right:auto} .du-pl.opp .du-nm{margin-left:auto}
-.du-sc{font-family:var(--f-display);font-weight:700;font-size:1.7rem;min-width:2ch;text-align:center}
+.du-sc{font-family:var(--f-display);font-weight:700;font-size:1.7rem;min-width:2ch;text-align:center;flex:none;font-variant-numeric:tabular-nums;white-space:nowrap}
+.du-pl .du-nm{flex:1 1 0} .du-sc[data-long]{font-size:1.35rem}
 .du-hud[data-lead="me"] .du-pl.me,.du-hud[data-lead="opp"] .du-pl.opp{box-shadow:0 0 0 2px #26805a,var(--shadow-card)}
 .du-vs{font-family:var(--f-display);font-weight:700;color:var(--muted);font-size:.85rem}
 .du-wrap{position:relative;display:flex;flex-direction:column}
@@ -1332,11 +1333,11 @@ body.du-lob #runner{flex:1 1 auto}
 @media (max-width:640px){ .du-side{grid-template-columns:1fr;gap:8px} .du-rate{padding:6px 12px 6px 6px} .du-rate .du-av{width:40px;height:40px} .du-rt b{font-size:1.5rem}
   .du-modes{gap:8px} .du-mode{padding:10px} .du-mi{width:34px;height:34px;border-radius:10px} .du-mi svg{width:20px;height:20px} .du-mode b{font-size:1rem} .du-mode small{display:none}
   .du-bots{grid-template-columns:repeat(2,minmax(0,1fr));gap:6px} .du-bot{padding:4px 6px} .du-bot .du-av{width:28px;height:28px}
-  .du-hud{gap:6px} .du-pl{padding:4px 8px 4px 4px;gap:6px} .du-pl.opp{padding:4px 4px 4px 8px} .du-pl .du-av{width:30px;height:30px;border-radius:9px} .du-sc{font-size:1.3rem} .du-nm b{font-size:.85rem} .du-vs{display:none} }
+  .du-hud{gap:6px} .du-pl{padding:4px 8px 4px 4px;gap:6px} .du-pl.opp{padding:4px 4px 4px 8px} .du-pl .du-av{width:30px;height:30px;border-radius:9px} .du-sc{font-size:1.3rem} .du-sc[data-long]{font-size:1.1rem} .du-nm b{font-size:.85rem} .du-vs{display:none} }
 @media (max-height:420px){ .du-lobby{grid-template-columns:minmax(0,1fr) 220px;grid-template-rows:minmax(0,1fr)} .du-side{grid-column:2;grid-row:1;display:flex} .du-lobby>.du-modes,.du-lobby>.du-panel{grid-row:1} .du-hist{display:none} .du-mode{min-height:0;padding:8px 10px;flex-direction:row;align-items:center;gap:8px} .du-mode b{margin-top:0;font-size:.95rem} .du-mode small{display:none} .du-mi{width:30px;height:30px} .du-mi svg{width:18px;height:18px}
   .du-rate{padding:4px 10px 4px 4px} .du-rate .du-av{width:34px;height:34px} .du-rt b{font-size:1.3rem} .du-rt em{display:none} .du-lobby{gap:8px} .du-panel{padding:8px 10px;gap:6px}
   .du-bots{grid-template-columns:repeat(5,minmax(0,1fr));gap:5px} .du-bot{padding:3px 5px} .du-bot .du-av{width:26px;height:26px} .du-bot small{display:none} .du-bot b{font-size:.75rem}
-  .du-pl .du-av{width:28px;height:28px} .du-sc{font-size:1.2rem} .du-pl{padding:3px 8px 3px 3px} .du-rcard{padding:8px 14px;gap:3px} .du-rcard h3{font-size:1.3rem} .du-rsc b{font-size:1.4rem} .du-count{font-size:4rem} }
+  .du-pl .du-av{width:28px;height:28px} .du-sc{font-size:1.2rem} .du-sc[data-long]{font-size:1rem} .du-pl{padding:3px 8px 3px 3px} .du-rcard{padding:8px 14px;gap:3px} .du-rcard h3{font-size:1.3rem} .du-rsc b{font-size:1.4rem} .du-count{font-size:4rem} }
 
 .du-art{position:absolute;top:10px;right:10px;width:46%;max-width:150px;aspect-ratio:1;display:flex;align-items:center;justify-content:center;pointer-events:none;filter:drop-shadow(0 12px 16px rgba(10,6,30,.3))}
 .du-art>svg{width:100%;height:100%}
@@ -4443,9 +4444,9 @@ function duRenderLobby(){ duArt();
     w.querySelector(".du-err").textContent=DU.err||""; body.appendChild(w); } }
 function duKbd(b,k){ if(midiMode() && S.settings.midiC!==false){ const kb=document.createElement("kbd"); kb.textContent=k; b.appendChild(kb); } return b; }
 function duHud(){ const o=DU.opp||{}, me=DU.me;
-  $("duMeAv").innerHTML=duAv(duMyAv()); $("duMeName").textContent=duMyName(); $("duMeElo").textContent = DU.rated ? String(eloGet().r) : t("duFriendly");
-  $("duOpAv").innerHTML=duAv(o.av); $("duOpName").textContent=(o.name||"?")+(o.bot?" · "+t("duBotTag"):""); $("duOpElo").textContent = o.gone ? t("duGone") : o.done ? t("duOut") : (o.elo!=null?String(o.elo):"");
-  $("duMeSc").textContent=me.score; $("duOpSc").textContent=o.score||0;
+  $("duMeAv").innerHTML=duAv(duMyAv()); nmPut($("duMeName"),duMyName()); $("duMeElo").textContent = DU.rated ? String(eloGet().r) : t("duFriendly");
+  $("duOpAv").innerHTML=duAv(o.av); nmPut($("duOpName"),o.name,o.bot?" · "+t("duBotTag"):""); $("duOpElo").textContent = o.gone ? t("duGone") : o.done ? t("duOut") : (o.elo!=null?String(o.elo):"");
+  [["duMeSc",me.score],["duOpSc",o.score||0]].forEach(([id,v])=>{ const e=$(id); e.textContent=fmtN(v); if(String(v|0).length>4) e.dataset.long=""; else delete e.dataset.long; });
   $("duHud").dataset.lead = me.score>(o.score||0) ? "me" : me.score<(o.score||0) ? "opp" : ""; }
 // ---- a duel ----
 function duBegin(o){ // o: {mode, seed, opp, rated, game, cont}
