@@ -13,6 +13,13 @@ create table if not exists public.profiles (
   updated_at timestamptz not null default now()
 );
 alter table public.profiles add column if not exists photo text; -- bases créées avant l'ajout de la photo Google
+-- pseudo propre (migration 2026-10-21_profiles_name_check.sql) : 2 à 24 caractères après btrim, pas de caractères de
+-- contrôle ni de direction du texte (bidi). NOT VALID : les lignes existantes ne sont pas revérifiées.
+alter table public.profiles drop constraint if exists profiles_name_clean;
+alter table public.profiles add constraint profiles_name_clean check (
+  char_length(btrim(name)) between 2 and 24
+  and name !~ U&'[\0001-\001F\007F\200E\200F\202A-\202E\2066-\2069]'
+) not valid;
 
 create table if not exists public.progress (
   user_id uuid primary key references auth.users(id) on delete cascade,

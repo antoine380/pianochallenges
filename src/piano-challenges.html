@@ -2397,6 +2397,7 @@ const TXT = {
     pfDayS:n=>"Série : "+n+" j", pfWeekS:n=>"Semaines : "+n, pfBest:n=>"Record : "+n, pfJSub:(a,b)=>fmtN(a)+(a>1?" éléments maîtrisés":" élément maîtrisé")+" sur "+fmtN(b)+".", pfRSub:"Tes meilleurs scores dans les jeux et les morceaux.",
     pfMonths:["janvier","février","mars","avril","mai","juin","juillet","août","septembre","octobre","novembre","décembre"], pfDays:["L","M","M","J","V","S","D"], themeDayS:"Mode jour", themeNightS:"Mode nuit", langLbl:"Langue",
     hsDailyK:"À faire aujourd'hui", hsDailyGo:"C'est parti", hsDailyDone:"Refaire", hsMidiT:"Clavier MIDI", hsMidiOff:"Aucun clavier branché : relie-le en USB ou en Bluetooth.", hsMidiNo:"Ce navigateur ne gère pas le MIDI : joue au micro ou à l'écran.", hsMidiConnect:"Connecter", hsMidiChange:"Changer",
+    pseudoShort:"Ton pseudo doit faire au moins 2 caractères.", pseudoLong:"Ton pseudo doit faire 24 caractères au plus.", pseudoBad:"Ton pseudo contient des caractères invisibles ou de contrôle : retire-les.",
     rankOrd:n=>ordFr(n), hsNewsT:"Actualités", hsRankT:"Classement de la semaine", hsRankMore:"Tout voir", hsRankLoad:"Chargement…", hsRankErr:"Classement indisponible pour l'instant.",
     hsNews:[["Nouveau look","Mode jour ou nuit, cartes en 3D : l'app fait peau neuve.","#6a4bf0","M12 3l2.4 5 5.6.8-4 3.9.9 5.5L12 15.6 7.1 18.2l.9-5.5-4-3.9 5.6-.8z"],["Jeux Play","Six mini-jeux sur le clavier lumineux, dans GAMES.","#1f7a52","M6 9h4M8 7v4M15 9h.01M18 11h.01M3 8a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4v5a4 4 0 0 1-7 2.5h-4A4 4 0 0 1 3 13z"],["Jeu libre","Joue ce que tu veux dans PLAY : chaque note s'allume dans sa couleur.","#0e7490","M9 18V5l12-2v13M9 18a3 3 0 1 1-6 0 3 3 0 0 1 6 0zM21 16a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"],["Entraînement du jour","10 exercices mélangés chaque jour pour garder ta série.","#a3306b","M12 3c1 3.5 5 6 5 11a5 5 0 0 1-10 0c0-2.2 1-3.8 2.2-5 .2 1.6 1 2.8 2.3 3.3C11 9.3 11.3 6 12 3z"]],
     wrongSr:"Fausse note : ",
@@ -2561,6 +2562,7 @@ const TXT = {
     pfDayS:n=>"Streak: "+n+" d", pfWeekS:n=>"Weeks: "+n, pfBest:n=>"Best: "+n, pfJSub:(a,b)=>fmtN(a)+" of "+fmtN(b)+(b!==1?" items":" item")+" mastered.", pfRSub:"Your best scores in games and songs.",
     pfMonths:["January","February","March","April","May","June","July","August","September","October","November","December"], pfDays:["M","T","W","T","F","S","S"], themeDayS:"Day mode", themeNightS:"Night mode", langLbl:"Language",
     hsDailyK:"To do today", hsDailyGo:"Let's go", hsDailyDone:"Play again", hsMidiT:"MIDI keyboard", hsMidiOff:"No keyboard connected: plug it in over USB or Bluetooth.", hsMidiNo:"This browser has no MIDI: play with the mic or on screen.", hsMidiConnect:"Connect", hsMidiChange:"Change",
+    pseudoShort:"Your nickname needs at least 2 characters.", pseudoLong:"Your nickname can be 24 characters at most.", pseudoBad:"Your nickname contains invisible or control characters: please remove them.",
     rankOrd:n=>ordEn(n), hsNewsT:"News", hsRankT:"This week's leaderboard", hsRankMore:"See all", hsRankLoad:"Loading…", hsRankErr:"Leaderboard unavailable right now.",
     hsNews:[["New look","Day or night mode and 3D cards: the app gets a makeover.","#6a4bf0","M12 3l2.4 5 5.6.8-4 3.9.9 5.5L12 15.6 7.1 18.2l.9-5.5-4-3.9 5.6-.8z"],["Play games","Six mini-games on the light-up keyboard, in GAMES.","#1f7a52","M6 9h4M8 7v4M15 9h.01M18 11h.01M3 8a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4v5a4 4 0 0 1-7 2.5h-4A4 4 0 0 1 3 13z"],["Free play","Play anything in PLAY: every note lights up in its colour.","#0e7490","M9 18V5l12-2v13M9 18a3 3 0 1 1-6 0 3 3 0 0 1 6 0zM21 16a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"],["Daily practice","10 mixed exercises every day to keep your streak.","#a3306b","M12 3c1 3.5 5 6 5 11a5 5 0 0 1-10 0c0-2.2 1-3.8 2.2-5 .2 1.6 1 2.8 2.3 3.3C11 9.3 11.3 6 12 3z"]],
     wrongSr:"Wrong note: ",
@@ -4409,7 +4411,7 @@ function duRenderLobby(){ duArt();
   const hl=$("duHist"); hl.innerHTML=""; const H=(e.h||[]).slice(-6).reverse();
   if(!H.length){ const li=document.createElement("li"); li.innerHTML="<p></p>"; li.firstChild.textContent=t("duHistNone"); hl.appendChild(li); }
   H.forEach(x=>{ const li=document.createElement("li"); li.innerHTML='<span class="r"></span><span class="du-av"></span><b></b><i></i>'; const r=li.querySelector(".r"); r.className="r "+(x.res===1?"w":x.res===0?"l":"d"); r.textContent=x.res===1?t("duW1"):x.res===0?t("duL1"):t("duD1");
-    li.querySelector(".du-av").innerHTML=duAv(x.av); li.querySelector("b").textContent=(x.nm||"?")+" ("+x.o+")"; const i=li.querySelector("i"); if(x.dd!=null){ i.textContent=(x.dd>=0?"+":"")+x.dd; i.className=x.dd>=0?"up":"down"; } hl.appendChild(li); });
+    li.querySelector(".du-av").innerHTML=duAv(x.av); nmPut(li.querySelector("b"),x.nm," ("+x.o+")"); const i=li.querySelector("i"); if(x.dd!=null){ i.textContent=(x.dd>=0?"+":"")+x.dd; i.className=x.dd>=0?"up":"down"; } hl.appendChild(li); });
   const sub = DU.view!=="lobby"; $("duModes").hidden=sub; $("duPanel").hidden=!sub;
   if(!sub) return;
   const body=$("duPBody"); body.innerHTML=""; $("duPTitle").textContent=t({bots:"duBots",friend:"duFriend",search:"duOnline"}[DU.view]);
@@ -4427,7 +4429,7 @@ function duRenderLobby(){ duArt();
     if(DU.ch && !DU.auto){ w.innerHTML='<p class="du-code"><span></span><b class="mono"></b></p><p class="qz-hint"></p><ul class="du-peers"></ul><div class="du-row"><button class="btn" type="button" data-a="copy"></button><button class="btn" type="button" data-a="leave"></button><button class="btn primary" type="button" data-a="go"></button></div>';
       w.querySelector(".du-code span").textContent=t("qzCodeL"); w.querySelector(".du-code b").textContent=DU.code;
       w.querySelector(".qz-hint").textContent = DU.host ? t("duShare") : t("qzWaitHost");
-      DU.peers.slice(0,2).forEach(p=>{ const li=document.createElement("li"); li.innerHTML='<span class="du-av"></span><b></b><small></small>'; li.querySelector(".du-av").innerHTML=duAv(p.av); li.querySelector("b").textContent=p.name+(p.id===netId()?" ("+t("qzYou")+")":""); li.querySelector("small").textContent=p.elo; w.querySelector("ul").appendChild(li); });
+      DU.peers.slice(0,2).forEach(p=>{ const li=document.createElement("li"); li.innerHTML='<span class="du-av"></span><b></b><small></small>'; li.querySelector(".du-av").innerHTML=duAv(p.av); nmPut(li.querySelector("b"),p.name,p.id===netId()?" ("+t("qzYou")+")":""); li.querySelector("small").textContent=p.elo; w.querySelector("ul").appendChild(li); });
       const [cp,lv,go]=w.querySelectorAll(".du-row button"); cp.textContent=t("qzCopyT"); lv.textContent=t("qzLeaveT"); go.textContent=t("duGoT");
       cp.onclick=()=>{ const link=SITE_URL()+"#duel-"+DU.code; try{ navigator.clipboard.writeText(link).then(()=>{ cp.textContent=t("qzCopied"); setTimeout(()=>cp.textContent=t("qzCopyT"),1800); },()=>{}); }catch(e){} };
       lv.onclick=()=>{ duLeaveRoom(); duRender(); }; go.hidden=!DU.host; go.disabled=DU.peers.length<2; go.onclick=duHostStart; }
@@ -4472,7 +4474,7 @@ function duMe(score, done){ if(!DU.mode || (DU.view!=="play"&&DU.view!=="wait"))
 // the duel is over when both have finished, or when the one still playing has already passed the other's final score
 function duCheck(){ if(DU.view!=="play"&&DU.view!=="wait") return; const me=DU.me, o=DU.opp;
   const over = (me.done&&o.done) || (o.done&&me.score>o.score) || (me.done&&o.score>me.score);
-  if(!over) { if(DU.view==="wait"){ $("duWait").hidden=false; $("duWait").textContent=t("duWaitOpp")(o.name, o.score||0, me.score); } return; }
+  if(!over) { if(DU.view==="wait"){ $("duWait").hidden=false; nmFill($("duWait"),n=>t("duWaitOpp")(n, fmtN(o.score||0), fmtN(me.score)),o.name); } return; }
   duFinish(me.score>o.score?1:me.score<o.score?0:.5); }
 function duStopGame(){ clearInterval(DU.sim); clearInterval(DU.hb); clearTimeout(DU.countT); clearTimeout(MM.inT); cancelAnimationFrame(SP.raf); MM.timers.forEach(clearTimeout); MM.timers=[]; clearKeys();
   if(RN.state==="run") RN.state="over"; if(SP.state==="run") SP.state="over"; if(MM.state!=="ready") MM.state="over"; }
@@ -4997,7 +4999,7 @@ function qzDevices(){ const out=[["screen",t("qzScreen")]]; try{ if(midiAcc) mid
 function qzZones(n){ const [lo,hi] = S.settings.kbdSize && S.settings.kbdSize!=="auto" ? [LOW,HIGH] : midiReady ? [36,96] : [48,84], oct=Math.max(n,Math.round((hi-lo+1)/12)), per=Math.max(1,Math.floor(oct/n)); return Array.from({length:n},(_,i)=>{ const a=lo+i*per*12, b=i===n-1?hi:a+per*12-1; return [a,b]; }); }
 const qzMidiName=m=>qzRoots()[m%12]+(Math.floor(m/12)-1);
 const QZ_BOTS=["Robo Mozart","Robo Chopin","Robo Bach"];
-const qzSafe = s => String(s==null?"":s).replace(/[\u0000-\u001f<>]/g,"").trim().slice(0,14);
+const qzSafe = s => gCut(String(s==null?"":s).replace(/[\u0000-\u001f\u007f<>]/g,"").replace(BIDI_G,"").trim(),14,48).trim(); // 14 graphemes, never half an emoji
 
 // ---------- setup ----------
 function renderQuiz(){ ["qzSetup","qzPlay","qzEnd"].forEach(id=>$(id).hidden = id!=="qz"+QZ.view[0].toUpperCase()+QZ.view.slice(1));
@@ -5098,13 +5100,13 @@ function renderQzPlay(){ if(!QZ.q) return; const q=QZ.q, fr=S.settings.lang==="f
   $("qzImg").innerHTML=OBJ[q[1]]?OBJ[q[1]]():""; $("qzImg").style.setProperty("--tc",th.col);
   $("qzText").textContent=fr?q[2]:q[4];
   const turnP = QZ.mode==="turn" ? QZ.players[qzWho("",0)] : null;
-  $("qzTurn").hidden = !turnP; if(turnP){ $("qzTurn").textContent=t("qzTurnOf")(turnP.name); $("qzTurn").style.setProperty("--pc",turnP.col); }
+  $("qzTurn").hidden = !turnP; if(turnP){ nmFill($("qzTurn"),t("qzTurnOf"),turnP.name); $("qzTurn").style.setProperty("--pc",turnP.col); }
   const box=$("qzAns"); box.innerHTML="";
   QZ.ans.forEach((a,k)=>{ const b=document.createElement("button"); b.type="button"; b.className="qz-a"; b.style.setProperty("--ac",["#ff5a6e","#3cc8f0","#ffd23f","#3ddc84"][k]);
     if(QZ.done) b.classList.add(a.right?"right":"wrong");
     b.innerHTML='<span class="qz-l">'+"ABCD"[k]+'</span><span class="qz-at"></span><span class="qz-play"><small>'+t("qzPlay")+'</small><b></b>'+(cf.keys||cf.diff<3||QZ.done?qzKeys(a.tg.pcs,"#7a5bf5"):"")+'</span><span class="qz-who"></span>';
     b.querySelector(".qz-at").textContent=a.txt; b.querySelector(".qz-play b").textContent=a.tg.name;
-    const who=b.querySelector(".qz-who"); QZ.players.forEach((p,i)=>{ if(QZ.picks[i]===k){ const d=document.createElement("i"); d.style.background=p.col; d.title=p.name; who.appendChild(d); } });
+    const who=b.querySelector(".qz-who"); QZ.players.forEach((p,i)=>{ if(QZ.picks[i]===k){ const d=document.createElement("i"); d.style.background=p.col; d.title=pName(p.name); who.appendChild(d); } });
     b.onclick=()=>{ if(QZ.done) return; if(uiSound()) a.tg.mid.forEach((m,i)=>tone(m,i*.02,.7,.14));
       if(QZ.mode==="zone") return; // one shared piano: a tap cannot tell who answered
       let pi = QZ.mode==="dev" ? QZ.players.findIndex(p=>!p.bot&&p.dev==="screen") : qzWho("screen",a.tg.mid[0]);
@@ -5113,7 +5115,7 @@ function renderQzPlay(){ if(!QZ.q) return; const q=QZ.q, fr=S.settings.lang==="f
   const sb=$("qzScores"); sb.innerHTML="";
   QZ.players.forEach((p,i)=>{ const d=document.createElement("div"); d.className="qz-ps"+(p.gone?" gone":""); d.style.setProperty("--pc",p.col); const st=QZ.picks[i];
     if(turnP===p && !QZ.done) d.classList.add("turn");
-    d.innerHTML='<i></i><span><b></b><small></small></span><span class="qz-pts"></span>'; d.querySelector("b").textContent=p.name+(p.me?" ("+t("qzYou")+")":"");
+    d.innerHTML='<i></i><span><b></b><small></small></span><span class="qz-pts"></span>'; nmPut(d.querySelector("b"),p.name,p.me?" ("+t("qzYou")+")":"");
     d.querySelector("small").textContent = p.gone ? t("qzLeft") : st==null ? (QZ.done?t("qzNoAns"):(turnP&&turnP!==p)?"":p.bot?t("qzBotThinks"):t("qzWaiting")) : !QZ.done ? t("qzAnswered") : QZ.ans[st].right ? "+"+p.last : t("qzWrong");
     if(QZ.done && st!=null) d.classList.add(QZ.ans[st].right?"ok":"ko");
     d.querySelector(".qz-pts").textContent=fmtN(p.score); sb.appendChild(d); });
@@ -5124,9 +5126,9 @@ function qzFinish(){ qzClearTimers(); QZ.view="end"; const me=QZ.players.filter(
   if(me.length===1 && me[0].ok) addXP(Math.min(60,me[0].ok*3)); save(); renderQuiz(); if(QZ.players.some(p=>p.ok) && uiSound()) setTimeout(confetti,200); }
 function renderQzEnd(){ const P=QZ.players.map((p,i)=>({...p,i})).sort((a,b)=>b.score-a.score), box=$("qzPodium"); box.innerHTML="";
   const humans=QZ.players.filter(p=>!p.bot).length;
-  $("qzEndT").textContent = QZ.players.length>1 ? t("qzWinner")(P[0].name) : t("qzSoloEnd")(P[0].ok,QZ.list.length);
+  if(QZ.players.length>1) nmFill($("qzEndT"),t("qzWinner"),P[0].name); else $("qzEndT").textContent=t("qzSoloEnd")(P[0].ok,QZ.list.length);
   P.forEach((p,r)=>{ const d=document.createElement("div"); d.className="qz-pod r"+(r+1); d.style.setProperty("--pc",p.col);
-    d.innerHTML='<span class="qz-rk">'+(r+1)+'</span><b></b><span class="qz-sc"></span><small></small>'; d.querySelector("b").textContent=p.name; d.querySelector(".qz-sc").textContent=fmtN(p.score)+" pts"; d.querySelector("small").textContent=t("qzRight")(p.ok,QZ.list.length); box.appendChild(d); });
+    d.innerHTML='<span class="qz-rk">'+(r+1)+'</span><b></b><span class="qz-sc"></span><small></small>'; nmPut(d.querySelector("b"),p.name); d.querySelector(".qz-sc").textContent=fmtN(p.score)+" pts"; d.querySelector("small").textContent=t("qzRight")(p.ok,QZ.list.length); box.appendChild(d); });
   $("qzAgain").hidden = QZ.mode==="online" && !NET.host; $("qzAgain").textContent=t("qzAgainT"); if(midiReady && S.settings.midiC!==false){ const kb=document.createElement("kbd"); kb.textContent=CNAME()+" / "+BNAME(); $("qzAgain").appendChild(kb); } }
 function qzQuit(){ qzClearTimers(); if(QZ.mode==="online") netLeave(); QZ.view="setup"; QZ.done=true; renderQuiz(); }
 $("qzGo").addEventListener("click",qzStart);
@@ -5214,7 +5216,7 @@ function renderQzNet(){ if(page!=="quiz"||QZ.view!=="setup"||qzCfg().where!=="on
   $("qzNetName").value = document.activeElement===$("qzNetName") ? $("qzNetName").value : netName();
   $("qzFriendIdle").hidden = inRoom; $("qzFriendRoom").hidden = !inRoom || NET.auto;
   if(inRoom){ $("qzRoomCode").textContent=NET.code; $("qzRoomHint").textContent = NET.host ? t("qzShareCode") : t("qzWaitHost");
-    const ul=$("qzRoomPl"); ul.innerHTML=""; P.slice(0,4).forEach((p,i)=>{ const li=document.createElement("li"); li.style.setProperty("--pc",QZ_COLORS[i]); li.innerHTML="<i></i><b></b><small></small>"; li.querySelector("b").textContent=p.name+(p.id===netId()?" ("+t("qzYou")+")":""); li.querySelector("small").textContent=(p.host?t("qzHost")+" · ":"")+t("pfLvl")+" "+p.lvl; ul.appendChild(li); });
+    const ul=$("qzRoomPl"); ul.innerHTML=""; P.slice(0,4).forEach((p,i)=>{ const li=document.createElement("li"); li.style.setProperty("--pc",QZ_COLORS[i]); li.innerHTML="<i></i><b></b><small></small>"; nmPut(li.querySelector("b"),p.name,p.id===netId()?" ("+t("qzYou")+")":""); li.querySelector("small").textContent=(p.host?t("qzHost")+" · ":"")+t("pfLvl")+" "+p.lvl; ul.appendChild(li); });
     $("qzRoomGo").hidden=!NET.host; $("qzRoomGo").disabled=P.length<2 || !QZ.data; }
   $("qzSearchBtn").hidden = NET.searching || st==="nobody"; $("qzSearching").hidden = !NET.searching && st!=="nobody";
   $("qzSearchTxt").textContent = st==="nobody" ? t("qzNobody") : t("qzSearchingT"); $("qzSearchBot").hidden = st!=="nobody";
@@ -5389,7 +5391,10 @@ async function initCloud(){
   }catch(e){ cloudFail=true; }
   if(page==="account") renderAccount(); if(page==="rank") renderRank();
 }
-const myName = () => S.profileName || (user && ((user.user_metadata&&(user.user_metadata.full_name||user.user_metadata.name||[user.user_metadata.given_name,user.user_metadata.family_name].filter(Boolean).join(" "))) || (user.email||"").split("@")[0])) || t("you");
+const myNameRaw = () => S.profileName || (user && ((user.user_metadata&&(user.user_metadata.full_name||user.user_metadata.name||[user.user_metadata.given_name,user.user_metadata.family_name].filter(Boolean).join(" "))) || (user.email||"").split("@")[0])) || t("you");
+const myName = () => gCut(String(myNameRaw()).replace(BIDI_G,"").replace(/[\u0000-\u001f\u007f]/g,"").trim(),24,24).trim() || t("you");
+// the name sent to profiles: 2 to 24 characters, no control or direction characters (check profiles_name_clean)
+const myNameDb = () => { const v=myName(); return nameErr(v) ? t("qzPlayer") : v; };
 async function setUser(u){
   user=u; renderStatus(); document.body.classList.toggle("guest",!u);
   if(u && page==="locked" && lockFor) openPage(lockFor);
@@ -5468,7 +5473,7 @@ async function cloudPushNow(){
 async function cloudPushRaw(){
   const li=levelInfo(S.xp), solved=Object.values(S.secStats||{}).reduce((a,x)=>a+(x.ok||0),0), now=new Date().toISOString();
   const r1=await sb.from("progress").upsert({user_id:user.id, data:S, updated_at:now});
-  const r2=await sb.from("profiles").upsert({id:user.id, name:myName().slice(0,24), avatar:charIndex(li.L), photo:userPhoto()||null, xp:S.xp, level:li.L, streak:effStreak(), solved, updated_at:now});
+  const r2=await sb.from("profiles").upsert({id:user.id, name:myNameDb(), avatar:charIndex(li.L), photo:userPhoto()||null, xp:S.xp, level:li.L, streak:effStreak(), solved, updated_at:now});
   if(r1.error||r2.error) throw (r1.error||r2.error);
   // XP earned per day (last 7 days) feeds the day / week / month / year leaderboards
   const since=addDays(-7), today=dayStr();
@@ -5573,7 +5578,7 @@ function renderAccount(){
     const inp=document.createElement("input"); inp.type="text"; inp.maxLength=24; inp.value=myName(); row.appendChild(inp);
     const sv=document.createElement("button"); sv.className="btn primary"; sv.type="submit"; sv.textContent=t("saveLbl"); row.appendChild(sv);
     const m=h("p","", "msg");
-    f.onsubmit=async e=>{ e.preventDefault(); const v=inp.value.trim().slice(0,24); if(!v) return; S.profileName=v; save(); renderStatus(); try{ await cloudPushNow(); m.className="msg ok"; m.textContent=t("saved"); box.querySelector(".nm").textContent=v; }catch(err){ m.className="msg err"; m.textContent=t("cloudErr"); } };
+    f.onsubmit=async e=>{ e.preventDefault(); const v=inp.value.trim(), er=nameErr(v)||(gLen(v)>24||Array.from(v).length>24?"pseudoLong":""); if(er){ m.className="msg err"; m.textContent=t(er); inp.focus(); return; } S.profileName=v; save(); renderStatus(); try{ await cloudPushNow(); m.className="msg ok"; m.textContent=t("saved"); box.querySelector(".nm").textContent=v; }catch(err){ m.className="msg err"; m.textContent=t("cloudErr"); } };
     const lo=h("button",t("logout"),"btn"); lo.type="button"; lo.onclick=async()=>{ try{ await sb.auth.signOut(); }catch(e){} toast(t("signedOut")); };
     return;
   }
@@ -6096,13 +6101,13 @@ function gateForm(){ const f=$("gtForm"); f.innerHTML=""; const m=GATE.mode;
   const b=document.createElement("button"); b.type="submit"; b.className="gt-go"; b.id="gtGo"; b.textContent=t(m==="signup"?"gtCreate":"gtSignIn"); b.disabled=GATE.busy||!sb; f.appendChild(b);
   const alt=document.createElement("button"); alt.type="button"; alt.className="gt-link"; alt.textContent=t("gtUseCode"); alt.onclick=()=>{ GATE.email=em.value.trim(); Object.assign(GATE,{otp:true,sent:false,msg:"",err:false}); gateRender(); }; f.appendChild(alt);
   f.onsubmit=async e=>{ e.preventDefault(); if(!sb) return; GATE.email=em.value.trim(); if(name) GATE.name=name.value.trim();
-    const bad = !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(GATE.email) ? "gtBadMail" : pw.value.length<8 ? "gtBadPwd" : m==="signup"&&!ok.checked ? "gtNeedOk" : "";
+    const bad = !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(GATE.email) ? "gtBadMail" : pw.value.length<8 ? "gtBadPwd" : m==="signup"&&GATE.name&&nameErr(GATE.name) ? nameErr(GATE.name) : m==="signup"&&!ok.checked ? "gtNeedOk" : "";
     if(bad){ GATE.msg=t(bad); GATE.err=true; gateForm(); return; }
     GATE.busy=true; GATE.msg=""; gateForm();
     try{ if(m==="signup"){
         const {data,error}=await sb.auth.signUp({email:GATE.email, password:pw.value, options:{data:{name:GATE.name||undefined}, emailRedirectTo: isApp()?undefined:location.origin+location.pathname}}); if(error) throw error;
         if(data.user && Array.isArray(data.user.identities) && !data.user.identities.length) throw new Error("already registered"); // Supabase does not say it otherwise
-        if(GATE.name){ S.profileName=GATE.name.slice(0,24); save(); }
+        if(GATE.name){ S.profileName=gCut(GATE.name,24,24); save(); }
         if(!data.session){ Object.assign(GATE,{confirm:true,sent:true,busy:false,msg:t("gtConfirm")(GATE.email),err:false}); gateRender(); return; } }
       else { const {error}=await sb.auth.signInWithPassword({email:GATE.email, password:pw.value}); if(error) throw error; }
       GATE.busy=false; // setUser() closes the gate
@@ -6314,7 +6319,7 @@ function wrapTxt(g,s,x,y,w,lh,max){ const lines=[]; let line=""; String(s).split
 async function shareEnd(g,good,n){ const lbl=g.label||t("endTitle"), file=await shareCard(lbl,fmtN(good)+" / "+fmtN(n),t("shareImgEnd"),"#c9463c");
   shareIt({text:t("shareEnd")(good,n,lbl),url:refLink(),file}); }
 async function shareDuel(){ const r=DU.res, o=DU.opp; if(!r||!o) return; const gn=duGameName(), w=r.res, file=await shareCard(gn+" · "+pName(o.name),fmtN(r.me)+" – "+fmtN(r.opp),(t("shareImgDu")[w]||"")+(r.elo?" · ELO "+fmtN(r.elo.after):""),"#26805a");
-  shareIt({text:t("shareDu")(w,gn,r.me,r.opp,o.name||"?"),url:refLink(),file}); }
+  shareIt({text:t("shareDu")(w,gn,r.me,r.opp,pName(o.name)),url:refLink(),file}); }
 // a friend's link: remembered for the sign-up (the server credits both accounts)
 (()=>{ try{ const rf=new URLSearchParams(location.search).get("ref"); if(rf && /^p[a-z0-9]{8}$/.test(rf) && rf!==S.netId && !S.refBy){ S.refBy=rf; save(); } }catch(e){} })();
 document.addEventListener("keydown",e=>{ if(!document.body.classList.contains("pw-on")) return; if(e.key==="Escape"){ e.preventDefault(); if($("inv")&&!$("inv").hidden) invClose(); else pwClose(); } e.stopImmediatePropagation(); },true);
