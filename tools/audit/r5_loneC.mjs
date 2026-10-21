@@ -7,7 +7,7 @@ const check = (name, ok, detail) => { console.log((ok ? 'OK   ' : 'FAIL ') + nam
 const { browser, page } = await launch({ mode: 'ok' });
 await page.goto(URL); await wait(page, 1000); await closeOnboarding(page, 'midi');
 await gotoExercise(page, 'chords');
-await page.evaluate(() => { const S = JSON.parse(localStorage.getItem('memo-gammes-v1')); S.settings.guideK = true; S.settings.autoNext = false; S.settings.delay = 0; localStorage.setItem('memo-gammes-v1', JSON.stringify(S)); });
+await page.evaluate(() => { const S = JSON.parse(localStorage.getItem('memo-gammes-v1')); S.settings.guideK = true; S.settings.su = { chords: { tids: [], keys: 'pick', picked: [0] } }; S.settings.autoNext = false; S.settings.delay = 0; localStorage.setItem('memo-gammes-v1', JSON.stringify(S)); });
 await page.reload(); await wait(page, 1000); await closeOnboarding(page, 'midi'); await gotoExercise(page, 'chords');
 const guide = () => page.evaluate(() => [...document.querySelectorAll('#kbd [data-m].k-guide')].map(k => +k.dataset.m));
 // 1) révélé : rejouer l'accord révélé (C Major = commence par un Do)
@@ -41,13 +41,13 @@ const prompt2 = s.prompt;
 await page.evaluate(() => [65, 69, 72].forEach(n => window.__midi.noteOn(n))); await wait(page, 300);
 s = await state(page);
 check('succès : un accord contenant un Do ne démarre pas l’exercice suivant', s.prompt === prompt2 && s.nSlotsOk === exp2.length, { prompt: s.prompt, slots: s.slots });
-// a game is now one chosen item: once it is nailed, a lone C opens the summary, and the next lone C replays the same item
+// a game on one chosen key: once it is nailed, a lone C opens the summary, and the next lone C goes to the next key
 await midi.on(page, 72); await wait(page, 300);
 const endShown = await page.evaluate(() => !document.getElementById('endModal').hidden);
 check('succès : un Do seul (72) termine la partie (résumé)', endShown, { endShown });
 await midi.on(page, 72); await wait(page, 300);
 s = await state(page);
-check('résumé : un Do seul relance le même exercice', s.playing && s.slots[0].includes('cur') && s.nSlotsOk === 0 && s.prompt === prompt2, { prompt: s.prompt, slots: s.slots });
+check('résumé : un Do seul passe à la tonalité suivante', s.playing && s.slots[0].includes('cur') && s.nSlotsOk === 0 && s.prompt !== prompt2, { prompt: s.prompt, slots: s.slots });
 await browser.close();
 if (fails.length) { console.log('\nECHEC r5 :', fails); process.exit(1); }
 console.log('\nr5 OK');

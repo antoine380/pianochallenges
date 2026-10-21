@@ -1195,6 +1195,53 @@ body.gp .wk.k-ok span,body.gp .bk.k-ok span{color:#15122e}
   #qzPlayers{width:100%;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 10px} #qzModeRow{width:100%}
   #qzOnlineBox{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr));align-items:start} #qzOnlineBox .qz-err{grid-column:1/-1}
   .qz-net .su-h{margin:0} .qz-join{margin-top:4px} .qz .su-box{padding:6px 10px} .qz-themes{padding-top:6px} .qz-theme{min-height:42px} }
+
+/* scales: notes or chords, big cards */
+.su-modes{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-bottom:4px}
+.su-mode{display:flex;align-items:center;gap:12px;text-align:left;border:0;border-radius:var(--r-lg);padding:12px 14px;background:var(--surface);color:var(--ink);box-shadow:var(--shadow-card);transition:transform .15s}
+.su-mode:not(:disabled):hover{transform:translateY(-2px)}
+.su-mk{width:74px;height:30px;flex:none;border-radius:8px;padding:3px;background:var(--surface-2)} .su-mk svg{width:100%;height:100%;display:block}
+.su-mode b{display:block;font-family:var(--f-display);font-weight:700;font-size:1.15rem} .su-mode small{display:block;color:var(--muted);font-size:.78rem;line-height:1.3}
+.su-mode[aria-pressed="true"]{color:#fff;background:linear-gradient(150deg,color-mix(in srgb,var(--mc) 60%,#fff),var(--mc));box-shadow:0 14px 24px -12px var(--mc)}
+.su-mode[aria-pressed="true"] small{color:#fff;opacity:.92} .su-mode[aria-pressed="true"] .su-mk{background:rgba(255,255,255,.2)}
+.su-mode:disabled{opacity:.5;cursor:default}
+.su-7{grid-column:1/-1;padding:2px 6px}
+.btn kbd,.qz-go kbd{font-family:var(--f-body);font-weight:800;font-size:.7rem;opacity:.75;margin-left:8px;padding:1px 6px;border-radius:6px;background:rgba(127,127,160,.2)}
+@media (max-height:820px){ .su-mode{padding:9px 12px} .su-mode b{font-size:1rem} }
+@media (max-width:900px), (max-height:420px){ .su-mode small{display:none} .su-mk{width:56px;height:24px} .su-mode{padding:8px 10px;gap:8px} }
+
+/* start screen v2: numbered steps, several types, key groups */
+.su-h{display:flex;align-items:center;gap:8px}
+.su-n{width:20px;height:20px;border-radius:50%;display:grid;place-items:center;background:var(--surface-2);color:var(--ink);font-size:.72rem;letter-spacing:0}
+.su-card{position:relative}
+.su-tick{position:absolute;top:10px;right:10px;width:18px;height:18px;border-radius:6px;box-shadow:inset 0 0 0 2px var(--line)}
+.su-card[aria-pressed="true"] .su-tick{background:#fff;box-shadow:none} .su-card[aria-pressed="true"] .su-tick::after{content:"";position:absolute;left:6px;top:2px;width:4px;height:9px;border:solid var(--mc);border-width:0 2.5px 2.5px 0;transform:rotate(45deg)}
+.su-kms{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.su-km{display:flex;flex-direction:column;align-items:flex-start;gap:2px;text-align:left;border:0;border-radius:var(--r-md);padding:10px 12px;background:var(--surface);color:var(--ink);box-shadow:var(--shadow-card)}
+.su-km b{font-weight:800;font-size:.92rem} .su-km small{color:var(--muted);font-size:.74rem;line-height:1.25}
+.su-km[aria-pressed="true"]{color:#fff;background:linear-gradient(150deg,color-mix(in srgb,var(--mc) 60%,#fff),var(--mc));box-shadow:0 12px 22px -12px var(--mc)} .su-km[aria-pressed="true"] small{color:#fff;opacity:.9}
+.su-keys{margin-top:8px} .su-keys[hidden]{display:none}
+.su-krow{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-top:4px} .su-krow .qz-hint{margin:0}
+#suModeWrap{margin-top:8px}
+@media (max-height:820px){ .su-km{padding:8px 10px} .su-km small{font-size:.7rem} .su-card{min-height:44px;padding:8px 12px} .su-card small{display:none} .su-tick{top:50%;transform:translateY(-50%)} .su-card[aria-pressed="true"] .su-tick{transform:translateY(-50%)} }
+@media (max-width:900px), (max-height:420px){ .su-km small{display:none} }
+@media (max-width:640px), (max-height:420px){ .su-kms{display:flex;gap:6px} .su-km{flex:1;padding:7px 8px;align-items:center} .su-tick{display:none} .su-card[aria-pressed="true"] .su-tick{display:none} }
+
+/* start screen v2: tighter phones */
+.su-go b{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+@media (max-width:640px){ .su-side>.su-box:nth-child(1){display:flex;align-items:center;gap:10px} .su-side>.su-box:nth-child(1) .su-h{margin:0} .su-side>.su-box:nth-child(1) .su-seg{flex:1}
+  .su-side>.su-box:nth-child(2){display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 4px} .su-side>.su-box:nth-child(2) .su-hh{grid-column:1/-1}
+  .su-mode{padding:6px 10px} .su-mode b{font-size:.95rem} .su-mk{width:48px;height:20px} .su-modes{gap:8px} #suModeWrap{margin-top:4px}
+  .su-krow{margin-top:0} .su-krow .qz-hint:empty{display:none} .su-help.mini{padding-block:2px} .su-keys{margin-top:4px} }
+@media (max-height:420px) and (orientation:landscape){ .su-go b{-webkit-line-clamp:1;font-size:.95rem} .su-mode{padding:5px 10px} .su-mk{height:20px} .su-krow{margin-top:0} .su-krow .qz-hint{display:none} .su-help.mini{padding-block:1px} #suModeWrap{margin-top:4px} .su-keys{margin-top:4px} }
+
+.su-hrow{display:flex;align-items:center;justify-content:space-between;gap:10px} .su-hrow .su-help{padding-block:0} .su-khint{margin:4px 0 0} .su-khint:empty{display:none}
+@media (max-width:640px), (max-height:420px){ .su-khint{display:none} }
+@media (max-width:640px){ .su-go{padding:8px 12px} .su-side{gap:6px} .su-box{padding:6px 12px} .su-kms .su-km{padding:6px 8px} }
+@media (min-width:641px){ .su-keys{grid-template-columns:repeat(12,minmax(0,1fr));gap:6px} .su-keys .su-key{min-height:40px;padding:6px 0;border-radius:12px} .su-keys .su-key b{font-size:.88rem} }
+@media (max-height:420px) and (orientation:landscape){ .su-go b{-webkit-line-clamp:2;font-size:.8rem;line-height:1.15} }
+@media (max-width:900px){ .su-help small{display:none} .su-help{padding-block:4px} }
+@media (max-width:640px){ .su-go b{-webkit-line-clamp:1;font-size:1rem} .su-row{flex-wrap:nowrap} .su-row .su-lbl{font-size:.7rem} .su-chips{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none} .su-chips button{flex:none;padding:6px 11px;font-size:.8rem} }
 </style>
 
 <script>if(window.Capacitor&&window.webkit&&window.webkit.messageHandlers&&window.webkit.messageHandlers.bridge)document.documentElement.classList.add("native");</script>
@@ -1340,8 +1387,10 @@ body.gp .wk.k-ok span,body.gp .bk.k-ok span{color:#15122e}
     <div class="mode-h"><h2 class="mode-big" id="suTitle"><span class="mb-ic" id="suIc"></span><span id="suName"></span></h2><p id="suSub"></p></div>
     <div class="su-wrap">
       <div class="su-main">
-        <h3 class="su-h" id="suTypesH"></h3><div class="su-cards" id="suTypes"></div>
-        <div id="suKeysWrap"><h3 class="su-h" data-i="suKey"></h3><div class="su-keys" id="suKeys"></div></div>
+        <h3 class="su-h"><span class="su-n">1</span><span id="suTypesH"></span></h3><div class="su-cards" id="suTypes"></div>
+        <div id="suKeysWrap"><div class="su-hrow"><h3 class="su-h"><span class="su-n">2</span><span data-i="suKeysH"></span></h3><label class="su-help mini"><input type="checkbox" id="suShuffle"><span><b data-i="suShuffleT"></b></span></label></div>
+          <div class="su-kms" id="suKeyMode"></div><div class="su-keys" id="suKeys"></div><p class="qz-hint su-khint" id="suKeysHint"></p></div>
+        <div id="suModeWrap"><div class="su-modes" id="suMode" hidden></div></div>
         <div id="suExtra"></div>
       </div>
       <aside class="su-side">
@@ -1805,7 +1854,7 @@ const TXT = {
     lockedHintP:n=>"Réussis 3 fois une progression sans faute pour débloquer la tonalité suivante. Encore "+n+" à découvrir.",
     typeLockedH:l=>"Ces tonalités s'ouvrent au niveau "+l+".", typeLockedP:l=>"Cette progression s'ouvre au niveau "+l+".", typeLockedE:l=>"Cette catégorie s'ouvre au niveau "+l+".",
     earHint:"Touche une case pour écouter un exemple.", right:"Bonne réponse !", wrong:"Réponse : ", answerLbl:"Réponse",
-    get kbdHintE(){ return "Clavier d'ordinateur : rangée Q S D F G H J K pour jouer des notes. Espace : réécouter · Entrée (ou un "+CNAME()+" au clavier MIDI) : continuer · ⌫ : réessayer."; }, playSound:"Écouter",
+    get kbdHintE(){ return "Clavier d'ordinateur : rangée Q S D F G H J K pour jouer des notes. Espace : réécouter · Entrée (ou un "+CNAME()+" au clavier MIDI) : continuer · un "+BNAME()+" seul : recommencer · ⌫ : réessayer."; }, playSound:"Écouter",
     intNames:{m2:"Seconde mineure",M2:"Seconde majeure",m3:"Tierce mineure",M3:"Tierce majeure",P4:"Quarte juste",TT:"Triton",P5:"Quinte juste",m6:"Sixte mineure",M6:"Sixte majeure",m7:"Septième mineure",M7:"Septième majeure",P8:"Octave"},
     intShort:{m2:"2m",M2:"2M",m3:"3m",M3:"3M",P4:"4J",TT:"Triton",P5:"5J",m6:"6m",M6:"6M",m7:"7m",M7:"7M",P8:"8ve"},
     secScales:"Gammes", secChords:"Accords", inversions:"Renversements", chordToPlay:"Accord à jouer",
@@ -1846,7 +1895,9 @@ const TXT = {
     melDown:" · descend en Mineur",
     midiBlockedMsg:"Le navigateur a refusé l'accès MIDI. Clique sur le cadenas à gauche de l'adresse pour l'autoriser, ou choisis le clavier à l'écran.",
     dailyResume:"Reprendre",
-    syncOk:x=>"Sauvegardé en ligne "+x+" ✓", syncErr:x=>"Hors ligne : dernière sauvegarde "+x+".", agoNever:"inconnue", signedOut:"Déconnecté", rights:"Tous droits réservés", themeDay:"Passer en mode jour", themeNight:"Passer en mode nuit", qzTabQuiz:"Quiz", qzTabPlayers:"Joueurs", qzToPlayersT:"Choisir les joueurs", optUiSound:"Sons de l'interface (survol des cartes, réponses du quiz)", qzAnsH:"Répondre avec", qzNotes:"Des notes", qzChords:"Des accords",
+    syncOk:x=>"Sauvegardé en ligne "+x+" ✓", syncErr:x=>"Hors ligne : dernière sauvegarde "+x+".", agoNever:"inconnue", signedOut:"Déconnecté", rights:"Tous droits réservés", themeDay:"Passer en mode jour", themeNight:"Passer en mode nuit", suKeysH:"Tonalités", suKeysSimple:"Simples", suKeysSimpleD:"Sans dièse ni bémol : Do, Ré, Mi, Fa, Sol, La, Si", suKeysAll:"Toutes", suKeysAllD:"Avec les ♯ et les ♭", suKeysPick:"Au choix", suKeysPickD:"Je choisis les tonalités",
+    suShuffleT:"Mélanger l'ordre", suLockedKeys:n=>n+" tonalité"+(n>1?"s":"")+" encore verrouillée"+(n>1?"s":"")+" (niveaux, ou « Tout débloquer » dans Réglages)", suNone:"Aucune tonalité débloquée dans ce choix", suModeN:"En notes", suModeND:"Do, Ré, Mi… une note après l'autre, de la tonique à l'octave.", suModeC:"En accords", suModeCD:"L'accord de chaque degré, du I au VII, plaqué ou note par note.", suNoChords:"Cette gamme n'a pas d'accords par degré.",
+    againB:"Recommencer", nextKeyB:l=>"Suivant : "+l, qzTabQuiz:"Quiz", qzTabPlayers:"Joueurs", qzToPlayersT:"Choisir les joueurs", optUiSound:"Sons de l'interface (survol des cartes, réponses du quiz)", qzAnsH:"Répondre avec", qzNotes:"Des notes", qzChords:"Des accords",
     qzDiffN:["Do, Ré, Mi, Fa","4 notes blanches au hasard","4 notes au hasard, touches noires comprises"], qzDiffC:["Do, Fa, Sol, La mineur","Accords simples au hasard","Tous les accords, majeurs, mineurs et de 7e"],
     qzBotsH:"Bots", qzBotLvlH:"Niveau", qzBotLvls:["Facile","Moyen","Fort"], qzBotThinks:"réfléchit…", qzYou:"toi", qzLeft:"a quitté",
     qzLocal:"Sur cet appareil", qzOnline:"En ligne", qzYourName:"Ton pseudo", qzGuest:"Invité", qzOnlineN:n=>n+(n>1?" joueurs en ligne":" joueur en ligne"), qzConnecting:"Connexion…",
@@ -1990,7 +2041,9 @@ const TXT = {
     melDown:" · descends as Minor",
     midiBlockedMsg:"The browser refused MIDI access. Click the padlock left of the address to allow it, or choose the on-screen keyboard.",
     dailyResume:"Resume",
-    syncOk:x=>"Saved online "+x+" ✓", syncErr:x=>"Offline: last save "+x+".", agoNever:"unknown", signedOut:"Signed out", rights:"All rights reserved", themeDay:"Switch to day mode", themeNight:"Switch to night mode", qzTabQuiz:"Quiz", qzTabPlayers:"Players", qzToPlayersT:"Choose the players", optUiSound:"Interface sounds (card hover, quiz answers)", qzAnsH:"Answer with", qzNotes:"Notes", qzChords:"Chords",
+    syncOk:x=>"Saved online "+x+" ✓", syncErr:x=>"Offline: last save "+x+".", agoNever:"unknown", signedOut:"Signed out", rights:"All rights reserved", themeDay:"Switch to day mode", themeNight:"Switch to night mode", suKeysH:"Keys", suKeysSimple:"Simple", suKeysSimpleD:"No sharp or flat: C, D, E, F, G, A, B", suKeysAll:"All", suKeysAllD:"With the ♯ and ♭", suKeysPick:"Pick", suKeysPickD:"I choose the keys",
+    suShuffleT:"Shuffle the order", suLockedKeys:n=>n+" key"+(n>1?"s":"")+" still locked (levels, or “Unlock everything” in Settings)", suNone:"No unlocked key in this choice", suModeN:"As notes", suModeND:"C, D, E… one note after another, from the root to the octave.", suModeC:"As chords", suModeCD:"The chord of each degree, from I to VII, at once or note by note.", suNoChords:"This scale has no chord per degree.",
+    againB:"Start again", nextKeyB:l=>"Next: "+l, qzTabQuiz:"Quiz", qzTabPlayers:"Players", qzToPlayersT:"Choose the players", optUiSound:"Interface sounds (card hover, quiz answers)", qzAnsH:"Answer with", qzNotes:"Notes", qzChords:"Chords",
     qzDiffN:["C, D, E, F","4 random white notes","4 random notes, black keys included"], qzDiffC:["C, F, G, A minor","Random simple chords","Every chord: major, minor and 7th"],
     qzBotsH:"Bots", qzBotLvlH:"Level", qzBotLvls:["Easy","Medium","Strong"], qzBotThinks:"thinking…", qzYou:"you", qzLeft:"left",
     qzLocal:"On this device", qzOnline:"Online", qzYourName:"Your nickname", qzGuest:"Guest", qzOnlineN:n=>n+(n>1?" players online":" player online"), qzConnecting:"Connecting…",
@@ -2028,7 +2081,8 @@ const NAT = [0,2,4,5,7,9,11];
 const NAME_FR = {C:"Do",D:"Ré",E:"Mi",F:"Fa",G:"Sol",A:"La",B:"Si"};
 const PC_FR = ["Do","Do♯","Ré","Ré♯","Mi","Fa","Fa♯","Sol","Sol♯","La","La♯","Si"];
 const PC_EN = ["C","C♯","D","D♯","E","F","F♯","G","G♯","A","A♯","B"];
-function CNAME(){ return (S.settings.notation==="fr"?PC_FR:PC_EN)[0]; } // name of C in the current notation, for "play a C" texts
+function CNAME(){ return (S.settings.notation==="fr"?PC_FR:PC_EN)[0]; }
+function BNAME(){ return (S.settings.notation==="fr"?PC_FR:PC_EN)[11]; } // B / Si: "start again" on the MIDI keyboard // name of C in the current notation, for "play a C" texts
 const TYPES = [
   {id:"major", lvl:1, fr:"Majeur",            frP:"Majeures",        en:"Major",            enP:"Major",            iv:[0,2,4,5,7,9,11]},
   {id:"minor", lvl:1, fr:"Mineur",            frP:"Mineures",        en:"Minor",            enP:"Minor",    iv:[0,2,3,5,7,8,10]},
@@ -2664,13 +2718,21 @@ function followMidi(n){
 }
 // a C on the MIDI keyboard starts the game, continues after an answer, or starts a new game from the summary
 function midiStart(note){
-  if(note%12!==0 || !(page==="practice"||page==="daily") || setOpen || openMods.length || helpOpen || midiOpen || S.settings.midiC===false) return false;
+  const pc=note%12; if((pc!==0&&pc!==11) || !(page==="practice"||page==="daily") || setOpen || openMods.length || helpOpen || midiOpen || S.settings.midiC===false) return false;
+  if(pc===11) return midiRestart();
   if(page==="daily" && !game && !endOpen){ startDaily(); return true; }
+  if(endOpen && lastGame && lastGame.label){ if(lastGame.single) endNext(lastGame); else endReplay(lastGame); return true; }
   if(endOpen){ closeEnd(); if(page==="daily") return true; idleStart(); return true; }
   if(phase==="idle" || phase==="success"){ idleStart(); return true; }
   if(phase==="revealed"){ grade(true); return true; }
   return false;
 }
+// a lone B: start the same thing again (the summary of a game, a revealed answer, a nailed exercise); during an exercise a B is an ordinary note
+function midiRestart(){
+  if(endOpen){ const rw=document.getElementById("endRework"); if(rw){ rw.click(); return true; } if(lastGame && lastGame.label){ endReplay(lastGame); return true; } return false; }
+  if(phase==="revealed"){ grade(false); return true; }
+  if(phase==="success" && cur){ clearTimeout(advanceTimer); startRound({...cur, dir:null},true); return true; }
+  return false; }
 // MIDI notes that arrive together (a block chord) are processed lowest first
 let midiBuf=[], midiTimer=0, midiReady=false;
 // Notes that arrive within 35 ms form one group. A lone C from the MIDI keyboard starts / continues (midiStart); a chord that
@@ -2970,15 +3032,31 @@ function openEnd(g){
   }
   const foot=$("endFoot"); foot.innerHTML="";
   const btn=(lbl,cls,fn)=>{ const b=document.createElement("button"); b.type="button"; b.className="btn "+cls; b.textContent=lbl; b.onclick=fn; foot.appendChild(b); return b; };
+  const hint=(b,k)=>{ if(midiMode() && S.settings.midiC!==false){ const kb=document.createElement("kbd"); kb.textContent=k; b.appendChild(kb); } return b; };
+  if(g.label){ // a game chosen on the start screen: change, start again (B), next key (C, one item) or play again (C, several)
+    btn(t("suChange"),"",()=>{ closeEnd(); render(); });
+    if(g.single) hint(btn(t("againB"),"",()=>endReplay(g)),BNAME());
+    else if(misses.length){ const rw=hint(btn(t("reworkBtn"),"",()=>{ closeEnd(); page="practice"; game=makeGame(misses.map(r=>r.it)); game.label=g.label; game.i=-1; startRound(); }),BNAME()); rw.id="endRework"; }
+    const nx = g.single ? hint(btn(t("nextKeyB")(endNextLabel(g)),"primary",()=>endNext(g)),CNAME()) : hint(btn(t("newGame"),"primary",()=>endReplay(g)),CNAME());
+    $("endX").setAttribute("aria-label",t("closeLbl")); if(!endOpen) modalOpened(); endOpen=true; $("endModal").hidden=false; nx.focus(); if(n && good/n>=.8) setTimeout(confetti,150); return; }
   btn(t("closeLbl"),"",closeEnd);
   if(misses.length) btn(t("reworkBtn"),"",()=>{ closeEnd(); page="practice"; game=makeGame(misses.map(r=>r.it)); game.i=-1; startRound(); });
   const main=btn(t("newGame"),"primary",()=>{ closeEnd(); page="practice"; if(g.sec&&!g.daily&&g.sec!==S.section) switchSection(g.sec);
     if(g.label && g.queue){ const q=g.sec==="ear"?suQueue(g.sec):g.single?[{...g.queue[0]}]:g.queue.map(it=>({...it})); game=makeGame(q); game.label=g.label; game.single=!!g.single; game.i=-1; } startRound(); });
-  if(g.label) btn(t("suChange"),"",()=>{ closeEnd(); render(); });
+
   $("endX").setAttribute("aria-label",t("closeLbl"));
   if(!endOpen) modalOpened(); endOpen=true; $("endModal").hidden=false; main.focus();
   if(n && good/n>=.8) setTimeout(confetti,150);
 }
+// the next open key of the same scale / chord / progression (ear: a new game)
+// one-item game: the next open key of the same scale / chord / progression
+function endNextKey(g){ const it=g.queue[0], open=openRoots(it.sec,it.tid); const i=open.indexOf(it.k); return open[(i+1)%open.length]; }
+function endNextLabel(g){ const it={...g.queue[0], k:endNextKey(g)}, sec=it.sec, ty=typeDef(sec,it.tid), fr=S.settings.lang==="fr";
+  return sec==="chords" ? noteName(tonicNote(it.k))+" "+SEC[sec].name(ty) : sec==="harmony" ? noteName(tonicNote(it.k))+" "+(HTYPE[it.tid].scale==="minor"?(fr?"mineur":"minor"):(fr?"majeur":"major")) : itemName(it); }
+function endNext(g){ closeEnd(); page="practice"; if(g.sec!==S.section) switchSection(g.sec); const it=g.queue[0], st=suState(g.sec), k=endNextKey(g);
+  st.tids=[it.tid]; st.keys="pick"; st.picked=[keyPc(k)]; save(); suStart(); }
+function endReplay(g){ closeEnd(); page="practice"; if(g.sec!==S.section) switchSection(g.sec);
+  const q=g.sec==="ear"?suQueue(g.sec):g.single?[{...g.queue[0]}]:g.queue.map(it=>({...it})); game=makeGame(q); game.label=g.label; game.single=!!g.single; game.i=-1; startRound(); }
 function closeEnd(){ if(!endOpen) return; endOpen=false; $("endModal").hidden=true; modalClosed(); }
 function renderGameBar(){
   const bar=$("gamebar"), segs=$("segs"), lbl=$("gameLbl"), end=$("gameEnd");
@@ -3137,13 +3215,13 @@ function renderActions(){
     if(k){ const kb=document.createElement("kbd"); kb.textContent=k; b.appendChild(kb); } b.onclick=fn; a.appendChild(b); };
   const sp=()=>{ const s=document.createElement("span"); s.className="spacer"; a.appendChild(s); };
   const kb=hasKeyboard(), space=kb?(S.settings.lang==="fr"?"Espace":"Space"):null, enter=kb?(S.settings.lang==="fr"?"Entrée":"Enter"):null;
-  const cKey = midiMode() && S.settings.midiC!==false ? CNAME() : null;
+  const cKey = midiMode() && S.settings.midiC!==false ? CNAME() : null, bKey = midiMode() && S.settings.midiC!==false ? BNAME() : null;
   if(phase==="idle" && page==="daily" && !game) return; // the header already has "Start"
   if(phase==="idle") mk(t("start"),"primary big",()=>startRound(),cKey||space);
   else if(phase==="listening" && cur.sec==="ear") mk(tx("replay"),"primary",()=>playScale(0),space);
   else if(phase==="listening"){ if(S.settings.guideP && hintStage<2) mk(t("hintBtn"),"",()=>hintMore(),space); else mk(t("giveUp"),"",()=>reveal(false),space); }
-  else if(phase==="revealed"){ mk(tx("replay"),"",()=>{ playScale(0); if(cur.sec!=="prog") showReveal(true); }); sp(); mk(t("review"),"",()=>grade(false),kb?"⌫":null); mk(t("knew"),"good",()=>grade(true),cKey||enter); }
-  else if(phase==="success"){ mk(tx("replay"),"",()=>{ clearTimeout(advanceTimer); playScale(0); if(!chSeq()) showReveal(true); }); sp(); mk(t("next"),"primary",()=>startRound(),cKey||space); }
+  else if(phase==="revealed"){ mk(tx("replay"),"",()=>{ playScale(0); if(cur.sec!=="prog") showReveal(true); }); sp(); mk(t("review"),"",()=>grade(false),bKey||(kb?"⌫":null)); mk(t("knew"),"good",()=>grade(true),cKey||enter); }
+  else if(phase==="success"){ mk(tx("replay"),"",()=>{ clearTimeout(advanceTimer); playScale(0); if(!chSeq()) showReveal(true); }); sp(); if(bKey) mk(t("againB"),"",()=>{ clearTimeout(advanceTimer); startRound({...cur, dir:null},true); },bKey); mk(t("next"),"primary",()=>startRound(),cKey||space); }
 }
 function renderPrompt(){
   const sec=S.section;
@@ -3749,53 +3827,85 @@ $("pfLevels").addEventListener("click",()=>openChars());
 // ----- Start screen of a LEARN game: pick the scale / chord as cards, the timer and the helps, then play that one item -----
 const SU_COL={chords:"#c9463c",scales:"#b4461a",harmony:"#2c56d6",prog:"#6a3fd1",ear:"#0e7490"};
 const SU_NAME={chords:"secChords",scales:"secScales",harmony:"secHarmony",prog:"secProg",ear:"secEar"};
+// a start-screen choice: one or more types, keys (simple = no sharp / flat in the name, all, or picked), then notes or chords, then the options
+const LET_PC={C:0,D:2,E:4,F:5,G:7,A:9,B:11};
+const keyPc = k => { const n=tonicNote(k); return ((LET_PC[n.l]+n.a)%12+12)%12; };
+const keySimple = k => tonicNote(k).a===0;
 function suState(sec){ S.settings.su=S.settings.su||{}; const st=S.settings.su[sec]||(S.settings.su[sec]={});
-  const types=typeList(sec); if(!types.some(ty=>ty.id===st.tid) || !typeOpenS(sec,st.tid)) st.tid=(types.find(ty=>ty.id===S.settings[SEC[sec].view] && typeOpenS(sec,ty.id))||types.find(ty=>typeOpenS(sec,ty.id))||types[0]).id;
-  if(sec!=="ear"){ const open=openRoots(sec,st.tid); if(!open.includes(st.k)) st.k=open[0]; }
-  return st; }
-function suQueue(sec){ const st=suState(sec), tid=st.tid, k=st.k;
-  if(sec==="ear"){ const n=S.settings.gameLen&&isFinite(S.settings.gameLen)?S.settings.gameLen:10, ks=openRoots(sec,tid); return Array.from({length:n},()=>({sec,tid,k:ks[Math.floor(Math.random()*ks.length)]})); }
-  if(sec==="chords"){ const ty=typeDef(sec,tid), invs=S.settings.invs.filter(i=>i<ty.iv.length); return (invs.length?invs:[0]).map(inv=>({sec,tid,k,inv})); }
-  if(sec==="harmony") return S.settings.hdegs.slice().sort().map(deg=>({sec,tid,k,deg}));
-  if(sec==="scales" && S.settings.scMode==="chords" && TYPE[tid].iv) return [{sec,tid,k,ch:1}];
-  return [{sec,tid,k}]; }
-function suLabel(sec){ const st=suState(sec), ty=typeDef(sec,st.tid); return sec==="ear" ? SEC[sec].name(ty) : sec==="chords" ? noteName(tonicNote(st.k))+" "+SEC[sec].name(ty) : sec==="harmony" ? noteName(tonicNote(st.k))+" "+(HTYPE[st.tid].scale==="minor"?(S.settings.lang==="fr"?"mineur":"minor"):(S.settings.lang==="fr"?"majeur":"major")) : itemName(suQueue(sec)[0]); }
+  const types=typeList(sec), open=id=>types.some(ty=>ty.id===id)&&typeOpenS(sec,id);
+  if(!Array.isArray(st.tids)) st.tids = st.tid ? [st.tid] : [];
+  st.tids=st.tids.filter(open); if(!st.tids.length){ const d=types.find(ty=>ty.id===S.settings[SEC[sec].view]&&open(ty.id))||types.find(ty=>open(ty.id))||types[0]; st.tids=[d.id]; }
+  if(!["simple","all","pick"].includes(st.keys)) st.keys = st.k ? "pick" : "simple";
+  if(!Array.isArray(st.picked)) st.picked = st.k && sec!=="ear" ? [keyPc(st.k)] : [0];
+  st.tid=st.tids[0]; return st; }
+function suKeys(sec,tid){ const st=suState(sec), open=openRoots(sec,tid);
+  return open.filter(k => st.keys==="all" ? true : st.keys==="simple" ? keySimple(k) : st.picked.includes(keyPc(k))); }
+function suQueue(sec){ const st=suState(sec), out=[];
+  if(sec==="ear"){ const n=S.settings.gameLen&&isFinite(S.settings.gameLen)?S.settings.gameLen:10, all=st.tids.flatMap(tid=>openRoots(sec,tid).map(k=>({sec,tid,k}))); return Array.from({length:n},()=>({...all[Math.floor(Math.random()*all.length)]})); }
+  st.tids.forEach(tid=>suKeys(sec,tid).forEach(k=>{
+    if(sec==="chords"){ const ty=typeDef(sec,tid), invs=S.settings.invs.filter(i=>i<ty.iv.length); (invs.length?invs:[0]).forEach(inv=>out.push({sec,tid,k,inv})); }
+    else if(sec==="harmony") S.settings.hdegs.slice().sort().forEach(deg=>out.push({sec,tid,k,deg}));
+    else if(sec==="scales" && S.settings.scMode==="chords" && TYPE[tid].iv) out.push({sec,tid,k,ch:1});
+    else out.push({sec,tid,k}); }));
+  return st.shuffle ? qzShuffle(out) : out; }
+function suLabel(sec){ const st=suState(sec), q=suQueue(sec), fr=S.settings.lang==="fr";
+  if(q.length===1 && sec!=="ear"){ const it=q[0], ty=typeDef(sec,it.tid); return sec==="chords" ? noteName(tonicNote(it.k))+" "+SEC[sec].name(ty) : sec==="harmony" ? noteName(tonicNote(it.k))+" "+(HTYPE[it.tid].scale==="minor"?(fr?"mineur":"minor"):(fr?"majeur":"major")) : itemName(it); }
+  const names=st.tids.map(id=>SEC[sec].name(typeDef(sec,id))), tn = names.length<=2 ? names.join(", ") : names[0]+", "+names[1]+" +"+(names.length-2);
+  if(sec==="ear") return tn;
+  return tn+" · "+(st.keys==="all" ? t("suKeysAll") : st.keys==="simple" ? t("suKeysSimple") : st.picked.map(pc=>qzRoots()[pc]).join(", ")); }
 function renderSetup(){
-  const sec=S.section, st=suState(sec), col=SU_COL[sec], fr=S.settings.lang==="fr";
+  const sec=S.section, st=suState(sec), col=SU_COL[sec], re=()=>{ save(); renderSetup(); };
   const h=$("suTitle"); h.style.setProperty("--mc",col); $("suIc").innerHTML=SEC_ICON(sec); $("suName").textContent=t(SU_NAME[sec]); $("suSub").textContent=t("suSub_"+sec);
+  // 1. the types (several allowed)
   $("suTypesH").textContent=t(sec==="chords"?"suPickChord":sec==="ear"?"suPickEar":sec==="prog"?"suPickProg":"suPickScale");
   const tb=$("suTypes"); tb.innerHTML=""; tb.style.setProperty("--mc",col);
-  typeList(sec).forEach(ty=>{ const open=typeOpenS(sec,ty.id), b=document.createElement("button"); b.type="button"; b.className="su-card"; b.disabled=!open; b.setAttribute("aria-pressed",ty.id===st.tid);
-    b.innerHTML="<b></b><small></small>"; b.querySelector("b").textContent=SEC[sec].name(ty);
+  typeList(sec).forEach(ty=>{ const open=typeOpenS(sec,ty.id), on=st.tids.includes(ty.id), b=document.createElement("button"); b.type="button"; b.className="su-card"; b.disabled=!open; b.setAttribute("aria-pressed",on);
+    b.innerHTML="<i class='su-tick'></i><b></b><small></small>"; b.querySelector("b").textContent=SEC[sec].name(ty);
     b.querySelector("small").textContent= open ? (sec==="ear"?"":rootsOf(sec,ty.id).filter(k=>tileMast(sec,ty.id,k)>=3).length+" / "+rootsOf(sec,ty.id).length+" "+t("suMastered")) : t("lvlShort")+ty.lvl;
-    b.onclick=()=>{ st.tid=ty.id; save(); renderSetup(); }; tb.appendChild(b); });
+    b.onclick=()=>{ if(on){ if(st.tids.length>1) st.tids=st.tids.filter(x=>x!==ty.id); } else st.tids=[...st.tids,ty.id]; re(); }; tb.appendChild(b); });
+  // 2. the keys
   const kw=$("suKeysWrap"); kw.hidden = sec==="ear";
-  if(sec!=="ear"){ const kb=$("suKeys"); kb.innerHTML=""; kb.style.setProperty("--mc",col); const open=openRoots(sec,st.tid);
-    rootsOf(sec,st.tid).forEach(k=>{ const b=document.createElement("button"); b.type="button"; b.className="su-key"; const ok=open.includes(k); b.disabled=!ok; b.setAttribute("aria-pressed",k===st.k);
-      const m=tileMast(sec,st.tid,k); b.innerHTML="<b></b><span class='pips'>"+[0,1,2].map(i=>"<i class='"+(i<Math.min(3,m)?"f":"")+"'></i>").join("")+"</span>"; b.querySelector("b").textContent=noteName(tonicNote(k));
-      b.title= ok ? "" : tx("lockedTip"); b.onclick=()=>{ st.k=k; save(); renderSetup(); }; kb.appendChild(b); }); }
+  if(sec!=="ear"){ const seg=$("suKeyMode"); seg.innerHTML=""; seg.style.setProperty("--mc",col);
+    [["simple","suKeysSimple","suKeysSimpleD"],["all","suKeysAll","suKeysAllD"],["pick","suKeysPick","suKeysPickD"]].forEach(([v,l,d])=>{ const b=document.createElement("button"); b.type="button"; b.className="su-km"; b.setAttribute("aria-pressed",st.keys===v);
+      b.innerHTML="<b></b><small></small>"; b.querySelector("b").textContent=t(l); b.querySelector("small").textContent=t(d); b.onclick=()=>{ st.keys=v; re(); }; seg.appendChild(b); });
+    const kb=$("suKeys"); kb.hidden = st.keys!=="pick"; kb.innerHTML=""; kb.style.setProperty("--mc",col);
+    if(st.keys==="pick"){ const openPc=new Set(st.tids.flatMap(tid=>openRoots(sec,tid).map(keyPc)));
+      const spell={}; st.tids.forEach(tid=>rootsOf(sec,tid).forEach(k=>{ const pc=keyPc(k); if(spell[pc]==null) spell[pc]=noteName(tonicNote(k)); }));
+      [0,7,2,9,4,11,6,1,8,3,10,5].forEach(pc=>{ const b=document.createElement("button"); b.type="button"; b.className="su-key"; const ok=openPc.has(pc), on=st.picked.includes(pc); b.disabled=!ok; b.setAttribute("aria-pressed",on&&ok);
+        b.innerHTML="<b></b>"; b.querySelector("b").textContent=spell[pc]||qzRoots()[pc]; b.title= ok ? "" : tx("lockedTip");
+        b.onclick=()=>{ if(on){ if(st.picked.length>1) st.picked=st.picked.filter(x=>x!==pc); } else st.picked=[...st.picked,pc]; re(); }; kb.appendChild(b); }); }
+    const locked=st.tids.reduce((a,tid)=>a+rootsOf(sec,tid).length-openRoots(sec,tid).length,0);
+    $("suKeysHint").textContent = locked && !S.settings.unlockAll ? t("suLockedKeys")(locked) : "";
+    $("suShuffle").checked=!!st.shuffle; }
   // extra choices for some topics
   const ex=$("suExtra"); ex.innerHTML="";
   const chipRow=(label,names,key,max)=>{ const w=document.createElement("div"); w.className="su-row"; w.innerHTML="<span class='su-lbl'></span><div class='su-chips'></div>"; w.firstChild.textContent=label;
     names.slice(0,max).forEach((nm,i)=>{ const b=document.createElement("button"); b.type="button"; b.textContent=nm; b.setAttribute("aria-pressed",S.settings[key].includes(i));
-      b.onclick=()=>{ const set=new Set(S.settings[key]); if(set.has(i)){ if(set.size>1) set.delete(i); } else set.add(i); S.settings[key]=[...set].sort(); save(); renderSetup(); }; w.lastChild.appendChild(b); }); ex.appendChild(w); };
-  if(sec==="chords") chipRow(t("inversions"),t("invNames"),"invs",typeDef(sec,st.tid).iv.length);
+      b.onclick=()=>{ const set=new Set(S.settings[key]); if(set.has(i)){ if(set.size>1) set.delete(i); } else set.add(i); S.settings[key]=[...set].sort(); re(); }; w.lastChild.appendChild(b); }); ex.appendChild(w); };
+  if(sec==="chords") chipRow(t("inversions"),t("invNames"),"invs",Math.max(...st.tids.map(id=>typeDef(sec,id).iv.length)));
   if(sec==="harmony") chipRow(t("degrees"),ROMAN,"hdegs",7);
-  if(sec==="scales"){ const w=document.createElement("div"); w.className="su-row"; w.innerHTML="<span class='su-lbl'></span><div class='su-chips'></div>"; w.firstChild.textContent=t("scModeLbl");
-    [["notes","scNotes"],["chords","scChords"]].forEach(([v,k])=>{ const b=document.createElement("button"); b.type="button"; b.textContent=t(k); b.setAttribute("aria-pressed",S.settings.scMode===v); if(v==="chords" && !TYPE[st.tid].iv) b.disabled=true;
-      b.onclick=()=>{ S.settings.scMode=v; save(); renderSetup(); }; w.lastChild.appendChild(b); }); ex.appendChild(w); }
-  // timer
+  // 3. scales: notes or chords
+  const sm=$("suMode"); sm.hidden = sec!=="scales"; sm.innerHTML="";
+  if(sec==="scales"){ const anyChord=st.tids.some(id=>TYPE[id].iv); if(!anyChord && S.settings.scMode==="chords") S.settings.scMode="notes";
+    [["notes",[0,2,4,5,7,9,11]],["chords",[0,4,7]]].forEach(([v,pcs])=>{ const b=document.createElement("button"); b.type="button"; b.className="su-mode"; b.style.setProperty("--mc",col);
+      b.setAttribute("aria-pressed",(S.settings.scMode||"notes")===v); if(v==="chords" && !anyChord){ b.disabled=true; b.title=t("suNoChords"); }
+      b.innerHTML='<span class="su-mk">'+qzKeys(pcs,"#ffb02e")+'</span><span><b></b><small></small></span>'; b.querySelector("b").textContent=t(v==="notes"?"suModeN":"suModeC"); b.querySelector("small").textContent=t(v==="notes"?"suModeND":"suModeCD");
+      b.onclick=()=>{ S.settings.scMode=v; re(); }; sm.appendChild(b); });
+    if(S.settings.scMode==="chords"){ const w=document.createElement("label"); w.className="su-help mini su-7"; w.innerHTML='<input type="checkbox"><span><b></b></span>'; const cb=w.querySelector("input"); cb.id="suSc7"; cb.checked=!!S.settings.sc7; w.querySelector("b").textContent=t("optSc7");
+      cb.onchange=()=>{ S.settings.sc7=cb.checked; re(); }; sm.appendChild(w); } }
+  // 4. timer and helps
   const tm=$("suTimer"); tm.innerHTML=""; [0,20,10,5].forEach(v=>{ const b=document.createElement("button"); b.type="button"; b.textContent=v?v+" s":t("noTimer"); b.setAttribute("aria-pressed",S.settings.delay===v); b.onclick=()=>{ setDelay(v); renderSetup(); }; tm.appendChild(b); });
-  // helps
   [["suHelpN","guideN"],["suHelpK","guideK"],["suHelpP","guideP"]].forEach(([id,k])=>{ $(id).checked=!!S.settings[k]; });
   $("suLabels").checked=!!S.settings.labels;
   // summary
-  const q=suQueue(sec); $("suSum").textContent=suLabel(sec); $("suCount").textContent=t("suCount")(q.length, sec);
-  $("suGo").style.setProperty("--mc",col);
+  const q=suQueue(sec); $("suSum").textContent=suLabel(sec); $("suCount").textContent=q.length ? t("suCount")(q.length, sec) : t("suNone");
+  $("suGo").disabled=!q.length; $("suGo").style.setProperty("--mc",col);
 }
-function suStart(){ const sec=S.section, st=suState(sec), q=suQueue(sec);
-  S.settings[SEC[sec].view]=st.tid; S.settings[SEC[sec].sel]=[st.tid]; save();
+function suStart(){ const sec=S.section, st=suState(sec), q=suQueue(sec); if(!q.length) return;
+  S.settings[SEC[sec].view]=q[0].tid; S.settings[SEC[sec].sel]=st.tids.slice(); save();
   game=makeGame(q); game.label=suLabel(sec); game.single=q.length===1; game.i=-1; startRound(); }
+$("suShuffle").addEventListener("change",e=>{ suState(S.section).shuffle=e.target.checked; save(); renderSetup(); });
+
 $("suGo").addEventListener("click",suStart);
 [["suHelpN","guideN"],["suHelpK","guideK"],["suHelpP","guideP"]].forEach(([id,k])=>$(id).addEventListener("change",e=>{ S.settings[k]=e.target.checked;
   if(k==="guideP" && e.target.checked){ S.settings.guideN=false; S.settings.guideK=false; } else if(e.target.checked) S.settings.guideP=false; save(); renderSetup(); renderGameBar(); }));
@@ -3969,11 +4079,17 @@ function qzWho(dev,m){ const P=QZ.players; if(QZ.mode==="online") return P.findI
   if(QZ.mode==="turn"){ const hs=P.map((p,i)=>p.bot?-1:i).filter(i=>i>=0); return hs[QZ.turn]; }
   if(QZ.mode==="zone") return P.findIndex(p=>!p.bot&&p.zone&&m>=p.zone[0]&&m<=p.zone[1]);
   return P.findIndex(p=>!p.bot&&p.dev===dev); }
-function quizIn(dev,m){ if(QZ.view!=="play"||QZ.done) return;
+function quizIn(dev,m){ if(S.settings.midiC!==false && (QZ.view==="end" || (QZ.view==="play" && QZ.done))){ qzShortcut(m); return; }
+  if(QZ.view!=="play"||QZ.done) return;
   const pi=qzWho(dev,m); if(pi==null||pi<0 || QZ.picks[pi]!=null) return;
   const now=performance.now(), b=QZ.buf[pi]||(QZ.buf[pi]={notes:[],timer:0,at:0}); if(now-b.at>900) b.notes=[]; b.at=now; b.notes.push(m%12);
   clearTimeout(b.timer); b.timer=setTimeout(()=>{ const set=[...new Set(b.notes)].sort((a,c)=>a-c).join(",");
     const k=QZ.ans.findIndex(a=>a.tg.pcs.slice().sort((x,y)=>x-y).join(",")===set); if(k<0) return; qzLocalPick(pi,k); },170); }
+// after the answer is shown: a lone C = next question; at the end: C or B = play again (a chord is ignored)
+function qzShortcut(m){ const b=QZ.sc||(QZ.sc={notes:[],t:0,at:0}), now=performance.now(); if(now-b.at>400) b.notes=[]; b.at=now; b.notes.push(m%12); clearTimeout(b.t);
+  b.t=setTimeout(()=>{ if(b.notes.length!==1) return; const pc=b.notes[0];
+    if(QZ.view==="play" && QZ.done && pc===0 && (QZ.mode!=="online"||NET.host) && performance.now()-QZ.doneAt>600) qzNext();
+    else if(QZ.view==="end" && (pc===0||pc===11) && (QZ.mode!=="online"||NET.host)) $("qzAgain").click(); },120); }
 function qzLocalPick(pi,k){ if(QZ.done||QZ.picks[pi]!=null) return; const ms=performance.now()-QZ.t0; qzPick(pi,k,ms);
   if(QZ.mode==="online") netSend({type:"ans",id:QZ.players[pi].id,i:QZ.i,o:QZ.ans[k].o,ms:Math.round(ms)}); }
 function qzPick(pi,k,ms){ if(QZ.done||QZ.picks[pi]!=null||!QZ.ans[k]) return; const a=QZ.ans[k], p=QZ.players[pi], left=Math.max(0,1-ms/QZ.dur);
@@ -3981,7 +4097,7 @@ function qzPick(pi,k,ms){ if(QZ.done||QZ.picks[pi]!=null||!QZ.ans[k]) return; co
   const live=QZ.players.map((p,i)=>i).filter(i=>!QZ.players[i].gone);
   const all = QZ.mode==="solo"||QZ.mode==="turn" || live.every(i=>QZ.picks[i]!=null);
   if(all && (QZ.mode!=="online"||NET.host)) qzReveal(); else renderQzPlay(); }
-function qzReveal(fromNet){ if(QZ.done) return; QZ.done=true; qzClearTimers();
+function qzReveal(fromNet){ if(QZ.done) return; QZ.done=true; QZ.doneAt=performance.now(); qzClearTimers();
   if(QZ.mode==="online" && NET.host && !fromNet) netSend({type:"reveal",i:QZ.i});
   const r=QZ.ans.findIndex(a=>a.right); if(uiSound()) QZ.ans[r].tg.mid.forEach((m,i)=>tone(m,i*.03,.9,.16));
   renderQzPlay(); if(QZ.mode!=="online"||NET.host) QZ.revealT=setTimeout(()=>{ if(page==="quiz"&&QZ.view==="play"&&QZ.done) qzNext(); },4200); }
@@ -4010,6 +4126,7 @@ function renderQzPlay(){ if(!QZ.q) return; const q=QZ.q, fr=S.settings.lang==="f
     if(QZ.done && st!=null) d.classList.add(QZ.ans[st].right?"ok":"ko");
     d.querySelector(".qz-pts").textContent=p.score; sb.appendChild(d); });
   $("qzNext").hidden=!QZ.done || (QZ.mode==="online" && !NET.host); $("qzBar").parentElement.hidden=QZ.done;
+  $("qzNext").textContent=t("qzNextT"); if(midiReady && S.settings.midiC!==false){ const kb=document.createElement("kbd"); kb.textContent=CNAME(); $("qzNext").appendChild(kb); }
 }
 function qzFinish(){ qzClearTimers(); QZ.view="end"; const me=QZ.players.filter(p=>!p.bot&&!p.remote);
   if(me.length===1 && me[0].ok) addXP(Math.min(60,me[0].ok*3)); save(); renderQuiz(); if(QZ.players.some(p=>p.ok) && uiSound()) setTimeout(confetti,200); }
@@ -4018,7 +4135,7 @@ function renderQzEnd(){ const P=QZ.players.map((p,i)=>({...p,i})).sort((a,b)=>b.
   $("qzEndT").textContent = QZ.players.length>1 ? t("qzWinner")(P[0].name) : t("qzSoloEnd")(P[0].ok,QZ.list.length);
   P.forEach((p,r)=>{ const d=document.createElement("div"); d.className="qz-pod r"+(r+1); d.style.setProperty("--pc",p.col);
     d.innerHTML='<span class="qz-rk">'+(r+1)+'</span><b></b><span class="qz-sc"></span><small></small>'; d.querySelector("b").textContent=p.name; d.querySelector(".qz-sc").textContent=p.score+" pts"; d.querySelector("small").textContent=t("qzRight")(p.ok,QZ.list.length); box.appendChild(d); });
-  $("qzAgain").hidden = QZ.mode==="online" && !NET.host; }
+  $("qzAgain").hidden = QZ.mode==="online" && !NET.host; $("qzAgain").textContent=t("qzAgainT"); if(midiReady && S.settings.midiC!==false){ const kb=document.createElement("kbd"); kb.textContent=CNAME()+" / "+BNAME(); $("qzAgain").appendChild(kb); } }
 function qzQuit(){ qzClearTimers(); if(QZ.mode==="online") netLeave(); QZ.view="setup"; QZ.done=true; renderQuiz(); }
 $("qzGo").addEventListener("click",qzStart);
 $("qzNext").addEventListener("click",()=>{ if(QZ.done) qzNext(); });
