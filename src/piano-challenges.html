@@ -1310,7 +1310,7 @@ body.du-lob #runner{flex:1 1 auto}
 .du-rcard h3{margin:0;font-family:var(--f-display);font-weight:700;font-size:1.8rem}
 .du-res[data-res="win"] h3{color:#26805a} .du-res[data-res="loss"] h3{color:var(--bad)}
 .du-rsc{display:flex;align-items:center;gap:14px} .du-rsc>span{display:flex;align-items:center;gap:10px} .du-rsc b{font-family:var(--f-display);font-size:2rem} .du-rsc i{font-style:normal;color:var(--muted)}
-.du-relo{margin:0;font-weight:800} .du-relo .up{color:#26805a} .du-relo .down{color:var(--bad)}
+.du-relo{margin:0;font-weight:800} .du-relo .up{color:#26805a} .du-relo .down{color:var(--bad)} .du-relo b{display:inline-block}
 .du-res .du-row{justify-content:center}
 .du-res .btn kbd,.du-panel .btn kbd{margin-left:6px}
 @media (max-width:1100px){ .du-lobby{grid-template-columns:minmax(0,1fr) 250px} .du-mode{padding:14px} .du-bots{grid-template-columns:repeat(4,minmax(0,1fr))} .du-bot small{display:none} }
@@ -4497,7 +4497,16 @@ function duRenderRes(){ const r=DU.res, o=DU.opp, box=$("duRes"); if(!r) return;
   else if(DU.mode==="online") btn(t("duNewOpp"),"primary",()=>{ duEnd(); duSearch(); },CNAME()).id="duRematch";
   const card=box.querySelector(".du-rcard"), sh=document.createElement("button"); sh.type="button"; sh.className="du-share"; sh.id="duShare"; sh.innerHTML=pwI("share")+"<span></span>"; sh.lastChild.textContent=t("shareBtn");
   sh.onclick=()=>shareDuel(); card.appendChild(sh);
-  if(DU.mode!=="friend"){ const ch=document.createElement("button"); ch.type="button"; ch.className="du-chal"; ch.id="duChal"; ch.textContent=t("shareChal"); ch.onclick=()=>{ duEnd(); DU.view="friend"; duRender(); duJoin(netCode(),true,false); }; card.appendChild(ch); } }
+  if(DU.mode!=="friend"){ const ch=document.createElement("button"); ch.type="button"; ch.className="du-chal"; ch.id="duChal"; ch.textContent=t("shareChal"); ch.onclick=()=>{ duEnd(); DU.view="friend"; duRender(); duJoin(netCode(),true,false); }; card.appendChild(ch); }
+  if(box._r!==r){ box._r=r; duResIn(box, r.res===1); } } // enters once per result (re-renders for a rematch request stay still)
+// the result enters (the buttons and C/B work at once): backdrop fade, card rises, ELO change after it, a win's title pops. Reduced motion: fades only.
+function duResIn(box, win){ if(!box.animate) return; const cs=getComputedStyle(document.documentElement), EO=cs.getPropertyValue("--ease-out").trim()||"ease-out", EP=cs.getPropertyValue("--ease-pop").trim()||"ease-out";
+  const card=box.querySelector(".du-rcard"), d=box.querySelector(".du-relo b"), h=box.querySelector("h3");
+  if(matchMedia("(prefers-reduced-motion: reduce)").matches){ box.animate([{opacity:0},{opacity:1}],{duration:150,easing:"ease"}); return; }
+  box.animate([{opacity:0},{opacity:1}],{duration:200,easing:"ease"});
+  card.animate([{opacity:0,transform:"translateY(8px) scale(.97)"},{opacity:1,transform:"none"}],{duration:300,easing:EO});
+  if(d) d.animate([{opacity:0,transform:"translateY(4px)"},{opacity:1,transform:"none"}],{duration:200,delay:250,easing:EO,fill:"backwards"});
+  if(win) h.animate([{transform:"scale(.86)"},{transform:"scale(1.08)",offset:.6},{transform:"none"}],{duration:380,easing:EP}); }
 function duEnd(){ if(DU.mode && DU.rated && DU.opp && !DU.opp.gone && ["count","play","wait"].includes(DU.view)){ eloApply(duKey(), DU.opp.elo, 0, DU.opp.bot!=null, DU.opp.name, DU.opp.av); duSend({t:"sc",s:DU.me.score,d:true,quit:1}); } // leaving a rated game counts as a loss
   delete S.duPend; duStopGame(); if(DU.ch) duLeaveRoom(); DU.mode=null; DU.opp=null; gRnd=Math.random; }
 function duStartBot(i){ if(!duelGate()) return; duEnd(); const seed=(Math.random()*4294967296)>>>0, elo=DU_BOTS[i];
