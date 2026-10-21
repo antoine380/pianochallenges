@@ -1897,9 +1897,9 @@ body.staff-on.staff-seq .slots{display:none} #clefField[hidden]{display:none}
           </div>
           <div id="qzOnlineBox" class="qz-box" hidden>
             <section class="su-box qz-net"><div class="su-hh"><h3 class="su-h" data-i="qzYourName"></h3><span class="qz-online" id="qzOnlineN"></span></div>
-              <input type="text" id="qzNetName" maxlength="14" class="qz-in" aria-label="Pseudo"></section>
+              <input type="text" id="qzNetName" maxlength="14" class="qz-in" aria-label="Pseudo" autocomplete="nickname" autocorrect="off" spellcheck="false" enterkeyhint="done"></section>
             <section class="su-box qz-net"><h3 class="su-h" data-i="qzFriendH"></h3>
-              <div id="qzFriendIdle"><button class="btn primary" id="qzCreate" type="button" data-i="qzCreateT"></button><div class="qz-join"><input type="text" id="qzCodeIn" maxlength="5" class="qz-in qz-code-in" placeholder="CODE" autocapitalize="characters" autocomplete="off" aria-label="Code"><button class="btn" id="qzJoin" type="button" data-i="qzJoinT"></button></div></div>
+              <div id="qzFriendIdle"><button class="btn primary" id="qzCreate" type="button" data-i="qzCreateT"></button><div class="qz-join"><input type="text" id="qzCodeIn" maxlength="5" class="qz-in qz-code-in" placeholder="CODE" autocapitalize="characters" autocomplete="off" autocorrect="off" spellcheck="false" enterkeyhint="go" aria-label="Code"><button class="btn" id="qzJoin" type="button" data-i="qzJoinT"></button></div></div>
               <div id="qzFriendRoom" hidden><div class="qz-code"><span data-i="qzCodeL"></span><b id="qzRoomCode"></b><button class="hs-more" id="qzCopy" type="button" data-i="qzCopyT"></button></div><p class="qz-hint" id="qzRoomHint"></p><ul class="qz-room" id="qzRoomPl"></ul>
                 <div class="qz-join"><button class="btn" id="qzRoomLeave" type="button" data-i="qzLeaveT"></button><button class="btn primary" id="qzRoomGo" type="button" data-i="qzGoT"></button></div></div></section>
             <section class="su-box qz-net"><h3 class="su-h" data-i="qzRandomH"></h3>
@@ -2895,7 +2895,9 @@ let S=load();
 const darkMQ=matchMedia("(prefers-color-scheme: dark)");
 const isDark=()=>{ const th=document.documentElement.getAttribute("data-theme"); return th ? th==="dark" : darkMQ.matches; };
 function applyTheme(){ const th=S.settings&&S.settings.theme; if(th==="light"||th==="dark") document.documentElement.setAttribute("data-theme",th); else document.documentElement.removeAttribute("data-theme");
-  const b=document.getElementById("themeBtn"); if(b){ const d=isDark(); b.classList.toggle("light",!d); const l=typeof t==="function"?t(d?"themeDay":"themeNight"):""; b.setAttribute("aria-label",l); b.title=l; const lb=document.getElementById("themeLbl"); if(lb) lb.textContent=typeof t==="function"?t(d?"themeDayS":"themeNightS"):""; } }
+  const b=document.getElementById("themeBtn"); if(b){ const d=isDark(); b.classList.toggle("light",!d); const l=typeof t==="function"?t(d?"themeDay":"themeNight"):""; b.setAttribute("aria-label",l); b.title=l; const lb=document.getElementById("themeLbl"); if(lb) lb.textContent=typeof t==="function"?t(d?"themeDayS":"themeNightS"):""; }
+  // browser bar / status bar colour follows the app's theme, not only the system's (two metas, one per scheme: a forced theme sets both)
+  document.querySelectorAll('meta[name="theme-color"]').forEach(m=>{ if(!m.dataset.sys) m.dataset.sys=m.content; m.content = th==="light" ? "#f1f2fb" : th==="dark" ? "#15122e" : m.dataset.sys; }); }
 applyTheme();
 document.getElementById("themeBtn").addEventListener("click",()=>{ S.settings.theme=isDark()?"light":"dark"; save(); applyTheme(); });
 darkMQ.addEventListener&&darkMQ.addEventListener("change",applyTheme);
@@ -4458,7 +4460,7 @@ function duRenderLobby(){ duArt();
       const [cp,lv,go]=w.querySelectorAll(".du-row button"); cp.textContent=t("qzCopyT"); lv.textContent=t("qzLeaveT"); go.textContent=t("duGoT");
       cp.onclick=()=>{ const link=SITE_URL()+"#duel-"+DU.code; try{ navigator.clipboard.writeText(link).then(()=>{ cp.textContent=t("qzCopied"); setTimeout(()=>cp.textContent=t("qzCopyT"),1800); },()=>{}); }catch(e){} };
       lv.onclick=()=>{ duLeaveRoom(); duRender(); }; go.hidden=!DU.host; go.disabled=DU.peers.length<2; go.onclick=duHostStart; }
-    else { w.innerHTML='<button class="btn primary" type="button" data-a="create"></button><span class="du-or"></span><div class="du-row"><input class="mono" maxlength="5" autocomplete="off" spellcheck="false"><button class="btn" type="button" data-a="join"></button></div><p class="qz-hint"></p>';
+    else { w.innerHTML='<button class="btn primary" type="button" data-a="create"></button><span class="du-or"></span><div class="du-row"><input class="mono" maxlength="5" autocomplete="off" spellcheck="false" autocapitalize="characters" autocorrect="off" enterkeyhint="go"><button class="btn" type="button" data-a="join"></button></div><p class="qz-hint"></p>';
       const [cr,jn]=w.querySelectorAll("button"), inp=w.querySelector("input"); cr.textContent=t("qzCreateT"); jn.textContent=t("qzJoinT"); inp.placeholder="CODE"; w.querySelector(".du-or").textContent=t("duOr"); w.querySelector(".qz-hint").textContent=t("duFriendHint");
       cr.onclick=()=>duJoin(netCode(),true,false); jn.onclick=()=>{ const c=inp.value.toUpperCase().replace(/[^A-Z2-9]/g,""); if(c.length!==5){ DU.err=t("qzBadCode"); duRender(); return; } duJoin(c,false,false); };
       inp.addEventListener("keydown",e=>{ if(e.key==="Enter") jn.click(); }); }
@@ -5047,7 +5049,7 @@ function renderQzSetup(){ const c=qzCfg(), fr=S.settings.lang==="fr", re=()=>{ s
   $("qzModeHelp").textContent = c.n===1 ? "" : t("qzModeD")[["dev","zone","turn"].indexOf(c.mode)];
   const devs=qzDevices(), zones=qzZones(c.n), pl=$("qzPlayers"); pl.innerHTML="";
   for(let i=0;i<c.n;i++){ const row=document.createElement("div"); row.className="qz-pl"; row.style.setProperty("--pc",QZ_COLORS[i]);
-    row.innerHTML='<i></i><input type="text" maxlength="14"><span class="qz-pin"></span>'; const inp=row.querySelector("input"); inp.id="qzName"+i; inp.value=c.names[i]||t("qzPlayer")+" "+(i+1); inp.setAttribute("aria-label",t("qzPlayer")+" "+(i+1));
+    row.innerHTML='<i></i><input type="text" maxlength="14" autocorrect="off" spellcheck="false" enterkeyhint="done"><span class="qz-pin"></span>'; const inp=row.querySelector("input"); inp.id="qzName"+i; inp.value=c.names[i]||t("qzPlayer")+" "+(i+1); inp.setAttribute("aria-label",t("qzPlayer")+" "+(i+1));
     inp.oninput=()=>{ c.names[i]=qzSafe(inp.value); save(); };
     const pin=row.querySelector(".qz-pin");
     if(c.n>1 && c.mode==="dev"){ const sel=document.createElement("select"); sel.id="qzDev"+i; sel.setAttribute("aria-label",t("qzKeyboard"));
@@ -5576,7 +5578,7 @@ function renderAccount(){
     const f=document.createElement("form"); L.appendChild(f);
     const lb=document.createElement("label"); lb.className="pk-lbl"; lb.textContent=t("nameLbl"); f.appendChild(lb);
     const row=document.createElement("div"); row.className="acct-row"; f.appendChild(row);
-    const inp=document.createElement("input"); inp.type="text"; inp.maxLength=24; inp.value=myName(); row.appendChild(inp);
+    const inp=document.createElement("input"); inp.type="text"; inp.maxLength=24; inp.value=myName(); inp.setAttribute("autocorrect","off"); inp.spellcheck=false; inp.enterKeyHint="done"; row.appendChild(inp);
     const sv=document.createElement("button"); sv.className="btn primary"; sv.type="submit"; sv.textContent=t("saveLbl"); row.appendChild(sv);
     const m=h("p","", "msg");
     f.onsubmit=async e=>{ e.preventDefault(); const v=inp.value.trim().slice(0,24); if(!v) return; S.profileName=v; save(); renderStatus(); try{ await cloudPushNow(); m.className="msg ok"; m.textContent=t("saved"); box.querySelector(".nm").textContent=v; }catch(err){ m.className="msg err"; m.textContent=t("cloudErr"); } };
@@ -6098,7 +6100,7 @@ function gateForm(){ const f=$("gtForm"); f.innerHTML=""; const m=GATE.mode;
       GATE.busy=false; if(error){ GATE.msg=authMsg(error); GATE.err=true; gateRender(); }
       }catch(err){ GATE.busy=false; GATE.msg=authMsg(err); GATE.err=true; gateRender(); } }; // success: setUser() closes the gate
     return; }
-  const name = m==="signup" ? gateField(f,"text",t("gtName"),GATE.name,"nickname","gtName") : null; if(name) name.maxLength=24;
+  const name = m==="signup" ? gateField(f,"text",t("gtName"),GATE.name,"nickname","gtName") : null; if(name){ name.maxLength=24; name.setAttribute("autocorrect","off"); name.spellcheck=false; name.enterKeyHint="next"; }
   const em=gateField(f,"email",t("emailPh"),GATE.email,"email","gtEmail");
   const pw=gateField(f,"password",t("gtPwd"),"",m==="signup"?"new-password":"current-password","gtPwd");
   const eye=document.createElement("button"); eye.type="button"; eye.className="gt-eye"; eye.setAttribute("aria-label",t("gtShowPwd")); eye.innerHTML='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg>';
