@@ -1,12 +1,29 @@
 // Start flow (Oct 2026): sign-in screen on the first visit (guest button), 5 onboarding questions that set the app up, guided tour (next / close),
 // nothing shown again on the next visit; skip buttons; the tour can be replayed from Settings.
-import { launch, URL } from './lib.mjs';
+import { launch, URL, INIT } from './lib.mjs';
 const wait = (p, ms) => p.waitForTimeout(ms);
 const fails = []; const check = (n, ok, d) => { console.log((ok ? 'OK   ' : 'FAIL ') + n + (d ? ' — ' + JSON.stringify(d) : '')); if (!ok) fails.push(n); };
 const { browser, page } = await launch({ mode: 'ok' });
-await page.goto(URL); await wait(page, 1500);
 const ev = (f, a) => page.evaluate(f, a), vis = id => ev(id => { const e = document.getElementById(id); return !!e && !e.hidden; }, id);
-check('premier lancement : écran de connexion', await vis('gate'));
+// 1. first launch (Oct 2026): play a first note as a guest, no form first
+{ const c = await browser.newContext({ viewport: { width: 1280, height: 800 }, locale: 'fr-FR' }); await c.addInitScript(INIT.replace('${MODE}', 'ok')); const p = await c.newPage();
+  const e = (f, a) => p.evaluate(f, a); await p.goto(URL); await p.waitForTimeout(1500);
+  check('premier lancement : « Joue ta première note », pas de formulaire', await e(() => !!document.querySelector('.fn-card') && !document.getElementById('gtEmail')));
+  check('clavier MIDI détecté et choisi, 3 niveaux', await e(() => document.querySelector('.fn-in[data-v=midi]').getAttribute('aria-pressed') === 'true' && /Fake/.test(document.querySelector('.fn-in[data-v=midi] small').textContent) && document.querySelectorAll('.fn-lv button').length === 3));
+  await e(() => window.__midi.noteOn(62)); await p.waitForTimeout(150);
+  check('mauvaise note : on dit laquelle et où est le Do', await e(() => /Presque/.test(document.querySelector('#fnPrompt small').textContent)));
+  await e(() => window.__midi.noteOn(60)); await p.waitForTimeout(300);
+  check('un Do : bravo et bouton pour continuer', await e(() => /Bravo/.test(document.querySelector('#fnPrompt').textContent) && !document.getElementById('fnGo').hidden));
+  await e(() => window.__midi.noteOn(72)); await p.waitForTimeout(1500);
+  const S0 = await e(() => JSON.parse(localStorage.getItem('memo-gammes-v1')));
+  check('un 2e Do : premier exercice d’accords lancé, invité, sans tutoriel', await e(() => document.body.dataset.page === 'practice' && /Majeur/.test(document.getElementById('prompt').textContent)) && S0.gate === 'guest' && S0.onb && S0.onb.done && S0.tourDone === 1 && S0.settings.input === 'midi', { gate: S0.gate, input: S0.settings.input });
+  await p.reload(); await p.waitForTimeout(1200);
+  check('visite suivante : plus de premier écran', await e(() => !document.querySelector('.fn-card')));
+  await c.close(); }
+// 2. "Sign in" from the first screen: the sign-in form, then the full questionnaire when continuing as a guest
+await page.goto(URL); await wait(page, 1500);
+await ev(() => document.getElementById('fnLogin').click()); await wait(page, 300);
+check('« Se connecter » : écran de connexion', await vis('gate') && await ev(() => !!document.getElementById('gtEmail')));
 check('formulaire : e-mail, mot de passe, Google / Apple / Facebook, invité', await ev(() => !!document.getElementById('gtEmail') && !!document.getElementById('gtPwd') && document.querySelectorAll('.gt-s').length === 3 && !!document.getElementById('gateGuest')));
 await ev(() => document.querySelector('.gt-tabs [data-m=login]').click()); await wait(page, 100);
 check('onglet Se connecter : pas de prénom ni de case à cocher', await ev(() => !document.getElementById('gtName') && !document.getElementById('gtOk')));

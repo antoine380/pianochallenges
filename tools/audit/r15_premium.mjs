@@ -55,6 +55,7 @@ check('Échap ferme l’invitation', !(await vis('inv')));
 // a friend's link, first visit
 const ctx2 = await browser.newContext(); const p2 = await ctx2.newPage();
 await p2.goto(URL + '?ref=pabcd1234'); await p2.waitForTimeout(1400);
+await p2.evaluate(() => document.getElementById('fnLogin')?.click()); await p2.waitForTimeout(400);
 check('lien d’un ami : retenu et affiché à l’inscription', await p2.evaluate(() => JSON.parse(localStorage.getItem('memo-gammes-v1') || '{}').refBy === 'pabcd1234' && !!document.querySelector('.gt-ref')));
 check('aucune erreur JS', errs.length === 0, errs);
 await browser.close();
