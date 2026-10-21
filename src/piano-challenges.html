@@ -2214,6 +2214,9 @@ body.staff-on.staff-seq .slots{display:none} #clefField[hidden]{display:none}
   // no pinch / double-tap zoom inside the app
   document.addEventListener("gesturestart",e=>e.preventDefault());
   document.addEventListener("dblclick",e=>e.preventDefault(),{passive:false});
+  // local pages opened "in a new tab" (legal pages from the sign-in screen and the paywall): WKWebView has no tabs and
+  // Capacitor hands them to iOS, which cannot open capacitor://localhost, so open them in place (their link "/" comes back)
+  document.addEventListener("click",e=>{ const a=e.target.closest&&e.target.closest('a[target="_blank"][href]'); if(!a) return; let u; try{ u=new URL(a.href,location.href); }catch(_){ return; } if(u.origin!==location.origin) return; e.preventDefault(); location.assign(u.href); },true);
 })();
 (() => {
 "use strict";
