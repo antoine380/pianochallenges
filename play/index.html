@@ -102,7 +102,7 @@ button:focus-visible{outline:2px solid var(--coral);outline-offset:3px}
 .stage canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
 .kbd{position:relative;height:clamp(120px,27vh,230px);touch-action:none;flex-shrink:0;background:#221d47;border-radius:0 0 18px 18px;padding:0 6px 8px;box-shadow:0 14px 30px #0008}
 .kbd::before{content:"";position:absolute;left:0;right:0;top:0;height:4px;border-radius:2px;background:#9d8bff;box-shadow:0 0 14px 1px #9d8bff;z-index:3}
-.key{position:absolute;top:4px;border-radius:0 0 8px 8px;--kc:#fff;transition:box-shadow .08s,background .08s}
+.key{position:absolute;top:4px;border-radius:0 0 8px 8px;--kc:#fff;transition:box-shadow 140ms ease,background 140ms ease}
 .key.w{height:calc(100% - 12px);background:#4b438f;border:0;margin-left:1.5px;box-shadow:inset 0 -7px 0 #2f2966;border-radius:0 0 10px 10px}
 .key.b{height:60%;z-index:2;background:#1e1a42;border:0;border-radius:0 0 7px 7px;box-shadow:inset 0 -5px 0 rgba(255,255,255,.08),0 4px 8px -2px rgba(10,6,30,.45)}
 .key .lbl{position:absolute;left:0;right:0;bottom:12px;text-align:center;font-size:12px;font-weight:800;color:#d6d1ff;pointer-events:none}
@@ -114,6 +114,7 @@ button:focus-visible{outline:2px solid var(--coral);outline-offset:3px}
 .key.target .lbl,.key.down .lbl{color:#15131c}
 .key.down{background:color-mix(in srgb,var(--kc) 70%,#fff);box-shadow:0 0 30px var(--kc),inset 0 4px 8px #0005;border-color:transparent}
 .key.wrong{background:var(--bad)!important;box-shadow:0 0 20px var(--bad)!important}
+.key.down,.key.wrong{transition:none} /* a key lights at once; only the release fades */
 
 .overlay{position:absolute;inset:0;display:grid;place-items:center;background:#15122eb8;backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);z-index:5;padding:16px;overflow:auto}
 .ocard{background:var(--stage-2);border-radius:26px;padding:26px 30px;max-width:470px;width:100%;display:flex;flex-direction:column;gap:12px;text-align:center}
@@ -124,7 +125,7 @@ button:focus-visible{outline:2px solid var(--coral);outline-offset:3px}
 .ocard .btn{background:var(--glass);color:var(--stage)}
 .ocard .btn.light{background:transparent;color:var(--glass);border:1px solid #3a3944}
 .big-stars{font-size:44px;color:var(--sun);letter-spacing:6px}
-.big-stars .off{color:#2c2b34}
+.big-stars .off{color:#2c2b34} .big-stars span{display:inline-block}
 .res{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
 .res div{background:var(--stage);border-radius:14px;padding:12px 4px}
 .res b{display:block;font-family:var(--f-mono);font-size:22px;font-weight:500}
@@ -264,6 +265,7 @@ en:{midiScreen:"On-screen keyboard",midiConnect:"Connect a MIDI keyboard",midiHo
   ear:['Golden Ear','Listen to a note or a short melody, then play it back from memory.','Musical ear','You first hear a reference C, then a note or a short melody. Play it back from memory. 10 questions, longer and longer.'],
   staff:['Staff Express','Notes arrive on a staff, not in a cascade.','Sight reading','Notes slide along a treble-clef staff, right to left. Play each note when it reaches the bar. A missed note costs a life.']}}};
 const tr=k=>T[LANG][k];
+const RM=matchMedia('(prefers-reduced-motion: reduce)').matches; // reduced motion: no screen shake in the games
 document.querySelectorAll('[data-i]').forEach(el=>el.textContent=tr(el.dataset.i));
 document.querySelectorAll('[data-i-aria]').forEach(el=>el.setAttribute('aria-label',tr(el.dataset.iAria)));
 /* ================= Music data ================= */
@@ -528,14 +530,21 @@ function finishSong(){
   const stars=acc>=92?3:acc>=75?2:acc>=45?1:0;
   if(stars>(best[P.song.id]||0)){best[P.song.id]=stars;store.set('best',best)}
   if(stars>=2)fanfare();
-  overlay(`<div class="big-stars">${'★'.repeat(stars)}<span class="off">${'★'.repeat(3-stars)}</span></div>
+  overlay(`<div class="big-stars">${[0,1,2].map(i=>`<span${i<stars?'':' class="off"'}>★</span>`).join('')}</div>
     <h2>${tr('verdicts')[stars]}</h2>
     <p class="mono">${tr('acc')(acc,P.score,P.maxStreak)}</p>
     <div class="res"><div><b style="color:var(--good)">${P.c.p}</b><small>${tr('resPerfect')}</small></div><div><b style="color:var(--warn)">${P.c.b}</b><small>${tr('resGood')}</small></div><div><b style="color:var(--bad)">${P.c.m}</b><small>${tr('resMissed')}</small></div><div><b>${P.c.w}</b><small>${tr('resWrong')}</small></div></div>
     <div class="row"><button class="btn" id="again">${tr('replay')}</button><button class="btn light" data-h>${tr('library')}</button></div>
     ${speed<1?'':`<span class="hint">${tr('tooFast')}</span>`}`);
   $('again').onclick=startSong;
+  starsIn();
 }
+// end of a song (rare): the card rises, the won stars come one by one (120 ms apart), the others only fade to their dim colour; the buttons work at once
+function starsIn(){if(!ovCard.animate)return;const EO='cubic-bezier(0.23,1,0.32,1)';
+  if(RM){ovCard.animate([{opacity:0},{opacity:1}],{duration:200,easing:'ease'});return}
+  ovCard.animate([{opacity:0,transform:'translateY(8px)'},{opacity:1,transform:'none'}],{duration:250,easing:EO});
+  ovCard.querySelectorAll('.big-stars span').forEach((el,i)=>el.animate(el.classList.contains('off')?[{opacity:0},{opacity:1}]:[{opacity:0,transform:'scale(.6)'},{opacity:1,transform:'none'}],
+    {duration:el.classList.contains('off')?200:400,delay:150+i*120,easing:el.classList.contains('off')?'ease':'cubic-bezier(.3,1.6,.5,1)',fill:'backwards'}))}
 
 /* ----- 3D projection: z = beats ahead / visible beats ----- */
 const VIS=3.4;
@@ -667,7 +676,7 @@ GAME.runner={lives:true,timed:false,tools:['names','hint'],
     for(const o of gs.obs){o.x-=sp*dt;if(!o.done&&o.x<rx+18){o.done='hit';gs.lives--;gs.combo=0;gs.shake=.35;blip(110,.3,'sawtooth',.09,60);burstAt(rx,SH*.74-30,o.m);ghud();if(gs.lives<=0){endGame('runner',`<p>${tr('cleared')(gs.cleared)}</p>`);break}}}
     gs.obs=gs.obs.filter(o=>o.x>-120);
     const tgt=gs.obs.find(o=>!o.done&&o.x>rx-10);setTargets(hint&&tgt&&tgt.x<rx+SW*.6?[{m:tgt.m}]:[])},
-  draw(dt){const sx=gs.shake>0?(Math.random()-.5)*12:0;ctx.save();ctx.translate(sx,0);const gy=SH*.74,rx=SW*.18;
+  draw(dt){const sx=gs.shake>0&&!RM?(Math.random()-.5)*12:0;ctx.save();ctx.translate(sx,0);const gy=SH*.74,rx=SW*.18;
     bgDark('#0b0a10','#2a1a3a','#4a2238');
     for(let i=0;i<40;i++){const x=((i*137.5-gs.dist*.05)%SW+SW)%SW,y=(i*53)%(gy*.7);ctx.fillStyle=`rgba(255,255,255,${.2+(i%5)*.1})`;ctx.fillRect(x,y,2,2)}
     ctx.fillStyle='#231a3a';ctx.beginPath();ctx.moveTo(0,gy);for(let x=0;x<=SW+40;x+=40)ctx.lineTo(x,gy-60-40*Math.sin((x+gs.dist*.25)/120));ctx.lineTo(SW,gy);ctx.fill();
@@ -753,7 +762,7 @@ GAME.climber={lives:false,timed:true,tools:['names','fing','hint'],sc:0,
     else{gs.floor=Math.max(0,gs.floor-1);gs.shake=.3;blip(140,.15,'sawtooth',.06);popLane(tr('slip'),m,'bad')}
     GAME.climber.aim();ghud()},
   update(dt){gs.t+=dt;if(gs.shake>0)gs.shake-=dt;if(!gs.running)return;if(tick(dt))endGame('climber',`<p>${tr('floors')(gs.floor,gs.laps)}</p>`)},
-  draw(dt){const sx=gs.shake>0?(Math.random()-.5)*10:0;ctx.save();ctx.translate(sx,0);bgDark('#06120c','#0b2416','#0f3a22');
+  draw(dt){const sx=gs.shake>0&&!RM?(Math.random()-.5)*10:0;ctx.save();ctx.translate(sx,0);bgDark('#06120c','#0b2416','#0f3a22');
     const s=SCALES[GAME.climber.sc],n=16,h=SH*.9/n,w=SW*.22,x0=SW/2-w/2,base=SH-10-gs.floor*h*0;
     for(let i=0;i<n;i++){const y=SH-10-(i+1)*h+ (gs.floor>8?(gs.floor-8)*h:0);if(y>SH||y<-h)continue;const idx=i%8,m=s.root+s.st[idx],on=i<gs.floor;
       ctx.fillStyle=on?col(m,58):'rgba(255,255,255,.06)';ctx.strokeStyle=on?col(m,70):'rgba(255,255,255,.15)';ctx.lineWidth=1.5;rr(x0+(i%2?12:-12),y+3,w,h-6,8);ctx.fill();ctx.stroke();
