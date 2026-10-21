@@ -165,7 +165,7 @@ button:focus-visible, select:focus-visible, input:focus-visible, summary:focus-v
 @keyframes revIn{from{opacity:0;transform:scale(.86)}}
 @keyframes popSlot{0%{transform:scale(.86)}60%{transform:scale(1.08)}100%{transform:none}}
 @keyframes riseIn{from{transform:translateY(6px);opacity:0}}
-.k-press{transform:translateY(2px) scaleY(.985);transform-origin:top;box-shadow:inset 0 -3px 0 rgba(0,0,0,.18)}
+.k-press,.k-down{transform:translateY(2px) scaleY(.985);transform-origin:top;box-shadow:inset 0 -3px 0 rgba(0,0,0,.18)}
 .answers{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px}
 .answers button{border:1px solid transparent;background:var(--surface-2);border-radius:10px;padding:12px 10px;font-family:var(--f-display);font-weight:700;font-size:1rem;min-height:52px}
 .answers button:hover:not(:disabled){border-color:var(--ink)}
@@ -252,7 +252,7 @@ button:focus-visible, select:focus-visible, input:focus-visible, summary:focus-v
 .wk.k-hit span,.bk.k-hit span{color:#15122e}
 .k-ok{box-shadow:inset 0 -7px 0 rgba(0,0,0,.16),0 0 20px 0 var(--good)!important}
 .k-bad{box-shadow:inset 0 -7px 0 rgba(0,0,0,.16),0 0 20px 0 var(--bad)!important}
-.wk:is(.k-press,.k-hit,.k-ok,.k-bad),.bk:is(.k-press,.k-hit,.k-ok,.k-bad){transition:none} /* a key lights at once; only the release fades */
+.wk:is(.k-press,.k-down,.k-hit,.k-ok,.k-bad),.bk:is(.k-press,.k-down,.k-hit,.k-ok,.k-bad){transition:none} /* a key lights at once; only the release fades */
 
 .actions{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
 .btn{border:0;background:var(--surface-2);border-radius:999px;padding:10px 18px;font-weight:800;min-height:44px}
@@ -3040,14 +3040,19 @@ function scrollKbdTo(m){
   const wrap=$("kbdWrap"), el=keyEls[fold(m)]; if(!el || wrap.scrollWidth<=wrap.clientWidth+2) return;
   wrap.scrollTo({left:Math.max(0, el.offsetLeft - wrap.clientWidth/2 + 60), behavior:"smooth"});
 }
+const kbdPtr=new Map(); // pointerId -> key held down (the key stays down until the finger or the mouse is released)
 kbd.addEventListener("pointerdown", e=>{
   const el=e.target.closest("[data-m]"); if(!el) return;
-  e.preventDefault(); const m=+el.dataset.m; pressKey(m); tone(m); midiIn(m); // key lit before the grouping; same 35 ms grouping as MIDI (two-finger chords)
+  e.preventDefault(); const m=+el.dataset.m; keyDown(m,true); kbdPtr.set(e.pointerId,m); pressKey(m); tone(m); midiIn(m); // key lit before the grouping; same 35 ms grouping as MIDI (two-finger chords)
 });
 // keys are buttons for assistive tech (not in the Tab order: the letter keys are the shortcuts); Enter/Space on a focused key plays it
 function keyA11y(el,m){ el.setAttribute("role","button"); el.tabIndex=-1; el.setAttribute("aria-label",(S.settings.notation==="fr"?PC_FR:PC_EN)[m%12]+" "+(Math.floor(m/12)-1)); }
 kbd.addEventListener("keydown", e=>{ const el=e.target.closest("[data-m]"); if(!el || (e.code!=="Enter" && e.code!=="Space")) return; e.preventDefault(); e.stopPropagation(); const m=+el.dataset.m; tone(m); noteIn(m); });
 function pressKey(m){ const el=keyEls[fold(m)]; if(!el) return; el.classList.add("k-press"); setTimeout(()=>el.classList.remove("k-press"),130); }
+// k-down: the key stays down while the note is held (MIDI note-off, pointer up, key up); k-press (130 ms) stays for the mic
+function keyDown(m,on){ const el=keyEls[fold(m)]; if(el) el.classList.toggle("k-down",on); }
+["pointerup","pointercancel","pointerleave"].forEach(ty=>kbd.addEventListener(ty,e=>{ const m=kbdPtr.get(e.pointerId); if(m!=null){ kbdPtr.delete(e.pointerId); keyDown(m,false); } }));
+document.addEventListener("keyup",e=>{ const m=CODE_MAP[e.code]; if(m!=null) keyDown(fold(m),false); });
 kbd.addEventListener("contextmenu", e=>e.preventDefault());
 const CODE_MAP={KeyA:60,KeyW:61,KeyS:62,KeyE:63,KeyD:64,KeyF:65,KeyT:66,KeyG:67,KeyY:68,KeyH:69,KeyU:70,KeyJ:71,KeyK:72,KeyO:73,KeyL:74,KeyP:75,Semicolon:76};
 document.addEventListener("keydown", e=>{
@@ -3068,7 +3073,7 @@ document.addEventListener("keydown", e=>{
   if(e.code==="Enter" && phase==="revealed"){ e.preventDefault(); grade(true); return; }
   if(e.code==="Backspace" && phase==="revealed"){ e.preventDefault(); grade(false); return; }
   const m=CODE_MAP[e.code]; if(m==null||e.repeat||e.metaKey||e.ctrlKey||e.altKey) return;
-  const mm=fold(m); pressKey(mm); tone(mm); midiIn(mm);
+  const mm=fold(m); pressKey(mm); keyDown(mm,true); tone(mm); midiIn(mm);
 });
 function flashKey(m, cls, ms=220){ const el=keyEls[fold(m)]; if(!el) return; el.classList.add(cls); setTimeout(()=>el.classList.remove(cls), ms); }
 function clearKeys(){ Object.values(keyEls).forEach(el=>el.classList.remove("k-ok","k-rev","k-hit","k-bad","k-guide")); }
@@ -5765,15 +5770,16 @@ async function enableMidi(){
   if(!navigator.requestMIDIAccess){ $("midiBtn").classList.add("err"); $("midiTxt").textContent=t("midiNo"); notice(t("midiUnsupported")); return; }
   try{
     const acc=await navigator.requestMIDIAccess(); midiAcc=acc;
-    const bind=()=>{ const names=[]; acc.inputs.forEach(inp=>{
+    const bind=()=>{ document.querySelectorAll("#kbd .k-down").forEach(e=>e.classList.remove("k-down")); const names=[]; acc.inputs.forEach(inp=>{
         if(inp.state && inp.state!=="connected"){ inp.onmidimessage=null; return; } // Chrome keeps unplugged ports in the map
         names.push(inp.name); inp.onmidimessage=ev=>{
         const [st,note,vel]=ev.data;
         if(page==="quiz"){ if((st&0xf0)===0x90 && vel>0){ if(S.settings.midiSound) tone(note,0,.9,.1+.26*vel/127); if(!anyModal()) quizIn(String(inp.id||inp.name),note); } return; } // every keyboard counts: one per player
         if(S.settings.midiInput && inp.name!==S.settings.midiInput) return;
         if(page==="play"){ if((st&0xf0)===0x90 && vel>0) playSend("noteon",note,vel/127); else if((st&0xf0)===0x80 || ((st&0xf0)===0x90 && vel===0)) playSend("noteoff",note); return; }
+        if((st&0xf0)===0x80 || ((st&0xf0)===0x90 && vel===0)){ keyDown(note,false); return; }
         if((st&0xf0)===0x90 && vel>0){
-          pressKey(note); // light the key at once, before the 35 ms grouping
+          pressKey(note); keyDown(note,true); // light the key at once, before the 35 ms grouping
           if(S.settings.midiSound) tone(note,0,.9,.1+.26*vel/127);
           if(calib){ calibNote(note); return; }
           followMidi(note);
