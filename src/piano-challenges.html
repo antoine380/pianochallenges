@@ -1434,7 +1434,9 @@ body.gate-on{overflow:hidden}
   .fn-play{padding:12px 18px;gap:7px} .fn-play h2{font-size:1.3rem} .fn-step{font-size:.66rem} .fn-lbl{display:none} .fn-in{padding:5px 9px} .fn-in small{display:none} .fn-lv button{padding:5px} .fn-prompt{min-height:0;padding:6px 10px} .fn-prompt .fn-big{font-size:1.6rem} .fn-kb{height:96px} .fn-foot{font-size:.76rem} }
 /* end of a game: what comes next */
 .end-next{display:flex;flex-direction:column;gap:4px;margin:2px 0 10px} .end-next .en-row{display:flex;align-items:center;gap:12px} .end-next b{font-weight:800;font-size:.9rem;white-space:nowrap}
-.end-next .en-bar{flex:1;height:8px;border-radius:99px;background:var(--surface-2);overflow:hidden} .end-next .en-bar i{display:block;height:100%;background:#7a5bf5;border-radius:99px}
+.end-next .en-bar{flex:1;height:8px;border-radius:99px;background:var(--surface-2);overflow:hidden} .end-next .en-bar i{display:block;height:100%;width:100%;transform-origin:left;background:#7a5bf5;border-radius:99px}
+.end-next .en-lvl{display:flex;align-items:center;gap:10px;transform-origin:left center} .end-next .en-lvl .av{width:40px;height:40px;flex:none} .end-next .en-lvl b{font-family:var(--f-display);font-weight:700;font-size:1.05rem}
+.lvl-av.pulse,.mbar-lvl.pulse{animation:pulse 500ms var(--ease-out)}
 .end-next p{margin:0;color:var(--muted);font-weight:700;font-size:.84rem} .end-next p:empty{display:none}
 .end-acct{display:flex;align-items:center;gap:12px;border-radius:16px;padding:10px 12px;margin:0 0 10px;background:color-mix(in srgb,#7a5bf5 10%,var(--surface))}
 .end-acct div{flex:1;min-width:0} .end-acct b{display:block;font-weight:800;font-size:.92rem} .end-acct small{color:var(--muted);font-weight:700;font-size:.78rem}
@@ -2942,12 +2944,14 @@ function poolAll(){
   if(!out.length && sec==="scales" && S.settings.scMode==="chords"){ const m=S.settings.scMode; S.settings.scMode="notes"; const o=poolAll(); S.settings.scMode=m; return o; }
   return out;
 }
+let lvlUp=0; // level reached during the current LEARN game (not saved): celebrated when the game ends, then #lvlAv pulses once
 function addXP(n){
   if(n>0) bumpStreak();
   S.xpDays=S.xpDays||{}; const dk=dayStr(); S.xpDays[dk]=(S.xpDays[dk]||0)+n;
   const before=levelInfo(S.xp).L; S.xp+=n; const after=levelInfo(S.xp).L;
   if(after>before){
-    toast(titleFor(after)); try{ ntfLevel(after); }catch(e){}
+    if(game && (page==="practice"||page==="daily")) lvlUp=after; else toast(titleFor(after)); // LEARN: celebrated in #endNext at the end of the game
+    try{ ntfLevel(after); }catch(e){}
     SECS.forEach(sec=>typeList(sec).forEach(ty=>{ const key=sec==="scales"?ty.id:sec+":"+ty.id;
       if(typeOpenS(sec,ty.id) && !S.seenTypes.includes(key)){ S.seenTypes.push(key); if(ty.lvl>1) unlockNote(t("newType")+SEC[sec].name(ty)); } }));
   }
@@ -3518,8 +3522,9 @@ const SRS_DAYS=[0,1,2,4,7,14,30];
 const dayStr = (d=new Date()) => { const z=new Date(d.getTime()-d.getTimezoneOffset()*6e4); return z.toISOString().slice(0,10); };
 const addDays = n => { const d=new Date(); d.setDate(d.getDate()+n); return dayStr(d); }; // calendar days (DST-safe), also used by the SRS
 function makeGame(queue, daily){
+  lvlUp=0;
   const n = queue ? queue.length : (S.settings.gameLen||Infinity);
-  return {queue:queue||null, daily:!!daily, total:n, i:0, results:[], xp0:S.xp, maxCombo:0, sec:S.section};
+  return {queue:queue||null, daily:!!daily, total:n, i:0, results:[], xp0:S.xp, sk0:effStreak(), maxCombo:0, sec:S.section};
 }
 function roundLevel(){
   if(cur.sec==="ear") return errors?"bad":"good";
@@ -3590,6 +3595,27 @@ function finishGame(){
   save(); render(); renderDaily();
   if(doneN) openEnd(g);
 }
+// #endNext: the XP bar fills from where the game started (g.xp0); a level reached in the game is celebrated here (bar to the end,
+// "Level N reached" with the new avatar, confetti, then the bar starts again); the streak line enters if the game raised it.
+// Nothing waits for it: focus and the C/B shortcuts work at once. Reduced motion: final state, the level line only fades in.
+function endNextMotion(nx, g, li, sk){
+  const bar=nx.querySelector("i"), fin=li.into/li.need, L0=levelInfo(g.xp0||0), up=li.L>L0.L?li.L:0;
+  const b0=up ? L0.into/L0.need : Math.min(fin, Math.max(0,(g.xp0||0)-(S.xp-li.into))/li.need);
+  bar.style.transform="scaleX("+fin+")"; lvlUp=up;
+  const RM=matchMedia("(prefers-reduced-motion: reduce)").matches, cs=getComputedStyle(document.documentElement);
+  const EO=cs.getPropertyValue("--ease-out").trim()||"ease-out", EP=cs.getPropertyValue("--ease-pop").trim()||"ease-out";
+  const grew = g.sk0!=null && sk>g.sk0, p=nx.querySelector("p");
+  let lv=null;
+  if(up){ lv=document.createElement("div"); lv.className="en-lvl"; lv.innerHTML='<span class="av"></span><b></b>'; lv.firstChild.innerHTML=avatarSVG(charIndex(up)); lv.lastChild.textContent=t("ntfLvlT")(up); nx.prepend(lv); }
+  if(!bar.animate) return;
+  if(RM){ if(lv) lv.animate([{opacity:0},{opacity:1}],{duration:200,easing:"ease"}); return; }
+  if(up){
+    bar.animate([{transform:"scaleX("+b0+")",easing:EO},{transform:"scaleX(1)",offset:.33},{transform:"scaleX(1)",offset:.75},{transform:"scaleX(0)",offset:.75,easing:EO},{transform:"scaleX("+fin+")"}],{duration:1200,delay:150,fill:"backwards"});
+    lv.animate([{opacity:0,transform:"scale(.9)"},{opacity:1,transform:"none"}],{duration:500,delay:550,easing:EP,fill:"backwards"});
+    setTimeout(()=>{ if(endOpen && lv.isConnected) confetti($("endModal"), lv.firstChild, 70, 1300); },550);
+  } else if(fin>b0+.005) bar.animate([{transform:"scaleX("+b0+")"},{transform:"scaleX("+fin+")"}],{duration:400,delay:150,easing:EO,fill:"backwards"});
+  if(grew && p.textContent) p.animate([{opacity:0,transform:"translateY(4px)"},{opacity:1,transform:"none"}],{duration:200,delay:up?1350:400,easing:EO,fill:"backwards"});
+}
 function openEnd(g){
   const L=S.settings.lang, R=g.results.filter(Boolean), n=R.length;
   const cnt=lv=>R.filter(r=>r.level===lv).length, good=cnt("good");
@@ -3611,7 +3637,8 @@ function openEnd(g){
   body.appendChild(stats);
   { const li=levelInfo(S.xp), nx=document.createElement("div"); nx.className="end-next"; nx.id="endNext";
     nx.innerHTML='<div class="en-row"><b></b><span class="en-bar"><i></i></span></div><p></p>'; nx.querySelector("b").textContent=t("endNext")(li.need-li.into, li.L+1);
-    nx.querySelector("i").style.width=Math.round(li.into/li.need*100)+"%"; const sk=effStreak(); nx.querySelector("p").textContent = sk ? t("endStreak")(sk) : ""; body.appendChild(nx);
+    const sk=effStreak(); nx.querySelector("p").textContent = sk ? t("endStreak")(sk) : ""; body.appendChild(nx);
+    endNextMotion(nx, g, li, sk);
     if(!user){ const ac=document.createElement("div"); ac.className="end-acct"; ac.id="endAcct"; ac.innerHTML='<div><b></b><small></small></div><button class="btn primary" type="button"></button>';
       ac.querySelector("b").textContent=t("endAcct"); ac.querySelector("small").textContent=t("endAcctS"); const ab=ac.querySelector("button"); ab.textContent=t("endAcctB");
       ab.onclick=()=>{ closeEnd(); PW.pending=false; GATE.mode="signup"; gateOpen(); }; body.appendChild(ac); }
@@ -3635,7 +3662,7 @@ function openEnd(g){
     if(g.single) hint(btn(t("againB"),"",()=>endReplay(g)),BNAME());
     else if(misses.length){ const rw=hint(btn(t("reworkBtn"),"",()=>{ closeEnd(); page="practice"; game=makeGame(misses.map(r=>r.it)); game.label=g.label; game.orig=g.orig||g.queue; game.i=-1; startRound(); }),BNAME()); rw.id="endRework"; }
     const nx = g.single ? hint(btn(t("nextKeyB")(endNextLabel(g)),"primary",()=>endNext(g)),CNAME()) : hint(btn(t("newGame"),"primary",()=>endReplay(g)),CNAME());
-    $("endX").setAttribute("aria-label",t("closeLbl")); if(!endOpen) modalOpened(); endOpen=true; $("endModal").hidden=false; nx.focus(); if(n && good/n>=.8) setTimeout(()=>confetti(),150); return; }
+    $("endX").setAttribute("aria-label",t("closeLbl")); if(!endOpen) modalOpened(); endOpen=true; $("endModal").hidden=false; nx.focus(); if(n && good/n>=.8 && !lvlUp) setTimeout(()=>confetti(),150); return; }
   btn(t("closeLbl"),"",closeEnd);
   if(misses.length){ const rw=hint(btn(t("reworkBtn"),"",()=>{ closeEnd(); page="practice"; game=makeGame(misses.map(r=>r.it)); game.i=-1; startRound(); }),BNAME()); rw.id="endRework"; }
   const main=btn(t("newGame"),"primary",()=>{ closeEnd(); page="practice"; if(g.sec&&!g.daily&&g.sec!==S.section) switchSection(g.sec);
@@ -3643,7 +3670,7 @@ function openEnd(g){
 
   $("endX").setAttribute("aria-label",t("closeLbl"));
   if(!endOpen) modalOpened(); endOpen=true; $("endModal").hidden=false; main.focus();
-  if(n && good/n>=.8) setTimeout(()=>confetti(),150);
+  if(n && good/n>=.8 && !lvlUp) setTimeout(()=>confetti(),150);
 }
 // one-item game: the next open key of the same scale / chord / progression
 function endNextKey(g){ const it=g.queue[0], open=openRoots(it.sec,it.tid); const i=open.indexOf(it.k); return open[(i+1)%open.length]; }
@@ -3654,6 +3681,7 @@ function endReplay(g){ closeEnd(); page="practice"; if(g.sec!==S.section) switch
   if(g.orig || (!g.single && g.sec!=="ear" && suState(g.sec).shuffle)){ if(g.orig){ game=makeGame(g.orig.map(it=>({...it}))); game.label=g.label; game.i=-1; startRound(); } else suStart(); return; } // the whole choice again (shuffled again)
   const q=g.sec==="ear"?suQueue(g.sec):g.single?[{...g.queue[0]}]:g.queue.map(it=>({...it})); game=makeGame(q); game.label=g.label; game.single=!!g.single; game.i=-1; startRound(); }
 function closeEnd(){ if(!endOpen) return; endOpen=false; $("endModal").hidden=true; modalClosed();
+  if(lvlUp){ lvlUp=0; ["lvlAv","mbLvlBtn"].forEach(id=>{ const a=$(id); if(!a) return; a.classList.remove("pulse"); void a.offsetWidth; a.classList.add("pulse"); a.addEventListener("animationend",()=>a.classList.remove("pulse"),{once:true}); }); }
   if(PW.pending){ PW.pending=false; S.pwShown=1; save(); setTimeout(()=>{ if(!anyModal()) pwOpen("success"); },350); } } // the offer, once, after a first game played well
 function renderGameBar(){
   const bar=$("gamebar"), segs=$("segs"), lbl=$("gameLbl"), end=$("gameEnd");
