@@ -1543,7 +1543,8 @@ body.gate-on{overflow:hidden}
 .gt-ref svg{width:20px;height:20px;flex:none;fill:none;stroke:#e04f7a;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
 .end-share{display:inline-flex;align-items:center;gap:6px;margin-left:auto;align-self:flex-start;border:0;border-radius:999px;padding:7px 12px;background:var(--surface-2);color:var(--ink);font-weight:800;font-size:.82rem;cursor:pointer}
 .end-share svg,.du-share svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
-.du-rcard{position:relative} .du-share{position:absolute;top:12px;right:12px;display:inline-flex;align-items:center;gap:6px;border:0;border-radius:999px;padding:6px 11px;background:var(--surface-2);color:var(--ink);font-weight:800;font-size:.8rem;cursor:pointer}
+.du-rcard{position:relative} .du-share{order:-1;align-self:flex-end;margin:-4px -10px 0 0;flex:none;display:inline-flex;align-items:center;gap:6px;border:0;border-radius:999px;padding:6px 11px;background:var(--surface-2);color:var(--ink);font-weight:800;font-size:.8rem;cursor:pointer}
+@media (max-height:420px){ .du-share{position:absolute;top:6px;right:8px;margin:0;padding:4px 9px;font-size:.74rem} .du-share span{display:none} .du-rcard .du-rk{padding-inline:40px} } /* short landscape: icon only, the kicker keeps room for it */
 .du-chal{border:0;background:none;color:#7a5bf5;font-weight:800;font-size:.86rem;cursor:pointer;padding:4px;margin-top:2px}
 .set-prem{display:flex;flex-wrap:wrap;align-items:center;gap:10px} .set-prem.off .sp-st,.set-prem.off #spSee{display:none} .set-prem .sp-st{flex:1 1 220px;font-weight:800} .set-prem .sp-st small{display:block;color:var(--muted);font-weight:600}
 .set-prem label{flex:1 1 100%;display:flex;gap:8px;align-items:center;font-size:.86rem;font-weight:700;color:var(--muted)}
@@ -4502,7 +4503,7 @@ function duRenderRes(){ const r=DU.res, o=DU.opp, box=$("duRes"); if(!r) return;
   else if(DU.ch && !DU.opp.gone){ if(DU.mode==="online") btn(t("duNewOpp"),"",()=>{ duEnd(); duSearch(); });
     const rm=btn(DU.want?t("duRematchSent"):DU.oppWant?t("duRematchAccept"):t("duRematch"),"primary",duRematch,CNAME()); rm.id="duRematch"; rm.disabled=DU.want; }
   else if(DU.mode==="online") btn(t("duNewOpp"),"primary",()=>{ duEnd(); duSearch(); },CNAME()).id="duRematch";
-  const card=box.querySelector(".du-rcard"), sh=document.createElement("button"); sh.type="button"; sh.className="du-share"; sh.id="duShare"; sh.innerHTML=pwI("share")+"<span></span>"; sh.lastChild.textContent=t("shareBtn");
+  const card=box.querySelector(".du-rcard"), sh=document.createElement("button"); sh.type="button"; sh.className="du-share"; sh.id="duShare"; sh.innerHTML=pwI("share")+"<span></span>"; sh.lastChild.textContent=t("shareBtn"); sh.setAttribute("aria-label",t("shareBtn"));
   sh.onclick=()=>shareDuel(); card.appendChild(sh);
   if(DU.mode!=="friend"){ const ch=document.createElement("button"); ch.type="button"; ch.className="du-chal"; ch.id="duChal"; ch.textContent=t("shareChal"); ch.onclick=()=>{ duEnd(); DU.view="friend"; duRender(); duJoin(netCode(),true,false); }; card.appendChild(ch); } }
 function duEnd(){ if(DU.mode && DU.rated && DU.opp && !DU.opp.gone && ["count","play","wait"].includes(DU.view)){ eloApply(duKey(), DU.opp.elo, 0, DU.opp.bot!=null, DU.opp.name, DU.opp.av); duSend({t:"sc",s:DU.me.score,d:true,quit:1}); } // leaving a rated game counts as a loss
