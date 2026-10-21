@@ -15,6 +15,7 @@
   --shadow-card:0 18px 40px -20px rgba(70,60,160,.35); --shadow-float:0 30px 80px -24px rgba(70,60,160,.45);
   --note-0:#ff5a6e; --note-2:#ff9a3c; --note-4:#ffd23f; --note-5:#3ddc84; --note-7:#3cc8f0; --note-9:#5b7cff; --note-11:#b26bff;
   --r-sm:10px; --r-md:16px; --r-lg:24px; --r-xl:32px;
+  --ease-out:cubic-bezier(0.23,1,0.32,1); --ease-in-out:cubic-bezier(0.77,0,0.175,1); --ease-drawer:cubic-bezier(0.32,0.72,0,1); --ease-pop:cubic-bezier(.3,1.6,.5,1); /* motion: entrances, on-screen moves, drawer, rare celebrations only */
   --f-display:"Fredoka", "Nunito", "Avenir Next Rounded", system-ui, sans-serif;
   --f-body:"Nunito", "Avenir Next", "Segoe UI", system-ui, sans-serif;
   --f-mono:"Nunito", "Avenir Next", "Segoe UI", system-ui, sans-serif;
@@ -1408,7 +1409,7 @@ body.gate-on{overflow:hidden}
 .fn-in[aria-pressed="true"]{border-color:#7a5bf5;box-shadow:0 0 0 4px color-mix(in srgb,#7a5bf5 18%,transparent)}
 .fn-lv{display:flex;gap:8px} .fn-lv button{flex:1;border:2px solid var(--line);background:var(--surface);color:var(--ink);border-radius:999px;padding:9px 6px;font-weight:800;font-size:.88rem;cursor:pointer}
 .fn-lv button[aria-pressed="true"]{background:#7a5bf5;border-color:#7a5bf5;color:#fff}
-.fn-prompt{display:flex;align-items:center;gap:14px;background:var(--surface-2);border-radius:18px;padding:12px 16px;min-height:72px}
+.fn-prompt{display:flex;align-items:center;gap:14px;background:var(--surface-2);border-radius:18px;padding:12px 16px;min-height:72px;transition:background-color 200ms ease}
 .fn-prompt .fn-big{font-family:var(--f-display);font-weight:700;font-size:2.4rem;color:var(--note-0,#f2545b);flex:none}
 .fn-prompt b{display:block;font-weight:800} .fn-prompt small{display:block;color:var(--muted);font-weight:700;font-size:.82rem}
 .fn-prompt.ok{background:color-mix(in srgb,#26805a 14%,var(--surface))} .fn-prompt.ok .fn-big{color:#26805a} .fn-prompt.bad small{color:var(--bad)}
@@ -1419,6 +1420,9 @@ body.gate-on{overflow:hidden}
 .fn-kb .fn-hint{background:#f2545b;color:#fff;box-shadow:0 0 18px #f2545b} .fn-kb .fn-down{filter:brightness(1.3)} .fn-kb .fn-bad{background:var(--bad)!important}
 .fn-kb .fn-good{background:#26805a!important;color:#fff;box-shadow:0 0 20px #26805a}
 .fn-go{width:100%} .fn-go[hidden]{display:none}
+/* the first C (once per player): the big C pops, the button rises in after it; usable at once */
+.fn-prompt.fn-win .fn-big{animation:popWin 380ms var(--ease-pop)} .fn-go.fn-enter{animation:riseIn8 300ms var(--ease-out) 120ms backwards}
+@keyframes popWin{0%{transform:scale(.86)}60%{transform:scale(1.08)}100%{transform:none}} @keyframes riseIn8{from{opacity:0;transform:translateY(8px)}}
 .fn-foot{display:flex;justify-content:space-between;align-items:center;gap:10px;font-weight:800;font-size:.86rem;color:var(--muted);margin-top:auto}
 .fn-foot button{border:0;background:none;color:#7a5bf5;font:inherit;font-weight:800;cursor:pointer;padding:2px}
 .fn-oct2{display:contents}
@@ -3631,7 +3635,7 @@ function openEnd(g){
     if(g.single) hint(btn(t("againB"),"",()=>endReplay(g)),BNAME());
     else if(misses.length){ const rw=hint(btn(t("reworkBtn"),"",()=>{ closeEnd(); page="practice"; game=makeGame(misses.map(r=>r.it)); game.label=g.label; game.orig=g.orig||g.queue; game.i=-1; startRound(); }),BNAME()); rw.id="endRework"; }
     const nx = g.single ? hint(btn(t("nextKeyB")(endNextLabel(g)),"primary",()=>endNext(g)),CNAME()) : hint(btn(t("newGame"),"primary",()=>endReplay(g)),CNAME());
-    $("endX").setAttribute("aria-label",t("closeLbl")); if(!endOpen) modalOpened(); endOpen=true; $("endModal").hidden=false; nx.focus(); if(n && good/n>=.8) setTimeout(confetti,150); return; }
+    $("endX").setAttribute("aria-label",t("closeLbl")); if(!endOpen) modalOpened(); endOpen=true; $("endModal").hidden=false; nx.focus(); if(n && good/n>=.8) setTimeout(()=>confetti(),150); return; }
   btn(t("closeLbl"),"",closeEnd);
   if(misses.length){ const rw=hint(btn(t("reworkBtn"),"",()=>{ closeEnd(); page="practice"; game=makeGame(misses.map(r=>r.it)); game.i=-1; startRound(); }),BNAME()); rw.id="endRework"; }
   const main=btn(t("newGame"),"primary",()=>{ closeEnd(); page="practice"; if(g.sec&&!g.daily&&g.sec!==S.section) switchSection(g.sec);
@@ -3639,7 +3643,7 @@ function openEnd(g){
 
   $("endX").setAttribute("aria-label",t("closeLbl"));
   if(!endOpen) modalOpened(); endOpen=true; $("endModal").hidden=false; main.focus();
-  if(n && good/n>=.8) setTimeout(confetti,150);
+  if(n && good/n>=.8) setTimeout(()=>confetti(),150);
 }
 // one-item game: the next open key of the same scale / chord / progression
 function endNextKey(g){ const it=g.queue[0], open=openRoots(it.sec,it.tid); const i=open.indexOf(it.k); return open[(i+1)%open.length]; }
@@ -3716,21 +3720,22 @@ function renderSession(){
   const b=document.createElement("b"); b.textContent=ok+"/"+tot; el.append(b);
   el.append(" ("+pct+(S.settings.lang==="fr"?" %":"%")+")");
 }
-function confetti(){
+// host: the positioned element to draw in (default the exercise stage), from: the element the burst starts from, n particles, dur ms
+function confetti(host, from, n=90, dur=1500){
   if(window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-  const st=$("stage"), cv=document.createElement("canvas"); cv.className="confetti"; st.appendChild(cv);
+  const st=host||$("stage"), cv=document.createElement("canvas"); cv.className="confetti"; st.appendChild(cv);
   const r=st.getBoundingClientRect(), dpr=Math.min(2,window.devicePixelRatio||1);
   cv.width=r.width*dpr; cv.height=r.height*dpr; const c=cv.getContext("2d"); c.scale(dpr,dpr);
   const cs=getComputedStyle(document.documentElement), cols=["--good","--accent","--reveal","--warn","--bad"].map(v=>cs.getPropertyValue(v).trim()||"#e9a33a");
-  const fb=$("feedback").getBoundingClientRect(), ox=fb.left-r.left+fb.width/2, oy=fb.top-r.top+fb.height/2;
-  const P=Array.from({length:90},()=>{ const a=Math.random()*Math.PI*2, v=3+Math.random()*7;
+  const fb=(from||$("feedback")).getBoundingClientRect(), ox=fb.left-r.left+fb.width/2, oy=fb.top-r.top+fb.height/2;
+  const P=Array.from({length:n},()=>{ const a=Math.random()*Math.PI*2, v=3+Math.random()*7;
     return {x:ox,y:oy,vx:Math.cos(a)*v,vy:Math.sin(a)*v-4,w:5+Math.random()*5,h:3+Math.random()*4,r:Math.random()*6,vr:(Math.random()-.5)*.4,c:cols[Math.random()*cols.length|0]}; });
   const t0=performance.now();
   (function frame(now){
     const el=now-t0; c.clearRect(0,0,r.width,r.height);
     P.forEach(p=>{ p.vy+=.25; p.vx*=.985; p.x+=p.vx; p.y+=p.vy; p.r+=p.vr;
-      c.save(); c.globalAlpha=Math.max(0,1-el/1500); c.translate(p.x,p.y); c.rotate(p.r); c.fillStyle=p.c; c.fillRect(-p.w/2,-p.h/2,p.w,p.h); c.restore(); });
-    if(el<1500) requestAnimationFrame(frame); else cv.remove();
+      c.save(); c.globalAlpha=Math.max(0,1-el/dur); c.translate(p.x,p.y); c.rotate(p.r); c.fillStyle=p.c; c.fillRect(-p.w/2,-p.h/2,p.w,p.h); c.restore(); });
+    if(el<dur) requestAnimationFrame(frame); else cv.remove();
   })(t0);
 }
 function applyStatic(){
@@ -5081,7 +5086,7 @@ function renderQzPlay(){ if(!QZ.q) return; const q=QZ.q, fr=S.settings.lang==="f
   $("qzNext").textContent=t("qzNextT"); if(midiReady && S.settings.midiC!==false){ const kb=document.createElement("kbd"); kb.textContent=CNAME(); $("qzNext").appendChild(kb); }
 }
 function qzFinish(){ qzClearTimers(); QZ.view="end"; const me=QZ.players.filter(p=>!p.bot&&!p.remote);
-  if(me.length===1 && me[0].ok) addXP(Math.min(60,me[0].ok*3)); save(); renderQuiz(); if(QZ.players.some(p=>p.ok) && uiSound()) setTimeout(confetti,200); }
+  if(me.length===1 && me[0].ok) addXP(Math.min(60,me[0].ok*3)); save(); renderQuiz(); if(QZ.players.some(p=>p.ok) && uiSound()) setTimeout(()=>confetti(),200); }
 function renderQzEnd(){ const P=QZ.players.map((p,i)=>({...p,i})).sort((a,b)=>b.score-a.score), box=$("qzPodium"); box.innerHTML="";
   const humans=QZ.players.filter(p=>!p.bot).length;
   $("qzEndT").textContent = QZ.players.length>1 ? t("qzWinner")(P[0].name) : t("qzSoloEnd")(P[0].ok,QZ.list.length);
@@ -6204,7 +6209,7 @@ function pwRender(){ const o=$("pw"); if(!o) return; const y=PW.plan==="year", a
 function payStart(plan){ const now=Date.now(), D=864e5;
   if(PAY_LIVE){ /* to come: isApp() ? native StoreKit purchase : Stripe Checkout session from a Supabase function */ return; }
   S.prem={...(S.prem||{}), plan, preview:1, trialEnd: plan==="year" ? now+7*D : 0, until: plan==="month" ? now+30*D : 0, at:now}; save();
-  PW.done=true; pwRender(); confetti&&setTimeout(confetti,120); }
+  PW.done=true; pwRender(); setTimeout(()=>confetti(),120); }
 function premRefresh(){ const hs=$("hsInv"); if(hs){ const sm=hs.querySelector("small"); if(sm) sm.textContent=t(paywallOn()?"invHubS":"invHubSF"); } const b=$("premBtn"); if(b){ b.hidden=!paywallOn() || (premUntil()>Date.now() && !(S.prem&&S.prem.trialEnd>Date.now()));
     $("premSub").textContent = S.prem&&S.prem.trialEnd>Date.now() ? t("premSubTrial")(premDays()) : t("premSub"); }
   try{ if(document.body.classList.contains("setup")) renderSetup(); }catch(e){} try{ renderPlaySongs(); }catch(e){} try{ if(RN.on&&DU.view==="lobby") duRender(); }catch(e){} try{ renderSetPrem(); }catch(e){} }
@@ -6301,7 +6306,10 @@ function fnRender(){ const g=$("gate"); if(!g||!FN.on) return; const mark=$("hom
 function fnNote(m, el){ if(!FN.on) return; const kb=$("fnKb"); const pc=((m%12)+12)%12;
   if(FN.done){ if(pc===0 && el===undefined) fnGo(); return; } // MIDI: a C again carries on
   const k = el || (kb && (kb.querySelector('[data-m="'+m+'"]') || kb.querySelector('[data-m="'+(60+pc)+'"]')));
-  if(pc===0){ FN.done=true; FN.wrong=""; fnRender(); const k2=$("fnKb").querySelector('[data-m="'+(m>=72&&m<84?72:60)+'"]'); if(k2) k2.classList.add("fn-good"); setTimeout(()=>$("fnGo")&&$("fnGo").focus(),30); try{ confetti(); }catch(e){} return; }
+  if(pc===0){ FN.done=true; FN.wrong=""; fnRender(); const k2=$("fnKb").querySelector('[data-m="'+(m>=72&&m<84?72:60)+'"]'); if(k2) k2.classList.add("fn-good"); setTimeout(()=>$("fnGo")&&$("fnGo").focus(),30);
+    // the moment (once): the prompt turns green (colour fade), the big C pops, the button rises in; confetti from the C, inside the card (the stage is under the gate)
+    const pr=$("fnPrompt"); pr.classList.remove("ok"); void pr.offsetWidth; pr.classList.add("ok","fn-win"); $("fnGo").classList.add("fn-enter");
+    try{ confetti($("gate").querySelector(".fn-card"), k2||pr, 60, 1200); }catch(e){} return; }
   FN.wrong=(S.settings.notation==="fr"?PC_FR:PC_EN)[pc]; const pr=$("fnPrompt"); if(pr){ pr.classList.add("bad"); pr.querySelector("small").textContent=t("fnWrong")(FN.wrong); }
   if(k){ k.classList.add("fn-bad"); setTimeout(()=>k.classList.remove("fn-bad"),320); } }
 function fnClose(){ FN.on=false; const g=$("gate"); if(g){ g.hidden=true; g.innerHTML=""; } document.body.classList.remove("gate-on"); startInert(); }
