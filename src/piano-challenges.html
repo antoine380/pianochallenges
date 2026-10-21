@@ -412,6 +412,7 @@ body{margin:0;padding:0;overflow:hidden}
   .hub-grid .ptile{min-height:0;padding:12px 16px;--os:80px} .hub-grid .ptile p{font-size:.8rem;line-height:1.35} .hub-grid .ptile .h3{font-size:1.5rem}
   .ptile-grid .ptile :is(.h3,.rec){max-width:calc(100% - 44px)}
   #learnTiles .ptile{--os:62px;padding-top:12px}
+  :is(#gameCards,#playCards) .ptile .h3{padding-right:calc(var(--os) - 6px)} /* the 3D object no longer hides the end of the title */
   .ptile,.ptile:hover{box-shadow:0 10px 16px -12px var(--tc),inset 0 1px 0 rgba(255,255,255,.4),inset 0 0 0 1px rgba(255,255,255,.12)}
   .gc-head{margin:0;font-size:.95rem} .gc-head small{display:none}
   .mode-h p{display:none}
