@@ -996,7 +996,15 @@ body:not(.runner-on)[data-page="games"] .stage{display:none!important}
 .pf-id .xpbar{height:8px;border-radius:999px;background:rgba(255,255,255,.25);overflow:hidden;max-width:420px} .pf-id .xpbar i{display:block;height:100%;background:var(--gold);border-radius:inherit}
 .pf-id small{font-weight:700;opacity:.9}
 .pf-head .btn{background:rgba(255,255,255,.95);color:#1b1838}
-.pf-row{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(250px,1fr);gap:14px;overflow-x:auto;scroll-snap-type:x mandatory;padding-bottom:6px;scrollbar-width:thin}
+.pf{container:pf/inline-size}
+.pf-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;padding-bottom:6px}
+@container pf (min-width:641px){ .pf-row{grid-template-columns:repeat(2,minmax(0,1fr))} } /* 2 × 2, never 3 + 1 alone */
+@container pf (min-width:940px){ .pf-row{grid-template-columns:repeat(4,minmax(0,1fr))} }
+.pf-dots{display:none}
+/* overflowing horizontal rows: fade on the edge that hides more (data-ov = "r", "l" or "lr", set by ovFade) */
+:is(.pf-row,.su-cards,.su-keys,.su-chips)[data-ov="r"]{-webkit-mask-image:linear-gradient(90deg,#000 calc(100% - 44px),transparent);mask-image:linear-gradient(90deg,#000 calc(100% - 44px),transparent)}
+:is(.pf-row,.su-cards,.su-keys,.su-chips)[data-ov="l"]{-webkit-mask-image:linear-gradient(90deg,transparent,#000 44px);mask-image:linear-gradient(90deg,transparent,#000 44px)}
+:is(.pf-row,.su-cards,.su-keys,.su-chips)[data-ov="lr"]{-webkit-mask-image:linear-gradient(90deg,transparent,#000 44px,#000 calc(100% - 44px),transparent);mask-image:linear-gradient(90deg,transparent,#000 44px,#000 calc(100% - 44px),transparent)}
 .pf-card{scroll-snap-align:start;border-radius:var(--r-lg);overflow:hidden;color:#fff;display:flex;flex-direction:column;min-height:300px;box-shadow:var(--shadow-card)}
 .pf-card h3{margin:0;padding:14px 16px 10px;font-family:var(--f-display);font-weight:700;font-size:1.1rem}
 .pf-card p{margin:0;padding:0 16px 8px;font-size:.8rem;opacity:.9}
@@ -1006,7 +1014,7 @@ body:not(.runner-on)[data-page="games"] .stage{display:none!important}
 .pf-stats li b{font-family:var(--f-display);font-size:1.2rem;font-variant-numeric:tabular-nums;white-space:nowrap}
 .pf-streak{background:#16764e}
 .pf-sh{display:flex;justify-content:space-between;gap:10px;padding:14px 16px 10px;background:#1f8a5c} .pf-sh div{display:flex;flex-direction:column} .pf-sh .r{text-align:right}
-.pf-sh b{font-weight:800;font-size:.95rem} .pf-sh small{opacity:.85;font-size:.78rem}
+.pf-sh{flex-wrap:wrap;row-gap:6px} .pf-sh b{font-weight:800;font-size:.95rem;white-space:nowrap} .pf-sh small{opacity:.85;font-size:.78rem}
 .pf-cal{padding:10px 12px 14px}
 .pf-calh{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px} .pf-calh b{text-transform:capitalize;font-weight:800;font-size:.92rem}
 .pf-calh button{border:0;background:rgba(255,255,255,.15);color:#fff;width:30px;height:30px;border-radius:50%;font-size:1.1rem;line-height:1}
@@ -1021,11 +1029,13 @@ body:not(.runner-on)[data-page="games"] .stage{display:none!important}
 .pf-journey .bar{height:7px;border-radius:999px;background:rgba(0,0,0,.18);overflow:hidden} .pf-journey .bar i{display:block;height:100%;border-radius:inherit;box-shadow:0 0 0 1px rgba(255,255,255,.4)}
 .pf-recs{background:#a9332d} .pf-recs h3{background:#c9463c}
 .pf-recs ul{overflow-y:auto;max-height:240px}
-.pf-recs li{display:flex;justify-content:space-between;gap:10px;padding:7px 16px;font-size:.84rem;font-weight:700}
-.pf-recs li b{font-variant-numeric:tabular-nums;color:#ffe27a;white-space:nowrap}
+.pf-recs li{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:baseline;gap:0 10px;padding:7px 16px;font-size:.84rem;font-weight:700}
+.pf-recs li b{font-variant-numeric:tabular-nums;color:#ffe27a;white-space:nowrap;text-align:right}
+.pf-recs li small{grid-column:2;text-align:right;font-size:.72rem;font-weight:700;opacity:.85;white-space:nowrap;font-variant-numeric:tabular-nums}
 .pf-journey p,.pf-journey h3{color:#fff}
 .pf-detail-h{margin:6px 0 0;font-family:var(--f-display);font-weight:700;font-size:1.1rem}
-@media (max-width:640px){ .pf-head{padding:12px} .pf-head .av{width:48px;height:48px} .pf-id b{font-size:1.15rem} .pf-row{grid-auto-columns:86%} }
+@media (max-width:640px){ .pf-head{padding:12px} .pf-head .av{width:48px;height:48px} .pf-id b{font-size:1.15rem} .pf-row{grid-template-columns:none;grid-auto-flow:column;grid-auto-columns:86%;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;overscroll-behavior-x:contain} .pf-row::-webkit-scrollbar{display:none}
+  .pf-dots{display:flex;justify-content:center;gap:8px;margin-top:-6px} .pf-dots button{width:8px;height:8px;padding:0;border:0;border-radius:50%;background:var(--line)} .pf-dots button[aria-current="true"]{background:var(--brand);width:20px;border-radius:4px} }
 
 /* ===== v1.4: LEARN start screen, step-by-step card ===== */
 [data-page="practice"] .picker{display:none!important}
@@ -2182,6 +2192,7 @@ body.staff-on.staff-seq .slots{display:none} #clefField[hidden]{display:none}
           <section class="pf-card pf-journey"><h3 data-i="pfJourney"></h3><p id="pfJourneySub"></p><ul id="pfJourney"></ul></section>
           <section class="pf-card pf-recs"><h3 data-i="pfRecs"></h3><p id="pfRecsSub"></p><ul id="pfRecs"></ul></section>
         </div>
+        <div class="pf-dots" id="pfDots"></div>
         <h3 class="pf-detail-h" data-i="pfDetail"></h3>
       </div>
       <div class="prog-cats" id="progCats"></div>
@@ -2380,7 +2391,7 @@ const TXT = {
     suHelpPT:"Aide progressive", suHelpPD:"Rien au départ. Si tu bloques, un indice arrive toutes les 8 s (ou avec Espace) : le degré, puis le nom, puis les touches. Les notes trouvées restent allumées et une fiche se construit pour les retenir.",
     suLabelsT:"Noms des notes sur le clavier", suCount:(n,sec)=>n===1?(sec==="prog"?"1 progression à jouer":sec==="chords"?"1 accord à jouer":"1 gamme, rejouée jusqu'à la réussir"):n+" exercices",
     ficheT:"À retenir", ficheS:(a,b)=>a+" / "+b+" notes", playSub:"Des morceaux qui tombent sur le clavier, à ton rythme. En dessous, le piano pour jouer librement.", freeK:"Jeu libre",
-    pfAch:"Tes réussites", pfJourney:"Ton parcours", pfRecs:"Tes records", pfDetail:"Détail par matière", pfLvl:"Niveau",
+    pfEloL:(g,c)=>g+" ("+c.toLowerCase()+")", pfAch:"Tes réussites", pfJourney:"Ton parcours", pfRecs:"Tes records", pfDetail:"Détail par matière", pfLvl:"Niveau",
     pfSt:["Score total","Exercices réussis","Exercices sans faute","Éléments maîtrisés","Temps de jeu total","Joué aujourd'hui"],
     pfDayS:n=>"Série : "+n+" j", pfWeekS:n=>"Semaines : "+n, pfBest:n=>"Record : "+n, pfJSub:(a,b)=>a+" éléments maîtrisés sur "+b+".", pfRSub:"Tes meilleurs scores dans les jeux et les morceaux.",
     pfMonths:["janvier","février","mars","avril","mai","juin","juillet","août","septembre","octobre","novembre","décembre"], pfDays:["L","M","M","J","V","S","D"], themeDayS:"Mode jour", themeNightS:"Mode nuit", langLbl:"Langue",
@@ -2544,7 +2555,7 @@ const TXT = {
     suHelpPT:"Step-by-step help", suHelpPD:"Nothing at first. If you get stuck, a hint comes every 8 s (or with Space): the degree, then the name, then the keys. The notes you find stay lit and a card builds up to help you remember them.",
     suLabelsT:"Note names on the keys", suCount:(n,sec)=>n===1?(sec==="prog"?"1 progression to play":sec==="chords"?"1 chord to play":"1 scale, replayed until you nail it"):n+" exercises",
     ficheT:"To remember", ficheS:(a,b)=>a+" / "+b+" notes", playSub:"Songs that fall onto the keyboard, at your own pace. Below, the piano for free play.", freeK:"Free play",
-    pfAch:"Your achievements", pfJourney:"Your journey", pfRecs:"Your records", pfDetail:"Detail by topic", pfLvl:"Level",
+    pfEloL:(g,c)=>g+" ("+c.toLowerCase()+")", pfAch:"Your achievements", pfJourney:"Your journey", pfRecs:"Your records", pfDetail:"Detail by topic", pfLvl:"Level",
     pfSt:["Total score","Exercises passed","Perfect exercises","Items mastered","Total time played","Played today"],
     pfDayS:n=>"Streak: "+n+" d", pfWeekS:n=>"Weeks: "+n, pfBest:n=>"Best: "+n, pfJSub:(a,b)=>a+" of "+b+" items mastered.", pfRSub:"Your best scores in games and songs.",
     pfMonths:["January","February","March","April","May","June","July","August","September","October","November","December"], pfDays:["M","T","W","T","F","S","S"], themeDayS:"Day mode", themeNightS:"Night mode", langLbl:"Language",
@@ -2572,6 +2583,10 @@ const nameErr = s => { const v=String(s==null?"":s).trim(); return BIDI_1.test(v
 function avFill(el,photo,ci){ el.textContent=""; const svg=()=>{ el.innerHTML=avatarSVG(Math.max(0,Math.min(9,ci|0))); };
   if(!(photo && /^https:\/\//.test(photo))){ svg(); return el; }
   const img=document.createElement("img"); img.className="photo"; img.alt=""; img.referrerPolicy="no-referrer"; img.addEventListener("error",svg,{once:true}); img.src=photo; el.appendChild(img); return el; }
+// a horizontal row that scrolls: fade the edge(s) that hide content, updated on scroll and resize
+function ovFade(el,cb){ if(!el) return; const up=()=>{ const max=el.scrollWidth-el.clientWidth, x=Math.abs(el.scrollLeft); const v=max>2 ? (x>2?"l":"")+(x<max-2?"r":"") : ""; if(v) el.dataset.ov=v; else delete el.dataset.ov; if(cb) cb(el); };
+  if(!el._ov){ el._ov=up; el.addEventListener("scroll",()=>requestAnimationFrame(up),{passive:true}); OV_ROWS.add(el); } else el._ov=up; requestAnimationFrame(up); }
+const OV_ROWS=new Set(); addEventListener("resize",()=>OV_ROWS.forEach(el=>el._ov&&el._ov()));
 const ordFr = n => fmtN(n)+(n===1?"er":"e"), ordEn = n => fmtN(n)+((n%100>=11&&n%100<=13)?"th":["th","st","nd","rd"][n%10]||"th");
 
 // ---------- Music theory ----------
@@ -4762,22 +4777,29 @@ function renderFiche(){
   let mAll=0,nAll=0; const jr=secs.map(sec=>{ let m=0,n=0; try{ typeList(sec).forEach(ty=>{ const r=rootsOf(sec,ty.id); n+=r.length; m+=r.filter(k=>tileMast(sec,ty.id,k)>=3).length; }); }catch(e){} mAll+=m; nAll+=n; return [sec,m,n]; });
   const ss=S.secStats||{}, sum=k=>Object.values(ss).reduce((a,v)=>a+((v&&v[k])|0),0);
   const play=S.playSec||{}, tot=Object.values(play).reduce((a,v)=>a+(v|0),0);
-  const L=t("pfSt"), vals=[S.xp.toLocaleString(S.settings.lang==="fr"?"fr-FR":"en-GB")+" XP",sum("ok"),sum("perfect"),mAll,fmtDur(tot),fmtDur(play[dayStr()]|0)], SC=["#0e7490","#8a3fd1","#6a3fd1","#b4461a","#c9463c","#1f7a52"];
+  const L=t("pfSt"), vals=[fmtN(S.xp)+" XP",fmtN(sum("ok")),fmtN(sum("perfect")),fmtN(mAll),fmtDur(tot),fmtDur(play[dayStr()]|0)], SC=["#0e7490","#8a3fd1","#6a3fd1","#b4461a","#c9463c","#1f7a52"];
   const ul=$("pfStats"); ul.innerHTML=""; L.forEach((l,i)=>{ const li2=document.createElement("li"); li2.style.background=SC[i]; li2.innerHTML="<span></span><b></b>"; li2.firstChild.textContent=l; li2.lastChild.textContent=vals[i]; ul.appendChild(li2); });
-  const st=streaks(); $("pfDay").textContent=t("pfDayS")(st.cur); $("pfDayBest").textContent=t("pfBest")(st.best); $("pfWeek").textContent=t("pfWeekS")(st.wc); $("pfWeekBest").textContent=t("pfBest")(st.wb);
+  const st=streaks(); $("pfDay").textContent=t("pfDayS")(fmtN(st.cur)); $("pfDayBest").textContent=t("pfBest")(fmtN(st.best)); $("pfWeek").textContent=t("pfWeekS")(fmtN(st.wc)); $("pfWeekBest").textContent=t("pfBest")(fmtN(st.wb));
   if(!pfMonth){ const d=new Date(); pfMonth=new Date(d.getFullYear(),d.getMonth(),1); }
   $("pfMonth").textContent=t("pfMonths")[pfMonth.getMonth()]+" "+pfMonth.getFullYear();
   const cal=$("pfCal"); cal.innerHTML=t("pfDays").map(x=>"<i>"+x+"</i>").join(""); const first=(pfMonth.getDay()+6)%7, nd=new Date(pfMonth.getFullYear(),pfMonth.getMonth()+1,0).getDate(), today=dayStr();
   for(let i=0;i<first;i++) cal.appendChild(document.createElement("span"));
   for(let d=1;d<=nd;d++){ const k=dayStr(new Date(pfMonth.getFullYear(),pfMonth.getMonth(),d)), e=document.createElement("span"); e.textContent=d; if(st.set.has(k)) e.className="on"; if(k===today) e.classList.add("today"); cal.appendChild(e); }
   $("pfJourneySub").textContent=t("pfJSub")(mAll,nAll); const ju=$("pfJourney"); ju.innerHTML="";
-  jr.forEach(([sec,m,n])=>{ const li2=document.createElement("li"); li2.innerHTML='<span class="pj-t"><b></b><span class="pj-n"></span></span><span class="bar"><i></i></span>'; li2.querySelector("b").textContent=t(NM[sec]); li2.querySelector(".pj-n").textContent=m+" / "+n; const bi=li2.querySelector(".bar i"); bi.style.width=(n?m/n*100:0)+"%"; bi.style.background=COL[sec]; ju.appendChild(li2); });
+  jr.forEach(([sec,m,n])=>{ const li2=document.createElement("li"); li2.innerHTML='<span class="pj-t"><b></b><span class="pj-n"></span></span><span class="bar"><i></i></span>'; li2.querySelector("b").textContent=t(NM[sec]); li2.querySelector(".pj-n").textContent=fmtN(m)+" / "+fmtN(n); const bi=li2.querySelector(".bar i"); bi.style.width=(n?m/n*100:0)+"%"; bi.style.background=COL[sec]; ju.appendChild(li2); });
   $("pfRecsSub").textContent=t("pfRSub"); const ru=$("pfRecs"); ru.innerHTML=""; let cb={}, cg={}; try{ cb=JSON.parse(localStorage.getItem("clavio:best")||"{}")||{}; cg=JSON.parse(localStorage.getItem("clavio:gbest")||"{}")||{}; }catch(e){}
-  const rows=[]; t("games").forEach(([title,,id])=>{ if(id) rows.push([title,((S.gameBest||{})[id]||(id==="runner"?S.runnerBest:0)||0)]); });
-  Object.entries(S.elo||{}).filter(([,e])=>e&&e.n).forEach(([k,e])=>{ const [g,c]=k.split("-"); if(DU_GAMES.includes(g)) rows.push([duGameName(g)+" · "+t(c==="notes"?"duNotes":"duChords")+" · ELO", e.r+(eloProv(e)?"?":"")+" ("+t("duRecord")(e.w,e.d,e.l)+")"]); });
-  t("playGames").forEach(([title,,id])=>rows.push([title,cg[id]|0])); const fr=S.settings.lang==="fr"; SONGS_H.forEach(([id,tf,te])=>rows.push([fr?tf:te,"★".repeat(cb[id]|0)+"☆".repeat(3-(cb[id]|0))]));
-  rows.forEach(([a,b])=>{ const li2=document.createElement("li"); li2.innerHTML="<span></span><b></b>"; li2.firstChild.textContent=a; li2.lastChild.textContent=b; ru.appendChild(li2); });
+  const rows=[]; t("games").forEach(([title,,id])=>{ if(id) rows.push([title,fmtN((S.gameBest||{})[id]||(id==="runner"?S.runnerBest:0)||0)]); });
+  Object.entries(S.elo||{}).filter(([,e])=>e&&e.n).forEach(([k,e])=>{ const [g,c]=k.split("-"); if(DU_GAMES.includes(g)) rows.push([t("pfEloL")(duGameName(g),t(c==="notes"?"duNotes":"duChords")), "ELO "+fmtN(e.r)+(eloProv(e)?"?":""), t("duRecord")(fmtN(e.w),fmtN(e.d),fmtN(e.l))]); });
+  t("playGames").forEach(([title,,id])=>rows.push([title,fmtN(cg[id]|0)])); const fr=S.settings.lang==="fr"; SONGS_H.forEach(([id,tf,te])=>rows.push([fr?tf:te,"★".repeat(cb[id]|0)+"☆".repeat(3-(cb[id]|0))]));
+  rows.forEach(([a,b,c])=>{ const li2=document.createElement("li"); li2.innerHTML="<span></span><b></b>"+(c?"<small></small>":""); li2.firstChild.textContent=a; li2.children[1].textContent=b; if(c) li2.children[2].textContent=c; ru.appendChild(li2); });
+  pfDotsInit();
 }
+// phone: the 4 cards are a swipeable row, with a fade on the edge and one dot per card
+function pfDotsInit(){ const row=document.querySelector("#progFiche .pf-row"), dots=$("pfDots"); if(!row||!dots) return; const cards=[...row.children];
+  if(dots.children.length!==cards.length){ dots.innerHTML=""; cards.forEach((c,i)=>{ const b=document.createElement("button"); b.type="button"; b.setAttribute("aria-label",(c.querySelector("h3")||{}).textContent||t("acctStreak"));
+    b.onclick=()=>row.scrollTo({left:c.offsetLeft-row.offsetLeft,behavior:matchMedia("(prefers-reduced-motion: reduce)").matches?"auto":"smooth"}); dots.appendChild(b); }); }
+  cards.forEach((c,i)=>{ const b=dots.children[i]; if(b) b.setAttribute("aria-label",(c.querySelector("h3")||{}).textContent||t("acctStreak")); });
+  ovFade(row,()=>{ const w=cards[0]?cards[0].offsetWidth+14:1, i=Math.max(0,Math.min(cards.length-1,Math.round(row.scrollLeft/w))); [...dots.children].forEach((b,j)=>b.setAttribute("aria-current",j===i)); }); }
 $("pfPrev").addEventListener("click",()=>{ pfMonth=new Date(pfMonth.getFullYear(),pfMonth.getMonth()-1,1); renderFiche(); });
 $("pfNext").addEventListener("click",()=>{ pfMonth=new Date(pfMonth.getFullYear(),pfMonth.getMonth()+1,1); renderFiche(); });
 $("pfLevels").addEventListener("click",()=>openChars());
