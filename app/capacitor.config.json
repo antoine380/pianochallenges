@@ -5,7 +5,7 @@
   "backgroundColor": "#15122e",
   "ios": {
     "contentInset": "never",
-    "scrollEnabled": true,
+    "scrollEnabled": false,
     "allowsLinkPreview": false,
     "preferredContentMode": "mobile"
   },
