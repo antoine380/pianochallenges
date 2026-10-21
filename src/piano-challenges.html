@@ -1379,7 +1379,7 @@ body.du-lob #runner{flex:1 1 auto}
 .ntf-ic{width:46px;height:46px;flex:none;border-radius:14px;background:var(--surface-2);display:grid;place-items:center;padding:4px} .ntf-ic svg{width:100%;height:100%}
 .ntf-it[data-cat="social"] .ntf-ic{background:color-mix(in srgb,#2563eb 14%,var(--surface))} .ntf-it[data-cat="progress"] .ntf-ic{background:color-mix(in srgb,#7a5bf5 14%,var(--surface))}
 .ntf-it[data-cat="remind"] .ntf-ic{background:color-mix(in srgb,#ff8a2a 16%,var(--surface))} .ntf-it[data-cat="news"] .ntf-ic{background:color-mix(in srgb,#26805a 14%,var(--surface))}
-.ntf-tx{flex:1;min-width:0;display:flex;flex-direction:column;gap:1px} .ntf-tx b{font-weight:800} .ntf-tx span{color:var(--muted);font-size:.88rem} .ntf-tx small{color:var(--muted);font-size:.74rem;font-weight:700}
+.ntf-tx{flex:1;min-width:0;display:flex;flex-direction:column;gap:1px} .ntf-tx b{font-weight:800;overflow-wrap:anywhere} .ntf-tx span{color:var(--muted);font-size:.88rem;overflow-wrap:anywhere;display:-webkit-box;-webkit-line-clamp:2;line-clamp:2;-webkit-box-orient:vertical;overflow:hidden} .ntf-tx small{color:var(--muted);font-size:.74rem;font-weight:700}
 .ntf-go{flex:none;padding:7px 14px}
 .ntf-dot{position:absolute;right:12px;top:50%;width:10px;height:10px;border-radius:50%;background:#ff5a6e;transform:translateY(-50%);display:none} .ntf-it.unread .ntf-dot{display:block}
 .ntf-empty{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;text-align:center;padding:30px;flex:1} .ntf-empty p{margin:0;color:var(--muted)}
@@ -4617,7 +4617,7 @@ function renderNotifs(){ const st=ntfStore(), ul=$("ntfList"); ul.innerHTML="";
   let g=""; L.forEach(n=>{ const gg=ntfGroup(n.t); if(gg!==g){ g=gg; const h=document.createElement("li"); h.className="ntf-g"; h.textContent=t(gg); ul.appendChild(h); }
     const li=document.createElement("li"); li.className="ntf-it"+(n.read?"":" unread"); li.dataset.cat=n.cat;
     li.innerHTML='<span class="ntf-ic"></span><span class="ntf-tx"><b></b><span></span><small></small></span>'+(n.act?'<button class="btn ntf-go" type="button"></button>':'')+'<i class="ntf-dot" aria-hidden="true"></i>';
-    li.querySelector(".ntf-ic").innerHTML=(OBJ[NTF_ICON[n.type]]||OBJ.bell)(); li.querySelector("b").textContent=n.ti; li.querySelector(".ntf-tx span").textContent=n.tx; li.querySelector("small").textContent=ntfAgo(n.t);
+    li.querySelector(".ntf-ic").innerHTML=(OBJ[NTF_ICON[n.type]]||OBJ.bell)(); li.querySelector("b").textContent=n.ti; li.querySelector(".ntf-tx span").textContent=n.tx; li.querySelector(".ntf-tx span").title=n.tx||""; li.querySelector("small").textContent=ntfAgo(n.t);
     if(n.act){ const b=li.querySelector(".ntf-go"); b.textContent=t(n.act.l||"ntfOpen"); b.onclick=e=>{ e.stopPropagation(); n.read=true; save(); ntfBadge(); ntfDo(n.act); }; }
     li.onclick=()=>{ if(!n.read){ n.read=true; save(); ntfBadge(); renderNotifs(); } };
     ul.appendChild(li); });
@@ -6300,15 +6300,19 @@ function shareCard(k,big,sub,col){ return new Promise(res=>{ try{ const c=docume
     const bg=g.createLinearGradient(0,0,1080,1080); bg.addColorStop(0,"#2b1f74"); bg.addColorStop(1,col||"#7a5bf5"); g.fillStyle=bg; g.fillRect(0,0,1080,1080);
     g.globalAlpha=.18; g.fillStyle="#fff"; for(let i=0;i<14;i++){ g.fillRect(60+i*70,820,60,200); } g.globalAlpha=.3; g.fillStyle="#15122e"; for(let i=0;i<14;i++){ if([2,6,9,13].includes(i)) continue; g.fillRect(105+i*70,820,30,120); } g.globalAlpha=1;
     g.fillStyle="#ffd77a"; g.font="800 40px Nunito, system-ui, sans-serif"; g.fillText(t("shareImgK").toUpperCase(),80,130);
-    g.fillStyle="#fff"; g.font="700 64px Fredoka, Nunito, system-ui, sans-serif"; wrapTxt(g,k,80,230,920,72);
-    g.font="700 260px Fredoka, Nunito, system-ui, sans-serif"; g.fillText(big,72,560);
+    g.fillStyle="#fff"; g.font="700 64px Fredoka, Nunito, system-ui, sans-serif"; wrapTxt(g,k,80,230,920,72,2);
+    let fs=260; g.font="700 "+fs+"px Fredoka, Nunito, system-ui, sans-serif"; while(g.measureText(big).width>920 && fs>80){ fs-=10; g.font="700 "+fs+"px Fredoka, Nunito, system-ui, sans-serif"; } g.fillText(big,72,560);
     g.font="700 48px Nunito, system-ui, sans-serif"; g.fillStyle="#e9e4ff"; wrapTxt(g,sub,80,650,920,58);
     g.font="800 40px Nunito, system-ui, sans-serif"; g.fillStyle="#fff"; g.fillText(t("shareImgCta"),80,790);
     c.toBlob(b=>res(b?new File([b],"piano-challenges.png",{type:"image/png"}):null),"image/png"); }catch(e){ res(null); } }); }
-function wrapTxt(g,s,x,y,w,lh){ const ws=String(s).split(" "); let line=""; ws.forEach(word=>{ const tt=line?line+" "+word:word; if(g.measureText(tt).width>w && line){ g.fillText(line,x,y); y+=lh; line=word; } else line=tt; }); if(line) g.fillText(line,x,y); }
-async function shareEnd(g,good,n){ const lbl=g.label||t("endTitle"), file=await shareCard(lbl,good+" / "+n,t("shareImgEnd"),"#c9463c");
+function wrapTxt(g,s,x,y,w,lh,max){ const lines=[]; let line=""; String(s).split(" ").forEach(word=>{ const tt=line?line+" "+word:word; if(g.measureText(tt).width>w && line){ lines.push(line); line=word; } else line=tt; }); if(line) lines.push(line);
+  // a word wider than the card (no space to break on) is cut by grapheme
+  const fit=l=>{ if(g.measureText(l).width<=w) return l; let n=gLen(l); while(n>1 && g.measureText(gCut(l,n)+"…").width>w) n--; return gCut(l,n)+"…"; };
+  let out=lines.map(fit); if(max && out.length>max){ out=out.slice(0,max); let l=lines[max-1]; while(l && g.measureText(l+"…").width>w) l=gCut(l,gLen(l)-1); out[max-1]=(l||"")+"…"; }
+  out.forEach((l,i)=>g.fillText(l,x,y+i*lh)); }
+async function shareEnd(g,good,n){ const lbl=g.label||t("endTitle"), file=await shareCard(lbl,fmtN(good)+" / "+fmtN(n),t("shareImgEnd"),"#c9463c");
   shareIt({text:t("shareEnd")(good,n,lbl),url:refLink(),file}); }
-async function shareDuel(){ const r=DU.res, o=DU.opp; if(!r||!o) return; const gn=duGameName(), w=r.res, file=await shareCard(gn+" · "+(o.name||""),r.me+" – "+r.opp,(t("shareImgDu")[w]||"")+(r.elo?" · ELO "+r.elo.after:""),"#26805a");
+async function shareDuel(){ const r=DU.res, o=DU.opp; if(!r||!o) return; const gn=duGameName(), w=r.res, file=await shareCard(gn+" · "+pName(o.name),fmtN(r.me)+" – "+fmtN(r.opp),(t("shareImgDu")[w]||"")+(r.elo?" · ELO "+fmtN(r.elo.after):""),"#26805a");
   shareIt({text:t("shareDu")(w,gn,r.me,r.opp,o.name||"?"),url:refLink(),file}); }
 // a friend's link: remembered for the sign-up (the server credits both accounts)
 (()=>{ try{ const rf=new URLSearchParams(location.search).get("ref"); if(rf && /^p[a-z0-9]{8}$/.test(rf) && rf!==S.netId && !S.refBy){ S.refBy=rf; save(); } }catch(e){} })();
