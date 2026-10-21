@@ -63,7 +63,7 @@ export async function newPage(browser, {state=null, midi=true, tz=null, viewport
 
 // état de base : onboarding fait, interaction = écran (ou midi), tout débloqué si demandé
 export function baseState({input='screen', unlockAll=true, delay=0, lang='fr', notation='fr', extra={}, settings={}}={}){
-  return { xp:0, mastery:{}, stats:{ok:0,perfect:0,revealed:0,errors:0}, streak:{days:0,last:''}, langV2:true, secStats:{}, srs:{}, daily:{}, section:'scales', introSeen:{scales:1,chords:1,harmony:1,prog:1,ear:1,games:1,daily:1},
+  return { xp:0, mastery:{}, stats:{ok:0,perfect:0,revealed:0,errors:0}, streak:{days:0,last:''}, langV2:true, gate:'guest', onb:{done:1}, tourDone:1, secStats:{}, srs:{}, daily:{}, section:'scales', introSeen:{scales:1,chords:1,harmony:1,prog:1,ear:1,games:1,daily:1},
     settings:{ lang, notation, mode:'suite', delay, dir:'up', octave:true, labels:true, midiSound:false, midiC:true, autoNext:false, unlockAll, input,
       types:['major'], view:'major', ctypes:['maj'], cview:'maj', invs:[0], htypes:['maj'], hview:'maj', hdegs:[0,1,2,3,4,5,6], ptypes:['p145','pop'], pview:'pop', vl:false,
       etypes:['chord','int'], eview:'chord', earV2:true, diffV2:true, midiV2:true, scMode:'notes', sc7:false, gameLen:10, ...settings },

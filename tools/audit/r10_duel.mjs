@@ -8,7 +8,7 @@ const FAKE_RT = /const FAKE_RT = `([\s\S]*?)`;/.exec(fs.readFileSync(new globalT
 const fails = []; const check = (n, ok, d) => { console.log((ok ? 'OK   ' : 'FAIL ') + n + (d ? ' — ' + JSON.stringify(d) : '')); if (!ok) fails.push(n); };
 const seed = name => `(()=>{ try{ if(sessionStorage.getItem('seeded')) return; sessionStorage.setItem('seeded','1');
   localStorage.setItem('memo-gammes-v1', JSON.stringify({settings:{lang:'fr',notation:'fr',input:'screen',earV2:true,diffV2:true,midiV2:true,uiSound:false,quiz:{netName:${JSON.stringify(name)}}},
-    langV2:true,introSeen:{chords:1,scales:1,harmony:1,prog:1,ear:1,games:1,daily:1,section:1},seenTypes:[],stats:{},secStats:{},xp:500,xpDays:{},streak:{days:0}})); }catch(e){} })();`;
+    langV2:true,gate:'guest',onb:{done:1},tourDone:1,introSeen:{chords:1,scales:1,harmony:1,prog:1,ear:1,games:1,daily:1,section:1},seenTypes:[],stats:{},secStats:{},xp:500,xpDays:{},streak:{days:0}})); }catch(e){} })();`;
 const b = await chromium.launch(process.env.PW_CHROMIUM ? { executablePath: process.env.PW_CHROMIUM } : {});
 const ctx = await b.newContext({ viewport: { width: 1024, height: 768 } });
 await ctx.addInitScript(FAKE_RT);

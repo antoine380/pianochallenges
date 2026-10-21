@@ -82,6 +82,8 @@ export async function launch(opts = {}) {
 export async function closeOnboarding(page, input = 'midi') {
   for (let i = 0; i < 12; i++) {
     await page.waitForTimeout(400);
+    // start screen, onboarding questions and tour (Oct 2026): continue as a guest and skip
+    for (const sel of ['#gateGuest', '#onbSkip', '#tourX']) if (await page.isVisible(sel)) { await page.click(sel); await page.waitForTimeout(350); }
     const inVis = await page.isVisible('#inputModal');
     if (inVis) {
       const idx = { screen: 0, midi: 1, mic: 2 }[input] ?? 0;
@@ -99,7 +101,7 @@ export async function closeOnboarding(page, input = 'midi') {
         await page.waitForTimeout(250);
       }
     }
-    const any = await page.evaluate(() => ['inputModal', 'welcomeModal', 'helpModal', 'introModal', 'midiModal'].some(id => { const e = document.getElementById(id); return e && !e.hidden; }));
+    const any = await page.evaluate(() => ['inputModal', 'welcomeModal', 'helpModal', 'introModal', 'midiModal', 'gate', 'onb', 'tour'].some(id => { const e = document.getElementById(id); return e && !e.hidden; }));
     if (!any) break;
   }
   if (await page.isVisible('#lockPanel')) await page.click('#lockGuest');

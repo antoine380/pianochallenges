@@ -21,7 +21,7 @@ OPEN={"help":"document.getElementById('helpBtn').click()","levels":"document.get
  "mode":"document.getElementById('inChip').click()","midi":"document.getElementById('midiCfg').click()"}
 CLOSE=["escape","x","backdrop","finish"]
 SEED="""(()=>{try{const S={settings:{lang:"fr",notation:"fr",input:"screen",earV2:true,diffV2:true,midiV2:true},langV2:true,
- introSeen:{chords:1,scales:1,harmony:1,prog:1,ear:1,games:1,daily:1,section:1},seenTypes:[],stats:{},secStats:{},xp:0,xpDays:{},streak:{days:0}};
+ gate:"guest",onb:{done:1},tourDone:1,introSeen:{chords:1,scales:1,harmony:1,prog:1,ear:1,games:1,daily:1,section:1},seenTypes:[],stats:{},secStats:{},xp:0,xpDays:{},streak:{days:0}};
  localStorage.setItem("memo-gammes-v1",JSON.stringify(S));}catch(e){}})();"""
 async def main():
   async with async_playwright() as p:

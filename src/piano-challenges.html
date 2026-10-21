@@ -1383,6 +1383,98 @@ body.du-lob #runner{flex:1 1 auto}
 
 @media (max-width:640px){ .ntf-pane .ph-title{display:none} .ntf-pane .pane-head{gap:8px} .ntf-pane .pane-head>div{display:none} .ntf-card{flex:none;max-height:calc(100dvh - 230px)} }
 @media (max-height:420px){ .ntf-pane .pane-head>div{display:none} .ntf-pane .pane-head{justify-content:flex-end;margin-top:-4px} .ntf-pane .pane-head .btn{padding:6px 12px} .ntf-pane{gap:8px} .ntf-card{flex:none;max-height:calc(100dvh - 150px)} .ntf-mailhint{display:none} }
+
+/* ---------- start: sign-in screen, onboarding, guided tour ---------- */
+body.gate-on{overflow:hidden}
+.gate,.onb{position:fixed;inset:0;z-index:9000;display:grid;place-items:center;padding:20px;overflow:auto;
+  background:radial-gradient(1200px 700px at 15% 10%,color-mix(in srgb,#8b6cff 30%,transparent),transparent 60%),radial-gradient(900px 600px at 90% 90%,color-mix(in srgb,#ff5a6e 18%,transparent),transparent 60%),var(--bg)}
+.gate[hidden],.onb[hidden],.tour[hidden]{display:none}
+.gt-card{width:min(1120px,100%);height:min(740px,calc(100dvh - 40px));display:grid;grid-template-columns:minmax(360px,440px) 1fr;background:#1b1838;border-radius:36px;padding:12px;box-shadow:0 40px 80px -30px rgba(20,12,60,.6)}
+.gt-form{position:relative;z-index:2;background:var(--surface);border-radius:28px;padding:24px 34px;display:flex;flex-direction:column;gap:12px;overflow:auto;scrollbar-width:none}
+.gt-top{display:flex;align-items:center;justify-content:space-between}
+.gt-logo{display:flex;align-items:center;gap:10px} .gt-logo svg{width:38px;height:38px} .gt-logo b{font-family:var(--f-display);font-weight:700;font-size:1.2rem}
+.gt-lang{border:0;background:var(--surface-2);color:var(--ink);font-weight:800;border-radius:999px;padding:6px 12px}
+.gt-h{margin:6px 0 0;font-family:var(--f-display);font-weight:700;font-size:2rem;line-height:1.08;text-align:center}
+.gt-tabs{align-self:center;flex:none} .gt-tabs button{white-space:nowrap;padding:8px 16px}
+.gt-f{display:flex;flex-direction:column;gap:10px}
+.gt-in{width:100%;box-sizing:border-box;border:2px solid var(--line);background:var(--surface);color:var(--ink);border-radius:999px;padding:13px 20px;font-size:1rem;text-align:center;transition:border-color .15s,box-shadow .15s}
+.gt-in:focus{outline:none;border-color:#7a5bf5;box-shadow:0 0 0 4px color-mix(in srgb,#7a5bf5 20%,transparent)}
+.gt-pw{position:relative} .gt-pw .gt-in{padding-right:48px} .gt-eye{position:absolute;right:10px;top:50%;transform:translateY(-50%);border:0;background:none;color:var(--muted);width:34px;height:34px;display:grid;place-items:center}
+.gt-eye svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.8}
+.gt-ok{display:flex;align-items:center;justify-content:center;gap:10px;font-size:.88rem;font-weight:700} .gt-ok a{color:#7a5bf5}
+.gt-go{border:0;border-radius:999px;padding:14px 20px;font-family:var(--f-display);font-weight:700;font-size:1.05rem;letter-spacing:.02em;color:#fff;cursor:pointer;
+  background:linear-gradient(180deg,#a48bff,#6a4bf0);box-shadow:inset 0 2px 0 rgba(255,255,255,.4),inset 0 -4px 0 rgba(40,20,120,.35),0 14px 24px -12px #6a4bf0;transition:transform .12s}
+.gt-go:hover:not(:disabled){transform:translateY(-2px)} .gt-go:disabled{opacity:.55;cursor:default}
+.gt-link{border:0;background:none;color:#7a5bf5;font-weight:800;font-size:.86rem;cursor:pointer;align-self:center;padding:4px}
+.gt-msg{margin:0;text-align:center;font-size:.86rem;font-weight:700;min-height:0} .gt-msg:empty{display:none} .gt-msg.err{color:var(--bad)} .gt-msg.ok{color:#26805a}
+.gt-note,.gt-wait{margin:0;text-align:center;color:var(--muted);font-size:.9rem}
+.gt-or{display:flex;align-items:center;gap:10px;color:var(--muted);font-size:.8rem;font-weight:800;text-transform:uppercase} .gt-or::before,.gt-or::after{content:"";flex:1;height:1px;background:var(--line)}
+.gt-soc{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px} .gt-google{grid-column:1/-1}
+.gt-s{display:flex;align-items:center;justify-content:center;gap:8px;border:0;border-radius:999px;padding:11px 8px;font-weight:800;font-size:.9rem;cursor:pointer;box-shadow:inset 0 -3px 0 rgba(0,0,0,.12)}
+.gt-s svg{width:18px;height:18px;flex:none} .gt-s span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.gt-google{background:var(--surface-2);color:var(--ink)} .gt-apple{background:#111;color:#fff} .gt-fb{background:#1877f2;color:#fff} .gt-s:disabled{opacity:.5}
+.gt-guest{margin-top:auto;display:flex;align-items:center;justify-content:center;gap:8px;border:2px dashed var(--line);background:none;color:var(--ink);border-radius:999px;padding:11px;font-weight:800;cursor:pointer}
+.gt-guest svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round} .gt-guest:hover{border-color:#7a5bf5;color:#7a5bf5}
+/* the art */
+.gt-art{position:relative;overflow:hidden;border-radius:0 26px 26px 0;margin-left:-30px;background:radial-gradient(700px 500px at 60% 40%,#3b2a8f,#1b1446 55%,#0f0b2a);color:#fff}
+.gt-glow{position:absolute;inset:0;background:radial-gradient(260px 200px at 65% 70%,rgba(255,201,74,.25),transparent 70%),radial-gradient(300px 260px at 25% 25%,rgba(139,108,255,.4),transparent 70%)}
+.gt-art::after{content:"";position:absolute;inset:0;background-image:radial-gradient(circle,rgba(255,255,255,.55) 1px,transparent 1.5px);background-size:46px 46px;opacity:.18}
+.gt-o{position:absolute;width:110px;filter:drop-shadow(0 18px 24px rgba(0,0,0,.45));animation:gtFloat 6s ease-in-out infinite} .gt-o svg{width:100%;height:auto;display:block}
+.gt-o.o1{left:10%;top:12%;width:120px} .gt-o.o2{right:8%;top:8%;width:100px;animation-delay:-2s} .gt-o.o3{right:12%;bottom:12%;width:120px;animation-delay:-4s} .gt-o.o4{left:12%;bottom:10%;width:120px;animation-delay:-1s} .gt-o.o5{left:46%;top:6%;width:80px;animation-delay:-3s}
+@keyframes gtFloat{50%{transform:translateY(-12px) rotate(-3deg)}}
+.gt-hero{position:absolute;left:50%;top:56%;width:min(220px,30%);transform:translate(-50%,-50%);filter:drop-shadow(0 30px 30px rgba(0,0,0,.5));animation:gtFloat 5s ease-in-out infinite} .gt-hero svg{width:100%;height:auto}
+.gt-big{position:absolute;left:0;right:0;top:24%;text-align:center;z-index:2} .gt-big b{display:block;font-family:var(--f-display);font-weight:700;font-size:clamp(2.6rem,6vw,4.6rem);line-height:1;text-shadow:0 8px 30px rgba(0,0,0,.4)}
+.gt-big span{display:inline-block;margin-top:8px;background:#ffc94a;color:#1b1838;font-weight:800;border-radius:999px;padding:4px 14px;transform:rotate(-4deg);font-size:.95rem}
+.gt-avs{position:absolute;inset:0;z-index:1}
+.gt-av{display:inline-block;width:58px;height:58px;border-radius:50%;overflow:hidden;background:#fff;box-shadow:0 0 0 4px #ffc94a,0 12px 22px rgba(0,0,0,.4)} .gt-av svg{width:100%;height:100%;display:block}
+.gt-avs .gt-av{position:absolute;animation:gtFloat 7s ease-in-out infinite}
+.gt-avs .gt-av:nth-child(1){left:30%;top:14%} .gt-avs .gt-av:nth-child(2){right:26%;top:20%;animation-delay:-2s} .gt-avs .gt-av:nth-child(3){left:20%;top:44%;animation-delay:-4s}
+.gt-avs .gt-av:nth-child(4){right:16%;top:46%;animation-delay:-1s} .gt-avs .gt-av:nth-child(5){left:34%;bottom:24%;animation-delay:-3s} .gt-avs .gt-av:nth-child(6){right:34%;bottom:20%;animation-delay:-5s}
+.gt-pts{position:absolute;left:0;right:0;bottom:22px;margin:0;padding:0 24px;list-style:none;display:flex;justify-content:center;gap:8px;flex-wrap:wrap;z-index:2}
+.gt-pts li{background:rgba(255,255,255,.12);backdrop-filter:blur(6px);border:1px solid rgba(255,255,255,.18);border-radius:999px;padding:6px 12px;font-size:.78rem;font-weight:700}
+@media (max-width:900px){ .gt-card{grid-template-columns:1fr;height:auto;max-height:none;min-height:min(740px,calc(100dvh - 40px))} .gt-art{display:none} .gt-form{padding:22px 24px} }
+@media (max-width:640px){ .gate{padding:0;place-items:stretch} .gt-card{border-radius:0;padding:0;min-height:100dvh;background:var(--surface)} .gt-form{border-radius:0;padding:16px 18px;gap:9px} .gt-h{font-size:1.55rem} .gt-in{padding:11px 16px} .gt-go{padding:12px} }
+@media (max-height:520px){ .gate{padding:0;place-items:stretch} .gt-card{grid-template-columns:1fr;border-radius:0;padding:0;height:auto;min-height:100dvh} .gt-art{display:none}
+  .gt-form{border-radius:0;display:grid;grid-template-columns:1fr 1fr;align-content:start;column-gap:24px;padding:12px 20px} .gt-top,.gt-h,.gt-tabs{grid-column:1/-1} .gt-h{font-size:1.3rem;margin:0} .gt-f{grid-row:span 4} .gt-in{padding:9px 14px} .gt-go{padding:10px} .gt-guest{margin-top:0;padding:8px} }
+/* onboarding */
+.onb-card{width:min(860px,100%);min-height:min(640px,calc(100dvh - 40px));background:var(--surface);border-radius:32px;padding:22px 30px;display:flex;flex-direction:column;gap:14px;box-shadow:0 40px 80px -30px rgba(20,12,60,.5)}
+.onb-top{display:flex;align-items:center;gap:14px} .onb-back{width:38px;height:38px;border-radius:12px;border:0;background:var(--surface-2);color:var(--ink);display:grid;place-items:center;flex:none}
+.onb-back svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
+.onb-bar{flex:1;height:10px;border-radius:999px;background:var(--surface-2);overflow:hidden} .onb-bar i{display:block;height:100%;border-radius:999px;background:linear-gradient(90deg,#a48bff,#6a4bf0);transition:width .3s}
+.onb-skip{flex:none}
+.onb-body{flex:1;display:flex;flex-direction:column;align-items:center;text-align:center;gap:6px}
+.onb-k{margin:0;font-size:.75rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:#7a5bf5} .onb-h{margin:0;font-family:var(--f-display);font-weight:700;font-size:2rem;line-height:1.1} .onb-sub{margin:0 0 10px;color:var(--muted)}
+.onb-opts{width:100%;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px} .onb-opts.six{grid-template-columns:repeat(3,minmax(0,1fr))}
+.onb-opt{position:relative;display:flex;align-items:center;gap:14px;text-align:left;border:2px solid transparent;border-radius:22px;padding:14px;background:var(--surface-2);color:var(--ink);cursor:pointer;transition:transform .12s,border-color .12s}
+.onb-opts.six .onb-opt{flex-direction:column;text-align:center;gap:8px;padding:16px 10px}
+.onb-opt:hover{transform:translateY(-2px)} .onb-opt[aria-pressed="true"]{border-color:#7a5bf5;background:color-mix(in srgb,#7a5bf5 12%,var(--surface))}
+.onb-ic{width:64px;height:64px;flex:none;display:grid;place-items:center} .onb-ic svg{width:100%;height:100%}
+.onb-ot{display:flex;flex-direction:column;gap:2px;min-width:0} .onb-ot b{font-family:var(--f-display);font-weight:700;font-size:1.12rem} .onb-ot small{color:var(--muted);font-size:.84rem}
+.onb-opt .su-tick{position:absolute;top:10px;right:10px} .onb-opt[aria-pressed="true"] .su-tick{background:#7a5bf5;box-shadow:none} .onb-opt[aria-pressed="true"] .su-tick::after{content:"";position:absolute;left:6px;top:2px;width:4px;height:9px;border:solid #fff;border-width:0 2.5px 2.5px 0;transform:rotate(45deg)}
+.onb-foot{display:flex;flex-direction:column;align-items:center;gap:6px} .onb-next{min-width:260px}
+.onb-friends{display:flex;flex-direction:column;align-items:center;gap:14px;width:100%;max-width:460px} .onb-avs{display:flex} .onb-avs .gt-av{width:72px;height:72px;margin-left:-14px} .onb-avs .gt-av:first-child{margin-left:0}
+.onb-link{display:flex;gap:8px;width:100%} .onb-link input{flex:1;min-width:0;border:2px solid var(--line);border-radius:999px;padding:10px 14px;background:var(--surface-2);color:var(--ink)} .onb-share{width:100%}
+.onb-sum{display:flex;flex-direction:column;gap:10px;width:100%;max-width:520px;text-align:left} .onb-li{display:flex;align-items:center;gap:14px;background:var(--surface-2);border-radius:18px;padding:10px 14px;font-weight:700} .onb-li .onb-ic{width:48px;height:48px}
+@media (max-width:640px){ .onb{padding:0;place-items:stretch} .onb-card{border-radius:0;min-height:100dvh;padding:14px 16px;gap:10px} .onb-h{font-size:1.45rem} .onb-opts,.onb-opts.six{grid-template-columns:1fr 1fr;gap:8px}
+  .onb-opt{flex-direction:column;text-align:center;gap:6px;padding:12px 8px} .onb-ic{width:48px;height:48px} .onb-ot b{font-size:.98rem} .onb-ot small{font-size:.76rem} .onb-next{min-width:0;width:100%} }
+@media (max-height:520px){ .onb{padding:0;place-items:stretch} .onb-card{border-radius:0;min-height:100dvh;padding:10px 16px;gap:6px} .onb-h{font-size:1.3rem} .onb-sub{margin:0 0 4px} .onb-opts.six{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .onb-opt{padding:8px 10px;gap:10px} .onb-opts.six .onb-opt{padding:8px;flex-direction:row;text-align:left} .onb-ic{width:40px;height:40px} .onb-ot small{display:none} .onb-next{padding:10px} }
+/* tour */
+.tour{position:fixed;inset:0;z-index:8500}
+.tour-hole{position:fixed;border-radius:16px;box-shadow:0 0 0 4px #ffc94a,0 0 0 9999px rgba(15,10,40,.62);transition:all .3s ease;pointer-events:none}
+.tour-tip{position:fixed;width:340px;background:var(--surface);color:var(--ink);border-radius:22px;padding:16px 18px 14px;box-shadow:0 30px 60px -20px rgba(10,6,30,.6);transition:left .3s,top .3s}
+.tour-tip::before{content:"";position:absolute;width:16px;height:16px;background:var(--surface);transform:rotate(45deg);display:none}
+.tour-tip[data-side="right"]::before{display:block;left:-7px;top:calc(50% - 8px)} .tour-tip[data-side="below"]::before{display:block;top:-7px;left:calc(50% - 8px)} .tour-tip[data-side="above"]::before{display:block;bottom:-7px;left:calc(50% - 8px)}
+.tour-x{position:absolute;top:8px;right:10px;width:30px;height:30px;border-radius:50%;border:0;background:var(--surface-2);color:var(--ink);font-size:1.2rem;line-height:1;cursor:pointer}
+.tour-k{margin:0;font-size:.72rem;font-weight:800;letter-spacing:.08em;color:#7a5bf5} .tour-tip h3{margin:2px 0 6px;font-family:var(--f-display);font-size:1.3rem}
+.tour-tip ul{margin:0 0 12px;padding-left:18px;display:flex;flex-direction:column;gap:4px;font-size:.92rem} .tour-tip li::marker{color:#7a5bf5}
+.tour-foot{display:flex;align-items:center;gap:8px} .tour-foot .gt-link{margin-right:auto;padding:0} .tour-foot .btn{padding:8px 14px}
+
+@media (max-width:900px) and (min-height:700px) and (min-width:641px){ .gt-card{grid-template-columns:1fr;grid-template-rows:300px auto;height:auto} .gt-art{display:block;grid-row:1;margin:0 0 -34px;border-radius:26px 26px 0 0} .gt-form{grid-row:2}
+  .gt-pts{display:none} .gt-o{width:84px!important} .gt-hero{top:66%;width:150px} .gt-big{top:16%} .gt-avs .gt-av{width:46px;height:46px} }
+@media (max-height:520px){ .gt-form .gt-h{display:none} .gt-tabs{justify-self:center;grid-column:1/-1} .gt-form{row-gap:8px} }
+
+@media (max-width:900px) and (min-height:700px) and (min-width:641px){ .gt-avs,.gt-o.o5{display:none} .gt-big{top:12%} }
 </style>
 
 <script>if(window.Capacitor&&window.webkit&&window.webkit.messageHandlers&&window.webkit.messageHandlers.bridge)document.documentElement.classList.add("native");</script>
@@ -1901,6 +1993,7 @@ body.du-lob #runner{flex:1 1 auto}
         </div>
       </section>
       <section class="set-sec"><h3><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 16V11a6 6 0 0 1 12 0v5l1.5 2h-15z"/><path d="M10 20.5a2.2 2.2 0 0 0 4 0"/></svg><span data-i="ntfTitle"></span></h3><div class="ntf-set" id="ntfSet"></div></section>
+      <p class="set-reset"><button class="btn" id="tourAgain" type="button" data-i="tourAgainT"></button> <button class="btn" id="onbAgain" type="button" data-i="onbAgainT"></button></p>
       <p class="set-reset"><button class="danger" id="resetBtn" type="button"></button></p>
       <p class="legal-links set-legal"><a href="/mentions-legales.html" data-i="legalNotice"></a> · <a href="/confidentialite.html" data-i="privacy"></a><br>© 2026 Antoine Bernard · <span data-i="rights"></span></p>
     </div>
@@ -2071,7 +2164,7 @@ const TXT = {
     melDown:" · descend en Mineur",
     midiBlockedMsg:"Le navigateur a refusé l'accès MIDI. Clique sur le cadenas à gauche de l'adresse pour l'autoriser, ou choisis le clavier à l'écran.",
     dailyResume:"Reprendre",
-    syncOk:x=>"Sauvegardé en ligne "+x+" ✓", syncErr:x=>"Hors ligne : dernière sauvegarde "+x+".", agoNever:"inconnue", signedOut:"Déconnecté", rights:"Tous droits réservés", themeDay:"Passer en mode jour", themeNight:"Passer en mode nuit", ntfTitle:"Notifications", ntfSub:"Tes défis, tes progrès et les nouveautés de l'app.", ntfAllReadT:"Tout marquer comme lu", ntfSetT:"Réglages", ntfAll:"Tout",
+    syncOk:x=>"Sauvegardé en ligne "+x+" ✓", syncErr:x=>"Hors ligne : dernière sauvegarde "+x+".", agoNever:"inconnue", signedOut:"Déconnecté", rights:"Tous droits réservés", themeDay:"Passer en mode jour", themeNight:"Passer en mode nuit", gtBig:"100 % gratuit", gtBigSub:"sur ton vrai piano", gtPoints:["5 matières : accords, gammes, harmonie, progressions, oreille", "Des duels en ligne avec un classement ELO", "Ton clavier MIDI, ton piano au micro ou l'écran"], gtTitleUp:"Inscris-toi et joue gratuitement", gtTitleIn:"Content de te revoir !", gtSignup:"Créer un compte", gtLogin:"Se connecter", gtName:"Ton prénom ou pseudo", gtPwd:"Mot de passe (8 caractères min.)", gtShowPwd:"Afficher le mot de passe", gtAccept:"J'accepte la", gtPrivacy:"politique de confidentialité", gtCreate:"Créer mon compte", gtSignIn:"Se connecter", gtUseCode:"Recevoir plutôt un code par e-mail", gtBackPwd:"Revenir au mot de passe", gtOtpIntro:"Entre ton e-mail : on t'envoie un code pour te connecter, sans mot de passe.", gtWith:p=>"Continuer avec "+p, gtGuest:"Continuer en invité", gtBadMail:"Cette adresse e-mail ne semble pas valide.", gtBadPwd:"Le mot de passe doit faire au moins 8 caractères.", gtNeedOk:"Accepte la politique de confidentialité pour créer ton compte.", gtConfirm:e=>"Presque fini ! Un e-mail de confirmation est parti à "+e+". Clique sur le lien, ou entre ici le code qu'il contient.", gtBadLogin:"E-mail ou mot de passe incorrect.", gtExists:"Un compte existe déjà avec cet e-mail : connecte-toi.", gtNotConfirmed:"Confirme d'abord ton adresse avec l'e-mail reçu (ou connecte-toi avec un code).", gtSoonProv:"Cette connexion arrive bientôt. Utilise Google, ton e-mail, ou continue en invité.", onbPrev:"Précédent", onbNextT:"Suivant", onbSkip:"Passer", onbStep:(i,n)=>"Question "+i+" sur "+n, onbQ_why:"Pourquoi veux-tu apprendre le piano ?", onbS_why:"Plusieurs réponses possibles.", onbQ_level:"Quel est ton niveau ?", onbS_level:"On règle les aides et ton classement de départ.", onbQ_how:"Comment vas-tu jouer ?", onbS_how:"Tu pourras changer à tout moment, en bas du menu.", onbQ_cont:"Tu veux travailler…", onbS_cont:"Les jeux, les gammes et le quiz partiront de ce choix.", onbQ_friends:"Invite tes amis", onbS_friends:"Joue en duel avec eux et comparez vos progrès au classement.", onbO_why:{"fun": ["Pour le plaisir", "Me détendre en jouant"], "songs": ["Jouer mes morceaux", "Les chansons que j'aime"], "theory": ["Comprendre la musique", "Accords, gammes, harmonie"], "accomp": ["Accompagner des chansons", "Seul ou avec des amis"], "create": ["Composer et improviser", "Créer ma musique"], "school": ["Pour mes cours", "Conservatoire, école, prof"]}, onbO_level:{"debut": ["Je débute", "Je n'ai jamais joué"], "notes": ["Je connais quelques notes", "Je trouve Do, Ré, Mi sur le clavier"], "simple": ["Je joue des morceaux simples", "Et quelques accords"], "adv": ["Je joue déjà bien", "Je veux aller plus loin"]}, onbO_how:{"midi": ["Clavier MIDI", "Branché en USB ou en Bluetooth"], "mic": ["Piano acoustique", "L'app écoute avec le micro"], "screen": ["Sur l'écran", "Je joue directement dans l'app"]}, onbO_cont:{"notes": ["Juste les notes", "Une note à la fois, pour bien démarrer"], "chords": ["Les notes et la grille d'accords", "Plus complet, pour aller plus loin"]}, onbShare:"Partager le lien", onbShareTxt:"Viens jouer du piano avec moi sur Piano Challenges !", onbLater:"Plus tard", onbDoneK:"C'est prêt", onbDoneH:"Ton programme est prêt", onbDoneSub:"On a réglé l'app pour toi. Tu peux tout changer dans Réglages.", onbTour:"Découvrir l'app", onbNoTour:"Passer la présentation", onbSumLevel:{"debut": "Aides activées : touches allumées, noms des notes et doigtés.", "notes": "Aide progressive, noms des notes et doigtés activés.", "simple": "Aide progressive activée, sans les noms des notes.", "adv": "Tous les exercices sont débloqués, sans aide."}, onbSumHow:{"midi": "Ton clavier MIDI sera détecté dès que tu le branches.", "mic": "L'app écoutera ton piano avec le micro.", "screen": "Tu joues sur le clavier à l'écran."}, onbSumCont:{"notes": "Jeux et gammes en notes pour commencer.", "chords": "Jeux, gammes et quiz avec les accords."}, onbSumWhy:{"songs": "Va dans PLAY pour tes premiers morceaux.", "theory": "Commence par LEARN : accords et gammes.", "fun": "Chaque jour, l'entraînement du jour te fait progresser en 5 minutes."}, tourDone:"C'est parti !", tourSkipT:"Passer", tourAgainT:"Revoir la présentation", onbAgainT:"Refaire le questionnaire", tourT:{learn:["LEARN",["Accords, gammes, harmonie, progressions et oreille","Tu choisis l'exercice, il est corrigé note par note"]],games:["GAMES",["Des mini-jeux rapides","Des duels en ligne, contre un ami ou un bot, avec ton ELO"]],play:["PLAY",["Des morceaux en cascade, à ta vitesse","Le piano libre pour jouer ce que tu veux"]],quiz:["QUIZ",["Réponds en jouant la bonne note ou le bon accord","Jusqu'à 4 joueurs, ou en ligne"]],daily:["Entraînement du jour",["10 exercices, environ 5 minutes","Il garde ta série de jours en vie"]],level:["Ton niveau",["Gagne de l'XP pour débloquer les 10 personnages","Touche-le pour voir ta progression"]],ntf:["Notifications",["Tes défis, tes progrès et les nouveautés","Règle-les dans Réglages"]],rank:["Classement",["Compare-toi aux autres joueurs","Par jour, semaine, mois ou année"]],input:["Ton instrument",["Clavier MIDI, micro ou écran","Touche ici pour changer"]],settings:["Réglages",["Langue, aides, doigtés, notifications","Tu peux revoir cette présentation ici"]]}, ntfTitle:"Notifications", ntfSub:"Tes défis, tes progrès et les nouveautés de l'app.", ntfAllReadT:"Tout marquer comme lu", ntfSetT:"Réglages", ntfAll:"Tout",
     ntfCat_social:"Défis", ntfCat_progress:"Progrès", ntfCat_remind:"Rappels", ntfCat_news:"Nouveautés",
     ntfCatD_social:"Duels, revanches, classement de la semaine", ntfCatD_progress:"Niveaux, déblocages, records d'ELO", ntfCatD_remind:"Entraînement du jour, série en danger", ntfCatD_news:"Nouveaux morceaux, jeux et questions",
     ntfWeeklyT:"Récap de la semaine", ntfWeeklyD:"Le dimanche : XP, série, ELO et ton objectif", ntfApp:"Dans l'app", ntfMail:"E-mail",
@@ -2232,7 +2325,7 @@ const TXT = {
     melDown:" · descends as Minor",
     midiBlockedMsg:"The browser refused MIDI access. Click the padlock left of the address to allow it, or choose the on-screen keyboard.",
     dailyResume:"Resume",
-    syncOk:x=>"Saved online "+x+" ✓", syncErr:x=>"Offline: last save "+x+".", agoNever:"unknown", signedOut:"Signed out", rights:"All rights reserved", themeDay:"Switch to day mode", themeNight:"Switch to night mode", ntfTitle:"Notifications", ntfSub:"Your challenges, your progress and what's new in the app.", ntfAllReadT:"Mark all as read", ntfSetT:"Settings", ntfAll:"All",
+    syncOk:x=>"Saved online "+x+" ✓", syncErr:x=>"Offline: last save "+x+".", agoNever:"unknown", signedOut:"Signed out", rights:"All rights reserved", themeDay:"Switch to day mode", themeNight:"Switch to night mode", gtBig:"100% free", gtBigSub:"on your real piano", gtPoints:["5 topics: chords, scales, harmony, progressions, ear", "Online duels with an ELO rating", "Your MIDI keyboard, your piano through the mic, or the screen"], gtTitleUp:"Sign up and play for free", gtTitleIn:"Good to see you again!", gtSignup:"Create an account", gtLogin:"Sign in", gtName:"Your first name or nickname", gtPwd:"Password (8 characters min.)", gtShowPwd:"Show password", gtAccept:"I accept the", gtPrivacy:"privacy policy", gtCreate:"Create my account", gtSignIn:"Sign in", gtUseCode:"Get a code by e-mail instead", gtBackPwd:"Back to the password", gtOtpIntro:"Enter your e-mail: we send you a code to sign in, no password needed.", gtWith:p=>"Continue with "+p, gtGuest:"Continue as a guest", gtBadMail:"This e-mail address does not look valid.", gtBadPwd:"The password needs at least 8 characters.", gtNeedOk:"Accept the privacy policy to create your account.", gtConfirm:e=>"Almost done! A confirmation e-mail went to "+e+". Click the link, or enter the code it contains here.", gtBadLogin:"Wrong e-mail or password.", gtExists:"An account already uses this e-mail: sign in.", gtNotConfirmed:"First confirm your address with the e-mail you got (or sign in with a code).", gtSoonProv:"This sign-in is coming soon. Use Google, your e-mail, or continue as a guest.", onbPrev:"Back", onbNextT:"Next", onbSkip:"Skip", onbStep:(i,n)=>"Question "+i+" of "+n, onbQ_why:"Why do you want to learn the piano?", onbS_why:"Pick as many as you like.", onbQ_level:"What is your level?", onbS_level:"We set the helps and your starting rating.", onbQ_how:"How will you play?", onbS_how:"You can change it any time, at the bottom of the menu.", onbQ_cont:"You want to work on…", onbS_cont:"Games, scales and the quiz will start from this choice.", onbQ_friends:"Invite your friends", onbS_friends:"Play duels with them and compare your progress on the leaderboard.", onbO_why:{"fun": ["For fun", "To relax while playing"], "songs": ["Play my songs", "The music I love"], "theory": ["Understand music", "Chords, scales, harmony"], "accomp": ["Accompany songs", "Alone or with friends"], "create": ["Compose and improvise", "Make my own music"], "school": ["For my lessons", "School, conservatory, teacher"]}, onbO_level:{"debut": ["I'm a beginner", "I have never played"], "notes": ["I know a few notes", "I can find C, D, E on the keys"], "simple": ["I play simple songs", "And a few chords"], "adv": ["I already play well", "I want to go further"]}, onbO_how:{"midi": ["MIDI keyboard", "Plugged in with USB or Bluetooth"], "mic": ["Acoustic piano", "The app listens with the mic"], "screen": ["On the screen", "I play right in the app"]}, onbO_cont:{"notes": ["Just the notes", "One note at a time, to start well"], "chords": ["Notes and the chord chart", "More complete, to go further"]}, onbShare:"Share the link", onbShareTxt:"Come and play the piano with me on Piano Challenges!", onbLater:"Later", onbDoneK:"All set", onbDoneH:"Your plan is ready", onbDoneSub:"We set the app up for you. You can change everything in Settings.", onbTour:"Discover the app", onbNoTour:"Skip the tour", onbSumLevel:{"debut": "Helps on: lit keys, note names and fingering.", "notes": "Progressive help, note names and fingering on.", "simple": "Progressive help on, without note names.", "adv": "Every exercise unlocked, no help."}, onbSumHow:{"midi": "Your MIDI keyboard is detected as soon as you plug it in.", "mic": "The app will listen to your piano with the mic.", "screen": "You play on the on-screen keyboard."}, onbSumCont:{"notes": "Games and scales with notes to start.", "chords": "Games, scales and the quiz with chords."}, onbSumWhy:{"songs": "Go to PLAY for your first songs.", "theory": "Start with LEARN: chords and scales.", "fun": "Every day, the daily practice gets you better in 5 minutes."}, tourDone:"Let's go!", tourSkipT:"Skip", tourAgainT:"Replay the tour", onbAgainT:"Redo the questions", tourT:{learn:["LEARN",["Chords, scales, harmony, progressions and ear","Pick an exercise, it is checked note by note"]],games:["GAMES",["Quick mini-games","Online duels, against a friend or a bot, with your ELO"]],play:["PLAY",["Falling-note songs at your own speed","Free piano to play anything"]],quiz:["QUIZ",["Answer by playing the right note or chord","Up to 4 players, or online"]],daily:["Daily practice",["10 exercises, about 5 minutes","It keeps your streak alive"]],level:["Your level",["Earn XP to unlock the 10 characters","Tap it to see your progress"]],ntf:["Notifications",["Your challenges, progress and news","Set them up in Settings"]],rank:["Leaderboard",["Compare yourself with other players","By day, week, month or year"]],input:["Your instrument",["MIDI keyboard, mic or screen","Tap here to change"]],settings:["Settings",["Language, helps, fingering, notifications","You can replay this tour here"]]}, ntfTitle:"Notifications", ntfSub:"Your challenges, your progress and what's new in the app.", ntfAllReadT:"Mark all as read", ntfSetT:"Settings", ntfAll:"All",
     ntfCat_social:"Challenges", ntfCat_progress:"Progress", ntfCat_remind:"Reminders", ntfCat_news:"What's new",
     ntfCatD_social:"Duels, rematches, weekly leaderboard", ntfCatD_progress:"Levels, unlocks, ELO records", ntfCatD_remind:"Daily practice, streak in danger", ntfCatD_news:"New songs, games and questions",
     ntfWeeklyT:"Weekly recap", ntfWeeklyD:"On Sundays: XP, streak, ELO and your goal", ntfApp:"In the app", ntfMail:"E-mail",
@@ -3976,7 +4069,7 @@ const DU={view:"lobby",game:"runner",cont:"chords",mode:null,rated:false,opp:nul
 let gRnd=Math.random;
 function duRng(seed){ let a=seed>>>0; return ()=>{ a|=0; a=a+0x6D2B79F5|0; let t=Math.imul(a^a>>>15,1|a); t=t+Math.imul(t^t>>>7,61|t)^t; return ((t^t>>>14)>>>0)/4294967296; }; }
 const duKey = (g,c) => (g||DU.game)+"-"+(c||DU.cont);
-function eloGet(key){ S.elo=S.elo||{}; const e=S.elo[key||duKey()]; return e && Number.isFinite(e.r) ? e : {r:800,n:0,w:0,d:0,l:0,h:[]}; }
+function eloGet(key){ S.elo=S.elo||{}; const e=S.elo[key||duKey()]; return e && Number.isFinite(e.r) ? e : {r:S.eloStart||800,n:0,w:0,d:0,l:0,h:[]}; }
 const eloProv = e => e.n<5; // provisional rating, shown with a "?" like chess.com
 function eloApply(key, opp, res, bot, nm, av){ const e={...eloGet(key)}; e.h=(e.h||[]).slice(-19);
   const E=1/(1+Math.pow(10,(opp-e.r)/400)), K = e.n<10?40 : e.n<30?24 : 16, d=Math.round(K*(res-E));
@@ -4957,6 +5050,7 @@ async function setUser(u){
     }
     try{ await cloudPull(); }catch(e){}
     try{ ntfCloud(); }catch(e){}
+    if(S.gate!=="account"){ S.gate="account"; save(); } if($("gate") && !$("gate").hidden){ gateClose(); startFlow(); }
     if(S.ownerId!==u.id){ S.ownerId=u.id; save(); } // a guest who signs in keeps everything, and the device is now tied to this account
   }
   if(page==="account") renderAccount(); if(page==="rank") renderRank();
@@ -5555,6 +5649,158 @@ $("helpBody").addEventListener("pointerdown",e=>{ swipeX=e.clientX; });
 $("helpBody").addEventListener("pointerup",e=>{ if(swipeX==null) return; const dx=e.clientX-swipeX; swipeX=null;
   if(Math.abs(dx)>50){ if(dx<0 && tutI<t("tut").length-1) tutGo(1); else if(dx>0) tutGo(-1); } });
 
+// ---------- Start: sign-in screen, onboarding (5 questions that set the app up), guided tour ----------
+// Shown once: S.gate = "guest" | "account" once passed; S.onb = {done, why, level, how, cont}; S.tourDone. Each step can be skipped.
+const GATE={mode:"signup", busy:false, msg:"", err:false, otp:false, sent:false, email:"", confirm:false};
+function gateNeeded(){ return !S.gate && !hasSession() && !/^#(quiz|duel)-/.test(location.hash||""); }
+function gateArt(){ // the right half: night scene with the 3D objects, level characters and the piano character
+  const av=i=>'<span class="gt-av" style="--i:'+i+'">'+avatarSVG(i)+'</span>';
+  return '<div class="gt-art" aria-hidden="true"><div class="gt-glow"></div>'
+    +'<span class="gt-o o1">'+OBJ.chords()+'</span><span class="gt-o o2">'+OBJ.speed()+'</span><span class="gt-o o3">'+OBJ.memory()+'</span><span class="gt-o o4">'+OBJ.scales()+'</span><span class="gt-o o5">'+OBJ.medal()+'</span>'
+    +'<div class="gt-avs">'+[0,2,4,6,8,9].map(av).join("")+'</div>'
+    +'<div class="gt-big"><b>'+esc(t("gtBig"))+'</b><span>'+esc(t("gtBigSub"))+'</span></div>'
+    +'<span class="gt-hero">'+OBJ.runner()+'</span>'
+    +'<ul class="gt-pts">'+t("gtPoints").map(x=>'<li>'+esc(x)+'</li>').join("")+'</ul></div>'; }
+function gateOpen(){ let g=$("gate"); if(!g){ g=document.createElement("div"); g.id="gate"; g.className="gate"; g.setAttribute("role","dialog"); g.setAttribute("aria-modal","true"); document.body.appendChild(g); }
+  document.body.classList.add("gate-on"); g.hidden=false; gateRender(); ensureCloud().then(()=>{ if(!$("gate").hidden) gateRender(); }).catch(()=>{}); }
+function gateClose(){ const g=$("gate"); if(g) g.hidden=true; document.body.classList.remove("gate-on"); }
+function gateRender(){ const g=$("gate"), m=GATE.mode, mark=$("homeLink").querySelector("svg").outerHTML;
+  g.innerHTML='<div class="gt-card"><div class="gt-form"><div class="gt-top"><span class="gt-logo">'+mark+'<b>Piano Challenges</b></span><button class="gt-lang" type="button" id="gtLang">'+(S.settings.lang==="fr"?"EN":"FR")+'</button></div>'
+    +'<h2 class="gt-h"></h2><div class="seg gt-tabs"><button type="button" data-m="signup"></button><button type="button" data-m="login"></button></div>'
+    +'<form class="gt-f" id="gtForm" novalidate></form><p class="gt-msg" id="gtMsg" role="status"></p>'
+    +'<div class="gt-or"><span></span></div><div class="gt-soc"><button type="button" class="gt-s gt-google" data-p="google"></button><button type="button" class="gt-s gt-apple" data-p="apple"></button><button type="button" class="gt-s gt-fb" data-p="facebook"></button></div>'
+    +'<button class="gt-guest" type="button" id="gateGuest"></button></div>'+gateArt()+'</div>';
+  g.querySelector(".gt-h").textContent=t(m==="signup"?"gtTitleUp":"gtTitleIn");
+  const [tu,ti]=g.querySelectorAll(".gt-tabs button"); tu.textContent=t("gtSignup"); ti.textContent=t("gtLogin"); tu.setAttribute("aria-pressed",m==="signup"); ti.setAttribute("aria-pressed",m==="login");
+  g.querySelectorAll(".gt-tabs button").forEach(b=>b.onclick=()=>{ Object.assign(GATE,{mode:b.dataset.m,msg:"",err:false,otp:false,sent:false,confirm:false}); gateRender(); });
+  g.querySelector(".gt-or span").textContent=t("orLbl");
+  const ico={google:'<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="#4285F4" d="M22.5 12.3c0-.8-.1-1.5-.2-2.2H12v4.2h5.9a5 5 0 0 1-2.2 3.3v2.7h3.6c2-1.9 3.2-4.7 3.2-8z"/><path fill="#34A853" d="M12 23c3 0 5.5-1 7.3-2.7l-3.6-2.7c-1 .7-2.2 1.1-3.7 1.1-2.9 0-5.3-1.9-6.2-4.5H2.1v2.8A11 11 0 0 0 12 23z"/><path fill="#FBBC05" d="M5.8 14.2a6.6 6.6 0 0 1 0-4.3V7.1H2.1a11 11 0 0 0 0 9.9z"/><path fill="#EA4335" d="M12 5.4c1.6 0 3 .6 4.2 1.6l3.1-3.1A11 11 0 0 0 2.1 7.1l3.7 2.8C6.7 7.3 9.1 5.4 12 5.4z"/></svg>',
+    apple:'<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M16.4 12.6c0-2.4 2-3.6 2.1-3.7a4.6 4.6 0 0 0-3.6-2c-1.5-.2-3 .9-3.7.9-.8 0-2-.9-3.2-.8a4.8 4.8 0 0 0-4 2.5c-1.7 3-.4 7.4 1.2 9.8.8 1.2 1.8 2.5 3 2.4 1.2 0 1.7-.8 3.1-.8s1.9.8 3.2.8 2.1-1.2 2.9-2.4a10 10 0 0 0 1.3-2.7 4.2 4.2 0 0 1-2.3-4zM14 5.4a4.3 4.3 0 0 0 1-3.1 4.4 4.4 0 0 0-2.9 1.5 4.1 4.1 0 0 0-1 3c1.1.1 2.2-.6 2.9-1.4z"/></svg>',
+    facebook:'<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="#fff" d="M14 8.5V7c0-.7.2-1.2 1.3-1.2H17V2.6c-.3 0-1.3-.1-2.5-.1-2.5 0-4.2 1.5-4.2 4.3v1.7H7.5V12h2.8v9.5H14V12h2.8l.4-3.5z"/></svg>'};
+  g.querySelectorAll(".gt-s").forEach(b=>{ const pv=b.dataset.p; b.innerHTML=ico[pv]+"<span></span>"; b.querySelector("span").textContent= pv==="google" ? t("gtWith")("Google") : {apple:"Apple",facebook:"Facebook"}[pv]; b.disabled=GATE.busy||!sb; b.onclick=()=>gateOAuth(pv); });
+  const gg=$("gateGuest"); gg.innerHTML="<span></span><svg viewBox='0 0 24 24' aria-hidden='true'><path d='M5 12h14M13 6l6 6-6 6'/></svg>"; gg.firstChild.textContent=t("gtGuest"); gg.onclick=gateGuest;
+  $("gtLang").onclick=()=>{ document.querySelector('#langSeg [data-v="'+(S.settings.lang==="fr"?"en":"fr")+'"]').click(); gateRender(); };
+  gateForm(); }
+function gateField(f, type, ph, val, ac, id){ const i=document.createElement("input"); i.type=type; i.placeholder=ph; i.value=val||""; i.autocomplete=ac; i.className="gt-in"; if(id) i.id=id; f.appendChild(i); return i; }
+function gateForm(){ const f=$("gtForm"); f.innerHTML=""; const m=GATE.mode;
+  const msg=$("gtMsg"); msg.textContent=GATE.msg||""; msg.className="gt-msg"+(GATE.err?" err":GATE.msg?" ok":"");
+  if(!sb && !cloudFail){ const p=document.createElement("p"); p.className="gt-wait"; p.textContent=t("rankLoading"); f.appendChild(p); }
+  if(GATE.otp || GATE.confirm){ // code received by e-mail (sign-in without password, or the confirmation of a new account)
+    const p=document.createElement("p"); p.className="gt-note"; p.textContent = GATE.sent ? t("codeSent")(GATE.email) : t("gtOtpIntro"); f.appendChild(p);
+    const em=GATE.sent?null:gateField(f,"email",t("emailPh"),GATE.email,"email","gtEmail");
+    const cd=GATE.sent?gateField(f,"text",t("codePh"),"","one-time-code","gtCode"):null; if(cd){ cd.inputMode="numeric"; cd.maxLength=10; }
+    const b=document.createElement("button"); b.type="submit"; b.className="gt-go"; b.textContent=GATE.sent?t("verify"):t("sendCode"); b.disabled=GATE.busy||!sb; f.appendChild(b);
+    const back=document.createElement("button"); back.type="button"; back.className="gt-link"; back.textContent=t("gtBackPwd"); back.onclick=()=>{ Object.assign(GATE,{otp:false,sent:false,confirm:false,msg:"",err:false}); gateRender(); }; f.appendChild(back);
+    f.onsubmit=async e=>{ e.preventDefault(); if(!sb) return; GATE.busy=true; gateForm();
+      if(!GATE.sent){ GATE.email=em.value.trim(); const {error}=await sb.auth.signInWithOtp({email:GATE.email, options:{shouldCreateUser:true, emailRedirectTo: isApp()?undefined:location.origin+location.pathname}});
+        GATE.busy=false; if(error){ GATE.msg=authMsg(error); GATE.err=true; } else { GATE.sent=true; GATE.msg=""; GATE.err=false; } gateRender(); return; }
+      const token=cd.value.replace(/\D/g,""); const {error}=await sb.auth.verifyOtp({email:GATE.email, token, type:GATE.confirm?"signup":"email"});
+      GATE.busy=false; if(error){ GATE.msg=authMsg(error); GATE.err=true; gateRender(); } }; // success: setUser() closes the gate
+    return; }
+  const name = m==="signup" ? gateField(f,"text",t("gtName"),GATE.name,"nickname","gtName") : null; if(name) name.maxLength=24;
+  const em=gateField(f,"email",t("emailPh"),GATE.email,"email","gtEmail");
+  const pw=gateField(f,"password",t("gtPwd"),"",m==="signup"?"new-password":"current-password","gtPwd");
+  const eye=document.createElement("button"); eye.type="button"; eye.className="gt-eye"; eye.setAttribute("aria-label",t("gtShowPwd")); eye.innerHTML='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg>';
+  eye.onclick=()=>{ pw.type=pw.type==="password"?"text":"password"; }; const wrap=document.createElement("div"); wrap.className="gt-pw"; pw.replaceWith(wrap); wrap.append(pw,eye);
+  let ok=null; if(m==="signup"){ const l=document.createElement("label"); l.className="gt-ok"; l.innerHTML='<span class="sw"><input type="checkbox" id="gtOk"><i></i></span><span></span>';
+    l.lastChild.innerHTML=esc(t("gtAccept"))+' <a href="/confidentialite.html" target="_blank" rel="noopener"></a>'; l.querySelector("a").textContent=t("gtPrivacy"); f.appendChild(l); ok=l.querySelector("input"); }
+  const b=document.createElement("button"); b.type="submit"; b.className="gt-go"; b.id="gtGo"; b.textContent=t(m==="signup"?"gtCreate":"gtSignIn"); b.disabled=GATE.busy||!sb; f.appendChild(b);
+  const alt=document.createElement("button"); alt.type="button"; alt.className="gt-link"; alt.textContent=t("gtUseCode"); alt.onclick=()=>{ GATE.email=em.value.trim(); Object.assign(GATE,{otp:true,sent:false,msg:"",err:false}); gateRender(); }; f.appendChild(alt);
+  f.onsubmit=async e=>{ e.preventDefault(); if(!sb) return; GATE.email=em.value.trim(); if(name) GATE.name=name.value.trim();
+    const bad = !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(GATE.email) ? "gtBadMail" : pw.value.length<8 ? "gtBadPwd" : m==="signup"&&!ok.checked ? "gtNeedOk" : "";
+    if(bad){ GATE.msg=t(bad); GATE.err=true; gateForm(); return; }
+    GATE.busy=true; GATE.msg=""; gateForm();
+    try{ if(m==="signup"){ if(GATE.name){ S.profileName=GATE.name.slice(0,24); save(); }
+        const {data,error}=await sb.auth.signUp({email:GATE.email, password:pw.value, options:{data:{name:GATE.name||undefined}, emailRedirectTo: isApp()?undefined:location.origin+location.pathname}}); if(error) throw error;
+        if(!data.session){ Object.assign(GATE,{confirm:true,sent:true,busy:false,msg:t("gtConfirm")(GATE.email),err:false}); gateRender(); return; } }
+      else { const {error}=await sb.auth.signInWithPassword({email:GATE.email, password:pw.value}); if(error) throw error; }
+      GATE.busy=false; // setUser() closes the gate
+    }catch(err){ GATE.busy=false; const s=String(err&&err.message||""); GATE.msg = /invalid login|credentials/i.test(s) ? t("gtBadLogin") : /already registered|already exists/i.test(s) ? t("gtExists") : /not confirmed/i.test(s) ? t("gtNotConfirmed") : authMsg(err); GATE.err=true; gateRender(); } }; }
+async function gateOAuth(pv){ if(!sb) return; GATE.msg=""; try{ await oauthLogin(pv); }catch(e){}
+  if(loginStep.err && loginStep.msg){ GATE.msg = /not enabled|unsupported provider|provider/i.test(loginStep.msg) ? t("gtSoonProv") : loginStep.msg; GATE.err=true; loginStep.msg=""; loginStep.err=false; gateRender(); } }
+function gateGuest(){ S.gate="guest"; save(); gateClose(); startFlow(); }
+// after the gate: the onboarding questions, then the tour
+function startFlow(){ if(!(S.onb&&S.onb.done)) onbOpen(); else if(!S.tourDone) tourStart(); else maybeAskInput(); }
+
+// ---------- Onboarding ----------
+const ONB={i:0, a:{why:[], level:null, how:null, cont:null}};
+function onbQs(){ return [
+  {k:"why", multi:true, opts:[["fun","heart"],["songs","play"],["theory","learn"],["accomp","guitar"],["create","palette"],["school","book"]]},
+  {k:"level", opts:[["debut","leaf"],["notes","scales"],["simple","chords"],["adv","crown"]]},
+  {k:"how", opts:["midi","mic","screen"].filter(v=>inputModes().includes(v)).map(v=>[v,{midi:"games",mic:"bell",screen:"play"}[v]])},
+  {k:"cont", opts:[["notes","star"],["chords","harmony"]]},
+  {k:"friends"} ]; }
+function onbOpen(){ let o=$("onb"); if(!o){ o=document.createElement("div"); o.id="onb"; o.className="onb"; o.setAttribute("role","dialog"); o.setAttribute("aria-modal","true"); document.body.appendChild(o); }
+  o.hidden=false; document.body.classList.add("gate-on"); ONB.i=0; onbRender(); }
+function onbClose(){ $("onb").hidden=true; document.body.classList.remove("gate-on"); }
+function onbRender(){ const o=$("onb"), Q=onbQs(), n=Q.length, i=ONB.i, fin=i>=n;
+  o.innerHTML='<div class="onb-card"><div class="onb-top"><button class="onb-back" type="button" id="onbBack"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></button><div class="onb-bar"><i></i></div><button class="gt-link onb-skip" type="button" id="onbSkip"></button></div>'
+    +'<div class="onb-body"><p class="onb-k"></p><h2 class="onb-h"></h2><p class="onb-sub"></p><div class="onb-opts" id="onbOpts"></div></div><div class="onb-foot"><button class="gt-go onb-next" type="button" id="onbNext"></button></div></div>';
+  o.querySelector(".onb-bar i").style.width=Math.min(100,(i+(fin?1:0))/n*100)+"%"; $("onbBack").style.visibility=i?"visible":"hidden"; $("onbBack").setAttribute("aria-label",t("onbPrev"));
+  $("onbBack").onclick=()=>{ ONB.i=Math.max(0,i-1); onbRender(); }; $("onbSkip").textContent=t("onbSkip"); $("onbSkip").onclick=()=>onbFinish(true);
+  const box=$("onbOpts"), next=$("onbNext");
+  if(fin){ o.querySelector(".onb-k").textContent=t("onbDoneK"); o.querySelector(".onb-h").textContent=t("onbDoneH"); o.querySelector(".onb-sub").textContent=t("onbDoneSub");
+    box.className="onb-sum"; onbSummary().forEach(([ic,tx])=>{ const d=document.createElement("div"); d.className="onb-li"; d.innerHTML='<span class="onb-ic">'+OBJ[ic]()+'</span><span></span>'; d.lastChild.textContent=tx; box.appendChild(d); });
+    next.textContent=t("onbTour"); next.onclick=()=>onbFinish(false);
+    const sk=document.createElement("button"); sk.type="button"; sk.className="gt-link"; sk.id="onbNoTour"; sk.textContent=t("onbNoTour"); sk.onclick=()=>{ S.tourDone=1; onbFinish(false,true); }; o.querySelector(".onb-foot").appendChild(sk); $("onbSkip").hidden=true; return; }
+  const q=Q[i]; o.querySelector(".onb-k").textContent=t("onbStep")(i+1,n); o.querySelector(".onb-h").textContent=t("onbQ_"+q.k); o.querySelector(".onb-sub").textContent=t("onbS_"+q.k);
+  if(q.k==="friends"){ box.className="onb-friends"; const link=location.origin+"/?ref="+netId();
+    box.innerHTML='<div class="onb-avs">'+[1,3,5].map(x=>'<span class="gt-av">'+avatarSVG(x)+'</span>').join("")+'</div><div class="onb-link"><input readonly class="mono"><button class="btn" type="button" id="onbCopy"></button></div><button class="gt-go onb-share" type="button" id="onbShare"></button>';
+    box.querySelector("input").value=link; $("onbCopy").textContent=t("qzCopyT"); $("onbShare").textContent=t("onbShare");
+    $("onbCopy").onclick=()=>{ try{ navigator.clipboard.writeText(link).then(()=>{ $("onbCopy").textContent=t("qzCopied"); },()=>{}); }catch(e){} };
+    $("onbShare").hidden=!navigator.share; $("onbShare").onclick=()=>{ navigator.share({title:"Piano Challenges", text:t("onbShareTxt"), url:link}).catch(()=>{}); };
+    next.textContent=t("onbLater"); next.onclick=()=>{ ONB.i++; onbRender(); }; return; }
+  box.className="onb-opts"+(q.opts.length>4?" six":"");
+  q.opts.forEach(([v,ic])=>{ const b=document.createElement("button"); b.type="button"; b.className="onb-opt"; const on = q.multi ? ONB.a[q.k].includes(v) : ONB.a[q.k]===v; b.setAttribute("aria-pressed",on);
+    b.innerHTML='<span class="onb-ic">'+(OBJ[ic]?OBJ[ic]():"")+'</span><span class="onb-ot"><b></b><small></small></span><i class="su-tick"></i>'; const L=t("onbO_"+q.k)[v]; b.querySelector("b").textContent=L[0]; b.querySelector("small").textContent=L[1];
+    b.onclick=()=>{ if(q.multi){ const a=ONB.a[q.k]; ONB.a[q.k]=a.includes(v)?a.filter(x=>x!==v):[...a,v]; } else ONB.a[q.k]=v; onbRender(); if(!q.multi) setTimeout(()=>{ if(ONB.i===i){ ONB.i++; onbRender(); } },260); };
+    box.appendChild(b); });
+  const has = q.multi ? ONB.a[q.k].length>0 : ONB.a[q.k]!=null; next.textContent=t("onbNextT"); next.disabled=!has; next.onclick=()=>{ ONB.i++; onbRender(); }; }
+// what the answers change in the app
+const ONB_ELO={debut:600, notes:800, simple:1000, adv:1200};
+function onbApply(){ const a=ONB.a, st=S.settings;
+  if(a.level){ const L=a.level; st.guideK = L==="debut"; st.labels = L==="debut"||L==="notes"; st.fing = L!=="adv"; st.guideP = L!=="adv"; st.guideN = false;
+    if(L==="adv") st.unlockAll=true; S.eloStart=ONB_ELO[L]; }
+  if(a.cont){ st.gmCont=a.cont; st.duCont=a.cont; st.scMode=a.cont==="chords"?"chords":"notes"; st.quiz={...(st.quiz||{}), ans:a.cont}; }
+  S.onb={done:1, why:a.why, level:a.level, how:a.how, cont:a.cont, at:Date.now()}; save(); renderSettings(); render();
+  if(a.how) setInput(a.how,true); }
+function onbSummary(){ const a=ONB.a, out=[], L=a.level;
+  if(L) out.push(["learn", t("onbSumLevel")[L]]);
+  if(a.how) out.push([{midi:"games",mic:"bell",screen:"play"}[a.how], t("onbSumHow")[a.how]]);
+  if(a.cont) out.push([a.cont==="chords"?"harmony":"star", t("onbSumCont")[a.cont]]);
+  const w=a.why; if(w.includes("songs")) out.push(["play", t("onbSumWhy").songs]); else if(w.includes("theory")||w.includes("school")) out.push(["scales", t("onbSumWhy").theory]); else if(w.length) out.push(["daily", t("onbSumWhy").fun]);
+  if(!out.length) out.push(["daily", t("onbSumWhy").fun]); return out; }
+function onbFinish(skipped, noTour){ if(skipped) S.onb={done:1, skipped:1, at:Date.now()}; else onbApply(); save(); onbClose();
+  const w=(S.onb&&S.onb.why)||[]; if(!skipped) openPage(w.includes("songs")?"free":"hub");
+  if(!noTour && !S.tourDone) tourStart(); else if(!S.onb.how) maybeAskInput(); }
+
+// ---------- Guided tour: a bubble on each part of the app (next / close) ----------
+const TOUR={i:0, steps:[]};
+function tourSteps(){ return [["#modeNav [data-mode=learn]","learn"],["#modeNav [data-mode=games]","games"],["#modeNav [data-mode=play]","play"],["#modeNav [data-mode=quiz]","quiz"],
+  ["#dailyCard","daily"],["#lvlAv","level"],["#ntfBtn","ntf"],["#rankBtn","rank"],["#inChip","input"],["#setBtn","settings"]]; }
+function tourStart(){ if(page!=="hub") openPage("hub"); TOUR.steps=tourSteps(); TOUR.i=0; let o=$("tour"); if(!o){ o=document.createElement("div"); o.id="tour"; o.className="tour"; document.body.appendChild(o);
+    o.innerHTML='<div class="tour-hole" id="tourHole"></div><div class="tour-tip" id="tourTip" role="dialog" aria-live="polite"><button class="tour-x" type="button" id="tourX"></button><p class="tour-k" id="tourK"></p><h3 id="tourH"></h3><ul id="tourL"></ul><div class="tour-foot"><button class="gt-link" type="button" id="tourSkip"></button><button class="btn" type="button" id="tourPrev"></button><button class="btn primary" type="button" id="tourNext"></button></div></div>';
+    $("tourX").innerHTML="×"; $("tourX").onclick=tourEnd; $("tourSkip").onclick=tourEnd; $("tourNext").onclick=()=>tourGo(1); $("tourPrev").onclick=()=>tourGo(-1);
+    addEventListener("resize",()=>{ if(!$("tour").hidden) tourShow(); }); document.addEventListener("keydown",e=>{ if($("tour").hidden) return; if(e.key==="Escape") tourEnd(); else if(e.key==="ArrowRight") tourGo(1); else if(e.key==="ArrowLeft") tourGo(-1); },true); }
+  o.hidden=false; if(phoneMQ.matches) openDrawer(); setTimeout(tourShow,phoneMQ.matches?320:0); }
+function tourGo(d){ const n=TOUR.steps.length; TOUR.i+=d; if(TOUR.i>=n){ tourEnd(); return; } TOUR.i=Math.max(0,TOUR.i); tourShow(); }
+function tourEnd(){ $("tour").hidden=true; S.tourDone=1; save(); closeDrawer(); if(!S.settings.input) maybeAskInput(); }
+function tourShow(){ const st=TOUR.steps[TOUR.i]; if(!st) return tourEnd(); const el=document.querySelector(st[0]);
+  if(!el || !el.getClientRects().length){ TOUR.steps.splice(TOUR.i,1); return tourShow(); }
+  const r=el.getBoundingClientRect(), pad=6, hole=$("tourHole"), tip=$("tourTip"), n=TOUR.steps.length;
+  Object.assign(hole.style,{left:(r.left-pad)+"px",top:(r.top-pad)+"px",width:(r.width+pad*2)+"px",height:(r.height+pad*2)+"px"});
+  $("tourK").textContent=(TOUR.i+1)+" / "+n; const d=t("tourT")[st[1]]; $("tourH").textContent=d[0];
+  const ul=$("tourL"); ul.innerHTML=""; d[1].forEach(x=>{ const li=document.createElement("li"); li.textContent=x; ul.appendChild(li); });
+  $("tourNext").textContent = TOUR.i===n-1 ? t("tourDone") : t("onbNextT"); $("tourPrev").textContent=t("onbPrev"); $("tourPrev").hidden=!TOUR.i; $("tourSkip").textContent=t("tourSkipT"); $("tourX").setAttribute("aria-label",t("close"));
+  // place the bubble next to the element: on the right of the menu, otherwise below / above
+  const W=innerWidth, H=innerHeight; tip.style.maxWidth=Math.min(340,W-24)+"px"; const tw=Math.min(340,W-24), th=tip.offsetHeight||200; let x,y; tip.dataset.side="";
+  if(r.right+16+tw<W && r.left<W/2){ x=r.right+16; y=Math.max(12,Math.min(H-th-12, r.top+r.height/2-th/2)); tip.dataset.side="right"; }
+  else if(r.bottom+16+th<H){ x=Math.max(12,Math.min(W-tw-12, r.left+r.width/2-tw/2)); y=r.bottom+14; tip.dataset.side="below"; }
+  else { x=Math.max(12,Math.min(W-tw-12, r.left+r.width/2-tw/2)); y=Math.max(12,r.top-th-14); tip.dataset.side="above"; }
+  tip.style.left=x+"px"; tip.style.top=y+"px"; $("tourNext").focus({preventScroll:true}); }
+$("tourAgain").addEventListener("click",()=>{ S.tourDone=0; save(); tourStart(); });
+$("onbAgain").addEventListener("click",()=>{ ONB.a={why:[],level:null,how:null,cont:null}; S.tourDone=1; onbOpen(); });
+
 // ---------- Boot ----------
 
 applyStatic(); applySide(); buildKeyboard(); renderSettings(); render(); renderDaily(); openPage("hub");
@@ -5563,7 +5809,8 @@ setTimeout(()=>{ if(hasSession()) ensureCloud(); }, 400);
 const mobileWeb = (phoneMQ.matches||railMQ.matches) && !document.documentElement.classList.contains("native");
 document.body.classList.add("guest");
 restoreInput();
-if(firstVisit){ save(); if(mobileWeb){ renderWelcome(); openMod("welcomeModal"); } else { setTimeout(openInputChooser, document.documentElement.classList.contains("native")?1700:300); } }
+if(gateNeeded()){ save(); gateOpen(); }
+else if(!(S.onb&&S.onb.done) || !S.tourDone){ save(); setTimeout(startFlow, document.documentElement.classList.contains("native")?1700:300); }
 else maybeAskInput();
 })();
 </script>

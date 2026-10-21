@@ -38,7 +38,7 @@ const FAKE_RT = `(() => {
 const seed = (name, extra = {}) => `(()=>{ try{ if(sessionStorage.getItem('seeded')) return; sessionStorage.setItem('seeded','1');
   localStorage.setItem('memo-gammes-v1', JSON.stringify({settings:{lang:'fr',notation:'fr',input:'screen',earV2:true,diffV2:true,midiV2:true,uiSound:false,
     quiz:Object.assign({where:'online',netName:${JSON.stringify(name)},diff:1,ans:'notes',count:5,time:20,theme:'all',keys:true}, ${JSON.stringify(extra)})},
-    langV2:true,introSeen:{chords:1,scales:1,harmony:1,prog:1,ear:1,games:1,daily:1,section:1},seenTypes:[],stats:{},secStats:{},xp:500,xpDays:{},streak:{days:0}})); }catch(e){} })();`;
+    langV2:true,gate:'guest',onb:{done:1},tourDone:1,introSeen:{chords:1,scales:1,harmony:1,prog:1,ear:1,games:1,daily:1,section:1},seenTypes:[],stats:{},secStats:{},xp:500,xpDays:{},streak:{days:0}})); }catch(e){} })();`;
 const b = await chromium.launch(process.env.PW_CHROMIUM ? { executablePath: process.env.PW_CHROMIUM } : {});
 const ctx = await b.newContext({ viewport: { width: 1280, height: 800 } });
 await ctx.addInitScript(FAKE_RT);

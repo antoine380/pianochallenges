@@ -7,7 +7,7 @@
 import { createRequire } from 'module';
 const { chromium } = createRequire(import.meta.url)('playwright');
 const PORT=process.env.PORT||'8767', BASE=`http://localhost:${PORT}/`;
-const SEED=lang=>`(()=>{try{const S={settings:{lang:${JSON.stringify(lang)},notation:${JSON.stringify(lang)},input:"screen",earV2:true,diffV2:true,midiV2:true},langV2:true,
+const SEED=lang=>`(()=>{try{const S={settings:{lang:${JSON.stringify(lang)},notation:${JSON.stringify(lang)},input:"screen",earV2:true,diffV2:true,midiV2:true},langV2:true,gate:"guest",onb:{done:1},tourDone:1,
   introSeen:{chords:1,scales:1,harmony:1,prog:1,ear:1,games:1,daily:1,section:1},seenTypes:[],stats:{},secStats:{},xp:0,xpDays:{},streak:{days:0}};
   localStorage.setItem("memo-gammes-v1",JSON.stringify(S));}catch(e){}})();`;
 const fails=[]; const ok=(cond,msg)=>{ console.log((cond?'ok   ':'FAIL ')+msg); if(!cond) fails.push(msg); };
