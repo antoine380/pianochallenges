@@ -115,7 +115,7 @@ button:focus-visible, select:focus-visible, input:focus-visible, summary:focus-v
 .lvl-meta{display:flex;flex-direction:column;gap:3px;min-width:120px}
 .lvl-title{font-size:.75rem;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;white-space:nowrap}
 .xpbar{height:6px;background:var(--line);border-radius:3px;overflow:hidden}
-.xpbar i{display:block;height:100%;width:0;background:var(--accent);transition:width .5s ease}
+.xpbar i{display:block;height:100%;width:100%;transform:scaleX(0);transform-origin:left;background:var(--accent);transition:transform 300ms var(--ease-out)}
 .chip{font-family:var(--f-mono);font-size:.82rem;color:var(--muted);white-space:nowrap}
 .chip b{color:var(--ink);font-weight:500}
 
@@ -641,7 +641,7 @@ body.runner-on .free-lbl{display:none!important}
 .gm-big{margin:0;font-family:var(--f-display);font-weight:800;font-size:clamp(2.2rem,8vh,4rem);line-height:1}
 .gm-sub{margin:0;color:var(--muted);font-size:.9rem;max-width:46ch}
 .gm-bar{width:min(420px,80%);height:8px;border-radius:4px;background:var(--line);overflow:hidden;margin-top:6px}
-.gm-bar i{display:block;height:100%;width:100%;background:var(--accent);transition:width .1s linear} .gm-bar i.low{background:var(--bad)}
+.gm-bar i{display:block;height:100%;width:100%;transform-origin:left;background:var(--accent)} .gm-bar i.low{background:var(--bad)}
 .gm-board.hit{animation:gmHit .3s ease} @keyframes gmHit{40%{background:var(--good-soft)}}
 @media (max-width:640px){ .gm-opt span{display:none} .rn-head{gap:8px} }
 .set-body{display:flex!important;flex-direction:column;align-items:stretch!important;gap:26px}
@@ -991,7 +991,7 @@ body:not(.runner-on)[data-page="games"] .stage{display:none!important}
 .pf-id{flex:1;min-width:0;display:flex;flex-direction:column;gap:3px}
 .pf-k{font-weight:800;font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;opacity:.9}
 .pf-id b{font-family:var(--f-display);font-weight:700;font-size:1.5rem;line-height:1.1}
-.pf-id .xpbar{height:8px;border-radius:999px;background:rgba(255,255,255,.25);overflow:hidden;max-width:420px} .pf-id .xpbar i{display:block;height:100%;background:var(--gold);border-radius:inherit}
+.pf-id .xpbar{height:8px;border-radius:999px;background:rgba(255,255,255,.25);overflow:hidden;max-width:420px} .pf-id .xpbar i{display:block;height:100%;background:var(--gold);border-radius:inherit;transform-origin:left}
 .pf-id small{font-weight:700;opacity:.9}
 .pf-head .btn{background:rgba(255,255,255,.95);color:#1b1838}
 .pf-row{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(250px,1fr);gap:14px;overflow-x:auto;scroll-snap-type:x mandatory;padding-bottom:6px;scrollbar-width:thin}
@@ -3906,7 +3906,7 @@ function renderStatus(){
   if($("lvlAvatar").dataset.c!==key){ $("lvlAvatar").innerHTML=$("mbAv").innerHTML = ph ? photoImg(ph) : avatarSVG(ci); $("lvlAvatar").dataset.c=key; }
   if(typeof user!=="undefined" && user) $("lvlTitle").textContent=myName();
   $("lvlAv").setAttribute("aria-label",titleFor(li.L)+" · "+t("charMore"));
-  $("xpFill").style.width=(li.into/li.need*100)+"%"; $("xpTxt").textContent=li.into+" / "+li.need+" XP";
+  $("xpFill").style.transform="scaleX("+(li.into/li.need)+")"; $("xpTxt").textContent=li.into+" / "+li.need+" XP";
   const cEl=$("combo"), prevC=cEl.textContent; cEl.textContent="×"+combo;
   $("comboStat").classList.toggle("off",combo===0);
   if(prevC!==cEl.textContent && combo>0){ const st=$("comboStat"); st.classList.remove("pulse"); void st.offsetWidth; st.classList.add("pulse"); }
@@ -4294,7 +4294,7 @@ function spTick(now){
   let left=(SP.end-now)/1000;
   // progressive: each answer gives back a little time, less and less
   if(left<=0){ SP.state="over"; clearKeys(); if(DU.mode) duMe(SP.count,true); const best=(S.gameBest||{}).speed||0; SP.newBest=false; if(!DU.mode){ if(SP.count>best){ S.gameBest={...(S.gameBest||{}),speed:SP.count}; SP.newBest=true; } if(SP.count){ addXP(SP.count); renderStatus(); } } save(); tone(48,0,.4,.15); gmBoard(); gmScore(); return; }
-  $("gmBar").style.width=(left/SP.dur*100)+"%"; $("gmBar").classList.toggle("low",left<10);
+  $("gmBar").style.transform="scaleX("+Math.max(0,left/SP.dur)+")"; $("gmBar").classList.toggle("low",left<10);
   SP.raf=requestAnimationFrame(spTick);
 }
 function spNote(m){
@@ -4334,7 +4334,7 @@ function gmBoard(){
   const k=$("gmKick"), big=$("gmBig"), sub=$("gmSub"), startTxt = midiMode()?t("rnStart"):t("gmTap");
   $("gmBar").parentElement.hidden = GM!=="speed";
   if(GM==="speed"){
-    if(SP.state==="ready"){ k.textContent=t("spName"); big.textContent=t("gmReady"); sub.textContent=t("spHow")(spDur())+" "+startTxt; $("gmBar").style.width="100%"; }
+    if(SP.state==="ready"){ k.textContent=t("spName"); big.textContent=t("gmReady"); sub.textContent=t("spHow")(spDur())+" "+startTxt; $("gmBar").style.transform="scaleX(1)"; }
     else if(SP.state==="run"){ k.textContent=SP.target&&SP.target.note?t("gmNote"):t("gmChord"); const st=staffTargetSVG(SP.target,200,9); if(st){ big.innerHTML='<span class="gm-staff">'+st+'</span>'; sub.textContent=S.settings.labels?SP.target.label:""; } else { big.textContent=SP.target?SP.target.label:""; sub.textContent=""; } }
     else { k.textContent=SP.newBest?t("rnNew"):t("gmOver"); big.textContent=String(SP.count); sub.textContent=t("spDone")(SP.count)+" "+startTxt; }
   } else {
@@ -4782,7 +4782,7 @@ function renderFiche(){
   const li=levelInfo(S.xp), ph=(typeof userPhoto==="function"&&userPhoto())||"";
   $("pfAv").innerHTML= ph ? photoImg(ph) : avatarSVG(charIndex(li.L));
   $("pfK").textContent=(typeof user!=="undefined"&&user)?myName():t("you"); $("pfName").textContent=titleFor(li.L);
-  $("pfXp").style.width=(li.into/li.need*100)+"%"; $("pfXpTxt").textContent=li.into+" / "+li.need+" XP";
+  $("pfXp").style.transform="scaleX("+(li.into/li.need)+")"; $("pfXpTxt").textContent=li.into+" / "+li.need+" XP";
   const secs=["chords","scales","harmony","prog","ear"], NM={chords:"secChords",scales:"secScales",harmony:"secHarmony",prog:"secProg",ear:"secEar"}, COL={chords:"#c9463c",scales:"#b4461a",harmony:"#2c56d6",prog:"#6a3fd1",ear:"#0e7490"};
   let mAll=0,nAll=0; const jr=secs.map(sec=>{ let m=0,n=0; try{ typeList(sec).forEach(ty=>{ const r=rootsOf(sec,ty.id); n+=r.length; m+=r.filter(k=>tileMast(sec,ty.id,k)>=3).length; }); }catch(e){} mAll+=m; nAll+=n; return [sec,m,n]; });
   const ss=S.secStats||{}, sum=k=>Object.values(ss).reduce((a,v)=>a+((v&&v[k])|0),0);
