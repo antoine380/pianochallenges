@@ -41,9 +41,13 @@ const prompt2 = s.prompt;
 await page.evaluate(() => [65, 69, 72].forEach(n => window.__midi.noteOn(n))); await wait(page, 300);
 s = await state(page);
 check('succès : un accord contenant un Do ne démarre pas l’exercice suivant', s.prompt === prompt2 && s.nSlotsOk === exp2.length, { prompt: s.prompt, slots: s.slots });
-await midi.on(page, 72); await wait(page, 200);
+// a game is now one chosen item: once it is nailed, a lone C opens the summary, and the next lone C replays the same item
+await midi.on(page, 72); await wait(page, 300);
+const endShown = await page.evaluate(() => !document.getElementById('endModal').hidden);
+check('succès : un Do seul (72) termine la partie (résumé)', endShown, { endShown });
+await midi.on(page, 72); await wait(page, 300);
 s = await state(page);
-check('succès : un Do seul (72) démarre l’exercice suivant', s.slots[0].includes('cur') && s.nSlotsOk === 0, { prompt: s.prompt, slots: s.slots });
+check('résumé : un Do seul relance le même exercice', s.playing && s.slots[0].includes('cur') && s.nSlotsOk === 0 && s.prompt === prompt2, { prompt: s.prompt, slots: s.slots });
 await browser.close();
 if (fails.length) { console.log('\nECHEC r5 :', fails); process.exit(1); }
 console.log('\nr5 OK');
