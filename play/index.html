@@ -13,6 +13,7 @@
 @font-face{font-family:"Nunito";font-style:normal;font-weight:600;font-display:swap;src:url(../assets/fonts/nunito-latin-600-normal.woff2) format("woff2")}
 @font-face{font-family:"Nunito";font-style:normal;font-weight:700;font-display:swap;src:url(../assets/fonts/nunito-latin-700-normal.woff2) format("woff2")}
 @font-face{font-family:"Nunito";font-style:normal;font-weight:800;font-display:swap;src:url(../assets/fonts/nunito-latin-800-normal.woff2) format("woff2")}
+@font-face{font-family:"Bravura";font-style:normal;font-weight:400;font-display:block;src:url(../assets/fonts/bravura.woff2) format("woff2")}
 /* Layout: ROLI-style. Home = cream page, light oversized headline, colored tiles each holding a dark "tablet" with a 3D cascade.
    Play = dark full-bleed stage; notes fall in perspective as extruded pills onto a dark keyboard whose keys light in the note's color. */
 :root{
@@ -132,6 +133,14 @@ button:focus-visible{outline:2px solid var(--coral);outline-offset:3px}
 .seg{display:inline-flex;gap:4px;justify-content:center;flex-wrap:wrap}
 .seg button{padding:8px 14px;border-radius:999px;border:1px solid #3a3944;font-size:14px;color:var(--glass-muted)}
 .seg button[aria-pressed="true"]{background:var(--glass);color:var(--stage);border-color:var(--glass)}
+/* sheet view: the song written in bars on a paper card, a cursor follows the playback */
+.sheet{position:absolute;inset:8px 0 10px;background:#f7f6ff;color:#221d47;border-radius:18px;box-shadow:0 10px 30px #0006;display:flex;flex-direction:column;justify-content:center;padding:8px 14px;overflow:hidden;z-index:1}
+.sheet-in{position:relative;display:flex;flex-direction:column;gap:6px}
+.sheet .sys svg{display:block}
+.sheet .sys+.sys{opacity:.6}
+.sheet-cur{position:absolute;left:0;top:0;width:3px;border-radius:2px;background:#7a5bf5;box-shadow:0 0 10px #7a5bf5aa;pointer-events:none;will-change:transform}
+.sheet-msg{position:absolute;top:6px;left:0;right:0;text-align:center;font-family:var(--f);font-weight:700;font-size:14px;color:#5b5486;pointer-events:none}
+.sheet-msg.big{top:50%;transform:translateY(-50%);font-size:84px;color:#7a5bf5;opacity:.85}
 @media (max-width:560px){.res{grid-template-columns:repeat(2,1fr)} .stat b{font-size:16px} .tool{min-width:46px} .ttl{max-width:40vw}}
 @media (prefers-reduced-motion:reduce){.tile,.key{transition:none}}
 </style>
@@ -181,6 +190,7 @@ button:focus-visible{outline:2px solid var(--coral);outline-offset:3px}
         <button class="tool" id="tNames" aria-pressed="true"><svg viewBox="0 0 24 24"><path d="M9 18V5l10-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="16" cy="16" r="3"/></svg><span data-i="names"></span></button>
         <button class="tool" id="tFing" aria-pressed="true"><svg viewBox="0 0 24 24"><path d="M8 13V5.5a1.5 1.5 0 0 1 3 0V12M11 11V4.5a1.5 1.5 0 0 1 3 0V12M14 11.5V6.5a1.5 1.5 0 0 1 3 0V13M17 12.5V9a1.5 1.5 0 0 1 3 0v5a7 7 0 0 1-7 7h-1.5a6 6 0 0 1-5-2.7L4 14.5a1.6 1.6 0 0 1 2.6-1.9L8 14"/></svg><span data-i="fing"></span></button>
         <button class="tool song-only" id="tWait" aria-pressed="true"><svg viewBox="0 0 24 24"><rect x="5" y="4" width="4" height="16" rx="1"/><rect x="15" y="4" width="4" height="16" rx="1"/></svg><span data-i="wait"></span></button>
+        <button class="tool song-only" id="tSheet" aria-pressed="false" hidden><svg viewBox="0 0 24 24"><path d="M3 7h18M3 11h18M3 15h18"/><ellipse cx="9" cy="16.5" rx="2.4" ry="1.8" transform="rotate(-20 9 16.5)"/><path d="M11.2 16V5"/></svg><span data-i="sheet"></span></button>
         <button class="tool song-only" id="tListen" aria-pressed="false"><svg viewBox="0 0 24 24"><path d="M6 4l14 8-14 8z"/></svg><span data-i="listen"></span></button>
         <button class="tool song-only" id="tMetro" aria-pressed="false"><svg viewBox="0 0 24 24"><path d="M8 3h8l3 18H5z"/><path d="M12 15L18 5"/></svg><span data-i="metro"></span></button>
         <button class="tool game-only" id="tHint" aria-pressed="true"><svg viewBox="0 0 24 24"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-4 10.5c.7.7 1 1.5 1 2.5h6c0-1 .3-1.8 1-2.5A6 6 0 0 0 12 3z"/></svg><span data-i="hint"></span></button>
@@ -190,6 +200,7 @@ button:focus-visible{outline:2px solid var(--coral);outline-offset:3px}
     <div class="stagewrap">
       <div class="stage" id="stage">
         <canvas id="cv"></canvas>
+        <div class="sheet" id="sheet" hidden><div class="sheet-in" id="sheetIn"></div><div class="sheet-msg" id="sheetMsg"></div></div>
         <div class="overlay" id="ov" hidden><div class="ocard" id="ovCard"></div></div>
       </div>
       <div class="kbd" id="kbd" aria-label="Clavier" data-i-aria="kbd"></div>
@@ -197,6 +208,7 @@ button:focus-visible{outline:2px solid var(--coral);outline-offset:3px}
   </section>
 </div>
 
+<script src="../assets/js/staff.js"></script>
 <script>
 (() => {
 /* ================= Language ================= */
@@ -211,7 +223,7 @@ fr:{midiScreen:"Clavier à l'écran",midiConnect:"Connecter un clavier MIDI",mid
  heroGamesT:"Une compétence par jeu",heroGamesP:"Repérer les notes, tenir le tempo, les accords, les gammes, l'oreille et la lecture : chaque jeu entraîne une seule chose, sur ton clavier.",
  freeT:"Jeu libre",freeK:"Sans partition",freeD:"Joue ce que tu veux : chaque note s'allume dans sa couleur.",songsH:"Morceaux",songsSub:"Domaine public · à ton rythme",gamesH:"Jeux",gamesSub:"Une compétence par jeu",
  foot:"Prototype. Le son est un synthé intégré ; l'app finale utilisera le piano échantillonné Salamander. Clavier d'ordinateur : Q S D F G H J K L pour les blanches, Z E T Y U O P pour les noires.",
- back:"Retour",kbd:"Clavier",lives:"Vies",time:"Temps",streak:"Série",score:"Score",speed:"Vitesse",names:"Notes",fing:"Doigts",wait:"Attente",listen:"Écouter",metro:"Métro",hint:"Indice",replay:"Rejouer",
+ back:"Retour",kbd:"Clavier",lives:"Vies",time:"Temps",streak:"Série",score:"Score",speed:"Vitesse",names:"Notes",fing:"Doigts",wait:"Attente",listen:"Écouter",metro:"Métro",hint:"Indice",replay:"Rejouer",sheet:"Partition",cascade:"Cascade",
  level:"Niveau",levels:['','Débutant','Facile','Intermédiaire'],trad:"Traditionnel",tradMozart:"Traditionnel (var. Mozart)",notes:"notes",record:"Record",play:"Jouer",library:"Bibliothèque",game:"Jeu",
  songIntro:(s,c)=>`${c} · ${s.notes.length} notes. Le morceau s'arrête jusqu'à ce que tu joues la <span style="color:${TONE[s.tone]}">bonne note</span>. Les chiffres indiquent le doigt à utiliser (1 = pouce).`,
  listenHint:"« Écouter » joue d'abord le morceau pour toi.",listenedT:"Tu as écouté le morceau",listenedP:"À toi de jouer maintenant.",
@@ -234,7 +246,7 @@ en:{midiScreen:"On-screen keyboard",midiConnect:"Connect a MIDI keyboard",midiHo
  heroGamesT:"One skill per game",heroGamesP:"Finding notes, keeping the beat, chords, scales, ear and reading: each game trains one thing, on your keyboard.",
  freeT:"Free play",freeK:"No score",freeD:"Play anything: every note lights up in its colour.",songsH:"Songs",songsSub:"Public domain · at your own pace",gamesH:"Games",gamesSub:"One skill per game",
  foot:"Prototype. The sound is a built-in synth; the final app will use the sampled Salamander piano. Computer keyboard: A S D F G H J K L for the white keys, W E T Y U O P for the black keys.",
- back:"Back",kbd:"Keyboard",lives:"Lives",time:"Time",streak:"Streak",score:"Score",speed:"Speed",names:"Names",fing:"Fingers",wait:"Wait",listen:"Listen",metro:"Metro",hint:"Hint",replay:"Replay",
+ back:"Back",kbd:"Keyboard",lives:"Lives",time:"Time",streak:"Streak",score:"Score",speed:"Speed",names:"Names",fing:"Fingers",wait:"Wait",listen:"Listen",metro:"Metro",hint:"Hint",replay:"Replay",sheet:"Sheet",cascade:"Cascade",
  level:"Level",levels:['','Beginner','Easy','Intermediate'],trad:"Traditional",tradMozart:"Traditional (Mozart var.)",notes:"notes",record:"Best",play:"Play",library:"Library",game:"Game",
  songIntro:(s,c)=>`${c} · ${s.notes.length} notes. The song stops until you play the <span style="color:${TONE[s.tone]}">right note</span>. The numbers show which finger to use (1 = thumb).`,
  listenHint:"“Listen” plays the song for you first.",listenedT:"You listened to the song",listenedP:"Now it's your turn.",
@@ -267,7 +279,7 @@ const toMidi=n=>{const t=n.match(/^([A-G])(#?)(\d)$/);return 12*(+t[3]+1)+{C:0,D
 const parse=(s,fing)=>{let b=0;const out=[];for(const tok of s.trim().split(/\s+/)){const[n,d]=tok.split(':');const dur=parseFloat(d);if(n!=='R')out.push({m:toMidi(n),s:b,d:dur,f:fing[n]||0});b+=dur}return out};
 
 const SONGS=[
- {id:'lune',title:'Au clair de la lune',composer:'trad',level:1,bpm:96,tone:'coral',fing:{C4:1,D4:2,E4:3},
+ {id:'lune',title:'Au clair de la lune',composer:'trad',level:1,bpm:96,meter:[4,4],tone:'coral',fing:{C4:1,D4:2,E4:3},
   seq:'C4:1 C4:1 C4:1 D4:1 E4:2 D4:2 C4:1 E4:1 D4:1 D4:1 C4:4 C4:1 C4:1 C4:1 D4:1 E4:2 D4:2 C4:1 E4:1 D4:1 D4:1 C4:4'},
  {id:'maman',title:LANG==='fr'?'Ah ! vous dirai-je, maman':'Twinkle, Twinkle, Little Star',composer:'tradMozart',level:1,bpm:100,tone:'cyan',fing:{C4:1,D4:2,E4:3,F4:4,G4:5,A4:5},
   seq:'C4:1 C4:1 G4:1 G4:1 A4:1 A4:1 G4:2 F4:1 F4:1 E4:1 E4:1 D4:1 D4:1 C4:2 G4:1 G4:1 F4:1 F4:1 E4:1 E4:1 D4:2 G4:1 G4:1 F4:1 F4:1 E4:1 E4:1 D4:2 C4:1 C4:1 G4:1 G4:1 A4:1 A4:1 G4:2 F4:1 F4:1 E4:1 E4:1 D4:1 D4:1 C4:2'},
@@ -275,8 +287,8 @@ const SONGS=[
   seq:'E4:1 E4:1 F4:1 G4:1 G4:1 F4:1 E4:1 D4:1 C4:1 C4:1 D4:1 E4:1 E4:1.5 D4:.5 D4:2 E4:1 E4:1 F4:1 G4:1 G4:1 F4:1 E4:1 D4:1 C4:1 C4:1 D4:1 E4:1 D4:1.5 C4:.5 C4:2'},
  {id:'jacques',title:'Frère Jacques',composer:'trad',level:2,bpm:108,tone:'mint',fing:{G4:1,C5:1,D5:2,E5:3,F5:4,G5:5,A5:5},
   seq:'C5:1 D5:1 E5:1 C5:1 C5:1 D5:1 E5:1 C5:1 E5:1 F5:1 G5:2 E5:1 F5:1 G5:2 G5:.5 A5:.5 G5:.5 F5:.5 E5:1 C5:1 G5:.5 A5:.5 G5:.5 F5:.5 E5:1 C5:1 C5:1 G4:1 C5:2 C5:1 G4:1 C5:2'},
- {id:'elise',title:LANG==='fr'?'Lettre à Élise':'Für Elise',composer:'L. van Beethoven',level:3,bpm:76,tone:'violet',fing:{E5:4,'D#5':3,D5:3,C5:2,B4:1,A4:1,'G#4':2,E4:2,C4:1},
-  seq:'E5:.5 D#5:.5 E5:.5 D#5:.5 E5:.5 B4:.5 D5:.5 C5:.5 A4:1.5 C4:.5 E4:.5 A4:.5 B4:1.5 E4:.5 G#4:.5 B4:.5 C5:1.5 E4:.5 E5:.5 D#5:.5 E5:.5 D#5:.5 E5:.5 B4:.5 D5:.5 C5:.5 A4:1.5 C4:.5 E4:.5 A4:.5 B4:1.5 E4:.5 C5:.5 B4:.5 A4:3'},
+ {id:'elise',title:LANG==='fr'?'Lettre à Élise':'Für Elise',composer:'L. van Beethoven',level:3,bpm:76,meter:[3,8],pickup:1,tone:'violet',fing:{E5:4,'D#5':3,D5:3,C5:2,B4:1,A4:1,'G#4':2,E4:2,C4:1},
+  seq:'E5:.5 D#5:.5 E5:.5 D#5:.5 E5:.5 B4:.5 D5:.5 C5:.5 A4:1.5 C4:.5 E4:.5 A4:.5 B4:1.5 E4:.5 G#4:.5 B4:.5 C5:1.5 E4:.5 E5:.5 D#5:.5 E5:.5 D#5:.5 E5:.5 B4:.5 D5:.5 C5:.5 A4:1.5 C4:.5 E4:.5 A4:.5 B4:1.5 E4:.5 C5:.5 B4:.5 A4:1.5'},
 ];
 SONGS.forEach(s=>{s.notes=parse(s.seq,s.fing);s.end=Math.max(...s.notes.map(n=>n.s+n.d));s.by=T[LANG][s.composer]||s.composer});
 const LEVEL=tr('levels');
@@ -395,7 +407,7 @@ const home=$('home'),play=$('play'),ov=$('ov'),ovCard=$('ovCard'),cv=$('cv'),ctx
 let SW=300,SH=200;
 function fit(){const r=stage.getBoundingClientRect(),d=window.devicePixelRatio||1;SW=r.width;SH=r.height;
   cv.width=Math.round(SW*d);cv.height=Math.round(SH*d);ctx.setTransform(d,0,0,d,0,0)}
-new ResizeObserver(fit).observe(stage);
+new ResizeObserver(()=>{fit();SV.sig=''}).observe(stage);
 let wake=null;
 async function keepAwake(){try{wake=await navigator.wakeLock?.request('screen')}catch(e){}}
 function go(s){if(s==='home'&&embedded&&(VIEW.startsWith('song=')||VIEW.startsWith('game='))){try{window.parent.postMessage({source:'clavio',type:'home'},location.origin==='null'?'*':location.origin)}catch(e){}}screen=s;home.hidden=s!=='home';play.hidden=s!=='play';
@@ -462,6 +474,7 @@ const tog=(id,fn)=>$(id).addEventListener('click',e=>{const on=e.currentTarget.g
 tog('tNames',on=>{showNames=on;labelKeys()});
 tog('tFing',on=>{showFing=on;lastTargets='x'});
 tog('tWait',on=>P.wait=on);
+tog('tSheet',on=>{sheet=on;store.set('sheet',on);applySheet()});
 tog('tListen',on=>{P.listen=on;startSong()});
 tog('tMetro',on=>P.metro=on);
 tog('tHint',on=>{hint=on;lastTargets='x'});
@@ -470,7 +483,7 @@ $('restart').addEventListener('click',()=>{if(mode==='song')startSong();else GAM
 
 /* ================= Song player ================= */
 const P={song:null,notes:[],t:0,playing:false,wait:true,listen:false,metro:false,score:0,streak:0,maxStreak:0,c:{p:0,b:0,m:0,w:0},frozen:false,lastBeat:-9};
-function openSong(s){mode='song';P.song=s;go('play');
+function openSong(s){mode='song';P.song=s;go('play');applySheet();
   setBar({title:s.title,sub:`${s.by} · ${tr('level')} ${s.level}`,lives:false,time:false,streak:true,prog:true,tools:['song','speed','fing','names']});
   resetSong();
   overlay(`<span class="lvl">${tr('level')} ${s.level} · ${LEVEL[s.level]}</span><h2>${s.title}</h2>
@@ -581,10 +594,51 @@ function drawSong(dt){
   drawFx(dt);
 }
 
+/* ----- Sheet view (like ROLI's "Partition"): the song in bars, two lines at a time, a cursor follows the playback ----- */
+const HAS_STAFF=typeof Staff!=='undefined';
+const HCLEF=((HASH.find(x=>x.startsWith('clef='))||'clef=auto').slice(5));
+let sheet=HAS_STAFF&&!!store.get('sheet',HASH.includes('staff=1'));
+const SV={song:null,ev:[],sig:'',cur:null};
+function songEvents(s){const ns=s.notes,ev=[];let b=0;
+  for(let i=0;i<ns.length;){const s0=ns[i].s;if(s0>b+1e-6)ev.push({rest:true,notes:[],dur:s0-b,s:b,idx:[]});
+    const idx=[];while(i<ns.length&&Math.abs(ns[i].s-s0)<1e-6)idx.push(i++);
+    const d=Math.max(...idx.map(j=>ns[j].d)),nx=i<ns.length?ns[i].s:s0+d,dur=Math.min(d,nx-s0);
+    ev.push({dur,s:s0,idx});b=s0+dur}
+  return ev}
+const inkOf=n=>n.st===1||n.st===3?col(n.m,44):n.st===2?'#b9b5cc':null;
+function applySheet(){const on=sheet&&mode==='song'&&screen==='play';$('sheet').hidden=!on;cv.style.visibility=on?'hidden':'';$('tSheet').setAttribute('aria-pressed',!!sheet);$('tSheet').hidden=!HAS_STAFF||mode!=='song';SV.sig=''}
+function drawSheet(){
+  const s=P.song,box=$('sheet');if(!s||box.hidden)return;
+  if(SV.song!==s){SV.song=s;SV.ev=songEvents(s);SV.sig=''}
+  const ev=SV.ev,meter=s.meter||[4,4],per=meter[0]*4/meter[1],W=Math.max(220,box.clientWidth-28),BH=box.clientHeight-16;
+  const two=BH>200,sp=Math.max(5,Math.min(11,(BH-(two?10:0))/(two?2:1)/(showNames?11.5:9.6)));
+  const bpl=Math.max(2,Math.min(per<3?6:4,Math.floor((W-sp*9)/(per*sp*5.2))));
+  const bars=Staff.bars(ev,meter,s.pickup),lines=[];for(let i=0;i<bars.length;i+=bpl)lines.push(bars.slice(i,i+bpl));
+  const t=Math.max(0,P.t);let ci=0;ev.forEach((e,i)=>{if(e.s<=t+1e-6)ci=i});
+  const f=front();if(f&&P.wait&&!P.listen){const fi=ev.findIndex(e=>e.idx.includes(P.notes.indexOf(f)));if(fi>=0&&fi<ci)ci=fi}
+  const li=Math.max(0,lines.findIndex(l=>l.flat().includes(ci))),show=[li,li+1].filter(i=>i<lines.length).slice(0,two?2:1);
+  const fe=f?ev.findIndex(e=>e.idx.includes(P.notes.indexOf(f))):-1;
+  const sig=[W,BH,showNames,li,fe,show.map(i=>lines[i].flat().map(k=>ev[k].idx.map(j=>P.notes[j].st).join('')).join(',')).join('|')].join('/');
+  if(sig!==SV.sig){SV.sig=sig;let html='';SV.cur=null;
+    show.forEach((L,n)=>{const ids=lines[L].flat(),nb=lines[L].length,w=nb<bpl?Math.round(W*(.22+.78*nb/bpl)):W;
+      const evs=ids.map(k=>{const e=ev[k];return e.rest?{rest:true,notes:[],dur:e.dur}:{dur:e.dur,notes:e.idx.map(j=>{const n=P.notes[j],c=inkOf(n);return c?{m:n.m,color:c}:{m:n.m}})}});
+      const labels=showNames?ids.map(k=>ev[k].rest?'':NAMES[pc(s.notes[ev[k].idx[0]].m)]):null;
+      const cur=ids.indexOf(fe);
+      let r;try{r=Staff.render({events:evs,mode:'measures',meter,offset:L===0&&s.pickup?per-s.pickup:0,clef:HCLEF,key:0,width:w,sp,labels,cur:cur>=0?cur:null,curColor:'rgba(122,91,245,.14)',final:L===lines.length-1?true:'thin',ts:L===0,stroke:'#221d47',aria:s.title})}catch(e){return}
+      html+=`<div class="sys">${r.svg}</div>`;if(n===0)SV.cur={ids,xs:r.xs,w,h:r.height,sp,end:ev[ids[ids.length-1]].s+ev[ids[ids.length-1]].dur}});
+    $('sheetIn').innerHTML=html+'<i class="sheet-cur" id="sheetCur"></i>'}
+  const C=SV.cur,cur=$('sheetCur');if(C&&cur){const sys=$('sheetIn').firstElementChild;let x=C.xs[0];
+    for(let k=0;k<C.ids.length;k++){const e=ev[C.ids[k]],a=e.s,b=k+1<C.ids.length?ev[C.ids[k+1]].s:C.end,xa=C.xs[k],xb=k+1<C.ids.length?C.xs[k+1]:C.w-C.sp*1.2;
+      if(t>=a-1e-6){x=xa+(xb-xa)*Math.min(1,(t-a)/Math.max(.01,b-a))}}
+    cur.style.height=(C.h-C.sp)+'px';cur.style.transform=`translate(${sys.offsetLeft+x+C.sp*.55}px,${sys.offsetTop+C.sp*.5}px)`}
+  const msg=$('sheetMsg');if(P.playing&&P.t<0){msg.textContent=Math.ceil(-P.t);msg.className='sheet-msg big'}else{msg.textContent=P.frozen?tr('waitNote'):'';msg.className='sheet-msg'}
+}
+if(HAS_STAFF&&document.fonts)document.fonts.load('40px Bravura').then(()=>{SV.sig=''}).catch(()=>{});
+
 /* ================= Games ================= */
 const GAME={};
 let gs=null; // current game state
-function openGame(id){mode=id;const g=GAMES.find(x=>x.id===id);go('play');
+function openGame(id){mode=id;const g=GAMES.find(x=>x.id===id);go('play');applySheet();
   setBar({title:g.t,sub:g.skill,lives:GAME[id].lives,time:GAME[id].timed,streak:false,prog:false,tools:GAME[id].tools||['fing','names']});
   GAME[id].reset();drawG=GAME[id].draw;
   overlay(`<span class="lvl">${tr('game')} · ${g.skill}</span><h2>${g.t}</h2><p>${g.intro}</p>${GAME[id].options?GAME[id].options():''}<div class="row"><button class="btn" id="go">${tr('play')}</button></div>`);
@@ -765,7 +819,7 @@ GAME.staff={lives:true,timed:false,tools:['names','speed','hint'],
 /* ================= Loop ================= */
 let last=performance.now();
 function frame(now){const dt=Math.min(.05,(now-last)/1000);last=now;
-  if(screen==='play'){if(mode==='song'){updateSong(dt);drawSong(dt)}else{GAME[mode].update(dt);GAME[mode].draw(dt)}}
+  if(screen==='play'){if(mode==='song'){updateSong(dt);if(sheet&&HAS_STAFF)drawSheet();else drawSong(dt)}else{GAME[mode].update(dt);GAME[mode].draw(dt)}}
   requestAnimationFrame(frame)}
 renderHome();requestAnimationFrame(frame);
 if(VIEW.startsWith('game=')&&GAMES.some(g=>g.id===VIEW.slice(5)))openGame(VIEW.slice(5));

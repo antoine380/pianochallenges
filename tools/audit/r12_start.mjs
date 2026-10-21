@@ -18,16 +18,18 @@ check('invité : onboarding question 1', !(await vis('gate')) && await vis('onb'
 const pick = i => ev(i => document.querySelectorAll('.onb-opt')[i].click(), i);
 await pick(1); await pick(2); await ev(() => document.getElementById('onbNext').click()); await wait(page, 200);
 await pick(0); await wait(page, 500);   // level: beginner (moves on by itself)
+check('question 3 : lire les notes sur une portée', await ev(() => document.querySelectorAll('.onb-opt').length === 3 && /portée/.test(document.querySelector('.onb-h').textContent)));
+await pick(0); await wait(page, 500);   // reads music: yes
 const how = await ev(() => [...document.querySelectorAll('.onb-opt b')].map(b => b.textContent));
-check('question 3 : les façons de jouer', how.length >= 2, how);
+check('question 4 : les façons de jouer', how.length >= 2, how);
 await ev(() => [...document.querySelectorAll(".onb-opt")].pop().click()); await wait(page, 500);   // screen (last)
 await pick(1); await wait(page, 500);   // notes + chords
-check('question 5 : inviter des amis (lien)', await ev(() => /\?ref=p/.test(document.querySelector('.onb-link input').value)));
+check('question 6 : inviter des amis (lien)', await ev(() => /\?ref=p/.test(document.querySelector('.onb-link input').value)));
 await ev(() => document.getElementById('onbNext').click()); await wait(page, 200);
 check('résumé : programme prêt', await ev(() => document.querySelectorAll('.onb-li').length >= 3));
 await ev(() => document.getElementById('onbNext').click()); await wait(page, 800);
 const S1 = await ev(() => JSON.parse(localStorage.getItem('memo-gammes-v1')));
-check('réglages appliqués (débutant, écran, accords)', S1.onb.level === 'debut' && S1.settings.guideK === true && S1.settings.fing === true && S1.settings.gmCont === 'chords' && S1.eloStart === 600, { onb: S1.onb, input: S1.settings.input });
+check('réglages appliqués (débutant, écran, accords)', S1.onb.level === 'debut' && S1.settings.guideK === true && S1.settings.fing === true && S1.settings.gmCont === 'chords' && S1.eloStart === 600 && S1.settings.staff === true, { onb: S1.onb, input: S1.settings.input });
 check('tutoriel : bulle sur LEARN', await vis('tour') && await ev(() => document.getElementById('tourH').textContent === 'LEARN'));
 await ev(() => document.getElementById('tourNext').click()); await wait(page, 350);
 check('Suivant : bulle sur GAMES', await ev(() => document.getElementById('tourH').textContent === 'GAMES'));
