@@ -3905,7 +3905,7 @@ function renderStatus(){
   const li=levelInfo(S.xp);
   $("lvlNum").textContent=li.L; $("mbLvl").textContent=li.L; $("lvlTitle").textContent=titleFor(li.L);
   const ci=charIndex(li.L), ph=(typeof userPhoto==="function"&&userPhoto())||"", key=ph||String(ci);
-  if($("lvlAvatar").dataset.c!==key){ $("lvlAvatar").innerHTML=$("mbAv").innerHTML = ph ? photoImg(ph) : avatarSVG(ci); $("lvlAvatar").dataset.c=key; }
+  if($("lvlAvatar").dataset.c!==key){ avFill($("lvlAvatar"),ph,ci); avFill($("mbAv"),ph,ci); $("lvlAvatar").dataset.c=key; }
   if(typeof user!=="undefined" && user) $("lvlTitle").textContent=myName();
   $("lvlAv").setAttribute("aria-label",titleFor(li.L)+" · "+t("charMore"));
   $("xpFill").style.width=(li.into/li.need*100)+"%"; $("xpTxt").textContent=fmtN(li.into)+" / "+fmtN(li.need)+" XP";
@@ -4773,7 +4773,7 @@ function streaks(){ const days=Object.keys(S.xpDays||{}).filter(k=>(S.xpDays[k]|
 const fmtDur=sec=>{ const h=Math.floor(sec/3600), m=Math.round(sec%3600/60); return h? h+" h "+String(m).padStart(2,"0")+" min" : m+" min"; };
 function renderFiche(){
   const li=levelInfo(S.xp), ph=(typeof userPhoto==="function"&&userPhoto())||"";
-  $("pfAv").innerHTML= ph ? photoImg(ph) : avatarSVG(charIndex(li.L));
+  avFill($("pfAv"),ph,charIndex(li.L));
   $("pfK").textContent=(typeof user!=="undefined"&&user)?myName():t("you"); $("pfName").textContent=titleFor(li.L);
   $("pfXp").style.width=(li.into/li.need*100)+"%"; $("pfXpTxt").textContent=fmtN(li.into)+" / "+fmtN(li.need)+" XP";
   const secs=["chords","scales","harmony","prog","ear"], NM={chords:"secChords",scales:"secScales",harmony:"secHarmony",prog:"secProg",ear:"secEar"}, COL={chords:"#c9463c",scales:"#b4461a",harmony:"#2c56d6",prog:"#6a3fd1",ear:"#0e7490"};
@@ -5562,8 +5562,8 @@ function renderAccount(){
   const li=levelInfo(S.xp), ci=charIndex(li.L), c=t("chars")[ci];
   const solved=Object.values(S.secStats||{}).reduce((a,x)=>a+(x.ok||0),0);
   const ph=userPhoto();
-  const box=$("acctMe"); box.innerHTML='<div class="acct-top"><span class="av">'+(ph?photoImg(ph):avatarSVG(ci))+'</span><div><b><span class="nm"></span><span class="lvl-chip"></span></b><small></small></div></div><div class="acct-stats"></div>';
-  box.querySelector(".nm").textContent = user ? myName() : c[0]+" "+c[1]; box.querySelector(".lvl-chip").textContent=t("acctLevel")+" "+li.L;
+  const box=$("acctMe"); box.innerHTML='<div class="acct-top"><span class="av"></span><div><b><span class="nm"></span><span class="lvl-chip"></span></b><small></small></div></div><div class="acct-stats"></div>';
+  avFill(box.querySelector(".acct-top .av"),ph,ci); box.querySelector(".nm").textContent = user ? myName() : c[0]+" "+c[1]; box.querySelector(".lvl-chip").textContent=t("acctLevel")+" "+li.L;
   box.querySelector("small").textContent=c[2];
   const st=box.querySelector(".acct-stats");
   [[t("acctXp"),fmtN(S.xp)],[t("acctStreak"),fmtN(S.streak.days)+" "+t("day")],[t("acctDone"),fmtN(solved)],[t("acctLevel"),fmtN(li.L)]].forEach(([k,v])=>{ const d=document.createElement("div"); d.className="end-stat"; d.innerHTML="<span></span><b></b>"; d.querySelector("span").textContent=k; d.querySelector("b").textContent=v; st.appendChild(d); });
@@ -5651,7 +5651,6 @@ $("dcReview").addEventListener("change",e=>{ dcRev=e.target.checked; });
 $("dcOk").addEventListener("click",()=>{ S.settings.dailySecs=SECS.filter(x=>dcSel.includes(x)); S.settings.dailyLen=dcLenV; S.settings.dailyReview=dcRev; const changed=JSON.stringify([S.settings.dailySecs,S.settings.dailyLen,S.settings.dailyReview])!==JSON.stringify([dcPrev&&dcPrev[0],dcPrev&&dcPrev[1],dcPrev&&dcPrev[2]]); save(); closeMod("dailyCfgModal");
   if(dcStartAfter){ dcStartAfter=false; if(changed) dailyPlan(true); startDaily(); return; } if(!(game&&game.daily)){ dailyPlan(true); renderDaily(); } });
 const userPhoto = () => user && user.user_metadata && (user.user_metadata.avatar_url || user.user_metadata.picture) || "";
-const photoImg = url => '<img class="photo" alt="" referrerpolicy="no-referrer" src="'+String(url).replace(/"/g,"&quot;")+'">';
 function showIntro(key){
   const k = key==="section" ? (page==="practice"?S.section:page) : key, d=t("intro")[k]; if(!d) return;
   S.introSeen=S.introSeen||{}; S.introSeen[k]=true; save();
