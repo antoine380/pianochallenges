@@ -509,6 +509,11 @@ body{margin:0;padding:0;overflow:hidden}
 .rank-list .num{font-family:var(--f-mono);font-size:.86rem;text-align:right;white-space:nowrap}
 .rank-list .skel{height:10px;border-radius:5px;background:var(--line);opacity:.6}
 .rank-list .skel-av{width:40px;height:40px;border-radius:50%;background:var(--line);opacity:.6}
+.rank-list :is(b,small){display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap} .rank-list li>span:nth-child(3){min-width:0} .rank-list .av{border-radius:50%;overflow:hidden}
+.rank-list .num{font-variant-numeric:tabular-nums} .rank-list li.sep{display:block;background:transparent;padding:0 12px;text-align:center;color:var(--muted);font-weight:800;letter-spacing:.2em}
+@media (max-width:640px){ .rank-list li{grid-template-columns:24px 32px minmax(0,1fr) auto;grid-template-rows:auto auto;gap:0 8px;padding:7px 10px}
+  .rank-list li>:is(.rk,.av){grid-row:1/3} .rank-list li>span:nth-child(3){grid-row:1/3;min-width:0} .rank-list li>.num{grid-column:4;line-height:1.25} .rank-list li>.num:last-child{font-size:.76rem;color:var(--muted)}
+  .rank-list .av{width:32px;height:32px} .rank-list .rk{font-size:.85rem} }
 .rank-cta{display:flex;align-items:center;gap:12px;flex-wrap:wrap;justify-content:space-between;border-top:1px solid var(--line);padding-top:14px}
 .rank-cta p{margin:0;color:var(--muted);max-width:60ch}
 .acct-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:12px}
@@ -2380,7 +2385,7 @@ const TXT = {
     pfDayS:n=>"Série : "+n+" j", pfWeekS:n=>"Semaines : "+n, pfBest:n=>"Record : "+n, pfJSub:(a,b)=>a+" éléments maîtrisés sur "+b+".", pfRSub:"Tes meilleurs scores dans les jeux et les morceaux.",
     pfMonths:["janvier","février","mars","avril","mai","juin","juillet","août","septembre","octobre","novembre","décembre"], pfDays:["L","M","M","J","V","S","D"], themeDayS:"Mode jour", themeNightS:"Mode nuit", langLbl:"Langue",
     hsDailyK:"À faire aujourd'hui", hsDailyGo:"C'est parti", hsDailyDone:"Refaire", hsMidiT:"Clavier MIDI", hsMidiOff:"Aucun clavier branché : relie-le en USB ou en Bluetooth.", hsMidiNo:"Ce navigateur ne gère pas le MIDI : joue au micro ou à l'écran.", hsMidiConnect:"Connecter", hsMidiChange:"Changer",
-    hsNewsT:"Actualités", hsRankT:"Classement de la semaine", hsRankMore:"Tout voir", hsRankLoad:"Chargement…", hsRankErr:"Classement indisponible pour l'instant.",
+    rankOrd:n=>ordFr(n), hsNewsT:"Actualités", hsRankT:"Classement de la semaine", hsRankMore:"Tout voir", hsRankLoad:"Chargement…", hsRankErr:"Classement indisponible pour l'instant.",
     hsNews:[["Nouveau look","Mode jour ou nuit, cartes en 3D : l'app fait peau neuve.","#6a4bf0","M12 3l2.4 5 5.6.8-4 3.9.9 5.5L12 15.6 7.1 18.2l.9-5.5-4-3.9 5.6-.8z"],["Jeux Play","Six mini-jeux sur le clavier lumineux, dans GAMES.","#1f7a52","M6 9h4M8 7v4M15 9h.01M18 11h.01M3 8a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4v5a4 4 0 0 1-7 2.5h-4A4 4 0 0 1 3 13z"],["Jeu libre","Joue ce que tu veux dans PLAY : chaque note s'allume dans sa couleur.","#0e7490","M9 18V5l12-2v13M9 18a3 3 0 1 1-6 0 3 3 0 0 1 6 0zM21 16a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"],["Entraînement du jour","10 exercices mélangés chaque jour pour garder ta série.","#a3306b","M12 3c1 3.5 5 6 5 11a5 5 0 0 1-10 0c0-2.2 1-3.8 2.2-5 .2 1.6 1 2.8 2.3 3.3C11 9.3 11.3 6 12 3z"]],
     wrongSr:"Fausse note : ",
     dailyShort:"Entraînement"},
@@ -2544,12 +2549,30 @@ const TXT = {
     pfDayS:n=>"Streak: "+n+" d", pfWeekS:n=>"Weeks: "+n, pfBest:n=>"Best: "+n, pfJSub:(a,b)=>a+" of "+b+" items mastered.", pfRSub:"Your best scores in games and songs.",
     pfMonths:["January","February","March","April","May","June","July","August","September","October","November","December"], pfDays:["M","T","W","T","F","S","S"], themeDayS:"Day mode", themeNightS:"Night mode", langLbl:"Language",
     hsDailyK:"To do today", hsDailyGo:"Let's go", hsDailyDone:"Play again", hsMidiT:"MIDI keyboard", hsMidiOff:"No keyboard connected: plug it in over USB or Bluetooth.", hsMidiNo:"This browser has no MIDI: play with the mic or on screen.", hsMidiConnect:"Connect", hsMidiChange:"Change",
-    hsNewsT:"News", hsRankT:"This week's leaderboard", hsRankMore:"See all", hsRankLoad:"Loading…", hsRankErr:"Leaderboard unavailable right now.",
+    rankOrd:n=>ordEn(n), hsNewsT:"News", hsRankT:"This week's leaderboard", hsRankMore:"See all", hsRankLoad:"Loading…", hsRankErr:"Leaderboard unavailable right now.",
     hsNews:[["New look","Day or night mode and 3D cards: the app gets a makeover.","#6a4bf0","M12 3l2.4 5 5.6.8-4 3.9.9 5.5L12 15.6 7.1 18.2l.9-5.5-4-3.9 5.6-.8z"],["Play games","Six mini-games on the light-up keyboard, in GAMES.","#1f7a52","M6 9h4M8 7v4M15 9h.01M18 11h.01M3 8a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4v5a4 4 0 0 1-7 2.5h-4A4 4 0 0 1 3 13z"],["Free play","Play anything in PLAY: every note lights up in its colour.","#0e7490","M9 18V5l12-2v13M9 18a3 3 0 1 1-6 0 3 3 0 0 1 6 0zM21 16a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"],["Daily practice","10 mixed exercises every day to keep your streak.","#a3306b","M12 3c1 3.5 5 6 5 11a5 5 0 0 1-10 0c0-2.2 1-3.8 2.2-5 .2 1.6 1 2.8 2.3 3.3C11 9.3 11.3 6 12 3z"]],
     wrongSr:"Wrong note: ",
     dailyShort:"Daily"}
 };
 const t = k => TXT[S.settings.lang][k];
+// data shown to people (scores, XP, other players' names): thousands separators in the app's language,
+// cuts by grapheme (never half an emoji), names isolated from the text around them (<bdi>) and without bidi controls
+const fmtN = n => (+n||0).toLocaleString(S.settings.lang==="fr"?"fr-FR":"en-GB");
+const BIDI_G = /[‎‏‪-‮⁦-⁩]/g, BIDI_1 = /[‎‏‪-‮⁦-⁩]/, CTRL_1 = /[\u0000-\u001f\u007f]/;
+const gSeg = (typeof Intl!=="undefined" && Intl.Segmenter) ? new Intl.Segmenter() : null;
+function gCut(s,n,cp){ s=String(s==null?"":s); const parts=gSeg?Array.from(gSeg.segment(s),x=>x.segment):Array.from(s); let out="", k=0, c=0;
+  for(const p of parts){ const l=Array.from(p).length; if(k>=n || (cp && c+l>cp)) break; out+=p; k++; c+=l; } return out; }
+const gLen = s => gSeg ? Array.from(gSeg.segment(String(s))).length : Array.from(String(s)).length;
+const pName = s => String(s==null?"":s).replace(BIDI_G,"").replace(/[\u0000-\u001f\u007f]/g,"").trim() || t("qzPlayer");
+function nmPut(el,s,suf){ const v=pName(s), bd=document.createElement("bdi"); bd.textContent=v; el.textContent=""; el.appendChild(bd); if(suf) el.appendChild(document.createTextNode(suf)); el.title=v+(suf||""); return v; }
+function nmFill(el,fn,s){ const v=pName(s), parts=String(fn("⁣")).split("⁣"), bd=document.createElement("bdi"); bd.textContent=v; el.textContent=parts[0]||""; el.appendChild(bd); if(parts[1]) el.appendChild(document.createTextNode(parts[1])); }
+// one's own nickname: 2 to 24 characters, no control or text-direction characters (same rule as the profiles_name_clean check in SQL)
+const nameErr = s => { const v=String(s==null?"":s).trim(); return BIDI_1.test(v)||CTRL_1.test(v) ? "pseudoBad" : gLen(v)<2 ? "pseudoShort" : ""; };
+// avatar: a photo built with the DOM (never concatenated HTML), the drawn character if it fails to load
+function avFill(el,photo,ci){ el.textContent=""; const svg=()=>{ el.innerHTML=avatarSVG(Math.max(0,Math.min(9,ci|0))); };
+  if(!(photo && /^https:\/\//.test(photo))){ svg(); return el; }
+  const img=document.createElement("img"); img.className="photo"; img.alt=""; img.referrerPolicy="no-referrer"; img.addEventListener("error",svg,{once:true}); img.src=photo; el.appendChild(img); return el; }
+const ordFr = n => fmtN(n)+(n===1?"er":"e"), ordEn = n => fmtN(n)+((n%100>=11&&n%100<=13)?"th":["th","st","nd","rd"][n%10]||"th");
 
 // ---------- Music theory ----------
 const LETTERS = ["C","D","E","F","G","A","B"];
@@ -5212,8 +5235,8 @@ function renderHubSide(){
   renderHubRank();
 }
 function hsRow(r,rk,me){ const li=document.createElement("li"); if(me) li.className="me"; const okPhoto=r.photo && /^https:\/\//.test(r.photo);
-  li.innerHTML='<span class="rk"></span><span class="av">'+(okPhoto?photoImg(r.photo):avatarSVG(Math.max(0,Math.min(9,r.avatar|0))))+'</span><b></b><span class="num"></span>';
-  li.querySelector(".rk").textContent=rk; li.querySelector("b").textContent=r.name; li.querySelector(".num").textContent=(r.xp|0)+" XP"; return li; }
+  li.innerHTML='<span class="rk"></span><span class="av"></span><b></b><span class="num"></span>'; avFill(li.querySelector(".av"),okPhoto?r.photo:"",r.avatar);
+  li.querySelector(".rk").textContent=typeof rk==="number"?fmtN(rk):rk; nmPut(li.querySelector("b"),r.name); li.querySelector(".num").textContent=fmtN(r.xp)+" XP"; return li; }
 async function renderHubRank(){
   const ol=$("hsRank"); if(getComputedStyle($("hsRank").closest(".hs-card")).display==="none") return;
   const li0=levelInfo(S.xp), now=new Date(), since=addDays(-((now.getDay()+6)%7));
@@ -5227,9 +5250,17 @@ async function renderHubRank(){
   const {data,error}=await Promise.race([sb.rpc("leaderboard",{since}), new Promise(r=>setTimeout(()=>r({data:null,error:1}),8000))]);
   ol.innerHTML="";
   try{ ntfRank(data,since); }catch(e){}
-  const list=(data||[]).slice(0,5); list.forEach((r,i)=>ol.appendChild(hsRow(r,i+1,user&&r.id===user.id)));
-  if(error) ol.appendChild(msg("hsRankErr")); else if(!user || !list.some(r=>r.id===user.id)) ol.appendChild(mine());
+  const all=data||[], list=all.slice(0,5); list.forEach((r,i)=>ol.appendChild(hsRow(r,i+1,user&&r.id===user.id)));
+  if(error) ol.appendChild(msg("hsRankErr")); else if(!user || !list.some(r=>r.id===user.id)){
+    const at=user?all.findIndex(r=>r.id===user.id):-1, row=mine(); ol.appendChild(row);
+    const put=(rk,xp)=>{ row.querySelector(".rk").textContent=""; const b=row.querySelector("b"); b.textContent=t("rankOrd")(rk)+" · "+t("you"); b.title=b.textContent; row.querySelector(".num").textContent=fmtN(xp)+" XP"; };
+    if(at>=0) put(at+1,all[at].xp); else if(user){ const m=await myRank(since); if(m && ol.contains(row)) put(m.rank,m.xp); } }
 }
+// my_rank(since): the signed-in player's own rank and XP when outside the top 50 (supabase/migrations/2026-10-21_my_rank.sql).
+// Not installed yet, offline or no XP in the period: null, and nothing is shown.
+async function myRank(since){ if(!sb||!user) return null;
+  try{ const {data,error}=await Promise.race([sb.rpc("my_rank",{since:since||null}), new Promise(r=>setTimeout(()=>r({data:null,error:1}),6000))]);
+    const r=Array.isArray(data)?data[0]:data; if(error||!r||!(+r.rank>0)) return null; return {rank:+r.rank|0, xp:+r.xp||0}; }catch(e){ return null; } }
 $("hsDaily").addEventListener("click",()=>$("dailyCard").click());
 $("hsRankMore").addEventListener("click",()=>$("rankBtn").click());
 $("hsMidiBtn").addEventListener("click",()=>{ if(midiPossible()) setInput("midi",true); else openInputChooser(true); });
@@ -5448,14 +5479,15 @@ function renderWelcome(){ const ul=$("wcList"); ul.innerHTML=""; t("perks").forE
 $("wcSignup").addEventListener("click",()=>{ closeMod("welcomeModal"); openPage("account"); });
 function renderRankPer(){ const box=$("rankPer"), P=t("periods"), cur=S.settings.rankPer||"week"; box.innerHTML="";
   Object.keys(P).forEach(k=>{ const b=document.createElement("button"); b.type="button"; b.textContent=P[k]; b.setAttribute("aria-pressed",k===cur); b.onclick=()=>{ S.settings.rankPer=k; save(); renderRank(); }; box.appendChild(b); }); }
-async function renderRank(){
+let rankTok=0;
+async function renderRank(){ const tok=++rankTok;
   renderRankPer(); if(!cloudPromise){ ensureCloud(); } // first opening: load the SDK, initCloud re-renders when ready
   const li=levelInfo(S.xp), ol=$("rankList"); ol.innerHTML="";
   const row=(r,rk,me)=>{ const el=document.createElement("li"); if(me) el.className="me";
     const okPhoto = r.photo && /^https:\/\//.test(r.photo);
-    el.innerHTML='<span class="rk"></span><span class="av">'+(okPhoto?photoImg(r.photo):avatarSVG(Math.max(0,Math.min(9,r.avatar|0))))+'</span><span><b></b><small></small></span><span class="num"></span><span class="num"></span>';
-    el.querySelector(".rk").textContent=rk; el.querySelector("b").textContent=r.name; el.querySelector("small").textContent=t("acctLevel")+" "+r.level+" · "+t("chars")[Math.max(0,Math.min(9,r.avatar|0))][2];
-    const n=el.querySelectorAll(".num"); n[0].textContent=r.xp+" XP"; n[1].textContent="🔥 "+r.streak+" "+t("day"); return el; };
+    el.innerHTML='<span class="rk"></span><span class="av"></span><span><b></b><small></small></span><span class="num"></span><span class="num"></span>'; avFill(el.querySelector(".av"),okPhoto?r.photo:"",r.avatar);
+    el.querySelector(".rk").textContent=typeof rk==="number"?fmtN(rk):rk; nmPut(el.querySelector("b"),r.name); const sm=el.querySelector("small"); sm.textContent=t("acctLevel")+" "+fmtN(r.level)+" · "+t("chars")[Math.max(0,Math.min(9,r.avatar|0))][2]; sm.title=sm.textContent;
+    const n=el.querySelectorAll(".num"); n[0].textContent=fmtN(r.xp)+" XP"; n[1].textContent="🔥 "+fmtN(r.streak)+" "+t("day"); return el; };
   const cta=document.querySelector(".rank-cta"); cta.hidden=!!user;
   $("rankPanel").querySelector(".pane-head p").textContent = user ? t("rankSubIn") : t("rankSub");
   const per=S.settings.rankPer||"week", now=new Date();
@@ -5469,9 +5501,14 @@ async function renderRank(){
   if(page!=="rank") return;
   ol.innerHTML="";
   if(error){ const p=document.createElement("p"); p.className="rank-msg"; p.textContent=t("rankErr"); ol.appendChild(p); }
-  const list=data||[]; list.forEach((r,i)=>ol.appendChild(row(r,i+1,user&&r.id===user.id)));
+  const list=(data||[]).slice(0,50); list.forEach((r,i)=>ol.appendChild(row(r,i+1,user&&r.id===user.id)));
   if(!list.length && !error){ const p=document.createElement("p"); p.className="rank-msg"; p.textContent=since?t("rankEmptyP"):t("rankEmpty"); ol.appendChild(p); }
   if(!user) ol.appendChild(row({name:t("you"),avatar:charIndex(li.L),level:li.L,xp:myXP,streak:S.streak.days},"—",true));
+  else if(!error && list.length && !list.some(r=>r.id===user.id)){ // outside the top 50: "…" then "1 284th · You"
+    const m=await myRank(since); if(!m || page!=="rank" || tok!==rankTok) return;
+    const sep=document.createElement("li"); sep.className="sep"; sep.setAttribute("aria-hidden","true"); sep.textContent="…"; ol.appendChild(sep);
+    const me=row({name:t("you"),avatar:charIndex(li.L),photo:userPhoto(),level:li.L,xp:m.xp,streak:effStreak()},"",true); me.classList.add("out");
+    me.querySelector("b").textContent=t("rankOrd")(m.rank)+" · "+t("you"); me.querySelector("b").title=me.querySelector("b").textContent; ol.appendChild(me); }
 }
 async function oauthLogin(provider){
   try{
