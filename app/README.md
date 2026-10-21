@@ -75,3 +75,10 @@ Puis ▶︎ dans Xcode.
 Dans l'app, la page détecte le plugin et remplace `navigator.requestMIDIAccess`. Le reste du site ne change pas.
 
 Pour publier plus tard sur l'App Store ou TestFlight, il faudra le compte Apple Developer payant (99 €/an).
+
+
+## Sur Mac (puce Apple)
+L'app iPad tourne telle quelle sur un Mac à puce Apple (« Designed for iPad », `SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = YES`), avec le MIDI USB et Bluetooth.
+1. `cd ~/pianochallenges && git pull && cd app && npm run sync && npm run open`
+2. Dans Xcode, choisir la destination **My Mac (Designed for iPad)**, puis ▶︎. L'app s'installe et apparaît dans le Launchpad ; clic droit sur son icône dans le Dock > Options > Garder dans le Dock.
+3. Pour la distribuer : dans App Store Connect, laisser cochée la disponibilité « Mac (Apple Silicon) » de l'app iPad.
