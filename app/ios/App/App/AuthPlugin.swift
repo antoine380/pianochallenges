@@ -25,7 +25,8 @@ public class AuthPlugin: CAPPlugin, CAPBridgedPlugin, ASWebAuthenticationPresent
             return
         }
         let scheme = call.getString("scheme") ?? "pianochallenges"
-        DispatchQueue.main.async {
+        DispatchQueue.main.async { [weak self] in
+            guard let self = self else { call.reject("Sign-in closed"); return }
             let session = ASWebAuthenticationSession(url: url, callbackURLScheme: scheme) { [weak self] callbackURL, error in
                 self?.session = nil
                 if let callbackURL = callbackURL {

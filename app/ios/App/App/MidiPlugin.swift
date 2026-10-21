@@ -39,7 +39,8 @@ public class MidiPlugin: CAPPlugin, CAPBridgedPlugin, UIAdaptivePresentationCont
     // Capacitor runs plugin calls on a background queue. CoreMIDI delivers its "setup changed"
     // notifications on the run loop of the thread that created the client, so create it on the main thread.
     @objc func start(_ call: CAPPluginCall) {
-        DispatchQueue.main.async {
+        DispatchQueue.main.async { [weak self] in
+            guard let self = self else { call.reject("MIDI closed"); return }
             if !self.started {
                 var status = MIDIClientCreateWithBlock("Piano Challenges" as CFString, &self.client) { [weak self] notification in
                     if notification.pointee.messageID == .msgSetupChanged || notification.pointee.messageID == .msgObjectAdded || notification.pointee.messageID == .msgObjectRemoved {

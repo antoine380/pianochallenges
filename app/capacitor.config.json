@@ -2,7 +2,7 @@
   "appId": "com.pianochallenges.app",
   "appName": "Piano Challenges",
   "webDir": "www",
-  "backgroundColor": "#161920",
+  "backgroundColor": "#15122e",
   "ios": {
     "contentInset": "never",
     "scrollEnabled": true,
