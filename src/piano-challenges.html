@@ -684,6 +684,7 @@ body.runner-on .free-lbl{display:none!important}
 /* Daily practice: the exercise area only appears once the practice has started */
 body[data-page="daily"]:not(.playing) .stage{display:none!important}
 [data-page="rank"] :is(.picker,.stage), [data-page="account"] :is(.picker,.stage){display:none!important}
+[data-page="notif"] :is(.picker,.stage){display:none!important}
 
 /* App launch animation (iOS app only) */
 .splash{display:none}
@@ -1346,6 +1347,42 @@ body.du-lob #runner{flex:1 1 auto}
 @media (max-width:640px){ .du-modes{flex:none;grid-auto-rows:auto} .du-mode{min-height:110px} }
 
 @media (min-width:641px) and (max-width:900px) and (min-height:700px){ .du-art{width:56%;max-width:210px;top:16px;right:16px} .du-mode b{font-size:1.6rem} .du-mode small{font-size:.9rem} }
+
+/* notifications */
+.nbadge{margin-left:auto;min-width:20px;height:20px;padding:0 6px;border-radius:999px;background:#ff5a6e;color:#fff;font:800 .7rem/20px var(--f-body);text-align:center;box-shadow:0 0 0 2px var(--surface)}
+.side.collapsed .nbadge{position:absolute;top:4px;right:4px;margin:0;min-width:16px;height:16px;line-height:16px;font-size:.6rem;padding:0 4px} #ntfBtn{position:relative}
+.ntf-mb{position:relative} .ntf-mb .nbadge{position:absolute;top:-3px;right:-3px;margin:0;min-width:18px;height:18px;line-height:18px;font-size:.62rem;padding:0 4px}
+.ntf-pane{min-height:0;flex:1 1 auto}
+.ntf-pane .pane-head .btn{flex:none}
+.ntf-tabs{align-self:flex-start;max-width:100%;flex:none} .ntf-tabs button{white-space:nowrap}
+@media (max-width:640px){ .ntf-tabs{align-self:stretch} .ntf-tabs button{padding-inline:6px;font-size:.8rem} }
+.ntf-card{padding:8px;flex:1 1 auto;min-height:0;overflow:auto;display:flex;flex-direction:column}
+.ntf-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:4px}
+.ntf-g{font-size:.72rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);padding:10px 10px 2px}
+.ntf-it{position:relative;display:flex;align-items:center;gap:12px;padding:10px 34px 10px 10px;border-radius:14px;cursor:pointer;transition:background .15s}
+.ntf-it:hover{background:var(--surface-2)} .ntf-it.unread{background:color-mix(in srgb,var(--accent) 8%,transparent)}
+.ntf-ic{width:46px;height:46px;flex:none;border-radius:14px;background:var(--surface-2);display:grid;place-items:center;padding:4px} .ntf-ic svg{width:100%;height:100%}
+.ntf-it[data-cat="social"] .ntf-ic{background:color-mix(in srgb,#2563eb 14%,var(--surface))} .ntf-it[data-cat="progress"] .ntf-ic{background:color-mix(in srgb,#7a5bf5 14%,var(--surface))}
+.ntf-it[data-cat="remind"] .ntf-ic{background:color-mix(in srgb,#ff8a2a 16%,var(--surface))} .ntf-it[data-cat="news"] .ntf-ic{background:color-mix(in srgb,#26805a 14%,var(--surface))}
+.ntf-tx{flex:1;min-width:0;display:flex;flex-direction:column;gap:1px} .ntf-tx b{font-weight:800} .ntf-tx span{color:var(--muted);font-size:.88rem} .ntf-tx small{color:var(--muted);font-size:.74rem;font-weight:700}
+.ntf-go{flex:none;padding:7px 14px}
+.ntf-dot{position:absolute;right:12px;top:50%;width:10px;height:10px;border-radius:50%;background:#ff5a6e;transform:translateY(-50%);display:none} .ntf-it.unread .ntf-dot{display:block}
+.ntf-empty{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;text-align:center;padding:30px;flex:1} .ntf-empty p{margin:0;color:var(--muted)}
+.ntf-mailhint{margin:0}
+.ntf-set{display:flex;flex-direction:column;gap:2px;max-width:640px}
+.ntf-row{display:grid;grid-template-columns:minmax(0,1fr) 90px 90px;align-items:center;gap:8px;padding:8px 6px;border-radius:12px} .ntf-row:not(.ntf-hd):hover{background:var(--surface-2)}
+.ntf-row>span{display:flex;flex-direction:column;min-width:0} .ntf-row>span b{font-weight:800;font-size:.92rem} .ntf-row>span small{color:var(--muted);font-size:.78rem}
+.ntf-hd b{font-size:.72rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);text-align:center}
+.sw{justify-self:center;position:relative;display:inline-block;width:44px;height:26px;cursor:pointer} .sw input{position:absolute;opacity:0;width:100%;height:100%;margin:0;cursor:pointer}
+.sw i{position:absolute;inset:0;border-radius:999px;background:var(--line);transition:background .15s;pointer-events:none} .sw i::after{content:"";position:absolute;top:3px;left:3px;width:20px;height:20px;border-radius:50%;background:#fff;box-shadow:0 2px 4px rgba(10,6,30,.25);transition:transform .15s}
+.sw input:checked+i{background:var(--accent)} .sw input:checked+i::after{transform:translateX(18px)} .sw input:disabled+i{opacity:.4} .sw input:focus-visible+i{outline:2px solid var(--accent);outline-offset:2px}
+.ntf-note{margin:6px 6px 0}
+@media (max-width:640px){ .ntf-pane .pane-head p{display:none} .ntf-pane .pane-head .btn{padding:7px 10px;font-size:.82rem} .ntf-it{gap:10px;padding:8px 26px 8px 6px} .ntf-ic{width:38px;height:38px;border-radius:11px} .ntf-tx span{font-size:.82rem} .ntf-go{padding:6px 10px;font-size:.8rem}
+  .ntf-row{grid-template-columns:minmax(0,1fr) 62px 62px} .ntf-row>span small{display:none} .ntf-hd b{font-size:.62rem} }
+@media (max-height:420px){ .ntf-pane .pane-head p{display:none} }
+
+@media (max-width:640px){ .ntf-pane .ph-title{display:none} .ntf-pane .pane-head{gap:8px} .ntf-pane .pane-head>div{display:none} .ntf-card{flex:none;max-height:calc(100dvh - 230px)} }
+@media (max-height:420px){ .ntf-pane .pane-head>div{display:none} .ntf-pane .pane-head{justify-content:flex-end;margin-top:-4px} .ntf-pane .pane-head .btn{padding:6px 12px} .ntf-pane{gap:8px} .ntf-card{flex:none;max-height:calc(100dvh - 150px)} .ntf-mailhint{display:none} }
 </style>
 
 <script>if(window.Capacitor&&window.webkit&&window.webkit.messageHandlers&&window.webkit.messageHandlers.bridge)document.documentElement.classList.add("native");</script>
@@ -1416,6 +1453,7 @@ body.du-lob #runner{flex:1 1 auto}
   </button>
 
   <div class="side-foot">
+    <button class="nav-item" id="ntfBtn" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 16V11a6 6 0 0 1 12 0v5l1.5 2h-15z"/><path d="M10 20.5a2.2 2.2 0 0 0 4 0"/></svg><span class="lbl" data-i="ntfTitle"></span><span class="nbadge" id="ntfBadge" hidden></span></button>
     <button class="nav-item" id="rankBtn" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 4h8v5a4 4 0 0 1-8 0zM8 6H4.5a3 3 0 0 0 3.5 4M16 6h3.5a3 3 0 0 1-3.5 4M12 13v4M8.5 20h7"/></svg><span class="lbl" data-i="secRank"></span></button>
     <button class="nav-item" id="accountBtn" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8.5" r="4"/><path d="M4.5 20a7.5 7.5 0 0 1 15 0"/></svg><span class="lbl" data-i="secAccount"></span></button>
     <button class="nav-item" id="progBtn" type="button" aria-haspopup="dialog"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg><span class="lbl" data-i="progress"></span></button>
@@ -1434,6 +1472,7 @@ body.du-lob #runner{flex:1 1 auto}
   <button class="mbar-btn" id="menuBtn" type="button" aria-label="Menu" aria-controls="side" aria-expanded="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
   <h1 class="mbar-title" id="mbTitle"></h1>
 <a id="homeLink2" href="/" hidden></a>
+  <button class="mbar-btn ghost ntf-mb" id="mbNtf" type="button" aria-label="Notifications"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 16V11a6 6 0 0 1 12 0v5l1.5 2h-15z"/><path d="M10 20.5a2.2 2.2 0 0 0 4 0"/></svg><span class="nbadge" id="mbNtfBadge" hidden></span></button>
   <button class="mbar-btn ghost" id="mbSet" type="button" aria-label="Settings"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10.3 3.2a1.8 1.8 0 0 1 3.4 0l.4 1.2a1.8 1.8 0 0 0 2.4 1l1.1-.6a1.8 1.8 0 0 1 2.4 2.4l-.6 1.1a1.8 1.8 0 0 0 1 2.4l1.2.4a1.8 1.8 0 0 1 0 3.4l-1.2.4a1.8 1.8 0 0 0-1 2.4l.6 1.1a1.8 1.8 0 0 1-2.4 2.4l-1.1-.6a1.8 1.8 0 0 0-2.4 1l-.4 1.2a1.8 1.8 0 0 1-3.4 0l-.4-1.2a1.8 1.8 0 0 0-2.4-1l-1.1.6a1.8 1.8 0 0 1-2.4-2.4l.6-1.1a1.8 1.8 0 0 0-1-2.4l-1.2-.4a1.8 1.8 0 0 1 0-3.4l1.2-.4a1.8 1.8 0 0 0 1-2.4l-.6-1.1a1.8 1.8 0 0 1 2.4-2.4l1.1.6a1.8 1.8 0 0 0 2.4-1z"/><circle cx="12" cy="12" r="3"/></svg></button>
   <button class="mbar-lvl" id="mbLvlBtn" type="button" aria-haspopup="dialog"><span class="av" id="mbAv"></span><span class="mono" id="mbLvl">1</span></button>
 </header>
@@ -1631,6 +1670,15 @@ body.du-lob #runner{flex:1 1 auto}
   <section class="pane" id="progressPage" hidden>
     <div class="pane-head"><h2 class="ph-title"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg><span data-i="progress"></span></h2><button class="btn ph-back" type="button" data-back data-i="backPlay"></button></div>
     <div class="card" id="progHost"></div>
+  </section>
+
+  <section class="pane ntf-pane" id="notifPanel" hidden>
+    <div class="pane-head"><div><h2 class="ph-title"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 16V11a6 6 0 0 1 12 0v5l1.5 2h-15z"/><path d="M10 20.5a2.2 2.2 0 0 0 4 0"/></svg><span data-i="ntfTitle"></span></h2><p data-i="ntfSub"></p></div>
+      <button class="btn" id="ntfAllRead" type="button" data-i="ntfAllReadT"></button><button class="btn" id="ntfSetBtn" type="button" data-i="ntfSetT"></button></div>
+    <div class="seg ntf-tabs" id="ntfTabs"><button type="button" data-v="all" data-i="ntfAll"></button><button type="button" data-v="social" data-i="ntfCat_social"></button><button type="button" data-v="progress" data-i="ntfCat_progress"></button><button type="button" data-v="remind" data-i="ntfCat_remind"></button><button type="button" data-v="news" data-i="ntfCat_news"></button></div>
+    <div class="card ntf-card"><ul class="ntf-list" id="ntfList"></ul>
+      <div class="ntf-empty" id="ntfEmpty" hidden><span class="ntf-eart"></span><b data-i="ntfEmptyT"></b><p data-i="ntfEmptyX"></p></div></div>
+    <p class="qz-hint ntf-mailhint" id="ntfMailHint"></p>
   </section>
 
   <section class="pane" id="rankPanel" hidden>
@@ -1852,6 +1900,7 @@ body.du-lob #runner{flex:1 1 auto}
           <label class="check"><input type="checkbox" id="optAll"> <span data-i="optAll"></span></label></div>
         </div>
       </section>
+      <section class="set-sec"><h3><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 16V11a6 6 0 0 1 12 0v5l1.5 2h-15z"/><path d="M10 20.5a2.2 2.2 0 0 0 4 0"/></svg><span data-i="ntfTitle"></span></h3><div class="ntf-set" id="ntfSet"></div></section>
       <p class="set-reset"><button class="danger" id="resetBtn" type="button"></button></p>
       <p class="legal-links set-legal"><a href="/mentions-legales.html" data-i="legalNotice"></a> · <a href="/confidentialite.html" data-i="privacy"></a><br>© 2026 Antoine Bernard · <span data-i="rights"></span></p>
     </div>
@@ -2022,7 +2071,18 @@ const TXT = {
     melDown:" · descend en Mineur",
     midiBlockedMsg:"Le navigateur a refusé l'accès MIDI. Clique sur le cadenas à gauche de l'adresse pour l'autoriser, ou choisis le clavier à l'écran.",
     dailyResume:"Reprendre",
-    syncOk:x=>"Sauvegardé en ligne "+x+" ✓", syncErr:x=>"Hors ligne : dernière sauvegarde "+x+".", agoNever:"inconnue", signedOut:"Déconnecté", rights:"Tous droits réservés", themeDay:"Passer en mode jour", themeNight:"Passer en mode nuit", duBotDesc:["Elle découvre le clavier. Parfaite pour ta première partie.","Il connaît ses premiers accords, mais il hésite encore.","Agile mais distraite : elle fait encore des fautes.","Une bonne oreille et un rythme régulier.","Réfléchi, il se trompe rarement.","Rapide et sûr de lui.","Malin, il enchaîne sans faiblir.","Calme et précis comme un métronome.","Un maestro : il faudra tout donner.","La légende. Presque imbattable."], duHistT:"Dernières parties", duHistNone:"Aucune partie classée pour l'instant.", duW1:"V", duL1:"D", duD1:"N", duLobby:"Salon", duChords:"Accords", duNotes:"Notes", duOnline:"Jouer en ligne", duOnlineD:"Partie classée contre un joueur de ton niveau", duBots:"Contre un bot", duBotsD:"10 adversaires, du débutant au maestro", duFriend:"Avec un ami", duFriendD:"Partage un code ou un lien", duSolo:"Entraînement solo", duSoloD:"Bats ton record, sans adversaire",
+    syncOk:x=>"Sauvegardé en ligne "+x+" ✓", syncErr:x=>"Hors ligne : dernière sauvegarde "+x+".", agoNever:"inconnue", signedOut:"Déconnecté", rights:"Tous droits réservés", themeDay:"Passer en mode jour", themeNight:"Passer en mode nuit", ntfTitle:"Notifications", ntfSub:"Tes défis, tes progrès et les nouveautés de l'app.", ntfAllReadT:"Tout marquer comme lu", ntfSetT:"Réglages", ntfAll:"Tout",
+    ntfCat_social:"Défis", ntfCat_progress:"Progrès", ntfCat_remind:"Rappels", ntfCat_news:"Nouveautés",
+    ntfCatD_social:"Duels, revanches, classement de la semaine", ntfCatD_progress:"Niveaux, déblocages, records d'ELO", ntfCatD_remind:"Entraînement du jour, série en danger", ntfCatD_news:"Nouveaux morceaux, jeux et questions",
+    ntfWeeklyT:"Récap de la semaine", ntfWeeklyD:"Le dimanche : XP, série, ELO et ton objectif", ntfApp:"Dans l'app", ntfMail:"E-mail",
+    ntfMailNote:"Au plus 2 e-mails par semaine, en plus des rappels de série. Chaque e-mail a un lien pour se désinscrire.", ntfMailGuest:"Crée un compte (Profil) pour recevoir le récap et les rappels par e-mail.",
+    ntfMailOn:"Les e-mails sont activés pour ton compte. Tu peux les régler dans Réglages.", ntfMailOff:"Les e-mails sont désactivés. Tu peux les activer dans Réglages.",
+    ntfEmptyT:"Rien de nouveau", ntfEmptyX:"Tes défis, tes progrès et les nouveautés arriveront ici.", ntfToday:"Aujourd'hui", ntfYesterday:"Hier", ntfWeek:"Cette semaine", ntfOlder:"Plus ancien",
+    ntfNow:"à l'instant", ntfMin:n=>"il y a "+n+" min", ntfH:n=>"il y a "+n+" h", ntfYest:"hier", ntfOpen:"Voir", ntfPlay:"Jouer", ntfSee:"Voir", ntfSetGo:"Régler",
+    ntfWelcomeT:"Bienvenue dans tes notifications", ntfWelcomeX:"Tes défis, tes progrès et les nouveautés s'afficheront ici. Choisis ce que tu veux recevoir.",
+    ntfDailyT:"Ton entraînement du jour est prêt", ntfDailyX:"10 exercices, environ 5 minutes.", ntfStreakT:n=>"Ta série de "+n+" jours est en danger", ntfStreakX:"Joue un exercice avant minuit pour la garder.",
+    ntfLvlT:L=>"Niveau "+L+" atteint !", ntfLvlX:"De nouveaux exercices t'attendent.", ntfLvlChar:c=>"Nouveau niveau débloqué : "+c+".", ntfUnlockT:"Nouvel exercice débloqué",
+    ntfEloT:r=>"Nouveau record d'ELO : "+r, ntfRankT:n=>n+" t'a dépassé", ntfRankX:p=>"Tu es "+p+(p===1?"er":"e")+" au classement de la semaine.", duBotDesc:["Elle découvre le clavier. Parfaite pour ta première partie.","Il connaît ses premiers accords, mais il hésite encore.","Agile mais distraite : elle fait encore des fautes.","Une bonne oreille et un rythme régulier.","Réfléchi, il se trompe rarement.","Rapide et sûr de lui.","Malin, il enchaîne sans faiblir.","Calme et précis comme un métronome.","Un maestro : il faudra tout donner.","La légende. Presque imbattable."], duHistT:"Dernières parties", duHistNone:"Aucune partie classée pour l'instant.", duW1:"V", duL1:"D", duD1:"N", duLobby:"Salon", duChords:"Accords", duNotes:"Notes", duOnline:"Jouer en ligne", duOnlineD:"Partie classée contre un joueur de ton niveau", duBots:"Contre un bot", duBotsD:"10 adversaires, du débutant au maestro", duFriend:"Avec un ami", duFriendD:"Partage un code ou un lien", duSolo:"Entraînement solo", duSoloD:"Bats ton record, sans adversaire",
     duYourElo:g=>"Ton ELO · "+g, duRecord:(w,d,l)=>w+" V · "+d+" N · "+l+" D", duNew:"Joue 5 parties pour fixer ton niveau", duNear:"Ton niveau", duPlayVs:(n,e)=>"Jouer contre "+n+" ("+e+")", duShare:"Envoie ce code à ton ami ; la partie démarre quand tu cliques sur Lancer.", duOr:"ou",
     duFriendHint:"Partie amicale : elle ne compte pas pour l'ELO.", duSearching:"Recherche d'un adversaire…", duWindow:(e,w,n)=>"Ton ELO "+e+(w<9999?" · adversaire entre "+Math.max(100,e-w)+" et "+(e+w):" · tous niveaux")+" · "+Math.max(1,n)+" en ligne", duBotWait:(n,e)=>"Jouer contre "+n+" ("+e+"), un bot de ton niveau",
     duFriendly:"Amical", duBotTag:"bot", duGone:"a quitté", duOut:"terminé", duRated:"partie classée", duWinForfeit:"Victoire, ton adversaire est parti", duWin:"Victoire !", duLoss:"Défaite", duDraw:"Égalité", duNewElo:"Nouvel ELO", duUnrated:"Partie amicale, ELO inchangé",
@@ -2172,7 +2232,18 @@ const TXT = {
     melDown:" · descends as Minor",
     midiBlockedMsg:"The browser refused MIDI access. Click the padlock left of the address to allow it, or choose the on-screen keyboard.",
     dailyResume:"Resume",
-    syncOk:x=>"Saved online "+x+" ✓", syncErr:x=>"Offline: last save "+x+".", agoNever:"unknown", signedOut:"Signed out", rights:"All rights reserved", themeDay:"Switch to day mode", themeNight:"Switch to night mode", duBotDesc:["Just discovering the keys. Perfect for your first game.","Knows the first chords, but still hesitates.","Nimble but easily distracted: still makes mistakes.","A good ear and a steady pace.","Thoughtful, rarely wrong.","Fast and confident.","Clever, keeps going without a slip.","Calm and precise like a metronome.","A maestro: you will have to give everything.","The legend. Almost unbeatable."], duHistT:"Recent games", duHistNone:"No rated game yet.", duW1:"W", duL1:"L", duD1:"D", duLobby:"Lobby", duChords:"Chords", duNotes:"Notes", duOnline:"Play online", duOnlineD:"Rated game against a player of your level", duBots:"Play a bot", duBotsD:"10 opponents, from beginner to maestro", duFriend:"Play a friend", duFriendD:"Share a code or a link", duSolo:"Solo practice", duSoloD:"Beat your best, no opponent",
+    syncOk:x=>"Saved online "+x+" ✓", syncErr:x=>"Offline: last save "+x+".", agoNever:"unknown", signedOut:"Signed out", rights:"All rights reserved", themeDay:"Switch to day mode", themeNight:"Switch to night mode", ntfTitle:"Notifications", ntfSub:"Your challenges, your progress and what's new in the app.", ntfAllReadT:"Mark all as read", ntfSetT:"Settings", ntfAll:"All",
+    ntfCat_social:"Challenges", ntfCat_progress:"Progress", ntfCat_remind:"Reminders", ntfCat_news:"What's new",
+    ntfCatD_social:"Duels, rematches, weekly leaderboard", ntfCatD_progress:"Levels, unlocks, ELO records", ntfCatD_remind:"Daily practice, streak in danger", ntfCatD_news:"New songs, games and questions",
+    ntfWeeklyT:"Weekly recap", ntfWeeklyD:"On Sundays: XP, streak, ELO and your goal", ntfApp:"In the app", ntfMail:"E-mail",
+    ntfMailNote:"At most 2 e-mails a week, plus streak reminders. Every e-mail has an unsubscribe link.", ntfMailGuest:"Create an account (Profile) to get the recap and reminders by e-mail.",
+    ntfMailOn:"E-mails are on for your account. You can change them in Settings.", ntfMailOff:"E-mails are off. You can turn them on in Settings.",
+    ntfEmptyT:"Nothing new", ntfEmptyX:"Your challenges, progress and news will show up here.", ntfToday:"Today", ntfYesterday:"Yesterday", ntfWeek:"This week", ntfOlder:"Older",
+    ntfNow:"just now", ntfMin:n=>n+" min ago", ntfH:n=>n+" h ago", ntfYest:"yesterday", ntfOpen:"Open", ntfPlay:"Play", ntfSee:"See", ntfSetGo:"Set up",
+    ntfWelcomeT:"Welcome to your notifications", ntfWelcomeX:"Your challenges, progress and news will show up here. Choose what you want to get.",
+    ntfDailyT:"Your daily practice is ready", ntfDailyX:"10 exercises, about 5 minutes.", ntfStreakT:n=>"Your "+n+"-day streak is in danger", ntfStreakX:"Play one exercise before midnight to keep it.",
+    ntfLvlT:L=>"Level "+L+" reached!", ntfLvlX:"New exercises are waiting for you.", ntfLvlChar:c=>"New level unlocked: "+c+".", ntfUnlockT:"New exercise unlocked",
+    ntfEloT:r=>"New ELO record: "+r, ntfRankT:n=>n+" passed you", ntfRankX:p=>"You are #"+p+" on the weekly leaderboard.", duBotDesc:["Just discovering the keys. Perfect for your first game.","Knows the first chords, but still hesitates.","Nimble but easily distracted: still makes mistakes.","A good ear and a steady pace.","Thoughtful, rarely wrong.","Fast and confident.","Clever, keeps going without a slip.","Calm and precise like a metronome.","A maestro: you will have to give everything.","The legend. Almost unbeatable."], duHistT:"Recent games", duHistNone:"No rated game yet.", duW1:"W", duL1:"L", duD1:"D", duLobby:"Lobby", duChords:"Chords", duNotes:"Notes", duOnline:"Play online", duOnlineD:"Rated game against a player of your level", duBots:"Play a bot", duBotsD:"10 opponents, from beginner to maestro", duFriend:"Play a friend", duFriendD:"Share a code or a link", duSolo:"Solo practice", duSoloD:"Beat your best, no opponent",
     duYourElo:g=>"Your ELO · "+g, duRecord:(w,d,l)=>w+" W · "+d+" D · "+l+" L", duNew:"Play 5 games to set your level", duNear:"Your level", duPlayVs:(n,e)=>"Play "+n+" ("+e+")", duShare:"Send this code to your friend; the game starts when you press Start.", duOr:"or",
     duFriendHint:"Friendly game: it does not count for ELO.", duSearching:"Looking for an opponent…", duWindow:(e,w,n)=>"Your ELO "+e+(w<9999?" · opponent between "+Math.max(100,e-w)+" and "+(e+w):" · any level")+" · "+Math.max(1,n)+" online", duBotWait:(n,e)=>"Play "+n+" ("+e+"), a bot of your level",
     duFriendly:"Friendly", duBotTag:"bot", duGone:"left", duOut:"finished", duRated:"rated game", duWinForfeit:"You win, your opponent left", duWin:"You win!", duLoss:"You lose", duDraw:"Draw", duNewElo:"New ELO", duUnrated:"Friendly game, ELO unchanged",
@@ -2599,7 +2670,7 @@ function addXP(n){
   S.xpDays=S.xpDays||{}; const dk=dayStr(); S.xpDays[dk]=(S.xpDays[dk]||0)+n;
   const before=levelInfo(S.xp).L; S.xp+=n; const after=levelInfo(S.xp).L;
   if(after>before){
-    toast(titleFor(after));
+    toast(titleFor(after)); try{ ntfLevel(after); }catch(e){}
     SECS.forEach(sec=>typeList(sec).forEach(ty=>{ const key=sec==="scales"?ty.id:sec+":"+ty.id;
       if(typeOpenS(sec,ty.id) && !S.seenTypes.includes(key)){ S.seenTypes.push(key); if(ty.lvl>1) unlockNote(t("newType")+SEC[sec].name(ty)); } }));
   }
@@ -3566,6 +3637,7 @@ function renderMap(){
     .forEach(([l,v])=>{ const sp=document.createElement("span"); sp.textContent=l+" "; const b=document.createElement("b"); b.textContent=v; sp.appendChild(b); $("stats").appendChild(sp); });
 }
 function renderSettings(){
+  try{ renderNtfSet(); }catch(e){}
   const set=(id,v)=>$(id).querySelectorAll("button").forEach(b=>b.setAttribute("aria-pressed",b.dataset.v===v));
   set("segMode",S.settings.mode); set("segDiff",String(S.settings.delay));
   $("langSum").innerHTML = S.settings.lang==="fr" ? '<span class="flag">🇫🇷</span><span class="ltxt"> Français</span>' : '<span class="flag">🇬🇧</span><span class="ltxt"> English</span>';
@@ -3586,7 +3658,7 @@ function renderSettings(){
 }
 function render(){ if(page==="hub") try{ renderHubSide(); }catch(e){} /* the first renders run before the input code is defined */
   const suOn = page==="practice" && !game && phase==="idle"; document.body.classList.toggle("setup",suOn); document.body.classList.toggle("gp",!!S.settings.guideP);
-  const sp=document.getElementById("setupPanel"); if(sp){ sp.hidden=!suOn; if(suOn) try{ renderSetup(); }catch(e){ console.warn(e); } try{ renderFiche2(); }catch(e){} } document.body.classList.toggle("playing", !!game || phase!=="idle"); document.body.dataset.page=page; $("gamesPanel").hidden = page!=="games"; $("hubPanel").hidden = page!=="hub"; $("quizPanel").hidden = page!=="quiz"; $("freePanel").hidden = page!=="free"; $("learnPanel").hidden = page!=="learn"; $("dailyPanel").hidden = page!=="daily"; $("rankPanel").hidden = page!=="rank"; $("accountPanel").hidden = page!=="account"; $("lockPanel").hidden = page!=="locked"; $("settingsPage").hidden = page!=="settings"; $("progressPage").hidden = page!=="progress"; renderDaily(); renderGameBar(); setNav();
+  const sp=document.getElementById("setupPanel"); if(sp){ sp.hidden=!suOn; if(suOn) try{ renderSetup(); }catch(e){ console.warn(e); } try{ renderFiche2(); }catch(e){} } document.body.classList.toggle("playing", !!game || phase!=="idle"); document.body.dataset.page=page; $("gamesPanel").hidden = page!=="games"; $("hubPanel").hidden = page!=="hub"; $("quizPanel").hidden = page!=="quiz"; $("freePanel").hidden = page!=="free"; $("learnPanel").hidden = page!=="learn"; $("dailyPanel").hidden = page!=="daily"; $("rankPanel").hidden = page!=="rank"; $("notifPanel").hidden = page!=="notif"; $("accountPanel").hidden = page!=="account"; $("lockPanel").hidden = page!=="locked"; $("settingsPage").hidden = page!=="settings"; $("progressPage").hidden = page!=="progress"; renderDaily(); renderGameBar(); setNav();
   if(phase==="idle"||phase==="listening") resetScore(); renderSession(); renderHint(); renderPrompt(); renderTimeline(); renderSlots(); renderActions(); renderStatus(); renderMap(); labelKeys(); }
 
 // ---------- Settings wiring ----------
@@ -3636,11 +3708,11 @@ const phoneMQ=window.matchMedia("(max-width:640px)"), railMQ=window.matchMedia("
 function setNav(){
   const mark=(el,on)=>{ if(on) el.setAttribute("aria-current","page"); else el.removeAttribute("aria-current"); };
   $("secTabs").querySelectorAll("button").forEach(b=>mark(b, page==="practice" ? b.dataset.v===S.section : b.dataset.v===page));
-  const mode = page==="quiz" ? "quiz" : page==="play"||page==="free" ? (page==="play"&&playHash.startsWith("#game")?"games":"play") : page==="games" ? "games" : ["hub","settings","rank","account","progress"].includes(page) ? "" : page==="locked" ? (lockFor==="games"?"games":"learn") : "learn";
+  const mode = page==="quiz" ? "quiz" : page==="play"||page==="free" ? (page==="play"&&playHash.startsWith("#game")?"games":"play") : page==="games" ? "games" : ["hub","settings","rank","account","progress","notif"].includes(page) ? "" : page==="locked" ? (lockFor==="games"?"games":"learn") : "learn";
   $("side").dataset.mode=mode; $("modeNav").querySelectorAll("button").forEach(b=>mark(b,b.dataset.mode===mode));
-  mark($("dailyCard"),page==="daily"); mark($("rankBtn"),page==="rank"); mark($("accountBtn"),page==="account"); mark($("setBtn"),page==="settings"); mark($("progBtn"),page==="progress");
+  mark($("dailyCard"),page==="daily"); mark($("rankBtn"),page==="rank"); mark($("ntfBtn"),page==="notif"); mark($("accountBtn"),page==="account"); mark($("setBtn"),page==="settings"); mark($("progBtn"),page==="progress");
   const pv = page==="practice"?S.section : page==="locked"?lockFor : page;
-  $("mbTitle").textContent = t({chords:"secChords",scales:"secScales",harmony:"secHarmony",prog:"secProg",ear:"secEar",games:"secGames",play:"secPlay",free:"secPlay",quiz:"quizT",hub:"hub",learn:"learn",daily:narrowMQ.matches?"dailyShort":"dailyTitle",rank:"secRank",account:"secAccount",settings:"settings",progress:"progress"}[pv]);
+  $("mbTitle").textContent = t({chords:"secChords",scales:"secScales",harmony:"secHarmony",prog:"secProg",ear:"secEar",games:"secGames",play:"secPlay",free:"secPlay",quiz:"quizT",hub:"hub",learn:"learn",daily:narrowMQ.matches?"dailyShort":"dailyTitle",rank:"secRank",account:"secAccount",settings:"settings",progress:"progress",notif:"ntfTitle"}[pv]);
   if(page==="locked"){ $("secTabs").querySelectorAll("button").forEach(b=>mark(b,b.dataset.v===lockFor)); mark($("dailyCard"),lockFor==="daily"); }
 }
 function applySide(){
@@ -3909,7 +3981,7 @@ const eloProv = e => e.n<5; // provisional rating, shown with a "?" like chess.c
 function eloApply(key, opp, res, bot, nm, av){ const e={...eloGet(key)}; e.h=(e.h||[]).slice(-19);
   const E=1/(1+Math.pow(10,(opp-e.r)/400)), K = e.n<10?40 : e.n<30?24 : 16, d=Math.round(K*(res-E));
   const before=e.r; e.r=Math.max(100,e.r+d); e.n++; if(res===1) e.w++; else if(res===0) e.l++; else e.d++;
-  e.h.push({d:dayStr(),r:e.r,o:Math.round(opp),res,bot:!!bot,nm:qzSafe(nm),av:av|0,dd:e.r-before}); S.elo={...(S.elo||{}),[key]:e}; save(); return {before, after:e.r, d:e.r-before}; }
+  e.h.push({d:dayStr(),r:e.r,o:Math.round(opp),res,bot:!!bot,nm:qzSafe(nm),av:av|0,dd:e.r-before}); S.elo={...(S.elo||{}),[key]:e}; try{ ntfElo(key,e.r); }catch(x){} save(); return {before, after:e.r, d:e.r-before}; }
 function duGameName(g){ return t({runner:"rnName",speed:"spName",memory:"mmName"}[g||DU.game]); }
 function duMyAv(){ return charIndex(levelInfo(S.xp).L); }
 function duMyName(){ return typeof netName==="function" ? netName() : t("qzYou"); }
@@ -4109,6 +4181,93 @@ $("duModes").addEventListener("click",e=>{ const b=e.target.closest("[data-m]");
 $("duCont").addEventListener("click",e=>{ const b=e.target.closest("[data-v]"); if(!b) return; DU.cont=b.dataset.v; S.settings.duCont=DU.cont; save(); DU.botPick=null; duRender(); });
 $("duPBack").addEventListener("click",()=>{ duStopSearch(); if(DU.ch && !DU.mode) duLeaveRoom(); duSet("lobby"); });
 $("duToLobby").addEventListener("click",()=>{ duEnd(); gameOpen(DU.game,true); duSet("lobby"); });
+
+// ---------- Notifications: a page of their own (bell in the menu with a badge), filled by the app and, for accounts, by the server ----------
+// S.notifs = {list:[{id,cat,type,t,ti,tx,act,read}], keys:{key:time}} (60 kept). Categories: social | progress | remind | news.
+// Preferences: S.settings.ntf = {social:{app,mail}, progress:{app,mail}, remind:{app,mail}, news:{app,mail}, weekly}; the e-mail ones are also saved
+// in Supabase (notif_prefs) so the server knows what it may send. Server notifications (weekly recap, reminders) come from the "notifications" table.
+const NTF_CATS=["social","progress","remind","news"];
+const NTF_ICON={lvl:"star", unlock:"scales", elo:"crown", streak:"daily", daily:"learn", news:"bell", rank:"medal", recap:"scroll", welcome:"heart", duel:"games"};
+function ntfPrefs(){ const d={social:{app:true,mail:true},progress:{app:true,mail:false},remind:{app:true,mail:true},news:{app:true,mail:false},weekly:true}, p=S.settings.ntf||{};
+  const o={weekly:p.weekly!==false}; NTF_CATS.forEach(c=>{ o[c]={app:!(p[c]&&p[c].app===false), mail: p[c]&&p[c].mail!=null ? !!p[c].mail : d[c].mail}; }); return o; }
+function ntfStore(){ if(!S.notifs||!Array.isArray(S.notifs.list)) S.notifs={list:[],keys:{}}; if(!S.notifs.keys) S.notifs.keys={}; return S.notifs; }
+// add one notification (once per key); silent=true for the first fill so old news do not pile up
+function ntfAdd(o, silent){ const st=ntfStore(), key=o.key||(o.type+"-"+Date.now()); if(st.keys[key]) return false; st.keys[key]=Date.now();
+  const ks=Object.entries(st.keys); if(ks.length>300){ ks.sort((a,b)=>a[1]-b[1]).slice(0,ks.length-300).forEach(([k])=>delete st.keys[k]); }
+  if(silent || !ntfPrefs()[o.cat||"progress"].app){ save(); return false; }
+  st.list.unshift({id:key, cat:o.cat||"progress", type:o.type, t:o.t||Date.now(), ti:String(o.ti||"").slice(0,90), tx:String(o.tx||"").slice(0,200), act:o.act||null, read:false});
+  st.list=st.list.slice(0,60); save(); ntfBadge(); if(page==="notif") renderNotifs(); return true; }
+function ntfUnread(){ return ntfStore().list.filter(n=>!n.read).length; }
+function ntfBadge(){ const n=ntfUnread(); ["ntfBadge","mbNtfBadge"].forEach(id=>{ const b=$(id); if(!b) return; b.hidden=!n; b.textContent=n>9?"9+":n; });
+  $("ntfBtn")?.setAttribute("aria-label", t("ntfTitle")+(n?" ("+n+")":"")); $("mbNtf")?.setAttribute("aria-label", t("ntfTitle")+(n?" ("+n+")":"")); }
+function ntfAgo(ts){ const s=(Date.now()-ts)/1000, fr=S.settings.lang==="fr";
+  if(s<60) return t("ntfNow"); if(s<3600) return t("ntfMin")(Math.floor(s/60)); if(s<86400 && new Date(ts).getDate()===new Date().getDate()) return t("ntfH")(Math.floor(s/3600));
+  if(dayStr(new Date(ts))===addDays(-1)) return t("ntfYest"); return new Date(ts).toLocaleDateString(fr?"fr-FR":"en-GB",{day:"numeric",month:"short"}); }
+function ntfGroup(ts){ const d=dayStr(new Date(ts)); if(d===dayStr()) return "ntfToday"; if(d===addDays(-1)) return "ntfYesterday"; if(d>=addDays(-7)) return "ntfWeek"; return "ntfOlder"; }
+let ntfFilter="all";
+function renderNotifs(){ const st=ntfStore(), ul=$("ntfList"); ul.innerHTML="";
+  document.querySelectorAll("#ntfTabs button").forEach(b=>b.setAttribute("aria-pressed",b.dataset.v===ntfFilter));
+  const L=st.list.filter(n=>ntfFilter==="all"||n.cat===ntfFilter); $("ntfAllRead").disabled=!st.list.some(n=>!n.read);
+  $("ntfEmpty").hidden=!!L.length; ul.hidden=!L.length;
+  let g=""; L.forEach(n=>{ const gg=ntfGroup(n.t); if(gg!==g){ g=gg; const h=document.createElement("li"); h.className="ntf-g"; h.textContent=t(gg); ul.appendChild(h); }
+    const li=document.createElement("li"); li.className="ntf-it"+(n.read?"":" unread"); li.dataset.cat=n.cat;
+    li.innerHTML='<span class="ntf-ic"></span><span class="ntf-tx"><b></b><span></span><small></small></span>'+(n.act?'<button class="btn ntf-go" type="button"></button>':'')+'<i class="ntf-dot" aria-hidden="true"></i>';
+    li.querySelector(".ntf-ic").innerHTML=(OBJ[NTF_ICON[n.type]]||OBJ.bell)(); li.querySelector("b").textContent=n.ti; li.querySelector(".ntf-tx span").textContent=n.tx; li.querySelector("small").textContent=ntfAgo(n.t);
+    if(n.act){ const b=li.querySelector(".ntf-go"); b.textContent=t(n.act.l||"ntfOpen"); b.onclick=e=>{ e.stopPropagation(); n.read=true; save(); ntfBadge(); ntfDo(n.act); }; }
+    li.onclick=()=>{ if(!n.read){ n.read=true; save(); ntfBadge(); renderNotifs(); } };
+    ul.appendChild(li); });
+  const m=$("ntfMailHint"); m.textContent = user ? (ntfPrefs().weekly||ntfPrefs().remind.mail ? t("ntfMailOn") : t("ntfMailOff")) : t("ntfMailGuest"); }
+function ntfDo(a){ if(!a) return; const k=a.k;
+  if(k==="daily") guardLeave(()=>openPage("daily")); else if(k==="rank") openPage("rank"); else if(k==="game"){ openPage("games"); if(DU_GAMES.includes(a.v)) gameOpen(a.v); }
+  else if(k==="learn") openPage("learn"); else if(k==="free") openPage("free"); else if(k==="progress") openSet("progress"); else if(k==="settings") openSet("settings"); else if(k==="hub") openPage("hub"); }
+// ---- what the app itself notices ----
+function ntfCheck(){ const st=ntfStore(), first=!S.notifs.init, today=dayStr(), h=new Date().getHours();
+  if(first){ S.notifs.init=1; t("hsNews").forEach(([ti])=>ntfAdd({key:"news-"+ti, cat:"news", type:"news", ti}, true));
+    ntfAdd({key:"welcome", cat:"news", type:"welcome", ti:t("ntfWelcomeT"), tx:t("ntfWelcomeX"), act:{k:"settings",l:"ntfSetGo"}}); }
+  // news of the home page that this player has not seen yet
+  t("hsNews").forEach(([ti,su])=>ntfAdd({key:"news-"+ti, cat:"news", type:"news", ti, tx:su, act:{k:"hub",l:"ntfOpen"}}));
+  // the daily practice of the day
+  if(!(S.daily&&S.daily.date===today)) ntfAdd({key:"daily-"+today, cat:"remind", type:"daily", ti:t("ntfDailyT"), tx:t("ntfDailyX"), act:{k:"daily",l:"ntfPlay"}});
+  // the streak is in danger in the evening
+  const sd=S.streak&&S.streak.days|0; if(sd>=2 && S.streak.last===addDays(-1) && h>=17) ntfAdd({key:"streak-"+today, cat:"remind", type:"streak", ti:t("ntfStreakT")(sd), tx:t("ntfStreakX"), act:{k:"daily",l:"ntfPlay"}});
+  ntfBadge(); }
+setInterval(()=>{ try{ ntfCheck(); }catch(e){} }, 30*60*1000);
+// a new level (and the character of the level), a new rating record, the weekly leaderboard
+function ntfLevel(L){ const ci=CHAR_LVL.indexOf(L), c=ci>=0?t("chars")[ci]:null;
+  ntfAdd({key:"lvl-"+L, cat:"progress", type:"lvl", ti:t("ntfLvlT")(L), tx: c ? t("ntfLvlChar")(c[0]+" "+c[1]) : t("ntfLvlX"), act:{k:"progress",l:"ntfSee"}}); }
+function ntfElo(key, r){ const [g,c]=key.split("-"), e=(S.elo||{})[key]; if(!e || e.n<5) return; const peak=e.peak||0; if(r>peak){ e.peak=r; if(peak) ntfAdd({key:"elo-"+key+"-"+Math.floor(r/50), cat:"progress", type:"elo", ti:t("ntfEloT")(r), tx:duGameName(g)+" · "+t(c==="notes"?"duNotes":"duChords"), act:{k:"game",v:g,l:"ntfPlay"}}); } }
+function ntfRank(rows, since){ if(!user||!Array.isArray(rows)) return; const me=rows.findIndex(r=>r.id===user.id); if(me<0) return; const old=S.ntfRk&&S.ntfRk.since===since?S.ntfRk:null;
+  if(old && me>old.pos){ const by=rows.slice(0,me).find(r=>!old.above.includes(r.id)); if(by) ntfAdd({key:"rk-"+since+"-"+me+"-"+by.id, cat:"social", type:"rank", ti:t("ntfRankT")(qzSafe(by.name)||"?"), tx:t("ntfRankX")(me+1), act:{k:"rank",l:"ntfSee"}}); }
+  S.ntfRk={since, pos:me, above:rows.slice(0,me).map(r=>r.id)}; save(); }
+// ---- server side (accounts): notifications written by the server, e-mail preferences ----
+async function ntfCloud(){ if(!sb||!user) return;
+  try{ const since=new Date(Date.now()-30*86400000).toISOString();
+    const {data,error}=await sb.from("notifications").select("id,cat,kind,title,body,action,created_at").eq("user_id",user.id).gte("created_at",since).order("created_at",{ascending:true}).limit(50);
+    if(!error && Array.isArray(data)) data.forEach(r=>{ const act = typeof r.action==="string" && /^(daily|rank|learn|free|progress|hub|game:(runner|speed|memory))$/.test(r.action) ? (r.action.startsWith("game:")?{k:"game",v:r.action.slice(5),l:"ntfPlay"}:{k:r.action,l:"ntfOpen"}) : null;
+      ntfAdd({key:"srv-"+r.id, cat:NTF_CATS.includes(r.cat)?r.cat:"news", type:NTF_ICON[r.kind]?r.kind:"news", ti:r.title, tx:r.body, t:Date.parse(r.created_at)||Date.now(), act}); });
+  }catch(e){}
+  ntfSavePrefs(); }
+let ntfPrefT=0;
+function ntfSavePrefs(){ clearTimeout(ntfPrefT); ntfPrefT=setTimeout(async()=>{ if(!sb||!user) return; const p=ntfPrefs();
+  try{ await sb.from("notif_prefs").upsert({user_id:user.id, email_weekly:p.weekly, email_streak:p.remind.mail, email_social:p.social.mail, email_news:p.news.mail, lang:S.settings.lang==="en"?"en":"fr", updated_at:new Date().toISOString()},{onConflict:"user_id"}); }catch(e){} },800); }
+// ---- settings: categories x channels ----
+function renderNtfSet(){ const box=$("ntfSet"); if(!box) return; const p=ntfPrefs(); box.innerHTML="";
+  const head=document.createElement("div"); head.className="ntf-row ntf-hd"; head.innerHTML="<span></span><b></b><b></b>"; head.children[1].textContent=t("ntfApp"); head.children[2].textContent=t("ntfMail"); box.appendChild(head);
+  const row=(label,sub,app,mail,onApp,onMail)=>{ const r=document.createElement("div"); r.className="ntf-row"; r.innerHTML='<span><b></b><small></small></span><label class="sw"><input type="checkbox"><i></i></label><label class="sw"><input type="checkbox"><i></i></label>';
+    r.querySelector("b").textContent=label; r.querySelector("small").textContent=sub; const [a,m]=r.querySelectorAll("input");
+    if(app==null){ a.closest("label").style.visibility="hidden"; } else { a.checked=app; a.onchange=()=>onApp(a.checked); a.setAttribute("aria-label",label+" · "+t("ntfApp")); }
+    m.checked=mail; m.disabled=!user; m.onchange=()=>onMail(m.checked); m.setAttribute("aria-label",label+" · "+t("ntfMail")); box.appendChild(r); };
+  const set=(c,ch,v)=>{ S.settings.ntf=S.settings.ntf||{}; S.settings.ntf[c]={...ntfPrefs()[c],[ch]:v}; save(); ntfSavePrefs(); renderNtfSet(); };
+  NTF_CATS.forEach(c=>row(t("ntfCat_"+c), t("ntfCatD_"+c), p[c].app, p[c].mail, v=>set(c,"app",v), v=>set(c,"mail",v)));
+  row(t("ntfWeeklyT"), t("ntfWeeklyD"), null, p.weekly, null, v=>{ S.settings.ntf=S.settings.ntf||{}; S.settings.ntf.weekly=v; save(); ntfSavePrefs(); renderNtfSet(); });
+  const n=document.createElement("p"); n.className="qz-hint ntf-note"; n.textContent = user ? t("ntfMailNote") : t("ntfMailGuest"); box.appendChild(n); }
+// ---- buttons ----
+$("ntfBtn").addEventListener("click",()=>{ closeDrawer(); guardLeave(()=>openPage("notif")); });
+$("mbNtf").addEventListener("click",()=>guardLeave(()=>openPage("notif")));
+$("ntfAllRead").addEventListener("click",()=>{ ntfStore().list.forEach(n=>n.read=true); save(); ntfBadge(); renderNotifs(); });
+$("ntfSetBtn").addEventListener("click",()=>{ openSet("settings"); setTimeout(()=>$("ntfSet")?.scrollIntoView({block:"start",behavior:"smooth"}),80); });
+$("ntfTabs").addEventListener("click",e=>{ const b=e.target.closest("[data-v]"); if(!b) return; ntfFilter=b.dataset.v; renderNotifs(); });
+setTimeout(()=>{ try{ ntfCheck(); }catch(e){ console.warn(e); } },1500);
 
 // one tile: glossy colored card, a 3D-look object overflowing its top-right corner, then kicker, name, line, button
 function tile({color,obj,kick,title,desc,btn,rec,soon,onOpen}){
@@ -4677,6 +4836,7 @@ async function renderHubRank(){
   if(Date.now()-hsRankAt<60000) return; hsRankAt=Date.now();
   const {data,error}=await Promise.race([sb.rpc("leaderboard",{since}), new Promise(r=>setTimeout(()=>r({data:null,error:1}),8000))]);
   ol.innerHTML="";
+  try{ ntfRank(data,since); }catch(e){}
   const list=(data||[]).slice(0,5); list.forEach((r,i)=>ol.appendChild(hsRow(r,i+1,user&&r.id===user.id)));
   if(error) ol.appendChild(msg("hsRankErr")); else if(!user || !list.some(r=>r.id===user.id)) ol.appendChild(mine());
 }
@@ -4729,7 +4889,7 @@ function openPage(pg){
     phase="idle"; cur=null; seq=[]; found=[]; played=[]; idx=0; errors=0; game=null;
     clearKeys(); $("stage").classList.remove("res-good","res-warn","res-bad");
   }
-  page=pg; if(backFromInfo){ returnPage=null; setTimeout(resumeRound,0); } if(pg==="locked") renderLock(); if(pg==="settings") renderSettings(); if(pg==="progress") renderMap(); if(pg==="games") renderGames(); if(pg==="learn") renderLearn(); if(pg==="quiz"){ if(QZ.view!=="play") QZ.view="setup"; renderQuiz(); if(qzCfg().where==="online") netLobbyPeek(); } if(pg==="free") renderPlaySongs(); if(pg==="rank") renderRank(); if(pg==="account") renderAccount(); if(pg==="daily") dailyPlan();
+  page=pg; if(backFromInfo){ returnPage=null; setTimeout(resumeRound,0); } if(pg==="locked") renderLock(); if(pg==="settings") renderSettings(); if(pg==="progress") renderMap(); if(pg==="games") renderGames(); if(pg==="notif") renderNotifs(); if(pg==="learn") renderLearn(); if(pg==="quiz"){ if(QZ.view!=="play") QZ.view="setup"; renderQuiz(); if(qzCfg().where==="online") netLobbyPeek(); } if(pg==="free") renderPlaySongs(); if(pg==="rank") renderRank(); if(pg==="account") renderAccount(); if(pg==="daily") dailyPlan();
   if(narrowMQ.matches) buildKeyboard();
   renderSettings(); render(); renderDaily(); $("main").scrollTo({top:0});
   if(["games","daily"].includes(pg)) autoIntro(pg);
@@ -4796,6 +4956,7 @@ async function setUser(u){
       renderStatus(); render(); renderDaily();
     }
     try{ await cloudPull(); }catch(e){}
+    try{ ntfCloud(); }catch(e){}
     if(S.ownerId!==u.id){ S.ownerId=u.id; save(); } // a guest who signs in keeps everything, and the device is now tied to this account
   }
   if(page==="account") renderAccount(); if(page==="rank") renderRank();
@@ -4814,6 +4975,9 @@ function mergeState(local, cloud){
   const ls=isObj(local.streak)?local.streak:{days:0,last:""}, cs=isObj(c.streak)?c.streak:{days:0,last:""};
   m.streak = String(cs.last||"")>String(ls.last||"") ? {...cs} : String(cs.last||"")<String(ls.last||"") ? {...ls} : {days:Math.max(num(ls.days),num(cs.days)), last:ls.last||""};
   m.elo={...(isObj(local.elo)?local.elo:{})}; Object.entries(isObj(c.elo)?c.elo:{}).forEach(([k,e])=>{ if(isObj(e) && Number.isFinite(+e.r) && num(e.n)>num((m.elo[k]||{}).n)) m.elo[k]=e; }); if(!Object.keys(m.elo).length) delete m.elo; // ratings: the device with more games wins
+  if(isObj(c.notifs) && Array.isArray(c.notifs.list)){ const L=isObj(local.notifs)&&Array.isArray(local.notifs.list)?local.notifs.list:[], byId=new Map(L.map(n=>[n.id,{...n}]));
+    c.notifs.list.forEach(n=>{ if(!isObj(n)||!n.id) return; const o=byId.get(n.id); if(o) o.read=o.read||!!n.read; else byId.set(n.id,n); });
+    m.notifs={...(isObj(local.notifs)?local.notifs:{}), list:[...byId.values()].sort((a,b)=>num(b.t)-num(a.t)).slice(0,60), keys:{...(c.notifs.keys||{}), ...((isObj(local.notifs)&&local.notifs.keys)||{})}}; }
   m.gameBest=maxMap(local.gameBest,c.gameBest); m.runnerBest=Math.max(num(local.runnerBest),num(c.runnerBest));
   const newer=(a,b)=>{ if(!isObj(b)) return a; if(!isObj(a)) return b; return String(b.date||"")>String(a.date||"") ? b : a; };
   m.daily=newer(local.daily,c.daily); m.dailyPlan=newer(local.dailyPlan,c.dailyPlan); m.dailyRun=newer(local.dailyRun,c.dailyRun);
@@ -5153,7 +5317,7 @@ function restoreInput(){
   renderInputUI();
 }
 // ---------- Toasts & notices ----------
-function unlockNote(x){ /* unlock notifications removed on request: unlocks show in the progress view */ }
+function unlockNote(x){ try{ ntfAdd({key:"unl-"+x, cat:"progress", type:"unlock", ti:t("ntfUnlockT"), tx:x, act:{k:"learn",l:"ntfPlay"}}); }catch(e){} } // no toast (removed on request): it goes to the notifications
 let toastT=0;
 function toast(x){
   // discreet notification (level up, sign-out…), 2.5 s, created on demand
