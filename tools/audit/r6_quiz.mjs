@@ -24,7 +24,7 @@ async function openQuiz() { await ev(() => document.querySelector('#modeNav [dat
   for (let i = 0; i < 30 && !(await ev(() => !!window.QUIZ_DATA)); i++) await wait(page, 100); await wait(page, 200); }
 
 // 1) solo, easy (notes), 3 questions, right answer on the first keyboard
-await set({ n: 1, diff: 1, count: 5, time: 20, theme: 'all', keys: true }); await page.reload(); await wait(page, 800); await closeOnboarding(page);
+await set({ n: 1, diff: 1, ans: 'notes', bots: 0, where: 'local', count: 5, time: 20, theme: 'all', keys: true }); await page.reload(); await wait(page, 800); await closeOnboarding(page);
 await openQuiz();
 check('quiz : 200 questions chargées à la demande', await ev(() => window.QUIZ_DATA.q.length === 200 && document.querySelectorAll('#qzThemes .qz-theme').length === 11), await ev(() => [window.QUIZ_DATA.q.length, document.querySelectorAll('#qzThemes .qz-theme').length]));
 await ev(() => document.getElementById('qzGo').click()); await wait(page, 300);
@@ -49,7 +49,7 @@ await ev(() => document.getElementById('qzQuit').click()); await wait(page, 200)
 
 // 2) two players, one MIDI keyboard each, medium chords
 await ev(() => window.__midi.addSecond()); await wait(page, 300);
-await set({ n: 2, mode: 'dev', diff: 2, count: 5, devs: ['in-1', 'in-2'] }); await page.reload(); await wait(page, 900); await closeOnboarding(page);
+await set({ n: 2, mode: 'dev', diff: 2, ans: 'chords', count: 5, devs: ['in-1', 'in-2'] }); await page.reload(); await wait(page, 900); await closeOnboarding(page);
 await ev(() => window.__midi.addSecond()); await wait(page, 300);
 await openQuiz();
 await ev(() => document.getElementById('qzGo').click()); await wait(page, 300);
@@ -63,7 +63,7 @@ check('2 claviers : J2 (2e clavier) marque, J1 (mauvais accord) non', s[0] === 0
 await ev(() => document.getElementById('qzQuit').click()); await wait(page, 200);
 
 // 3) two players sharing one keyboard in zones
-await set({ n: 2, mode: 'zone', diff: 1, count: 5 }); await page.reload(); await wait(page, 900); await closeOnboarding(page);
+await set({ n: 2, mode: 'zone', diff: 1, ans: 'notes', count: 5 }); await page.reload(); await wait(page, 900); await closeOnboarding(page);
 await openQuiz();
 const zones = await ev(() => [...document.querySelectorAll('#qzPlayers .qz-pin')].map(p => p.textContent));
 check('zones : chaque joueur a sa zone', zones.length === 2 && zones.every(z => /–/.test(z)), zones);
@@ -75,7 +75,7 @@ check('zones : une note jouée en haut du clavier compte pour J2', s[0] === 0 &&
 await ev(() => document.getElementById('qzQuit').click()); await wait(page, 200);
 
 // 4) taking turns + end podium
-await set({ n: 2, mode: 'turn', diff: 1, count: 5 }); await page.reload(); await wait(page, 900); await closeOnboarding(page);
+await set({ n: 2, mode: 'turn', diff: 1, ans: 'notes', count: 5 }); await page.reload(); await wait(page, 900); await closeOnboarding(page);
 await openQuiz(); await ev(() => document.getElementById('qzGo').click()); await wait(page, 300);
 check('tour par tour : « Au tour de » affiché', await ev(() => !document.getElementById('qzTurn').hidden));
 for (let i = 0; i < 5; i++) { c = await cards(); await play(c.find(x => x.right).pcs); await wait(page, 350); await ev(() => document.getElementById('qzNext').click()); await wait(page, 300); }
