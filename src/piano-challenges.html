@@ -863,7 +863,13 @@ html.native .midi-body [data-i="midiHint"]{display:none}
   .prompt{font-size:clamp(1.9rem,4.4vw,2.8rem)}
   .hint.keys{display:none}
 }
-@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.sp-k,.sp-b,.sp-wm{opacity:1!important;transform:none!important}}
+/* reduced motion = fewer and gentler, not zero: no movement (keyframes, transform/size/position transitions), fades of opacity and colour kept */
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none!important;transition-property:opacity,color,background-color,border-color,box-shadow!important}
+  .sp-k,.sp-b,.sp-wm{opacity:1!important;transform:none!important}
+  .modal-card,.dd-pop,.tut-text{animation:rmFade 150ms ease!important}
+}
+@keyframes rmFade{from{opacity:0}}
 
 /* ===== Design system v1.1: aligned menu, hub 2/3 + side column, big mode titles ===== */
 .side .side-daily{display:none!important} /* the daily practice lives in Learn and on the hub */

@@ -265,6 +265,7 @@ en:{midiScreen:"On-screen keyboard",midiConnect:"Connect a MIDI keyboard",midiHo
   ear:['Golden Ear','Listen to a note or a short melody, then play it back from memory.','Musical ear','You first hear a reference C, then a note or a short melody. Play it back from memory. 10 questions, longer and longer.'],
   staff:['Staff Express','Notes arrive on a staff, not in a cascade.','Sight reading','Notes slide along a treble-clef staff, right to left. Play each note when it reaches the bar. A missed note costs a life.']}}};
 const tr=k=>T[LANG][k];
+const RM=matchMedia('(prefers-reduced-motion: reduce)').matches; // reduced motion: no screen shake in the games
 document.querySelectorAll('[data-i]').forEach(el=>el.textContent=tr(el.dataset.i));
 document.querySelectorAll('[data-i-aria]').forEach(el=>el.setAttribute('aria-label',tr(el.dataset.iAria)));
 /* ================= Music data ================= */
@@ -668,7 +669,7 @@ GAME.runner={lives:true,timed:false,tools:['names','hint'],
     for(const o of gs.obs){o.x-=sp*dt;if(!o.done&&o.x<rx+18){o.done='hit';gs.lives--;gs.combo=0;gs.shake=.35;blip(110,.3,'sawtooth',.09,60);burstAt(rx,SH*.74-30,o.m);ghud();if(gs.lives<=0){endGame('runner',`<p>${tr('cleared')(gs.cleared)}</p>`);break}}}
     gs.obs=gs.obs.filter(o=>o.x>-120);
     const tgt=gs.obs.find(o=>!o.done&&o.x>rx-10);setTargets(hint&&tgt&&tgt.x<rx+SW*.6?[{m:tgt.m}]:[])},
-  draw(dt){const sx=gs.shake>0?(Math.random()-.5)*12:0;ctx.save();ctx.translate(sx,0);const gy=SH*.74,rx=SW*.18;
+  draw(dt){const sx=gs.shake>0&&!RM?(Math.random()-.5)*12:0;ctx.save();ctx.translate(sx,0);const gy=SH*.74,rx=SW*.18;
     bgDark('#0b0a10','#2a1a3a','#4a2238');
     for(let i=0;i<40;i++){const x=((i*137.5-gs.dist*.05)%SW+SW)%SW,y=(i*53)%(gy*.7);ctx.fillStyle=`rgba(255,255,255,${.2+(i%5)*.1})`;ctx.fillRect(x,y,2,2)}
     ctx.fillStyle='#231a3a';ctx.beginPath();ctx.moveTo(0,gy);for(let x=0;x<=SW+40;x+=40)ctx.lineTo(x,gy-60-40*Math.sin((x+gs.dist*.25)/120));ctx.lineTo(SW,gy);ctx.fill();
@@ -754,7 +755,7 @@ GAME.climber={lives:false,timed:true,tools:['names','fing','hint'],sc:0,
     else{gs.floor=Math.max(0,gs.floor-1);gs.shake=.3;blip(140,.15,'sawtooth',.06);popLane(tr('slip'),m,'bad')}
     GAME.climber.aim();ghud()},
   update(dt){gs.t+=dt;if(gs.shake>0)gs.shake-=dt;if(!gs.running)return;if(tick(dt))endGame('climber',`<p>${tr('floors')(gs.floor,gs.laps)}</p>`)},
-  draw(dt){const sx=gs.shake>0?(Math.random()-.5)*10:0;ctx.save();ctx.translate(sx,0);bgDark('#06120c','#0b2416','#0f3a22');
+  draw(dt){const sx=gs.shake>0&&!RM?(Math.random()-.5)*10:0;ctx.save();ctx.translate(sx,0);bgDark('#06120c','#0b2416','#0f3a22');
     const s=SCALES[GAME.climber.sc],n=16,h=SH*.9/n,w=SW*.22,x0=SW/2-w/2,base=SH-10-gs.floor*h*0;
     for(let i=0;i<n;i++){const y=SH-10-(i+1)*h+ (gs.floor>8?(gs.floor-8)*h:0);if(y>SH||y<-h)continue;const idx=i%8,m=s.root+s.st[idx],on=i<gs.floor;
       ctx.fillStyle=on?col(m,58):'rgba(255,255,255,.06)';ctx.strokeStyle=on?col(m,70):'rgba(255,255,255,.15)';ctx.lineWidth=1.5;rr(x0+(i%2?12:-12),y+3,w,h-6,8);ctx.fill();ctx.stroke();
