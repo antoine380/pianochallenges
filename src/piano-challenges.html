@@ -1757,6 +1757,91 @@ html,body{overscroll-behavior:none}
 .staff-box[hidden]{display:none} .staff-box svg{max-width:100%;height:auto;display:block}
 body.staff-on.staff-seq .slots{display:none} #clefField[hidden]{display:none}
 .gm-staff{display:inline-flex;background:#fff;color:#1b1838;border-radius:16px;padding:2px 8px;box-shadow:0 10px 24px -14px rgba(27,24,56,.5)} .gm-staff svg{display:block;height:auto;max-height:22vh;width:auto}
+/* ===== Mise en page pleine hauteur (22/10/2026) =====
+   One spacing scale for the whole app, the same page header everywhere, and the pages that never scroll fill the whole screen:
+   the active page is a flex column that takes the height left, tile grids stretch their rows, the exercise card and the game grow,
+   the keyboard grows with the room (capped so the keys keep piano proportions). Content pages (settings, progress, ranking…) still scroll. */
+:root{--sp-1:4px;--sp-2:8px;--sp-3:12px;--sp-4:16px;--sp-5:24px;--sp-6:32px;
+  --page-pad:clamp(14px,1.8vw,28px);--gap:clamp(12px,1.5vw,22px);--card-pad:clamp(12px,1.3vw,20px);--ctl-h:44px;--title-size:clamp(1.6rem,2.6vw,2.4rem);
+  --kbd-max:clamp(150px,calc((100vw - 260px) * .36),440px)}
+@media (max-width:900px) and (min-width:641px) and (orientation:portrait){ :root{--kbd-max:clamp(150px,calc((100vw - 90px) * .58),440px)} }
+@media (max-width:640px){ :root{--page-pad:12px;--gap:10px;--card-pad:12px;--title-size:1.5rem;--kbd-max:clamp(130px,calc((100vw - 24px) * .78),340px)} }
+@media (max-height:520px) and (orientation:landscape){ :root{--page-pad:10px;--gap:8px;--card-pad:10px;--title-size:1.2rem} }
+/* shell: page margins from the scale, a wider column on big screens */
+.main{padding:var(--page-pad) max(var(--page-pad), env(safe-area-inset-right, 0px)) calc(var(--page-pad) + env(safe-area-inset-bottom, 0px)) max(var(--page-pad), env(safe-area-inset-left, 0px))}
+.wrap{max-width:1680px;gap:var(--gap)}
+@media (max-width:640px){ .main{padding-bottom:calc(var(--page-pad) + env(safe-area-inset-bottom, 0px))}
+  body:is([data-page="practice"],[data-page="daily"]) .main{padding-bottom:calc(84px + env(safe-area-inset-bottom, 0px))} }
+/* one page header: icon badge + title, same size and margins on every page */
+.mode-h h2,.pane-head h2{font-size:var(--title-size)!important;line-height:1.05}
+.mode-big{gap:var(--sp-3)}
+.mode-h p,.pane-head p{margin-top:var(--sp-1)}
+.mode-big .mb-ic{width:1.2em;height:1.2em}
+.ph-title{gap:var(--sp-3);letter-spacing:-.01em}
+.ph-title svg{box-sizing:border-box;width:1.2em!important;height:1.2em!important;padding:.22em;border-radius:.34em;flex:none;stroke:#fff!important;stroke-width:2;
+  background:linear-gradient(150deg,color-mix(in srgb,var(--mc,var(--brand)) 50%,#fff),var(--mc,var(--brand)));box-shadow:0 10px 20px -10px var(--mc,var(--brand)),inset 0 1px 0 rgba(255,255,255,.4)}
+.mode-page,.pane,.dpanel,.games{gap:var(--gap)}
+.pane-head{gap:var(--sp-3)}
+/* cards of the same role: same radius, shadow and inside spacing */
+.card,.su-box,.hs-card,.du-panel,.du-hist,.du-rate,.qz-q{border-radius:var(--r-lg);box-shadow:var(--shadow-card)}
+.card{padding:var(--card-pad)}
+.su-box,.hs-card,.du-panel,.du-hist{padding:var(--card-pad)}
+
+/* ---- pages that never scroll: the active page takes all the height ---- */
+[data-page="learn"] #learnPanel,
+body:not(.runner-on)[data-page="games"] #gamesPanel,
+[data-page="free"] #freePanel{flex:1 1 auto;min-height:0}
+/* tile grids stretch their rows; each tile is a size container, so its text and its 3D object grow with it */
+:is(#learnTiles,#gameCards,#playCards,#playSongs){flex:1 1 0;min-height:0;grid-auto-rows:minmax(0,1fr);align-content:stretch;gap:calc(var(--gap) + 12px) var(--gap);padding:18px 8px 2px 0;margin:0}
+#gameCards{flex-grow:3} #playCards{flex-grow:2}
+#main :is(#learnTiles,#gameCards,#playCards,#playSongs) .ptile{container:pt/size;min-height:0;height:100%;padding:var(--card-pad);gap:clamp(2px,1.2cqh,8px);justify-content:flex-end;border-radius:var(--r-lg);
+  --os:clamp(44px,min(62cqh,46cqw),210px)}
+#main :is(#learnTiles,#gameCards,#playCards,#playSongs) .ptile .obj{top:-16px;right:6px}
+#main :is(#learnTiles,#gameCards,#playCards,#playSongs) .ptile :is(.pk,.h3,.rec){max-width:calc(100% - var(--os) * .55)}
+#main :is(#learnTiles,#gameCards,#playCards,#playSongs) .ptile .h3{font-size:clamp(.92rem,min(13cqh,8.5cqw),2rem);padding-right:0;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+@container pt (max-height:110px){ #main :is(#learnTiles,#gameCards,#playCards,#playSongs) .ptile :is(.pk,.h3,.rec){max-width:calc(100% - var(--os) * .35)} }
+#main :is(#learnTiles,#gameCards,#playCards,#playSongs) .ptile p{font-size:clamp(.76rem,min(6.5cqh,4.2cqw),1rem);line-height:1.35;max-width:min(100%,46ch)}
+#main :is(#learnTiles,#gameCards,#playCards,#playSongs) .ptile .go{font-size:clamp(.78rem,4cqw,.95rem);padding:.5em 1.1em;margin-top:clamp(2px,1.5cqh,10px)}
+#main :is(#learnTiles,#gameCards,#playCards,#playSongs) .ptile :is(.pk,.go){display:none} #main :is(#learnTiles,#gameCards,#playCards,#playSongs) .ptile p{display:none}
+@container pt (min-height:150px) and (min-width:150px){ #main :is(#learnTiles,#gameCards,#playCards,#playSongs) .ptile p{display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden} }
+@container pt (min-height:200px) and (min-width:170px){ #main :is(#learnTiles,#gameCards,#playCards,#playSongs) .ptile .go{display:inline-flex} }
+@container pt (min-height:240px) and (min-width:200px){ #main :is(#learnTiles,#gameCards,#playCards,#playSongs) .ptile .pk{display:block} #main :is(#learnTiles,#gameCards,#playCards,#playSongs) .ptile p{-webkit-line-clamp:4} }
+.gc-head{margin:0}
+#main #learnTiles{grid-template-columns:repeat(3,minmax(0,1fr))}
+@media (max-width:900px) and (min-width:641px) and (orientation:portrait){ #main #learnTiles{grid-template-columns:repeat(2,minmax(0,1fr))} }
+@media (max-width:640px){ #main #learnTiles{grid-template-columns:repeat(2,minmax(0,1fr))} }
+
+/* hub: the three modes fill the left two thirds, the side column fills the right third */
+.mode-page.hub{justify-content:flex-start}
+.hub-wrap{align-items:stretch}
+.hub-main{min-height:0;gap:var(--gap)}
+.hub-grid{flex:1 1 auto;min-height:0;grid-auto-rows:minmax(0,1fr);gap:var(--gap)}
+#main .hub-grid .ptile{container:hb/size;min-height:0}
+.hub-side{gap:var(--gap);justify-content:flex-start;min-height:0}
+.hub-side .hs-daily{flex:1 1 auto;max-height:300px;--os:clamp(90px,14vh,150px)}
+.hub-side .hs-rank{flex:1 1 auto;min-height:0;overflow:hidden}
+@media (min-width:901px){
+  .hub-wrap .hub-grid{padding:8px 8px 2px 0}
+  #main .hub-wrap .hub-grid .ptile{--os:clamp(90px,min(78cqh,32cqw),230px);padding:clamp(14px,4cqh,30px) clamp(18px,3cqw,34px)}
+  #main .hub-wrap .hub-grid .ptile .h3{font-size:clamp(1.5rem,min(20cqh,7cqw),2.8rem)}
+  #main .hub-wrap .hub-grid .ptile p{font-size:clamp(.84rem,min(8cqh,2.4cqw),1.15rem);line-height:1.4}
+  #main .hub-wrap .hub-grid .ptile .tags{font-size:clamp(.7rem,1.6cqw,.85rem)}
+  @container hb (max-height:150px){ #main .hub-grid .ptile .tags{display:none} }
+}
+@media (max-width:900px){ .hub-wrap{grid-template-rows:minmax(0,1fr) auto;flex:1} .hub-main{display:flex;flex-direction:column} }
+@media (max-width:900px) and (min-width:641px){ #main .hub-grid .ptile{--os:clamp(70px,min(60cqh,60cqw),170px);padding-top:max(12px,calc(var(--os) * .7))} }
+@media (max-width:640px){ #main .hub-grid .ptile{--os:clamp(60px,min(66cqh,30cqw),120px);justify-content:center} .hub-grid .ptile .h3{font-size:clamp(1.3rem,min(22cqh,9cqw),2rem)!important} }
+@media (max-height:420px) and (orientation:landscape){ .hub-main{flex:1} #main .hub-grid .ptile{--os:clamp(44px,min(50cqh,34cqw),110px);justify-content:flex-end;padding:10px 12px}
+  #main .hub-grid .ptile .h3{font-size:clamp(1rem,min(16cqh,10cqw),1.6rem)!important;max-width:calc(100% - var(--os) * .5)} #main .hub-grid .ptile p{display:none}
+  @container hb (min-height:150px){ #main .hub-grid .ptile p{display:block;font-size:.78rem;max-width:none} } }
+
+/* PLAY page: the songs fill the top, the free keyboard keeps a good size underneath */
+[data-page="free"] .stage{flex:none!important}
+[data-page="free"] .kbd{height:clamp(110px,30vh,var(--kbd-max))!important}
+@media (max-width:640px){ [data-page="free"] .kbd{height:clamp(110px,24vh,200px)!important} }
+@media (max-height:420px) and (orientation:landscape){ [data-page="free"] .kbd{height:clamp(80px,30vh,140px)!important} }
+@media (max-width:900px) and (min-width:641px) and (orientation:portrait){ #main #gameCards{grid-template-columns:repeat(2,minmax(0,1fr))} #main #playCards{grid-template-columns:repeat(3,minmax(0,1fr))} }
+/* ===== fin mise en page ===== */
 </style>
 
 <script>if(window.Capacitor&&window.webkit&&window.webkit.messageHandlers&&window.webkit.messageHandlers.bridge)document.documentElement.classList.add("native");</script>
