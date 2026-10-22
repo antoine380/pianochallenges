@@ -1874,6 +1874,52 @@ body[data-page="daily"]:not(.playing) .dtl .dot svg{width:48%;height:48%}
 body[data-page="daily"]:not(.playing) .dtl .st-l{display:block;font-family:var(--f-display);font-weight:700;font-size:clamp(.8rem,1.8vh,1.15rem);max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 @media (max-width:900px) and (orientation:portrait){ body[data-page="daily"]:not(.playing) .dtl{grid-template-columns:repeat(3,minmax(0,1fr));--dd:clamp(34px,7vh,72px)} }
 @media (max-height:520px) and (orientation:landscape){ body[data-page="daily"]:not(.playing) .dtl{--dd:clamp(28px,9vh,44px)} body[data-page="daily"]:not(.playing) .dtl .st-l{font-size:.72rem} }
+
+/* ---- start screen of a subject: two columns that reach the bottom, the Start button at the bottom of its column ---- */
+body.setup #setupPanel{flex:1 1 auto;min-height:0}
+.su-wrap{flex:1 1 auto;align-items:stretch;gap:var(--gap)}
+.su-main{gap:clamp(4px,1vh,12px)}
+.su-main{--su-push:auto}
+#suKeysWrap,#suModeWrap:has(#suMode:not([hidden])),#suExtra:not(:empty){margin-top:var(--su-push)}
+@media (min-width:1300px){ .su-wrap{grid-template-columns:minmax(0,1fr) clamp(320px,20vw,400px)} }
+.su-cards{grid-template-columns:repeat(auto-fill,minmax(clamp(150px,11vw,230px),1fr))}
+.su-side{gap:var(--gap)}
+.su-side>.su-box:nth-child(2){flex:1 1 auto}
+.su-go{margin-top:auto}
+@media (min-height:861px) and (min-width:901px){
+  .su-card{min-height:clamp(62px,8.5vh,104px);padding:clamp(12px,1.6vh,18px) 16px} .su-card b{font-size:clamp(1rem,1.9vh,1.3rem)} .su-card small{font-size:clamp(.74rem,1.3vh,.88rem)}
+  .su-km{padding:clamp(10px,1.8vh,20px) 16px} .su-km b{font-size:clamp(.92rem,1.8vh,1.15rem)} .su-km small{font-size:clamp(.74rem,1.3vh,.88rem)}
+  .su-keys .su-key{min-height:clamp(40px,6vh,64px)} .su-keys .su-key b{font-size:clamp(.88rem,1.6vh,1.1rem)}
+  .su-mode{padding:clamp(12px,1.8vh,20px) 16px} .su-h{font-size:clamp(.8rem,1.3vh,.92rem)}
+  .su-chips button,.su-row .seg button{padding:clamp(7px,1.1vh,11px) clamp(14px,1.4vw,20px);font-size:clamp(.85rem,1.4vh,.98rem)}
+  .su-help b{font-size:clamp(.9rem,1.5vh,1rem)} .su-go{padding:clamp(14px,2vh,22px) 18px} }
+@media (max-width:900px){ .su-wrap{grid-template-rows:auto 1fr} .su-side{align-content:end} .su-go{margin-top:0} }
+@media (max-width:640px){ .su-main{--su-push:4px} .su-card{min-height:clamp(0px,calc((100vh - 700px) * .3),64px)} }
+@media (max-height:420px) and (orientation:landscape){ .su-wrap{grid-template-columns:minmax(0,1fr) 300px;grid-template-rows:none} .su-main{--su-push:4px}
+  .su-side>.su-box:nth-child(2){display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 4px;align-content:start} .su-side>.su-box:nth-child(2) .su-hh{grid-column:1/-1}
+  .su-side>.su-box:nth-child(2) .su-help b{font-size:.74rem;line-height:1.15} .su-side .su-help{padding:2px} .su-side .su-help input{width:16px;height:16px;margin-top:0} .su-go{margin-top:auto} }
+
+/* ---- quiz: settings and a question fill the page; the answer piano takes the height left ---- */
+[data-page="quiz"] #quizPanel{flex:1 1 auto;min-height:0}
+#qzSetup:not([hidden]){display:flex;flex-direction:column;gap:var(--gap);flex:1 1 auto;min-height:0}
+#qzSetup .qz-wrap{flex:1 1 auto;min-height:0;align-items:stretch;gap:var(--gap)}
+#qzSetup .qz-wrap>.qz-col{min-height:0;gap:clamp(4px,1vh,12px)}
+#qzSetup .qz-themes{grid-template-columns:repeat(4,minmax(0,1fr));flex:1 1 auto;min-height:0;grid-auto-rows:minmax(0,1fr);align-content:stretch;padding-top:10px}
+#qzSetup .qz-theme{container:qt/size;min-height:56px;height:100%}
+#qzSetup .qz-theme b{font-size:clamp(.92rem,min(17cqh,9cqw),1.45rem);max-width:calc(100% - 30px)}
+#qzSetup .qz-theme small{font-size:clamp(.7rem,min(10cqh,6cqw),.9rem)}
+#qzSetup .qz-ti{width:clamp(34px,min(52cqh,34cqw),96px);height:clamp(34px,min(52cqh,34cqw),96px)}
+#qzSetup .qz-diff{padding:clamp(8px,1.4vh,16px) 14px}
+#qzSetup .qz-wrap>.su-side{min-height:0}
+#qzLocalBox:not([hidden]),#qzOnlineBox:not([hidden]){flex:1 1 auto}
+#qzLocalBox>.su-box{flex:0 1 auto}
+#qzLocalBox .qz-go{margin-top:auto}
+#qzPlay:not([hidden]){flex:1 1 auto;min-height:0;gap:var(--gap)}
+#qzPlay .qz-kb{flex:1 1 auto;height:auto;min-height:110px;max-height:clamp(150px,44vh,460px)}
+@media (min-height:861px){ #qzPlay .qz-a{min-height:clamp(64px,8vh,104px)} #qzPlay .qz-at{font-size:clamp(1.02rem,1.9vh,1.3rem)} #qzPlay .qz-img{width:clamp(110px,13vh,160px);height:clamp(110px,13vh,160px)} #qzPlay .qz-q{padding:clamp(16px,2.4vh,28px) 24px} }
+@media (max-width:640px){ #qzPlay .qz-kb{min-height:118px} #qzSetup .qz-themes{display:grid;overflow:visible} #qzSetup .qz-themes{grid-template-columns:repeat(3,minmax(0,1fr))} }
+@media (max-height:420px) and (orientation:landscape){ #qzPlay .qz-kb{min-height:60px} #qzPlay{gap:6px} }
+#qzEnd:not([hidden]){flex:1 1 auto;justify-content:center}
 /* ===== fin mise en page ===== */
 </style>
 
