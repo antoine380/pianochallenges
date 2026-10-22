@@ -13,6 +13,13 @@ create table if not exists public.profiles (
   updated_at timestamptz not null default now()
 );
 alter table public.profiles add column if not exists photo text; -- bases créées avant l'ajout de la photo Google
+-- pseudo propre (migration 2026-10-21_profiles_name_check.sql) : 2 à 24 caractères après btrim, pas de caractères de
+-- contrôle ni de direction du texte (bidi). NOT VALID : les lignes existantes ne sont pas revérifiées.
+alter table public.profiles drop constraint if exists profiles_name_clean;
+alter table public.profiles add constraint profiles_name_clean check (
+  char_length(btrim(name)) between 2 and 24
+  and name !~ U&'[\0001-\001F\007F\200E\200F\202A-\202E\2066-\2069]'
+) not valid;
 
 create table if not exists public.progress (
   user_id uuid primary key references auth.users(id) on delete cascade,
@@ -72,6 +79,29 @@ language sql stable security definer set search_path = public as $$
 $$;
 revoke all on function public.leaderboard(date) from public;
 grant execute on function public.leaderboard(date) to anon, authenticated;
+
+-- my_rank(since): the caller's own rank and XP, for players outside the top 50 (migration 2026-10-21_my_rank.sql).
+create or replace function public.my_rank(since date default null)
+returns table (rank bigint, xp bigint)
+language plpgsql stable security definer set search_path = public as $$
+declare uid uuid := auth.uid(); mine bigint;
+begin
+  if uid is null then return; end if;
+  if since is null then
+    select p.xp::bigint into mine from public.profiles p where p.id = uid;
+    if mine is null or mine <= 0 then return; end if;
+    return query select (1 + count(*))::bigint, mine from public.profiles p where p.xp > mine;
+  else
+    select sum(l.xp)::bigint into mine from public.xp_log l where l.user_id = uid and l.day >= since and l.xp > 0;
+    if mine is null or mine <= 0 then return; end if;
+    return query
+      select (1 + count(*))::bigint, mine
+      from (select l.user_id from public.xp_log l join public.profiles p on p.id = l.user_id
+            where l.day >= since and l.xp > 0 group by l.user_id having sum(l.xp) > mine) s;
+  end if;
+end $$;
+revoke all on function public.my_rank(date) from public;
+grant execute on function public.my_rank(date) to authenticated;
 
 -- =====================================================================================
 -- Migration 2026-10-20 (audit #12, #37) — À EXÉCUTER PAR ANTOINE dans Supabase > SQL Editor > New query > Run.

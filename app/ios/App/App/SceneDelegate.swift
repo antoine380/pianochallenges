@@ -8,7 +8,10 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard let windowScene = scene as? UIWindowScene else { return }
 
         window = UIWindow(windowScene: windowScene)
-        window?.rootViewController = CAPBridgeViewController()
+        // Capacitor 8.5 (UIScene): the window and its root controller are created here, not by Main.storyboard.
+        // Use our subclass so capacitorDidLoad (Midi/Auth plugins), the background colour,
+        // the hidden status bar and the "keep the screen awake" call actually run.
+        window?.rootViewController = MainViewController()
         window?.makeKeyAndVisible()
 
         SceneDelegateProxy.shared.scene(scene, willConnectTo: session, options: connectionOptions)
