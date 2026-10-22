@@ -13,10 +13,8 @@ const set = cfg => ev(c => { const S = JSON.parse(localStorage.getItem('memo-gam
 const cards = () => ev(() => {
   const D = window.QUIZ_DATA, txt = document.getElementById('qzText').textContent, fr = document.documentElement.lang !== 'en';
   const q = D.q.find(x => x[2] === txt || x[4] === txt), right = q ? (q[2] === txt ? q[3][0] : q[5][0]) : null;
-  const W = [0, 2, 4, 5, 7, 9, 11], B = [1, 3, 6, 8, 10];
-  return [...document.querySelectorAll('#qzAns .qz-a')].map(a => { const r = [...a.querySelectorAll('.qz-play svg rect')];
-    const pcs = r.map((x, i) => x.getAttribute('fill') === '#7a5bf5' ? (i < 7 ? W[i] : B[i - 7]) : null).filter(x => x != null);
-    return { right: a.querySelector('.qz-at').textContent === right, pcs, name: a.querySelector('.qz-play b').textContent }; });
+  return [...document.querySelectorAll('#qzAns .qz-a')].map(a => ({ right: a.querySelector('.qz-at').textContent === right,
+    pcs: a.dataset.pcs.split(',').map(Number), name: a.querySelector('.qz-l .ln').textContent }));
 });
 const play = (pcs, dev = 0, base = 60) => ev(([pcs, dev, base]) => pcs.forEach(pc => window.__midi.noteOn(base + pc, 100, dev)), [pcs, dev, base]);
 const scores = () => ev(() => [...document.querySelectorAll('#qzScores .qz-ps')].map(d => +d.querySelector('.qz-pts').textContent));
@@ -44,7 +42,14 @@ await play([11]); await wait(page, 350);
 check('solo : une note hors réponses est ignorée', await ev(() => document.getElementById('qzNext').hidden));
 // screen: tap the right card
 c = await cards(); const k = c.findIndex(x => x.right); await ev(k => document.querySelectorAll('#qzAns .qz-a')[k].click(), k); await wait(page, 300);
+check('piano du quiz : plus de A B C D, la note est l’étiquette', await ev(() => [...document.querySelectorAll('#qzAns .qz-l .ln')].map(x => x.textContent).join() === 'Do,Ré,Mi,Fa'), await ev(() => [...document.querySelectorAll('#qzAns .qz-l')].map(x => x.textContent)));
+check('piano du quiz : 12 touches, les 4 réponses en couleur', await ev(() => document.querySelectorAll('#qzKb button').length === 12 && document.querySelectorAll('#qzKb .ans').length === 4));
 check('solo : toucher la bonne carte à l’écran répond', (await scores())[0] >= 200 && await ev(() => !document.getElementById('qzNext').hidden));
+await ev(() => document.getElementById('qzNext').click()); await wait(page, 300);
+{ const before = (await scores())[0]; c = await cards(); const rp = c.find(x => x.right).pcs[0];
+  await ev(rp => { const W = [0, 2, 4, 5, 7, 9, 11], B = [1, 3, 6, 8, 10], ks = document.querySelectorAll('#qzKb button'), i = W.indexOf(rp);
+    ks[i >= 0 ? i : 7 + B.indexOf(rp)].dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, button: 0 })); }, rp); await wait(page, 300);
+  check('piano du quiz : toucher la touche de la bonne note répond', (await scores())[0] >= before + 100 && await ev(() => !!document.querySelector('#qzKb .right')), await scores()); }
 await ev(() => document.getElementById('qzQuit').click()); await wait(page, 200);
 
 // 2) two players, one MIDI keyboard each, medium chords

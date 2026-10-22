@@ -1193,6 +1193,26 @@ body.gp .wk.k-ok span,body.gp .bk.k-ok span{color:#15122e}
 .qz-who{position:absolute;top:-6px;left:44px;display:flex;gap:3px} .qz-who i{width:16px;height:16px;border-radius:50%;box-shadow:0 0 0 2px var(--surface)}
 .qz-a.right{box-shadow:0 0 0 3px var(--good),0 14px 24px -14px var(--good)} .qz-a.right .qz-l{background:var(--good);color:#fff}
 .qz-a.wrong{opacity:.55}
+/* quiz: the answer is the note; a piano to answer on (oct. 2026) */
+.qz-a{grid-template-columns:auto minmax(0,1fr);min-height:64px}
+.qz-l{width:auto;min-width:46px;height:auto;min-height:38px;padding:4px 12px;font-size:1.15rem;line-height:1.05;text-align:center;white-space:nowrap}
+.qz-who{left:12px}
+.qz-l .sh{display:none} .qz-at{min-width:0;overflow-wrap:anywhere}
+.qz-kb{position:relative;display:flex;gap:4px;height:clamp(110px,20vh,190px);padding:6px 6px 8px;border-radius:var(--r-lg);background:#2b2560;box-shadow:var(--shadow-card);touch-action:manipulation;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
+.qz-kb button{border:0;cursor:pointer;font:inherit;-webkit-tap-highlight-color:transparent;transition:background-color 140ms ease,opacity 200ms ease}
+.qz-w{flex:1 1 0;min-width:0;display:flex;align-items:flex-end;justify-content:center;padding:0 2px 10px;border-radius:4px 4px 12px 12px;background:#f4f3ff;color:#8a86ad;font-weight:800;font-size:.8rem}
+.qz-b{position:absolute;top:6px;width:9.2%;height:58%;z-index:2;display:flex;align-items:flex-end;justify-content:center;padding:0 0 6px;border-radius:0 0 8px 8px;background:#15122e;color:#8f8ab8;font-weight:800;font-size:.62rem}
+.qz-kb span{max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.qz-kb .ans{background:var(--ac);color:#15122e;font-family:var(--f-display);font-weight:700;font-size:1.15rem}
+.qz-kb .qz-b.ans{font-size:.8rem}
+.qz-kb .ans.chd{font-size:1rem;padding-left:2px;padding-right:2px}
+.qz-kb .dn{filter:brightness(.88)}
+.qz-kb .right{box-shadow:inset 0 0 0 4px var(--good),0 0 0 3px var(--good);background:var(--good);color:#fff}
+.qz-kb .wrong{opacity:.4}
+@media (max-height:820px){ .qz-a{min-height:58px} }
+@media (max-width:640px){ #qzAns{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px} #qzAns .qz-a{grid-template-columns:auto minmax(0,1fr);gap:8px;min-height:52px;padding:6px 8px} .qz-l{min-height:30px;font-size:1rem;padding:3px 10px} .qz-l .ln{display:none} .qz-l .sh{display:inline}
+  .qz-at{font-size:.92rem} .qz-kb{height:118px} .qz-w{font-size:.7rem;padding-bottom:8px} .qz-kb .ans{font-size:.95rem} .qz-kb .qz-b.ans{font-size:.66rem} }
+@media (max-height:420px) and (orientation:landscape){ #qzAns .qz-a{min-height:0;padding:5px 10px} .qz-l{min-height:28px;font-size:.95rem;padding:2px 10px} .qz-kb{height:74px;padding:4px 4px 5px} #qzPlay .qz-ps{padding:4px 10px} #qzPlay{gap:5px} .qz-b{top:4px} .qz-w{padding-bottom:6px} }
 .qz-scores{display:flex;gap:10px;flex-wrap:wrap}
 .qz-ps{display:flex;align-items:center;gap:10px;padding:8px 14px;border-radius:999px;background:var(--surface);box-shadow:var(--shadow-card);min-width:150px}
 .qz-ps>i{width:12px;height:12px;border-radius:50%;background:var(--pc);flex:none}
@@ -1984,6 +2004,7 @@ body.staff-on.staff-seq .slots{display:none} #clefField[hidden]{display:none}
       <div class="qz-top"><span class="qz-chip" id="qzTheme"></span><span class="qz-num" id="qzNum"></span><div class="qz-timer"><i id="qzBar"></i></div><button class="btn" id="qzQuit" type="button" data-i="qzQuit"></button></div>
       <div class="qz-q"><div class="qz-img" id="qzImg"></div><div><p class="qz-turn" id="qzTurn" hidden></p><p class="qz-text" id="qzText"></p></div></div>
       <div class="qz-ans" id="qzAns"></div>
+      <div class="qz-kb" id="qzKb" role="group"></div>
       <div class="qz-foot"><div class="qz-scores" id="qzScores"></div><button class="btn primary" id="qzNext" type="button" data-i="qzNextT" hidden></button></div>
     </div>
     <div id="qzEnd" class="qz-col qz-end" hidden>
@@ -2504,7 +2525,7 @@ const TXT = {
     qzDiffs:["Facile","Moyen","Difficile"],
     qzModes:["Un clavier chacun","Zones d'un piano","Chacun son tour"], qzModeD:["Chaque joueur répond sur son clavier MIDI (ou sur l'écran). Le plus rapide gagne le plus de points.","Un seul piano partagé : chaque joueur joue dans sa zone du clavier.","Un seul clavier : les joueurs répondent à tour de rôle, une question chacun."],
     qzPlayer:"Joueur", qzKeyboard:"Clavier", qzScreen:"Écran", qzZone:"Zone", qzTurnN:n=>"Joue en "+n+(n===1?"er":"e"), qzMidiOk:n=>n+(n>1?" claviers MIDI détectés":" clavier MIDI détecté"), qzMidiNone:"Aucun clavier MIDI détecté : tu peux répondre en touchant les réponses ou avec le clavier de l'ordinateur.",
-    qzQ:(a,b)=>"Question "+a+" / "+b, qzPlay:"Joue", qzTurnOf:n=>"Au tour de "+n, qzWaiting:"réfléchit…", qzAnswered:"a répondu", qzNoAns:"pas de réponse", qzWrong:"raté", qzQuit:"Quitter", qzNextT:"Question suivante",
+    qzQ:(a,b)=>"Question "+a+" / "+b, qzPlay:"Joue", qzKbL:"Piano des réponses", qzTurnOf:n=>"Au tour de "+n, qzWaiting:"réfléchit…", qzAnswered:"a répondu", qzNoAns:"pas de réponse", qzWrong:"raté", qzQuit:"Quitter", qzNextT:"Question suivante",
     qzWinner:n=>n+" gagne !", qzSoloEnd:(a,b)=>a+" bonne"+(a>1?"s":"")+" réponse"+(a>1?"s":"")+" sur "+b, qzRight:(a,b)=>a+" / "+b+" bonnes réponses", qzSettings:"Changer les réglages", qzAgainT:"Rejouer", suKey:"Tonalité", suTimer:"Chrono", suHelps:"Aides", suHowT:"Comment ça marche ?", suGo:"Commencer", suMastered:"maîtrisées", suChange:"Changer de choix",
     suPickScale:"Quelle gamme ?", suPickChord:"Quel accord ?", suPickProg:"Quelle progression ?", suPickEar:"Qu'est-ce qu'on écoute ?",
     suSub_scales:"Choisis une gamme et sa tonalité, règle le chrono et les aides, puis joue-la jusqu'à la réussir.", suSub_chords:"Choisis un accord et sa tonalité. Chaque renversement coché est un exercice.", suSub_harmony:"Choisis une tonalité : chaque degré coché est un exercice.", suSub_prog:"Choisis une progression et sa tonalité, puis enchaîne les accords.", suSub_ear:"Choisis ce que tu veux reconnaître : 10 écoutes par partie.",
@@ -2669,7 +2690,7 @@ const TXT = {
     qzDiffs:["Easy","Medium","Hard"],
     qzModes:["One keyboard each","Zones of one piano","Take turns"], qzModeD:["Each player answers on their own MIDI keyboard (or on screen). The fastest scores the most.","One shared piano: each player plays in their own part of the keyboard.","One keyboard: players answer in turn, one question each."],
     qzPlayer:"Player", qzKeyboard:"Keyboard", qzScreen:"Screen", qzZone:"Zone", qzTurnN:n=>"Plays "+["1st","2nd","3rd","4th"][n-1], qzMidiOk:n=>n+(n>1?" MIDI keyboards found":" MIDI keyboard found"), qzMidiNone:"No MIDI keyboard found: you can answer by tapping the answers or with the computer keyboard.",
-    qzQ:(a,b)=>"Question "+a+" / "+b, qzPlay:"Play", qzTurnOf:n=>n+"'s turn", qzWaiting:"thinking…", qzAnswered:"answered", qzNoAns:"no answer", qzWrong:"missed", qzQuit:"Quit", qzNextT:"Next question",
+    qzQ:(a,b)=>"Question "+a+" / "+b, qzPlay:"Play", qzKbL:"Answer piano", qzTurnOf:n=>n+"'s turn", qzWaiting:"thinking…", qzAnswered:"answered", qzNoAns:"no answer", qzWrong:"missed", qzQuit:"Quit", qzNextT:"Next question",
     qzWinner:n=>n+" wins!", qzSoloEnd:(a,b)=>a+" right answer"+(a!==1?"s":"")+" out of "+b, qzRight:(a,b)=>a+" / "+b+" right answers", qzSettings:"Change settings", qzAgainT:"Play again", suKey:"Key", suTimer:"Timer", suHelps:"Helps", suHowT:"How does it work?", suGo:"Start", suMastered:"mastered", suChange:"Change choice",
     suPickScale:"Which scale?", suPickChord:"Which chord?", suPickProg:"Which progression?", suPickEar:"What do we listen to?",
     suSub_scales:"Pick a scale and its key, set the timer and the helps, then play it until you nail it.", suSub_chords:"Pick a chord and its key. Each ticked inversion is one exercise.", suSub_harmony:"Pick a key: each ticked degree is one exercise.", suSub_prog:"Pick a progression and its key, then chain the chords.", suSub_ear:"Pick what you want to recognise: 10 listens per game.",
@@ -5147,7 +5168,7 @@ const QZ_ROOT={fr:["Do","Do♯","Ré","Mi♭","Mi","Fa","Fa♯","Sol","La♭","L
 const qzRoots = () => S.settings.notation==="fr"?QZ_ROOT.fr:QZ_ROOT.en;
 function qzChord(root,kind){ const iv={maj:[0,4,7],min:[0,3,7],dom7:[0,4,7,10]}[kind], R=qzRoots()[root], fr=S.settings.lang==="fr";
   const name = kind==="maj" ? R+(fr?" majeur":" major") : kind==="min" ? R+(fr?" mineur":" minor") : R+"7";
-  return {pcs:iv.map(x=>(root+x)%12), mid:iv.map(x=>60+root+x-(root>6?12:0)), name}; }
+  return {pcs:iv.map(x=>(root+x)%12), mid:iv.map(x=>60+root+x-(root>6?12:0)), name, sym:R+(kind==="min"?"m":kind==="dom7"?"7":"")}; }
 function qzNote(pc){ return {pcs:[pc], mid:[60+pc], name:qzRoots()[pc]}; }
 function qzPick4(pool,mk){ const out=[], keys=new Set(); let guard=0; while(out.length<4 && guard++<500){ const x=pool[Math.floor(Math.random()*pool.length)], c=mk(x), key=c.pcs.slice().sort((a,b)=>a-b).join(","); if(keys.has(key)) continue; keys.add(key); out.push(c); } return out; }
 // the 4 things to play for one question: notes or chords, easier or harder
@@ -5260,6 +5281,27 @@ function qzReveal(fromNet){ if(QZ.done) return; QZ.done=true; QZ.doneAt=performa
   if(QZ.mode==="online" && NET.host && !fromNet) netSend({type:"reveal",i:QZ.i});
   const r=QZ.ans.findIndex(a=>a.right); if(uiSound()) QZ.ans[r].tg.mid.forEach((m,i)=>tone(m,i*.03,.9,.16));
   renderQzPlay(); if(QZ.mode!=="online"||NET.host) QZ.revealT=setTimeout(()=>{ if(page==="quiz"&&QZ.view==="play"&&QZ.done) qzNext(); },4200); }
+// answer k touched on screen (its card or its key on the quiz piano)
+function qzTap(k){ const a=QZ.ans[k]; if(QZ.done||!a) return; if(uiSound()) a.tg.mid.forEach((m,i)=>tone(m,i*.02,.7,.14));
+  if(QZ.mode==="zone") return; // one shared piano: a tap cannot tell who answered
+  const pi = QZ.mode==="dev" ? QZ.players.findIndex(p=>!p.bot&&p.dev==="screen") : qzWho("screen",a.tg.mid[0]);
+  if(pi!=null && pi>=0) qzLocalPick(pi,k); }
+// the quiz piano (one octave): each answer is a key in its colour, named; chords are answered on their root
+function renderQzKb(){ const kb=$("qzKb"); if(!kb) return; kb.innerHTML=""; kb.setAttribute("aria-label",t("qzKbL"));
+  const R=qzRoots(), own={}, cnt={}; QZ.ans.forEach(a=>{ const r=a.tg.pcs[0]; cnt[r]=(cnt[r]||0)+1; });
+  QZ.ans.forEach((a,k)=>{ const r=a.tg.pcs[0]; if(cnt[r]===1) own[r]=k; });
+  const W=[0,2,4,5,7,9,11], B=[[1,0],[3,1],[6,3],[8,4],[10,5]], col=["#ff5a6e","#3cc8f0","#ffd23f","#3ddc84"], ch=QZ.ans.some(a=>a.tg.pcs.length>1);
+  const key=(pc,cls)=>{ const b=document.createElement("button"); b.type="button"; b.className=cls; const k=own[pc], a=k!=null?QZ.ans[k]:null;
+    b.innerHTML='<span></span>'; b.firstChild.textContent = a ? (a.tg.sym||a.tg.name) : R[pc];
+    if(a){ b.classList.add("ans"); b.style.setProperty("--ac",col[k]); b.setAttribute("aria-label",a.tg.name+" : "+a.txt);
+      if(QZ.done) b.classList.add(a.right?"right":"wrong"); } else b.setAttribute("aria-label",R[pc]);
+    if(ch && a) b.classList.add("chd");
+    b.addEventListener("pointerdown",e=>{ if(e.button>0) return; b.classList.add("dn"); setTimeout(()=>b.classList.remove("dn"),160);
+      if(k!=null) qzTap(k); else if(uiSound()) tone(60+pc,0,.5,.14); });
+    b.addEventListener("click",e=>{ if(e.detail===0 && k!=null) qzTap(k); }); // keyboard (Enter / Space)
+    return b; };
+  W.forEach(pc=>kb.appendChild(key(pc,"qz-w")));
+  B.forEach(([pc,i])=>{ const b=key(pc,"qz-b"); b.style.left="calc("+(i+1)+" * 100% / 7 - 4.6%)"; kb.appendChild(b); }); }
 function renderQzPlay(){ if(!QZ.q) return; const q=QZ.q, fr=S.settings.lang==="fr", th=QZ.data.themes[q[0]]||{fr:"",en:"",col:"#6a4bf0"}, cf=QZ.cfg;
   $("qzTheme").textContent=fr?th.fr:th.en; $("qzTheme").style.setProperty("--tc",th.col);
   $("qzNum").textContent=t("qzQ")(QZ.i+1,QZ.list.length);
@@ -5270,14 +5312,12 @@ function renderQzPlay(){ if(!QZ.q) return; const q=QZ.q, fr=S.settings.lang==="f
   const box=$("qzAns"); box.innerHTML="";
   QZ.ans.forEach((a,k)=>{ const b=document.createElement("button"); b.type="button"; b.className="qz-a"; b.style.setProperty("--ac",["#ff5a6e","#3cc8f0","#ffd23f","#3ddc84"][k]);
     if(QZ.done) b.classList.add(a.right?"right":"wrong");
-    b.innerHTML='<span class="qz-l">'+"ABCD"[k]+'</span><span class="qz-at"></span><span class="qz-play"><small>'+t("qzPlay")+'</small><b></b>'+(cf.keys||cf.diff<3||QZ.done?qzKeys(a.tg.pcs,"#7a5bf5"):"")+'</span><span class="qz-who"></span>';
-    b.querySelector(".qz-at").textContent=a.txt; b.querySelector(".qz-play b").textContent=a.tg.name;
+    b.innerHTML='<span class="qz-l"></span><span class="qz-at"></span><span class="qz-who"></span>'; b.dataset.pcs=a.tg.pcs.join(",");
+    const lb=b.querySelector(".qz-l"); lb.innerHTML='<span class="ln"></span><span class="sh"></span>'; lb.firstChild.textContent=a.tg.name; lb.lastChild.textContent=a.tg.sym||a.tg.name; b.querySelector(".qz-at").textContent=a.txt; b.setAttribute("aria-label",t("qzPlay")+" "+a.tg.name+" : "+a.txt);
     const who=b.querySelector(".qz-who"); QZ.players.forEach((p,i)=>{ if(QZ.picks[i]===k){ const d=document.createElement("i"); d.style.background=p.col; d.title=pName(p.name); who.appendChild(d); } });
-    b.onclick=()=>{ if(QZ.done) return; if(uiSound()) a.tg.mid.forEach((m,i)=>tone(m,i*.02,.7,.14));
-      if(QZ.mode==="zone") return; // one shared piano: a tap cannot tell who answered
-      let pi = QZ.mode==="dev" ? QZ.players.findIndex(p=>!p.bot&&p.dev==="screen") : qzWho("screen",a.tg.mid[0]);
-      if(QZ.mode==="dev" && pi<0) return; if(pi!=null && pi>=0) qzLocalPick(pi,k); };
+    b.onclick=()=>qzTap(k);
     box.appendChild(b); });
+  renderQzKb();
   const sb=$("qzScores"); sb.innerHTML="";
   QZ.players.forEach((p,i)=>{ const d=document.createElement("div"); d.className="qz-ps"+(p.gone?" gone":""); d.style.setProperty("--pc",p.col); const st=QZ.picks[i];
     if(turnP===p && !QZ.done) d.classList.add("turn");
