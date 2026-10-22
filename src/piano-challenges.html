@@ -1920,6 +1920,29 @@ body.setup #setupPanel{flex:1 1 auto;min-height:0}
 @media (max-width:640px){ #qzPlay .qz-kb{min-height:118px} #qzSetup .qz-themes{display:grid;overflow:visible} #qzSetup .qz-themes{grid-template-columns:repeat(3,minmax(0,1fr))} }
 @media (max-height:420px) and (orientation:landscape){ #qzPlay .qz-kb{min-height:60px} #qzPlay{gap:6px} }
 #qzEnd:not([hidden]){flex:1 1 auto;justify-content:center}
+
+/* ---- first launch "Play your first note": the card takes the screen, its keyboard takes the height left ---- */
+.fn-kb{flex:1 1 auto;height:auto;min-height:140px;max-height:clamp(170px,40vh,440px)}
+@media (min-width:761px) and (min-height:561px){ .fn-card{width:min(1600px,100%);height:calc(100dvh - 40px)} .fn-hero h1{font-size:clamp(2.2rem,min(4.4vw,7vh),4.4rem)} .fn-hero p{font-size:clamp(1.02rem,1.9vh,1.3rem)}
+  .fn-hero .fn-obj{width:min(300px,34%)} .fn-play{gap:clamp(10px,1.6vh,18px)} .fn-play h2{font-size:clamp(1.6rem,3.6vh,2.4rem)} }
+@media (min-width:761px) and (max-width:900px) and (orientation:portrait){ .gate:has(.fn-card){padding:0;place-items:stretch}
+  .fn-card{grid-template-columns:1fr;grid-template-rows:auto 1fr;border-radius:0;height:100dvh;width:100%} .fn-hero{padding:28px 32px 22px;gap:10px} .fn-hero h1{margin:6px 0 0} .fn-trust{margin-top:4px} .fn-hero .fn-obj{width:150px} .fn-play{padding:24px 32px} }
+@media (max-width:760px){ .fn-kb{min-height:110px;max-height:260px} }
+@media (max-height:560px){ .fn-kb{min-height:80px;max-height:150px} }
+@media (max-height:560px) and (min-width:700px){ .fn-kb{min-height:80px;max-height:150px} }
+
+/* ---- content pages (settings, progress, ranking, profile, notifications): they may scroll, but reach the bottom ---- */
+.pane:not([hidden]):not(.lock){flex:1 0 auto}
+.rank-card{flex:1 0 auto;display:flex;flex-direction:column}
+.rank-cta{margin-top:auto}
+.acct-grid{flex:1 0 auto;align-items:stretch}
+.acct-login{display:flex;flex-direction:column}
+#settingsPage>.card,#progressPage>.card{flex:1 0 auto}
+/* phones: the bar on top already says where you are, so the page title is not repeated */
+@media (max-width:640px), (max-height:520px) and (orientation:landscape){
+  .pane-head h2.ph-title{display:none}
+  :is(#learnPanel,#gamesPanel,#freePanel) .mode-h{display:none}
+}
 /* ===== fin mise en page ===== */
 </style>
 
