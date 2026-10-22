@@ -1841,6 +1841,39 @@ body:not(.runner-on)[data-page="games"] #gamesPanel,
 @media (max-width:640px){ [data-page="free"] .kbd{height:clamp(110px,24vh,200px)!important} }
 @media (max-height:420px) and (orientation:landscape){ [data-page="free"] .kbd{height:clamp(80px,30vh,140px)!important} }
 @media (max-width:900px) and (min-width:641px) and (orientation:portrait){ #main #gameCards{grid-template-columns:repeat(2,minmax(0,1fr))} #main #playCards{grid-template-columns:repeat(3,minmax(0,1fr))} }
+
+/* ---- exercise (LEARN, daily practice): the card fills the page, the keyboard grows ---- */
+body:is([data-page="practice"],[data-page="daily"]):not(.setup) .stage{flex:1 1 auto}
+.kbd-wrap{flex:1 1 auto;max-height:var(--kbd-max)}
+.stage{padding:var(--card-pad) clamp(14px,2.2vw,28px);gap:clamp(8px,1.4vh,16px)}
+@media (min-height:861px){ .prompt{font-size:clamp(2.2rem,5.2vh,4.2rem)} .slot .nn{font-size:clamp(1rem,2.2vh,1.6rem)} .slot{padding:8px 4px 10px} }
+
+/* ---- games: the game area and the keyboard share the height ---- */
+#runner{container-type:inline-size}
+body.runner-on:not(.du-lob)[data-page="games"] #runner{flex:0 1 auto}
+body.runner-on #runner .rn-stage{height:clamp(150px,min(46cqw,42vh),600px)}
+body.runner-on:not(.du-lob)[data-page="games"] .stage{flex:1 1 auto}
+@media (max-height:520px) and (orientation:landscape){ body.runner-on #runner .rn-stage{height:clamp(110px,min(46cqw,36vh),200px)} }
+/* duel lobby: the four ways to play fill the height on phones too */
+@media (max-width:640px){ .du-modes{flex:1 1 auto;grid-auto-rows:minmax(0,1fr)} .du-mode{min-height:0} }
+/* the speed and memory boards: the target grows with the board */
+body.runner-on #runner .gm-big{font-size:clamp(2.2rem,min(8cqw,13vh),6.5rem)}
+body.runner-on #runner .gm-kick{font-size:clamp(.78rem,1.4cqw,1.05rem)}
+body.runner-on #runner .gm-sub{font-size:clamp(.9rem,1.6cqw,1.15rem)}
+body.runner-on #runner .gm-bar{height:clamp(8px,1.2vh,12px)}
+/* daily practice, before starting: the ten steps of the day as a grid of cards that fills the page */
+.dtl .st-l{display:none}
+body[data-page="daily"]:not(.playing) #dailyPanel{flex:1 1 auto;min-height:0}
+body[data-page="daily"]:not(.playing) .dtl-wrap{flex:1 1 auto;display:flex;min-height:0}
+body[data-page="daily"]:not(.playing) .dtl{--dd:clamp(40px,min(9vh,6vw),92px);flex:1;grid-auto-flow:row;grid-template-columns:repeat(6,minmax(0,1fr));grid-auto-rows:minmax(0,1fr);gap:var(--gap);padding:0;background:none;box-shadow:none;border-radius:0;overflow:visible}
+body[data-page="daily"]:not(.playing) .dtl li{justify-content:center;gap:clamp(4px,1vh,10px);padding:var(--sp-2);background:var(--surface);border-radius:var(--r-lg);box-shadow:var(--shadow-card);cursor:default}
+body[data-page="daily"]:not(.playing) .dtl li::before{display:none}
+body[data-page="daily"]:not(.playing) .dtl .st-n{position:absolute;top:10px;left:12px;font-size:clamp(.7rem,1.4vh,.9rem)}
+body[data-page="daily"]:not(.playing) .dtl .dot{width:var(--dd);height:var(--dd);border-width:3px}
+body[data-page="daily"]:not(.playing) .dtl .dot svg{width:48%;height:48%}
+body[data-page="daily"]:not(.playing) .dtl .st-l{display:block;font-family:var(--f-display);font-weight:700;font-size:clamp(.8rem,1.8vh,1.15rem);max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+@media (max-width:900px) and (orientation:portrait){ body[data-page="daily"]:not(.playing) .dtl{grid-template-columns:repeat(3,minmax(0,1fr));--dd:clamp(34px,7vh,72px)} }
+@media (max-height:520px) and (orientation:landscape){ body[data-page="daily"]:not(.playing) .dtl{--dd:clamp(28px,9vh,44px)} body[data-page="daily"]:not(.playing) .dtl .st-l{font-size:.72rem} }
 /* ===== fin mise en page ===== */
 </style>
 
@@ -3223,6 +3256,8 @@ function tone(midi, when=0, dur=.6, vol=.28){
 // ---------- Keyboard ----------
 const kbd=document.getElementById("kbd");
 const narrowMQ=window.matchMedia("(max-width:640px)");
+const tabMQ=window.matchMedia("(min-width:641px) and (max-width:900px) and (orientation:portrait)"); // tablet held upright: two octaves, so the keys stay wide enough to be tall
+const kbNarrow=()=>narrowMQ.matches||tabMQ.matches;
 let LOW=48, HIGH=72, keyEls={};
 function phoneStart(){
   if(!cur||!seq.length) return 48;
@@ -3238,8 +3273,8 @@ function buildKeyboard(){
   if(size!=="auto"){ // the same keys as the player's MIDI keyboard
     let [lo,hi] = size==="custom" ? [S.settings.kbdLow,S.settings.kbdHigh] : KB_PRESETS[size];
     while(!NAT.includes(lo%12)) lo--; while(!NAT.includes(hi%12)) hi++; LOW=lo; HIGH=hi;
-  } else if(narrowMQ.matches){ // phone: 10 white keys from the white key at/below the tonic
-    LOW=phoneStart(); let m=LOW, w=0; while(w<10){ if(NAT.includes(m%12)) w++; if(w<10) m++; } HIGH=m;
+  } else if(kbNarrow()){ // phone: 10 white keys from the white key at/below the tonic (upright tablet: 15)
+    const nw=narrowMQ.matches?10:15; LOW=phoneStart(); let m=LOW, w=0; while(w<nw){ if(NAT.includes(m%12)) w++; if(w<nw) m++; } HIGH=m;
   } else { LOW=48; HIGH=84; } // desktop: three octaves C3–C6
   kbd.innerHTML=""; keyEls={};
   const whites=[]; for(let m=LOW;m<=HIGH;m++) if(NAT.includes(m%12)) whites.push(m);
@@ -3475,7 +3510,7 @@ function startRound(item, retry){
   phase="listening"; startT=performance.now();
   const per = chSeq() ? seq.length : 1;
   deadline=(S.settings.delay>0 && cur.sec!=="ear") ? startT+S.settings.delay*1000*per : 0;
-  if(narrowMQ.matches && !kbFull() && LOW!==phoneStart()) buildKeyboard();
+  if(kbNarrow() && !kbFull() && LOW!==phoneStart()) buildKeyboard();
   clearKeys(); resetScore(); $("stage").classList.remove("res-good","res-warn","res-bad");
   S.settings[SEC[cur.sec].view]=cur.tid;
   render(); cancelAnimationFrame(raf); raf=requestAnimationFrame(tick);
@@ -3732,7 +3767,7 @@ function switchSection(sec){
   clearTimeout(advanceTimer); cancelAnimationFrame(raf); clearPlayTimers();
   S.section=sec; save(); phase="idle"; cur=null; seq=[]; found=[]; played=[]; idx=0; errors=0; game=null;
   clearKeys(); $("stage").classList.remove("res-good","res-warn","res-bad");
-  if(narrowMQ.matches) buildKeyboard();
+  if(kbNarrow()) buildKeyboard();
   renderSettings(); render();
 }
 
@@ -5594,7 +5629,7 @@ function openPage(pg){
     clearKeys(); $("stage").classList.remove("res-good","res-warn","res-bad");
   }
   page=pg; if(backFromInfo){ returnPage=null; setTimeout(resumeRound,0); } if(pg==="locked") renderLock(); if(pg==="settings") renderSettings(); if(pg==="progress") renderMap(); if(pg==="games") renderGames(); if(pg==="notif") renderNotifs(); if(pg==="learn") renderLearn(); if(pg==="quiz"){ if(QZ.view!=="play") QZ.view="setup"; renderQuiz(); if(qzCfg().where==="online") netLobbyPeek(); } if(pg==="free") renderPlaySongs(); if(pg==="rank") renderRank(); if(pg==="account") renderAccount(); if(pg==="daily") dailyPlan();
-  if(narrowMQ.matches) buildKeyboard();
+  if(kbNarrow()) buildKeyboard();
   renderSettings(); render(); renderDaily(); $("main").scrollTo({top:0});
   if(["games","daily"].includes(pg)) autoIntro(pg);
 }
@@ -5612,14 +5647,15 @@ function renderDailyPanel(){
   const check='<svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>', cross='<svg viewBox="0 0 24 24"><path d="M12 7v6M12 17v.5"/></svg>';
   shown.items.forEach((it,i)=>{ const li=document.createElement("li"), lv=levels[i];
     li.className = lv ? lv : i===curI ? "cur" : "todo";
-    li.innerHTML='<span class="st-n mono">'+(i+1)+'</span><span class="dot">'+(lv==="good"?check:SEC_ICON(it.sec))+'</span>';
+    li.innerHTML='<span class="st-n mono">'+(i+1)+'</span><span class="dot">'+(lv==="good"?check:SEC_ICON(it.sec))+'</span><span class="st-l"></span>';
+    li.querySelector(".st-l").textContent=t({scales:"secScales",chords:"secChords",harmony:"secHarmony",prog:"secProg",ear:"secEar"}[it.sec])||"";
     const show = lv || i===curI || (done && !run);
     li.dataset.tip = (i+1)+" · "+(t({scales:"secScales",chords:"secChords",harmony:"secHarmony",prog:"secProg",ear:"secEar"}[it.sec])||"") + (show && !(it.sec==="ear" && !lv) ? " — "+itemName(it) : "");
     li.tabIndex=0;
     ol.appendChild(li); });
   const fin=document.createElement("li"); fin.className="finish "+(done&&!run?"good":"todo");
-  fin.innerHTML='<span class="st-n mono">&nbsp;</span><span class="dot">'+(done&&!run?check:'<svg viewBox="0 0 24 24"><path d="M6 20V4M6 4h11l-2.5 4L17 12H6"/></svg>')+'</span>';
-  fin.dataset.tip=t("dpFinish"); ol.appendChild(fin);
+  fin.innerHTML='<span class="st-n mono">&nbsp;</span><span class="dot">'+(done&&!run?check:'<svg viewBox="0 0 24 24"><path d="M6 20V4M6 4h11l-2.5 4L17 12H6"/></svg>')+'</span><span class="st-l"></span>';
+  fin.querySelector(".st-l").textContent=t("dpFinish"); fin.dataset.tip=t("dpFinish"); ol.appendChild(fin);
   const c=ol.querySelector(".cur"); if(c) c.scrollIntoView({block:"nearest",inline:"center"});
 }
 // ---------- Accounts, sync and leaderboard (Supabase) ----------
@@ -5927,7 +5963,7 @@ function goHome(){
   clearTimeout(advanceTimer); cancelAnimationFrame(raf); clearPlayTimers(); closeEnd(); closeHelp();
   game=null; phase="idle"; cur=null; seq=[]; found=[]; played=[]; idx=0; errors=0;
   clearKeys(); $("stage").classList.remove("res-good","res-warn","res-bad");
-  if(S.section!=="chords"){ S.section="chords"; save(); if(narrowMQ.matches) buildKeyboard(); }
+  if(S.section!=="chords"){ S.section="chords"; save(); if(kbNarrow()) buildKeyboard(); }
   renderSettings(); render(); renderDaily(); $("main").scrollTo({top:0,behavior:"smooth"});
 }
 $("endX").addEventListener("click",closeEnd); $("endBg").addEventListener("click",closeEnd); bindSeg("segNot","notation",false); bindSeg("segDir","dir",true);
@@ -5974,7 +6010,7 @@ $("resetBtn").addEventListener("click",e=>{
   Object.assign(S.settings,{types:["major"],view:"major",ctypes:["maj"],cview:"maj",invs:[0],htypes:["maj"],hview:"maj",ptypes:["p145","pop"],pview:"pop",etypes:["chord","int"],eview:"chord",unlockAll:false});
   save(); resetArmed=false; e.target.textContent=t("reset"); phase="idle"; cur=null; seq=[]; found=[]; played=[]; combo=0; game=null; renderDaily(); clearKeys(); renderSettings(); render(); toast(t("resetDone"));
 });
-narrowMQ.addEventListener?.("change",()=>buildKeyboard());
+narrowMQ.addEventListener?.("change",()=>buildKeyboard()); tabMQ.addEventListener?.("change",()=>buildKeyboard());
 // a keyboard wider than its frame (Settings › keyboard size) can be dragged sideways with a finger (touch-action pan-x);
 // one that fits keeps touch-action none, so fast taps, chords and slides between keys all go to the notes
 { const kw=$("kbdWrap"), kbdFit=()=>kw.classList.toggle("kbd-scroll", kw.scrollWidth>kw.clientWidth+2);
