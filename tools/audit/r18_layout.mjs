@@ -2,6 +2,8 @@
 // Sur chaque page sans défilement et à chaque taille d'écran :
 //   1. rien ne défile (ni #main, ni le document, ni en largeur) ;
 //   2. le contenu remplit la hauteur : le bas du dernier élément peint (carte, tuile, touche, bouton…) est à ≥ 90 % de la zone utile de #main.
+// 3. (24/10/2026) tablettes et ordinateurs (dont les 6 tailles d'iPad) : les pages de contenu (Réglages et ses onglets,
+//    Progression et ses 2 onglets, Notifications, Classement, Profil, Aide) ne défilent pas non plus ; une longue liste défile dans sa carte.
 // Usage : python3 -m http.server 8795 à la racine, puis  PORT=8795 node tools/audit/r18_layout.mjs
 //   ONLY=hub,learn (scénarios)  SIZES=375x667,1024x768  SHOT=/dossier (captures)  MIN=0.9 (seuil)  THEME=dark
 import { createRequire } from 'module';
@@ -47,8 +49,14 @@ const SC2 = [
   ['notif', async p => { await click(p, '#ntfBtn'); await W(500); }],
   ['rank', async p => { await click(p, '#rankBtn'); await W(1200); }],
   ['account', async p => { await click(p, '#accountBtn'); await W(1200); }],
+  ['setgame', async p => { await click(p, '#setBtn'); await W(400); await click(p, '#setNav [data-v=game]'); await W(200); }],
+  ['setntf', async p => { await click(p, '#setBtn'); await W(400); await click(p, '#setNav [data-v=ntf]'); await W(200); }],
+  ['setprem', async p => { await click(p, '#setBtn'); await W(400); await click(p, '#setNav [data-v=prem]'); await W(200); }],
+  ['setapp', async p => { await click(p, '#setBtn'); await W(400); await click(p, '#setNav [data-v=app]'); await W(200); }],
+  ['progdet', async p => { await click(p, '#lvlAv'); await W(500); await click(p, '#pfNav [data-v=det]'); await W(200); await p.evaluate(() => document.querySelectorAll('#progCats > *')[1]?.click()); await W(300); }],
+  ['help', async p => { await click(p, '#helpBtn'); await W(500); }],
 ];
-const SIZES = (process.env.SIZES || '375x667,390x844,812x375,844x390,768x1024,1024x768,1280x800,1440x900,1920x1080').split(',').map(s => s.split('x').map(Number));
+const SIZES = (process.env.SIZES || '375x667,390x844,812x375,844x390,768x1024,1024x768,1180x820,820x1180,1366x1024,1024x1366,1280x800,1440x900,1920x1080').split(',').map(s => s.split('x').map(Number));
 const ONLY = (process.env.ONLY || '').split(',').filter(Boolean);
 const fails = []; const ok = (c, m) => { console.log((c ? 'ok   ' : 'FAIL ') + m); if (!c) fails.push(m); };
 const b = await chromium.launch(process.env.PW_CHROMIUM ? { executablePath: process.env.PW_CHROMIUM } : {});
@@ -99,8 +107,11 @@ for (const [w, h] of SIZES) {
     if (ONLY.length && !ONLY.includes(name)) continue;
     await p.goto(BASE + '?r18=' + name); await W(700); await p.keyboard.press('Escape'); await fn(p); await W(250);
     const m = await p.evaluate(() => { const d = document.scrollingElement, m = document.getElementById('main'), h = [...document.querySelectorAll('.pane:not([hidden]) .pane-head .ph-title, .pane:not([hidden]) .ph-title')].find(e => e.offsetParent);
-      return { dsw: d.scrollWidth, msw: m.scrollWidth, mcw: m.clientWidth, W: innerWidth, fs: h ? parseFloat(getComputedStyle(h).fontSize) : 0, page: document.body.dataset.page }; });
+      const card = [...document.querySelectorAll('.modal:not([hidden]) .modal-card')].find(e => e.offsetParent);
+      return { dsw: d.scrollWidth, msw: m.scrollWidth, mcw: m.clientWidth, W: innerWidth, fs: h ? parseFloat(getComputedStyle(h).fontSize) : 0, page: document.body.dataset.page,
+        msh: m.scrollHeight, mch: m.clientHeight, dsh: d.scrollHeight, H: innerHeight, card: card ? card.getBoundingClientRect().bottom <= innerHeight + 1 && card.getBoundingClientRect().top >= -1 : true }; });
     ok(m.dsw <= m.W + 1 && m.msw <= m.mcw + 1, `${w}×${h} ${name.padEnd(8)} no sideways scroll (main ${m.msw}/${m.mcw}), title ${m.fs}px`);
+    if (!phone) ok(m.msh <= m.mch + 1 && m.dsh <= m.H + 1 && m.card, `${w}×${h} ${name.padEnd(8)} tablet/computer: no page scroll (main ${m.msh}/${m.mch} doc ${m.dsh}/${m.H})`);
     if (SHOT) await p.screenshot({ path: `${SHOT}/${name}-${w}x${h}.png`, fullPage: false });
   }
   if (errs.length) ok(false, `${w}×${h} page errors: ${errs.join(' | ')}`);

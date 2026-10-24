@@ -2057,6 +2057,30 @@ body.setup #setupPanel{flex:1 1 auto;min-height:0}
   .pane-head h2.ph-title{display:none}
   :is(#learnPanel,#gamesPanel,#freePanel) .mode-h{display:none}
 }
+/* ---- tablets and computers: content pages never scroll (24/10/2026). Settings and Progress show one tab at a time; a long list
+   (notifications, ranking) scrolls inside its own card; any other overflow scrolls inside the page card, never the page. Phones keep scrolling. ---- */
+.set-nav{display:none}
+@media (min-width:641px) and (min-height:521px){
+  body:is([data-page="settings"],[data-page="progress"],[data-page="notif"],[data-page="rank"],[data-page="account"]) .main{overflow:hidden}
+  .pane:not([hidden]):not(.lock){flex:1 1 0;min-height:0;display:flex;flex-direction:column}
+  #settingsPage>.card,#progressPage>.card{flex:1 1 0;min-height:0;overflow:auto;display:flex;flex-direction:column}
+  .set-nav{display:flex;align-self:flex-start;max-width:100%;flex:none;margin-bottom:var(--sp-2)} .set-nav button{white-space:nowrap}
+  #setPane{gap:var(--gap)} #setPane .set-sec[data-tab]:not(.on){display:none} #setPane .set-sec[data-tab]>h3{display:none}
+  #setPane .set-app{display:flex;flex-direction:column;gap:var(--sp-4)} #setPane .set-app .set-legal{margin-top:auto}
+  #progPane{display:flex!important;flex-direction:column;gap:var(--gap);flex:1 1 auto;min-height:0} #progPane[hidden]{display:none!important}
+  #progPane[data-tab="ov"] :is(#progCats,.prog-detail){display:none} #progPane[data-tab="det"] #progFiche{display:none} .pf-detail-h{display:none}
+  #progFiche{flex:1 1 auto;min-height:0;margin:0} #progFiche .pf-row{flex:1 1 auto;min-height:0;grid-auto-rows:minmax(0,1fr);padding:0}
+  #progFiche .pf-card{min-height:0} #progFiche .pf-card ul{flex:1 1 auto;min-height:0;overflow-y:auto;max-height:none}
+  #progFiche .pf-cal{flex:1 1 auto;min-height:0;display:flex;flex-direction:column} #progFiche .pf-grid{flex:1 1 auto;min-height:0;align-content:space-evenly}
+  #progFiche .pf-grid span{aspect-ratio:auto;width:min(100%,2.4em);height:auto;min-height:0;justify-self:center;align-self:stretch;max-height:2.4em}
+  #progFiche .pf-stats li{padding-block:clamp(4px,1vh,10px)} #progFiche .pf-journey li{padding-block:clamp(4px,.9vh,9px)}
+  #progPane[data-tab="det"] .prog-cats{flex:none;margin:0} #progPane[data-tab="det"] .prog-detail{flex:1 1 auto;min-height:0}
+  #progPane[data-tab="det"] .prog-detail .map{flex:1 1 auto;min-height:0;overflow-y:auto;align-content:start}
+  @media (min-aspect-ratio:1/1){ #progFiche .pf-row{grid-template-columns:repeat(4,minmax(0,1fr))} #progFiche .pf-head{padding:10px 16px} #progFiche .pf-head .av{width:52px;height:52px} #progPane .prog-cats{grid-template-columns:repeat(5,minmax(0,1fr))} }
+  .ntf-pane .ntf-card{flex:1 1 0;min-height:0;overflow:auto}
+  .rank-card{flex:1 1 0;min-height:0} .rank-card .rank-list{flex:1 1 auto;min-height:0;overflow-y:auto}
+  #accountPanel .acct-grid{flex:1 1 0;min-height:0;overflow:auto}
+}
 /* hub: four modes (QUIZ joined the home page, 24/10/2026): a 2 × 2 grid on tablets and computers, 4 in a row on landscape phones */
 #main .hub-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
 @media (min-width:901px){
@@ -2568,8 +2592,9 @@ body.setup #setupPanel{flex:1 1 auto;min-height:0}
       <button class="modal-close" id="setX" type="button" aria-label="Close">×</button>
     </div>
     <div class="modal-body set-body" id="setPane">
-      <section class="set-sec" id="setPrem"><h3><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3.5 8.5l4 3.5L12 5l4.5 7 4-3.5-1.8 10h-13.4z"/><path d="M6 20.5h12"/></svg><span data-i="setPremH"></span></h3><div class="set-prem" id="setPremBox"></div></section>
-      <section class="set-sec"><h3><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2.5" y="7" width="19" height="11" rx="2"/><path d="M6.5 7v6M10 7v6M14 7v6M17.5 7v6"/></svg><span data-i="secInter"></span></h3>
+      <div class="seg set-nav" id="setNav" role="tablist"><button type="button" role="tab" data-v="inter" data-i="secInter"></button><button type="button" role="tab" data-v="game" data-i="setGameTab"></button><button type="button" role="tab" data-v="ntf" data-i="ntfTitle"></button><button type="button" role="tab" data-v="prem" data-i="setPremH"></button><button type="button" role="tab" data-v="app" data-i="setAppH"></button></div>
+      <section class="set-sec" id="setPrem" data-tab="prem"><h3><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3.5 8.5l4 3.5L12 5l4.5 7 4-3.5-1.8 10h-13.4z"/><path d="M6 20.5h12"/></svg><span data-i="setPremH"></span></h3><div class="set-prem" id="setPremBox"></div></section>
+      <section class="set-sec" data-tab="inter"><h3><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2.5" y="7" width="19" height="11" rx="2"/><path d="M6.5 7v6M10 7v6M14 7v6M17.5 7v6"/></svg><span data-i="secInter"></span></h3>
         <div class="set-grid"><div class="field" id="inputField"><span data-i="inLbl"></span>
           <div class="seg" id="segInput"></div>
           <p class="inp-status" id="inStatus"></p>
@@ -2583,7 +2608,7 @@ body.setup #setupPanel{flex:1 1 auto;min-height:0}
           <div class="set-checks"><label class="check"><input type="checkbox" id="optLabels"> <span data-i="optLabels"></span></label><label class="check"><input type="checkbox" id="optFing"> <span data-i="optFing"></span></label><label class="check"><input type="checkbox" id="optUiSound"> <span data-i="optUiSound"></span></label></div>
         </div>
       </section>
-      <section class="set-sec"><h3><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M10 8.5l5.5 3.5-5.5 3.5z"/></svg><span data-i="secGame"></span></h3>
+      <section class="set-sec" data-tab="game"><h3><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M10 8.5l5.5 3.5-5.5 3.5z"/></svg><span data-i="secGame"></span></h3>
         <div class="set-grid"><div class="field" id="dirField"><span data-i="direction"></span>
           <div class="seg" id="segDir">
             <button type="button" data-v="up" data-i="ascending"></button>
@@ -2603,12 +2628,14 @@ body.setup #setupPanel{flex:1 1 auto;min-height:0}
           <label class="check"><input type="checkbox" id="optAll"> <span data-i="optAll"></span></label></div>
         </div>
       </section>
-      <section class="set-sec"><h3><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 16V11a6 6 0 0 1 12 0v5l1.5 2h-15z"/><path d="M10 20.5a2.2 2.2 0 0 0 4 0"/></svg><span data-i="ntfTitle"></span></h3><div class="ntf-set" id="ntfSet"></div></section>
+      <section class="set-sec" data-tab="ntf"><h3><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 16V11a6 6 0 0 1 12 0v5l1.5 2h-15z"/><path d="M10 20.5a2.2 2.2 0 0 0 4 0"/></svg><span data-i="ntfTitle"></span></h3><div class="ntf-set" id="ntfSet"></div></section>
+      <section class="set-sec set-app" data-tab="app"><h3><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="6" y="2.5" width="12" height="19" rx="3"/><path d="M10.5 18.5h3"/></svg><span data-i="setAppH"></span></h3>
       <p class="set-reset"><button class="btn" id="tourAgain" type="button" data-i="tourAgainT"></button> <button class="btn" id="onbAgain" type="button" data-i="onbAgainT"></button></p>
       <p class="set-reset"><button class="danger" id="resetBtn" type="button"></button></p>
-      <p class="legal-links set-legal"><a href="/mentions-legales.html" data-i="legalNotice"></a> · <a href="/confidentialite.html" data-i="privacy"></a><br>© 2026 Antoine Bernard · <span data-i="rights"></span></p>
+      <p class="legal-links set-legal"><a href="/mentions-legales.html" data-i="legalNotice"></a> · <a href="/confidentialite.html" data-i="privacy"></a><br>© 2026 Antoine Bernard · <span data-i="rights"></span></p></section>
     </div>
-    <div class="modal-body prog-body" id="progPane" hidden>
+    <div class="modal-body prog-body" id="progPane" data-tab="ov" hidden>
+      <div class="seg set-nav pf-nav" id="pfNav" role="tablist"><button type="button" role="tab" data-v="ov" data-i="pfOverview"></button><button type="button" role="tab" data-v="det" data-i="pfDetail"></button></div>
       <div class="pf" id="progFiche">
         <div class="pf-head"><span class="av" id="pfAv"></span><div class="pf-id"><span class="pf-k" id="pfK"></span><b id="pfName"></b><div class="xpbar"><i id="pfXp"></i></div><small id="pfXpTxt"></small></div><button class="btn" id="pfLevels" type="button" data-i="charMore"></button></div>
         <div class="pf-row">
@@ -4547,6 +4574,17 @@ let setOpen=false; // always false since Settings became a page; still read by k
 // Settings and Progress are pages of their own (the old window's content is moved into them)
 $("setHost").appendChild($("setPane")); $("progHost").appendChild($("progPane"));
 $("setPane").classList.remove("modal-body"); $("progPane").classList.remove("modal-body"); $("progPane").hidden=false; $("setModal").remove();
+// Settings on tablets and computers: one section at a time behind tabs (no page scroll); phones keep the whole list
+const setTabsMQ=window.matchMedia("(min-width:641px) and (min-height:521px)");
+let setTabV="inter";
+function setTab(v){ setTabV=v||setTabV; $("setNav").querySelectorAll("button").forEach(b=>{ const on=b.dataset.v===setTabV; b.setAttribute("aria-pressed",on); b.setAttribute("aria-selected",on); });
+  $("setPane").querySelectorAll(".set-sec[data-tab]").forEach(x=>x.classList.toggle("on",x.dataset.tab===setTabV)); }
+$("setNav").addEventListener("click",e=>{ const b=e.target.closest("button[data-v]"); if(b) setTab(b.dataset.v); });
+setTab();
+// Progress on tablets and computers: the overview (fiche) and the detail per topic are two tabs
+function pfTab(v){ $("progPane").dataset.tab=v; $("pfNav").querySelectorAll("button").forEach(b=>{ const on=b.dataset.v===v; b.setAttribute("aria-pressed",on); b.setAttribute("aria-selected",on); }); }
+$("pfNav").addEventListener("click",e=>{ const b=e.target.closest("button[data-v]"); if(b) pfTab(b.dataset.v); });
+pfTab("ov");
 function openSet(tab){ closeDrawer(); if(tab==="progress") progSec=S.section; openPage(tab==="progress"?"progress":"settings"); }
 function closeSet(){ if(INFO_PAGES.includes(page)){ page="practice"; returnPage=null; paused=false; render(); renderDaily(); } } // e.g. a tile picked on the Progress page starts that exercise
 $("setBtn").addEventListener("click",()=>openSet("settings")); $("mbSet").addEventListener("click",()=>openSet("settings")); $("progBtn").addEventListener("click",()=>openSet("progress"));
@@ -5213,7 +5251,7 @@ function renderNtfSet(){ const box=$("ntfSet"); if(!box) return; const p=ntfPref
 $("ntfBtn").addEventListener("click",()=>{ closeDrawer(); guardLeave(()=>openPage("notif")); });
 $("mbNtf").addEventListener("click",()=>guardLeave(()=>openPage("notif")));
 $("ntfAllRead").addEventListener("click",()=>{ ntfStore().list.forEach(n=>n.read=true); save(); ntfBadge(); renderNotifs(); });
-$("ntfSetBtn").addEventListener("click",()=>{ openSet("settings"); setTimeout(()=>$("ntfSet")?.scrollIntoView({block:"start",behavior:"smooth"}),80); });
+$("ntfSetBtn").addEventListener("click",()=>{ openSet("settings"); setTab("ntf"); setTimeout(()=>{ if(!setTabsMQ.matches) $("ntfSet")?.scrollIntoView({block:"start",behavior:"smooth"}); },80); });
 $("ntfTabs").addEventListener("click",e=>{ const b=e.target.closest("[data-v]"); if(!b) return; ntfFilter=b.dataset.v; renderNotifs(); });
 setTimeout(()=>{ try{ ntfCheck(); }catch(e){ console.warn(e); } },1500);
 
