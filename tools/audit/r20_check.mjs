@@ -57,6 +57,14 @@ for (const [w, h] of [[1024, 768], [1180, 820], [1440, 900]]) {
   check('e-mail invalide : message, consentement et mot de passe gardés', /valide|valid/i.test(r2.msg) && r2.ok && r2.pwd === '12345678', r2);
   await p.context().close(); }
 
+// ---- 4. écran de connexion en téléphone paysage : titre visible, Google / Apple / Facebook sur une rangée ----
+for (const [w, h] of [[844, 390], [667, 375]]) { const p = await open(w, h, 'en');
+  await p.evaluate(() => document.querySelector('#mbAuth [data-auth=signup]').click()); await W(p, 1200);
+  const r = await p.evaluate(() => { const hh = document.querySelector('#gate .gt-h').getBoundingClientRect(); const s = [...document.querySelectorAll('#gate .gt-soc1 .gt-s')].map(b => b.getBoundingClientRect());
+    return { title: hh.height > 0, row: s.length === 3 && s.every(x => Math.abs(x.top - s[0].top) < 2), fits: document.getElementById('gateGuest').getBoundingClientRect().bottom <= innerHeight }; });
+  check(`${w}×${h} connexion : titre, 3 boutons sur une rangée, tout tient`, r.title && r.row && r.fits, r);
+  await p.context().close(); }
+
 await b.close();
 console.log(fails.length ? `\n${fails.length} échec(s)` : '\nTout est bon');
 process.exit(fails.length ? 1 : 0);
