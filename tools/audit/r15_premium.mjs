@@ -1,12 +1,13 @@
 // Premium (Oct 2026, preview until payments are live): off = nothing locked; on = locks on keys, types, songs, duels -> paywall;
 // C18 grid read from the PREM_OFFER constant of the source: Monthly / Yearly (most chosen, trial) / Family, lifetime link, J0/J5/J7 timeline,
-// launch price, generous free plan (freeDuels a day, first freeSongs songs); prices formatted per language (FR « 59,99 € », EN « €59.99 »);
+// launch price, generous free plan (freeDuels a day, the first freeSongs songs of the catalogue assets/js/songs-data.js); prices formatted per language (FR « 59,99 € », EN « €59.99 »);
 // simulated trial unlocks everything; Settings › Subscription shows the grid; invitations (?ref= link, share sheet), a friend's link is remembered.
 import { launch, closeOnboarding, URL } from './lib.mjs';
 import fs from 'fs';
 const SRC = fs.readFileSync(new globalThis.URL('../../src/piano-challenges.html', import.meta.url), 'utf8');
 const O = Function('return ' + /const PREM_OFFER=(\{[\s\S]*?\n\});/.exec(SRC)[1])();
-const NSONGS = (/const SONGS_H=\[(.*?)\];/s.exec(SRC)[1].match(/\["[a-z]+",/g) || []).length;
+const CAT = (fs.readFileSync(new globalThis.URL('../../assets/js/songs-data.js', import.meta.url), 'utf8').match(/\bid:"([a-z]+)"/g) || []).map(x => x.slice(4, -1)); // catalogue order (C6)
+const NSONGS = CAT.length, NFREE = Math.min(O.freeSongs, NSONGS), FREE = CAT.slice(0, NFREE);
 const money = (v, fr) => { const w = Math.abs(v - Math.round(v)) < .005, d = w ? 0 : 2; return new Intl.NumberFormat(fr ? 'fr-FR' : 'en-IE', { style: 'currency', currency: O.currency, minimumFractionDigits: d, maximumFractionDigits: d }).format(w ? Math.round(v) : v); };
 const norm = x => x.replace(/[\u00a0\u202f]/g, ' ');
 const wait = (p, ms) => p.waitForTimeout(ms);
@@ -38,16 +39,21 @@ check('lien « À vie » et prix de lancement garanti', (!O.life || grid.life.in
 check('gratuit généreux : ' + O.freeDuels + ' duels par jour, quiz illimité', grid.free.includes(O.freeDuels + ' duels par jour') && /quiz illimité/.test(grid.free), grid.free);
 await page.keyboard.press('Escape'); await wait(page, 200);
 check('Échap ferme le paywall', !(await vis('pw')));
-await ev(() => document.querySelector('.mode-item[data-mode="play"]').click()); await wait(page, 500);
-const LK = Math.max(0, NSONGS - O.freeSongs);
-check('PLAY : les ' + O.freeSongs + ' premiers morceaux gratuits (' + LK + ' verrouillé(s) sur ' + NSONGS + ')', await ev(n => document.querySelectorAll('#playSongs .ptile.pw-lk').length === n && ![...document.querySelectorAll('#playSongs .ptile')].slice(0, 10).some(t => t.classList.contains('pw-lk')), LK));
-if (LK) { await ev(() => [...document.querySelectorAll('#playSongs .ptile')].pop().click()); await wait(page, 300);
+await ev(() => document.querySelector('.mode-item[data-mode="play"]').click()); await wait(page, 1200); // catalogue (C6) loaded on demand
+const LK = NSONGS - NFREE;
+const pl = await ev(() => { const all = [...document.querySelectorAll('#playSongs .ptile[data-song]')]; return { all: [...new Set(all.map(e => e.dataset.song))], lk: [...new Set(all.filter(e => e.classList.contains('pw-lk')).map(e => e.dataset.song))] }; });
+check('PLAY : les ' + NFREE + ' premiers morceaux du catalogue gratuits, ' + LK + ' verrouillés sur ' + NSONGS, NSONGS >= 30 && pl.all.length === NSONGS && pl.lk.length === LK && !FREE.some(id => pl.lk.includes(id)), { n: pl.all.length, lk: pl.lk.length, free: FREE });
+if (LK) { await ev(() => document.querySelector('#playSongs .ptile.pw-lk').click()); await wait(page, 300);
   check('morceau verrouillé → paywall (pas de lecteur)', await vis('pw') && await ev(() => document.body.dataset.page !== 'play'));
+  check('paywall : titre neutre et « ' + NFREE + ' morceaux » dans la formule gratuite', await ev(n => document.getElementById('pwH').textContent === 'Tout le piano, sans limite' && document.querySelector('.pw-free').textContent.includes(n + ' morceaux'), NFREE));
   await ev(() => document.getElementById('pwX').click()); await wait(page, 200); }
+await ev(id => document.querySelector('#playSongs .ptile[data-song="' + id + '"]').click(), FREE[NFREE - 1]); await wait(page, 600);
+check('morceau gratuit (' + FREE[NFREE - 1] + ') → lecteur, pas de paywall', !(await vis('pw')) && await ev(() => document.body.dataset.page === 'play'));
+await ev(() => document.getElementById('homeLink').click()); await wait(page, 400);
 // Settings › Subscription: free plan text and the grid
 await ev(() => document.getElementById('setBtn').click()); await wait(page, 300); await ev(() => document.querySelector('#setNav [data-v="prem"]')?.click()); await wait(page, 200);
 const sp = norm(await ev(() => document.getElementById('setPremBox').textContent));
-check('Réglages › Abonnement : formule gratuite et grille (mensuel, annuel, famille, à vie)', sp.includes(O.freeDuels + ' duels par jour') && [O.month, O.year, O.family].every(v => sp.includes(norm(money(v, 1)))), sp);
+check('Réglages › Abonnement : formule gratuite et grille (mensuel, annuel, famille, à vie)', sp.includes(O.freeDuels + ' duels par jour') && sp.includes(NFREE + ' morceaux') && [O.month, O.year, O.family].every(v => sp.includes(norm(money(v, 1)))), sp);
 // English: prices formatted « €59.99 »
 await setS(() => { const S = JSON.parse(localStorage.getItem('memo-gammes-v1')); S.settings.lang = 'en'; localStorage.setItem('memo-gammes-v1', JSON.stringify(S)); });
 await page.reload(); await wait(page, 1000); await closeOnboarding(page, 'screen');
@@ -58,13 +64,6 @@ await page.keyboard.press('Escape'); await wait(page, 200);
 await setS(() => { const S = JSON.parse(localStorage.getItem('memo-gammes-v1')); S.settings.lang = 'fr'; localStorage.setItem('memo-gammes-v1', JSON.stringify(S)); });
 // duels: freeDuels a day
 await setS(n => { const S = JSON.parse(localStorage.getItem('memo-gammes-v1')); const d = new Date(); S.duDay = { d: d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'), n }; localStorage.setItem('memo-gammes-v1', JSON.stringify(S)); }, O.freeDuels);
-await wait(page, 600); // catalogue (C6) loaded on demand
-check('PLAY : 2 morceaux gratuits (lune, maman), les autres verrouillés', await ev(() => { const all = [...document.querySelectorAll('#playSongs .ptile[data-song]')], lk = all.filter(e => e.classList.contains('pw-lk')).map(e => e.dataset.song); return all.length >= 30 && lk.length === all.length - 2 && !lk.includes('lune') && !lk.includes('maman'); }));
-await ev(() => document.querySelector('#playSongs .ptile.pw-lk').click()); await wait(page, 300);
-check('morceau verrouillé → paywall (pas de lecteur)', await vis('pw') && await ev(() => document.body.dataset.page !== 'play'));
-await ev(() => document.getElementById('pwX').click()); await wait(page, 200);
-// duels: 3 a day
-await setS(() => { const S = JSON.parse(localStorage.getItem('memo-gammes-v1')); const d = new Date(); S.duDay = { d: d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'), n: 3 }; localStorage.setItem('memo-gammes-v1', JSON.stringify(S)); });
 await page.reload(); await wait(page, 1000); await closeOnboarding(page, 'screen');
 await ev(() => document.querySelector('.mode-item[data-mode="games"]').click()); await wait(page, 300); await ev(() => document.querySelectorAll('#gameCards .ptile')[0].click()); await wait(page, 600); await closeOnboarding(page);
 await ev(() => document.querySelector('#duModes [data-m=bots]').click()); await wait(page, 300);
