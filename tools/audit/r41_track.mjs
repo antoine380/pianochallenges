@@ -69,7 +69,7 @@ check('acc_end : style, pattern, étoiles, tempo', !!ae && !!ae.style && !!ae.pa
 await p.X('openPlayWith("#song=lune&arr=2")'); await p.waitForTimeout(400);
 const so = await p.X('(TRK.q.find(e=>e.n==="song_open")||{}).p||null');
 check('song_open : id et version du morceau', !!so && so.id === 'lune' && so.arr === '2', so);
-await p.X('delete S.badges; S.xp=20000; badgeCheck();'); await p.waitForTimeout(100);
+await p.X('TRK.q=TRK.q.filter(e=>e.n!=="badge"); delete S.badges; S.xp=20000; badgeCheck();'); await p.waitForTimeout(100);
 check('badges : premier passage silencieux (anciens badges notés) → aucun événement badge', await p.X('typeof badgeCheck==="function" && !!S.badges.xp10k && !TRK.q.some(e=>e.n==="badge")'));
 await p.X('delete S.badges.xp10k; badgeCheck();'); await p.waitForTimeout(100);
 check('badges : un nouveau badge → track("badge",{id})', await p.X('TRK.q.some(e=>e.n==="badge" && e.p.id==="xp10k")'), await p.X('JSON.stringify(TRK.q.filter(e=>e.n==="badge"))'));

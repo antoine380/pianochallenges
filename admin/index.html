@@ -215,7 +215,7 @@ const IDLE_MS=(LOCAL && +new URLSearchParams(location.search).get("idle")) || 30
 const $=id=>document.getElementById(id);
 const esc=s=>String(s==null?"":s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const fmtN=n=>(+n||0).toLocaleString("fr-FR");
-const pct=(a,b)=>b?Math.round(a*1000/b)/10+" %":"—";
+const pct=(a,b)=>b?(Math.round(a*1000/b)/10).toLocaleString("fr-FR")+"\u202f%":"—";
 const fmtD=d=>{ if(!d) return "—"; const x=new Date(d); return isNaN(x)?"—":x.toLocaleDateString("fr-FR",{day:"numeric",month:"short",year:"2-digit"}); };
 const fmtDT=d=>{ if(!d) return "—"; const x=new Date(d); return isNaN(x)?"—":x.toLocaleString("fr-FR",{day:"numeric",month:"short",hour:"2-digit",minute:"2-digit"}); };
 const dayISO=d=>{ const x=new Date(d); return x.getFullYear()+"-"+String(x.getMonth()+1).padStart(2,"0")+"-"+String(x.getDate()).padStart(2,"0"); };
