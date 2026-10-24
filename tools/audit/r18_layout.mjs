@@ -13,7 +13,7 @@ const PORT = process.env.PORT || '8767', BASE = `http://localhost:${PORT}/`;
 const MIN = +(process.env.MIN || 0.9), SHOT = process.env.SHOT || '';
 if (SHOT) fs.mkdirSync(SHOT, { recursive: true });
 const SEED = `(()=>{try{if(sessionStorage.getItem("r18"))return;sessionStorage.setItem("r18","1");const S={settings:{lang:"fr",notation:"fr",input:"screen",earV2:true,diffV2:true,midiV2:true,uiSound:false${process.env.THEME ? ',theme:"' + process.env.THEME + '"' : ''}},langV2:true,gate:"guest",onb:{done:1},tourDone:1,pwShown:1,
-  introSeen:Object.fromEntries(["hub","learn","games","free","play","quiz","chords","scales","harmony","prog","ear","daily","practice","runner","speed","memory","rank","account","settings","progress","notif","section"].map(k=>[k,1])),seenTypes:[],stats:{},secStats:{},xp:0,xpDays:{},streak:{days:0}};
+  introSeen:Object.fromEntries(["hub","learn","games","free","play","quiz","chords","scales","harmony","prog","ear","daily","practice","runner","speed","memory","douze","rank","account","settings","progress","notif","section"].map(k=>[k,1])),seenTypes:[],stats:{},secStats:{},xp:0,xpDays:{},streak:{days:0}};
   localStorage.setItem("memo-gammes-v1",JSON.stringify(S));}catch(e){}})();`;
 const W = ms => new Promise(r => setTimeout(r, ms));
 const click = (p, s) => p.evaluate(s => { const e = document.querySelector(s); if (e) e.click(); return !!e; }, s);
@@ -39,6 +39,7 @@ const SC = [
   ['runner', async p => { await game(p, 0, true); }],
   ['speed', async p => { await game(p, 1, true); }],
   ['memory', async p => { await game(p, 2, true); }],
+  ['douze', async p => { await game(p, 3, true); }],
   ['player', async p => { await mode(p, 'play'); await W(300); await click(p, '#playSongs .ptile'); await W(1800); }],
   ['first', async p => {}, { fresh: 1 }],
 ];
