@@ -30,7 +30,7 @@ export const INIT = `
     Object.defineProperty(p, 'onmidimessage', { get(){ return p._h; }, set(v){ p._h = v; p._sets++; W.__cnt.handlersSet++; }, enumerable:true });
     return p;
   }
-  const ports = [mkPort('in-1','Fake Keyboard 61'), mkPort('in-2','Fake Keyboard 25')];
+  const ports = [mkPort('in-1','Fake Keyboard 61'), mkPort('in-2','Fake Keyboard 25'), mkPort('net-1','Network Session 1')];
   const access = { inputs:new Map([[ports[0].id, ports[0]]]), outputs:new Map(), onstatechange:null, sysexEnabled:false, addEventListener(){}, removeEventListener(){} };
   W.__midi = {
     ports, access,
@@ -39,6 +39,7 @@ export const INIT = `
     noteOn(n, v=100, i=0){ return W.__midi.send(i,[0x90,n,v]); },
     noteOff(n, i=0){ return W.__midi.send(i,[0x80,n,0]); },
     chord(ns, v=100, i=0){ ns.forEach(n=>W.__midi.send(i,[0x90,n,v])); },
+    addVirtual(){ access.inputs.set(ports[2].id, ports[2]); if (access.onstatechange) access.onstatechange({port:ports[2]}); }, // macOS / iOS virtual network port: never a keyboard
     addSecond(){ access.inputs.set(ports[1].id, ports[1]); ports[1].state='connected'; if (access.onstatechange) access.onstatechange({port:ports[1]}); },
     disconnect(i=0){ const p=ports[i]; p.state='disconnected'; p.connection='closed'; /* Chrome garde le port dans la map */ if (access.onstatechange) access.onstatechange({port:p}); },
     remove(i=0){ const p=ports[i]; p.state='disconnected'; access.inputs.delete(p.id); if (access.onstatechange) access.onstatechange({port:p}); },

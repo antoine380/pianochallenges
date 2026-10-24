@@ -25,8 +25,21 @@ const pos = () => ev(() => [...document.querySelectorAll('#qzRace .qz-heads .qz-
 async function openQuiz() { await ev(() => document.querySelector('#modeNav [data-mode=quiz]').click()); await wait(page, 300);
   for (let i = 0; i < 30 && !(await ev(() => !!window.QUIZ_DATA)); i++) await wait(page, 100); await wait(page, 200); }
 
+// 0) defaults (Oct 2026): help « Montrer les touches à jouer » off (also for an old saved true), time 5 / 10 / 20 / 30 s, robots
+await set({ keys: true, time: 15 }); await page.reload(); await wait(page, 800); await closeOnboarding(page);
+await openQuiz();
+check('aide : « Montrer les touches à jouer » désactivé par défaut (même si l’ancien réglage était oui)', await ev(() => !document.getElementById('qzKeysOpt').checked));
+check('temps pour répondre : 5 / 10 / 20 / 30 s, une ancienne valeur va à la plus proche', await ev(() => [...document.querySelectorAll('#qzTime button')].map(b => b.textContent).join() === '5 s,10 s,20 s,30 s' && /^(10|20) s$/.test(document.querySelector('#qzTime [aria-pressed=true]').textContent)));
+check('configuration de la partie et aide : deux sections', await ev(() => /Configuration de la partie/i.test(document.getElementById('qzSetup').textContent) && /Aide/.test(document.getElementById('qzHelpBox').textContent)));
+check('« Robots » au lieu de « Bots »', await ev(() => /Robots/.test(document.getElementById('qzLocalBox').textContent) && !/\bBots\b/.test(document.getElementById('qzLocalBox').textContent)));
+await ev(() => document.getElementById('qzGo').click()); await wait(page, 300);
+check('aide désactivée : piano des réponses neutre, cartes étiquetées', await ev(() => document.querySelectorAll('#qzKb .ans').length === 0 && [...document.querySelectorAll('#qzAns .qz-l .ln')].every(x => x.textContent.length > 0)));
+await ev(() => document.querySelectorAll('#qzAns .qz-a')[0].click()); await wait(page, 300);
+check('aide désactivée : à la révélation, la bonne touche s’allume quand même', await ev(() => document.querySelectorAll('#qzKb .ans.right').length === 1));
+await ev(() => document.getElementById('qzQuit').click()); await wait(page, 200);
+
 // 1) solo, easy (notes), 3 questions, right answer on the first keyboard
-await set({ n: 1, diff: 1, ans: 'notes', bots: 0, where: 'local', count: 5, time: 20, theme: 'all', keys: true }); await page.reload(); await wait(page, 800); await closeOnboarding(page);
+await set({ n: 1, diff: 1, ans: 'notes', bots: 0, where: 'local', count: 5, time: 20, theme: 'all', keys: true, keysOff1: 1 }); await page.reload(); await wait(page, 800); await closeOnboarding(page);
 await openQuiz();
 check('quiz : 200 questions chargées à la demande', await ev(() => window.QUIZ_DATA.q.length === 200 && document.querySelectorAll('#qzThemes .qz-theme').length === 11), await ev(() => [window.QUIZ_DATA.q.length, document.querySelectorAll('#qzThemes .qz-theme').length]));
 check('réglages : « Seul · 2 · 3 · 4 » sur une ligne', await ev(() => { const b = [...document.querySelectorAll('#qzN button')]; return b.map(x => x.textContent).join('·') === 'Seul·2·3·4' && new Set(b.map(x => Math.round(x.getBoundingClientRect().top))).size === 1; }));
@@ -66,8 +79,14 @@ await ev(() => document.getElementById('qzQuit').click()); await wait(page, 200)
 // 2) two players, one MIDI keyboard each, medium chords
 await ev(() => window.__midi.addSecond()); await wait(page, 300);
 await set({ n: 2, mode: 'dev', diff: 2, ans: 'chords', count: 5, devs: ['in-1', 'in-2'], names: ['Anna', 'Bob'] }); await page.reload(); await wait(page, 900); await closeOnboarding(page);
-await ev(() => window.__midi.addSecond()); await wait(page, 300);
+await ev(() => { window.__midi.addSecond(); window.__midi.addVirtual(); }); await wait(page, 300);
 await openQuiz();
+{ const o = await ev(() => [...document.querySelectorAll('#qzDev0 option')].map(x => x.textContent));
+  check('claviers : écran + les 2 claviers MIDI, jamais « Network Session »', o.length === 3 && !o.some(x => /Network|réseau/i.test(x)), o); }
+check('claviers : tous les joueurs voient les mêmes choix, celui d’un autre est signalé', await ev(() => /pris par/.test([...document.querySelectorAll('#qzDev0 option')].map(x => x.textContent).join())));
+await ev(() => { const s = document.getElementById('qzDev1'); s.value = 'in-1'; s.dispatchEvent(new Event('change')); }); await wait(page, 200);
+check('claviers : prendre le clavier d’un autre échange les deux', await ev(() => document.getElementById('qzDev0').value === 'in-2' && document.getElementById('qzDev1').value === 'in-1' && document.getElementById('qzDevWarn').hidden));
+await ev(() => { const s = document.getElementById('qzDev1'); s.value = 'in-2'; s.dispatchEvent(new Event('change')); }); await wait(page, 200);
 await ev(() => document.getElementById('qzGo').click()); await wait(page, 300);
 c = await cards();
 check('2 claviers : réponses en accords (3 notes)', c.every(x => x.pcs.length === 3), c.map(x => x.name));
@@ -86,10 +105,11 @@ check('2 claviers : J1 (1er clavier) marque, J2 (mauvais accord du 2e clavier) n
 await ev(() => document.getElementById('qzQuit').click()); await wait(page, 200);
 
 // 3) two players sharing one keyboard in zones
-await set({ n: 2, mode: 'zone', diff: 1, ans: 'notes', count: 5 }); await page.reload(); await wait(page, 900); await closeOnboarding(page);
+await set({ n: 2, mode: 'zone', diff: 1, ans: 'notes', count: 5, devs: [] }); await page.reload(); await wait(page, 900); await closeOnboarding(page);
 await openQuiz();
 const zones = await ev(() => [...document.querySelectorAll('#qzPlayers .qz-pin')].map(p => p.textContent));
 check('zones : chaque joueur a sa zone', zones.length === 2 && zones.every(z => /–/.test(z)), zones);
+check('zones : le piano partagé se choisit et les zones sont dessinées (nom + bornes)', await ev(() => !document.getElementById('qzZoneDevRow').hidden && document.querySelectorAll('#qzZoneMap .qz-zone').length === 2 && /Anna/.test(document.getElementById('qzZoneMap').textContent) && /–/.test(document.querySelector('#qzZoneMap small').textContent)));
 await ev(() => document.getElementById('qzGo').click()); await wait(page, 300);
 c = await cards();
 await play(c.find(x => x.right).pcs, 0, 84); await wait(page, 350); // high notes = player 2's zone
