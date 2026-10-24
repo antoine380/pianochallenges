@@ -2505,8 +2505,8 @@ body.setup #setupPanel{flex:1 1 auto;min-height:0}
   <div class="modal-bg" data-close="leaveModal"></div>
   <div class="modal-card small">
     <div class="modal-head"><h2 id="lvTitle" data-i="leaveTitle"></h2></div>
-    <div class="modal-body"><p data-i="leaveSub" style="margin:0"></p></div>
-    <div class="modal-foot end-foot"><button class="btn" id="lvGo" type="button" data-i="leaveGo"></button><button class="btn primary" type="button" data-close="leaveModal" data-i="leaveStay"></button></div>
+    <div class="modal-body"><p id="lvSub" data-i="leaveSub" style="margin:0"></p></div>
+    <div class="modal-foot end-foot"><button class="btn" id="lvGo" type="button" data-i="leaveGo"></button><button class="btn primary" id="lvStay" type="button" data-close="leaveModal" data-i="leaveStay"></button></div>
   </div>
 </div>
 <div class="modal" id="introModal" role="dialog" aria-modal="true" aria-labelledby="introTitle" hidden>
@@ -2661,8 +2661,8 @@ const TXT = {
     endTitle:"Partie terminée !", endDaily:"Entraînement du jour terminé !", perfectN:"sans faute", warnN:"avec 1 à 3 fautes", badN:"avec plus de 3 fautes",
     accuracy:"Précision", avgTime:"Temps moyen", xpWon:"XP gagnés", bestCombo:"Meilleur combo", toRework:"À retravailler", allPerfect:"Aucune erreur, bravo !",
     reworkBtn:"Retravailler mes erreurs", newGame:"Nouvelle partie", closeLbl:"Fermer", outOf:"exercices sans faute", tomorrow:"demain",
-    secHarmony:"Harmonie", secProg:"Progressions", secEar:"Oreille", secGames:"Jeux", secPlay:"Play", hub:"Accueil", learn:"Learn", learnTitle:"Qu'est-ce qu'on travaille ?", learnSub:"Choisis une matière : les exercices se jouent sur ton piano et sont corrigés note par note.", learnTiles:[["chords","Accords","Majeurs, mineurs, renversements, accords de 7e."],["scales","Gammes","Majeures, mineures, pentatoniques, en notes ou en accords."],["harmony","Harmonie","Les degrés d'une tonalité et leurs accords."],["prog","Progressions","Les enchaînements d'accords des chansons."],["ear","Oreille","Reconnais intervalles et accords à l'écoute."],["daily","Entraînement du jour","10 exercices mélangés, environ 5 minutes."]], modeLearnSub:"Théorie et exercices", modePlaySub:"Morceaux en cascade", modeGamesSub:"Mini-jeux", hubTitle:"Qu'est-ce qu'on joue aujourd'hui ?", hubSub:"Trois façons de progresser au piano. Tu peux changer à tout moment depuis le menu.", hubLearn:"Accords, gammes, harmonie, progressions et oreille, avec des exercices corrigés note par note.", hubPlay:"Des morceaux qui tombent sur le clavier, à ta vitesse, avec les doigtés. Le morceau t'attend si tu te trompes.", hubGames:"Des mini-jeux courts pour repérer les notes, tenir le tempo, lire une portée ou tendre l'oreille.", hubLearnTags:"Accords · Gammes · Harmonie · Progressions · Oreille · Entraînement du jour", hubPlayTags:"Cascade 3D · Mode attente · Vitesse · Noms des notes · Doigtés", hubGamesTags:"Saute-notes · Contre la montre · Mémoire · Note Runner · Rythme Pulse · Accord Blaster · Gamme Climber · Oreille d'Or · Partition Express", playGamesHead:"Jeux Play", playGamesSub:"Sur le clavier lumineux, avec les notes qui tombent", playGames:[["Note Runner","Saute les obstacles en jouant la note écrite dessus.","runner"],["Rythme Pulse","Frappe au moment exact où le cercle touche la cible.","pulse"],["Accord Blaster","Joue l'accord affiché pour détruire l'astéroïde.","blaster"],["Gamme Climber","Grimpe la tour en jouant la gamme sans faute.","climber"],["Oreille d'Or","Écoute une note ou une mélodie, puis rejoue-la.","ear"],["Partition Express","Lis les notes qui arrivent sur la portée.","staff"]], secRank:"Classement", secAccount:"Profil",
-    inTitle:"Comment vas-tu jouer ?", secInter:"Interaction", secGame:"Réglages de jeu", periods:{day:"Jour",week:"Semaine",month:"Mois",year:"Année",all:"Depuis le début"}, rankEmptyP:"Personne n'a encore gagné d'XP sur cette période. À toi de jouer !", pcSolved:n=>fmtN(n)+(n>1?" réussis":" réussi"), inChange:"Mode de jeu", leaveTitle:"Quitter l'entraînement du jour ?", leaveSub:"Tu es en cours. Si tu quittes, cet entraînement s'arrête et il faudra le recommencer.", leaveStay:"Continuer l'entraînement", leaveGo:"Quitter", dcStart:"Démarrer l'entraînement", inMidiApp:"Un clavier MIDI ? Sur iPhone et iPad, il faut l'app Piano Challenges (le navigateur ne gère pas le MIDI).", midiDone:"Terminer la configuration", midiSetupNeed:"Branche ton clavier en USB ou cherche-le en Bluetooth : il doit apparaître dans la liste pour continuer.", midiSetupOk:"Clavier détecté ! Joue quelques notes pour vérifier, puis termine la configuration.", backPlay:"← Retour", lockGuest:"Continuer sans compte pour l'instant", inSub:"Choisis une fois pour toutes. Tu pourras changer dans les Réglages.", inLbl:"Je joue avec",
+    secHarmony:"Harmonie", secProg:"Progressions", secEar:"Oreille", secGames:"Jeux", secPlay:"Play", hub:"Accueil", learn:"Learn", learnTitle:"Qu'est-ce qu'on travaille ?", learnSub:"Choisis une matière : les exercices se jouent sur ton piano et sont corrigés note par note.", learnTiles:[["chords","Accords","Majeurs, mineurs, renversements, accords de 7e."],["scales","Gammes","Majeures, mineures, pentatoniques, en notes ou en accords."],["harmony","Harmonie","Les degrés d'une tonalité et leurs accords."],["prog","Progressions","Les enchaînements d'accords des chansons."],["ear","Oreille","Reconnais intervalles et accords à l'écoute."],["daily","Entraînement du jour","10 exercices mélangés, environ 5 minutes."]], modeLearnSub:"Théorie et exercices", modePlaySub:"Morceaux en cascade", modeGamesSub:"Mini-jeux", hubTitle:"Qu'est-ce qu'on joue aujourd'hui ?", hubSub:"Quatre façons de progresser au piano. Tu peux changer à tout moment depuis le menu.", hubLearn:"Accords, gammes, harmonie, progressions et oreille, avec des exercices corrigés note par note.", hubPlay:"Des morceaux qui tombent sur le clavier, à ta vitesse, avec les doigtés. Le morceau t'attend si tu te trompes.", hubGames:"Des mini-jeux courts pour repérer les notes, tenir le tempo, lire une portée ou tendre l'oreille.", hubLearnTags:"Accords · Gammes · Harmonie · Progressions · Oreille · Entraînement du jour", hubPlayTags:"Cascade 3D · Mode attente · Vitesse · Noms des notes · Doigtés", hubGamesTags:"Saute-notes · Contre la montre · Mémoire · Note Runner · Rythme Pulse · Accord Blaster · Gamme Climber · Oreille d'Or · Partition Express", playGamesHead:"Jeux Play", playGamesSub:"Sur le clavier lumineux, avec les notes qui tombent", playGames:[["Note Runner","Saute les obstacles en jouant la note écrite dessus.","runner"],["Rythme Pulse","Frappe au moment exact où le cercle touche la cible.","pulse"],["Accord Blaster","Joue l'accord affiché pour détruire l'astéroïde.","blaster"],["Gamme Climber","Grimpe la tour en jouant la gamme sans faute.","climber"],["Oreille d'Or","Écoute une note ou une mélodie, puis rejoue-la.","ear"],["Partition Express","Lis les notes qui arrivent sur la portée.","staff"]], secRank:"Classement", secAccount:"Profil",
+    inTitle:"Comment vas-tu jouer ?", secInter:"Interaction", secGame:"Réglages de jeu", periods:{day:"Jour",week:"Semaine",month:"Mois",year:"Année",all:"Depuis le début"}, rankEmptyP:"Personne n'a encore gagné d'XP sur cette période. À toi de jouer !", pcSolved:n=>fmtN(n)+(n>1?" réussis":" réussi"), inChange:"Mode de jeu", leaveTitle:"Quitter l'entraînement du jour ?", leaveSub:"Tu es en cours. Si tu quittes, cet entraînement s'arrête et il faudra le recommencer.", leaveStay:"Continuer", leaveGo:"Quitter", dcStart:"Démarrer l'entraînement", inMidiApp:"Un clavier MIDI ? Sur iPhone et iPad, il faut l'app Piano Challenges (le navigateur ne gère pas le MIDI).", midiDone:"Terminer la configuration", midiSetupNeed:"Branche ton clavier en USB ou cherche-le en Bluetooth : il doit apparaître dans la liste pour continuer.", midiSetupOk:"Clavier détecté ! Joue quelques notes pour vérifier, puis termine la configuration.", backPlay:"← Retour", lockGuest:"Continuer sans compte pour l'instant", inSub:"Choisis une fois pour toutes. Tu pourras changer dans les Réglages.", inLbl:"Je joue avec",
     inModes:{screen:["Le clavier à l'écran","Touche les notes à l'écran, ou utilise le clavier de l'ordinateur.","Écran"],midi:["Mon clavier MIDI","Branché en USB ou connecté en Bluetooth. Le plus précis.","MIDI"],mic:["Mon piano, avec le micro","Pour un piano acoustique : l'app écoute les notes que tu joues.","Micro"]},
     inCfgMidi:"Connecter / régler le clavier MIDI", inCfgMic:"Activer le micro", inMidiNo:"Ce navigateur ne gère pas le MIDI : utilise Chrome ou Edge, l'app iPhone/iPad, ou le micro.",
     inMidiOk:n=>"Connecté : "+n, inMidiNone:"Aucun clavier détecté : branche-le ou connecte-le en Bluetooth.", inMicOk:"Le micro écoute.", inMicOff:"Micro pas encore activé.", inScreenOk:"Touche les notes à l'écran.",
@@ -2814,6 +2814,7 @@ const TXT = {
     rankOrd:n=>ordFr(n), hsNewsT:"Actualités", hsRankT:"Classement de la semaine", hsRankMore:"Tout voir", hsRankLoad:"Chargement…", hsRankErr:"Classement indisponible pour l'instant.",
     hsNews:[["Nouveau look","Mode jour ou nuit, cartes en 3D : l'app fait peau neuve.","#6a4bf0","M12 3l2.4 5 5.6.8-4 3.9.9 5.5L12 15.6 7.1 18.2l.9-5.5-4-3.9 5.6-.8z"],["Jeux Play","Six mini-jeux sur le clavier lumineux, dans GAMES.","#1f7a52","M6 9h4M8 7v4M15 9h.01M18 11h.01M3 8a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4v5a4 4 0 0 1-7 2.5h-4A4 4 0 0 1 3 13z"],["Jeu libre","Joue ce que tu veux dans PLAY : chaque note s'allume dans sa couleur.","#0e7490","M9 18V5l12-2v13M9 18a3 3 0 1 1-6 0 3 3 0 0 1 6 0zM21 16a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"],["Entraînement du jour","10 exercices mélangés chaque jour pour garder ta série.","#a3306b","M12 3c1 3.5 5 6 5 11a5 5 0 0 1-10 0c0-2.2 1-3.8 2.2-5 .2 1.6 1 2.8 2.3 3.3C11 9.3 11.3 6 12 3z"]],
     wrongSr:"Fausse note : ",
+    lvT:"Quitter la partie ?", lvEndT:"Terminer la partie ?", lvLost:"Ta progression de cette partie sera perdue.", lvEndS:"La partie s'arrête ici : tu verras le bilan des exercices déjà faits.", lvSong:"Ta progression dans ce morceau sera perdue.", lvDuelR:"C'est une partie classée : quitter compte comme une défaite.", lvDuelOn:"Ton adversaire continue sans toi.", lvDuelF:"La partie amicale s'arrête pour toi.", lvQuizOn:"Les autres joueurs continuent sans toi.", lvEndGo:"Terminer", hubQuiz:"Un quiz de culture générale : tu réponds en jouant la bonne note ou le bon accord. Seul, à plusieurs ou en ligne.", hubQuizTags:"Culture générale · Notes et accords · Jusqu'à 4 joueurs · En ligne", setAppH:"Application", setGameTab:"Jeu", pfOverview:"Vue d'ensemble",
     dailyShort:"Entraînement"},
   en:{help:"Help", helpTitle:"How it works", helpOk:"Let's go", tutNext:"Next", tutPrev:"Previous", close:"Close", stepOf:(i,n)=>"Step "+i+" of "+n,
     tut:[{h:"Read the challenge",p:"A scale, a chord or a progression appears with a countdown. Picture the notes in your head before the bar runs out."},
@@ -2828,8 +2829,8 @@ const TXT = {
     endTitle:"Game complete!", endDaily:"Daily practice complete!", perfectN:"perfect", warnN:"with 1–3 mistakes", badN:"with 4+ mistakes",
     accuracy:"Accuracy", avgTime:"Average time", xpWon:"XP earned", bestCombo:"Best combo", toRework:"To rework", allPerfect:"No mistakes, well done!",
     reworkBtn:"Rework my mistakes", newGame:"New game", closeLbl:"Close", outOf:"exercises without mistakes", tomorrow:"tomorrow",
-    secHarmony:"Harmony", secProg:"Progressions", secEar:"Ear", secGames:"Games", secPlay:"Play", hub:"Home", learn:"Learn", learnTitle:"What do we work on?", learnSub:"Pick a topic: exercises are played on your piano and checked note by note.", learnTiles:[["chords","Chords","Major, minor, inversions, 7th chords."],["scales","Scales","Major, minor, pentatonic, as notes or chords."],["harmony","Harmony","The degrees of a key and their chords."],["prog","Progressions","The chord sequences behind songs."],["ear","Ear","Recognise intervals and chords by ear."],["daily","Daily practice","10 mixed exercises, about 5 minutes."]], modeLearnSub:"Theory and exercises", modePlaySub:"Falling-note songs", modeGamesSub:"Mini-games", hubTitle:"What do we play today?", hubSub:"Three ways to get better at the piano. Switch any time from the menu.", hubLearn:"Chords, scales, harmony, progressions and ear training, checked note by note.", hubPlay:"Songs that fall onto the keys at your own speed, with fingering. The song waits for you when you miss.", hubGames:"Short mini-games to find the notes, keep the beat, read the staff or train your ear.", hubLearnTags:"Chords · Scales · Harmony · Progressions · Ear · Daily practice", hubPlayTags:"3D cascade · Wait mode · Speed · Note names · Fingering", hubGamesTags:"Note Jumper · Time attack · Memory · Note Runner · Rhythm Pulse · Chord Blaster · Scale Climber · Golden Ear · Staff Express", playGamesHead:"Play games", playGamesSub:"On the lit keyboard, with falling notes", playGames:[["Note Runner","Jump over obstacles by playing the note written on them.","runner"],["Rhythm Pulse","Hit a key exactly when the ring reaches the target.","pulse"],["Chord Blaster","Play the chord shown to blast the asteroid.","blaster"],["Scale Climber","Climb the tower by playing the scale without a slip.","climber"],["Golden Ear","Listen to a note or a short melody, then play it back.","ear"],["Staff Express","Read the notes as they reach the bar on the staff.","staff"]], secRank:"Leaderboard", secAccount:"Profile",
-    inTitle:"How will you play?", secInter:"Interaction", secGame:"Game settings", periods:{day:"Today",week:"This week",month:"This month",year:"This year",all:"All time"}, rankEmptyP:"Nobody has earned XP in this period yet. Your turn!", pcSolved:n=>fmtN(n)+" solved", inChange:"Play mode", leaveTitle:"Leave the daily practice?", leaveSub:"You are in the middle of it. If you leave, it stops and you will have to start again.", leaveStay:"Keep practising", leaveGo:"Leave", dcStart:"Start the practice", inMidiApp:"A MIDI keyboard? On iPhone and iPad you need the Piano Challenges app (the browser has no MIDI).", midiDone:"Finish set-up", midiSetupNeed:"Plug your keyboard in with USB or search for it over Bluetooth: it must show up in the list to continue.", midiSetupOk:"Keyboard detected! Play a few notes to check, then finish the set-up.", backPlay:"← Back", lockGuest:"Continue without an account for now", inSub:"Choose once. You can change it later in Settings.", inLbl:"I play with",
+    secHarmony:"Harmony", secProg:"Progressions", secEar:"Ear", secGames:"Games", secPlay:"Play", hub:"Home", learn:"Learn", learnTitle:"What do we work on?", learnSub:"Pick a topic: exercises are played on your piano and checked note by note.", learnTiles:[["chords","Chords","Major, minor, inversions, 7th chords."],["scales","Scales","Major, minor, pentatonic, as notes or chords."],["harmony","Harmony","The degrees of a key and their chords."],["prog","Progressions","The chord sequences behind songs."],["ear","Ear","Recognise intervals and chords by ear."],["daily","Daily practice","10 mixed exercises, about 5 minutes."]], modeLearnSub:"Theory and exercises", modePlaySub:"Falling-note songs", modeGamesSub:"Mini-games", hubTitle:"What do we play today?", hubSub:"Four ways to get better at the piano. Switch any time from the menu.", hubLearn:"Chords, scales, harmony, progressions and ear training, checked note by note.", hubPlay:"Songs that fall onto the keys at your own speed, with fingering. The song waits for you when you miss.", hubGames:"Short mini-games to find the notes, keep the beat, read the staff or train your ear.", hubLearnTags:"Chords · Scales · Harmony · Progressions · Ear · Daily practice", hubPlayTags:"3D cascade · Wait mode · Speed · Note names · Fingering", hubGamesTags:"Note Jumper · Time attack · Memory · Note Runner · Rhythm Pulse · Chord Blaster · Scale Climber · Golden Ear · Staff Express", playGamesHead:"Play games", playGamesSub:"On the lit keyboard, with falling notes", playGames:[["Note Runner","Jump over obstacles by playing the note written on them.","runner"],["Rhythm Pulse","Hit a key exactly when the ring reaches the target.","pulse"],["Chord Blaster","Play the chord shown to blast the asteroid.","blaster"],["Scale Climber","Climb the tower by playing the scale without a slip.","climber"],["Golden Ear","Listen to a note or a short melody, then play it back.","ear"],["Staff Express","Read the notes as they reach the bar on the staff.","staff"]], secRank:"Leaderboard", secAccount:"Profile",
+    inTitle:"How will you play?", secInter:"Interaction", secGame:"Game settings", periods:{day:"Today",week:"This week",month:"This month",year:"This year",all:"All time"}, rankEmptyP:"Nobody has earned XP in this period yet. Your turn!", pcSolved:n=>fmtN(n)+" solved", inChange:"Play mode", leaveTitle:"Leave the daily practice?", leaveSub:"You are in the middle of it. If you leave, it stops and you will have to start again.", leaveStay:"Keep playing", leaveGo:"Leave", dcStart:"Start the practice", inMidiApp:"A MIDI keyboard? On iPhone and iPad you need the Piano Challenges app (the browser has no MIDI).", midiDone:"Finish set-up", midiSetupNeed:"Plug your keyboard in with USB or search for it over Bluetooth: it must show up in the list to continue.", midiSetupOk:"Keyboard detected! Play a few notes to check, then finish the set-up.", backPlay:"← Back", lockGuest:"Continue without an account for now", inSub:"Choose once. You can change it later in Settings.", inLbl:"I play with",
     inModes:{screen:["The on-screen keyboard","Tap the notes on screen, or use your computer keyboard.","Screen"],midi:["My MIDI keyboard","Plugged in with USB or connected over Bluetooth. The most accurate.","MIDI"],mic:["My piano, with the mic","For an acoustic piano: the app listens to the notes you play.","Mic"]},
     inCfgMidi:"Connect / set up the MIDI keyboard", inCfgMic:"Turn the mic on", inMidiNo:"This browser has no MIDI: use Chrome or Edge, the iPhone/iPad app, or the mic.",
     inMidiOk:n=>"Connected: "+n, inMidiNone:"No keyboard detected: plug it in or connect it over Bluetooth.", inMicOk:"The mic is listening.", inMicOff:"Mic not turned on yet.", inScreenOk:"Tap the notes on screen.",
@@ -2980,6 +2981,7 @@ const TXT = {
     rankOrd:n=>ordEn(n), hsNewsT:"News", hsRankT:"This week's leaderboard", hsRankMore:"See all", hsRankLoad:"Loading…", hsRankErr:"Leaderboard unavailable right now.",
     hsNews:[["New look","Day or night mode and 3D cards: the app gets a makeover.","#6a4bf0","M12 3l2.4 5 5.6.8-4 3.9.9 5.5L12 15.6 7.1 18.2l.9-5.5-4-3.9 5.6-.8z"],["Play games","Six mini-games on the light-up keyboard, in GAMES.","#1f7a52","M6 9h4M8 7v4M15 9h.01M18 11h.01M3 8a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4v5a4 4 0 0 1-7 2.5h-4A4 4 0 0 1 3 13z"],["Free play","Play anything in PLAY: every note lights up in its colour.","#0e7490","M9 18V5l12-2v13M9 18a3 3 0 1 1-6 0 3 3 0 0 1 6 0zM21 16a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"],["Daily practice","10 mixed exercises every day to keep your streak.","#a3306b","M12 3c1 3.5 5 6 5 11a5 5 0 0 1-10 0c0-2.2 1-3.8 2.2-5 .2 1.6 1 2.8 2.3 3.3C11 9.3 11.3 6 12 3z"]],
     wrongSr:"Wrong note: ",
+    lvT:"Leave the game?", lvEndT:"End the game?", lvLost:"Your progress in this game will be lost.", lvEndS:"The game stops here: you'll see the summary of the exercises you've done.", lvSong:"Your progress in this song will be lost.", lvDuelR:"This is a rated game: leaving counts as a loss.", lvDuelOn:"Your opponent keeps playing without you.", lvDuelF:"The friendly game stops for you.", lvQuizOn:"The other players carry on without you.", lvEndGo:"End game", hubQuiz:"A general-knowledge quiz: you answer by playing the right note or chord. Alone, with friends or online.", hubQuizTags:"General knowledge · Notes and chords · Up to 4 players · Online", setAppH:"App", setGameTab:"Game", pfOverview:"Overview",
     dailyShort:"Daily"}
 };
 const t = k => TXT[S.settings.lang][k];
@@ -3803,6 +3805,7 @@ function autoHelp(){ let h=$("autoHelp"); if(!h){ h=document.createElement("div"
   tr.onclick=()=>{ h.hidden=true; }; sh.onclick=()=>{ h.hidden=true; if(phase==="listening") reveal(false); }; h.hidden=false; }
 function noteIn(m){ lastNoteAt=Date.now();
   if(FN.on){ fnNote(m); return; } // the first screen (mic)
+  if(LV.on) return; // the leave window is open
   if(page==="quiz"){ if(!anyModal()) quizIn("screen",m); return; } // screen keyboard, computer keyboard, mic
   if(page==="play"){ playSend("noteon",m); setTimeout(()=>playSend("noteoff",m),400); return; } // screen keyboard / mic: no release event, so release after 400 ms
   if(!["practice","daily","games","free"].includes(page)) return; // no exercise on the other pages: nothing to feed
@@ -4537,9 +4540,58 @@ $("kbDetect").addEventListener("click",()=>{ if(calib){ calibApply(); return; } 
 $("homeLink").addEventListener("click",e=>{ e.preventDefault(); guardLeave(()=>{ goHome(); openPage("hub"); }); });
 $("homeLink2").addEventListener("click",e=>{ e.preventDefault(); goHome(); openPage("hub"); });
 
-// leaving a daily practice in progress asks first
-let leaveFn=null;
-function guardLeave(fn){ if(game && game.daily && game.i>=0 && (page==="daily" || (INFO_PAGES.includes(page) && returnPage==="daily"))){ leaveFn=fn; closeDrawer(); openMod("leaveModal"); return true; } fn(); return false; }
+// ---------- Leaving an activity in progress asks first (#leaveModal) ----------
+// An exercise or the daily practice (after the first note), a game, a duel, a song or a Play game, a quiz. Asked by the quit buttons
+// (Quitter, Salon, Terminer la partie) and by the menu (modes, sections, home, ranking, notifications, profile). Settings and Progress
+// open on top without stopping anything: they never ask. The activity holds still while the window is open (HOLD), except online
+// (the others keep playing). Esc / a lone C = keep playing, a lone B = leave.
+let leaveFn=null, HOLD=false;
+const LV={on:false,a:null,at:0,pass:false,buf:[],t:0,mm:false};
+const lvBase = () => INFO_PAGES.includes(page) ? returnPage : page;
+function actNow(){ const pg=lvBase();
+  if(pg==="play"){ try{ const w=$("playFrame").contentWindow; if(w && w.clavioBusy && w.clavioBusy()) return {k:"play", song:!playHash.startsWith("#game")}; }catch(e){} return null; }
+  if(pg==="quiz") return QZ.view==="play" ? {k:"quiz", online:QZ.mode==="online"} : null;
+  if(pg==="games"){ if(!RN.on) return null;
+    if(DU.mode && ["count","play","wait"].includes(DU.view)) return {k:"duel", online:DU.mode!=="bot", rated:!!DU.rated};
+    if(DU.view!=="solo") return null;
+    const run = GM==="runner" ? RN.state==="run" : GM==="speed" ? SP.state==="run" : MM.state==="listen"||MM.state==="input";
+    return run ? {k:"game"} : null; }
+  if((pg==="practice"||pg==="daily") && game && !endOpen && (game.i>0 || game.results.some(Boolean) || played.length>0 || errors>0 || idx>0)) return {k:game.daily?"daily":"learn"};
+  return null; }
+function guardLeave(fn){ const a=LV.pass||LV.on ? null : actNow(); if(a){ lvOpen(a,fn); return true; } fn(); return false; }
+function lvOpen(a, fn, end){ leaveFn=fn; LV.a=a; closeDrawer();
+  $("lvTitle").textContent = end ? t("lvEndT") : a.k==="daily" ? t("leaveTitle") : t("lvT");
+  $("lvSub").textContent = end ? t("lvEndS") : a.k==="daily" ? t("leaveSub") : a.k==="duel" ? (a.rated ? t("lvDuelR") : t("lvDuelF"))+(a.online ? " "+t("lvDuelOn") : "")
+    : a.k==="quiz" && a.online ? t("lvQuizOn") : a.k==="play" && a.song ? t("lvSong") : t("lvLost");
+  const go=$("lvGo"), st=$("lvStay"); go.textContent = end ? t("lvEndGo") : t("leaveGo"); st.textContent=t("leaveStay"); duKbd(st,CNAME()); duKbd(go,BNAME());
+  lvHold(true); LV.on=true; openMod("leaveModal"); st.focus({preventScroll:true}); }
+// called by closeMod("leaveModal"): Keep playing (button, Esc, backdrop, C) or just before Leave runs
+function lvAfter(){ if(!LV.on) return; LV.on=false; lvHold(false); LV.a=null; }
+function lvHold(on){ const a=LV.a; if(!a) return; const now=performance.now();
+  if(on){ if(HOLD || a.online) return; HOLD=true; LV.at=now;
+    if(a.k==="play"){ try{ $("playFrame").contentWindow.clavioHold(true); }catch(e){} }
+    if(a.k==="game"||a.k==="duel"){ if(MM.state==="listen"){ MM.timers.forEach(clearTimeout); MM.timers=[]; LV.mm=true; } clearTimeout(MM.inT); }
+    if(a.k==="quiz") qzHold(true);
+    return; }
+  if(!HOLD) return; HOLD=false; const d=now-LV.at;
+  if(a.k==="play"){ try{ $("playFrame").contentWindow.clavioHold(false); }catch(e){} }
+  if(a.k==="game"||a.k==="duel"){ if(SP.state==="run") SP.end+=d; DU.t0+=d;
+    if(LV.mm){ LV.mm=false; if(RN.on && GM==="memory" && MM.state==="listen") mmPlay(); } else if(MM.state==="input") mmIdle(); }
+  if(a.k==="quiz") qzHold(false,d); }
+// MIDI while the window is open: the notes are commands only (a lone C stays, a lone B leaves, a chord does nothing)
+function lvNote(m){ if(S.settings.midiC===false) return; LV.buf.push(((m%12)+12)%12); clearTimeout(LV.t);
+  LV.t=setTimeout(()=>{ const b=LV.buf; LV.buf=[]; if(b.length!==1 || !LV.on) return; if(b[0]===0) closeMod("leaveModal"); else if(b[0]===11) $("lvGo").click(); },120); }
+// the menu and the quit buttons: asked first when they would end the activity; "Leave" replays the click
+const LV_NAV="#homeLink,#modeNav [data-mode],#secTabs button,#dailyCard,#rankBtn,#ntfBtn,#mbNtf,#accountBtn", LV_QUIT="#rnQuit,#duToLobby,#gameEnd,#qzQuit";
+function lvLeaves(el){ const base=lvBase();
+  if(el.matches(LV_QUIT)) return true;
+  if(el.dataset.mode) return ({quiz:"quiz",learn:"learn",play:"free",games:"games"})[el.dataset.mode]!==base;
+  if(el.id==="dailyCard") return base!=="daily";
+  if(el.closest("#secTabs")) return !(el.dataset.v==="games" && base==="games");
+  return true; }
+document.addEventListener("click",e=>{ if(LV.pass || LV.on || !e.target.closest) return; const el=e.target.closest(LV_NAV+","+LV_QUIT); if(!el || !lvLeaves(el)) return;
+  const a=actNow(); if(!a) return; e.preventDefault(); e.stopImmediatePropagation();
+  lvOpen(a,()=>{ LV.pass=true; try{ el.click(); }finally{ LV.pass=false; } }, el.id==="gameEnd"); },true);
 // ---------- Sidebar, drawer, games page ----------
 const phoneMQ=window.matchMedia("(max-width:640px)"), railMQ=window.matchMedia("(max-height:520px) and (orientation:landscape)");
 function setNav(){
@@ -4643,7 +4695,7 @@ function rnLoop(now){
   if(cv.width!==Math.round(W*dpr)||cv.height!==Math.round(H*dpr)){ cv.width=Math.round(W*dpr); cv.height=Math.round(H*dpr); }
   const g=cv.getContext("2d"); g.setTransform(dpr,0,0,dpr,0,0);
   const u=H/200, ground=H-26*u, px=Math.max(60*u,W*.12), pw=46*u, ph=44*u;
-  if(RN.state==="run"){
+  if(RN.state==="run" && !HOLD){
     const df=gmDiff(), base={slow:W/5.6, mid:W/4, fast:W/2.9, prog:W/5.6}[df];
     if(!RN.speed) RN.speed=base;
     if(df==="prog" && RN.cleared>=3) RN.speed=Math.min(W/2.4, RN.speed + dt*W*0.0064);
@@ -4744,6 +4796,7 @@ function spGo(){ if(DU.view!=="solo" && DU.view!=="play") return; if(SP.state===
 function spNext(){ let n; do{ n=SP.pool[Math.floor(gRnd()*SP.pool.length)]; }while(SP.pool.length>1 && SP.target && n.label===SP.target.label); SP.target=n; SP.held=[]; rnHintPcs(n.pcs); gmBoard(); }
 function spTick(now){
   if(!RN.on || GM!=="speed" || SP.state!=="run") return;
+  if(HOLD){ SP.raf=requestAnimationFrame(spTick); return; } // the leave window is open: the clock waits (SP.end moves on resume)
   let left=(SP.end-now)/1000;
   // progressive: each answer gives back a little time, less and less
   if(left<=0){ SP.state="over"; clearKeys(); if(DU.mode) duMe(SP.count,true); const best=(S.gameBest||{}).speed||0; SP.newBest=false; if(!DU.mode){ if(SP.count>best){ S.gameBest={...(S.gameBest||{}),speed:SP.count}; SP.newBest=true; } if(SP.count){ addXP(SP.count); renderStatus(); } } save(); tone(48,0,.4,.15); gmBoard(); gmScore(); return; }
@@ -4917,7 +4970,7 @@ function duGo(){ DU.view="play"; DU.t0=performance.now(); duRender(); audio();
   clearInterval(DU.hb); if(DU.mode!=="bot"){ DU.opp.lastAt=Date.now(); DU.hb=setInterval(()=>{ if(DU.view!=="play"&&DU.view!=="wait"){ clearInterval(DU.hb); return; } duSend({t:"hb"});
       if(!DU.opp.done && Date.now()-DU.opp.lastAt>25000){ duSend({t:"stall"}); duFinish(1,"forfeit"); } },4000); }
   if(DU.game==="runner"){ RN.state="ready"; rnGo(); } else if(DU.game==="speed") spGo(); else mmGo();
-  if(DU.opp.bot!=null && DU.opp.plan){ let i=0; DU.sim=setInterval(()=>{ if(DU.view!=="play"&&DU.view!=="wait"){ clearInterval(DU.sim); return; } const el=performance.now()-DU.t0, P=DU.opp.plan;
+  if(DU.opp.bot!=null && DU.opp.plan){ let i=0; DU.sim=setInterval(()=>{ if(DU.view!=="play"&&DU.view!=="wait"){ clearInterval(DU.sim); return; } if(HOLD) return; const el=performance.now()-DU.t0, P=DU.opp.plan;
       while(i<P.length && P[i][0]<=el){ DU.opp.score=P[i][1]; if(P[i][2]) DU.opp.done=true; i++; } duHud(); duCheck(); },200); } }
 function duMe(score, done){ if(!DU.mode || (DU.view!=="play"&&DU.view!=="wait")) return; if(score===DU.me.score && done===DU.me.done) return;
   DU.me={score, done:DU.me.done||done}; if(DU.mode!=="bot") duSend({t:"sc",s:score,d:DU.me.done});
@@ -5560,10 +5613,18 @@ function qzShowQ(i){ qzClearTimers(); QZ.i=i; const cf=QZ.cfg, q=QZ.list[i], fr=
   QZ.ans=answers; QZ.q=q; QZ.picks={}; QZ.ms={}; QZ.buf={}; QZ.done=false; const humans=QZ.players.filter(p=>!p.bot).length; QZ.turn=(QZ.turn+1)%Math.max(1,humans);
   QZ.dur=cf.time*1000; QZ.t0=performance.now();
   // bots answer after a while, more or less right depending on their level
+  QZ.botPlan=[];
   QZ.players.forEach((p,pi)=>{ if(!p.bot || (QZ.mode==="online" && !NET.host)) return; const L=p.bot, acc=[.55,.75,.92][L-1], rng=[[.3,.75],[.18,.5],[.08,.3]][L-1];
     const ms=QZ.dur*(rng[0]+Math.random()*(rng[1]-rng[0])), right=Math.random()<acc, k=right?QZ.ans.findIndex(a=>a.right):QZ.ans.findIndex(a=>!a.right);
-    QZ.botT.push(setTimeout(()=>{ if(!QZ.done && QZ.i===i){ qzPick(pi,k,ms); if(QZ.mode==="online") netSend({type:"ans",id:p.id,i,o:QZ.ans[k].o,ms:Math.round(ms)}); } },ms)); });
-  renderQuiz(); QZ.raf=requestAnimationFrame(qzTick); }
+    QZ.botPlan.push({pi,k,ms,i}); });
+  qzArmBots(); renderQuiz(); QZ.raf=requestAnimationFrame(qzTick); }
+// the robots' answers of this question, each at its time (counted from QZ.t0, which moves on after a pause)
+function qzArmBots(){ const el=performance.now()-QZ.t0; (QZ.botPlan||[]).forEach(({pi,k,ms,i})=>{ if(QZ.picks[pi]!=null || i!==QZ.i) return; const p=QZ.players[pi];
+  QZ.botT.push(setTimeout(()=>{ if(!QZ.done && QZ.i===i){ qzPick(pi,k,ms); if(QZ.mode==="online") netSend({type:"ans",id:p.id,i,o:QZ.ans[k].o,ms:Math.round(ms)}); } },Math.max(0,ms-el))); }); }
+// the leave window holds a local quiz still: the clock, the robots and the next question wait
+function qzHold(on,d){ if(QZ.view!=="play") return; if(on){ cancelAnimationFrame(QZ.raf); clearTimeout(QZ.revealT); QZ.botT.forEach(clearTimeout); QZ.botT=[]; return; }
+  if(QZ.done){ const left=Math.max(800,4200-(LV.at-QZ.doneAt)); QZ.doneAt+=d; QZ.revealT=setTimeout(()=>{ if(page==="quiz"&&QZ.view==="play"&&QZ.done) qzNext(); },left); }
+  else { QZ.t0+=d; qzArmBots(); QZ.raf=requestAnimationFrame(qzTick); } }
 function qzTick(){ if(page!=="quiz"||QZ.view!=="play"||QZ.done) return; const left=Math.max(0,1-(performance.now()-QZ.t0)/QZ.dur); const b=$("qzBar"); if(b) b.style.transform="scaleX("+left+")";
   if(left<=0){ if(QZ.mode!=="online"||NET.host) qzReveal(); return; } QZ.raf=requestAnimationFrame(qzTick); }
 // which local player played this note?
@@ -5865,7 +5926,8 @@ let playHash="#songs"; // #songs = song library, #games = Play games, #game=<id>
 function playOpen(){ const f=$("playFrame"); const src="play/index.html"+playHash+"&lang="+(S.settings.lang==="fr"?"fr":"en")+(staffOn()?"&staff=1&clef="+staffClef():""); const old=f.getAttribute("src");
   if(old!==src){ f.onload=()=>{ if(page==="play" && !anyWin()) f.focus(); }; f.src=src; if(old){ try{ f.contentWindow.location.reload(); }catch(e){} } } // a hash-only change would not reload the page: force it
   $("playPanel").hidden=false; }
-addEventListener("message",e=>{ if(SAME_ORIGIN!=="*" && e.origin!==SAME_ORIGIN) return; const d=e.data; if(d && d.source==="clavio" && d.type==="free") openPage("free"); if(d && d.source==="clavio" && d.type==="home" && page==="play") openPage(playHash.startsWith("#game")?"games":"free"); });
+addEventListener("message",e=>{ if(SAME_ORIGIN!=="*" && e.origin!==SAME_ORIGIN) return; const d=e.data; if(d && d.source==="clavio" && d.type==="free") openPage("free"); if(d && d.source==="clavio" && d.type==="home" && page==="play") openPage(playHash.startsWith("#game")?"games":"free");
+  if(d && d.source==="clavio" && d.type==="askLeave" && page==="play" && !LV.on) lvOpen(actNow()||{k:"play",song:!playHash.startsWith("#game")},()=>{ try{ $("playFrame").contentWindow.clavioLeave(); }catch(e){} }); }); // the frame's back button during a song / a game
 function openPlayWith(h){ const sg=/^#song=([a-z]+)/.exec(h); if(sg && premSong(sg[1])){ pwOpen("songs"); return; } playHash=h; if(page==="play"){ playOpen(); setNav(); } else openPage("play"); }
 function goMode(m){ closeDrawer(); if(m==="quiz") openPage("quiz"); else if(m==="learn") openPage("learn"); else if(m==="play") openPage("free"); else openPage("games"); }
 document.querySelectorAll("[data-mode]").forEach(b=>b.addEventListener("click",()=>{ const m=b.dataset.mode; if(page==="daily" && game && game.daily){ guardLeave(()=>{ game=null; goMode(m); }); return; } goMode(m); }));
@@ -6166,9 +6228,9 @@ function renderAccount(){
 // ---- simple windows: characters + intros
 const openMods=[];
 function openMod(id){ if(!openMods.includes(id)){ modalOpened(); openMods.push(id); } $(id).hidden=false; const f=$(id).querySelector(".modal-close"); if(f) f.focus({preventScroll:true}); }
-function closeMod(id){ $(id).hidden=true; const i=openMods.indexOf(id); if(i>=0){ openMods.splice(i,1); modalClosed(); } }
+function closeMod(id){ $(id).hidden=true; const i=openMods.indexOf(id); if(i>=0){ openMods.splice(i,1); if(id==="leaveModal") lvAfter(); modalClosed(); } }
 document.addEventListener("click",e=>{ const c=e.target.closest("[data-close]"); if(c) closeMod(c.dataset.close); });
-$("lvGo").addEventListener("click",()=>{ closeMod("leaveModal"); const f=leaveFn; leaveFn=null; if(f){ clearTimeout(advanceTimer); cancelAnimationFrame(raf); clearPlayTimers(); f(); } });
+$("lvGo").addEventListener("click",()=>{ const k=LV.a&&LV.a.k; closeMod("leaveModal"); const f=leaveFn; leaveFn=null; if(f){ if(k==="learn"||k==="daily"){ clearTimeout(advanceTimer); cancelAnimationFrame(raf); clearPlayTimers(); } f(); } });
 function openChars(){
   closeDrawer(); const L=levelInfo(S.xp).L, ci=charIndex(L), g=$("charGrid"); g.innerHTML="";
   t("chars").forEach((c,i)=>{ const got=L>=CHAR_LVL[i], d=document.createElement("div");
@@ -6390,6 +6452,7 @@ async function enableMidi(){
         if((inp.state && inp.state!=="connected") || midiVirtual(inp.name)){ inp.onmidimessage=null; return; } // Chrome keeps unplugged ports in the map; virtual ports are not keyboards
         names.push(inp.name); inp.onmidimessage=ev=>{
         const [st,note,vel]=ev.data;
+        if(LV.on){ if((st&0xf0)===0x90 && vel>0) lvNote(note); return; } // the leave window: C = keep playing, B = leave
         if(page==="quiz"){ if((st&0xf0)===0x90 && vel>0){ if(S.settings.midiSound) tone(note,0,.9,.1+.26*vel/127); if(!anyModal()) quizIn(String(inp.id||inp.name),note); } return; } // every keyboard counts: one per player
         if(S.settings.midiInput && inp.name!==S.settings.midiInput) return;
         if(page==="play"){ if((st&0xf0)===0x90 && vel>0) playSend("noteon",note,vel/127); else if((st&0xf0)===0x80 || ((st&0xf0)===0x90 && vel===0)) playSend("noteoff",note); return; }

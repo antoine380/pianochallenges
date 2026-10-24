@@ -416,6 +416,12 @@ function go(s){if(s==='home'&&embedded&&(VIEW.startsWith('song=')||VIEW.startsWi
   if(s==='home'){renderHome();held.forEach(noteOff);setTargets([]);try{wake?.release()}catch(e){}}
   else{requestAnimationFrame(fit);keepAwake()}}
 document.querySelectorAll('[data-home]').forEach(b=>b.addEventListener('click',()=>{P.playing=false;if(mode!=='song')GAME[mode].stop?.();go('home')}));
+// Inside Piano Challenges: a song or a game in progress asks the host before leaving (its "Leave the game?" window); the host holds us still meanwhile
+let HOLD=false,lvPass=false;
+window.clavioBusy=()=>screen==='play'&&(mode==='song'?P.playing&&!P.listen&&(P.c.p+P.c.b+P.c.w+P.c.m)>0:!!(gs&&gs.running));
+window.clavioHold=on=>{HOLD=!!on};window.clavioHeld=()=>HOLD;
+window.clavioLeave=()=>{HOLD=false;const b=[...document.querySelectorAll('[data-home]')].find(x=>x.offsetParent);lvPass=true;try{b?b.click():go('home')}finally{lvPass=false}};
+if(embedded)document.querySelectorAll('[data-home]').forEach(b=>b.addEventListener('click',e=>{if(lvPass||!window.clavioBusy())return;e.stopImmediatePropagation();try{window.parent.postMessage({source:'clavio',type:'askLeave'},location.origin==='null'?'*':location.origin)}catch(er){}},true));
 function overlay(html){ovCard.innerHTML=html;ov.hidden=false;ovCard.querySelector('[data-h]')?.addEventListener('click',()=>{if(mode!=='song')GAME[mode].stop?.();go('home')})}
 const starsHTML=n=>`<span class="stars">${'★'.repeat(n)}<span class="off">${'★'.repeat(3-n)}</span></span>`;
 function setBar({title,sub,lives,time,streak,prog,tools}){
@@ -828,7 +834,8 @@ GAME.staff={lives:true,timed:false,tools:['names','speed','hint'],
 /* ================= Loop ================= */
 let last=performance.now();
 function frame(now){const dt=Math.min(.05,(now-last)/1000);last=now;
-  if(screen==='play'){if(mode==='song'){updateSong(dt);if(sheet&&HAS_STAFF)drawSheet();else drawSong(dt)}else{GAME[mode].update(dt);GAME[mode].draw(dt)}}
+  if(screen==='play'&&HOLD){if(mode==='song'){if(sheet&&HAS_STAFF)drawSheet();else drawSong(0)}else GAME[mode].draw(0)}
+  else if(screen==='play'){if(mode==='song'){updateSong(dt);if(sheet&&HAS_STAFF)drawSheet();else drawSong(dt)}else{GAME[mode].update(dt);GAME[mode].draw(dt)}}
   requestAnimationFrame(frame)}
 renderHome();requestAnimationFrame(frame);
 if(VIEW.startsWith('game=')&&GAMES.some(g=>g.id===VIEW.slice(5)))openGame(VIEW.slice(5));
