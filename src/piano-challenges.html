@@ -9399,7 +9399,7 @@ const rtN = pc => (S.settings.notation==="fr"?PC_FR:PC_EN)[pc];
 const rtL = (fr,en) => S.settings.lang==="fr"?fr:en;
 const rtCh = (pc,q) => rtN(pc)+(q==="m"?rtL(" mineur"," minor"):q==="7"?"7":q==="m7"?"m7":rtL(" majeur"," major"));
 const rtX = k => t("rtNames")[k];
-const rtGm = id => t({runner:"rnName",speed:"spName",memory:"mmName"}[id]);
+const rtGm = id => id==="douze" ? (((t("games")||[]).find(g=>g[2]==="douze")||[])[0]||"Les Douze") : t({runner:"rnName",speed:"spName",memory:"mmName"}[id]); // étape 3 : Les Douze
 const RT_STAGES=[
   [["jeu",{g:"runner",c:"notes",d:"slow",goal:5},()=>rtGm("runner")],
    ["lecon",{sec:"scales",t:["major"],k:[0]},()=>[0,2,4].map(rtN).join(" ")+"…"],
@@ -9546,6 +9546,7 @@ function rsSongPick(){ let best={}; try{ best=JSON.parse(localStorage.getItem("c
 function rsInfo(r){ const fr=S.settings.lang==="fr", K=t("rsK");
   if(r.kind==="learn" && SEC[r.sec] && Array.isArray(r.q) && r.q.length){ const p=r.route&&rtPill(r.route), n=Math.max(1,r.n|0), i=Math.min(n,Math.max(0,r.i|0)), fin=!!r.fin;
     return {k:K+" · "+(p&&!rtIsDone(p)?t("rtName")+" › "+t("rtStages")[p.si]:"LEARN › "+t(SU_NAME[r.sec])), t:r.label||t(SU_NAME[r.sec]), pct:fin?1:i/n, bar:fin?t("rsDone"):t("rsAt")(i,n), col:TILE_COL[r.sec], obj:r.sec}; }
+  if(r.kind==="game" && r.id==="douze"){ return {k:K+" · GAMES", t:rtGm("douze"), pct:null, bar:t("rnBestL")+" "+(typeof dzBestTxt==="function"?dzBestTxt():"—"), col:TILE_COL.douze||MODE_COL.games, obj:OBJ.douze?"douze":"games"}; } // étape 3 : record en temps
   if(r.kind==="game" && DU_GAMES.includes(r.id)){ const b=((S.gameBest||{})[r.id]||(r.id==="runner"?S.runnerBest:0)||0), m=RS_MS.find(x=>x>b)||b+1000;
     return {k:K+" · GAMES"+(r.cont?" › "+t("gmConts")[r.cont==="notes"?"notes":"chords"]:""), t:rtGm(r.id), pct:b/m, bar:t("rsRecord")(fmtN(b),fmtN(m)), col:TILE_COL[r.id], obj:r.id}; }
   if(r.kind==="song"){ const s=SONGS_H.find(x=>x[0]===r.id); if(!s) return null; let best={}; try{ best=JSON.parse(localStorage.getItem("clavio:best")||"{}")||{}; }catch(e){} const st=best[s[0]]|0;
