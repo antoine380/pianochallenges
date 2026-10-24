@@ -2422,6 +2422,7 @@ body[data-page="pp"] #ppPanel{display:flex;flex:1 1 auto;min-height:0;flex-direc
 .mw-dots li.cur{background:var(--brand);color:#fff;box-shadow:0 0 0 4px color-mix(in srgb,var(--brand) 25%,transparent)} .mw-dots li.done{background:color-mix(in srgb,var(--good) 18%,var(--surface-2));color:var(--good)} .mw-dots svg{width:14px;height:14px;stroke-width:3}
 .mw-head .modal-close{margin-left:auto}
 .mw-body{flex:1 1 auto;min-height:0;display:flex;flex-direction:column;gap:10px;overflow-y:auto;overscroll-behavior:contain}
+.mw-dup{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
 .mw-body h2{margin:0;font-family:var(--f-display);font-weight:700;font-size:1.7rem;line-height:1.1}
 .mw-sub,.mw-txt{margin:-4px 0 0;color:var(--muted);font-size:.95rem} .mw-txt{color:var(--ink);margin:0} .mw-txt small{display:block;color:var(--muted);font-size:.82rem;margin-top:2px}
 .mw-k{margin:0;font-weight:800;font-size:.74rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
@@ -2526,7 +2527,7 @@ button.mw-opt:active{transform:scale(.98)}
 @media (max-width:820px){ .mw .mw-card{padding:16px} .mw-fb{display:none} .mw-opts.n4{grid-template-columns:repeat(2,minmax(0,1fr))} .mw-steps{grid-template-columns:1fr} .mw-steps li{padding:8px 10px} .mw-tsteps{grid-template-columns:1fr 1fr} .mw-tsteps .mt-step:nth-child(2){grid-column:1/-1;order:3}
   .mw-adv{grid-template-columns:1fr} .mw-adv li{flex-direction:row;align-items:center} .mw-two{grid-template-columns:1fr} }
 @media (max-width:640px){ .mw{padding:0} .mw .mw-card{border-radius:0;height:100%;max-height:100%;width:100%;padding:calc(10px + env(safe-area-inset-top,0px)) 14px calc(10px + env(safe-area-inset-bottom,0px));gap:8px}
-  .mw-ti{display:none} .mw-dots{margin-left:0} .mw-body h2{font-size:1.35rem} .mw-sub{font-size:.84rem} .mw-art{height:62px} .mw-opt{padding:8px;border-radius:14px} .mw-opt b{font-size:.95rem} .mw-opt small{font-size:.74rem}
+  .mw-ti{display:none} .mw-dots{margin-left:0} .mw-body h2.mw-dup{position:static;width:auto;height:auto;overflow:visible;clip:auto} .mw-body h2{font-size:1.35rem} .mw-sub{font-size:.84rem} .mw-art{height:62px} .mw-opt{padding:8px;border-radius:14px} .mw-opt b{font-size:.95rem} .mw-opt small{font-size:.74rem}
   .mw-go{display:none} .mw-row{flex-wrap:wrap;padding:8px 10px} .mw-row .btn{width:100%;justify-content:center} .mw-fb{display:none} .mw-foot{padding-top:8px} .mw-foot .btn{min-height:40px;padding:6px 12px;font-size:.86rem}
   .mw-foot .btn.ghost:not(.mw-back){flex:1 1 40%;justify-content:center} .mw-foot .btn.primary{flex:1 1 100%;justify-content:center} .mw-foot .mw-sp{display:none}
   .mw-trow{height:116px} .mw-trow .mt-note{width:64px} .mw-trow .mt-note b{font-size:1.6rem} .mw-strip{height:80px}
@@ -8331,7 +8332,7 @@ function mwRender(){ if(!MW.on) return; const st=MW.step, d=mwDev(), body=$("mwB
     f=mwFoot(mwB("retest",t("mdRetest"),"ghost")+((hw.conn==="bt"||MW.conn==="bt")?mwB("lat",t("mdLatB"),"ghost","clock"):'')+mwB("play",t(FN.on?"mdPlayC":"mdPlay"),"primary mw-big"),{fb:false,back:false}); }
   else if(st==="trouble"){ ic=MW_ICON.fix; ti=t("mdTrouble"); const fx=mwFixes(), F=t("mdFix"), A=t("mdFixAct"), c=MW.conn||mwHw().conn, prev=MW.hist[MW.hist.length-1];
     const chips=[mwDevLbl(d)].concat(c?[t("mdConnN")[c]+(d.ios&&MW.port&&c!=="bt"?" · "+(MW.port==="light"?"Lightning":"USB-C"):"")]:[]).concat(prev&&t("mdStepN")[prev]?[t("mdStepN")[prev]]:[]);
-    h='<h2 id="mwH" class="sr-only">'+esc(t("mdTrouble"))+'</h2><div class="mw-chips2">'+chips.map(x=>'<span>'+esc(x)+'</span>').join("")+'</div>'
+    h='<h2 id="mwH" class="mw-dup">'+esc(t("mdTrouble"))+'</h2><div class="mw-chips2">'+chips.map(x=>'<span>'+esc(x)+'</span>').join("")+'</div>'
       +(MW.solved?'<div class="mw-found" role="status"><span class="mw-ok">'+MW_ICON.check+'</span><b>'+esc(t("mdSolved"))+' '+esc(MW.found?t("mdFound")(mdTrunc(MW.found)):"")+'</b></div>':'')
       +'<ul class="mw-fix">'+fx.map((i,k)=>{ const o=MW.open===i, x=F[i-1]; return '<li class="'+(o?'open':'')+'" data-fix="'+i+'"><button type="button" class="mw-fh" data-a="fix:'+i+'" aria-expanded="'+o+'"><span class="mw-rt"><b>'+esc(x[0])+'</b><small>'+esc(x[1])+'</small></span><span class="mw-chev">'+MW_ICON.chev+'</span></button>'
         +(o?'<div class="mw-fb2">'+(i===2?'<span class="mw-fart">'+MWA.cablex()+'</span>':'')+'<p>'+esc(x[2])+'</p>'+(A[i]?mwB("fixact:"+i,A[i],"primary"):mwB("retry",t("mdRetry"),"primary","retry",MW.retry))+'</div>':'')+'</li>'; }).join("")+'</ul>'
