@@ -43,6 +43,20 @@ for (const [w, h] of [[1024, 768], [1180, 820], [1440, 900]]) {
   check('quiz à 2 sans aucun point : « Égalité ! »', end === 'Égalité !', end);
   await p.context().close(); }
 
+// ---- 3. écran de connexion : une erreur de saisie n'efface plus le mot de passe ni la case de consentement ----
+{ const p = await open(1024, 768);
+  await p.evaluate(() => document.querySelector('#topAuth [data-auth=signup]').click()); await W(p, 1500);
+  await p.evaluate(() => { const b = document.getElementById('gtEmailGo'); b.disabled = false; b.click(); }); await W(p, 300);
+  await p.fill('#gtEmail', 'test@example.com'); await p.fill('#gtPwd', '12345678');
+  await p.evaluate(() => { const b = document.getElementById('gtGo'); b.disabled = false; b.click(); }); await W(p, 300);
+  const r = await p.evaluate(() => ({ msg: document.getElementById('gtMsg').textContent, pwd: document.getElementById('gtPwd').value }));
+  check('inscription sans consentement : message, mot de passe gardé', /politique|privacy/i.test(r.msg) && r.pwd === '12345678', r);
+  await p.evaluate(() => document.getElementById('gtOk').click()); await p.fill('#gtEmail', 'pas-un-mail');
+  await p.evaluate(() => document.getElementById('gtGo').click()); await W(p, 300);
+  const r2 = await p.evaluate(() => ({ msg: document.getElementById('gtMsg').textContent, ok: document.getElementById('gtOk').checked, pwd: document.getElementById('gtPwd').value }));
+  check('e-mail invalide : message, consentement et mot de passe gardés', /valide|valid/i.test(r2.msg) && r2.ok && r2.pwd === '12345678', r2);
+  await p.context().close(); }
+
 await b.close();
 console.log(fails.length ? `\n${fails.length} échec(s)` : '\nTout est bon');
 process.exit(fails.length ? 1 : 0);

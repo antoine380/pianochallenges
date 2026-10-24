@@ -6884,7 +6884,7 @@ function gateForm(){ const f=$("gtForm"); f.innerHTML=""; const m=GATE.mode;
   const alt=document.createElement("button"); alt.type="button"; alt.className="gt-link"; alt.textContent=t("gtUseCode"); alt.onclick=()=>{ GATE.email=em.value.trim(); Object.assign(GATE,{otp:true,sent:false,msg:"",err:false}); gateRender(); }; f.appendChild(alt);
   f.onsubmit=async e=>{ e.preventDefault(); if(!sb) return; GATE.email=em.value.trim(); if(name) GATE.name=name.value.trim();
     const bad = !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(GATE.email) ? "gtBadMail" : pw.value.length<8 ? "gtBadPwd" : m==="signup"&&GATE.name&&nameErr(GATE.name) ? nameErr(GATE.name) : m==="signup"&&!ok.checked ? "gtNeedOk" : "";
-    if(bad){ GATE.msg=t(bad); GATE.err=true; gateForm(); return; }
+    if(bad){ GATE.msg=t(bad); GATE.err=true; const g=$("gtMsg"); g.textContent=GATE.msg; g.className="gt-msg err"; return; } // the form stays as typed (password, consent)
     GATE.busy=true; GATE.msg=""; gateForm();
     try{ if(m==="signup"){
         const {data,error}=await sb.auth.signUp({email:GATE.email, password:pw.value, options:{data:{name:GATE.name||undefined}, emailRedirectTo: isApp()?undefined:location.origin+location.pathname}}); if(error) throw error;
