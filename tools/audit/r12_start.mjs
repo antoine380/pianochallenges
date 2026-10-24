@@ -16,7 +16,7 @@ const ev = (f, a) => page.evaluate(f, a), vis = id => ev(id => { const e = docum
   check('un Do : bravo et bouton pour continuer', await e(() => /Bravo/.test(document.querySelector('#fnPrompt').textContent) && !document.getElementById('fnGo').hidden));
   await e(() => window.__midi.noteOn(72)); await p.waitForTimeout(1500);
   const S0 = await e(() => JSON.parse(localStorage.getItem('memo-gammes-v1')));
-  check('un 2e Do : premier exercice d’accords lancé, invité, sans tutoriel', await e(() => document.body.dataset.page === 'practice' && /Majeur/.test(document.getElementById('prompt').textContent)) && S0.gate === 'guest' && S0.onb && S0.onb.done && S0.tourDone === 1 && S0.settings.input === 'midi', { gate: S0.gate, input: S0.settings.input });
+  check('un 2e Do (niveau « Je débute ») : les Premiers pas s’ouvrent (r21 vérifie la suite), invité, sans tutoriel', await e(() => document.body.dataset.page === 'pp' && !!document.querySelector('#ppPanel .pp-path')) && S0.gate === 'guest' && S0.onb && S0.onb.done && S0.tourDone === 1 && S0.settings.input === 'midi', { gate: S0.gate, input: S0.settings.input });
   await p.reload(); await p.waitForTimeout(1200);
   check('visite suivante : plus de premier écran', await e(() => !document.querySelector('.fn-card')));
   await c.close(); }
