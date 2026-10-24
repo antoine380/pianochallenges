@@ -8044,7 +8044,7 @@ async function lgHub(ol){
 // ---- page Classement : bouton « Ligue » en tête des périodes, vue #lgView ----
 let lgTok=0;
 const lgView=(()=>{ const v=document.createElement("div"); v.id="lgView"; v.hidden=true; $("rankPer").after(v); return v; })();
-const lgWanted = () => !LG.off && (S.settings.rankPer==="league" || (!S.settings.rankPer && !!user));
+const lgWanted = () => !LG.off && (S.settings.rankPer==="league" || (!S.settings.rankPer && !!user && !(LG.at && LG.rows && !LG.rows.length && LG.uid===user.id))); // no league this week (yet): the default stays the weekly leaderboard
 const _lgRankPer=renderRankPer;
 renderRankPer=function(){ _lgRankPer(); if(LG.off) return; const box=$("rankPer"), on=lgWanted();
   const b=document.createElement("button"); b.type="button"; b.id="rankLg"; b.textContent=t("lgTab"); b.setAttribute("aria-pressed",on);
@@ -8066,6 +8066,7 @@ renderRank=async function(){ const tok=++lgTok;
   const rows=await lgLoad(); if(tok!==lgTok || page!=="rank") return;
   if(LG.off) return renderRank(); // not installed yet: back to the usual leaderboard
   if(!rows){ lgView.innerHTML='<p class="lg-msg"></p>'; lgView.firstChild.textContent=t("rankErr"); return; }
+  if(!rows.length && !lgWanted()) return renderRank();
   lgRender(rows); };
 function lgRender(rows){
   const head=$("rankPanel").querySelector(".pane-head p"); lgView.innerHTML="";

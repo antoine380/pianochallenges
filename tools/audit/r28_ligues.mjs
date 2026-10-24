@@ -94,6 +94,14 @@ await rankOpen(p);
 check('réseau coupé : message « indisponible », pas de liste', await p.evaluate(() => !!document.querySelector('#lgView .lg-msg') && !document.querySelector('#lgView .lg-list')));
 errs.push(...p.errs); await p.context().close();
 
+// 5b) compte sans ligue cette semaine (ligue close, arrivé dimanche soir) : classement de la semaine par défaut, onglet Ligue = « commence lundi »
+p = await open({ width: 1024, height: 768 }, { user: USER, leaderboard: LB, league: [] });
+await rankOpen(p); await p.waitForTimeout(400);
+check('ligue vide : ancien classement par défaut', await p.evaluate(() => document.getElementById('lgView').hidden && document.querySelectorAll('#rankList li').length >= 12 && document.getElementById('rankLg').getAttribute('aria-pressed') === 'false'));
+await p.evaluate(() => document.getElementById('rankLg').click()); await p.waitForTimeout(700);
+check('ligue vide : l’onglet Ligue dit « Ta prochaine ligue commence lundi »', await p.evaluate(() => /commence lundi/.test(document.querySelector('#lgView .lg-msg')?.textContent || '')));
+errs.push(...p.errs); await p.context().close();
+
 // 6) invité : onglet Ligue → invitation à créer un compte → écran de connexion
 p = await open({ width: 1024, height: 768 }, { league: [], leaderboard: LB }, { ...STATE(), gate: 'guest' });
 await rankOpen(p);
