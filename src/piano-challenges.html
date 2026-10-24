@@ -2437,7 +2437,7 @@ body[data-page="acc"] #accPanel{display:flex;flex:1 1 auto;min-height:0;flex-dir
 .ac-tempo{display:flex;align-items:center;gap:10px;margin:4px 0}
 .ac-tempo input{flex:1;min-width:0;accent-color:var(--brand)} .ac-tempo b{min-width:2.4em;text-align:right;font-size:1.05rem}
 /* the game */
-.ac-play{position:relative;flex:1 1 auto;min-height:0;display:flex;flex-direction:column;gap:clamp(4px,1.4vh,14px)}
+.ac-play{position:relative;flex:1 1 auto;min-height:0;display:flex;flex-direction:column;justify-content:space-between;gap:clamp(4px,1.4vh,14px)}
 .ac-top{display:flex;align-items:center;gap:8px 10px;min-width:0}
 .ac-crumb{color:var(--muted);font-weight:700;font-size:clamp(.82rem,1.6vh,1rem);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0;flex:0 1 auto} .ac-crumb b{color:var(--ink)}
 .ac-chip{flex:none;border:0;border-radius:12px;padding:6px 12px;background:var(--surface);box-shadow:var(--shadow-card);font-weight:800;font-size:.85rem;color:var(--ink);white-space:nowrap}
@@ -2461,7 +2461,7 @@ button.ac-chip{cursor:pointer} button.ac-chip[aria-pressed="false"]{color:var(--
 .ac-met.ok small::after{content:" ★";color:var(--gold)}
 .ac-met>b,.ac-met>span{font:700 clamp(1rem,2.6vh,1.6rem)/1.1 var(--f-display);white-space:nowrap} .ac-met>span b{font:inherit}
 .ac-met.ok>b,.ac-met.ok>span{color:var(--good)}
-.ac-seq{flex:1 1 auto;min-height:0;display:grid;grid-template-columns:minmax(110px,190px) minmax(0,1fr);gap:0 clamp(8px,1.6vw,20px)}
+.ac-seq{flex:1 1 auto;min-height:0;max-height:440px;display:grid;grid-template-columns:minmax(110px,190px) minmax(0,1fr);gap:0 clamp(8px,1.6vw,20px)}
 .ac-lbls{display:grid;grid-template-rows:auto minmax(0,1fr) minmax(0,1fr);row-gap:clamp(4px,1vh,10px);min-width:0}
 .ac-lbls span{display:flex;flex-direction:column;justify-content:center;min-height:0}
 .ac-lbls b{font-weight:800;font-size:clamp(.9rem,1.8vh,1.1rem)} .ac-lbls small{color:var(--muted);font-size:.8rem;line-height:1.25}
@@ -2490,7 +2490,7 @@ button.ac-chip{cursor:pointer} button.ac-chip[aria-pressed="false"]{color:var(--
 .ac-leg .ac-up{margin-left:auto;color:var(--muted)} .ac-leg :is(.ac-up,.ac-flash)::before{display:none}
 .ac-flash{color:var(--good);opacity:0} .ac-flash:empty{display:none} .ac-flash.on{animation:acFlash 2.2s ease-out}
 @keyframes acFlash{0%,70%{opacity:1}100%{opacity:0}}
-.ac-kbw{flex:0 1 clamp(110px,30vh,260px);min-height:84px;display:flex;flex-direction:column;gap:6px;padding-bottom:4px}
+.ac-kbw{flex:1 1 clamp(110px,30vh,260px);max-height:320px;min-height:84px;display:flex;flex-direction:column;gap:6px;padding-bottom:4px}
 .ac-kbl{position:relative;flex:none;height:1.5em;font:800 .76rem/1.5 var(--f-mono);letter-spacing:.12em;text-transform:uppercase}
 .ac-kbl .l{position:absolute;left:4px;color:var(--ac-lh-t)} .ac-kbl .r{position:absolute;right:4px;color:var(--ac-rh-t)}
 .ac-kbl .c{position:absolute;transform:translateX(-50%);background:var(--surface);color:var(--ink);padding:0 8px;border-radius:8px;letter-spacing:0;text-transform:none;font-family:var(--f-body);white-space:nowrap}
@@ -2506,7 +2506,7 @@ button.ac-chip{cursor:pointer} button.ac-chip[aria-pressed="false"]{color:var(--
 .ac-crit{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px;width:min(380px,100%)}
 .ac-crit li{display:flex;gap:10px;align-items:center;padding:6px 12px;border-radius:12px;background:var(--surface-2);font-weight:800}
 .ac-crit i{font-style:normal;color:var(--muted)} .ac-crit li.ok i{color:var(--gold)} .ac-crit b{margin-left:auto}
-.ac-newrec{color:var(--gold);font-weight:800}
+.ac-newrec{color:var(--good);font-weight:800}
 /* tablets held upright and phones */
 @media (max-width:900px){ .ac-seq{grid-template-columns:minmax(90px,130px) minmax(0,1fr)} .ac-lbls small{display:none} .ac-gridc{display:none} }
 @media (max-width:640px){ .ac-pats{display:flex;overflow-x:auto;gap:6px;padding:2px 2px 6px;scrollbar-width:none} .ac-pats::-webkit-scrollbar{display:none} .ac-pat{flex:0 0 auto;min-width:132px}
@@ -8136,14 +8136,14 @@ function accStart(){ const c=accCfg(), P=ACC_PATS[c.pat[c.style]], bars=accBars(
   if(mode==="wait") accWaitNext(R);
   else { R.t0=performance.now()+250+R.m*accBeat(R); R.countFrom=0; R.nextK=-R.m; } // beat 0 of bar 0 after one bar of count-in
   accDs(R); accPaint(); R.raf=requestAnimationFrame(accTick); }
-const accDs = R => { const P=$("accPanel"); if(P){ P.dataset.t0=R.t0; P.dataset.bpm=R.bpm; P.dataset.mode=R.mode; } }; // timeline for the tests (r31)
+const accDs = R => { const P=$("accPanel"); if(P){ P.dataset.t0=R.t0; P.dataset.bpm=R.bpm; P.dataset.mode=R.mode; P.dataset.res=R.resumes|0; } }; // timeline for the tests (r31)
 function accStopRun(){ const R=ACC.run; if(R) cancelAnimationFrame(R.raf); ACC.tm.forEach(clearTimeout); ACC.tm=[]; ACC.run=null; ACC.gkey=""; }
 function accStop(){ accStopRun(); if(ACC.view==="play") ACC.view="setup"; }
 const accHeld = () => page!=="acc" || ACC.view!=="play" || anyModal() || document.hidden || (typeof LV!=="undefined"&&LV.on);
 // back from a window (leave?, MIDI unplugged, settings…): the bar being played starts again after one bar of count-in
 function accResume(R, now){ if(R.mode==="wait"){ accPaint(); return; }
   const bm=accBeat(R), ab=Math.max(0,Math.min(R.TB-1,Math.floor((now-R.t0)/bm/R.m)));
-  R.ev=R.ev.filter(e=>e.ab<ab); R.gen=ab-1; R.t0=now+250+R.m*bm-ab*R.m*bm; R.countFrom=ab*R.m; R.nextK=R.countFrom-R.m; R.ab=ab; accDs(R); accPaint(); }
+  R.ev=R.ev.filter(e=>e.ab<ab); R.gen=ab-1; R.t0=now+250+R.m*bm-ab*R.m*bm; R.countFrom=ab*R.m; R.nextK=R.countFrom-R.m; R.ab=ab; R.resumes=(R.resumes|0)+1; accDs(R); accPaint(); }
 function accClick(at, acc){ const c=audio(); if(!c||!master) return; const when=Math.max(c.currentTime,c.currentTime+(at-performance.now())/1000);
   const o=c.createOscillator(), g=c.createGain(); o.type="square"; o.frequency.value=acc?1568:1175;
   g.gain.setValueAtTime(0,when); g.gain.linearRampToValueAtTime(acc?.16:.09,when+.002); g.gain.exponentialRampToValueAtTime(.0005,when+.05);
@@ -8215,9 +8215,10 @@ function accFinish(){ const R=ACC.run; if(!R) return; cancelAnimationFrame(R.raf
   ACC.res={id:R.id, s, stars, sJ, sR, sT, xp, xp0, rec:rec&&stars>0, mode:R.mode, bpm:R.maxBpm, tg:R.pat.tg, full};
   accStopRun(); ACC.view="end"; accRender();
   if(stars) [0,4,7].forEach((d,i)=>tone(72+d,i*.09,.5,.16)); }
+const accPassed = r => r.stars>=3 || (r.mode==="wait" && r.stars>=2); // wait mode has no tempo star
 // Do = continue: the next pattern (same style, then the next style); Si = play it again
 function accNextGo(){ const c=accCfg(), r=ACC.res, id=r?r.id:c.pat[c.style], i=ACC_IDS.indexOf(id), nx=ACC_IDS[(i+1)%ACC_IDS.length];
-  if(r && r.stars<3){ accStart(); return; } // not yet: the same pattern again
+  if(r && !accPassed(r)){ accStart(); return; } // not yet: the same pattern again
   c.style=ACC_PATS[nx].st; c.pat[c.style]=nx; save(); accStart(); }
 // ---- drawing ----
 function accKbHTML(){ const [lo,hi]=accRange(), sp=accSplit(), W=[], N=S.settings.notation==="fr"?PC_FR:PC_EN; for(let m=lo;m<=hi;m++) if(NAT.includes(m%12)) W.push(m);
@@ -8227,7 +8228,7 @@ function accKbHTML(){ const [lo,hi]=accRange(), sp=accSplit(), W=[], N=S.setting
     if([0,2,5,7,9].includes(m%12)&&m+1<=hi) h+='<div class="bk '+(m+1<sp?"lh":"rh")+'" data-m="'+(m+1)+'" role="button" aria-label="'+esc(N[(m+1)%12])+'" style="--nc:var(--note-'+((m+1)%12)+');left:'+((i+1)*ww-bw/2)+'%;width:'+bw+'%"><span></span></div>'; });
   return h+'<i class="ac-split" style="left:'+sx+'%"></i>'; }
 const accKey = m => { const k=$("acKb"); return k&&k.querySelector('[data-m="'+accFold(m)+'"]'); };
-function accPress(m){ const el=accKey(m); if(!el) return; el.classList.remove("ac-on"); void el.offsetWidth; el.classList.add("ac-on","k-press"); clearTimeout(el._t); el._t=setTimeout(()=>el.classList.remove("ac-on","k-press"),220); }
+function accPress(m){ const el=accKey(m); if(!el) return; el.classList.add("ac-on","k-press"); /* no forced layout here: the note's time matters */ clearTimeout(el._t); el._t=setTimeout(()=>el.classList.remove("ac-on","k-press"),220); }
 function accKeyBad(m){ const el=accKey(m); if(!el) return; el.classList.add("k-bad"); setTimeout(()=>el.classList.remove("k-bad"),300); }
 function accFlash(x){ const el=$("acFlash"); if(!el) return; el.textContent=x; el.classList.remove("on"); void el.offsetWidth; el.classList.add("on"); }
 // keys to play next: the cell the cursor waits on (wait mode) or the next cell to come (rhythm)
@@ -8313,7 +8314,7 @@ function accRenderSetup(P){ const c=accCfg(), st=ACC_ST.find(x=>x.id===c.style),
   [["acUp","up"],["acMetroS","metro"],["acGuideS","guide"]].forEach(([id,k])=>{ $(id).onchange=e=>{ c[k]=e.target.checked; save(); }; });
   $("acGo").onclick=accStart;
   try{ ["acStyles","acKeys"].forEach(id=>ovFade($(id))); ovFade($("acProgs")); }catch(e){} }
-function accRenderEnd(P){ const r=ACC.res; if(!r){ ACC.view="setup"; return accRenderSetup(P); } const li=levelInfo(S.xp), pct=x=>Math.round(x*100)+" %", nx3=r.stars>=3;
+function accRenderEnd(P){ const r=ACC.res; if(!r){ ACC.view="setup"; return accRenderSetup(P); } const li=levelInfo(S.xp), pct=x=>Math.round(x*100)+" %", nx3=accPassed(r);
   const crit=[[r.sJ,t("accJust"),pct(r.s.just)],[r.sR,t("accReg"),pct(r.s.reg)],[r.sT,t("accTempoL"),r.mode==="wait"?t("accStarTW"):r.bpm+" / "+r.tg+" bpm"]];
   P.innerHTML='<div class="ac-endw"><div class="pp-card ac-card" role="dialog" aria-labelledby="acET"><small class="pp-k">'+esc(t("accName")+" · "+accPatTitle(r.id))+'</small>'
     +'<h2 id="acET">'+esc(r.stars?t("accDone"):t("accDoneLow"))+'</h2>'

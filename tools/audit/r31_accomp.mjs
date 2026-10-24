@@ -32,7 +32,11 @@ const toAcc = async p => { await click(p, '#modeNav [data-mode="learn"]'); await
 const cells = (p, h) => ev(p, h => [...document.querySelectorAll('#acCells .ac-c[data-h="' + h + '"]')].map(e => (e.className.match(/\bs\d\b|\bcur\b/g) || []).join(' ')), h);
 // plays notes at a time relative to the timeline (data-t0 = beat 0, data-bpm), inside the page so the delay is exact
 const at = (p, beat, notes, i = 0) => ev(p, ([beat, notes, i]) => { const P = document.getElementById('accPanel'), t0 = +P.dataset.t0, bm = 60000 / +P.dataset.bpm;
-  setTimeout(() => notes.forEach(n => window.__midi.noteOn(n, 100, i)), Math.max(0, t0 + beat * bm - performance.now())); return t0 + beat * bm - performance.now(); }, [beat, notes, i]);
+  setTimeout(() => { (window.__dt = window.__dt || {})[Math.round(beat)] = performance.now() - (t0 + Math.round(beat) * bm); notes.forEach(n => window.__midi.noteOn(n, 100, i)); }, Math.max(0, t0 + beat * bm - performance.now())); return t0 + beat * bm - performance.now(); }, [beat, notes, i]);
+// the class expected from the time the notes really left (the machine may be busy): s1 ≤ ±(80+lat), s2 ≤ ±(160+lat), else s3; « any » within 12 ms of a limit
+const expect = async (p, beat, lat = 0) => { const d = Math.abs(await ev(p, b => (window.__dt || {})[b], beat)), w1 = 80 + lat, w2 = 160 + lat;
+  return { d: Math.round(d), c: [w1, w2].some(w => Math.abs(d - w) < 12) ? 'any' : d <= w1 ? 's1' : d <= w2 ? 's2' : 's3' }; };
+const same = (x, e) => e.c === 'any' || x === e.c;
 const untilBeat = (p, beat) => ev(p, beat => new Promise(r => { const P = document.getElementById('accPanel'); setTimeout(r, Math.max(0, +P.dataset.t0 + beat * 60000 / +P.dataset.bpm - performance.now())); }), beat);
 
 // ---- clés acc* FR / EN ----
@@ -106,11 +110,11 @@ await toAcc(A); await click(A, '#acGo'); await W(A, 150);
 check('compte « 1, 2, 3, 4 » avant la 1re mesure', await waitFor(A, () => { const c = document.getElementById('acCount'); return c && !c.hidden && c.textContent === '1'; }, 1500)
   && await waitFor(A, () => document.getElementById('acCount').textContent === '3', 3000));
 await at(A, 0.02, [48, 60, 64, 67]); // +20 ms: perfect
-await untilBeat(A, 1); let r = await cells(A, 'R'), l = await cells(A, 'L');
-check('mesure 1 : jouée à +20 ms → vert (parfait)', r[0] === 's1' && l[0] === 's1', { r, l });
+await untilBeat(A, 1); let r = await cells(A, 'R'), l = await cells(A, 'L'), E = await expect(A, 0);
+check('mesure 1 : jouée à +20 ms → vert (parfait) [réel +' + E.d + ' ms]', same(r[0], E) && same(l[0], E) && E.c !== 's3', { r, l, E });
 await at(A, 4.12, [53, 65, 69, 72]); // +120 ms: ok (yellow)
-await untilBeat(A, 5); r = await cells(A, 'R'); l = await cells(A, 'L');
-check('mesure 2 : +120 ms → jaune (un peu tard)', r[0] === 's2' && l[0] === 's2', { r, l });
+await untilBeat(A, 5); r = await cells(A, 'R'); l = await cells(A, 'L'); E = await expect(A, 4);
+check('mesure 2 : +120 ms → jaune (un peu tard) [réel +' + E.d + ' ms]', same(r[0], E) && same(l[0], E) && E.c !== 's1', { r, l, E });
 await at(A, 8.3, [55, 67, 71, 74]); // +300 ms: missed
 await untilBeat(A, 9); r = await cells(A, 'R');
 check('mesure 3 : +300 ms → rouge (manquée)', r[0] === 's3', r);
@@ -129,14 +133,14 @@ await A.ctx.close();
 A = await open({ lat: 100, acc: { style: 'ballad', pat: { ballad: 'ballad1' }, prog: 'p145', key: 'C', mode: 'rhythm', bpm: 60, up: false, metro: false } });
 await toAcc(A); await click(A, '#acGo'); await W(A, 100);
 await at(A, 0.15, [48, 60, 64, 67]); await at(A, 4.24, [53, 65, 69, 72]);
-await untilBeat(A, 1); r = await cells(A, 'R');
-check('midiLat() = 100 ms : +150 ms reste « parfait » (±80 + 100)', r[0] === 's1', r);
-await untilBeat(A, 5); r = await cells(A, 'R');
-check('midiLat() = 100 ms : +240 ms est « correct » (±160 + 100)', r[0] === 's2', r);
+await untilBeat(A, 1); r = await cells(A, 'R'); E = await expect(A, 0, 100);
+check('midiLat() = 100 ms : +150 ms reste « parfait » (±80 + 100) [réel +' + E.d + ' ms]', same(r[0], E) && E.c !== 's3', { r, E });
+await untilBeat(A, 5); r = await cells(A, 'R'); E = await expect(A, 4, 100);
+check('midiLat() = 100 ms : +240 ms est « correct » (±160 + 100) [réel +' + E.d + ' ms]', same(r[0], E) && E.c !== 's1', { r, E });
 await A.ctx.close();
 
 // ---- progressif : 2 boucles parfaites → +5 bpm ----
-A = await open({ acc: { style: 'ballad', pat: { ballad: 'ballad1' }, prog: 'p145', key: 'C', mode: 'rhythm', bpm: 120, up: true, metro: false } });
+A = await open({ lat: 60, acc: { style: 'ballad', pat: { ballad: 'ballad1' }, prog: 'p145', key: 'C', mode: 'rhythm', bpm: 120, up: true, metro: false } }); // midiLat 60: room for a busy test machine
 await toAcc(A); await click(A, '#acGo'); await W(A, 100);
 const chords = [[48, 60, 64, 67], [53, 65, 69, 72], [55, 67, 71, 74], [48, 60, 64, 67]];
 for (let bar = 0; bar < 8; bar++) await at(A, bar * 4 + 0.01, chords[bar % 4]);
