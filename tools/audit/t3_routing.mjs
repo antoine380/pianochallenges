@@ -16,7 +16,7 @@ const WIN = {
   settings: { open: () => page.evaluate(() => document.getElementById('setBtn').click()), close: () => page.keyboard.press('Escape'), id: 'settingsPage' },
   progress: { open: () => page.evaluate(() => document.getElementById('progBtn').click()), close: () => page.keyboard.press('Escape'), id: 'progressPage' },
   levels: { open: () => page.evaluate(() => document.getElementById('lvlAv').click()), close: () => page.keyboard.press('Escape'), id: 'charModal' },
-  input: { open: () => page.evaluate(() => document.getElementById('inChip').click()), close: () => page.keyboard.press('Escape'), id: 'inputModal' },
+  input: { open: () => page.evaluate(() => document.getElementById('mdChange').click()), close: () => page.keyboard.press('Escape'), id: 'inputModal' },
 };
 for (const [name, w] of Object.entries(WIN)) {
   // (re)démarrer un exercice propre

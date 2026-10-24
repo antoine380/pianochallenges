@@ -9,7 +9,7 @@ LEARN="document.querySelector('#modeNav [data-mode=learn]').click(); document.qu
 # window or page id -> how to open it (the Help of a topic, #howPk, needs a topic page first)
 OPENERS={"settingsPage":"document.getElementById('setBtn').click()","charModal":"document.getElementById('charMore').click()",
  "midiModal":"document.getElementById('midiCfg').click()","introModal":LEARN+"; document.getElementById('howPk').click()",
- "inputModal":"document.getElementById('inChip').click()","helpModal":"document.getElementById('helpBtn').click()",
+ "inputModal":"document.getElementById('mdChange').click()","helpModal":"document.getElementById('helpBtn').click()",
  "dailyCfgModal":"document.getElementById('dailyCard').click(); document.getElementById('dpCfg').click()"}
 async def run(native):
   async with async_playwright() as p:
