@@ -1,7 +1,7 @@
 // Piano Challenges — actions sensibles du back office (Supabase Edge Function « admin »).
 // Appelée par admin/index.html : sb.functions.invoke("admin", {body:{action, ...}}) avec le jeton de la session.
-// Chaque appel revérifie le jeton : session en aal2 (mot de passe + code TOTP) ET compte présent dans public.admins
-// avec le rôle demandé (via la fonction SQL admin_me(), exécutée avec le jeton de l'appelant).
+// Chaque appel revérifie le jeton : session en aal2 (mot de passe + code TOTP, champ « aal » du jeton), jeton validé par le
+// serveur d'authentification (auth.getUser) ET compte présent dans public.admins avec le rôle demandé.
 // Ensuite seulement, la clé service (variable d'environnement fournie par Supabase, jamais dans un fichier) sert à :
 //   delete_user {id}                      owner   : supprime le compte (auth.users ; les tables suivent par « on delete cascade »)
 //   suspend {id, on}                      support : suspend (ban) ou réactive un compte
@@ -9,11 +9,10 @@
 //   preview {}                            support : envoie les e-mails de bienvenue / série / récap à l'adresse de l'admin (job preview de « notify »)
 // Toute action écrit une ligne dans public.admin_log (ajout seul).
 // Déploiement : supabase functions deploy admin   (« Verify JWT » activé : seul un utilisateur connecté peut l'appeler)
-// Secrets : SUPABASE_URL, SUPABASE_ANON_KEY, SUPABASE_SERVICE_ROLE_KEY (fournis par Supabase), NOTIFY_SECRET (déjà créé pour « notify »).
+// Secrets : SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY (fournis par Supabase), NOTIFY_SECRET (déjà créé pour « notify »).
 import { createClient } from "npm:@supabase/supabase-js@2";
 
 const URL_ = Deno.env.get("SUPABASE_URL")!;
-const ANON = Deno.env.get("SUPABASE_ANON_KEY")!;
 const SERVICE = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
 const NOTIFY_SECRET = Deno.env.get("NOTIFY_SECRET") || "";
 const ORIGINS = ["https://pianochallenges.com"];
@@ -27,7 +26,7 @@ function cors(req: Request) {
     "Access-Control-Allow-Headers": "authorization, apikey, content-type, x-client-info", "Access-Control-Allow-Methods": "POST, OPTIONS" };
 }
 const json = (req: Request, status: number, body: unknown) => new Response(JSON.stringify(body), { status, headers: { ...cors(req), "Content-Type": "application/json" } });
-// lecture du jeton (déjà vérifié par Supabase avec « Verify JWT », et revérifié par admin_me côté base)
+// lecture du contenu du jeton (sa signature et sa validité sont vérifiées juste après par auth.getUser)
 function claims(jwt: string): Record<string, unknown> {
   try { const p = jwt.split(".")[1].replace(/-/g, "+").replace(/_/g, "/"); return JSON.parse(atob(p + "=".repeat((4 - p.length % 4) % 4))); } catch { return {}; }
 }
@@ -38,15 +37,17 @@ Deno.serve(async (req) => {
   const auth = req.headers.get("authorization") || "";
   const jwt = auth.replace(/^Bearer\s+/i, "");
   if (!jwt || claims(jwt).aal !== "aal2") return json(req, 401, { error: "aal2 required" });
-  // 1. qui appelle ? (admin_me refuse tout compte absent de admins ou sans aal2)
-  const asCaller = createClient(URL_, ANON, { global: { headers: { Authorization: "Bearer " + jwt } }, auth: { persistSession: false } });
-  const { data: me, error: meErr } = await asCaller.rpc("admin_me");
-  if (meErr || !me || !me.role) return json(req, 403, { error: "forbidden" });
-  const myId = String(claims(jwt).sub || "");
+  // 1. qui appelle ? Le jeton est validé par le serveur d'authentification (getUser), puis le compte doit être dans admins.
+  const db = createClient(URL_, SERVICE, { auth: { persistSession: false } });
+  const { data: who, error: whoErr } = await db.auth.getUser(jwt);
+  if (whoErr || !who?.user) return json(req, 401, { error: "bad token" });
+  const { data: adm } = await db.from("admins").select("role").eq("user_id", who.user.id).maybeSingle();
+  if (!adm?.role) return json(req, 403, { error: "forbidden" });
+  const me = { role: String(adm.role), email: who.user.email || "" };
+  const myId = who.user.id;
   const need = (r: string) => (RANK[me.role] || 0) >= RANK[r];
   let body: Record<string, unknown> = {};
   try { body = await req.json(); } catch { return json(req, 400, { error: "json" }); }
-  const db = createClient(URL_, SERVICE, { auth: { persistSession: false } });
   const log = (action: string, target: string | null, detail: Record<string, unknown>) =>
     db.from("admin_log").insert({ admin_id: myId, admin_email: me.email, action, target, detail });
 
