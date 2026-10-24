@@ -5,9 +5,9 @@ const { browser, page } = await launch({ mode: 'ok' });
 await page.goto(URL); await wait(page, 1000);
 await closeOnboarding(page, 'midi');
 await page.click('.mode-item[data-mode="play"]'); await wait(page, 1500);
+await page.locator('#playSongs .ptile').first().click(); await wait(page, 1500); // PLAY = catalogue on the host page (C6); a tile opens the song in the frame
 let frame = page.frames().find(f => f.url().includes('play/'));
 console.log('iframe:', frame && frame.url());
-await frame.locator('#songGrid .tile').first().click(); await wait(page, 500);
 await frame.locator('#go').click(); await wait(page, 2500);
 const fstate = () => frame.evaluate(() => ({ score: document.getElementById('sScore').textContent, playVisible: !document.getElementById('play').hidden, ovHidden: document.getElementById('ov').hidden, ac: window.__cnt.ac, osc: window.__cnt.osc, held: [...document.querySelectorAll('.key.down')].map(k => +k.dataset.m), front: null }));
 let f = await fstate(); let h = await state(page);

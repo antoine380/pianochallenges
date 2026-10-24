@@ -58,6 +58,13 @@ await page.keyboard.press('Escape'); await wait(page, 200);
 await setS(() => { const S = JSON.parse(localStorage.getItem('memo-gammes-v1')); S.settings.lang = 'fr'; localStorage.setItem('memo-gammes-v1', JSON.stringify(S)); });
 // duels: freeDuels a day
 await setS(n => { const S = JSON.parse(localStorage.getItem('memo-gammes-v1')); const d = new Date(); S.duDay = { d: d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'), n }; localStorage.setItem('memo-gammes-v1', JSON.stringify(S)); }, O.freeDuels);
+await wait(page, 600); // catalogue (C6) loaded on demand
+check('PLAY : 2 morceaux gratuits (lune, maman), les autres verrouillés', await ev(() => { const all = [...document.querySelectorAll('#playSongs .ptile[data-song]')], lk = all.filter(e => e.classList.contains('pw-lk')).map(e => e.dataset.song); return all.length >= 30 && lk.length === all.length - 2 && !lk.includes('lune') && !lk.includes('maman'); }));
+await ev(() => document.querySelector('#playSongs .ptile.pw-lk').click()); await wait(page, 300);
+check('morceau verrouillé → paywall (pas de lecteur)', await vis('pw') && await ev(() => document.body.dataset.page !== 'play'));
+await ev(() => document.getElementById('pwX').click()); await wait(page, 200);
+// duels: 3 a day
+await setS(() => { const S = JSON.parse(localStorage.getItem('memo-gammes-v1')); const d = new Date(); S.duDay = { d: d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'), n: 3 }; localStorage.setItem('memo-gammes-v1', JSON.stringify(S)); });
 await page.reload(); await wait(page, 1000); await closeOnboarding(page, 'screen');
 await ev(() => document.querySelector('.mode-item[data-mode="games"]').click()); await wait(page, 300); await ev(() => document.querySelectorAll('#gameCards .ptile')[0].click()); await wait(page, 600); await closeOnboarding(page);
 await ev(() => document.querySelector('#duModes [data-m=bots]').click()); await wait(page, 300);
