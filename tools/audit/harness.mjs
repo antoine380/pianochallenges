@@ -23,7 +23,8 @@ window.__T = {
   // présents seulement après les correctifs de l'audit (typeof : pas d'erreur sur une version antérieure)
   get lastPushOk(){return typeof lastPushOk==="undefined"?undefined:lastPushOk}, get lastPushErr(){return typeof lastPushErr==="undefined"?undefined:lastPushErr}, get lastPull(){return typeof lastPull==="undefined"?undefined:lastPull},
   cloudPull, cloudPushNow, setUser, renderAccount, toast, STORE,
-  mergeState: typeof mergeState==="function"?mergeState:undefined, syncText: typeof syncText==="function"?syncText:undefined
+  mergeState: typeof mergeState==="function"?mergeState:undefined, syncText: typeof syncText==="function"?syncText:undefined,
+  get ACC(){return typeof ACC==="undefined"?undefined:ACC}, accOpen: typeof accOpen==="function"?accOpen:undefined, accStart: typeof accStart==="function"?accStart:undefined
 };`;
 
 export async function launch(opts={}){

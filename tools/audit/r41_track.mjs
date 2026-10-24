@@ -1,6 +1,6 @@
 // Chantier BACK OFFICE : la mesure d'usage de l'app (module « Mesure » en fin de script).
 // Vérifie : événements mis en file puis envoyés par lots (track_events) avec le contexte (langue, appareil, entrée, version) ;
-// réglages à distance app_config (actualités, flags) ; « Signaler un problème » (send_feedback) ; erreurs JS (log_errors) ;
+// acc_end (Accompagnement) et song_open (PLAY) ; réglages à distance app_config (actualités, flags) ; « Signaler un problème » (send_feedback) ; erreurs JS (log_errors) ;
 // interrupteur « Aider à améliorer l'app » coupé = rien n'est envoyé ; serveur qui refuse (404, 500, réseau coupé) = aucune
 // erreur ; en local sans « pc-trk-test », aucune requête vers Supabase. Aucun service en ligne : tout Supabase est intercepté.
 // Usage : PORT=8797 NODE_PATH=… PW_CHROMIUM=… node tools/audit/r41_track.mjs
@@ -62,6 +62,16 @@ const le = sent.p_evts.find(e => e.n === 'learn_end') || { p: {} };
 check('propriétés : textes courts, objets imbriqués écartés', le.p.what === 'chords' && le.p.n === '3' && le.p.complete === '1' && !('secret' in le.p), le.p);
 check('premier lancement repéré (first=1)', e0.p && e0.p.first === '1', e0.p);
 check('file vidée après envoi', (await p.X('TRK.q.length')) === 0);
+// nouvelles activités (étape 4) : fin d'Accompagnement (acc_end) et ouverture d'un morceau du catalogue (song_open)
+await p.X('accOpen(); accStart(); ACC.run.ev=[{st:1},{st:1},{st:2}]; ACC.run.okN=3; ACC.run.badN=0; accFinish();'); await p.waitForTimeout(200);
+const ae = await p.X('(TRK.q.find(e=>e.n==="acc_end")||{}).p||null');
+check('acc_end : style, pattern, étoiles, tempo', !!ae && !!ae.style && !!ae.pattern && /^[0-3]$/.test(ae.stars) && /^\d+$/.test(ae.tempo) && !!ae.mode, ae);
+await p.X('openPlayWith("#song=lune&arr=2")'); await p.waitForTimeout(400);
+const so = await p.X('(TRK.q.find(e=>e.n==="song_open")||{}).p||null');
+check('song_open : id et version du morceau', !!so && so.id === 'lune' && so.arr === '2', so);
+check('badges : pas de fonction de badges → aucun événement badge (et pas d’erreur)', await p.X('typeof badgeCheck!=="function" && !TRK.q.some(e=>e.n==="badge") && typeof trkBadge==="function"'));
+await p.X('openPage("hub")'); await p.waitForTimeout(300);
+await p.X('trkFlush()'); await p.waitForTimeout(500); p.log.track.length = 1; // ce lot-ci ne compte pas dans les vérifications suivantes
 // fermeture : envoi immédiat (keepalive)
 await p.X('track("goal_reached",{kind:"min",v:10})'); await p.evaluate(() => dispatchEvent(new Event('pagehide'))); await p.waitForTimeout(600);
 check('fermeture de la page : la file part tout de suite', p.log.track.length === 2 && evNames(p.log).includes('goal_reached'), p.log.track.length);

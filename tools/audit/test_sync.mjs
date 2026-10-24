@@ -36,6 +36,18 @@ try{
   if((await page.evaluate(()=>window.__T.lastPull))!==p0) bad.push('#10 pull répété < 60 s');
   await ctx.close();
 }catch(e){ bad.push('#10 exception : '+e.message.split('\n')[0]); }
+// pull pendant une partie d'Accompagnement (page acc) : appliqué en mémoire, pas de rechargement
+try{
+  const { page, ctx } = await newPage(browser, { state: baseState({lang:'fr',notation:'fr'}) }); await closeModals(page);
+  if(await page.evaluate(()=>typeof window.__T.accStart==='function')){
+    await page.evaluate(()=>{ window.__T.accOpen(); window.__T.accStart(); window.__noReload=1; }); await page.waitForTimeout(400);
+    await reattach(page,'u1',{progress:{u1:{...JSON.parse(await page.evaluate(()=>localStorage.getItem('memo-gammes-v1'))), xp:777}}});
+    await page.evaluate(()=>window.__T.cloudPull()); await page.waitForTimeout(800);
+    const a=await page.evaluate(()=>({kept:window.__noReload===1, xp:window.__T.S.xp, page:window.__T.page, view:window.__T.ACC&&window.__T.ACC.view}));
+    console.log('pull pendant l’Accompagnement :', JSON.stringify(a)); if(!(a.kept&&a.xp===777&&a.page==='acc'&&a.view==='play')) bad.push('pull en Accompagnement');
+  }
+  await ctx.close();
+}catch(e){ bad.push('acc exception : '+e.message.split('\n')[0]); }
 // #11 ownerId
 try{
   const { page, ctx } = await newPage(browser, { state: baseState({extra:{xp:120, mastery:{'major:F':2}}}) }); await closeModals(page);
