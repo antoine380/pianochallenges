@@ -2195,6 +2195,251 @@ body.gate-on .top-auth{visibility:hidden}
   #main .hub-grid .ptile :is(p,.tags){display:none} #main .hub-grid .ptile .h3{max-width:none!important;font-size:clamp(1.15rem,min(17cqh,13cqw),1.8rem)!important}
   @container hb (min-height:230px) and (min-width:160px){ #main .hub-grid .ptile p{display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;font-size:.76rem;max-width:none} } }
 /* ===== fin mise en page ===== */
+/* ==== Objectif (C9 / D21 / D22) ==== */
+:is(#lvlAv,#mbLvlBtn .av).goal-ring{--gp:0;--gr-c:var(--good);position:relative}
+:is(#lvlAv,#mbLvlBtn .av).goal-ring::before{content:"";position:absolute;inset:-5px;border-radius:50%;pointer-events:none;background:conic-gradient(var(--gr-c) calc(var(--gp) * 1turn),var(--line) 0);-webkit-mask:radial-gradient(farthest-side,transparent calc(100% - 4px),#000 calc(100% - 3.5px));mask:radial-gradient(farthest-side,transparent calc(100% - 4px),#000 calc(100% - 3.5px))}
+#mbLvlBtn .av.goal-ring::before{inset:-3px;-webkit-mask:radial-gradient(farthest-side,transparent calc(100% - 3px),#000 calc(100% - 2.5px));mask:radial-gradient(farthest-side,transparent calc(100% - 3px),#000 calc(100% - 2.5px))}
+#mbLvlBtn{padding-left:5px}
+:is(#lvlAv,#mbLvlBtn .av).goal-ring.done{--gr-c:var(--gold)} :is(#lvlAv,#mbLvlBtn .av).goal-ring.done::before{background:var(--gold);box-shadow:0 0 10px var(--gold)}
+.goal-ring.gl-win::before{animation:glWin 900ms var(--ease-out)} @keyframes glWin{0%{transform:scale(1)}35%{transform:scale(1.18)}100%{transform:scale(1)}}
+@media (prefers-reduced-motion:reduce){ .goal-ring.gl-win::before{animation:none} }
+.pf-goal{display:flex;align-items:center;flex-wrap:wrap;gap:6px 10px;padding:8px 14px;background:rgba(0,0,0,.14)}
+.pf-goal .gl-r{width:30px;height:30px;flex:none} .pf-goal .gl-r circle{fill:none;stroke-width:4} .pf-goal .gl-r .tr{stroke:rgba(255,255,255,.25)} .pf-goal .gl-r .fg{stroke:#fff;stroke-linecap:round;transform:rotate(-90deg);transform-origin:50% 50%}
+.pf-goal.done .gl-r .fg{stroke:#ffd75a}
+.pf-goal .gl-t{display:flex;flex-direction:column;min-width:0;flex:1 1 auto} .pf-goal .gl-t b{font-weight:800;font-size:.9rem;white-space:nowrap} .pf-goal .gl-t small{font-size:.74rem;opacity:.85;white-space:nowrap}
+.pf-goal .gl-chips{display:flex;gap:6px;flex-wrap:wrap}
+.pf-goal .gl-chip{display:inline-flex;align-items:center;gap:4px;border-radius:999px;padding:3px 8px;background:rgba(255,255,255,.16);font-size:.74rem;font-weight:800;white-space:nowrap}
+.pf-goal .gl-chip.ok{background:#ffd75a;color:#4a3200}
+.pf-sh b.gl-new{white-space:normal}
+#segGoal button{white-space:nowrap;padding-inline:6px;min-width:0}
+.pf-grid span.frz{background:rgba(124,196,255,.35);opacity:1}
+.goal-modal .modal-card{width:min(560px,100%)}
+.gl-body{display:flex;flex-direction:column;gap:12px;padding:22px}
+.gl-k{font-size:.74rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--good)}
+.gl-body h2{font-family:var(--f-display);font-size:1.5rem;margin:0;line-height:1.15} .gl-body p{margin:0;color:var(--muted)}
+.gl-opts{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px}
+.gl-opt{display:flex;flex-direction:column;align-items:center;gap:2px;padding:12px 4px;border-radius:14px;border:2px solid var(--line);background:var(--surface);color:var(--ink);min-width:0}
+.gl-opt b{font-family:var(--f-display);font-size:1.15rem;white-space:nowrap} .gl-opt small{font-size:.74rem;color:var(--muted);font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+.gl-opt[aria-pressed="true"]{border-color:var(--good);box-shadow:0 0 0 3px var(--good-soft)} .gl-opt[aria-pressed="true"] small{color:var(--good)}
+.gl-foot{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:4px} .gl-foot .linkbtn{align-self:center}
+@media (max-width:520px){ .gl-opts{grid-template-columns:repeat(3,minmax(0,1fr))} .gl-body{padding:18px 16px} .gl-body h2{font-size:1.3rem} }
+@media (max-height:420px){ .gl-body{gap:8px;padding:14px 18px} .gl-body h2{font-size:1.2rem} .gl-opt{padding:7px 4px} }
+/* ==== fin Objectif ==== */
+/* ==== MIDI lot 1 (24/10/2026) : pastille d'état M1, carte M2, test M8, toasts et pause M13 ==== */
+:root{--md-ok:var(--good);--md-wait:var(--warn);--md-mic:#3b82f6;--md-off:var(--muted);--md-plug:var(--brand)}
+.inp-chip.md-pill i{background:var(--md-off)}
+.md-pill.md-ok i{background:var(--md-ok)} .md-pill.md-wait i{background:var(--md-wait);animation:mdBlink 1.6s ease-in-out infinite}
+.md-pill:is(.md-mic,.md-micoff) i{background:var(--md-mic)} .md-pill.md-micoff i{opacity:.55} .md-pill.md-plug i{background:var(--md-plug)}
+@keyframes mdBlink{50%{opacity:.35}}
+.md-pill .mp-ic{display:grid;place-items:center;flex:none} .md-pill .mp-ic svg{width:22px;height:22px}
+.md-pill .mp-t{display:none}
+/* menu ouvert : la pastille prend la ligne, le jour/nuit devient une icône */
+.side:not(.collapsed) .theme-row #themeBtn{flex:none;width:auto} .side:not(.collapsed) .theme-row #themeBtn .lbl{display:none}
+.side:not(.collapsed) .md-pill{flex:1;min-width:0;width:auto;display:flex;align-items:center;gap:8px;padding:0 10px;justify-content:flex-start;color:var(--ink);border:1px solid var(--line)}
+.side:not(.collapsed) .md-pill .mp-t{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;flex:1;min-width:0;text-align:left;font-weight:800;font-size:.8rem;line-height:1.12;overflow:hidden;overflow-wrap:anywhere}
+.side:not(.collapsed) .md-pill .cg{display:none}
+.side:not(.collapsed) .md-pill i{position:static;flex:none;order:-1;width:10px;height:10px;border:0;box-shadow:0 0 0 3px color-mix(in srgb,currentColor 0%,transparent)}
+.side:not(.collapsed) .md-pill .mp-ic{display:none}
+.side:not(.collapsed) .md-pill.md-ok{border-color:color-mix(in srgb,var(--md-ok) 55%,transparent);background:color-mix(in srgb,var(--md-ok) 12%,var(--surface-2))}
+.side:not(.collapsed) .md-pill.md-wait{border-color:color-mix(in srgb,var(--md-wait) 55%,transparent);background:color-mix(in srgb,var(--md-wait) 12%,var(--surface-2))}
+.side:not(.collapsed) .md-pill.md-plug{border-style:dashed;border-color:color-mix(in srgb,var(--md-plug) 60%,transparent);color:var(--accent)}
+.md-mb{position:relative} .md-mb i{position:absolute;right:5px;top:7px;width:9px;height:9px;border-radius:50%;background:var(--md-off);box-shadow:0 0 0 2px var(--bg)}
+.md-mb.md-ok i{background:var(--md-ok)} .md-mb.md-wait i{background:var(--md-wait);animation:mdBlink 1.6s ease-in-out infinite} .md-mb:is(.md-mic,.md-micoff) i{background:var(--md-mic)} .md-mb.md-plug i{background:var(--md-plug)}
+/* carte « Ton clavier » de l'accueil (M2) */
+.hs-midi .obj{display:none} .hs-midi .hs-k{display:none} .hs-acts{display:flex;align-items:center;gap:6px;flex:none} .hs-midi .hs-more{display:none}
+.hs-midi.md-promo{flex-direction:column;align-items:flex-start;gap:6px;color:#fff;padding:14px 16px;--tc:#5a3fd6;--os:80px;
+  background-color:var(--tc);background-image:radial-gradient(120% 80% at 90% -10%,rgba(255,255,255,.28),transparent 55%),linear-gradient(160deg,#8b6cff,var(--tc) 66%);box-shadow:0 18px 30px -16px var(--tc),inset 0 1px 0 rgba(255,255,255,.4)}
+.hs-midi.md-promo .hs-ic{display:none} .hs-midi.md-promo .obj{display:block;position:absolute;top:-12px;right:-4px;width:var(--os);height:var(--os);filter:drop-shadow(0 12px 10px rgba(10,6,30,.45));pointer-events:none}
+.hs-midi.md-promo .obj svg{width:100%;height:100%;display:block}
+.hs-midi.md-promo .hs-k{display:block} .hs-midi.md-promo .hs-t{max-width:calc(100% - 64px)}
+.hs-midi.md-promo .hs-t b{font-family:var(--f-display);font-weight:700;font-size:1.2rem;line-height:1.1}
+.hs-midi.md-promo .hs-t small{color:#fff;opacity:.95;font-weight:600}
+.hs-midi.md-promo .hs-acts{width:100%;justify-content:space-between}
+.hs-midi.md-promo .btn{background:#fff;color:#1b1838;border:0;box-shadow:0 6px 14px -6px rgba(10,6,30,.5)}
+.hs-midi.md-promo .hs-more{display:inline-block;color:#fff;opacity:.95}
+.hs-midi.md-ok .hs-t b{color:var(--good)} .hs-midi.md-ok .hs-t b::before{content:"✓ "}
+@media (min-width:901px) and (max-height:820px){ .hs-midi.md-promo{padding:11px 14px;gap:4px;--os:64px} .hs-midi.md-promo .hs-k{display:none} .hs-midi.md-promo .hs-t b{font-size:1.05rem} }
+@media (max-width:900px) and (max-height:900px){ .hs-midi.md-promo .hs-k{display:none} }
+/* test « joue une note » (M8), en tête de la fenêtre Clavier MIDI */
+.md-test{display:flex;flex-direction:column;gap:8px;padding:10px;border-radius:var(--r-md);background:var(--surface-2);margin-bottom:6px}
+.mt-row{display:flex;gap:10px;align-items:stretch;min-height:96px}
+.mt-note{flex:none;width:78px;border-radius:12px;background:var(--surface);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;text-align:center}
+.mt-note b{font-family:var(--f-display);font-size:1.8rem;line-height:1;color:var(--nc,var(--accent))} .mt-note small{font-size:.68rem;color:var(--muted);font-weight:700}
+.mt-kb{position:relative;flex:1;min-width:0;display:flex;gap:2px;border-top:3px solid var(--hit-line,var(--brand));border-radius:4px}
+.mt-kb .w{flex:1;background:var(--key-white);border-radius:0 0 5px 5px;box-shadow:inset 0 -2px 0 var(--key-white-edge);position:relative}
+.mt-kb .b{position:absolute;top:0;height:58%;background:var(--key-black);border-radius:0 0 4px 4px;z-index:1}
+.mt-kb .on{background:var(--nc)!important;box-shadow:0 0 14px var(--nc)}
+.mt-kb .w small{position:absolute;bottom:3px;left:0;right:0;text-align:center;font-size:.55rem;color:var(--key-label);font-weight:700}
+.mt-vel{flex:none;width:36px;display:flex;flex-direction:column;align-items:center;gap:3px;font-size:.55rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.mt-vel i{flex:1;width:12px;border-radius:999px;background:var(--surface);position:relative;overflow:hidden}
+.mt-vel i b{position:absolute;left:0;right:0;bottom:0;height:0;background:linear-gradient(0deg,var(--good),var(--gold),var(--warn));transition:height .15s}
+.mt-vel em{font-style:normal;font-family:var(--f-display);font-size:.9rem;color:var(--ink)}
+.mt-msg{margin:0;font-weight:800;font-size:.92rem} .mt-msg.ok{color:var(--good)} .mt-msg small{display:block;font-weight:600;color:var(--muted);font-size:.78rem}
+.mt-steps{display:grid;grid-template-columns:1fr 1.4fr;gap:8px}
+.mt-step{display:flex;flex-direction:column;gap:4px;padding:8px 10px;border-radius:12px;background:var(--surface);font-size:.82rem;min-width:0}
+.mt-step b{font-weight:800} .mt-step small{color:var(--muted);font-size:.76rem;font-weight:600} .mt-step small.ok{color:var(--good)}
+.mt-btns{display:flex;flex-wrap:wrap;gap:4px} .mt-btns .btn{min-height:32px;padding:4px 10px;font-size:.78rem}
+.mt-btns .btn[aria-pressed="true"]{box-shadow:inset 0 0 0 2px var(--brand)}
+@media (max-width:520px){ .mt-steps{grid-template-columns:1fr} .mt-note{width:62px} .mt-note b{font-size:1.4rem} }
+/* toasts du clavier (M13), en haut */
+.md-toast{text-align:left;position:fixed;left:50%;top:max(12px,env(safe-area-inset-top));transform:translate(-50%,-12px);z-index:450;width:min(92vw,380px);display:flex;align-items:center;gap:10px;padding:8px 10px 8px 8px;border-radius:999px;
+  background:var(--surface);color:var(--ink);box-shadow:inset 0 0 0 1px var(--line),var(--shadow-float);opacity:0;pointer-events:none;transition:opacity 220ms var(--ease-out),transform 220ms var(--ease-out)}
+.md-toast.on{opacity:1;transform:translate(-50%,0);pointer-events:auto}
+.md-toast .mt-ic{width:36px;height:36px;border-radius:50%;display:grid;place-items:center;flex:none;color:#fff;background:var(--good)}
+.md-toast.md-lost .mt-ic{background:#d9761f} .md-toast .mt-ic svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.md-toast .mt-tx{display:flex;flex-direction:column;flex:1;min-width:0} .md-toast b{font-weight:800;font-size:.88rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap} .md-toast small{color:var(--muted);font-size:.76rem;font-weight:600}
+.md-toast .btn{flex:none;min-height:34px;padding:4px 14px;font-size:.82rem}
+/* fenêtre de pause (M13) */
+.md-lost{align-items:center;text-align:center;gap:10px;padding:24px 22px 18px}
+.md-lost .ml-ic{width:58px;height:58px;border-radius:16px;display:grid;place-items:center;color:#fff;background:linear-gradient(150deg,#f5a15a,#d9761f);box-shadow:0 10px 20px -10px #d9761f}
+.md-lost .ml-ic svg{width:30px;height:30px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.md-lost h2{margin:0;font-family:var(--f-display);font-size:1.45rem} .md-lost .ml-sub{margin:0;color:var(--muted)}
+.md-lost .btn{width:100%;justify-content:center;gap:8px} .md-lost .btn svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.md-lost .ml-wait{margin:0;display:flex;align-items:center;gap:8px;font-size:.84rem;color:var(--muted);font-weight:600}
+.md-lost .ml-wait i{width:14px;height:14px;border-radius:50%;border:2px solid var(--line);border-top-color:var(--brand);animation:mdSpin 1s linear infinite} .md-lost.back .ml-wait{color:var(--good);font-weight:800}
+@keyframes mdSpin{to{transform:rotate(360deg)}}
+@media (prefers-reduced-motion:reduce){ .md-pill.md-wait i,.md-mb.md-wait i,.md-lost .ml-wait i{animation:none} .md-toast{transition:opacity 120ms} .mt-vel i b{transition:none} }
+/* ==== fin MIDI lot 1 ==== */
+/* ==== Premiers pas (chantier Débutant, lot 1) ==== */
+/* the path's own hue: mint green, white text ≥ 4.5:1 on --pp; the accent text uses --good (dark green on light, mint on dark) */
+:root{--pp:#1f7a52;--pp-2:#17643f}
+#ppPanel{display:none}
+body[data-page="pp"] #ppPanel{display:flex;flex:1 1 auto;min-height:0;flex-direction:column;padding-block:0}
+[data-page="pp"] :is(.picker,.stage,.gamebar,.prompt-row,.timeline,.slots,.answers,.actions,.hint,.notice,.pane-head){display:none!important}
+.pp-badge{flex:none;width:40px;height:40px;border-radius:12px;display:grid;place-items:center;background:linear-gradient(150deg,#3fbf8a,var(--pp));box-shadow:0 10px 20px -10px var(--pp),inset 0 1px 0 rgba(255,255,255,.35)}
+.pp-badge svg{width:62%;height:62%;fill:none;stroke:#fff;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.pp-badge.big{width:56px;height:56px;border-radius:16px}
+.pp-main{font:700 1.05rem/1.2 var(--f-display);color:#fff;background:linear-gradient(180deg,var(--pp),var(--pp-2));border:0;border-radius:999px;padding:.8em 1.9em;box-shadow:0 12px 26px -12px var(--pp);cursor:pointer;white-space:nowrap}
+.pp-main small{font:800 .78em var(--f-body);opacity:.92}
+.pp-main:disabled{opacity:.62;cursor:default;box-shadow:none}
+.pp-main.sm{padding:.55em 1.25em;font-size:.95rem}
+@media (hover:hover) and (pointer:fine){.pp-main:not(:disabled):hover{filter:brightness(1.08)}}
+.pp-orc{display:block;text-align:center;color:var(--muted);font-weight:700;font-size:.82rem;margin-top:4px}
+.pp-k{font:800 .72rem var(--f-mono);letter-spacing:.12em;text-transform:uppercase;color:var(--good)}
+.pp-link{background:none;border:0;color:var(--muted);font:800 .92rem var(--f-body);cursor:pointer;padding:6px 10px;border-radius:10px}
+@media (hover:hover) and (pointer:fine){.pp-link:hover{color:var(--ink);background:var(--surface-2)}}
+.pp-bar{display:block;height:8px;border-radius:99px;background:var(--surface-2);overflow:hidden;flex:1 1 auto;min-width:40px}
+.pp-bar i{display:block;height:100%;border-radius:inherit;background:linear-gradient(90deg,#7a5bf5,#a996ff)}
+/* dots of the path (compact map, bravo) */
+.pp-dot{position:relative;flex:none;width:26px;height:26px;border-radius:50%;border:0;padding:0;background:var(--surface-2);color:var(--muted);font:800 .72rem var(--f-mono);display:grid;place-items:center;cursor:pointer;z-index:1}
+.pp-dot.done{background:var(--pp);color:#fff}
+.pp-dot.cur{background:var(--pp);color:#fff;box-shadow:0 0 0 3px var(--surface),0 0 0 5px var(--good);animation:ppPulse 2.2s ease-in-out infinite}
+@keyframes ppPulse{50%{box-shadow:0 0 0 3px var(--surface),0 0 0 8px color-mix(in srgb,var(--good) 35%,transparent)}}
+.pp-ck{position:absolute;right:-4px;bottom:-4px;width:14px;height:14px;border-radius:50%;background:#fff;display:grid;place-items:center;box-shadow:0 1px 3px rgba(0,0,0,.25)}
+.pp-ck svg{width:10px;height:10px;fill:none;stroke:var(--pp);stroke-width:3.4;stroke-linecap:round;stroke-linejoin:round}
+.pp-ds{display:none}
+.pp-mdots,.pp-mini{position:relative;display:flex;align-items:center;justify-content:space-between;gap:4px;min-width:0}
+.pp-mdots::before,.pp-mini::before{content:"";position:absolute;left:13px;right:13px;top:50%;height:3px;margin-top:-1.5px;border-radius:2px;background:var(--line)}
+/* LEARN: compact map (D7) */
+.pp-map{flex:none;display:flex;align-items:center;gap:12px 16px;padding:10px 14px;border-radius:var(--r-lg);background:var(--surface);box-shadow:var(--shadow-card);margin-top:4px}
+.pp-mh{display:flex;align-items:center;gap:10px;background:none;border:0;padding:0;color:inherit;text-align:left;cursor:pointer;min-width:0;flex:0 1 auto}
+.pp-mt{display:flex;flex-direction:column;min-width:0}
+.pp-mt b{font:700 1.08rem/1.15 var(--f-display)} .pp-mt small{color:var(--muted);font-weight:700;font-size:.82rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pp-map .pp-mdots{flex:1 1 auto}
+.pp-mc{font-size:.9rem;color:var(--muted);white-space:nowrap} .pp-mc b{font:700 1.5rem var(--f-display);color:var(--ink)}
+.pp-map.fold{padding:8px 14px} .pp-map.fold .pp-mh{flex:1 1 auto} .pp-map.fold .pp-badge{width:32px;height:32px;border-radius:10px}
+@media (max-width:1100px){ .pp-map:not(.fold){flex-wrap:wrap} .pp-map:not(.fold) .pp-mh{flex:1 1 0} .pp-map:not(.fold) .pp-mdots{order:5;flex:1 1 100%} }
+@media (max-width:640px){ .pp-map{padding:8px 10px;gap:8px 10px} .pp-map .pp-badge{width:32px;height:32px;border-radius:10px} .pp-dot{width:20px;height:20px;font-size:.62rem} .pp-ck{width:11px;height:11px;right:-3px;bottom:-3px} .pp-ck svg{width:8px;height:8px} .pp-mc b{font-size:1.2rem} .pp-map.fold .pp-mt small{display:none} }
+@media (max-height:520px) and (orientation:landscape){ .pp-map{padding:5px 10px;gap:8px;margin-top:0} .pp-map .pp-badge{width:28px;height:28px;border-radius:9px} .pp-map .pp-mt small{display:none} .pp-dot{width:20px;height:20px;font-size:.62rem} .pp-map:not(.fold){flex-wrap:nowrap} .pp-map:not(.fold) .pp-mdots{order:0;flex:1 1 auto} .pp-mc b{font-size:1.1rem} }
+/* hub: « Pick up » (D8) */
+.pp-res{flex:none;position:relative;overflow:hidden;display:grid;grid-template-columns:minmax(0,1fr) auto;grid-template-areas:"k go" "t go" "bar go";column-gap:18px;row-gap:4px;align-items:center;text-align:left;
+  padding:clamp(10px,2.2vh,20px) clamp(14px,2.4vw,26px);border:0;border-radius:var(--r-lg);color:#fff;background:linear-gradient(135deg,#25885d,var(--pp) 55%,var(--pp-2));box-shadow:0 18px 36px -18px var(--pp);cursor:pointer;margin-top:4px}
+.pp-res[hidden]{display:none}
+.pp-rk{grid-area:k;font:800 .72rem var(--f-mono);letter-spacing:.14em;text-transform:uppercase;opacity:.92}
+.pp-rt{grid-area:t;font:700 clamp(1.1rem,2.4vw,1.7rem)/1.1 var(--f-display);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pp-rbar{grid-area:bar;display:flex;align-items:center;gap:12px;min-width:0} .pp-rbar .pp-bar{max-width:260px;background:rgba(255,255,255,.25)} .pp-rbar .pp-bar i{background:#fff}
+.pp-rbar small{font-weight:800;font-size:.85rem;white-space:nowrap}
+.pp-rgo{grid-area:go;display:flex;flex-direction:column;align-items:center;gap:4px;z-index:1}
+.pp-rbtn{background:#fff;color:#14593b;font:700 1rem var(--f-display);padding:.6em 1.4em;border-radius:999px;box-shadow:0 8px 18px -8px rgba(0,0,0,.4)}
+.pp-rgo small{font-weight:800;font-size:.75rem;white-space:nowrap}
+.pp-ri{position:absolute;right:-10px;top:-14px;width:120px;height:120px;opacity:.12;pointer-events:none} .pp-ri svg{width:100%;height:100%;fill:none;stroke:#fff;stroke-width:1.6}
+@media (max-width:640px){ .pp-res{row-gap:2px;column-gap:10px} .pp-rgo small,.pp-ri{display:none} .pp-rbar small{font-size:.75rem} .pp-rbtn{font-size:.9rem;padding:.5em 1em} }
+@media (max-height:520px) and (orientation:landscape){ .pp-res{grid-template-areas:"t go" "bar go";padding:6px 14px;margin-top:0} .pp-rk,.pp-rgo small,.pp-ri{display:none} .pp-rt{font-size:1rem} .pp-rbtn{font-size:.85rem;padding:.4em 1em} }
+/* lesson (D9 – D12, D17) */
+.pp-lesson{position:relative;flex:1 1 auto;min-height:0;display:flex;flex-direction:column;gap:clamp(6px,1.6vh,16px)}
+.pp-top{flex:none;display:flex;align-items:center;gap:12px}
+.pp-tt{display:flex;flex-direction:column;min-width:0;flex:0 1 auto} .pp-tt small{font:800 .72rem var(--f-mono);letter-spacing:.12em;text-transform:uppercase;color:var(--good);white-space:nowrap}
+.pp-tt b{font:700 1.25rem/1.15 var(--f-display);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pp-steps{list-style:none;margin:0 auto;padding:0 8px;display:flex;gap:6px;align-items:center;flex:0 1 460px;min-width:0}
+.pp-steps li{flex:1 1 0;display:flex;align-items:center;gap:6px;min-width:0} .pp-steps li.cur{flex-grow:1.8}
+.pp-steps li i{flex:1 1 auto;min-width:12px;height:8px;border-radius:99px;background:var(--surface-2)} .pp-steps li.ok i{background:var(--pp)}
+.pp-steps li.cur i{background:linear-gradient(90deg,var(--pp) 35%,var(--surface-2) 35%);box-shadow:0 0 0 2px color-mix(in srgb,var(--good) 45%,transparent)}
+.pp-steps b{font:800 .78rem var(--f-body);color:var(--muted);white-space:nowrap}
+.pp-cnt{flex:none;padding:6px 12px;border-radius:99px;background:var(--surface-2);font-size:.95rem}
+.pp-x{flex:none;width:40px;height:40px;border-radius:12px;border:0;background:var(--surface-2);color:var(--ink);display:grid;place-items:center;cursor:pointer}
+.pp-x svg{width:18px;height:18px;stroke:currentColor;stroke-width:2.4;fill:none;stroke-linecap:round}
+.pp-mid{flex:1 1 auto;min-height:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:clamp(2px,1vh,10px)}
+.pp-say{margin:0;font:700 clamp(1.35rem,min(4.2vw,6vh),2.7rem)/1.15 var(--f-display);text-wrap:balance;max-width:26ch}
+.pp-say.pp-in{animation:ppIn .35s var(--ease-out)} @keyframes ppIn{from{opacity:0;transform:translateY(6px)}}
+.pp-sub{margin:0;color:var(--muted);font-weight:700;font-size:clamp(.92rem,min(1.6vw,2.4vh),1.25rem)} .pp-sub.pp-bold{color:var(--ink);font-weight:900}
+.pp-fb{margin:0;min-height:1.35em;font-weight:800;font-size:clamp(.9rem,min(1.5vw,2.3vh),1.15rem)} .pp-fb.ok{color:var(--good)} .pp-fb.bad{color:var(--warn)}
+.pp-help{flex:none;display:flex;justify-content:center}
+.pp-help:empty{display:none}
+#ppPanel .auto-help{position:static;transform:none;width:min(640px,100%);box-shadow:var(--shadow-card);border:2px solid color-mix(in srgb,var(--reveal) 45%,transparent)}
+@starting-style{#ppPanel .auto-help{opacity:0;transform:translateY(8px)}}
+.pp-kbw{flex:0 1 250px;min-height:84px;display:flex;padding-bottom:22px}
+.pp-kb.kbd{height:auto;flex:1 1 auto}
+.pp-star{position:absolute;bottom:-22px;left:50%;transform:translateX(-50%);font-style:normal;color:var(--gold);font-size:16px;line-height:1;pointer-events:none}
+#ppKb .pp-lit{background:var(--lc)!important;box-shadow:inset 0 -7px 0 rgba(0,0,0,.16),0 0 18px 0 var(--lc)!important}
+#ppKb .pp-on{background:var(--nc)!important;box-shadow:inset 0 -7px 0 rgba(0,0,0,.16),0 0 16px 0 var(--nc)!important}
+#ppKb :is(.pp-on,.pp-lit) span{color:#15122e}
+#ppKb .wk.pp-zone{background:var(--reveal-soft)!important;animation:ppZone 1.2s ease-in-out infinite alternate}
+#ppKb .bk.pp-zone{background:var(--reveal)!important;animation:ppZone 1.2s ease-in-out infinite alternate}
+@keyframes ppZone{to{filter:brightness(1.3) saturate(1.2)}}
+#ppKb .pp-warn{background:#f59e3b!important;box-shadow:0 0 18px 0 #f59e3b!important}
+.pp-foot{flex:none;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.pp-push{flex:1}
+.pp-inp{font-weight:800;font-size:.82rem;color:var(--muted);padding:6px 12px;border-radius:99px;background:var(--surface-2)}
+.pp-gow{display:flex;flex-direction:column;align-items:center}
+.pp-dim > :is(.pp-mid,.pp-kbw,.pp-top){opacity:.32;pointer-events:none;filter:saturate(.6)}
+.pp-card{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:min(640px,calc(100% - 8px));max-height:100%;overflow:hidden;z-index:5;background:var(--surface);border-radius:var(--r-xl);box-shadow:var(--shadow-float);
+  padding:clamp(12px,3vh,30px) clamp(16px,3vw,34px);display:flex;flex-direction:column;align-items:center;text-align:center;gap:clamp(4px,1.3vh,12px)}
+.pp-card h2{margin:0;font:700 clamp(1.4rem,min(3.6vw,5vh),2.4rem)/1.1 var(--f-display);text-wrap:balance}
+.pp-card p{margin:0}
+.pp-opencard{width:min(560px,calc(100% - 8px))} .pp-opencard > p:not(.pp-meta):not(.pp-again){color:var(--muted);font-weight:700;max-width:40ch}
+.pp-meta{display:flex;gap:8px;flex-wrap:wrap;justify-content:center} .pp-meta span{padding:5px 12px;border-radius:99px;background:var(--surface-2);font-weight:800;font-size:.85rem}
+.pp-again{color:var(--good);font-weight:800}
+.pp-stars{display:flex;gap:clamp(6px,2vw,18px);font-size:clamp(2rem,min(7vh,6vw),3.6rem);line-height:1}
+.pp-stars span{color:var(--surface-2);text-shadow:0 2px 0 rgba(0,0,0,.08)}
+.pp-stars span.on{color:var(--gold);animation:ppStar .5s var(--ease-pop) both;animation-delay:var(--d)}
+@keyframes ppStar{from{opacity:0;transform:scale(.3) rotate(-25deg)}}
+.pp-can{width:100%;background:var(--surface-2);border-radius:var(--r-md);padding:10px 16px;text-align:left}
+.pp-can small{font:800 .72rem var(--f-mono);letter-spacing:.12em;text-transform:uppercase;color:var(--good)} .pp-can p{font-weight:700}
+.pp-xp{width:100%;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.pp-xp b{font:700 1.5rem var(--f-display);color:var(--gold-ink)}
+.pp-x2{padding:4px 10px;border-radius:99px;background:color-mix(in srgb,var(--gold) 22%,transparent);font-weight:800;font-size:.8rem}
+.pp-xp small{width:100%;text-align:right;color:var(--muted);font-weight:700;font-size:.8rem;margin-top:-4px}
+.pp-mini{width:100%;padding:4px 6px}
+.pp-bgo{display:flex;flex-direction:column;align-items:center}
+.pp-blinks{display:flex;gap:6px;flex-wrap:wrap;justify-content:center}
+@media (max-width:640px){ .pp-top{flex-wrap:wrap;gap:8px} .pp-top .pp-badge{display:none} .pp-tt{flex:1 1 0} .pp-tt b{font-size:1.05rem} .pp-steps{order:5;flex:1 1 100%;padding:0} .pp-steps b{display:none}
+  .pp-kbw{flex-basis:190px} .pp-inp{display:none} .pp-card{width:100%;border-radius:var(--r-lg)} .pp-xp small{text-align:left} }
+@media (max-height:520px) and (orientation:landscape){ .pp-lesson{gap:4px} .pp-mid{flex:0 0 auto;min-height:auto;gap:0} .pp-mid .pp-k{display:none} .pp-say{font-size:1.3rem} #ppPanel .auto-help{padding:5px 10px} #ppPanel .auto-help small{display:none} .pp-kbw{flex:1 1 150px!important} .pp-top .pp-badge{display:none} .pp-tt b{font-size:1rem} .pp-x{width:34px;height:34px} .pp-kbw{flex-basis:150px;min-height:70px;padding-bottom:18px} .pp-star{bottom:-18px;font-size:13px}
+  .pp-card{gap:4px;padding:10px 18px} .pp-card :is(.pp-mini,.pp-can,.pp-k,.pp-badge){display:none} .pp-xp small{display:none} .pp-main{padding:.55em 1.4em} .pp-inp{display:none} }
+/* the path overview (D6) */
+.pp-path{flex:1 1 auto;min-height:0;display:flex;flex-direction:column;align-items:center;justify-content:space-evenly;text-align:center;gap:clamp(6px,2vh,22px);padding-block:clamp(4px,2vh,24px)}
+.pp-ph{display:flex;align-items:center;gap:14px} .pp-ph h2{margin:0;font:700 clamp(1.6rem,min(4.4vw,6vh),3rem)/1.05 var(--f-display)}
+.pp-psub{margin:0;color:var(--muted);font-weight:600;font-size:clamp(.95rem,min(1.8vw,2.6vh),1.3rem);max-width:46ch;text-wrap:balance}
+.pp-pmap{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:clamp(6px,2.4vh,26px) clamp(4px,1.5vw,18px);width:min(920px,100%)}
+.pp-pmap .pp-dot{width:auto;height:auto;border-radius:0;background:none;box-shadow:none;animation:none;display:flex;flex-direction:column;align-items:center;gap:clamp(6px,1.4vh,12px);color:var(--muted);font:inherit}
+.pp-di{position:relative;width:clamp(38px,min(8vh,6vw),66px);aspect-ratio:1;border-radius:50%;background:var(--surface-2);display:grid;place-items:center}
+.pp-di > svg{width:48%;height:48%;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.pp-pmap .pp-dn{position:absolute;left:-4px;top:-4px;width:22px;height:22px;border-radius:50%;background:var(--surface);color:var(--ink);font:800 .7rem var(--f-mono);display:grid;place-items:center;box-shadow:0 1px 4px rgba(0,0,0,.2)}
+.pp-pmap .pp-ck{right:-2px;bottom:-2px;width:18px;height:18px} .pp-pmap .pp-ck svg{width:12px;height:12px}
+.pp-pmap .done .pp-di{background:var(--pp);color:#fff}
+.pp-pmap .cur .pp-di{background:var(--pp);color:#fff;box-shadow:0 0 0 4px var(--bg),0 0 0 7px var(--good);animation:ppPulse2 2.2s ease-in-out infinite}
+@keyframes ppPulse2{50%{box-shadow:0 0 0 4px var(--bg),0 0 0 12px color-mix(in srgb,var(--good) 30%,transparent)}}
+.pp-dt{font-weight:800;font-size:clamp(.7rem,1.2vw,.88rem);line-height:1.15;color:var(--muted)} .pp-pmap .cur .pp-dt{color:var(--good)}
+.pp-pmap .pp-ds{display:block;font-size:.7rem;color:var(--gold);letter-spacing:1px;line-height:1} .pp-pmap .pp-ds i{font-style:normal;color:var(--surface-2)}
+.pp-pcur{display:none;margin:0;font-weight:800;color:var(--good)}
+.pp-prom{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:8px 12px;justify-content:center}
+.pp-prom li{display:flex;align-items:center;gap:8px;padding:8px 16px;border-radius:999px;background:var(--surface);box-shadow:var(--shadow-card);font-weight:800;font-size:clamp(.82rem,1.4vw,1rem)}
+.pp-prom svg{width:20px;height:20px;fill:none;stroke:var(--good);stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.pp-pgo{display:flex;flex-direction:column;align-items:center}
+.pp-pgo .pp-main{font-size:clamp(1rem,2vw,1.3rem)}
+@media (max-width:640px){ .pp-pmap .cur .pp-di{box-shadow:0 0 0 3px var(--bg),0 0 0 5px var(--good);animation:none} .pp-pmap .pp-ck{width:14px;height:14px} .pp-pmap .pp-ck svg{width:9px;height:9px} .pp-pmap .pp-dt,.pp-pmap .pp-ds{display:none} .pp-pcur{display:block} .pp-ph .pp-badge{width:44px;height:44px} .pp-prom li{padding:6px 12px} .pp-di{width:clamp(34px,10vw,44px)} .pp-pmap .pp-dn{width:17px;height:17px;font-size:.6rem} }
+@media (max-height:520px) and (orientation:landscape){ .pp-pmap{grid-template-columns:repeat(14,minmax(0,1fr))} .pp-pmap :is(.pp-dt,.pp-ds){display:none} .pp-pcur{display:block} .pp-ph .pp-badge{width:38px;height:38px} .pp-ph h2{font-size:1.5rem} .pp-psub{font-size:.9rem} .pp-prom li{padding:4px 10px;font-size:.8rem;box-shadow:none;background:var(--surface-2)} .pp-di{width:34px} .pp-pmap .pp-dn{width:16px;height:16px;font-size:.58rem} .pp-pgo .pp-main{font-size:1rem;padding:.55em 1.6em} }
+@media (prefers-reduced-motion:reduce){ #ppPanel *, .pp-map *, .pp-res{animation:none!important;transition:none!important} }
 </style>
 
 <script>if(window.Capacitor&&window.webkit&&window.webkit.messageHandlers&&window.webkit.messageHandlers.bridge)document.documentElement.classList.add("native");</script>
@@ -2287,6 +2532,7 @@ body.gate-on .top-auth{visibility:hidden}
   <h1 class="mbar-title" id="mbTitle"></h1>
 <a id="homeLink2" href="/" hidden></a>
   <div class="auth-bar mb-auth" id="mbAuth"><button class="btn primary auth-up" type="button" data-auth="signup" data-i="authUp"></button><button class="btn auth-in" type="button" data-auth="login" data-i="authIn"></button></div>
+  <button class="mbar-btn ghost md-mb" id="mbMidi" type="button" aria-label="MIDI"></button>
   <button class="mbar-btn ghost ntf-mb" id="mbNtf" type="button" aria-label="Notifications"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 16V11a6 6 0 0 1 12 0v5l1.5 2h-15z"/><path d="M10 20.5a2.2 2.2 0 0 0 4 0"/></svg><span class="nbadge" id="mbNtfBadge" hidden></span></button>
   <button class="mbar-btn ghost" id="mbSet" type="button" aria-label="Settings"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10.3 3.2a1.8 1.8 0 0 1 3.4 0l.4 1.2a1.8 1.8 0 0 0 2.4 1l1.1-.6a1.8 1.8 0 0 1 2.4 2.4l-.6 1.1a1.8 1.8 0 0 0 1 2.4l1.2.4a1.8 1.8 0 0 1 0 3.4l-1.2.4a1.8 1.8 0 0 0-1 2.4l.6 1.1a1.8 1.8 0 0 1-2.4 2.4l-1.1-.6a1.8 1.8 0 0 0-2.4 1l-.4 1.2a1.8 1.8 0 0 1-3.4 0l-.4-1.2a1.8 1.8 0 0 0-2.4-1l-1.1.6a1.8 1.8 0 0 1-2.4-2.4l.6-1.1a1.8 1.8 0 0 0-1-2.4l-1.2-.4a1.8 1.8 0 0 1 0-3.4l1.2-.4a1.8 1.8 0 0 0 1-2.4l-.6-1.1a1.8 1.8 0 0 1 2.4-2.4l1.1.6a1.8 1.8 0 0 0 2.4-1z"/><circle cx="12" cy="12" r="3"/></svg></button>
   <button class="mbar-lvl" id="mbLvlBtn" type="button" aria-haspopup="dialog"><span class="av" id="mbAv"></span><span class="mono" id="mbLvl">1</span></button>
@@ -2333,7 +2579,7 @@ body.gate-on .top-auth{visibility:hidden}
    <aside class="hub-side" id="hubSide">
     <button class="hs-card hs-daily" id="hsDaily" type="button"><span class="obj" data-obj="daily"></span><span class="hs-k" data-i="hsDailyK"></span><b data-i="dailyTitle"></b><small id="hsDailySub"></small><span class="hs-go" id="hsDailyGo"></span></button>
     <button class="hs-card hs-inv" id="hsInv" type="button"><span class="obj" data-obj="gift"></span><b data-i="invHubT"></b><small data-i="invHubSF"></small></button>
-    <div class="hs-card hs-midi" id="hsMidi"><span class="hs-ic"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2.5" y="7" width="19" height="11" rx="2"/><path d="M6.5 7v6M10 7v6M14 7v6M17.5 7v6"/></svg><i id="hsMidiDot"></i></span><span class="hs-t"><b data-i="hsMidiT"></b><small id="hsMidiSub"></small></span><button class="btn" id="hsMidiBtn" type="button"></button></div>
+    <div class="hs-card hs-midi" id="hsMidi"><span class="obj" id="hsMidiObj" aria-hidden="true"></span><span class="hs-ic"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2.5" y="7" width="19" height="11" rx="2"/><path d="M6.5 7v6M10 7v6M14 7v6M17.5 7v6"/></svg><i id="hsMidiDot"></i></span><span class="hs-t"><span class="hs-k" id="hsMidiK"></span><b id="hsMidiT"></b><small id="hsMidiSub"></small></span><span class="hs-acts"><button class="btn" id="hsMidiBtn" type="button"></button><button class="hs-more" id="hsMidiLater" type="button" data-i="mdLater"></button></span></div>
     <div class="hs-card hs-news" id="hsNews"><div class="hs-h"><b data-i="hsNewsT"></b><span class="hs-dots" id="hsDots"></span></div><div class="hs-slides" id="hsSlides"></div></div>
     <div class="hs-card hs-rank"><div class="hs-h"><b data-i="hsRankT"></b><button class="hs-more" id="hsRankMore" type="button" data-i="hsRankMore"></button></div><ol class="hs-list" id="hsRank"></ol></div>
    </aside></div>
@@ -2634,6 +2880,19 @@ body.gate-on .top-auth{visibility:hidden}
     </div>
   </div>
 </div>
+<div class="modal goal-modal" id="goalModal" role="dialog" aria-modal="true" aria-labelledby="glTitle" hidden>
+  <div class="modal-bg" data-close="goalModal"></div>
+  <div class="modal-card">
+    <div class="modal-body gl-body">
+      <span class="gl-k" data-i="goalKick"></span>
+      <h2 id="glTitle" data-i="goalQ"></h2>
+      <p data-i="goalSub"></p>
+      <div class="gl-opts" id="glOpts" role="group"></div>
+      <p class="hint" data-i="goalRingH"></p>
+      <div class="gl-foot"><button class="linkbtn" type="button" data-close="goalModal" data-i="goalLater"></button><button class="btn primary" id="glOk" type="button" data-i="goalOkB"></button></div>
+    </div>
+  </div>
+</div>
 <div class="modal" id="inputModal" role="dialog" aria-modal="true" aria-labelledby="inTitle" hidden>
   <div class="modal-bg"></div>
   <div class="modal-card">
@@ -2662,6 +2921,12 @@ body.gate-on .top-auth{visibility:hidden}
   <div class="modal-card small">
     <div class="modal-head"><h2 id="midiTitle" data-i="midiTitle"></h2><button class="modal-close" id="midiX" type="button" aria-label="Close">×</button></div>
     <div class="modal-body midi-body">
+      <div class="md-test" id="mdTest" hidden>
+        <div class="mt-row"><div class="mt-note"><b id="mtName">♪</b><small id="mtSub"></small></div><div class="mt-kb" id="mtKb" aria-hidden="true"></div><div class="mt-vel" aria-hidden="true"><span data-i="mdForce"></span><i><b id="mtBar"></b></i><em id="mtVel"></em></div></div>
+        <p class="mt-msg" id="mtMsg" role="status" aria-live="polite"></p>
+        <div class="mt-steps"><div class="mt-step" id="mtTouch"><b data-i="mdLoudSoft"></b><small id="mtTouchRes"></small></div>
+          <div class="mt-step" id="mtTwice"><b data-i="mdTwice"></b><span class="mt-btns"><button class="btn" type="button" data-v="yes" data-i="mdYes"></button><button class="btn" type="button" data-v="no" data-i="mdNo"></button><button class="btn" type="button" data-v="none" data-i="mdNone"></button></span><small id="mtTwiceRes"></small></div></div>
+      </div>
       <div class="midi-status"><span class="dot"></span><span id="mStTxt"></span><span class="spacer"></span><button class="btn primary" id="mEnable" type="button" data-i="midiOff"></button></div>
       <p class="notice midi-setup" id="midiSetupMsg" hidden></p>
       <p class="mdev-h" data-i="midiFound"></p>
@@ -2680,7 +2945,18 @@ body.gate-on .top-auth{visibility:hidden}
       <label class="check"><input type="checkbox" id="optMidiC"> <span data-i="optMidiC"></span></label>
       <p class="hint" data-i="midiHint"></p>
     </div>
-    <div class="modal-foot end-foot"><button class="btn primary" id="midiOk" type="button" data-i="closeLbl"></button></div>
+    <div class="modal-foot end-foot"><button class="btn" id="mdChange" type="button" data-i="mdChange"></button><button class="btn primary" id="midiOk" type="button" data-i="closeLbl"></button></div>
+  </div>
+</div>
+<div class="modal" id="mdLost" role="dialog" aria-modal="true" aria-labelledby="mdLostT" hidden>
+  <div class="modal-bg"></div>
+  <div class="modal-card small md-lost">
+    <span class="ml-ic" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M9 3v4M15 3v4M7 7h10v4a5 5 0 0 1-10 0zM12 16v5M4 4l16 16"/></svg></span>
+    <h2 id="mdLostT" data-i="mdLost"></h2>
+    <p class="ml-sub" id="mdLostS"></p>
+    <button class="btn primary" id="mdGoScreen" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2.5" y="4" width="19" height="13" rx="2"/><path d="M8 21h8M12 17v4"/></svg><span data-i="mdGoScreen"></span></button>
+    <button class="btn" id="mdWaitKb" type="button" data-i="mdWaitKb"></button>
+    <p class="ml-wait" id="mdLostWait"><i aria-hidden="true"></i><span id="mdLostWaitT"></span></p>
   </div>
 </div>
 <div class="modal" id="setModal" role="dialog" aria-modal="true" aria-labelledby="setTitle" hidden>
@@ -2722,6 +2998,8 @@ body.gate-on .top-auth{visibility:hidden}
         </div><div class="field" id="delayField"><span data-i="difficulty"></span>
           <div class="seg diff" id="segDiff"><button type="button" data-v="0"><b data-i="noTimer"></b></button><button type="button" data-v="20"><b>20 s</b></button><button type="button" data-v="10"><b>10 s</b></button><button type="button" data-v="5"><b>5 s</b></button></div>
           <div class="range-row"><input type="range" id="delay" min="0" max="20" step="1" aria-label="Seconds"><output class="mono" id="delayOut"></output></div>
+        </div><div class="field" id="goalField"><span data-i="goalSetL"></span>
+          <div class="seg" id="segGoal"><button type="button" data-v="min:5">5 min</button><button type="button" data-v="min:10">10 min</button><button type="button" data-v="min:20">20 min</button><button type="button" data-v="xp:50">50 XP</button><button type="button" data-v="xp:100">100 XP</button></div>
         </div>
           <div class="set-checks"><label class="check" id="octField"><input type="checkbox" id="optOct"> <span data-i="optOct"></span></label>
           <label class="check"><input type="checkbox" id="optAuto"> <span data-i="optAuto"></span></label>
@@ -2741,6 +3019,7 @@ body.gate-on .top-auth{visibility:hidden}
         <div class="pf-row">
           <section class="pf-card pf-stats"><h3 data-i="pfAch"></h3><ul id="pfStats"></ul></section>
           <section class="pf-card pf-streak"><div class="pf-sh"><div><b id="pfDay"></b><small id="pfDayBest"></small></div><div class="r"><b id="pfWeek"></b><small id="pfWeekBest"></small></div></div>
+            <div class="pf-goal" id="pfGoal"></div>
             <div class="pf-cal"><div class="pf-calh"><button type="button" id="pfPrev" aria-label="&lt;">‹</button><b id="pfMonth"></b><button type="button" id="pfNext" aria-label="&gt;">›</button></div><div class="pf-grid" id="pfCal"></div></div></section>
           <section class="pf-card pf-journey"><h3 data-i="pfJourney"></h3><p id="pfJourneySub"></p><ul id="pfJourney"></ul></section>
           <section class="pf-card pf-recs"><h3 data-i="pfRecs"></h3><p id="pfRecsSub"></p><ul id="pfRecs"></ul></section>
@@ -2958,7 +3237,36 @@ const TXT = {
     hsNews:[["Nouveau look","Mode jour ou nuit, cartes en 3D : l'app fait peau neuve.","#6a4bf0","M12 3l2.4 5 5.6.8-4 3.9.9 5.5L12 15.6 7.1 18.2l.9-5.5-4-3.9 5.6-.8z"],["Jeux Play","Six mini-jeux sur le clavier lumineux, dans GAMES.","#1f7a52","M6 9h4M8 7v4M15 9h.01M18 11h.01M3 8a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4v5a4 4 0 0 1-7 2.5h-4A4 4 0 0 1 3 13z"],["Jeu libre","Joue ce que tu veux dans PLAY : chaque note s'allume dans sa couleur.","#0e7490","M9 18V5l12-2v13M9 18a3 3 0 1 1-6 0 3 3 0 0 1 6 0zM21 16a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"],["Entraînement du jour","10 exercices mélangés chaque jour pour garder ta série.","#a3306b","M12 3c1 3.5 5 6 5 11a5 5 0 0 1-10 0c0-2.2 1-3.8 2.2-5 .2 1.6 1 2.8 2.3 3.3C11 9.3 11.3 6 12 3z"]],
     wrongSr:"Fausse note : ",
     lvT:"Quitter la partie ?", lvEndT:"Terminer la partie ?", lvLost:"Ta progression de cette partie sera perdue.", lvEndS:"La partie s'arrête ici : tu verras le bilan des exercices déjà faits.", lvSong:"Ta progression dans ce morceau sera perdue.", lvDuelR:"C'est une partie classée : quitter compte comme une défaite.", lvDuelOn:"Ton adversaire continue sans toi.", lvDuelF:"La partie amicale s'arrête pour toi.", lvQuizOn:"Les autres joueurs continuent sans toi.", lvEndGo:"Terminer", hubQuiz:"Un quiz de culture générale : tu réponds en jouant la bonne note ou le bon accord. Seul, à plusieurs ou en ligne.", hubQuizTags:"Culture générale · Notes et accords · Jusqu'à 4 joueurs · En ligne", setAppH:"Application", setGameTab:"Jeu", pfOverview:"Vue d'ensemble", qzAnsDN:"Tu réponds avec une note", qzAnsDC:"Tu réponds avec un accord", qzHelpNo:"Sans", qzHelpKeys:"Touches à jouer", authUp:"S'inscrire", authIn:"Se connecter", gtTitleNew:"Crée ton compte Piano Challenges", gtTitleBack:"Connecte-toi", gtEmailGo:"Continuer avec l'e-mail", gtHave:"Déjà un compte ?", gtNone:"Pas encore de compte ?", gtNoAcct:"Continuer sans compte", gtOther:"Autres options",
-    dailyShort:"Entraînement", qzDraw:"Égalité !"},
+    dailyShort:"Entraînement", qzDraw:"Égalité !", goalSetL:"Mon objectif du jour", goalKick:"Bravo pour cette partie", goalQ:"Ton objectif du jour", goalSub:"Même 5 minutes font une vraie différence.", goalLater:"Plus tard", goalOkB:"C'est noté",
+    goalRingH:"L'anneau autour de ton avatar se remplit dans la journée, puis devient doré.", goalTags:["Tranquille","Régulier","Motivé","Joueur","À fond"],
+    goalOk:"Objectif du jour atteint !", goalOf:(a,b,u)=>a+" / "+b+" "+u, goalDay:"Objectif du jour", goalLeft:(n,u)=>"Encore "+n+" "+u+" : chaque minute compte.", goalSaved:"Objectif enregistré",
+    goalNtfX:(g)=>"Tu as joué ton objectif ("+g+"). À demain !", streakNew:"Nouvelle série : joue aujourd'hui", streakGo:"À toi", streakFrozen:"Ta série est protégée : on a utilisé un gel.",
+    frzNtfX:(n)=>"Gel utilisé hier. "+(n?"Il t'en reste "+n+".":"Ta série continue."), frzWonT:"Tu as gagné un gel de série", frzWonX:"7 jours de suite ! Il protégera ta série si tu fais une pause un jour.",
+    frzN:n=>n+(n>1?" gels":" gel"), frzUsed:"Gel utilisé hier", wkNow:(n)=>"Semaine : "+n+"/7", wkTip:"3 jours dans la semaine = semaine validée",
+    mdPromise:"Ton piano devient une manette.", mdPromiseSub:"Branche ton clavier : chaque note est reconnue instantanément, même les accords.", mdPlug:"Brancher mon clavier", mdPlugShort:"Brancher un clavier", mdOn:n=>n, mdNKb:n=>n+" claviers", mdWait:"Clavier : en attente", mdScreen:"Écran", mdMic:"Micro", mdMicOff:"Micro coupé",
+    mdHubK:"Clavier MIDI", mdHubT:"Branche ton clavier", mdHubS:"Accords reconnus d'un coup, aucun bruit gênant. 2 minutes.", mdHubOff:"Aucun clavier branché.", mdHubNo:"Ton clavier marche dans l'app Piano Challenges ou dans Chrome.", mdHubHow:"Voir comment", mdTest:"Tester", mdLater:"Plus tard", mdKeysN:n=>n+" touches", mdConnected:"Connecté",
+    mdPressAny:"Appuie sur n'importe quelle touche", mdTalks:"Ton clavier parle à Piano Challenges !", mdFrom:(n,p)=>n+" reçu de « "+p+" »", mdForce:"Force", mdForceN:v=>"force "+v,
+    mdLoudSoft:"Appuie fort, puis doucement.", mdTouchOk:"Sensible au toucher ✓", mdTouchNo:"Toujours la même force : ton clavier n'est pas sensible au toucher.", mdTouchVals:(a,b)=>"fort "+a+" · doux "+b,
+    mdTwice:"Tu entends le son deux fois ?", mdYes:"Oui", mdNo:"Non", mdNone:"Je n'entends rien", mdTwiceYes:"Son de l'app coupé : ton piano joue seul.", mdTwiceNo:"Parfait, on garde comme ça.", mdTwiceNone:"Son de l'app activé : tu entends les notes ici.",
+    mdChange:"Changer d'entrée", mdDetected:n=>"Clavier détecté : "+n, mdOnNow:n=>n+" connecté", mdUse:"Utiliser", mdWasScreen:"Tu jouais sur l'écran", mdWasMic:"Tu jouais au micro", mdWasNone:"Joue avec dès maintenant",
+    mdLostT:"Clavier déconnecté", mdLostPill:"La pastille du menu passe à l'orange", mdLostOn:"Joue sur l'écran", mdLost:"Ton clavier s'est déconnecté", mdLostSub:"On a mis la partie en pause. Rebranche ton clavier ou continue à l'écran.",
+    mdGoScreen:"Continuer sur l'écran", mdWaitKb:"Attendre mon clavier", mdWaitAuto:"Dès qu'il revient : reprise après 3 s", mdWaiting:"En attente de ton clavier…", mdBack:s=>"Clavier revenu : reprise dans "+s+" s",
+    ppName:"Premiers pas", ppHello2:"Tes Premiers pas", ppSub:"14 leçons de 2 minutes. À la fin, tu joues ton premier morceau aux deux mains.", ppStart:"Commencer la leçon 1", ppStartN:n=>"Commencer la leçon "+n, ppContinueN:n=>"Continuer la leçon "+n, ppCount:n=>n+"/14", ppContinue:"Continuer", ppBegin:"Commencer", ppDiscover:"Découvrir",
+    ppOrC:n=>"ou joue un "+n, ppOrCRes:n=>"ou joue un "+n+" pour reprendre", ppResume:"Reprendre", ppResumeStep:s=>"On reprend à l'étape "+s, ppWatch:"Regarde", ppYourTurn:"À moi !", ppYourTurnN:n=>"À toi "+n, ppBravo:"Bravo", ppReplay:"Revoir",
+    ppTogether:"On s'y met ensemble ?", ppTogetherS:"Je te montre la bonne touche, puis tu la joues.", ppThatIs:n=>"Ça, c'est un "+n+".", ppLookZone:"Regarde la zone éclairée.", ppDone:n=>"Leçon "+n+" réussie !", ppNowYouCan:"Ce que tu sais faire maintenant",
+    ppNext:"Leçon suivante", ppRetry3:"Refaire pour 3 étoiles", ppStop:"Terminer pour aujourd'hui", ppBackMap:"Retour au parcours", ppGo:"C'est parti", ppQuit:"Quitter la leçon", ppRestart:"Recommencer", ppListen:"Réécouter",
+    ppLesson:n=>"Leçon "+n, ppKick:n=>"Premiers pas · Leçon "+n, ppStepOf:(s,n)=>"étape "+s+" sur "+n, ppMin:n=>n+" min", ppXp2:"×2 Premiers pas", ppStarsA:n=>n+(n>1?" étoiles":" étoile")+" sur 3",
+    ppSoonT:n=>"La leçon "+n+" arrive bientôt.", ppFirst:n=>"Fais d'abord la leçon "+n+".", ppFold:"14 leçons de 2 minutes · facultatif", ppIn:{midi:"Avec ton clavier",mic:"Au micro",screen:"Sur l'écran"},
+    ppPromise:["Une leçon = 2 min","Tu ne peux pas rater","Ton rythme, pas le nôtre"], ppGood:"Bien joué !", ppOk:n=>"Oui, c'est un "+n+" !", ppPlay:n=>"Joue un "+n+".", ppFindC:"Juste à gauche des 2 touches noires.",
+    ppTi:N=>["Le clavier se répète","Trouve tous les "+N[0],N[2]+" et "+N[4],N[5]+", "+N[7]+", "+N[9]+", "+N[11],"Les 7 notes en éclair","Grave, aigu, octave","Ta main, tes doigts","Ta première mélodie","Joue avec la pulsation","Ton premier accord",N[5]+" et "+N[7]+" : même forme","Changer d'accord en rythme","La main gauche entre en jeu","Ton premier morceau"],
+    ppShort:N=>["Les noires","Les "+N[0],N[2]+" et "+N[4],N[5]+" à "+N[11],"En éclair","Octave","Ta main","Mélodie","Pulsation","1er accord",N[5]+" et "+N[7],"En rythme","Main gauche","Morceau"],
+    ppWhat:N=>["Tu vas repérer les touches noires : elles vont par 2 et par 3.","Tu vas trouver n'importe quel "+N[0]+" sans compter.","Tu vas nommer les notes autour des 2 touches noires."],
+    ppCan:N=>["Repérer les groupes de 2 et de 3 noires : c'est ta boussole sur le clavier.","Trouver un "+N[0]+" en une seconde. Retiens le "+N[0]+" central : c'est ta maison.","Jouer "+N[0]+", "+N[2]+" et "+N[4]+". Dans 2 leçons, tu connaîtras toutes les notes."],
+    pp01W:["Les touches noires vont par 2, puis par 3.","Encore et encore, sur tout le clavier."], pp01Two:"Touche une noire d'un groupe de 2.", pp01Three:"Touche une noire d'un groupe de 3.", pp01Where:["Plutôt à gauche","Plutôt à droite","Où tu veux"], pp01Black:g=>"Une touche noire, dans un groupe de "+g,
+    pp02W:N=>["Le "+N[0]+" est juste à gauche des 2 noires.","Il y en a un dans chaque groupe."], pp02Sub1:"À gauche des 2 noires", pp02All:n=>"Joue tous les "+n+", de gauche à droite.", pp02AllS:n=>"Chaque "+n+" trouvé reste allumé.", pp02Order:n=>"De gauche à droite : cherche un "+n+" plus à droite.",
+    pp02Mid:n=>"Le "+n+" du milieu s'appelle le "+n+" central. Joue-le.", pp02MidS:"Il est marqué d'une étoile.", pp02NotMid:n=>"C'est bien un "+n+", mais pas celui du milieu.",
+    pp03W:N=>[N[0]+", "+N[2]+", "+N[4]+" : autour des 2 noires.",N[2]+" est entre les 2 noires, "+N[4]+" juste à droite."], pp03Run:N=>"Joue "+N[0]+", "+N[2]+", "+N[4]+".", pp03From1:n=>"Depuis le "+n+" central", pp03From2:n=>"Depuis un autre "+n,
+    pp03Hint:["À gauche des 2 noires","Entre les 2 noires","À droite des 2 noires"], pp03Ear:"Écoute et rejoue.", pp03EarS:"Les mêmes notes, dans le même ordre.", ppFnGo:"Commencer mes Premiers pas", ppFnOkS:"Étape 2 : ta première leçon, 2 minutes."},
   en:{help:"Help", helpTitle:"How it works", helpOk:"Let's go", tutNext:"Next", tutPrev:"Previous", close:"Close", stepOf:(i,n)=>"Step "+i+" of "+n,
     tut:[{h:"Read the challenge",p:"A scale, a chord or a progression appears with a countdown. Picture the notes in your head before the bar runs out."},
          {h:"Pick and set up",p:"Before each game, pick the scale or chord as a card, then the timer and your helps. “Show the notes” shows the note names, “Light up the keys” shows where to play, and “Step-by-step help” gives nothing at first, then a hint every 8 s; the notes you find stay lit and a card builds up to help you remember them. Less help = more XP."},
@@ -3125,7 +3433,36 @@ const TXT = {
     hsNews:[["New look","Day or night mode and 3D cards: the app gets a makeover.","#6a4bf0","M12 3l2.4 5 5.6.8-4 3.9.9 5.5L12 15.6 7.1 18.2l.9-5.5-4-3.9 5.6-.8z"],["Play games","Six mini-games on the light-up keyboard, in GAMES.","#1f7a52","M6 9h4M8 7v4M15 9h.01M18 11h.01M3 8a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4v5a4 4 0 0 1-7 2.5h-4A4 4 0 0 1 3 13z"],["Free play","Play anything in PLAY: every note lights up in its colour.","#0e7490","M9 18V5l12-2v13M9 18a3 3 0 1 1-6 0 3 3 0 0 1 6 0zM21 16a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"],["Daily practice","10 mixed exercises every day to keep your streak.","#a3306b","M12 3c1 3.5 5 6 5 11a5 5 0 0 1-10 0c0-2.2 1-3.8 2.2-5 .2 1.6 1 2.8 2.3 3.3C11 9.3 11.3 6 12 3z"]],
     wrongSr:"Wrong note: ",
     lvT:"Leave the game?", lvEndT:"End the game?", lvLost:"Your progress in this game will be lost.", lvEndS:"The game stops here: you'll see the summary of the exercises you've done.", lvSong:"Your progress in this song will be lost.", lvDuelR:"This is a rated game: leaving counts as a loss.", lvDuelOn:"Your opponent keeps playing without you.", lvDuelF:"The friendly game stops for you.", lvQuizOn:"The other players carry on without you.", lvEndGo:"End game", hubQuiz:"A general-knowledge quiz: you answer by playing the right note or chord. Alone, with friends or online.", hubQuizTags:"General knowledge · Notes and chords · Up to 4 players · Online", setAppH:"App", setGameTab:"Game", pfOverview:"Overview", qzAnsDN:"You answer with a note", qzAnsDC:"You answer with a chord", qzHelpNo:"Off", qzHelpKeys:"Keys to play", authUp:"Sign up", authIn:"Log in", gtTitleNew:"Create your Piano Challenges account", gtTitleBack:"Log in", gtEmailGo:"Continue with email", gtHave:"Already have an account?", gtNone:"No account yet?", gtNoAcct:"Continue without an account", gtOther:"Other options",
-    dailyShort:"Daily", qzDraw:"It's a draw!"}
+    dailyShort:"Daily", qzDraw:"It's a draw!", goalSetL:"My daily goal", goalKick:"Nice game", goalQ:"Your daily goal", goalSub:"Even 5 minutes make a real difference.", goalLater:"Later", goalOkB:"Got it",
+    goalRingH:"The ring around your avatar fills up during the day, then turns gold.", goalTags:["Easy","Steady","Keen","Gamer","All in"],
+    goalOk:"Daily goal reached!", goalOf:(a,b,u)=>a+" / "+b+" "+u, goalDay:"Daily goal", goalLeft:(n,u)=>n+" "+u+" to go: every minute counts.", goalSaved:"Goal saved",
+    goalNtfX:(g)=>"You played your goal ("+g+"). See you tomorrow!", streakNew:"New streak: play today", streakGo:"Play", streakFrozen:"Your streak is safe: a freeze was used.",
+    frzNtfX:(n)=>"Freeze used yesterday. "+(n?n+" left.":"Your streak goes on."), frzWonT:"You earned a streak freeze", frzWonX:"7 days in a row! It will protect your streak if you take a day off.",
+    frzN:n=>n+(n>1?" freezes":" freeze"), frzUsed:"Freeze used yesterday", wkNow:(n)=>"Week: "+n+"/7", wkTip:"3 days in a week = week done",
+    mdPromise:"Your piano becomes a game controller.", mdPromiseSub:"Plug in your keyboard: every note is recognised instantly, even chords.", mdPlug:"Connect my keyboard", mdPlugShort:"Connect a keyboard", mdOn:n=>n, mdNKb:n=>n+" keyboards", mdWait:"Keyboard: waiting", mdScreen:"Screen", mdMic:"Mic", mdMicOff:"Mic off",
+    mdHubK:"MIDI keyboard", mdHubT:"Plug in your keyboard", mdHubS:"Chords recognised at once, no noise in the way. 2 minutes.", mdHubOff:"No keyboard connected.", mdHubNo:"Your keyboard works in the Piano Challenges app or in Chrome.", mdHubHow:"See how", mdTest:"Test", mdLater:"Later", mdKeysN:n=>n+" keys", mdConnected:"Connected",
+    mdPressAny:"Press any key", mdTalks:"Your keyboard is talking to Piano Challenges!", mdFrom:(n,p)=>n+" from “"+p+"”", mdForce:"Force", mdForceN:v=>"force "+v,
+    mdLoudSoft:"Press hard, then softly.", mdTouchOk:"Touch-sensitive ✓", mdTouchNo:"Always the same force: your keyboard isn't touch-sensitive.", mdTouchVals:(a,b)=>"hard "+a+" · soft "+b,
+    mdTwice:"Do you hear the sound twice?", mdYes:"Yes", mdNo:"No", mdNone:"I hear nothing", mdTwiceYes:"App sound off: your piano plays on its own.", mdTwiceNo:"Great, we'll keep it that way.", mdTwiceNone:"App sound on: you hear the notes here.",
+    mdChange:"Change input", mdDetected:n=>"Keyboard found: "+n, mdOnNow:n=>n+" connected", mdUse:"Use it", mdWasScreen:"You were playing on screen", mdWasMic:"You were playing with the mic", mdWasNone:"Play with it right away",
+    mdLostT:"Keyboard disconnected", mdLostPill:"The menu badge turns orange", mdLostOn:"Play on the screen", mdLost:"Your keyboard disconnected", mdLostSub:"The game is paused. Plug your keyboard back in or carry on on screen.",
+    mdGoScreen:"Continue on screen", mdWaitKb:"Wait for my keyboard", mdWaitAuto:"As soon as it's back: resumes after 3 s", mdWaiting:"Waiting for your keyboard…", mdBack:s=>"Keyboard back: resuming in "+s+" s",
+    ppName:"First steps", ppHello2:"Your first steps", ppSub:"14 two-minute lessons. By the end, you play your first song with both hands.", ppStart:"Start lesson 1", ppStartN:n=>"Start lesson "+n, ppContinueN:n=>"Continue lesson "+n, ppCount:n=>n+"/14", ppContinue:"Continue", ppBegin:"Start", ppDiscover:"Discover",
+    ppOrC:n=>"or play "+ppArt(n), ppOrCRes:n=>"or play "+ppArt(n)+" to pick up", ppResume:"Pick up where you left off", ppResumeStep:s=>"Back to step "+s, ppWatch:"Watch", ppYourTurn:"My turn!", ppYourTurnN:n=>"Your turn "+n, ppBravo:"Well done", ppReplay:"Watch again",
+    ppTogether:"Shall we do it together?", ppTogetherS:"I'll show you the right key, then you play it.", ppThatIs:n=>"That's "+ppArt(n)+".", ppLookZone:"Look at the lit-up area.", ppDone:n=>"Lesson "+n+" done!", ppNowYouCan:"What you can do now",
+    ppNext:"Next lesson", ppRetry3:"Replay for 3 stars", ppStop:"Done for today", ppBackMap:"Back to the path", ppGo:"Let's go", ppQuit:"Leave the lesson", ppRestart:"Start again", ppListen:"Listen again",
+    ppLesson:n=>"Lesson "+n, ppKick:n=>"First steps · Lesson "+n, ppStepOf:(s,n)=>"step "+s+" of "+n, ppMin:n=>n+" min", ppXp2:"×2 First steps", ppStarsA:n=>n+(n!==1?" stars":" star")+" out of 3",
+    ppSoonT:n=>"Lesson "+n+" is coming soon.", ppFirst:n=>"Do lesson "+n+" first.", ppFold:"14 two-minute lessons · optional", ppIn:{midi:"With your keyboard",mic:"With the mic",screen:"On the screen"},
+    ppPromise:["One lesson = 2 min","You can't get it wrong","Your pace, not ours"], ppGood:"Well played!", ppOk:n=>"Yes, that's "+ppArt(n)+"!", ppPlay:n=>"Play "+ppArt(n)+".", ppFindC:"Just left of the 2 black keys.",
+    ppTi:N=>["The keyboard repeats","Find every "+N[0],N[2]+" and "+N[4],N[5]+", "+N[7]+", "+N[9]+", "+N[11],"All 7 notes, fast","Low, high, octave","Your hand, your fingers","Your first melody","Play with the beat","Your first chord",N[5]+" and "+N[7]+": same shape","Change chords in time","The left hand joins in","Your first song"],
+    ppShort:N=>["Black keys","The "+N[0]+"s",N[2]+" and "+N[4],N[5]+" to "+N[11],"Fast","Octave","Your hand","Melody","Beat","1st chord",N[5]+" and "+N[7],"In time","Left hand","Song"],
+    ppWhat:N=>["You'll spot the black keys: they come in 2s and 3s.","You'll find any "+N[0]+" without counting.","You'll name the notes around the 2 black keys."],
+    ppCan:N=>["Spot the groups of 2 and 3 black keys: that's your compass on the keyboard.","Find "+ppArt(N[0])+" in a second. Remember middle "+N[0]+": it's your home.","Play "+N[0]+", "+N[2]+" and "+N[4]+". In 2 lessons, you'll know every note."],
+    pp01W:["The black keys come in 2s, then 3s.","Again and again, all along the keyboard."], pp01Two:"Touch a black key from a group of 2.", pp01Three:"Touch a black key from a group of 3.", pp01Where:["Towards the left","Towards the right","Anywhere you like"], pp01Black:g=>"A black key, in a group of "+g,
+    pp02W:N=>[N[0]+" is just left of the 2 black keys.","There's one in every group."], pp02Sub1:"Left of the 2 black keys", pp02All:n=>"Play every "+n+", from left to right.", pp02AllS:n=>"Each "+n+" you find stays lit.", pp02Order:n=>"From left to right: look for "+ppArt(n)+" further right.",
+    pp02Mid:n=>"The "+n+" in the middle is called middle "+n+". Play it.", pp02MidS:"It's marked with a star.", pp02NotMid:n=>"That's "+ppArt(n)+", but not the one in the middle.",
+    pp03W:N=>[N[0]+", "+N[2]+", "+N[4]+": around the 2 black keys.",N[2]+" is between the 2 black keys, "+N[4]+" just to the right."], pp03Run:N=>"Play "+N[0]+", "+N[2]+", "+N[4]+".", pp03From1:n=>"From middle "+n, pp03From2:n=>"From another "+n,
+    pp03Hint:["Left of the 2 black keys","Between the 2 black keys","Right of the 2 black keys"], pp03Ear:"Listen and play it back.", pp03EarS:"The same notes, in the same order.", ppFnGo:"Start my first steps", ppFnOkS:"Step 2: your first lesson, 2 minutes."}
 };
 const t = k => TXT[S.settings.lang][k];
 // data shown to people (scores, XP, other players' names): thousands separators in the app's language,
@@ -3550,13 +3887,16 @@ function addXP(n){
     SECS.forEach(sec=>typeList(sec).forEach(ty=>{ const key=sec==="scales"?ty.id:sec+":"+ty.id;
       if(typeOpenS(sec,ty.id) && !S.seenTypes.includes(key)){ S.seenTypes.push(key); if(ty.lvl>1) unlockNote(t("newType")+SEC[sec].name(ty)); } }));
   }
+  try{ goalTick(); }catch(e){}
 }
 const effStreak = () => S.streak && (S.streak.last===dayStr()||S.streak.last===addDays(-1)) ? S.streak.days|0 : 0; // a streak not kept yesterday is over
 function bumpStreak(){
   const today=dayStr();
   if(S.streak.last===today) return;
+  try{ freezeCheck(); }catch(e){} // Objectif: a missed day covered by a freeze keeps the streak going
   const y=addDays(-1);
   S.streak.days = S.streak.last===y ? S.streak.days+1 : 1; S.streak.last=today;
+  try{ freezeEarn(); }catch(e){}
 }
 function setMastery(it,v){
   const before=openRoots(it.sec,it.tid);
@@ -3943,11 +4283,13 @@ function wrongNote(m){
   if(errors===3 && phase==="listening") autoHelp();
 }
 // three wrong notes on the same item: a hand is offered (see the answer, listen, then try again), never forced
-function autoHelp(){ let h=$("autoHelp"); if(!h){ h=document.createElement("div"); h.id="autoHelp"; h.className="auto-help"; h.setAttribute("role","status"); $("stage").appendChild(h); }
+// o (optional, Premiers pas): {host, title, sub, show} = where the band goes, its texts and what « Show me » does
+function autoHelp(o){ o=o||{}; let h=$("autoHelp"); if(!h){ h=document.createElement("div"); h.id="autoHelp"; h.className="auto-help"; h.setAttribute("role","status"); }
+  const host=o.host||$("stage"); if(h.parentNode!==host) host.appendChild(h);
   h.innerHTML='<div><b></b><small></small></div><button class="btn" type="button" data-a="try"></button><button class="btn primary" type="button" data-a="show"></button>';
-  h.querySelector("b").textContent=t("helpT"); h.querySelector("small").textContent=t("helpS");
+  h.querySelector("b").textContent=o.title||t("helpT"); h.querySelector("small").textContent=o.sub||t("helpS");
   const [tr,sh]=h.querySelectorAll("button"); tr.textContent=t("helpTry"); sh.textContent=t("helpShow");
-  tr.onclick=()=>{ h.hidden=true; }; sh.onclick=()=>{ h.hidden=true; if(phase==="listening") reveal(false); }; h.hidden=false; }
+  tr.onclick=()=>{ h.hidden=true; }; sh.onclick=()=>{ h.hidden=true; if(o.show) o.show(); else if(phase==="listening") reveal(false); }; h.hidden=false; }
 function noteIn(m){ lastNoteAt=Date.now();
   if(FN.on){ fnNote(m); return; } // the first screen (mic)
   if(LV.on) return; // the leave window is open
@@ -4244,7 +4586,8 @@ function openEnd(g){
     if(!user){ const ac=document.createElement("div"); ac.className="end-acct"; ac.id="endAcct"; ac.innerHTML='<div><b></b><small></small></div><button class="btn primary" type="button"></button>';
       ac.querySelector("b").textContent=t("endAcct"); ac.querySelector("small").textContent=t("endAcctS"); const ab=ac.querySelector("button"); ab.textContent=t("endAcctB");
       ab.onclick=()=>{ closeEnd(); PW.pending=false; GATE.mode="signup"; gateOpen(); }; body.appendChild(ac); }
-    if(paywallOn() && !isPremium() && !S.pwShown && n && good/n>=.8) PW.pending=true; }
+    if(paywallOn() && !isPremium() && !S.pwShown && n && good/n>=.8) PW.pending=true;
+    else if(n && good/n>=.8 && !(S.goal&&S.goal.asked)) GL.offer=true; }
   // one line per item, keeping its worst result
   const rank={good:0,warn:1,bad:2}, byKey=new Map();
   R.filter(r=>r.level!=="good").forEach(r=>{ const k=mkey(r.it), o=byKey.get(k); if(!o||rank[r.level]>rank[o.level]) byKey.set(k,r); });
@@ -4284,7 +4627,8 @@ function endReplay(g){ closeEnd(); page="practice"; if(g.sec!==S.section) switch
   const q=g.sec==="ear"?suQueue(g.sec):g.single?[{...g.queue[0]}]:g.queue.map(it=>({...it})); game=makeGame(q); game.label=g.label; game.single=!!g.single; game.i=-1; startRound(); }
 function closeEnd(){ if(!endOpen) return; endOpen=false; $("endModal").hidden=true; modalClosed();
   if(lvlUp){ lvlUp=0; ["lvlAv","mbLvlBtn"].forEach(id=>{ const a=$(id); if(!a) return; a.classList.remove("pulse"); void a.offsetWidth; a.classList.add("pulse"); a.addEventListener("animationend",()=>a.classList.remove("pulse"),{once:true}); }); }
-  if(PW.pending){ PW.pending=false; S.pwShown=1; save(); setTimeout(()=>{ if(!anyModal()) pwOpen("success"); },350); } } // the offer, once, after a first game played well
+  if(PW.pending){ PW.pending=false; S.pwShown=1; save(); setTimeout(()=>{ if(!anyModal()) pwOpen("success"); },350); } // the offer, once, after a first game played well
+  else if(GL.offer){ GL.offer=false; setTimeout(()=>{ if(!anyModal() && !game && phase==="idle") goalOpen(); },350); } } // Objectif: the daily goal, once
 function renderGameBar(){
   const bar=$("gamebar"), segs=$("segs"), lbl=$("gameLbl"), end=$("gameEnd");
   const g=game, total = g ? g.total : (S.settings.gameLen||Infinity);
@@ -4511,7 +4855,8 @@ function renderStatus(){
   const cEl=$("combo"), prevC=cEl.textContent; cEl.textContent="×"+combo;
   $("comboStat").classList.toggle("off",combo===0);
   if(prevC!==cEl.textContent && combo>0){ const st=$("comboStat"); st.classList.remove("pulse"); void st.offsetWidth; st.classList.add("pulse"); }
-  $("streak").textContent=fmtN(S.streak.days)+" "+t("day"); $("streakStat").classList.toggle("off",S.streak.days===0);
+  { const sk=effStreak(); $("streak").textContent=sk?fmtN(sk)+" "+t("day"):t("streakGo"); $("streakStat").classList.toggle("off",!sk); $("streakStat").title=sk?"":t("streakNew"); }
+  try{ goalRing(); }catch(e){}
 }
 function renderTypes(){
   const sec=S.section, cfg=SEC[sec], box=$("types"); box.innerHTML="";
@@ -5422,7 +5767,7 @@ function renderPlaySongs(){ const box=$("playSongs"); box.innerHTML=""; const fr
 // ----- time played: counted while notes come in (15 s ticks, 45 s of silence stops the clock) -----
 let lastNoteAt=0, playTick=0;
 setInterval(()=>{ if(document.hidden || Date.now()-lastNoteAt>45000) return; const d=dayStr(); if(!S.playSec||typeof S.playSec!=="object") S.playSec={};
-  S.playSec[d]=(S.playSec[d]|0)+15; if(++playTick%4===0) save(); },15000);
+  S.playSec[d]=(S.playSec[d]|0)+15; if(++playTick%4===0) save(); try{ goalTick(); }catch(e){} },15000);
 
 // ----- the light musical touch: a soft note when the pointer passes over a card (only once sound is unlocked) -----
 const HOVER_NOTES=[72,74,76,79,81,84];
@@ -5434,12 +5779,14 @@ let pfMonth=null;
 const pDate=s=>{ const [y,m,d]=s.split("-").map(Number); return new Date(y,m-1,d); };
 const wkKey=dt=>{ const d=new Date(dt.getFullYear(),dt.getMonth(),dt.getDate()); d.setDate(d.getDate()-((d.getDay()+6)%7)); return dayStr(d); };
 function streaks(){ const days=Object.keys(S.xpDays||{}).filter(k=>(S.xpDays[k]|0)>0).sort();
-  let best=0,run=0,prev=null; days.forEach(k=>{ const d=pDate(k); run = prev && Math.round((d-prev)/864e5)===1 ? run+1 : 1; best=Math.max(best,run); prev=d; });
-  const set=new Set(days); let cur=0; const d=new Date(); if(!set.has(dayStr(d))) d.setDate(d.getDate()-1); while(set.has(dayStr(d))){ cur++; d.setDate(d.getDate()-1); }
-  cur=Math.max(cur, S.streak&&S.streak.last===dayStr()?S.streak.days|0:0);
-  const wks=[...new Set(days.map(k=>wkKey(pDate(k))))].sort(); let wb=0,wr=0,wp=null; wks.forEach(k=>{ const d=pDate(k); wr = wp && Math.round((d-wp)/864e5)===7 ? wr+1 : 1; wb=Math.max(wb,wr); wp=d; });
+  let best=0,run=0,prev=null; const fz=frzDays(); days.forEach(k=>{ const d=pDate(k); let gap=prev?Math.round((d-prev)/864e5):0; if(prev && gap>1){ const x=new Date(prev); let ok=true; for(let i=1;i<gap;i++){ x.setDate(x.getDate()+1); if(!fz.has(dayStr(x))){ ok=false; break; } } if(ok) gap=1; }
+    run = prev && gap===1 ? run+1 : 1; best=Math.max(best,run); prev=d; });
+  const set=new Set(days), frz=frzDays(); let cur=0; const d=new Date(); if(!set.has(dayStr(d))) d.setDate(d.getDate()-1); while(set.has(dayStr(d))||frz.has(dayStr(d))){ if(set.has(dayStr(d))) cur++; d.setDate(d.getDate()-1); }
+  cur=Math.max(cur, effStreak());
+  const wn={}; days.forEach(k=>{ const w=wkKey(pDate(k)); wn[w]=(wn[w]|0)+1; }); const wkNow=wn[wkKey(new Date())]|0;
+  const wks=Object.keys(wn).filter(w=>wn[w]>=3).sort(); let wb=0,wr=0,wp=null; wks.forEach(k=>{ const d=pDate(k); wr = wp && Math.round((d-wp)/864e5)===7 ? wr+1 : 1; wb=Math.max(wb,wr); wp=d; });
   const ws=new Set(wks); let wc=0; const w=pDate(wkKey(new Date())); if(!ws.has(dayStr(w))) w.setDate(w.getDate()-7); while(ws.has(dayStr(w))){ wc++; w.setDate(w.getDate()-7); }
-  return {cur,best:Math.max(best,cur),wc,wb:Math.max(wb,wc),set}; }
+  return {cur,best:Math.max(best,cur),wc,wb:Math.max(wb,wc),set,frz,wkNow}; }
 const fmtDur=sec=>{ const h=Math.floor(sec/3600), m=Math.round(sec%3600/60); return h? h+" h "+String(m).padStart(2,"0")+" min" : m+" min"; };
 function renderFiche(){
   const li=levelInfo(S.xp), ph=(typeof userPhoto==="function"&&userPhoto())||"";
@@ -5452,12 +5799,12 @@ function renderFiche(){
   const play=S.playSec||{}, tot=Object.values(play).reduce((a,v)=>a+(v|0),0);
   const L=t("pfSt"), vals=[fmtN(S.xp)+" XP",fmtN(sum("ok")),fmtN(sum("perfect")),fmtN(mAll),fmtDur(tot),fmtDur(play[dayStr()]|0)], SC=["#0e7490","#8a3fd1","#6a3fd1","#b4461a","#c9463c","#1f7a52"];
   const ul=$("pfStats"); ul.innerHTML=""; L.forEach((l,i)=>{ const li2=document.createElement("li"); li2.style.background=SC[i]; li2.innerHTML="<span></span><b></b>"; li2.firstChild.textContent=l; li2.lastChild.textContent=vals[i]; ul.appendChild(li2); });
-  const st=streaks(); $("pfDay").textContent=t("pfDayS")(fmtN(st.cur)); $("pfDayBest").textContent=t("pfBest")(fmtN(st.best)); $("pfWeek").textContent=t("pfWeekS")(fmtN(st.wc)); $("pfWeekBest").textContent=t("pfBest")(fmtN(st.wb));
+  const st=streaks(); $("pfDay").textContent=st.cur?t("pfDayS")(fmtN(st.cur)):t("streakNew"); $("pfDay").classList.toggle("gl-new",!st.cur); try{ goalFiche(st); }catch(e){} $("pfDayBest").textContent=t("pfBest")(fmtN(st.best)); $("pfWeek").textContent=t("pfWeekS")(fmtN(st.wc)); $("pfWeekBest").textContent=t("pfBest")(fmtN(st.wb));
   if(!pfMonth){ const d=new Date(); pfMonth=new Date(d.getFullYear(),d.getMonth(),1); }
   $("pfMonth").textContent=t("pfMonths")[pfMonth.getMonth()]+" "+pfMonth.getFullYear();
   const cal=$("pfCal"); cal.innerHTML=t("pfDays").map(x=>"<i>"+x+"</i>").join(""); const first=(pfMonth.getDay()+6)%7, nd=new Date(pfMonth.getFullYear(),pfMonth.getMonth()+1,0).getDate(), today=dayStr();
   for(let i=0;i<first;i++) cal.appendChild(document.createElement("span"));
-  for(let d=1;d<=nd;d++){ const k=dayStr(new Date(pfMonth.getFullYear(),pfMonth.getMonth(),d)), e=document.createElement("span"); e.textContent=d; if(st.set.has(k)) e.className="on"; if(k===today) e.classList.add("today"); cal.appendChild(e); }
+  for(let d=1;d<=nd;d++){ const k=dayStr(new Date(pfMonth.getFullYear(),pfMonth.getMonth(),d)), e=document.createElement("span"); e.textContent=d; if(st.set.has(k)) e.className="on"; else if(st.frz.has(k)){ e.className="frz"; e.title=t("frzUsed"); } if(k===today) e.classList.add("today"); cal.appendChild(e); }
   $("pfJourneySub").textContent=t("pfJSub")(mAll,nAll); const ju=$("pfJourney"); ju.innerHTML="";
   jr.forEach(([sec,m,n])=>{ const li2=document.createElement("li"); li2.innerHTML='<span class="pj-t"><b></b><span class="pj-n"></span></span><span class="bar"><i></i></span>'; li2.querySelector("b").textContent=t(NM[sec]); li2.querySelector(".pj-n").textContent=fmtN(m)+" / "+fmtN(n); const bi=li2.querySelector(".bar i"); bi.style.width=(n?m/n*100:0)+"%"; bi.style.background=COL[sec]; ju.appendChild(li2); });
   $("pfRecsSub").textContent=t("pfRSub"); const ru=$("pfRecs"); ru.innerHTML=""; let cb={}, cg={}; try{ cb=JSON.parse(localStorage.getItem("clavio:best")||"{}")||{}; cg=JSON.parse(localStorage.getItem("clavio:gbest")||"{}")||{}; }catch(e){}
@@ -6027,10 +6374,7 @@ function hsAuto(){ clearInterval(hsTimer); if(matchMedia("(prefers-reduced-motio
 function renderHubSide(){
   const done=!!(S.daily&&S.daily.date===dayStr());
   $("hsDaily").classList.toggle("done",done); $("hsDailySub").textContent=$("dailySub").textContent; $("hsDailyGo").textContent=t(done?"hsDailyDone":"hsDailyGo");
-  const midiOn=midiReady && S.settings.input==="midi";
-  $("hsMidiDot").classList.toggle("on",midiOn);
-  $("hsMidiSub").textContent = midiReady ? t("inMidiOk")(midiNames.join(", ")) : midiPossible() ? t("hsMidiOff") : t("hsMidiNo");
-  $("hsMidiBtn").textContent=t(midiOn?"hsMidiChange":"hsMidiConnect");
+  mdHub(); // « Ton clavier » card (M2)
   if(hsNewsLang!==S.settings.lang){ hsNewsLang=S.settings.lang; const box=$("hsSlides"), dots=$("hsDots"); box.innerHTML=""; dots.innerHTML="";
     t("hsNews").forEach(([ti,su,c,ic],i)=>{ const d=document.createElement("div"); d.className="hs-slide";
       d.innerHTML='<span class="nb" style="background:linear-gradient(150deg,'+shade(c,.35)+','+c+')"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="'+ic+'"/></svg></span><span><b></b><small></small></span>';
@@ -6068,7 +6412,7 @@ async function myRank(since){ if(!sb||!user) return null;
     const r=Array.isArray(data)?data[0]:data; if(error||!r||!(+r.rank>0)) return null; return {rank:+r.rank|0, xp:+r.xp||0}; }catch(e){ return null; } }
 $("hsDaily").addEventListener("click",()=>$("dailyCard").click());
 $("hsRankMore").addEventListener("click",()=>$("rankBtn").click());
-$("hsMidiBtn").addEventListener("click",()=>{ if(midiPossible()) setInput("midi",true); else openInputChooser(true); });
+$("hsMidiBtn").addEventListener("click",()=>{ if(midiReady && S.settings.input!=="mic") openMidi(); else if(midiPossible()) setInput("midi",true); else openInputChooser(true); });
 document.querySelectorAll(".obj[data-obj]").forEach(e=>{ e.innerHTML=OBJ[e.dataset.obj](); });
 const MODE_COL={quiz:"#2563eb",games:"#26805a",play:"#7a5bf5",learn:"#c9463c"}; // same as --m-games/--m-play/--m-learn; shades only darken so white text stays ≥ 4.5:1
 // each tile has its own hue (white text ≥ 4.5:1 on each), like a shelf of game boxes
@@ -6219,6 +6563,8 @@ function mergeState(local, cloud){
   m.introSeen={...(isObj(c.introSeen)?c.introSeen:{}), ...(isObj(local.introSeen)?local.introSeen:{})};
   if(!(isObj(m.onb)&&m.onb.done) && isObj(c.onb)) m.onb=c.onb; if(!m.tourDone && c.tourDone) m.tourDone=c.tourDone; if(m.eloStart==null && c.eloStart!=null) m.eloStart=c.eloStart;
   m.profileName=c.profileName||local.profileName; if(!m.profileName) delete m.profileName;
+  { const lg=isObj(local.goal)?local.goal:null, cg=isObj(c.goal)?c.goal:null; if(lg||cg){ const g={...((cg&&num(cg.at)>num(lg&&lg.at))?cg:(lg||cg))}; g.done=[lg&&lg.done,cg&&cg.done].map(x=>String(x||"")).sort().pop()||undefined; if(!g.done) delete g.done; if((lg&&lg.asked)||(cg&&cg.asked)) g.asked=1; m.goal=g; } } // Objectif
+  { const lf=isObj(local.freeze)?local.freeze:null, cf=isObj(c.freeze)?c.freeze:null; if(lf||cf){ const f={...((cf&&num(cf.at)>num(lf&&lf.at))?cf:(lf||cf))}; f.used=[...new Set([...((lf&&Array.isArray(lf.used))?lf.used:[]),...((cf&&Array.isArray(cf.used))?cf.used:[])])].filter(x=>typeof x==="string").sort().slice(-40); f.n=Math.max(0,Math.min(2,num(f.n))); m.freeze=f; } }
   m.settings={...(isObj(local.settings)?local.settings:{})}; // this device's settings win
   return {merged:m, changed:JSON.stringify(m)!==JSON.stringify(local)};
 }
@@ -6525,6 +6871,7 @@ function renderInputUI(){
   $("inStatus").textContent=st; $("inCfg").textContent=cfg; $("inCfg").hidden=!cfg; if(page==="hub") renderHubSide();
   const ok = m==="screen" || (m==="midi"&&midiReady) || (m==="mic"&&micOn);
   const chip=$("inChip"); chip.innerHTML=INPUT_ICONS[m]+'<span class="cg"><svg viewBox="0 0 24 24"><path d="M10.3 3.2a1.8 1.8 0 0 1 3.4 0l.4 1.2a1.8 1.8 0 0 0 2.4 1l1.1-.6a1.8 1.8 0 0 1 2.4 2.4l-.6 1.1a1.8 1.8 0 0 0 1 2.4l1.2.4a1.8 1.8 0 0 1 0 3.4l-1.2.4a1.8 1.8 0 0 0-1 2.4l.6 1.1a1.8 1.8 0 0 1-2.4 2.4l-1.1-.6a1.8 1.8 0 0 0-2.4 1l-.4 1.2a1.8 1.8 0 0 1-3.4 0l-.4-1.2a1.8 1.8 0 0 0-2.4-1l-1.1.6a1.8 1.8 0 0 1-2.4-2.4l.6-1.1a1.8 1.8 0 0 0-1-2.4l-1.2-.4a1.8 1.8 0 0 1 0-3.4l1.2-.4a1.8 1.8 0 0 0 1-2.4l-.6-1.1a1.8 1.8 0 0 1 2.4-2.4l1.1.6a1.8 1.8 0 0 0 2.4-1z"/><circle cx="12" cy="12" r="3"/></svg></span><i class="'+(ok?"on":"off")+'"></i>'; chip.title=M[m][0]+" — "+st; chip.setAttribute("aria-label",chip.title);
+  mdPill();
 }
 let midiSetup=null; // {prev} while the player is connecting a MIDI keyboard after choosing MIDI
 async function setInput(v, fromUser){
@@ -6541,7 +6888,7 @@ async function setInput(v, fromUser){
   renderInputUI(); render();
 }
 $("inCfg").addEventListener("click",()=>{ const m=S.settings.input; if(m==="midi") openMidi(); else if(m==="mic") $("micBtn").click(); });
-$("inChip").addEventListener("click",()=>openInputChooser(true));
+$("inChip").addEventListener("click",()=>mdPillClick());
 function openInputChooser(change){
   const box=$("inOpts"), M=t("inModes"), curM=S.settings.input; box.innerHTML="";
   $("inTitle").textContent = change ? t("inChange") : t("inTitle"); $("inSubT").textContent = change ? "" : t("inSub"); $("inX").hidden=!change;
@@ -6596,7 +6943,7 @@ function renderMidiModal(){
   sel.value = midiNames.includes(S.settings.midiInput) ? S.settings.midiInput : "";
   renderSettings();
 }
-function openMidi(){ if(!midiOpen) modalOpened(); midiOpen=true; renderMidiModal(); startMidiPoll(); $("midiModal").hidden=false; $("midiOk").focus(); }
+function openMidi(){ if(!midiOpen) modalOpened(); midiOpen=true; mtReset(); renderMidiModal(); startMidiPoll(); $("midiModal").hidden=false; $("midiOk").focus(); }
 function closeMidi(){ if(!midiOpen) return; midiOpen=false; $("midiModal").hidden=true;
   if(midiSetup){ const prev=midiSetup.prev; midiSetup=null; S.settings.input = midiReady ? "midi" : (prev && prev!=="midi" ? prev : undefined); if(!S.settings.input) delete S.settings.input; save(); renderInputUI(); render(); } if(calib){ calib=null; calibMsg(""); $("kbDetect").textContent=t("kbDetect"); } clearInterval(midiPoll); modalClosed(); }
 let midiPoll=0; // in the app, look for newly paired / plugged keyboards while the window is open
@@ -6611,8 +6958,8 @@ $("mInput").addEventListener("change",e=>{ S.settings.midiInput=e.target.value; 
 $("optMidiC").addEventListener("change",e=>{ S.settings.midiC=e.target.checked; save(); render(); });
 $("midiBtn").addEventListener("click", ()=>{ if(midiAcc) openMidi(); else enableMidi(); });
 let midiDenied=false; // the browser refused requestMIDIAccess
-async function enableMidi(){
-  audio();
+async function enableMidi(quiet){
+  if(!quiet) audio(); // quiet: watching for a keyboard in the background (M13), no sound needed yet
   if(!navigator.requestMIDIAccess){ $("midiBtn").classList.add("err"); $("midiTxt").textContent=t("midiNo"); notice(t("midiUnsupported")); return; }
   try{
     const acc=await navigator.requestMIDIAccess(); midiAcc=acc;
@@ -6622,6 +6969,7 @@ async function enableMidi(){
         names.push(inp.name); inp.onmidimessage=ev=>{
         const [st,note,vel]=ev.data;
         if(LV.on){ if((st&0xf0)===0x90 && vel>0) lvNote(note); return; } // the leave window: C = keep playing, B = leave
+        if(midiOpen && !calib && (st&0xf0)===0x90 && vel>0){ pressKey(note); mtNote(note,vel,inp.name); return; } // the MIDI window: the « play a note » test (M8)
         if(page==="quiz"){ if((st&0xf0)===0x90 && vel>0){ if(S.settings.midiSound) tone(note,0,.9,.1+.26*vel/127); if(!anyModal()) quizIn(String(inp.id||inp.name),note); } return; } // every keyboard counts: one per player
         if(S.settings.midiInput && inp.name!==S.settings.midiInput) return;
         if(page==="play"){ if((st&0xf0)===0x90 && vel>0) playSend("noteon",note,vel/127); else if((st&0xf0)===0x80 || ((st&0xf0)===0x90 && vel===0)) playSend("noteoff",note); return; }
@@ -6635,7 +6983,7 @@ async function enableMidi(){
       $("midiBtn").classList.toggle("on",names.length>0); $("midiBtn").classList.remove("err");
       const shown = S.settings.midiInput && names.includes(S.settings.midiInput) ? S.settings.midiInput : names[0];
       $("midiTxt").textContent=names.length ? t("midiDev")+shown : t("midiNone");
-      if(names.length) guessKbdSize(shown); midiReady=names.length>0; midiNames=names; render(); if(midiOpen) renderMidiModal(); renderInputUI(); if(page==="quiz"&&QZ.view==="setup") renderQzSetup(); };
+      if(names.length) guessKbdSize(shown); midiReady=names.length>0; midiNames=names; render(); if(midiOpen) renderMidiModal(); renderInputUI(); if(page==="quiz"&&QZ.view==="setup") renderQzSetup(); mdPorts(names); };
     midiDenied=false; bind(); acc.onstatechange=bind; notice("");
   }catch(err){ midiDenied=true; $("midiBtn").classList.add("err"); $("midiTxt").textContent=t("midiBlocked"); notice(t("blocked")); if(midiOpen) renderMidiModal(); }
 }
@@ -7163,9 +7511,9 @@ function fnRender(){ const g=$("gate"); if(!g||!FN.on) return; const mark=$("hom
     +'<div class="fn-play"><div class="fn-top"><span class="fn-step">'+esc(t("fnStep"))+'</span><button class="fn-skip" type="button" id="fnSkip">'+esc(t("fnSkip"))+'</button></div><h2 id="fnH">'+esc(t("fnH"))+'</h2>'
     +'<p class="fn-lbl">'+esc(t("fnInL"))+'</p><div class="fn-ins">'+fnModes().map(v=>'<button type="button" class="fn-in" data-v="'+v+'" aria-pressed="'+(FN.how===v)+'"><b>'+esc(IN[v][0])+'</b><small'+(v==="midi"&&nm?' class="ok"':'')+'>'+esc(v==="midi"&&FN.how==="midi" ? (nm?t("fnMidiOk")(nm):t("fnMidiWait")) : IN[v][1])+'</small></button>').join("")+'</div>'
     +'<p class="fn-lbl">'+esc(t("fnLvlL"))+'</p><div class="fn-lv">'+["debut","notes","adv"].map((v,i)=>'<button type="button" data-v="'+v+'" aria-pressed="'+(FN.level===v)+'">'+esc(t("fnLvl")[i])+'</button>').join("")+'</div>'
-    +'<div class="fn-prompt'+(FN.done?' ok':FN.wrong?' bad':'')+'" id="fnPrompt" role="status"><span class="fn-big">'+(S.settings.notation==="fr"?"Do":"C")+'</span><span><b>'+esc(FN.done?t("fnOk"):t("fnPrompt"))+'</b><small>'+esc(FN.done?t("fnOkS"):FN.wrong?t("fnWrong")(FN.wrong):FN.how==="mic"?t("fnMicS"):t("fnPromptS"))+'</small></span></div>'
+    +'<div class="fn-prompt'+(FN.done?' ok':FN.wrong?' bad':'')+'" id="fnPrompt" role="status"><span class="fn-big">'+(S.settings.notation==="fr"?"Do":"C")+'</span><span><b>'+esc(FN.done?t("fnOk"):t("fnPrompt"))+'</b><small>'+esc(FN.done?t(FN.level==="debut"?"ppFnOkS":"fnOkS"):FN.wrong?t("fnWrong")(FN.wrong):FN.how==="mic"?t("fnMicS"):t("fnPromptS"))+'</small></span></div>'
     +'<div class="fn-kb" id="fnKb">'+keys+blk+'</div>'
-    +'<button class="gt-go fn-go" type="button" id="fnGo"'+(FN.done?'':' hidden')+'>'+esc(t("fnGo"))+'</button>'
+    +'<button class="gt-go fn-go" type="button" id="fnGo"'+(FN.done?'':' hidden')+'>'+esc(t(FN.level==="debut"?"ppFnGo":"fnGo"))+'</button>'
     +'<div class="fn-foot"><span>'+esc(t("fnLogin"))+' <button type="button" id="fnLogin">'+esc(t("fnLoginB"))+'</button></span><button type="button" id="fnLang">'+(S.settings.lang==="fr"?"EN":"FR")+'</button></div></div></div>';
   g.setAttribute("aria-labelledby","fnH");
   // black keys over the white ones
@@ -7194,10 +7542,428 @@ function fnClose(){ FN.on=false; const g=$("gate"); if(g){ g.hidden=true; g.inne
 function fnApply(){ S.gate="guest"; ONB.a={why:[],level:FN.level,staff:null,how:FN.how,cont:null}; onbApply(); S.onb={...S.onb, quick:1}; S.tourDone=1;
   S.introSeen={...(S.introSeen||{}), chords:true, learn:true, practice:true, hub:true}; save(); }
 function fnGo(){ fnApply(); fnClose(); setInput(FN.how, FN.how!=="screen");
+  if(FN.level==="debut"){ ppBegin(); return; } // a complete beginner: the First steps (overview, then lesson 1), not chords
   // the first game: three major chords in simple keys
   try{ S.section="chords"; const st=suState("chords"); st.tids=["maj"].filter(id=>typeList("chords").some(ty=>ty.id===id)); if(!st.tids.length) st.tids=[typeList("chords")[0].id]; st.keys="simple"; st.shuffle=false; save(); }catch(e){}
   openPage("learn"); setTimeout(()=>{ const b=$("secTabs").querySelector('[data-v="chords"]'); if(b) b.click(); setTimeout(()=>{ try{ suStart(); }catch(e){} },250); },60); }
 function fnSkip(){ S.gate="guest"; S.onb={done:1, skipped:1, at:Date.now()}; S.tourDone=1; save(); fnClose(); openPage("hub"); maybeAskInput(); } // skip: nothing is set up (like the questionnaire's skip)
+/* ==== Objectif (C9 / D21 / D22) : objectif du jour, anneau autour de l'avatar, série hebdomadaire, gels de série ==== */
+// S.goal={kind:"min"|"xp", v, at, asked, done:"YYYY-MM-DD"} (absent = 10 min) · S.freeze={n:0..2, used:[jours couverts], at}
+const GL={offer:false};
+const GOALS=[["min",5],["min",10],["min",20],["xp",50],["xp",100]];
+function goalCfg(){ const g=S.goal; return g && (g.kind==="min"||g.kind==="xp") && +g.v>0 ? g : {kind:"min", v:10}; }
+const goalUnit = g => g.kind==="xp" ? "XP" : "min";
+function goalNow(g=goalCfg(), day=dayStr()){ return g.kind==="xp" ? ((S.xpDays||{})[day]|0) : Math.floor((((S.playSec||{})[day])|0)/60); }
+function goalPct(g=goalCfg()){ const v = g.kind==="xp" ? ((S.xpDays||{})[dayStr()]|0) : (((S.playSec||{})[dayStr()])|0)/60; return Math.max(0, Math.min(1, v/g.v)); }
+const goalDone = () => !!(S.goal && S.goal.done===dayStr()) || goalPct()>=1;
+function goalSet(kind, v){ const o=S.goal&&typeof S.goal==="object"?S.goal:{}; S.goal={...o, kind, v:+v, at:Date.now(), asked:1}; save(); goalRing(); }
+// the ring around #lvlAv (menu) and #mbAv (mobile bar); gold once the goal is reached
+function goalRing(){ const g=goalCfg(), p=goalPct(g), done=goalDone(), lbl=t("goalDay")+" : "+t("goalOf")(fmtN(Math.min(goalNow(g),g.v)),fmtN(g.v),goalUnit(g));
+  [$("lvlAv"), $("mbAv")].forEach(el=>{ if(!el) return; el.classList.add("goal-ring"); el.classList.toggle("done",done); el.style.setProperty("--gp", done?1:p.toFixed(3)); });
+  const a=$("lvlAv"); if(a){ const base=(a.getAttribute("aria-label")||"").split(" · "+t("goalDay"))[0]; a.setAttribute("aria-label", base+" · "+lbl); a.title=lbl; }
+  const sg=$("segGoal"); if(sg) sg.querySelectorAll("button").forEach(b=>b.setAttribute("aria-pressed", b.dataset.v===g.kind+":"+g.v)); }
+function goalFanfare(){ if(S.settings.uiSound===false || !ctx || ctx.state!=="running") return; [72,76,79,84].forEach((m,i)=>tone(m,i*.11,.32,.12)); [72,76,79,84].forEach(m=>tone(m,.5,1.1,.08)); }
+// called on each tick of time played and on each XP: once a day, the ring turns gold, a short fanfare, a notification
+function goalTick(){ const today=dayStr(); if(goalPct()>=1 && !(S.goal&&S.goal.done===today)){ const g=goalCfg();
+    S.goal={...(S.goal&&typeof S.goal==="object"?S.goal:{kind:g.kind, v:g.v, at:0}), done:today}; save();
+    try{ goalFanfare(); }catch(e){}
+    try{ ntfAdd({key:"goal-"+today, cat:"progress", type:"goal", ti:t("goalOk"), tx:t("goalNtfX")(fmtN(g.v)+" "+goalUnit(g)), act:{k:"progress",l:"ntfSee"}}); }catch(e){}
+    goalRing(); [$("lvlAv"),$("mbAv")].forEach(el=>{ if(!el) return; el.classList.remove("gl-win"); void el.offsetWidth; el.classList.add("gl-win"); setTimeout(()=>el.classList.remove("gl-win"),1000); }); }
+  else goalRing(); }
+// ---- streak freezes: one earned every 7 days of streak (2 at most), used on their own the day after a missed day ----
+function frzStore(){ if(!S.freeze||typeof S.freeze!=="object") S.freeze={n:0, used:[], at:0}; if(!Array.isArray(S.freeze.used)) S.freeze.used=[]; S.freeze.n=Math.max(0,Math.min(2,S.freeze.n|0)); return S.freeze; }
+const frzDays = () => new Set((S.freeze&&Array.isArray(S.freeze.used))?S.freeze.used:[]);
+function freezeCheck(){ const st=S.streak; if(!st || !st.last || !(st.days>0)) return false; const y=addDays(-1); if(st.last>=y) return false;
+  const f=frzStore(); if(!f.n) return false; const miss=[]; const d=pDate(st.last); for(let i=0;i<40;i++){ d.setDate(d.getDate()+1); const k=dayStr(d); if(k>y) break; miss.push(k); }
+  if(!miss.length || miss.length>f.n) return false; // more days missed than freezes: a new streak starts (never counted as a loss)
+  f.n-=miss.length; f.used=[...new Set([...f.used, ...miss])].sort().slice(-40); f.at=Date.now(); st.last=y; save();
+  try{ ntfAdd({key:"frz-"+dayStr(), cat:"progress", type:"freeze", ti:t("streakFrozen"), tx:t("frzNtfX")(f.n), act:{k:"progress",l:"ntfSee"}}); }catch(e){}
+  return true; }
+function freezeEarn(){ const d=S.streak&&S.streak.days|0; if(!d || d%7) return; const f=frzStore(); if(f.n>=2 || f.won===d+":"+S.streak.last) return;
+  f.n++; f.won=d+":"+S.streak.last; f.at=Date.now();
+  try{ ntfAdd({key:"frzw-"+S.streak.last, cat:"progress", type:"freezeWon", ti:t("frzWonT"), tx:t("frzWonX"), act:{k:"progress",l:"ntfSee"}}); }catch(e){} }
+// ---- the goal row of the progress sheet (streak card): ring, today, this week, freezes ----
+function goalFiche(st){ const box=$("pfGoal"); if(!box) return; const g=goalCfg(), done=goalDone(), p=done?1:goalPct(g), r=12, C=2*Math.PI*r;
+  const left=Math.max(0, g.v-goalNow(g)), f=frzStore(), y=addDays(-1);
+  box.className="pf-goal"+(done?" done":"");
+  box.innerHTML='<svg class="gl-r" viewBox="0 0 30 30" aria-hidden="true"><circle class="tr" cx="15" cy="15" r="'+r+'"/><circle class="fg" cx="15" cy="15" r="'+r+'" stroke-dasharray="'+(C*p).toFixed(2)+' '+C.toFixed(2)+'"/></svg>'
+    +'<span class="gl-t"><b></b><small></small></span><span class="gl-chips"><span class="gl-chip wk"></span>'+(f.n||f.used.includes(y)?'<span class="gl-chip fz"></span>':'')+'</span>';
+  box.querySelector("b").textContent = done ? t("goalOk") : t("goalOf")(fmtN(goalNow(g)),fmtN(g.v),goalUnit(g));
+  box.querySelector("small").textContent = done ? t("goalOf")(fmtN(g.v),fmtN(g.v),goalUnit(g)) : t("goalDay");
+  const wk=box.querySelector(".wk"); wk.textContent=t("wkNow")(st.wkNow)+(st.wkNow>=3?" ✓":""); wk.classList.toggle("ok",st.wkNow>=3); wk.title=t("wkTip");
+  const fz=box.querySelector(".fz"); if(fz){ fz.textContent="❄ "+(f.used.includes(y)&&!(S.xpDays||{})[y]?t("frzUsed"):t("frzN")(f.n)); }
+  box.title = done ? "" : t("goalLeft")(fmtN(left), goalUnit(g)); }
+// ---- choosing the goal: Settings (tab Partie) and, once, after a game played well ----
+$("segGoal").addEventListener("click",e=>{ const b=e.target.closest("button[data-v]"); if(!b) return; const [k,v]=b.dataset.v.split(":"); goalSet(k,+v); });
+let glPick="min:10";
+function goalOpen(){ const g=goalCfg(); glPick=g.kind+":"+g.v; S.goal={...(S.goal&&typeof S.goal==="object"?S.goal:{kind:g.kind, v:g.v, at:0}), asked:1}; save();
+  const box=$("glOpts"); box.innerHTML=""; const tags=t("goalTags");
+  GOALS.forEach(([k,v],i)=>{ const b=document.createElement("button"); b.type="button"; b.className="gl-opt"; b.dataset.v=k+":"+v; b.innerHTML="<b></b><small></small>"; b.firstChild.textContent=v+" "+(k==="xp"?"XP":"min"); b.lastChild.textContent=tags[i];
+    b.setAttribute("aria-pressed", b.dataset.v===glPick); b.onclick=()=>{ glPick=b.dataset.v; box.querySelectorAll(".gl-opt").forEach(x=>x.setAttribute("aria-pressed",x.dataset.v===glPick)); }; box.appendChild(b); });
+  openMod("goalModal"); setTimeout(()=>{ const sel=box.querySelector('[aria-pressed="true"]'); if(sel) sel.focus({preventScroll:true}); },30); }
+$("glOk").addEventListener("click",()=>{ const [k,v]=glPick.split(":"); goalSet(k,+v); closeMod("goalModal"); toast(t("goalSaved")); });
+Object.assign(NTF_ICON,{goal:"medal", freeze:"gift", freezeWon:"gift"});
+// on start, and when the app comes back the next day: a freeze may cover yesterday
+try{ freezeCheck(); }catch(e){}
+document.addEventListener("visibilitychange",()=>{ if(document.visibilityState==="visible"){ try{ freezeCheck(); goalRing(); renderStatus(); }catch(e){} } });
+setInterval(()=>{ try{ freezeCheck(); goalRing(); }catch(e){} }, 10*60*1000);
+/* ==== fin Objectif ==== */
+/* ==== MIDI lot 1 (24/10/2026) : pastille d'état M1, toasts et pause M13, carte d'accueil M2, test « joue une note » M8 ==== */
+// S.midi = {hw:{name, vel}, seenAt, tested, later} : propre à cet appareil (mergeState garde la valeur locale ; un état ancien sans la clé marche)
+var MD={prev:null, paused:null, hold:false, cd:0, tt:0, wait:false};
+const mdS=()=>{ if(!S.midi||typeof S.midi!=="object"||Array.isArray(S.midi)) S.midi={}; return S.midi; };
+const mdTrunc=n=>{ n=String(n||""); return n.length>18 ? n.slice(0,17)+"…" : n; };
+const mdQuiet=()=>(typeof startUI==="function"&&startUI()) || FN.on;
+const MD_GEAR='<span class="cg"><svg viewBox="0 0 24 24"><path d="M10.3 3.2a1.8 1.8 0 0 1 3.4 0l.4 1.2a1.8 1.8 0 0 0 2.4 1l1.1-.6a1.8 1.8 0 0 1 2.4 2.4l-.6 1.1a1.8 1.8 0 0 0 1 2.4l1.2.4a1.8 1.8 0 0 1 0 3.4l-1.2.4a1.8 1.8 0 0 0-1 2.4l.6 1.1a1.8 1.8 0 0 1-2.4 2.4l-1.1-.6a1.8 1.8 0 0 0-2.4 1l-.4 1.2a1.8 1.8 0 0 1-3.4 0l-.4-1.2a1.8 1.8 0 0 0-2.4-1l-1.1.6a1.8 1.8 0 0 1-2.4-2.4l.6-1.1a1.8 1.8 0 0 0-1-2.4l-1.2-.4a1.8 1.8 0 0 1 0-3.4l1.2-.4a1.8 1.8 0 0 0 1-2.4l-.6-1.1a1.8 1.8 0 0 1 2.4-2.4l1.1.6a1.8 1.8 0 0 0 2.4-1z"/><circle cx="12" cy="12" r="3"/></svg></span>';
+const MD_PLUG='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 3v4M15 3v4M7 7h10v4a5 5 0 0 1-10 0zM12 16v5"/></svg>';
+const MD_UNPLUG='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 3v4M15 3v4M7 7h10v4a5 5 0 0 1-10 0zM12 16v5M4 4l16 16"/></svg>';
+const MD_CHECK='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>';
+OBJ.midikbd=()=>{ const o=O3(); o.raw('<path d="M98 86c14 4 16 18 6 26" stroke="#2b2560" stroke-width="5" fill="none" stroke-linecap="round"/>'); o.block(96,104,14,14,"#d8d6ee",4);
+  o.block(8,48,104,46,"#3a3478",12); o.block(14,54,92,8,"#5b4bd6",4); o.raw('<rect x="16" y="66" width="88" height="24" rx="4" fill="#fbfbff"/><g fill="#2b2560">'+[25,37,55,67,79].map(x=>'<rect x="'+x+'" y="66" width="7" height="14" rx="2"/>').join("")+'</g><g stroke="#d8d6ee" stroke-width="1.2">'+[28,40,52,64,76,88].map(x=>'<path d="M'+(x+.5)+' 80v10"/>').join("")+'</g>');
+  return o.ball(30,26,9,"#ff5a6e").ball(58,16,8,"#ffd23f").ball(84,28,8,"#3cc8f0").svg(); };
+// ---- état affiché (M1) ----
+function mdState(){ const m=S.settings.input, poss=midiPossible();
+  if(m==="mic") return {k:micOn?"mic":"micoff", lbl:t(micOn?"mdMic":"mdMicOff")};
+  if(midiReady){ const n=midiNames.length, one=S.settings.midiInput&&midiNames.includes(S.settings.midiInput)?S.settings.midiInput:(n===1?midiNames[0]:"");
+    return one ? {k:"ok", lbl:mdTrunc(one), full:one} : {k:"ok", lbl:t("mdNKb")(n), full:midiNames.join(", ")}; }
+  if(m==="midi" && poss) return {k:"wait", lbl:t("mdWait")};
+  if(poss && !mdS().seenAt) return {k:"plug", lbl:t("mdPlugShort")};
+  return {k:"screen", lbl:t("mdScreen")}; }
+function mdPill(){ if(!MD) return; const s=mdState(), c=$("inChip"), mb=$("mbMidi");
+  const ic = s.k==="plug" ? MD_PLUG : INPUT_ICONS[s.k==="ok"||s.k==="wait" ? "midi" : s.k==="screen" ? "screen" : "mic"];
+  if(c){ c.className="inp-chip md-pill md-"+s.k; c.innerHTML='<span class="mp-ic">'+ic+'</span><span class="lbl mp-t"></span>'+MD_GEAR+'<i class="'+(s.k==="wait"||s.k==="micoff"?"off":"on")+'"></i>';
+    c.querySelector(".mp-t").textContent=s.lbl; c.title=s.full||s.lbl; c.setAttribute("aria-label",c.title); c.dataset.st=s.k; }
+  if(mb){ mb.className="mbar-btn ghost md-mb md-"+s.k; mb.innerHTML=INPUT_ICONS[s.k==="screen"?"screen":s.k.startsWith("mic")?"mic":"midi"]+'<i></i>'; mb.title=s.full||s.lbl; mb.setAttribute("aria-label",mb.title); } }
+function mdPillClick(){ closeDrawer(); if(!midiPossible()){ openInputChooser(true); return; }
+  if(!midiAcc && !midiDenied && S.settings.input!=="mic"){ setInput("midi",true).then(()=>{ if(!midiOpen) openMidi(); }); return; }
+  openMidi(); }
+$("mbMidi").addEventListener("click",mdPillClick);
+$("mdChange").addEventListener("click",()=>{ closeMidi(); openInputChooser(true); });
+// ---- carte « Ton clavier » de l'accueil (M2) ----
+function mdHub(){ const c=$("hsMidi"); if(!c||!MD) return; const s=mdS(), poss=midiPossible(), ok=midiReady && S.settings.input!=="mic";
+  const st = ok ? "ok" : !poss ? "no" : (s.later && Date.now()-s.later<7*864e5) ? "later" : "promo";
+  c.className="hs-card hs-midi md-"+st; $("hsMidiDot").classList.toggle("on",ok);
+  const o=$("hsMidiObj"); if(st==="promo" && !o.firstChild) o.innerHTML=OBJ.midikbd();
+  const kb=/^\d+$/.test(S.settings.kbdSize||"") ? t("mdKeysN")(S.settings.kbdSize) : t("mdConnected"), st1=mdState();
+  $("hsMidiK").textContent=t("mdHubK");
+  $("hsMidiT").textContent = st==="ok" ? (st1.k==="ok"?st1.lbl:mdTrunc(midiNames[0])) : st==="promo" ? t("mdHubT") : t("hsMidiT");
+  $("hsMidiT").title = st==="ok" ? (st1.full||"") : "";
+  $("hsMidiSub").textContent = st==="ok" ? kb : st==="promo" ? t("mdHubS") : st==="no" ? t("mdHubNo") : t("mdHubOff");
+  $("hsMidiBtn").textContent = st==="ok" ? t("mdTest") : st==="promo" ? t("mdPlug") : st==="no" ? t("mdHubHow") : t("hsMidiConnect"); }
+$("hsMidiLater").addEventListener("click",()=>{ mdS().later=Date.now(); save(); mdHub(); });
+// ---- branchements à chaud (M13) ----
+function mdToast(kind, title, sub, btn, ms, act){ let el=$("mdToast");
+  if(!el){ el=document.createElement("div"); el.id="mdToast"; el.setAttribute("role","status"); el.setAttribute("aria-live","polite"); document.body.appendChild(el); }
+  el.className="md-toast md-"+kind; el.innerHTML='<span class="mt-ic">'+(kind==="lost"?MD_UNPLUG:kind==="ok"?MD_CHECK:INPUT_ICONS.midi)+'</span><span class="mt-tx"><b></b><small></small></span>'+(btn?'<button class="btn primary" type="button"></button>':'');
+  el.querySelector("b").textContent=title; const sm=el.querySelector("small"); sm.textContent=sub||""; sm.hidden=!sub;
+  if(btn){ const b=el.querySelector("button"); b.textContent=btn; b.onclick=()=>{ mdToastHide(); if(act) act(); }; }
+  requestAnimationFrame(()=>el.classList.add("on")); clearTimeout(MD.tt); MD.tt=setTimeout(mdToastHide,ms||3000); }
+function mdToastHide(){ const el=$("mdToast"); if(el) el.classList.remove("on"); clearTimeout(MD.tt); }
+function mdPorts(names){ const prev=MD.prev, s=mdS(); MD.prev=names.slice(); if(midiOpen) mtRender();
+  if(names.length){ const nm=S.settings.midiInput&&names.includes(S.settings.midiInput)?S.settings.midiInput:names[0];
+    if(!s.seenAt || !s.hw || s.hw.name!==nm){ s.seenAt=s.seenAt||Date.now(); s.hw = s.hw&&s.hw.name===nm ? s.hw : {name:nm}; save(); } }
+  if(prev===null) return; // the first look is not a change
+  const added=names.filter(n=>!prev.includes(n)), gone=prev.filter(n=>!names.includes(n));
+  if(added.length){ if(MD.paused){ mdBack(); return; } if(mdQuiet() || midiOpen) return;
+    if(S.settings.input==="midi") mdToast("ok", t("mdOnNow")(mdTrunc(added[0])), "", null, 3000);
+    else mdToast("found", t("mdDetected")(mdTrunc(added[0])), t(S.settings.input==="mic"?"mdWasMic":S.settings.input==="screen"?"mdWasScreen":"mdWasNone"), t("mdUse"), 5000, ()=>{ setInput("midi"); }); return; }
+  if(gone.length && !names.length){ if(MD.paused){ mdCdStop(); return; } mdLostNow(); } }
+function mdLostNow(){ const a = (S.settings.input==="midi" && !LV.on) ? actNow() : null;
+  const pause = a && (a.k==="learn" || a.k==="daily" || a.k==="game" || (a.k==="duel" && !a.online));
+  if(!pause){ if(!mdQuiet()) mdToast("lost", t("mdLostT"), a&&a.online ? t("mdLostOn") : S.settings.input==="midi" ? t("mdLostPill") : "", null, a&&a.online?4000:3000); return; }
+  mdToastHide(); MD.paused=a; MD.wait=false; mdHold(true); mdLostRender(); openMod("mdLost"); $("mdGoScreen").focus({preventScroll:true}); }
+// the games hold still like behind the « Leave the game? » window (lvHold); LEARN pauses by itself under a window (pauseRound)
+function mdHold(on){ const a=MD.paused; if(!a || a.k==="learn" || a.k==="daily") return;
+  if(on){ if(HOLD) return; const keep=LV.a; LV.a=a; lvHold(true); LV.a=keep; MD.hold=true; return; }
+  if(!MD.hold) return; MD.hold=false; const keep=LV.a; LV.a=a; lvHold(false); LV.a=keep; }
+function mdLostRender(back){ $("mdLostS").textContent=t("mdLostSub"); $("mdLost").querySelector(".md-lost").classList.toggle("back",!!back);
+  $("mdLostWaitT").textContent = back ? t("mdBack")(back) : MD.wait ? t("mdWaiting") : t("mdWaitAuto"); $("mdWaitKb").setAttribute("aria-pressed",MD.wait); }
+function mdBack(){ mdCdStop(); let n=3; mdLostRender(n); MD.cd=setInterval(()=>{ n--; if(n<=0){ mdCdStop(); mdResume(); } else mdLostRender(n); },1000); }
+function mdCdStop(){ clearInterval(MD.cd); MD.cd=0; if(MD.paused) mdLostRender(); }
+function mdResume(){ if(!MD.paused) return; clearInterval(MD.cd); MD.cd=0; mdHold(false); MD.paused=null; closeMod("mdLost"); renderInputUI(); }
+$("mdGoScreen").addEventListener("click",async ()=>{ if(!MD.paused) return; await setInput("screen"); mdResume(); });
+$("mdWaitKb").addEventListener("click",()=>{ MD.wait=true; if(!MD.cd) mdLostRender(); });
+document.addEventListener("keydown",e=>{ if(MD.paused && e.key==="Escape"){ e.preventDefault(); e.stopImmediatePropagation(); $("mdGoScreen").click(); } },true);
+// watch for a keyboard in the background when MIDI was already allowed (the app, or a browser permission granted before): no prompt
+function mdWatch(){ if(midiAcc || !navigator.requestMIDIAccess || !midiPossible() || S.settings.input==="midi") return;
+  if(document.documentElement.classList.contains("native")){ enableMidi(true); return; }
+  try{ navigator.permissions.query({name:"midi"}).then(p=>{ if(p && p.state==="granted" && !midiAcc) enableMidi(true); }).catch(()=>{}); }catch(e){} }
+// ---- test « joue une note » en tête de la fenêtre Clavier MIDI (M8) ----
+const MT={vels:[], lo:48, last:null, twice:""};
+function mtReset(){ MT.vels=[]; MT.last=null; MT.twice=""; mtRender(); }
+function mtTouch(){ const v=MT.vels; if(v.length<2) return null; const mx=Math.max(...v), mn=Math.min(...v); if(mx-mn>=40) return true; if(mx===mn) return false; return null; }
+function mtNote(m, v, port){ MT.vels.push(v); MT.last={m,v,port};
+  if(S.settings.midiSound) tone(m,0,.9,.1+.26*v/127);
+  const s=mdS(); s.tested=Date.now(); s.hw={...(s.hw&&s.hw.name===port?s.hw:{}), name:port}; const r=mtTouch(); if(r!=null) s.hw.vel=r; save();
+  if(m<MT.lo || m>=MT.lo+24) MT.lo=Math.max(0,Math.min(103,12*Math.floor(m/12)));
+  mtRender(); }
+function mtKb(){ const kb=$("mtKb"); if(!kb) return; if(kb.dataset.lo==String(MT.lo)) return; kb.dataset.lo=MT.lo; kb.innerHTML="";
+  const whites=[], WH=[0,2,4,5,7,9,11]; for(let m=MT.lo;m<MT.lo+24;m++) if(WH.includes(m%12)) whites.push(m);
+  whites.forEach(m=>{ const w=document.createElement("span"); w.className="w"; w.dataset.m=m; if(m%12===0){ const l=document.createElement("small"); l.textContent=octName(m); w.appendChild(l); } kb.appendChild(w); });
+  const ww=100/whites.length; for(let m=MT.lo;m<MT.lo+24;m++) if(!WH.includes(m%12)){ const i=whites.indexOf(m-1); const b=document.createElement("span"); b.className="b"; b.dataset.m=m; b.style.left="calc("+((i+1)*ww)+"% - "+(ww*.3)+"%)"; b.style.width=(ww*.6)+"%"; kb.appendChild(b); } }
+function mtRender(){ const box=$("mdTest"); if(!box) return; box.hidden=!midiReady; if(!midiReady) return; mtKb();
+  const L=MT.last, kb=$("mtKb"); kb.querySelectorAll(".on").forEach(e=>e.classList.remove("on"));
+  const msg=$("mtMsg"); msg.classList.toggle("ok",!!L);
+  if(L){ const pc=L.m%12, nc="var(--note-"+pc+")"; const k=kb.querySelector('[data-m="'+L.m+'"]'); if(k){ k.style.setProperty("--nc",nc); k.classList.add("on"); }
+    $("mtName").textContent=(S.settings.notation==="fr"?PC_FR:PC_EN)[pc]; $("mtName").parentNode.style.setProperty("--nc",nc);
+    $("mtSub").textContent=octName(L.m)+" · "+t("mdForceN")(L.v); $("mtBar").style.height=Math.round(L.v/127*100)+"%"; $("mtVel").textContent=L.v;
+    msg.textContent=t("mdTalks"); const sm=document.createElement("small"); sm.textContent=t("mdFrom")(octName(L.m),L.port); msg.appendChild(sm); }
+  else { $("mtName").textContent="♪"; $("mtName").parentNode.style.removeProperty("--nc"); $("mtSub").textContent=""; $("mtBar").style.height="0"; $("mtVel").textContent=""; msg.textContent=t("mdPressAny"); }
+  const r=mtTouch(), tr=$("mtTouchRes"), v=MT.vels; tr.className = r ? "ok" : "";
+  tr.textContent = r===true ? t("mdTouchVals")(Math.max(...v),Math.min(...v))+" · "+t("mdTouchOk") : r===false ? t("mdTouchNo") : v.length ? t("mdForceN")(v[v.length-1]) : "";
+  $("mtTwice").querySelectorAll("[data-v]").forEach(b=>b.setAttribute("aria-pressed",b.dataset.v===MT.twice));
+  $("mtTwiceRes").textContent = MT.twice==="yes" ? t("mdTwiceYes") : MT.twice==="none" ? t("mdTwiceNone") : MT.twice==="no" ? t("mdTwiceNo") : ""; }
+$("mtTwice").addEventListener("click",e=>{ const b=e.target.closest("[data-v]"); if(!b) return; MT.twice=b.dataset.v;
+  if(MT.twice==="yes") S.settings.midiSound=false; else if(MT.twice==="none") S.settings.midiSound=true;
+  save(); renderSettings(); mtRender(); });
+/* ==== fin MIDI lot 1 ==== */
+/* ==== Premiers pas (chantier Débutant, lot 1) ==== */
+// The "First steps" path: 14 two-minute lessons (P01–P03 written in lot 1, the others shown as "soon"). A lesson = Watch (the keyboard
+// shows and sounds the idea) → My turn (short exercises, checked by pitch class or by the exact note) → Bravo (1–3 stars, XP ×2).
+// Page "pp" (#ppPanel): views "path" (D6 overview), "open" (D9), "lesson" (D10 watch, D11 exercise, D12 help), "bravo" (D17).
+// State: S.pp {v,on,cur,step,done:{p01:{at,stars,err,sec,tries,last}},fail,start,end} and S.resume {kind:"pp",id,step,inp,at,v,err,fin}.
+// LEARN shows the compact map (#ppMap, D7), the hub a « Pick up » card (#ppResume, D8). Notes reach the lesson through midiFlush (ppIn).
+const PP_V=1, PP_IDS=Array.from({length:14},(_,i)=>"p"+String(i+1).padStart(2,"0")), PP_READY=["p01","p02","p03"], PP_XP=20, PP_MULT=2;
+const PP_MIN=[2,2,2,3,2,2,3,3,3,2,3,3,3,3];
+const PP_FOOT='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 21c-2.2 0-3.5-1.8-3.5-4.2 0-2.6 1.4-5.3 3.4-5.3s3 1.9 3 4.2c0 3-1 5.3-2.9 5.3z"/><circle cx="7.3" cy="7.6" r="1.3"/><circle cx="10.3" cy="5.6" r="1.3"/><circle cx="13.6" cy="6.2" r="1.2"/><circle cx="16" cy="8.4" r="1.1"/><circle cx="17.2" cy="11.3" r="1"/></svg>';
+const PP_ICON=["M4 5h16v14H4zM9 5v8M15 5v8","M4 11l8-7 8 7v9H4zM10 20v-5h4v5","M4 17l5-5 4 3 7-8M4 17h.01M9 12h.01M13 15h.01M20 7h.01","M6 18V9M10 18V6M14 18V9M18 18V6","M13 3L5 14h6l-1 7 8-11h-6z","M3 12h18M7 8l-4 4 4 4M17 8l4 4-4 4",
+  "M8 13V6.5a1.5 1.5 0 0 1 3 0V11M11 11V4.5a1.5 1.5 0 0 1 3 0V11M14 11V6.5a1.5 1.5 0 0 1 3 0V14c0 4-2.5 7-6 7-2.6 0-4.4-1.4-5.6-3.6L3.6 14a1.5 1.5 0 0 1 2.6-1.5L8 15",
+  "M9 18V5l11-2v13M9 18a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0zM20 16a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0z","M3 12h4l2-5 4 10 2-5h6","M12 3.5a2 2 0 1 1 0 4 2 2 0 0 1 0-4zM12 10a2 2 0 1 1 0 4 2 2 0 0 1 0-4zM12 16.5a2 2 0 1 1 0 4 2 2 0 0 1 0-4z",
+  "M6 6a2 2 0 1 1 0 4 2 2 0 0 1 0-4zM6 14a2 2 0 1 1 0 4 2 2 0 0 1 0-4zM12 12h9M18 9l3 3-3 3","M20 11a8 8 0 0 0-14.5-4.5M4 13a8 8 0 0 0 14.5 4.5M5 3v4h4M19 21v-4h-4","M5 20v-7M9 20V8M13 20V8M17 20v-7M5 13c0-5 12-5 12 0","M5 4h14v16H5zM10 15V8l5-1v6M10 15a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zM15 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z"];
+const ppSvg = i => '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="'+PP_ICON[i]+'"/></svg>';
+const PP={view:"path", id:null, L:null, step:0, items:[], ii:0, err:0, errStep:0, show:0, t0:0, tm:[], busy:0, lit:new Set(), zone:[], demo:new Map(), say:"", fb:"", fbk:"", bold:false, res:null, open:null, sayI:0};
+// en: "a C", "an E" (bravo texts and prompts)
+function ppArt(n){ return (/^[AEF]/.test(n)?"an ":"a ")+n; }
+const ppNames = () => (S.settings.notation==="fr"?PC_FR:PC_EN);
+const ppNN = pc => ppNames()[((pc%12)+12)%12];
+function ppS(){ const o=S.pp&&typeof S.pp==="object"&&!Array.isArray(S.pp)?S.pp:{}; S.pp=o; o.v=PP_V;
+  if(!o.done||typeof o.done!=="object"||Array.isArray(o.done)) o.done={}; if(!o.fail||typeof o.fail!=="object") o.fail={}; if(!PP_IDS.includes(o.cur)) o.cur=ppFirstOpen(o); return o; }
+function ppFirstOpen(o){ const d=((o||S.pp||{}).done)||{}; return PP_IDS.find(id=>!d[id])||PP_IDS[PP_IDS.length-1]; }
+const ppDoneN = () => PP_IDS.filter(id=>(((S.pp||{}).done)||{})[id]).length;
+const ppNum = id => PP_IDS.indexOf(id)+1;
+const ppReady = id => PP_READY.includes(id);
+const ppInp = () => S.settings.input||"screen";
+const ppStarsOf = id => ((((S.pp||{}).done)||{})[id]||{}).stars|0;
+const ppTitle = id => t("ppTi")(ppNames())[PP_IDS.indexOf(id)];
+const ppShortT = id => t("ppShort")(ppNames())[PP_IDS.indexOf(id)];
+const ppStarted = () => !!(S.pp && (S.pp.start || Object.keys(S.pp.done||{}).length));
+// ---- the lesson keyboard: same keys as the app's keyboard (.kbd/.wk/.bk), 2 octaves C3–C5 (1.5 on a phone held upright)
+const ppNarrow = () => matchMedia("(max-width:640px) and (orientation:portrait)").matches;
+const ppRange = () => ppNarrow()?[48,69]:[48,72];
+const ppFold = m => { const [lo,hi]=ppRange(); while(m<lo) m+=12; while(m>hi) m-=12; return m; };
+const ppKeys = pcs => { const [lo,hi]=ppRange(), o=[]; for(let m=lo;m<=hi;m++) if(pcs.includes(m%12)) o.push(m); return o; };
+function ppGroups(n){ const [lo,hi]=ppRange(), out=[]; for(let c=lo-(lo%12);c<=hi;c+=12){ const g=(n===2?[1,3]:[6,8,10]).map(x=>c+x).filter(m=>m>=lo&&m<=hi); if(g.length) out.push(g); } return out; }
+function ppKbHTML(){ const [lo,hi]=ppRange(), W=[], N=ppNames(); for(let m=lo;m<=hi;m++) if(NAT.includes(m%12)) W.push(m);
+  const ww=100/W.length, bw=ww*.62; let h="";
+  W.forEach((m,i)=>{ h+='<div class="wk" data-m="'+m+'" role="button" aria-label="'+esc(N[m%12])+'" style="--nc:var(--note-'+(m%12)+')"><span>'+esc(N[m%12])+'</span>'+(m===60?'<i class="pp-star" aria-hidden="true">★</i>':'')+'</div>';
+    if([0,2,5,7,9].includes(m%12) && m+1<=hi) h+='<div class="bk" data-m="'+(m+1)+'" role="button" aria-label="'+esc(N[(m+1)%12])+'" style="--nc:var(--note-'+(m%12)+');left:'+((i+1)*ww-bw/2)+'%;width:'+bw+'%"><span></span></div>'; });
+  return h; }
+const ppKeyEl = m => { const k=$("ppKb"); return k && k.querySelector('[data-m="'+ppFold(m)+'"]'); };
+function ppKeyCls(m, cls, ms){ const el=ppKeyEl(m); if(!el) return; el.classList.remove(cls); void el.offsetWidth; el.classList.add(cls); if(ms) setTimeout(()=>el.classList.remove(cls),ms); }
+function ppPaint(){ const k=$("ppKb"); if(!k) return; const lit=new Set([...PP.lit].map(ppFold)), zone=new Set(PP.zone.map(ppFold));
+  k.querySelectorAll("[data-m]").forEach(el=>{ const m=+el.dataset.m, d=PP.demo.get(m); el.classList.toggle("pp-on",lit.has(m)); el.classList.toggle("pp-zone",zone.has(m));
+    el.classList.toggle("pp-lit",!!d); if(d) el.style.setProperty("--lc",d); }); }
+function ppLater(fn, ms){ const id=setTimeout(()=>{ PP.tm=PP.tm.filter(x=>x!==id); fn(); }, ms); PP.tm.push(id); }
+function ppClearTimers(){ PP.tm.forEach(clearTimeout); PP.tm=[]; }
+// ---- lessons (§3.3 of the beginner's path): each exercise step makes its items when it starts (random order each time)
+const ppShuf = a => { a=a.slice(); for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; };
+function ppPc(pcs, o){ return {...o, check:m=>pcs.includes(((m%12)+12)%12)?"ok":"bad", zone:o.zone||(()=>ppKeys(pcs)), showM:o.showM||(()=>[ppKeys(pcs).sort((a,b)=>Math.abs(a-60)-Math.abs(b-60))[0]])}; }
+function ppRun(startOk, o){ const it={...o, got:[]}; // C, D, E in a row from a C (the exact notes: n, n+2, n+4)
+  it.check=m=>{ const pc=((m%12)+12)%12; if(it.got.length){ const exp=it.got[0]+[0,2,4][it.got.length]; if(m===exp){ it.got.push(m); return it.got.length===3?"ok":"step"; } if(it.got.includes(m)) return "skip"; }
+    if(pc===0 && startOk(m)){ it.got=[m]; return "step"; } return "bad"; };
+  return it; }
+function ppAllC(need, o){ const it={...o, got:[], need}; // every C, left to right
+  it.check=m=>{ it.why=null; if(((m%12)+12)%12!==0) return "bad"; if(it.got.includes(m)) return "skip"; if(it.got.length && m<it.got[it.got.length-1]){ it.why="order"; return "bad"; } it.got.push(m); return it.got.length>=need?"ok":"step"; };
+  return it; }
+function ppEar(seq, o){ const it={...o, got:[], seq}; // listen and play back: the same pitch classes in the same order
+  it.check=m=>{ if(((m%12)+12)%12===seq[it.got.length]){ it.got.push(m); return it.got.length===seq.length?"ok":"step"; } return "bad"; };
+  it.play=()=>{ PP.demo.clear(); ppPaint(); seq.forEach((pc,i)=>ppLater(()=>{ tone(60+pc,0,.5,.26); PP.demo.set(60+pc,"var(--note-"+pc+")"); ppPaint(); ppLater(()=>{ PP.demo.delete(60+pc); ppPaint(); },380); },i*480)); };
+  it.showM=()=>seq.map(pc=>60+pc); it.zone=()=>ppKeys([0,1,2,3,4]).filter(m=>m>=60&&m<=64); return it; }
+function ppLesson(id){ const N=ppNames(), C=N[0], D=N[2], E=N[4], g2=ppGroups(2), g3=ppGroups(3);
+  const watch=demo=>({k:"watch", demo});
+  if(id==="p01"){ const W=t("pp01Where"), side=(g,i)=>()=>{ const ks=g.flat(); return [i===0?ks[0]:i===1?ks[ks.length-1]:ks[Math.floor(ks.length/2)]]; };
+    const two=i=>ppPc([1,3],{say:t("pp01Two"), sub:W[i%3], sub1:t("pp01Black")(2), ok:t("ppGood"), zone:()=>g2.flat(), showM:side(g2,i%3)});
+    const three=i=>ppPc([6,8,10],{say:t("pp01Three"), sub:W[i%3], sub1:t("pp01Black")(3), ok:t("ppGood"), zone:()=>g3.flat(), showM:side(g3,i%3)});
+    return {steps:[watch(()=>{ ppSay(t("pp01W")[0]); let d=350; g2.forEach(g=>{ ppLater(()=>g.forEach((m,i)=>{ PP.demo.set(m,"#3d7bff"); tone(m,i*.16,.35,.2); ppPaint(); }),d); d+=850; });
+        ppLater(()=>ppSay(t("pp01W")[1]),d); g3.forEach(g=>{ ppLater(()=>g.forEach((m,i)=>{ PP.demo.set(m,"#ff9a3c"); tone(m,i*.16,.35,.2); ppPaint(); }),d); d+=950; }); }),
+      {k:"ex", mk:()=>[0,1,2].map(two)}, {k:"ex", mk:()=>[0,1,2].map(three)}, {k:"ex", mk:()=>ppShuf([two(2),two(0),three(1),three(2)])}],
+      can:t("ppCan")(N)[0]}; }
+  if(id==="p02"){ const Cs=ppKeys([0]), one=()=>ppPc([0],{say:t("ppPlay")(C), sub:t("ppFindC"), sub1:t("pp02Sub1"), ok:t("ppOk")(C), zone:()=>g2.flat().concat(Cs)});
+    const need = ppInp()==="screen" ? Cs.length : 3;
+    return {steps:[watch(()=>{ ppSay(t("pp02W")(N)[0]); const g=g2.find(x=>x[0]===61)||g2[0];
+        ppLater(()=>{ g.forEach(m=>PP.demo.set(m,"#3d7bff")); ppPaint(); },300); ppLater(()=>{ PP.demo.set(g[0]-1,"var(--note-0)"); tone(g[0]-1,0,.6,.28); ppPaint(); },1100);
+        ppLater(()=>{ ppSay(t("pp02W")(N)[1]); PP.demo.clear(); ppPaint(); },2300); Cs.forEach((m,i)=>ppLater(()=>{ PP.demo.set(m,"var(--note-0)"); tone(m,0,.5,.26); ppPaint(); },2600+i*650)); }),
+      {k:"ex", mk:()=>[one(),one(),one()]},
+      {k:"ex", mk:()=>[ppAllC(need,{say:t("pp02All")(C), sub:t("pp02AllS")(C), sub1:t("pp02Sub1"), zone:()=>Cs, showM:()=>Cs, bad:(m,it)=>it.why==="order"?t("pp02Order")(C):null})]},
+      {k:"ex", mk:()=>[{say:t("pp02Mid")(C), sub:t("pp02MidS"), sub1:t("pp02MidS"), ok:t("ppOk")(C), check:m=>m===60?"ok":"bad", zone:()=>[60,61,62,63,64,65,66,67,68,69,70,71].filter(m=>m<=ppRange()[1]), showM:()=>[60], bad:m=>((m%12)+12)%12===0?t("pp02NotMid")(C):null}]}],
+      can:t("ppCan")(N)[1]}; }
+  if(id==="p03"){ const H=t("pp03Hint"), near=ppKeys([0,1,2,3,4]).filter(m=>m>=60&&m<=64), otherC=ppKeys([0]).find(m=>m!==60&&m+4<=ppRange()[1])||48;
+    const run=(mid)=>ppRun(mid?(m=>m===60):(m=>m!==60),{say:t("pp03Run")(N), sub:mid?t("pp03From1")(C):t("pp03From2")(C), sub1:mid?t("pp03From1")(C):t("pp03From2")(C), ok:t("ppGood"), zone:()=>mid?near:[otherC,otherC+1,otherC+2,otherC+3,otherC+4], showM:()=>mid?[60,62,64]:[otherC,otherC+2,otherC+4]});
+    const one=pc=>ppPc([pc],{say:t("ppPlay")(N[pc]), sub:H[pc/2], sub1:H[pc/2], ok:t("ppOk")(N[pc]), zone:()=>ppKeys([0,1,2,3,4])});
+    const six=()=>{ const o=[]; let last=-1; while(o.length<6){ const pc=[0,2,4][Math.floor(Math.random()*3)]; if(pc===last) continue; o.push(pc); last=pc; } if(!o.includes(2)) o[2]=2; if(!o.includes(4)) o[4]=4; return o.map(one); };
+    return {steps:[watch(()=>{ ppSay(t("pp03W")(N)[0]); const g=g2.find(x=>x[0]===61)||g2[0];
+        ppLater(()=>{ g.forEach(m=>PP.demo.set(m,"#3d7bff")); ppPaint(); },300);
+        [0,2,4].forEach((pc,i)=>ppLater(()=>{ PP.demo.set(60+pc,"var(--note-"+pc+")"); tone(60+pc,0,.55,.26); ppPaint(); },1100+i*700));
+        ppLater(()=>ppSay(t("pp03W")(N)[1]),3400); }),
+      {k:"ex", mk:()=>[run(true),run(false)]}, {k:"ex", mk:six},
+      {k:"ex", mk:()=>ppShuf([ppEar([0,2,4],{say:t("pp03Ear"), sub:t("pp03EarS"), sub1:t("pp03EarS"), ok:t("ppGood")}), ppEar([4,2,0],{say:t("pp03Ear"), sub:t("pp03EarS"), sub1:t("pp03EarS"), ok:t("ppGood")})])}],
+      can:t("ppCan")(N)[2]}; }
+  return null; }
+// ---- where to pick up: the lesson being played (< 24 h: the same step), else the next one
+function ppResumeInfo(){ const p=S.pp; if(!p||typeof p!=="object") return null; const r=S.resume;
+  let id=ppFirstOpen(p), step=0, old=false, next=false, err=0;
+  if(r&&r.kind==="pp"&&PP_IDS.includes(r.id)){ id=r.id; step=r.step|0; err=r.err|0; if(Date.now()-(+r.at||0)>864e5 || r.v!==PP_V){ old=step>0; step=0; err=0; } next=!!r.fin && step===0; }
+  if(!ppReady(id)) return null;
+  const n=ppLesson(id).steps.length; step=Math.max(0,Math.min(step,n-1)); if(!step) err=0;
+  return {id, step, old, next, err, n:ppNum(id), total:n+1}; }
+function ppSaveResume(){ if(!PP.id||PP.view!=="lesson") return; S.resume={kind:"pp", id:PP.id, step:PP.step, at:Date.now(), v:PP_V, inp:ppInp(), err:PP.err}; save(); }
+// ---- views
+function ppGoPage(view){ PP.view=view; if(page!=="pp") openPage("pp"); else ppRender(); }
+function ppBegin(){ const p=ppS(); p.on=true; if(!p.start) p.start=Date.now(); save(); ppGoPage("path"); setTimeout(()=>{ if(page==="pp" && PP.view==="path") ppRender(); },900); } // the input is set a moment later (MIDI access): « or play a C »
+function ppOpen(id, step, err){ if(!ppReady(id)){ toast(t("ppSoonT")(ppNum(id))); return; } ppStop(); PP.open={id, step:step|0, err:err|0}; ppGoPage("open"); }
+function ppStart(id, step, err){ const L=ppLesson(id); if(!L) return; const p=ppS(); p.on=true; if(!p.start) p.start=Date.now();
+  ppStop(); PP.id=id; PP.L=L; PP.err=err|0; PP.show=0; PP.t0=Date.now(); PP.res=null; PP.view="lesson"; if(page!=="pp") openPage("pp"); ppStep(Math.min(step|0,L.steps.length-1)); }
+function ppStep(s){ ppClearTimers(); autoHelpHide(); PP.step=s; PP.errStep=PP.err; PP.demo.clear(); PP.lit.clear(); PP.zone=[]; PP.fb=""; PP.fbk=""; PP.bold=false;
+  const st=PP.L.steps[s]; PP.items = st.k==="ex" ? st.mk() : []; PP.ii=0; ppRender(); ppSaveResume();
+  if(st.k==="watch") st.demo(); else ppItem(); }
+function ppItem(){ const it=PP.items[PP.ii]; if(!it) return; it.err=0; PP.lit.clear(); PP.zone=[]; PP.fb=""; PP.fbk=""; PP.bold=false; PP.say=it.say; PP.busy=performance.now()+300; autoHelpHide(); ppPrompt(); ppPaint(); if(it.play) ppLater(it.play,450); }
+function ppSay(x){ PP.say=x; const e=$("ppSay"); if(e){ e.textContent=x; e.classList.remove("pp-in"); void e.offsetWidth; e.classList.add("pp-in"); } }
+function ppPrompt(){ const it=PP.items[PP.ii], s=$("ppSay"); if(!s) return; s.textContent=PP.say||"";
+  const sub=$("ppSub"); sub.textContent = it ? (PP.bold&&it.sub1?it.sub1:it.sub)||"" : ""; sub.classList.toggle("pp-bold",PP.bold);
+  const fb=$("ppFb"); fb.textContent=PP.fb; fb.className="pp-fb"+(PP.fbk?" "+PP.fbk:"");
+  const c=$("ppCnt"); if(c){ const prog = it&&it.got&&it.need ? " · "+it.got.length+"/"+it.need : ""; c.textContent = PP.items.length ? (PP.ii+1)+"/"+PP.items.length+prog : ""; c.hidden=!PP.items.length; } }
+function ppPress(m){ const el=ppKeyEl(m); if(!el) return; el.classList.add("k-press"); setTimeout(()=>el.classList.remove("k-press"),130); }
+// notes from MIDI, the mic, the screen keys or the computer keyboard; a lone C (MIDI) goes on, a lone B starts the exercise again
+function ppIn(b, lone){ if(page!=="pp" || anyModal()) return; b.forEach(ppPress);
+  const v=PP.view, st=PP.L&&PP.L.steps[PP.step], k=v==="lesson"&&st?st.k:"";
+  if(lone){ const pc=((b[0]%12)+12)%12;
+    if(pc===0 && (v==="path"||v==="open"||v==="bravo"||(k==="watch"&&PP.id==="p01"))){ ppPrimary(); return; } // P02, P03: a C is an answer, only Bravo takes it to go on
+    if(pc===11 && k==="ex"){ ppRestart(); return; } }
+  if(k!=="ex" || performance.now()<PP.busy) return;
+  for(const m of b){ if(PP.view!=="lesson"||performance.now()<PP.busy) break; ppAnswer(m); } }
+function ppPrimary(){ const b=$("ppMain"); if(b && !b.hidden && !b.disabled) b.click(); }
+function ppAnswer(m){ const it=PP.items[PP.ii]; if(!it) return; const r=it.check(m,it);
+  if(r==="skip") return;
+  if(r==="step"||r==="ok"){ if(it.got) PP.lit=new Set(it.got); else PP.lit.add(m);
+    if(r==="step"){ ppPrompt(); ppPaint(); return; }
+    PP.zone=[]; PP.fb=it.ok||t("ppOk")(ppNN(m)); PP.fbk="ok"; PP.bold=false; autoHelpHide(); ppPrompt(); ppPaint(); ppKeyCls(m,"k-hit",650);
+    PP.busy=performance.now()+900; ppLater(ppNext,650); return; }
+  PP.err++; it.err=(it.err||0)+1; ppKeyCls(m,"pp-warn",320);
+  const why=(it.bad&&it.bad(m,it))||t("ppThatIs")(ppNN(m)); PP.bold=true; PP.fbk="bad";
+  if(it.err===1) PP.fb=why; else { PP.fb=why+" "+t("ppLookZone"); PP.zone=it.zone?it.zone():[]; }
+  ppPrompt(); ppPaint();
+  if(it.err>=3) autoHelp({host:$("ppHelp"), title:t("ppTogether"), sub:t("ppTogetherS"), show:ppShowMe}); }
+function ppShowMe(){ const it=PP.items[PP.ii]; if(!it) return; PP.show++; it.err=1; const ms=it.showM?it.showM():[];
+  ms.forEach((m,i)=>ppLater(()=>{ tone(m,0,.6,.28); PP.demo.set(ppFold(m),"var(--reveal)"); ppPaint(); ppLater(()=>{ PP.demo.delete(ppFold(m)); ppPaint(); },700); },200+i*480)); }
+function ppNext(){ PP.ii++; if(PP.ii<PP.items.length){ ppItem(); return; } if(PP.step+1<PP.L.steps.length) ppStep(PP.step+1); else ppFinish(); }
+function ppRestart(){ PP.err=PP.errStep; ppStep(PP.step); }
+function ppFinish(){ ppClearTimers(); autoHelpHide(); const id=PP.id, err=PP.err, p=ppS(), prev=p.done[id];
+  const stars=Math.min(err<=1?3:err<=4?2:1, PP.show?2:3), xp0=S.xp|0, xp=PP_XP*PP_MULT;
+  p.done[id]={at:prev&&prev.at||Date.now(), stars:Math.max(stars,prev?prev.stars|0:0), last:stars, err, sec:Math.round((Date.now()-PP.t0)/1000), tries:(prev?prev.tries|0:0)+1};
+  p.cur=ppFirstOpen(p); p.step=0; if(PP_IDS.every(x=>p.done[x])) p.end=p.end||Date.now();
+  addXP(xp); S.resume={kind:"pp", id:p.cur, step:0, at:Date.now(), v:PP_V, inp:ppInp(), fin:id};
+  if(!prev) try{ ntfAdd({key:"pp-"+id, cat:"progress", type:"lvl", ti:t("ppDone")(ppNum(id)), tx:PP.L.can, act:{k:"learn",l:"ntfSee"}}); }catch(e){}
+  save(); PP.res={stars, xp, xp0, first:!prev}; PP.view="bravo"; PP.items=[]; ppRender();
+  [523.25,659.25,783.99].forEach((f,i)=>tone(72+[0,4,7][i],i*.09,.5,.16)); }
+function ppStop(){ ppClearTimers(); if(PP.view==="lesson") ppSaveResume(); const h=$("autoHelp"); if(h && $("ppPanel") && $("ppPanel").contains(h)) h.hidden=true; PP.demo.clear(); }
+function ppDots(ids, big){ const p=S.pp||{}, d=p.done||{}, cur=ppFirstOpen(p);
+  return ids.map(id=>{ const i=PP_IDS.indexOf(id), n=i+1, st=d[id]?d[id].stars|0:0, cls=d[id]?"done":id===cur?"cur":"todo", ti=ppShortT(id);
+    return '<button type="button" class="pp-dot '+cls+(ppReady(id)?'':' soon')+'" data-id="'+id+'" aria-label="'+esc(t("ppLesson")(n)+" · "+ppTitle(id)+(st?" · "+t("ppStarsA")(st):""))+'">'
+      +(()=>{ const ck=d[id]?'<span class="pp-ck" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span>':'', dn='<span class="pp-dn">'+n+'</span>';
+        return big ? '<span class="pp-di">'+ppSvg(i)+dn+ck+'</span>' : dn+ck; })()
+      +(big?'<span class="pp-dt">'+esc(ti)+'</span>':'')+(st?'<span class="pp-ds" aria-hidden="true">'+"★".repeat(st)+'<i>'+"★".repeat(3-st)+'</i></span>':'')+'</button>'; }).join(""); }
+function ppDotClick(box){ box.querySelectorAll(".pp-dot").forEach(b=>b.onclick=e=>{ e.stopPropagation(); const id=b.dataset.id, d=((S.pp||{}).done||{})[id], cur=ppFirstOpen(S.pp);
+  if(!ppReady(id)) toast(t("ppSoonT")(ppNum(id))); else if(d||id===cur){ const r=ppResumeInfo(); ppOpen(id, r&&r.id===id?r.step:0, r&&r.id===id?r.err:0); } else toast(t("ppFirst")(ppNum(cur))); }); }
+function ppStepsBar(){ const L=PP.L, n=L.steps.length, cur=PP.view==="bravo"?n:PP.step, lbl=i=>i===0?t("ppWatch"):i===n?t("ppBravo"):t("ppYourTurnN")(i);
+  return '<ol class="pp-steps" aria-label="'+esc(t("ppStepOf")(cur+1,n+1))+'">'+Array.from({length:n+1},(_,i)=>'<li class="'+(i<cur?"ok":i===cur?"cur":"")+'">'+(i===cur?'<b>'+esc(lbl(i))+'</b>':'')+'<i></i></li>').join("")+'</ol>'; }
+function ppHead(){ const n=ppNum(PP.id);
+  return '<div class="pp-top"><span class="pp-badge">'+PP_FOOT+'</span><div class="pp-tt"><small>'+esc(t("ppKick")(n))+'</small><b>'+esc(ppTitle(PP.id))+'</b></div>'+ppStepsBar()
+    +'<span class="pp-cnt mono" id="ppCnt" hidden></span><button class="pp-x" type="button" id="ppX" aria-label="'+esc(t("ppQuit"))+'"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>'; }
+const ppOrC = res => ppInp()==="midi" ? '<small class="pp-orc">'+esc(t(res?"ppOrCRes":"ppOrC")(CNAME()))+'</small>' : '';
+function ppRender(){ const P=$("ppPanel"); if(!P) return; const v=PP.view;
+  if((v==="lesson"||v==="bravo") && !PP.L){ PP.view="path"; return ppRender(); }
+  if(v==="path"){ const p=ppS(), r=ppResumeInfo(), id=r?r.id:p.cur, n=ppNum(id), anyDone=ppDoneN()>0;
+    P.innerHTML='<div class="pp-path"><div class="pp-ph"><span class="pp-badge big">'+PP_FOOT+'</span><h2>'+esc(t("ppHello2"))+'</h2></div><p class="pp-psub">'+esc(t("ppSub"))+'</p>'
+      +'<div class="pp-pmap">'+ppDots(PP_IDS,true)+'</div><p class="pp-pcur">'+esc(t("ppLesson")(n)+" · "+ppTitle(id))+'</p>'
+      +'<ul class="pp-prom">'+t("ppPromise").map((x,i)=>'<li>'+['<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/></svg>','<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l7 3v5c0 4.5-3 8.2-7 10-4-1.8-7-5.5-7-10V6z"/><path d="M8.5 12l2.5 2.5 4.5-5"/></svg>','<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="13" cy="4.5" r="1.8"/><path d="M9 21l2.5-6.5L14 17v4M8 11l3-3.5 3 2.5 3 1M11.5 14.5l-1-4"/></svg>'][i]+'<span>'+esc(x)+'</span></li>').join("")+'</ul>'
+      +'<div class="pp-pgo"><button class="pp-main" type="button" id="ppMain"'+(r?'':' disabled')+'>'+esc(r?(anyDone||r.step?t("ppContinueN")(n):t("ppStartN")(n)):t("ppSoonT")(n))+(r?' <small>('+t("ppMin")(PP_MIN[n-1])+')</small>':'')+'</button>'+(r?ppOrC():'')+'</div></div>';
+    $("ppMain").onclick=()=>{ const r2=ppResumeInfo(); if(r2) ppStart(r2.id,r2.step,r2.err); };
+    ppDotClick(P.querySelector(".pp-pmap")); return; }
+  if(v==="open"){ const o=PP.open||{id:"p01",step:0}, n=ppNum(o.id), i=PP_IDS.indexOf(o.id), L=ppLesson(o.id), IN=t("ppIn");
+    P.innerHTML='<div class="pp-lesson pp-dim"><div class="pp-mid"></div><div class="pp-kbw"><div class="kbd pp-kb" id="ppKb" aria-hidden="true">'+ppKbHTML()+'</div></div>'
+      +'<div class="pp-card pp-opencard" role="dialog" aria-labelledby="ppOT"><span class="pp-badge big">'+ppSvg(i)+'</span><small class="pp-k">'+esc(t("ppKick")(n))+'</small><h2 id="ppOT">'+esc(ppTitle(o.id))+'</h2>'
+      +'<p>'+esc(t("ppWhat")(ppNames())[i]||"")+'</p><p class="pp-meta"><span>'+esc(t("ppMin")(PP_MIN[i]))+'</span><span>'+esc(IN[ppInp()]||IN.screen)+'</span></p>'
+      +(o.step?'<p class="pp-again">'+esc(t("ppResumeStep")(o.step+1))+'</p>':'')
+      +'<button class="pp-main" type="button" id="ppMain">'+esc(t("ppGo"))+'</button>'+ppOrC()+'<button class="pp-link" type="button" id="ppToMap">'+esc(t("ppBackMap"))+'</button></div></div>';
+    $("ppMain").onclick=()=>ppStart(o.id,o.step,o.err); $("ppToMap").onclick=()=>openPage("learn"); return; }
+  if(v==="bravo"){ const r=PP.res||{stars:1,xp:0}, n=ppNum(PP.id), nx=ppFirstOpen(S.pp), nxOk=ppReady(nx)&&!(S.pp.done||{})[nx], li=levelInfo(S.xp), win=Math.max(0,Math.min(PP_IDS.length-7,PP_IDS.indexOf(PP.id)-3));
+    P.innerHTML='<div class="pp-lesson pp-dim">'+ppHead()+'<div class="pp-mid"></div><div class="pp-kbw"><div class="kbd pp-kb" id="ppKb" aria-hidden="true">'+ppKbHTML()+'</div></div>'
+      +'<div class="pp-card pp-bravo" role="dialog" aria-labelledby="ppBT"><small class="pp-k">'+esc(t("ppKick")(n))+'</small><h2 id="ppBT">'+esc(t("ppDone")(n))+'</h2>'
+      +'<p class="pp-stars" aria-label="'+esc(t("ppStarsA")(r.stars))+'">'+[0,1,2].map(i=>'<span class="'+(i<r.stars?"on":"")+'" style="--d:'+(i*220)+'ms">★</span>').join("")+'</p>'
+      +'<div class="pp-can"><small>'+esc(t("ppNowYouCan"))+'</small><p>'+esc(PP.L.can)+'</p></div>'
+      +'<div class="pp-xp"><b class="mono">+'+fmtN(r.xp)+' XP</b><span class="pp-x2">'+esc(t("ppXp2"))+'</span><span class="pp-bar"><i style="width:'+Math.round(100*li.into/li.need)+'%"></i></span><small>'+esc(t("endNext")(fmtN(li.need-li.into),fmtN(li.L+1)))+'</small></div>'
+      +'<div class="pp-mini">'+ppDots(PP_IDS.slice(win,win+7),false)+'</div>'
+      +'<div class="pp-bgo"><button class="pp-main" type="button" id="ppMain">'+esc(nxOk?t("ppNext"):t("ppBackMap"))+(nxOk?' <small>('+t("ppMin")(PP_MIN[ppNum(nx)-1])+')</small>':'')+'</button>'+ppOrC()+'</div>'
+      +'<div class="pp-blinks">'+(r.stars<3?'<button class="pp-link" type="button" id="ppAgain">'+esc(t("ppRetry3"))+'</button>':'')+'<button class="pp-link" type="button" id="ppDoneDay">'+esc(t("ppStop"))+'</button></div></div></div>';
+    $("ppMain").onclick=()=>{ if(nxOk) ppStart(nx,0,0); else openPage("learn"); };
+    if($("ppAgain")) $("ppAgain").onclick=()=>ppStart(PP.id,0,0); $("ppDoneDay").onclick=()=>openPage("hub"); $("ppX").onclick=()=>openPage("learn"); ppDotClick(P.querySelector(".pp-mini")); return; }
+  // lesson
+  const st=PP.L.steps[PP.step], watchS=st.k==="watch", IN=t("ppIn"), ear=!!(PP.items[0]&&PP.items[0].play);
+  P.innerHTML='<div class="pp-lesson">'+ppHead()+'<div class="pp-mid"><small class="pp-k">'+esc(watchS?t("ppWatch"):t("ppYourTurnN")(PP.step))+'</small><p class="pp-say" id="ppSay" aria-live="polite"></p><p class="pp-sub" id="ppSub"></p><p class="pp-fb" id="ppFb" role="status"></p></div>'
+    +'<div class="pp-help" id="ppHelp"></div><div class="pp-kbw"><div class="kbd pp-kb" id="ppKb" aria-label="Piano">'+ppKbHTML()+'</div></div>'
+    +'<div class="pp-foot"><span class="pp-inp">'+esc(IN[ppInp()]||IN.screen)+'</span><span class="pp-push"></span>'
+    +(watchS?'<button class="btn" type="button" id="ppReplay">'+esc(t("ppReplay"))+'</button><span class="pp-gow"><button class="pp-main" type="button" id="ppMain">'+esc(t("ppYourTurn"))+'</button>'+(PP.id==="p01"?ppOrC():'')+'</span>'
+      :(ear?'<button class="btn" type="button" id="ppListen">'+esc(t("ppListen"))+'</button>':'')+'<button class="btn" type="button" id="ppRestart">'+esc(t("ppRestart"))+'</button>')+'</div></div>';
+  $("ppX").onclick=()=>openPage("learn");
+  if(watchS){ $("ppMain").onclick=()=>ppStep(PP.step+1); $("ppReplay").onclick=()=>ppStep(PP.step); }
+  else { $("ppRestart").onclick=ppRestart; if($("ppListen")) $("ppListen").onclick=()=>{ const it=PP.items[PP.ii]; if(it&&it.play) it.play(); }; }
+  const kb=$("ppKb");
+  kb.addEventListener("pointerdown",e=>{ const el=e.target.closest("[data-m]"); if(!el) return; e.preventDefault(); const m=+el.dataset.m; try{ tone(m); }catch(er){} ppIn([m],false); });
+  kb.addEventListener("contextmenu",e=>e.preventDefault());
+  ppPrompt(); if(watchS) ppSay(PP.say||""); ppPaint(); }
+// ---- LEARN: the compact map (D7); everyone sees it, folded to one line for players who already play and have not started
+function ppRenderMap(){ const lp=$("learnPanel"); if(!lp) return; let el=$("ppMap");
+  if(!el){ el=document.createElement("section"); el.id="ppMap"; el.className="pp-map"; lp.insertBefore(el,$("learnTiles")); }
+  const p=S.pp||{}, n=ppDoneN(), r=ppResumeInfo(), lvl=S.onb&&S.onb.level, fold=!ppStarted() && !(lvl==="debut"||lvl==="notes");
+  el.classList.toggle("fold",fold); el.setAttribute("aria-label",t("ppName"));
+  const id=r?r.id:ppFirstOpen(p), sub = fold ? t("ppFold") : r ? t("ppLesson")(ppNum(id))+" · "+ppTitle(id)+" · "+t("ppMin")(PP_MIN[ppNum(id)-1]) : t("ppSoonT")(ppNum(id));
+  el.innerHTML='<button class="pp-mh" type="button" id="ppMapOpen"><span class="pp-badge">'+PP_FOOT+'</span><span class="pp-mt"><b>'+esc(t("ppName"))+'</b><small>'+esc(sub)+'</small></span></button>'
+    +(fold?'':'<div class="pp-mdots">'+ppDots(PP_IDS,false)+'</div>')+'<span class="pp-mc mono"><b>'+n+'</b>/14</span>'
+    +(fold?'<button class="pp-main sm" type="button" id="ppMapGo">'+esc(t("ppDiscover"))+'</button>':r?'<button class="pp-main sm" type="button" id="ppMapGo">'+esc(n||r.step?t("ppContinue"):t("ppBegin"))+'</button>':'');
+  $("ppMapOpen").onclick=()=>{ ppS(); ppGoPage("path"); };
+  if($("ppMapGo")) $("ppMapGo").onclick=()=>{ if(fold){ ppBegin(); return; } const r2=ppResumeInfo(); if(r2) ppOpen(r2.id,r2.step,r2.err); };
+  if(!fold) ppDotClick(el); }
+// ---- hub: « Pick up » (D8), only once the path has started (or for a beginner)
+function ppRenderResume(){ const hm=document.querySelector("#hubPanel .hub-main"); if(!hm) return; let el=$("ppResume");
+  if(!el){ el=document.createElement("button"); el.type="button"; el.id="ppResume"; el.className="pp-res"; hm.insertBefore(el,hm.querySelector(".hub-grid")); el.onclick=ppResumeGo; }
+  const r=ppResumeInfo(), show=!!r && (ppStarted() || (S.onb&&S.onb.level==="debut")); el.hidden=!show; document.body.classList.toggle("pp-hasres",show); if(!show) return;
+  const k = r.step ? t("ppResume") : r.next ? t("ppNext") : t("ppName"), pct=Math.round(100*r.step/r.total);
+  el.innerHTML='<span class="pp-rk">'+esc(k)+'</span><b class="pp-rt">'+esc(t("ppLesson")(r.n)+" · "+ppTitle(r.id))+'</b>'
+    +'<span class="pp-rbar"><span class="pp-bar"><i style="width:'+pct+'%"></i></span><small>'+esc(t("ppStepOf")(r.step+1,r.total)+" · "+t("ppMin")(PP_MIN[r.n-1]))+'</small></span>'
+    +'<span class="pp-rgo"><span class="pp-rbtn">'+esc(t("ppContinue"))+'</span>'+(ppInp()==="midi"?'<small>'+esc(t("ppOrCRes")(CNAME()))+'</small>':'')+'</span><span class="pp-ri" aria-hidden="true">'+ppSvg(r.n-1)+'</span>'; }
+function ppResumeGo(){ const r=ppResumeInfo(); if(r) ppOpen(r.id,r.step,r.err); }
+// ---- hooks into the app (wrapped here so the rest of the source stays as it was)
+{ const P=document.createElement("section"); P.className="mode-page pp-page"; P.id="ppPanel"; P.setAttribute("aria-label","Premiers pas"); const lp=$("learnPanel"); lp.parentNode.insertBefore(P,lp.nextSibling); }
+{ const _op=openPage; openPage=function(pg){ if(page==="pp" && pg!=="pp" && !INFO_PAGES.includes(pg)) ppStop(); const r=_op.apply(this,arguments); if(page==="pp" && pg==="pp") ppRender(); return r; }; }
+{ const _rl=renderLearn; renderLearn=function(){ _rl.apply(this,arguments); try{ ppRenderMap(); }catch(e){ console.warn(e); } }; }
+{ const _hs=renderHubSide; renderHubSide=function(){ _hs.apply(this,arguments); try{ ppRenderResume(); }catch(e){ console.warn(e); } }; }
+{ const _sn=setNav; setNav=function(){ _sn.apply(this,arguments); if(page==="pp") $("mbTitle").textContent=t("ppName"); }; }
+{ const _mf=midiFlush; midiFlush=function(){ // the lesson page gets every note; on the hub a lone C (MIDI) picks the lesson up
+    if(!FN.on && !LV.on && (page==="pp" || page==="hub")){ const b=midiBuf.slice().sort((a,c)=>a-c), lone=midiBufMidi && b.length===1;
+      if(page==="pp"){ midiBuf=[]; midiBufMidi=true; ppIn(b,lone); return; }
+      if(lone && b[0]%12===0 && !anyModal() && $("ppResume") && !$("ppResume").hidden){ midiBuf=[]; midiBufMidi=true; ppResumeGo(); return; } }
+    return _mf.apply(this,arguments); }; }
+document.addEventListener("keydown",e=>{ if(page!=="pp" || anyModal() || document.body.classList.contains("drawer") || e.target.matches("input,select,textarea")) return; // letters A–; play the keys, as on the other pages
+  const m=CODE_MAP[e.code]; if(m==null||e.repeat||e.metaKey||e.ctrlKey||e.altKey) return; tone(m); midiIn(m); });
+{ const _ms=mergeState; mergeState=function(local, cloud){ const r=_ms.apply(this,arguments); const isO=x=>x&&typeof x==="object"&&!Array.isArray(x), c=isO(cloud)?cloud:{}, a=isO(local.pp)?local.pp:null, b=isO(c.pp)?c.pp:null;
+    if(a||b){ const o={...(b||{}), ...(a||{})}, d={}; // lessons: union, best stars; current lesson: the furthest; fails: max
+      [b,a].forEach(p=>{ if(p&&isO(p.done)) Object.entries(p.done).forEach(([k,v])=>{ if(!isO(v)) return; const x=d[k]; d[k]=!x?{...v}:{...x,...v, stars:Math.max(+x.stars||0,+v.stars||0), tries:Math.max(+x.tries||0,+v.tries||0), at:Math.min(+x.at||+v.at||0,+v.at||+x.at||0)}; }); });
+      o.done=d; const ix=id=>PP_IDS.indexOf(id), cs=[a&&a.cur,b&&b.cur].filter(x=>PP_IDS.includes(x)).sort((x,y)=>ix(y)-ix(x)); if(cs.length){ o.cur=cs[0]; o.step=(a&&a.cur===o.cur?a.step:b&&b.cur===o.cur?b.step:0)|0; }
+      const f={}; [b,a].forEach(p=>{ if(p&&isO(p.fail)) Object.entries(p.fail).forEach(([k,v])=>{ f[k]=Math.max(f[k]|0,v|0); }); }); o.fail=f;
+      const st=[a&&a.start,b&&b.start].filter(Boolean); if(st.length) o.start=Math.min(...st); r.merged.pp=o; }
+    const ra=isO(local.resume)?local.resume:null, rb=isO(c.resume)?c.resume:null; if(ra||rb) r.merged.resume = !ra ? rb : !rb ? ra : (+rb.at||0)>(+ra.at||0) ? rb : ra; // the most recent
+    r.changed=JSON.stringify(r.merged)!==JSON.stringify(local); return r; }; }
+
 // ---------- Boot ----------
 
 applyStatic(); applySide(); buildKeyboard(); renderSettings(); render(); renderDaily(); openPage("hub");
@@ -7205,7 +7971,7 @@ setTimeout(()=>{ if(hasSession()) ensureCloud(); }, 400);
 { const sp=$("splash"); if(document.documentElement.classList.contains("native")){ const t0=performance.now(); setTimeout(()=>{ sp.classList.add("out"); setTimeout(()=>sp.remove(),400); }, Math.max(0,1500-t0)); } else sp.remove(); }
 const mobileWeb = (phoneMQ.matches||railMQ.matches) && !document.documentElement.classList.contains("native");
 document.body.classList.add("guest"); if(hasSession()) document.body.classList.add("sess-wait"); // a saved session: no « Sign up » flash before it loads
-restoreInput();
+restoreInput(); mdWatch();
 { const nat=isApp(), wait=nat?1600:300;
   if(gateNeeded()){ save(); const op=(S.onb&&S.onb.legacy)?gateOpen:fnOpen; /* older players keep their settings: the sign-in screen once, not the first-note screen */ if(nat) setTimeout(op,wait); else op(); }
   else if(!(S.onb&&S.onb.done) || !S.tourDone){ save(); if(hasSession()) ensureCloud().finally(()=>setTimeout(startFlow,wait)); else setTimeout(startFlow,wait); }
