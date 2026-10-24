@@ -93,6 +93,15 @@ await click(A, '#lvStay'); await W(A, 700);
 check('… Continuer : le défilement reprend', +(await txt(A, 'rnScore')) > +d2);
 await click(A, '#rnQuit'); await W(A, 200); await click(A, '#lvGo'); await W(A, 300);
 check('… Quitter : le jeu se ferme', await ev(A, () => !document.body.classList.contains('runner-on') && document.getElementById('runner').hidden));
+// « S'inscrire / Se connecter » (invité) pendant une partie : l'écran de connexion couvrait le jeu qui continuait dessous
+await gameSolo(A, 0); await start(A); await W(A, 600);
+await click(A, '#topAuth [data-auth=login]'); await W(A, 250); P = await panel(A);
+check('« Se connecter » en pleine partie : panneau, pas d’écran de connexion', !!P && await ev(A, () => { const g = document.getElementById('gate'); return !g || g.hidden; }), P);
+await click(A, '#lvStay'); await W(A, 250);
+await click(A, '#topAuth [data-auth=login]'); await W(A, 250); await click(A, '#lvGo'); await W(A, 600);
+check('… Quitter : jeu fermé, accueil, écran de connexion ouvert', await ev(A, () => document.getElementById('runner').hidden && document.body.dataset.page === 'hub' && !document.getElementById('gate').hidden));
+await click(A, '#gateGuest'); await W(A, 400);
+check('… « Continuer sans compte » : retour à l’accueil', await pg(A) === 'hub' && await ev(A, () => document.getElementById('gate').hidden));
 
 // ---- 4. Contre la montre : le chrono attend ----
 await gameSolo(A, 1); await start(A); await W(A, 400);

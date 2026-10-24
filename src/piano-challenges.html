@@ -4701,7 +4701,7 @@ function lvHold(on){ const a=LV.a; if(!a) return; const now=performance.now();
 function lvNote(m){ if(S.settings.midiC===false) return; LV.buf.push(((m%12)+12)%12); clearTimeout(LV.t);
   LV.t=setTimeout(()=>{ const b=LV.buf; LV.buf=[]; if(b.length!==1 || !LV.on) return; if(b[0]===0) closeMod("leaveModal"); else if(b[0]===11) $("lvGo").click(); },120); }
 // the menu and the quit buttons: asked first when they would end the activity; "Leave" replays the click
-const LV_NAV="#homeLink,#modeNav [data-mode],#secTabs button,#dailyCard,#rankBtn,#ntfBtn,#mbNtf,#accountBtn", LV_QUIT="#rnQuit,#duToLobby,#gameEnd,#qzQuit";
+const LV_NAV="#homeLink,#modeNav [data-mode],#secTabs button,#dailyCard,#rankBtn,#ntfBtn,#mbNtf,#accountBtn,[data-auth]", LV_QUIT="#rnQuit,#duToLobby,#gameEnd,#qzQuit";
 function lvLeaves(el){ const base=lvBase();
   if(el.matches(LV_QUIT)) return true;
   if(el.dataset.mode) return ({quiz:"quiz",learn:"learn",play:"free",games:"games"})[el.dataset.mode]!==base;
@@ -4710,7 +4710,8 @@ function lvLeaves(el){ const base=lvBase();
   return true; }
 document.addEventListener("click",e=>{ if(LV.pass || LV.on || !e.target.closest) return; const el=e.target.closest(LV_NAV+","+LV_QUIT); if(!el || !lvLeaves(el)) return;
   const a=actNow(); if(!a) return; e.preventDefault(); e.stopImmediatePropagation();
-  lvOpen(a,()=>{ LV.pass=true; try{ el.click(); }finally{ LV.pass=false; } }, el.id==="gameEnd"); },true);
+  // Sign up / Log in: the sign-in screen covers the app, so the activity stops first (back home, as with the logo)
+  lvOpen(a,()=>{ LV.pass=true; try{ if(el.dataset.auth) $("homeLink").click(); el.click(); }finally{ LV.pass=false; } }, el.id==="gameEnd"); },true);
 // ---------- Sidebar, drawer, games page ----------
 const phoneMQ=window.matchMedia("(max-width:640px)"), railMQ=window.matchMedia("(max-height:520px) and (orientation:landscape)");
 function setNav(){
