@@ -7,11 +7,14 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         guard let windowScene = scene as? UIWindowScene else { return }
 
-        window = UIWindow(windowScene: windowScene)
-        // Capacitor 8.5 (UIScene): the window and its root controller are created here, not by Main.storyboard.
-        // Use our subclass so capacitorDidLoad (Midi/Auth plugins), the background colour,
-        // the hidden status bar and the "keep the screen awake" call actually run.
-        window?.rootViewController = MainViewController()
+        // Info.plist names Main.storyboard for this scene (UISceneStoryboardFile), whose root is MainViewController:
+        // UIKit has then already created the window and ONE bridge. Creating a second window and controller here
+        // gave the app two Capacitor bridges (the plugins and native events could end up on the discarded one,
+        // and MIDI vanished from the app). Only build the window ourselves when no storyboard did it.
+        if window == nil {
+            window = UIWindow(windowScene: windowScene)
+            window?.rootViewController = MainViewController()
+        }
         window?.makeKeyAndVisible()
 
         SceneDelegateProxy.shared.scene(scene, willConnectTo: session, options: connectionOptions)
