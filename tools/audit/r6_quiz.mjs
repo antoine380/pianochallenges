@@ -1,6 +1,8 @@
 // Quiz (Oct 2026): questions load on demand; a player answers by playing the note / chord of an answer.
 // Checks: solo with notes (easy), 2 players with one MIDI keyboard each (medium chords), 2 players sharing one keyboard in zones,
 // taking turns, answering by tapping on screen, and the end podium.
+// Quiz v3: « Seul · 2 · 3 · 4 », the theme chip is bigger with its picture, nobody's choice shows before the reveal (only « answered »),
+// the names are on the chosen answers (and faces on the keys) after it, and each player's note moves on the staff by score / best possible score.
 import { launch, closeOnboarding, URL } from './lib.mjs';
 const wait = (p, ms) => p.waitForTimeout(ms);
 const fails = [];
@@ -17,7 +19,9 @@ const cards = () => ev(() => {
     pcs: a.dataset.pcs.split(',').map(Number), name: a.querySelector('.qz-l .ln').textContent }));
 });
 const play = (pcs, dev = 0, base = 60) => ev(([pcs, dev, base]) => pcs.forEach(pc => window.__midi.noteOn(base + pc, 100, dev)), [pcs, dev, base]);
-const scores = () => ev(() => [...document.querySelectorAll('#qzScores .qz-ps')].map(d => +d.querySelector('.qz-pts').textContent));
+const scores = () => ev(() => [...document.querySelectorAll('#qzRace .qz-tags .qz-pts')].map(d => +d.textContent.replace(/\D/g, '')));
+// where each note is on the staff: the translateX of its head (% of the run)
+const pos = () => ev(() => [...document.querySelectorAll('#qzRace .qz-heads .qz-ln')].map(l => parseFloat((/translateX\(([\d.]+)%/.exec(l.style.transform) || [0, 0])[1])));
 async function openQuiz() { await ev(() => document.querySelector('#modeNav [data-mode=quiz]').click()); await wait(page, 300);
   for (let i = 0; i < 30 && !(await ev(() => !!window.QUIZ_DATA)); i++) await wait(page, 100); await wait(page, 200); }
 
@@ -25,13 +29,20 @@ async function openQuiz() { await ev(() => document.querySelector('#modeNav [dat
 await set({ n: 1, diff: 1, ans: 'notes', bots: 0, where: 'local', count: 5, time: 20, theme: 'all', keys: true }); await page.reload(); await wait(page, 800); await closeOnboarding(page);
 await openQuiz();
 check('quiz : 200 questions chargées à la demande', await ev(() => window.QUIZ_DATA.q.length === 200 && document.querySelectorAll('#qzThemes .qz-theme').length === 11), await ev(() => [window.QUIZ_DATA.q.length, document.querySelectorAll('#qzThemes .qz-theme').length]));
+check('réglages : « Seul · 2 · 3 · 4 » sur une ligne', await ev(() => { const b = [...document.querySelectorAll('#qzN button')]; return b.map(x => x.textContent).join('·') === 'Seul·2·3·4' && new Set(b.map(x => Math.round(x.getBoundingClientRect().top))).size === 1; }));
 await ev(() => document.getElementById('qzGo').click()); await wait(page, 300);
+check('thème plus gros : image + nom, plus grand que le numéro', await ev(() => { const c = document.getElementById('qzTheme'), n = document.getElementById('qzNum');
+  return !!c.querySelector('.qz-ci svg') && c.textContent.length > 2 && parseFloat(getComputedStyle(c).fontSize) >= 16 && parseFloat(getComputedStyle(c).fontSize) > parseFloat(getComputedStyle(n).fontSize) * 1.2
+    && parseFloat(getComputedStyle(document.getElementById('qzText')).fontSize) > parseFloat(getComputedStyle(c).fontSize); }));
+check('course : une portée avec la clé de sol, une note par joueur au départ', await ev(() => !!document.querySelector('#qzRace .qz-clef text') && !!document.querySelector('#qzRace .qz-fin') && document.querySelectorAll('#qzRace .qz-heads .qz-ln .av').length === 1) && (await pos())[0] === 0);
 let c = await cards();
 check('solo facile : 4 réponses = Do Ré Mi Fa', c.length === 4 && c.map(x => x.pcs.join()).join('|') === '0|2|4|5', c);
 check('solo : la bonne réponse est identifiable', c.filter(x => x.right).length === 1, c);
 await play(c.find(x => x.right).pcs); await wait(page, 350);
 let s = await scores();
 check('solo : la bonne note rapporte des points et révèle', s[0] >= 100 && await ev(() => !document.getElementById('qzNext').hidden), s);
+{ const p = await pos(); check('course : la note avance de score / score maximal (5 questions × 200)', Math.abs(p[0] - s[0] / 1000 * 100) < 0.05, { p, s }); }
+check('solo : à la révélation, ton nom sur ta réponse et ta tête sur sa touche', await ev(() => { const r = document.querySelector('#qzAns .qz-a.right'); return !!r && r.querySelectorAll('.qz-wc').length === 1 && document.querySelectorAll('#qzKb .right .qz-kw .av').length === 1; }));
 await ev(() => document.getElementById('qzNext').click()); await wait(page, 300);
 c = await cards(); await play(c.find(x => !x.right).pcs); await wait(page, 350);
 s = await scores();
@@ -54,17 +65,24 @@ await ev(() => document.getElementById('qzQuit').click()); await wait(page, 200)
 
 // 2) two players, one MIDI keyboard each, medium chords
 await ev(() => window.__midi.addSecond()); await wait(page, 300);
-await set({ n: 2, mode: 'dev', diff: 2, ans: 'chords', count: 5, devs: ['in-1', 'in-2'] }); await page.reload(); await wait(page, 900); await closeOnboarding(page);
+await set({ n: 2, mode: 'dev', diff: 2, ans: 'chords', count: 5, devs: ['in-1', 'in-2'], names: ['Anna', 'Bob'] }); await page.reload(); await wait(page, 900); await closeOnboarding(page);
 await ev(() => window.__midi.addSecond()); await wait(page, 300);
 await openQuiz();
 await ev(() => document.getElementById('qzGo').click()); await wait(page, 300);
 c = await cards();
 check('2 claviers : réponses en accords (3 notes)', c.every(x => x.pcs.length === 3), c.map(x => x.name));
-await play(c.find(x => !x.right).pcs, 0); await wait(page, 300);
+await play(c.find(x => x.right).pcs, 0); await wait(page, 300);
 check('2 claviers : J1 a répondu, la question attend J2', await ev(() => document.getElementById('qzNext').hidden));
-await play(c.find(x => x.right).pcs, 1); await wait(page, 350);
+{ const h = await ev(() => ({ chips: document.querySelectorAll('#qzAns .qz-wc, #qzKb .qz-kw, #qzAns .mine').length, right: document.querySelectorAll('#qzAns .right, #qzKb .right').length,
+    ans: [...document.querySelectorAll('#qzRace .qz-heads .qz-ln')].map(l => l.classList.contains('ans')), txt: document.querySelector('#qzRace .qz-tags .qz-ln small').textContent }));
+  check('caché : rien sur les cartes ni le piano, seulement « a répondu » sur la note de J1', h.chips === 0 && h.right === 0 && h.ans[0] && !h.ans[1] && /répondu/.test(h.txt), h);
+  check('caché : les points de J1 ne bougent pas avant la révélation', (await scores())[0] === 0 && (await pos())[0] === 0, await scores()); }
+await play(c.find(x => !x.right).pcs, 1); await wait(page, 350);
 s = await scores();
-check('2 claviers : J2 (2e clavier) marque, J1 (mauvais accord) non', s[0] === 0 && s[1] >= 100, s);
+check('2 claviers : J1 (1er clavier) marque, J2 (mauvais accord du 2e clavier) non', s[0] >= 100 && s[1] === 0, s);
+{ const n = await ev(() => [...document.querySelectorAll('#qzAns .qz-a')].map(a => [a.classList.contains('right'), [...a.querySelectorAll('.qz-wc b')].map(b => b.textContent).join()]));
+  check('révélation : Anna sur la bonne réponse, Bob sur la sienne', n.some(([r, x]) => r && x === 'Anna') && n.some(([r, x]) => !r && x === 'Bob'), n);
+  const p = await pos(); check('course : J1 devant, J2 au départ, J1 mis en avant', p[0] > 0 && p[1] === 0 && await ev(() => document.querySelector('#qzRace .qz-heads .qz-ln').classList.contains('lead')), p); }
 await ev(() => document.getElementById('qzQuit').click()); await wait(page, 200);
 
 // 3) two players sharing one keyboard in zones
@@ -75,6 +93,8 @@ check('zones : chaque joueur a sa zone', zones.length === 2 && zones.every(z => 
 await ev(() => document.getElementById('qzGo').click()); await wait(page, 300);
 c = await cards();
 await play(c.find(x => x.right).pcs, 0, 84); await wait(page, 350); // high notes = player 2's zone
+check('zones : la note du haut est la réponse de J2 (sa note s’allume, celle de J1 non)', await ev(() => [...document.querySelectorAll('#qzRace .qz-heads .qz-ln')].map(l => l.classList.contains('ans')).join() === 'false,true'));
+await play(c.find(x => !x.right).pcs, 0, 48); await wait(page, 350); // low notes = player 1 (a wrong answer): the reveal
 s = await scores();
 check('zones : une note jouée en haut du clavier compte pour J2', s[0] === 0 && s[1] >= 100, s);
 await ev(() => document.getElementById('qzQuit').click()); await wait(page, 200);
@@ -86,6 +106,7 @@ check('tour par tour : « Au tour de » affiché', await ev(() => !document.getE
 for (let i = 0; i < 5; i++) { c = await cards(); await play(c.find(x => x.right).pcs); await wait(page, 350); await ev(() => document.getElementById('qzNext').click()); await wait(page, 300); }
 const pod = await ev(() => [!document.getElementById('qzEnd').hidden, document.querySelectorAll('#qzPodium .qz-pod').length, document.getElementById('qzEndT').textContent]);
 check('fin : podium avec 2 joueurs', pod[0] && pod[1] === 2, pod);
+check('fin : la course reste sous le podium', await ev(() => !!document.querySelector('#qzRaceEnd #qzRace') && document.querySelectorAll('#qzRace .qz-heads .qz-ln').length === 2));
 const errs = await ev(() => window.__cnt.consoleErrors);
 check('aucune erreur JS', errs.length === 0, errs);
 await browser.close();

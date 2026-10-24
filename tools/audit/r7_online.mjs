@@ -1,6 +1,8 @@
 // Quiz online + bots (Oct 2026). Supabase Realtime is replaced by a fake built on BroadcastChannel (pages of one browser context talk to each other),
 // with presence (track / untrack / sync) and broadcast. Checks: a friend joins with the code, both see the same questions and scores, the host drives the game;
 // two players searching are paired and the game starts; the guest is told when the host leaves; local bots answer by themselves.
+// Quiz v3: nobody sees the others' choices before the reveal (only that they answered), the names are on the answers after it,
+// the profile photo goes with the presence (only from the Google / Facebook hosts).
 import { createRequire } from 'module';
 const { chromium } = createRequire(import.meta.url)('playwright');
 const PORT = process.env.PORT || '8767', URL = `http://localhost:${PORT}/`;
@@ -42,6 +44,13 @@ const seed = (name, extra = {}) => `(()=>{ try{ if(sessionStorage.getItem('seede
 const b = await chromium.launch(process.env.PW_CHROMIUM ? { executablePath: process.env.PW_CHROMIUM } : {});
 const ctx = await b.newContext({ viewport: { width: 1280, height: 800 } });
 await ctx.addInitScript(FAKE_RT);
+// a hook into the app's scope (as in r17_data) to give Alice and Bruno an account photo; photos are served locally
+await ctx.route(u => u.href.startsWith(URL) && (u.pathname === '/' || u.pathname === '/index.html'), async r => { const res = await r.fetch(); let h = await res.text(); const e = h.lastIndexOf('})();\n</script>'); h = h.slice(0, e) + '\nwindow.__X=s=>eval(s);\n' + h.slice(e); await r.fulfill({ response: res, body: h, headers: { ...res.headers(), 'content-type': 'text/html; charset=utf-8' } }); });
+const PNG = Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==', 'base64');
+let evilHits = 0;
+await ctx.route('https://lh3.googleusercontent.com/**', r => r.fulfill({ status: 200, body: PNG, headers: { 'content-type': 'image/png' } }));
+await ctx.route('https://evil.example.com/**', r => { evilHits++; return r.fulfill({ status: 200, body: PNG, headers: { 'content-type': 'image/png' } }); });
+const PH_A = 'https://lh3.googleusercontent.com/a/alice-photo=s96-c', PH_B = 'https://evil.example.com/track.png';
 async function open(name, extra) { const p = await ctx.newPage(); const errs = []; p.on('pageerror', e => errs.push(e.message)); p.errs = errs;
   await p.addInitScript(seed(name, extra)); await p.goto(URL); await p.waitForTimeout(600);
   await p.evaluate(() => document.querySelector('#modeNav [data-mode=quiz]').click());
@@ -50,12 +59,14 @@ async function open(name, extra) { const p = await ctx.newPage(); const errs = [
 const rightIdx = p => p.evaluate(() => { const D = window.QUIZ_DATA, txt = document.getElementById('qzText').textContent; const q = D.q.find(x => x[2] === txt); if (!q) return -1;
   return [...document.querySelectorAll('#qzAns .qz-a .qz-at')].findIndex(e => e.textContent === q[3][0]); });
 const tap = (p, k) => p.evaluate(k => document.querySelectorAll('#qzAns .qz-a')[k].click(), k);
-const scores = p => p.evaluate(() => [...document.querySelectorAll('#qzScores .qz-ps')].map(d => d.querySelector('b').textContent.replace(/ \(toi\)$/, '') + ':' + d.querySelector('.qz-pts').textContent));
+const scores = p => p.evaluate(() => [...document.querySelectorAll('#qzRace .qz-tags .qz-tg')].map(d => d.querySelector('b').textContent.replace(/ \(toi\)$/, '') + ':' + d.querySelector('.qz-pts').textContent));
 const view = p => p.evaluate(() => ['qzSetup', 'qzPlay', 'qzEnd'].find(id => !document.getElementById(id).hidden));
 const W = (p, ms) => p.waitForTimeout(ms);
 
 // 1) a friend joins with the code
 const A = await open('Alice'), B = await open('Bruno');
+await A.evaluate(ph => window.__X(`user={id:"ua",email:"a@x.fr",user_metadata:{avatar_url:${JSON.stringify(ph)}}}`), PH_A);
+await B.evaluate(ph => window.__X(`user={id:"ub",email:"b@x.fr",user_metadata:{picture:${JSON.stringify(ph)}}}`), PH_B);
 check('en ligne : compteur de joueurs affiché', /en ligne/.test(await A.evaluate(() => document.getElementById('qzOnlineN').textContent)));
 await A.evaluate(() => document.getElementById('qzCreate').click()); await W(A, 400);
 const code = await A.evaluate(() => document.getElementById('qzRoomCode').textContent);
@@ -69,11 +80,21 @@ check('ami : la partie démarre chez les deux', (await view(A)) === 'qzPlay' && 
 const qa = await A.evaluate(() => document.getElementById('qzText').textContent), qb = await B.evaluate(() => document.getElementById('qzText').textContent);
 check('ami : même question des deux côtés', qa === qb && qa.length > 5, { qa, qb });
 const ra = await rightIdx(A), rb = await rightIdx(B);
+const heads = p => p.evaluate(() => [...document.querySelectorAll('#qzRace .qz-heads .qz-ln')].map(l => { const i = l.querySelector('img'); return i ? i.getAttribute('src') : 'svg'; }));
+const hb = await heads(B), ha = await heads(A);
+check('photo : Bruno voit la photo Google d’Alice sur sa note', hb[0] === PH_A, hb);
+check('photo : une adresse hors Google / Facebook est refusée (personnage à la place)', ha[1] === 'svg' && evilHits === 0, { ha, evilHits });
 await tap(A, ra); await W(A, 200);
 check('ami : après la réponse de A, on attend B', await A.evaluate(() => document.getElementById('qzNext').hidden));
+const hid = await B.evaluate(() => ({ chips: document.querySelectorAll('#qzAns .qz-wc, #qzKb .qz-kw').length, mine: document.querySelectorAll('#qzAns .mine').length,
+  ans: [...document.querySelectorAll('#qzRace .qz-heads .qz-ln')].map(l => l.classList.contains('ans')), pts: [...document.querySelectorAll('#qzRace .qz-pts')].map(e => e.textContent) }));
+check('caché : Bruno voit qu’Alice a répondu, pas sa réponse ni ses points', hid.chips === 0 && hid.mine === 0 && hid.ans[0] && !hid.ans[1] && hid.pts[0] === '0', hid);
+check('caché : Alice (seule sur son écran) garde sa réponse discrète', await A.evaluate(() => document.querySelectorAll('#qzAns .qz-a.mine').length === 1 && !document.querySelector('#qzAns .qz-wc')));
 await tap(B, (rb + 1) % 4); await W(A, 500);
 const sa = await scores(A), sb2 = await scores(B);
 check('ami : scores identiques chez A et B (A juste, B faux)', JSON.stringify(sa) === JSON.stringify(sb2) && /Alice:\d{3}/.test(sa[0]) && /Bruno:0/.test(sa[1]), { sa, sb2 });
+const onCards = await B.evaluate(() => [...document.querySelectorAll('#qzAns .qz-a')].map(a => [a.classList.contains('right'), [...a.querySelectorAll('.qz-wc b')].map(b => b.textContent).join()]));
+check('révélation : le nom de chacun sur sa réponse (Alice sur la bonne, Bruno sur une fausse)', onCards.some(([r, n]) => r && n === 'Alice') && onCards.some(([r, n]) => !r && n === 'Bruno'), onCards);
 check('ami : réponse révélée chez les deux, seul l’hôte a « Question suivante »', await A.evaluate(() => !document.getElementById('qzNext').hidden) && await B.evaluate(() => document.getElementById('qzNext').hidden && !!document.querySelector('#qzAns .qz-a.right')));
 for (let i = 1; i < 5; i++) { await A.evaluate(() => document.getElementById('qzNext').click()); await W(A, 400); const r = await rightIdx(B); await tap(B, r); await tap(A, (await rightIdx(A) + 1) % 4); await W(A, 400); }
 await A.evaluate(() => document.getElementById('qzNext').click()); await W(A, 600);
@@ -91,17 +112,18 @@ await B.close();
 const C = await open('Chloé'), D = await open('David');
 await C.evaluate(() => document.getElementById('qzSearchBtn').click()); await W(C, 300);
 check('hasard : recherche en cours', await C.evaluate(() => !document.getElementById('qzSearching').hidden));
-await D.evaluate(() => document.getElementById('qzSearchBtn').click()); await W(D, 1500);
+await D.evaluate(() => document.getElementById('qzSearchBtn').click()); for (let i = 0; i < 30 && !((await view(C)) === 'qzPlay' && (await view(D)) === 'qzPlay'); i++) await W(D, 200);
 check('hasard : les deux joueurs sont associés et jouent', (await view(C)) === 'qzPlay' && (await view(D)) === 'qzPlay', [await view(C), await view(D)]);
-const names = await D.evaluate(() => [...document.querySelectorAll('#qzScores .qz-ps b')].map(b => b.textContent));
+const names = await D.evaluate(() => [...document.querySelectorAll('#qzRace .qz-tg b')].map(b => b.textContent));
 check('hasard : chacun voit l’autre', names.some(n => /Chloé/.test(n)) && names.some(n => /David/.test(n)), names);
 await C.close(); await D.close();
 
 // 3) local bots
 const E = await open('Emma', { where: 'local', n: 1, bots: 2, botLvl: 3, time: 10 });
 await E.evaluate(() => document.getElementById('qzGo').click()); await W(E, 300);
-const pl = await E.evaluate(() => [...document.querySelectorAll('#qzScores .qz-ps b')].map(b => b.textContent));
+const pl = await E.evaluate(() => [...document.querySelectorAll('#qzRace .qz-tg b')].map(b => b.title));
 check('bots : 1 joueur + 2 bots', pl.length === 3 && pl.filter(n => /Robo/.test(n)).length === 2, pl);
+check('bots : avant la révélation, aucun nom sur les réponses', await E.evaluate(() => !document.querySelector('#qzAns .qz-wc')));
 await tap(E, await rightIdx(E)); await W(E, 3800);
 check('bots : les bots répondent seuls et la question se termine', await E.evaluate(() => !document.getElementById('qzNext').hidden));
 check('aucune erreur JS', [A, B, C, D, E].every(p => !p.errs.length), [A, B, C, D, E].map(p => p.errs));
