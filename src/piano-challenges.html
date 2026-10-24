@@ -2943,6 +2943,87 @@ body.runner-on #runner .dz-board{height:clamp(220px,min(56cqw,50vh),640px)}
 }
 @media (prefers-reduced-motion: reduce){ .dz-cell,.dz-bar i,.dz-med{transition:none} .dz-pen.pop{animation:none} }
 /* ==== fin Les Douze ==== */
+/* ==== Premiers pas lot 4 (D5 placement, D23 compte, D25 bilan, D28 micro) ==== */
+/* D5 · test de placement (vue « place » de #ppPanel) */
+.pl-top{flex:none;display:flex;align-items:center;gap:12px}
+.pl-mid{flex:1 1 auto;min-height:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:clamp(4px,1.4vh,14px);text-align:center}
+.pl-intro .pl-ix{margin:0;max-width:52ch;color:var(--ink);font-weight:700;font-size:clamp(.95rem,min(1.7vw,2.4vh),1.15rem)}
+.pl-qh{display:flex;flex-direction:column;align-items:center;gap:8px}
+.pl-prog{list-style:none;margin:0;padding:0;display:flex;gap:6px} .pl-prog li{width:clamp(22px,4vw,48px);height:8px;border-radius:99px;background:var(--surface-2)}
+.pl-prog li.ok{background:var(--pp)} .pl-prog li.cur{background:color-mix(in srgb,var(--good) 70%,transparent)}
+.pl-q{display:flex;align-items:center;justify-content:center;gap:clamp(12px,3vw,36px);min-width:0}
+.pl-qt{display:flex;flex-direction:column;align-items:center;gap:4px;min-width:0}
+.pl-ring{position:relative;flex:none;width:clamp(56px,min(11vh,9vw),96px);aspect-ratio:1}
+.pl-ring svg{width:100%;height:100%;transform:rotate(-90deg)} .pl-ring circle{fill:none;stroke-width:4.5} .pl-ring .tr{stroke:var(--surface-2)}
+.pl-ring .fg{stroke:var(--good);stroke-linecap:round;stroke-dasharray:100;stroke-dashoffset:0;animation:plRing var(--dur,8s) linear forwards}
+.pl-ring b{position:absolute;inset:0;display:grid;place-items:center;font:700 clamp(1.2rem,3.4vh,1.8rem) var(--f-display)}
+@keyframes plRing{to{stroke-dashoffset:100}}
+.pl-beat{display:flex;gap:8px;align-items:center} .pl-beat i{width:16px;height:16px;border-radius:50%;background:var(--surface-2);transition:transform .1s}
+.pl-beat i.y{box-shadow:inset 0 0 0 2px var(--good)} .pl-beat i.on{background:var(--good);transform:scale(1.25)}
+.pl-res .pl-rc{flex:1 1 auto;min-height:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:clamp(4px,1.4vh,14px);text-align:center}
+.pl-chip{display:inline-flex;align-items:center;gap:6px;padding:6px 14px;border-radius:999px;background:var(--good-soft);color:var(--good);font-weight:800;font-size:.9rem}
+.pl-rc h2{margin:0;font:700 clamp(1.3rem,min(3.6vw,5vh),2.2rem)/1.15 var(--f-display)} .pl-rs{margin:0;color:var(--muted);font-weight:700;font-size:clamp(.95rem,2.4vh,1.2rem)}
+.pl-note{margin:0;max-width:60ch;color:var(--muted);font-weight:700;font-size:.9rem}
+.pl-btns{display:flex;align-items:center;justify-content:center;gap:10px 18px;flex-wrap:wrap}
+.pp-pmap .pp-dot.acq .pp-di{background:var(--surface-2);color:var(--muted)} .pp-pmap .pp-dot.acq .pp-ck svg{stroke:var(--muted)} :is(.pp-mdots,.pp-mini) .pp-dot.acq{background:var(--surface-2);color:var(--muted)}
+@media (max-width:640px){ .pl-q{flex-direction:column;gap:6px} .pl-prog li{width:22px} .pl-foot .pp-inp{display:none} }
+@media (max-height:520px) and (orientation:landscape){ .pl-top .pp-badge,.pl-qh .pp-k{display:none} .pl-mid,.pl-res .pl-rc{gap:2px} .pl-ring{width:40px} .pl-q .pp-sub{font-size:.85rem} .pl-note{display:none} .pl-rc h2{font-size:1.2rem} }
+@media (prefers-reduced-motion:reduce){ .pl-ring .fg{animation:none} .pl-beat i{transition:none} }
+/* D23 · Garde tes progrès */
+.acc-modal .modal-card{width:min(480px,100%)}
+.acc-body{align-items:stretch} .acc-body .pp-badge{margin-bottom:4px}
+.acc-chips{display:flex;flex-wrap:wrap;gap:8px} .acc-chips span{padding:5px 12px;border-radius:999px;font-weight:800;font-size:.86rem;background:var(--surface-2)}
+.acc-chips .ok{color:var(--good);background:var(--good-soft)} .acc-chips .st{color:#8a5a00;background:#ffe7a6} .acc-chips .fl{color:#9a3d12;background:#ffd9c2}
+.acc-g,.acc-m{display:flex;align-items:center;justify-content:center;gap:10px;min-height:52px;border-radius:999px;font:700 1.02rem var(--f-display);cursor:pointer}
+.acc-g{background:#fff;color:#15122e;border:1px solid var(--line);box-shadow:0 8px 20px -12px rgba(20,12,60,.5)} .acc-gi{width:26px;height:26px;border-radius:50%;border:1px solid #c9c6e0;display:grid;place-items:center;font:800 .82rem var(--f-body)}
+.acc-m{background:var(--surface-2);color:var(--ink);border:0} .acc-m svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.acc-body .gl-foot small{color:var(--muted);font-weight:700}
+@media (max-height:520px){ .acc-body .pp-badge{display:none} .acc-g,.acc-m{min-height:42px} }
+/* D25 · bilan de la semaine */
+.wk-modal .modal-card{width:min(980px,100%)}
+.wk-body{display:flex;flex-direction:column;gap:clamp(8px,1.8vh,16px);padding:clamp(14px,2.4vh,26px)}
+.wk-h{display:flex;align-items:center;gap:14px} .wk-h>div{flex:1 1 auto;min-width:0} .wk-h h2{margin:0;font:700 clamp(1.4rem,3.6vh,2.1rem)/1.1 var(--f-display)} .wk-h p{margin:2px 0 0;color:var(--muted);font-weight:700}
+.wk-hi{flex:none;width:48px;height:48px;border-radius:14px;background:var(--surface-2);display:grid;place-items:center} .wk-hi svg,.wk-ti svg{width:60%;height:60%;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round} .wk-hi{color:var(--good)}
+.wk-valid{flex:none;padding:6px 14px;border-radius:999px;background:#ffe7a6;color:#6b4500;font-weight:800;font-size:.86rem;white-space:nowrap}
+.wk-tiles{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:clamp(8px,1.2vw,14px)}
+.wk-tile{display:flex;flex-direction:column;gap:2px;padding:clamp(10px,1.8vh,18px);border-radius:var(--r-lg);background:var(--surface-2);min-width:0}
+.wk-tile b{font:700 clamp(1.4rem,4vh,2.2rem)/1.1 var(--f-display)} .wk-tile small{color:var(--muted);font-weight:700}
+.wk-ti{width:32px;height:32px;border-radius:10px;display:grid;place-items:center;color:#fff;margin-bottom:4px} .wk-ti.c0{background:#1f7a52} .wk-ti.c1{background:#7a5bf5} .wk-ti.c2{background:#c25a12} .wk-ti.c3{background:#2563eb}
+.wk-row{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:clamp(8px,1.2vw,14px)}
+.wk-left{display:flex;flex-direction:column;gap:clamp(8px,1.2vw,14px);min-width:0}
+.wk-cal{padding:12px 16px;border-radius:var(--r-lg);background:var(--surface-2)} .wk-cal ol{list-style:none;margin:8px 0 0;padding:0;display:flex;justify-content:space-between;gap:4px}
+.wk-cal li{display:flex;flex-direction:column;align-items:center;gap:4px;font-weight:800;color:var(--muted);font-size:.85rem}
+.wk-cal i{width:clamp(28px,4.4vh,44px);aspect-ratio:1;border-radius:50%;background:var(--surface);display:grid;place-items:center} .wk-cal li.on i{background:var(--pp)}
+.wk-cal i svg{width:60%;height:60%;fill:none;stroke:#fff;stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
+.wk-best{position:relative;overflow:hidden;display:flex;flex-direction:column;justify-content:flex-end;gap:2px;min-height:76px;padding:12px 110px 12px 16px;border-radius:var(--r-lg);color:#fff;background:linear-gradient(135deg,#8b6cff,#5b3fd6)}
+.wk-best small{font:800 .72rem var(--f-mono);letter-spacing:.12em;text-transform:uppercase;opacity:.92} .wk-best b{font:700 clamp(1.05rem,2.8vh,1.5rem)/1.15 var(--f-display)} .wk-best>span:not(.wk-bo){color:#ffd75a;letter-spacing:2px}
+.wk-bo{position:absolute;right:8px;top:50%;transform:translateY(-50%);width:92px;height:92px} .wk-bo svg{width:100%;height:100%}
+.wk-one{margin:0;padding:12px 16px;border-radius:var(--r-lg);background:var(--surface-2);font-weight:700}
+.wk-goal{display:flex;flex-direction:column;gap:8px;padding:clamp(12px,2vh,18px);border-radius:var(--r-lg);background:var(--surface-2);min-width:0}
+.wk-goal>b{font:700 1.15rem/1.2 var(--f-display)} .wk-goal p{margin:0;color:var(--muted);font-weight:700}
+.wk-adj{display:grid;grid-template-columns:repeat(3,minmax(0,1fr))} .wk-btns{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:auto}
+@media (max-width:760px){ .wk-tiles{grid-template-columns:repeat(2,minmax(0,1fr))} .wk-row{grid-template-columns:1fr} .wk-ti{display:none} .wk-valid{display:none} .wk-hi{display:none} .wk-best{min-height:0;padding-right:16px} .wk-bo{display:none} }
+@media (max-height:700px){ .wk-body{gap:8px;padding:12px 14px} .wk-cal .pp-k{display:none} .wk-cal ol{margin-top:0} .wk-best{padding:8px 12px} .wk-best>span:not(.wk-bo){display:none} .wk-best small{font-size:.66rem} .wk-h h2{font-size:1.3rem} .wk-ti{display:none} .wk-tile{padding:8px 12px} .wk-tile b{font-size:1.3rem} .wk-cal{padding:8px 12px} .wk-cal i{width:26px} .wk-best{min-height:0} .wk-bo{width:64px;height:64px} .wk-goal{gap:6px} }
+@media (max-height:520px){ .wk-modal .modal-card{width:min(980px,100%)} .wk-body{gap:6px;padding:10px 14px} .wk-h p{display:none} .wk-hi{display:none} .wk-tiles{grid-template-columns:repeat(4,minmax(0,1fr))} .wk-tile small{font-size:.74rem} .wk-row{grid-template-columns:minmax(0,1fr) minmax(0,1fr)} .wk-best,.wk-one{display:none} .wk-goal p{display:none} .wk-goal>b{font-size:1rem} .wk-cal li span{font-size:.7rem} }
+/* D28 · préparer le micro */
+.mp-modal.mw-top{z-index:9100}
+.mp-modal .modal-card{width:min(600px,100%)}
+.mp-body{align-items:center;text-align:center}
+.mp-chip{display:inline-flex;align-items:center;gap:6px;padding:6px 14px;border-radius:999px;background:var(--surface-2);color:var(--muted);font-weight:800;font-size:.86rem}
+.mp-chip svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round} .mp-chip.ok{background:var(--good-soft);color:var(--good)} .mp-chip.no{background:color-mix(in srgb,var(--warn) 18%,transparent);color:var(--warn)}
+.mp-tips{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;width:100%}
+.mp-tips li{display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px 8px;border-radius:var(--r-md,14px);background:var(--surface-2);font-weight:800;font-size:.9rem;line-height:1.25}
+.mp-tips svg{width:30px;height:30px;fill:none;stroke:var(--good);stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.mp-live{display:flex;align-items:center;justify-content:center;gap:16px;min-height:80px}
+.mp-vu{display:flex;align-items:center;gap:4px;height:64px} .mp-vu[hidden]{display:none} .mp-vu i{width:7px;height:100%;border-radius:4px;background:var(--good);opacity:.35;transform:scaleY(.08);transform-origin:center} .mp-vu i.hi{opacity:1}
+.mp-note{font:700 clamp(2.4rem,9vh,4rem)/1 var(--f-display);min-width:1.5em}
+.mp-ck{width:44px;height:44px;border-radius:50%;background:#22a565;display:grid;place-items:center} .mp-ck[hidden]{display:none} .mp-ck svg{width:60%;height:60%;fill:none;stroke:#fff;stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
+.mp-msg{min-height:1.3em;font-weight:700} .mp-msg.warn{color:var(--warn)}
+.mp-btns{display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap}
+@media (max-width:520px){ .mp-vu{gap:3px} .mp-vu i:nth-child(n+15){display:none} .mp-live{gap:10px} .mp-ck{width:36px;height:36px} .mp-tips{grid-template-columns:1fr;gap:6px} .mp-tips li{flex-direction:row;padding:8px 12px;text-align:left} .mp-tips svg{width:24px;height:24px;flex:none} .mp-vu i{width:5px} }
+@media (max-height:520px){ .mp-tips li{padding:6px;font-size:.8rem} .mp-tips svg{width:22px;height:22px} .mp-live{min-height:56px} .mp-vu{height:44px} .mp-note{font-size:2.2rem} }
+@media (prefers-reduced-motion:reduce){ .mp-vu i{transition:none} }
+/* ==== fin Premiers pas lot 4 ==== */
 </style>
 
 <script>if(window.Capacitor&&window.webkit&&window.webkit.messageHandlers&&window.webkit.messageHandlers.bridge)document.documentElement.classList.add("native");</script>
@@ -6332,6 +6413,7 @@ async function ntfCloud(){ if(!sb||!user) return;
     const {data,error}=await sb.from("notifications").select("id,cat,kind,title,body,action,created_at").eq("user_id",user.id).gte("created_at",since).order("created_at",{ascending:true}).limit(50);
     if(!error && Array.isArray(data)) data.forEach(r=>{ const act = typeof r.action==="string" && /^(daily|rank|learn|free|progress|hub|game:(runner|speed|memory))$/.test(r.action) ? (r.action.startsWith("game:")?{k:"game",v:r.action.slice(5),l:"ntfPlay"}:{k:r.action,l:"ntfOpen"}) : null;
       const ts=Date.parse(r.created_at)||Date.now(), day=dayStr(new Date(ts));
+      if(r.kind==="path"){ ntfAdd({key:"ppr-"+day, cat:"remind", type:"path", ti:r.title, tx:r.body, t:ts, act:{k:"pp",l:"ntfPlay"}}); return; } // D24: the next lesson (lot 4)
       if(r.kind==="streak"){ if(S.streak&&S.streak.last===dayStr()) return; ntfAdd({key:"streak-"+day, cat:"remind", type:"streak", ti:r.title, tx:r.body, t:ts, act}); return; } // the same reminder as the app's own
       ntfAdd({key:"srv-"+r.id, cat:NTF_CATS.includes(r.cat)?r.cat:"news", type:NTF_ICON[r.kind]?r.kind:"news", ti:r.title, tx:r.body, t:ts, act}); });
   }catch(e){}
@@ -6344,7 +6426,10 @@ async function ntfCloud(){ if(!sb||!user) return;
   }catch(e){} }
 let ntfPrefT=0;
 function ntfSavePrefs(){ clearTimeout(ntfPrefT); ntfPrefT=setTimeout(async()=>{ if(!sb||!user) return; const p=ntfPrefs(), now=new Date();
-  try{ const {error}=await sb.from("notif_prefs").upsert({user_id:user.id, email_weekly:p.weekly, email_streak:p.remind.mail, email_social:p.social.mail, email_news:p.news.mail, lang:S.settings.lang==="en"?"en":"fr", updated_at:now.toISOString()},{onConflict:"user_id"});
+  try{ const row={user_id:user.id, email_weekly:p.weekly, email_streak:p.remind.mail, email_social:p.social.mail, email_news:p.news.mail, lang:S.settings.lang==="en"?"en":"fr", updated_at:now.toISOString()};
+    let tz="Europe/Paris"; try{ tz=Intl.DateTimeFormat().resolvedOptions().timeZone||tz; }catch(e){}
+    let {error}=await sb.from("notif_prefs").upsert({...row, remind_hour:(typeof remHour==="function"?remHour():18), tz},{onConflict:"user_id"}); // D24 (lot 4): reminder hour and time zone
+    if(error && /remind_hour|tz|column|PGRST204/i.test(String(error.message||"")+(error.code||""))) ({error}=await sb.from("notif_prefs").upsert(row,{onConflict:"user_id"})); // migration 2026-10-25 not run yet
     if(error) console.warn("notif_prefs", error.message); else { S.settings.ntfAt=now.getTime(); save(); } }catch(e){} },800); }
 // ---- settings: categories x channels ----
 function renderNtfSet(){ const box=$("ntfSet"); if(!box) return; const p=ntfPrefs(); box.innerHTML="";
@@ -7666,7 +7751,7 @@ $("micBtn").addEventListener("click", async ()=>{
       an.getFloatTimeDomainData(buf); const f=autoCorrelate(buf,c.sampleRate);
       if(f<0){ cand=null; count=0; lastEmit=null; return; }
       if(performance.now()<micMuteUntil) return;
-      const m=Math.round(69+12*Math.log2(f/440));
+      const m=Math.round(69+12*Math.log2(f/440)-(+S.settings.micCents||0)/100); // micCents: a piano tuned a little low/high (D28)
       if(m===cand) count++; else { cand=m; count=1; }
       if(count===3 && m!==lastEmit){ lastEmit=m; flashKey(m,"k-hit",150); midiIn(m); } // compare the full note: Do4 then Do5 are two notes
     },25);
@@ -10032,6 +10117,311 @@ OBJ.douze=()=>{ const o=O3(), C=["#ff5a6e","#ff7a4f","#ff9a3c","#ffb83d","#ffd23
     if(Object.keys(rec).length) r.merged.dzRec=rec; else delete r.merged.dzRec;
     r.changed=JSON.stringify(r.merged)!==JSON.stringify(local); return r; }; }
 /* ==== fin Les Douze ==== */
+/* ==== Premiers pas lot 4 (D5 placement, D23 compte, D24 rappel, D25 bilan, D28 micro) ==== */
+// D5 : test de placement (PP.view="place", état PL) · D23 : « Garde tes progrès » (#accModal, S.acct={n,at,why}) · D24 : rappel de la prochaine leçon
+// (notification « Rappels » ppr-<jour>, S.ppRem={n,last,kept}, heure S.settings.remindH, e-mail côté serveur : job « path » de notify) ·
+// D25 : bilan de la semaine (#wkModal, S.wkRev={last}) · D28 : préparer le micro (#mpModal, S.micPrep={at,ok}, S.settings.micCents).
+Object.assign(TXT.fr,{
+  plKick:"Placement · 60 secondes", plT:"Montre-moi ce que tu sais", plSub:n=>n+" petites questions, on s'arrête au premier doute.", plGo:"C'est parti", plQ:(i,n)=>"Question "+i+" sur "+n,
+  plIntro:"Quelques notes, deux accords et un rythme. Pas de piège : tu ne peux pas rater, on te place juste au bon endroit.",
+  plNote:n=>"Joue un "+n, plNoteS:"N'importe lequel, sur tout le clavier.", plSeq:N=>"Joue "+N.join(" "), plSeqS:"L'une après l'autre, en montant.", plCont:"… continue",
+  plMid:n=>"Joue le "+n+" central", plMidS:"Celui du milieu du clavier.", plChord:n=>"Joue "+n+" majeur", plChordS:N=>"("+N.join(" ")+" ensemble)", plChordM:"Au micro ou à l'écran : l'une après l'autre, c'est bon aussi.",
+  plBeat:n=>"Joue un "+n+" sur chaque clic", plBeatS:"4 clics pour écouter, puis à toi : 4 fois.", plBeatL:"Écoute…", plBeatY:"À toi !",
+  plDunno:"Je ne sais pas", plOk:"Bien !", plRes:"Résultat", plGood:n=>n+(n>1?" réponses justes":" réponse juste"), plStart:n=>"Tu commences à la leçon "+n,
+  plAcqN:n=>n>1?"Les leçons 1 à "+n+" sont marquées « acquises ». Tu peux les ouvrir quand tu veux.":"La leçon 1 est marquée « acquise ». Tu peux l'ouvrir quand tu veux.", plAcq:"Acquise",
+  plHere:"Commencer ici", plFromStart:"Reprendre depuis le début", plAllT:"Tu connais les bases !", plAllX:"On te propose les accords : étape 2 de Ma route.", plAllGo:"Aller aux accords", plAllPp:"Faire quand même les Premiers pas",
+  plSet:"Test de placement", plOrC:n=>"ou joue un "+n,
+  accT:"Garde tes progrès", accX:n=>"Tes "+n+(n>1?" leçons":" leçon")+", tes étoiles et ta série sur tous tes appareils.", accXg:"Ton objectif, tes étoiles et ta série sur tous tes appareils.",
+  accLes:n=>n+(n>1?" leçons":" leçon"), accSt:n=>n+(n>1?" étoiles":" étoile"), accDay:n=>n+(n>1?" jours":" jour"), accG:"Continuer avec Google", accMail:"Recevoir un code par e-mail", accFree:"Gratuit. Pas de carte bancaire.", accLater:"Plus tard",
+  remT0:n=>"Ta leçon "+n+" t'attend", remT1:n=>"2 minutes pour ta leçon "+n+" ?", remT2:n=>"On reprend ? Ta leçon "+n+" t'attend", remMel:"Ta mélodie t'attend", remKeptT:"Ta place est gardée", remKeptX:"Tes Premiers pas t'attendent, quand tu veux.",
+  remHourL:"Heure du rappel", remHourD:"Ta prochaine leçon, une fois par jour, jamais après 21 h",
+  wkT:"Ta semaine", wkRange:(a,b)=>"Du "+a+" au "+b, wkValid:"Semaine validée", wkDays:"jours joués", wkMin:"de piano", wkLes:"leçons", wkNotes:"notes apprises", wkXp:"XP gagnés", wkBestS:"meilleure série",
+  wkYour:"Tes jours", wkBest:"Ta plus belle réussite", wkBestDay:(d,m)=>"Ta meilleure journée : "+d+" · "+m+" min", wkGoalQ:g=>"Ton objectif de "+g+", ça va ?", wkGoalX:(a,b)=>"Tu l'as atteint "+a+(a>1?" jours":" jour")+" sur "+b+".",
+  wkGoalB:["Parfait","Plus","Moins"], wkGo:"Continuer", wkShare:"Partager", wkOne:n=>"Une semaine chargée ? 1 jour, c'est déjà ça."+(n?" Ta leçon "+n+" t'attend.":""), wkShareT:(d,m)=>"Ma semaine au piano : "+d+"/7 jours, "+m+" min",
+  wkNtfT:"Ton bilan de la semaine", wkNtfX:(d,m)=>d+"/7 jours · "+m+" min", wkDOW:["L","M","M","J","V","S","D"], wkSaved:"Objectif mis à jour",
+  mpOk:"Micro autorisé", mpWait:"On demande le micro…", mpNo:"Micro refusé", mpT:"On t'écoute", mpTips:d=>[d,"Évite la télé ou la musique autour","Joue normalement, pas besoin de taper fort"],
+  mpDev:{ipad:"Pose l'iPad sur le pupitre",iphone:"Pose ton téléphone sur le pupitre",android:"Pose ton téléphone sur le pupitre",other:"Place l'ordinateur près du piano"}, mpPlay:n=>"Joue un "+n+" sur ton piano.", mpGot:n=>"Joue un "+n+" sur ton piano : on l'a bien entendu.", mpHeard:n=>"On entend un "+n+". Essaie un "+n+".",
+  mpNoise:"Il y a du bruit autour : on entend mal.", mpLow:"Ton piano sonne un peu bas : on s'adapte.", mpHigh:"Ton piano sonne un peu haut : on s'adapte.", mpGo:"Ça marche", mpLater:"Plus tard",
+  mpDenied:"Le micro est bloqué. Autorise-le pour Piano Challenges, puis réessaie.", mpDeniedApp:"Le micro est bloqué : ouvre Réglages › Piano Challenges › Micro, puis réessaie.", mpDeniedWeb:"Clique sur le cadenas à gauche de l'adresse, autorise le micro, puis réessaie.",
+  mpRetry:"Réessayer", mpScreen:"Jouer sur l'écran", mpSet:"Préparer le micro"
+});
+Object.assign(TXT.en,{
+  plKick:"Placement · 60 seconds", plT:"Show me what you know", plSub:n=>n+" short questions, we stop at the first doubt.", plGo:"Let's go", plQ:(i,n)=>"Question "+i+" of "+n,
+  plIntro:"A few notes, two chords and a rhythm. No trick: you can't get it wrong, we just place you at the right spot.",
+  plNote:n=>"Play "+ppArt(n), plNoteS:"Any of them, anywhere on the keyboard.", plSeq:N=>"Play "+N.join(" "), plSeqS:"One after the other, going up.", plCont:"… keep going",
+  plMid:n=>"Play middle "+n, plMidS:"The one in the middle of the keyboard.", plChord:n=>"Play "+n+" major", plChordS:N=>"("+N.join(" ")+" together)", plChordM:"With the mic or on screen: one after the other is fine too.",
+  plBeat:n=>"Play "+ppArt(n)+" on each click", plBeatS:"4 clicks to listen, then your turn: 4 times.", plBeatL:"Listen…", plBeatY:"Your turn!",
+  plDunno:"I don't know", plOk:"Nice!", plRes:"Result", plGood:n=>n+(n>1?" right answers":" right answer"), plStart:n=>"You start at lesson "+n,
+  plAcqN:n=>n>1?"Lessons 1 to "+n+" are marked as known. You can open them whenever you like.":"Lesson 1 is marked as known. You can open it whenever you like.", plAcq:"Known",
+  plHere:"Start here", plFromStart:"Start from the beginning", plAllT:"You know the basics!", plAllX:"Let's go to chords: stage 2 of My path.", plAllGo:"Go to chords", plAllPp:"Do the First steps anyway",
+  plSet:"Placement test", plOrC:n=>"or play "+ppArt(n),
+  accT:"Keep your progress", accX:n=>"Your "+n+(n>1?" lessons":" lesson")+", your stars and your streak on all your devices.", accXg:"Your goal, your stars and your streak on all your devices.",
+  accLes:n=>n+(n>1?" lessons":" lesson"), accSt:n=>n+(n>1?" stars":" star"), accDay:n=>n+(n>1?" days":" day"), accG:"Continue with Google", accMail:"Get a code by e-mail", accFree:"Free. No credit card.", accLater:"Later",
+  remT0:n=>"Lesson "+n+" is waiting", remT1:n=>"2 minutes for lesson "+n+"?", remT2:n=>"Shall we go on? Lesson "+n+" is waiting", remMel:"Your melody is waiting", remKeptT:"Your spot is kept", remKeptX:"Your First steps are waiting, whenever you like.",
+  remHourL:"Reminder time", remHourD:"Your next lesson, once a day, never after 9 pm",
+  wkT:"Your week", wkRange:(a,b)=>a+" to "+b, wkValid:"Week complete", wkDays:"days played", wkMin:"of piano", wkLes:"lessons", wkNotes:"notes learned", wkXp:"XP earned", wkBestS:"best streak",
+  wkYour:"Your days", wkBest:"Your best moment", wkBestDay:(d,m)=>"Your best day: "+d+" · "+m+" min", wkGoalQ:g=>"Your "+g+" goal, is it right?", wkGoalX:(a,b)=>"You reached it on "+a+" day"+(a>1?"s":"")+" out of "+b+".",
+  wkGoalB:["Perfect","More","Less"], wkGo:"Continue", wkShare:"Share", wkOne:n=>"A busy week? 1 day still counts."+(n?" Lesson "+n+" is waiting.":""), wkShareT:(d,m)=>"My piano week: "+d+"/7 days, "+m+" min",
+  wkNtfT:"Your week in review", wkNtfX:(d,m)=>d+"/7 days · "+m+" min", wkDOW:["M","T","W","T","F","S","S"], wkSaved:"Goal updated",
+  mpOk:"Microphone allowed", mpWait:"Asking for the microphone…", mpNo:"Microphone blocked", mpT:"We're listening", mpTips:d=>[d,"Avoid the TV or music around you","Play normally, no need to hit hard"],
+  mpDev:{ipad:"Put the iPad on the music stand",iphone:"Put your phone on the music stand",android:"Put your phone on the music stand",other:"Put the computer near the piano"}, mpPlay:n=>"Play "+ppArt(n)+" on your piano.", mpGot:n=>"Play "+ppArt(n)+" on your piano: we heard it well.", mpHeard:n=>"We hear "+ppArt(n)+". Try "+ppArt(n)+".",
+  mpNoise:"It's noisy around you: we can't hear well.", mpLow:"Your piano sounds a little flat: we'll adjust.", mpHigh:"Your piano sounds a little sharp: we'll adjust.", mpGo:"It works", mpLater:"Later",
+  mpDenied:"The microphone is blocked. Allow it for Piano Challenges, then try again.", mpDeniedApp:"The microphone is blocked: open Settings › Piano Challenges › Microphone, then try again.", mpDeniedWeb:"Click the padlock left of the address, allow the microphone, then try again.",
+  mpRetry:"Try again", mpScreen:"Play on screen", mpSet:"Set up the microphone"
+});
+// mpHeard uses the note heard and the note asked: fix the FR/EN wording with two names
+TXT.fr.mpHeard=(h,c)=>"On entend un "+h+". Essaie un "+c+"."; TXT.en.mpHeard=(h,c)=>"We hear "+ppArt(h)+". Try "+ppArt(c)+".";
+Object.assign(NTF_ICON,{path:"learn", week:"scroll"});
+const L4isO = x => x && typeof x==="object" && !Array.isArray(x);
+
+// ======================= D5 · test de placement =======================
+// 7 consignes de 8 s : Fa, Si, Do Ré Mi Fa Sol, Do central, Do majeur, un rythme, Sol majeur. Première erreur (ou « Je ne sais pas »,
+// ou temps écoulé) = place : P04, P04, P04, P02, P07, P09, P11 ; tout juste = étape 2 de Ma route (accords). Jamais d'échec : on place.
+const PL_Q=[{k:"note",pc:5,to:"p04"},{k:"note",pc:11,to:"p04"},{k:"seq",pcs:[0,2,4,5,7],to:"p04"},{k:"mid",to:"p02"},{k:"chord",pcs:[0,4,7],to:"p07"},{k:"beat",to:"p09"},{k:"chord",pcs:[7,11,2],to:"p11"}];
+const PL_SEC=8;
+let PL={st:"intro", i:0, ok:0, to:null, got:[], ch:new Map(), busy:0, t0:0, tm:[], hits:[], beats:[], fb:"", placed:[], rt:[]};
+function plClear(){ PL.tm.forEach(clearTimeout); PL.tm=[]; clearInterval(PL.iv); }
+function plLater(fn, ms){ const id=setTimeout(()=>{ PL.tm=PL.tm.filter(x=>x!==id); fn(); },ms); PL.tm.push(id); }
+function plOpen(){ plClear(); PL={st:"intro", i:0, ok:0, to:null, got:[], ch:new Map(), busy:0, t0:0, tm:[], hits:[], beats:[], fb:"", placed:[], rt:[]}; PP.id=null; PP.L=null; PP.lit.clear(); PP.demo.clear(); PP.zone=[];
+  if(INFO_PAGES.includes(page)) closeSet(); ppGoPage("place"); }
+function plSay(q){ const N=ppNames();
+  if(q.k==="note") return [t("plNote")(N[q.pc]), t("plNoteS")];
+  if(q.k==="seq") return [t("plSeq")(q.pcs.map(p=>N[p])), PL.got.length ? PL.got.map(m=>N[md12(m)]).join(", ")+" ✓ "+t("plCont") : t("plSeqS")];
+  if(q.k==="mid") return [t("plMid")(N[0]), t("plMidS")];
+  if(q.k==="beat") return [t("plBeat")(N[0]), t("plBeatS")];
+  return [t("plChord")(N[q.pcs[0]]), t("plChordS")(q.pcs.map(p=>N[p]))+(ppInp()!=="midi"?" "+t("plChordM"):"")]; }
+function plRender(){ const P=$("ppPanel"); if(!P) return; const n=PL_Q.length, C=CNAME();
+  if(PL.st==="res"){ plRenderRes(P); return; }
+  const top='<div class="pl-top"><span class="pp-badge">'+PP_FOOT+'</span><div class="pp-tt"><small>'+esc(t("plKick"))+'</small><b>'+esc(t("plT"))+'</b></div><span class="pp-push"></span><button class="pp-x" type="button" id="plX" aria-label="'+esc(t("ppQuit"))+'"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>';
+  let mid;
+  if(PL.st==="intro") mid='<div class="pl-mid pl-intro"><p class="pp-sub">'+esc(t("plSub")(n))+'</p><p class="pl-ix">'+esc(t("plIntro"))+'</p><button class="pp-main" type="button" id="plGo">'+esc(t("plGo"))+'</button>'+(ppInp()==="midi"?'<small class="pp-orc">'+esc(t("plOrC")(C))+'</small>':'')+'</div>';
+  else { const q=PL_Q[PL.i], [say,sub]=plSay(q), beat=q.k==="beat";
+    mid='<div class="pl-mid"><div class="pl-qh"><small class="pp-k">'+esc(t("plQ")(PL.i+1,n))+'</small><ol class="pl-prog" aria-hidden="true">'+PL_Q.map((_,i)=>'<li class="'+(i<PL.i?"ok":i===PL.i?"cur":"")+'"></li>').join("")+'</ol></div>'
+      +'<div class="pl-q"><div class="pl-qt"><p class="pp-say" id="plSay" aria-live="polite">'+esc(say)+'</p><p class="pp-sub" id="plSub">'+esc(sub)+'</p><p class="pp-fb ok" id="plFb" role="status">'+esc(PL.fb)+'</p></div>'
+      +(beat?'<div class="pl-beat" id="plBeat" aria-hidden="true">'+Array.from({length:8},(_,i)=>'<i class="'+(i<4?"l":"y")+'"></i>').join("")+'</div>'
+        :'<div class="pl-ring" id="plRing" aria-hidden="true"><svg viewBox="0 0 44 44"><circle class="tr" cx="22" cy="22" r="19"/><circle class="fg" cx="22" cy="22" r="19" pathLength="100"/></svg><b id="plSec">'+PL_SEC+'</b></div>')+'</div></div>'; }
+  P.innerHTML='<div class="pp-lesson pl-wrap">'+top+mid+'<div class="pp-kbw"><div class="kbd pp-kb" id="ppKb" aria-label="Piano">'+ppKbHTML()+'</div></div>'
+    +'<div class="pp-foot pl-foot"><span class="pp-inp">'+esc((t("ppIn")||{})[ppInp()]||"")+'</span><span class="pp-push"></span>'+(PL.st==="q"?'<button class="btn" type="button" id="plDunno">'+esc(t("plDunno"))+'</button>':'')+'</div></div>';
+  $("plX").onclick=()=>{ plClear(); openPage("learn"); };
+  if($("plGo")) $("plGo").onclick=plStart;
+  if($("plDunno")) $("plDunno").onclick=()=>plDoubt(null);
+  const kb=$("ppKb"); kb.addEventListener("pointerdown",e=>{ const el=e.target.closest("[data-m]"); if(!el) return; e.preventDefault(); const m=+el.dataset.m; try{ tone(m); }catch(er){} ppIn([m],false); });
+  kb.addEventListener("contextmenu",e=>e.preventDefault()); ppPaint(); }
+function plStart(){ PL.st="q"; PL.i=0; PL.ok=0; plAsk(); }
+function plAsk(){ plClear(); const q=PL_Q[PL.i]; PL.got=[]; PL.ch=new Map(); PL.fb=""; PP.lit.clear(); PL.hits=[]; PL.beats=[]; PL.t0=performance.now(); PL.busy=PL.t0+350; plRender();
+  if(q.k==="beat"){ plBeatRun(); return; }
+  const ring=$("plRing"); if(ring) ring.style.setProperty("--dur",PL_SEC+"s");
+  PL.iv=setInterval(()=>{ const left=Math.max(0,Math.ceil(PL_SEC-(performance.now()-PL.t0)/1000)), b=$("plSec"); if(b) b.textContent=left; if(left<=0){ clearInterval(PL.iv); plDoubt(null); } },200); }
+function plBeatRun(){ const spb=750, t0=performance.now()+700, lat=ppInp()==="mic"?80:ppInp()==="midi"?midiLat():0; PL.lat=lat;
+  for(let i=0;i<8;i++){ const at=t0+i*spb; PL.beats.push(at); plLater(()=>{ try{ tone(i<4?96:91,0,.05,i<4?.16:.12); }catch(e){} const box=$("plBeat"); if(box){ box.querySelectorAll("i").forEach((x,j)=>x.classList.toggle("on",j===i)); }
+      if(i===4){ const s=$("plSub"); if(s) s.textContent=t("plBeatY"); } if(i===0){ const s=$("plSub"); if(s) s.textContent=t("plBeatL"); } }, Math.max(0,at-performance.now())); }
+  plLater(plBeatEnd, t0+7*spb+500-performance.now()); }
+function plBeatEnd(){ const win=ppInp()==="mic"?300:220, tg=PL.beats.slice(4), hit=tg.filter(b=>PL.hits.some(h=>Math.abs(h-b)<=win)).length;
+  if(hit>=3) plOk(); else plDoubt(null); }
+function plIn(b, lone){ if(PL.st==="intro"){ if(lone && md12(b[0])===0) plStart(); return; }
+  if(PL.st==="res"){ if(lone && md12(b[0])===0){ const m=$("plMain"); if(m) m.click(); } return; }
+  const q=PL_Q[PL.i], now=performance.now(); if(!q || now<PL.busy) return;
+  if(q.k==="beat"){ b.forEach(m=>{ PL.hits.push(now-35-(PL.lat||0)); }); return; }
+  for(const m of b){ const pc=md12(m);
+    if(q.k==="note"){ if(pc===q.pc) return plOk(m); return plDoubt(m); }
+    if(q.k==="mid"){ if(m===60) return plOk(m); return plDoubt(m); }
+    if(q.k==="seq"){ const g=PL.got;
+      if(g.length && pc===q.pcs[g.length]){ g.push(m); PP.lit.add(m); if(g.length===q.pcs.length) return plOk(m); plSub(); ppPaint(); continue; }
+      if(g.length && pc===md12(g[g.length-1])) continue; // the mic hears the same note twice
+      if(pc===q.pcs[0]){ PL.got=[m]; PP.lit=new Set([m]); plSub(); ppPaint(); continue; }
+      return plDoubt(m); }
+    if(q.k==="chord"){ if(!q.pcs.includes(pc)) return plDoubt(m); PL.ch.set(pc,now); PP.lit.add(m); ppPaint();
+      if(q.pcs.every(x=>PL.ch.has(x) && now-PL.ch.get(x)<4000)) return plOk(m); } } }
+function plSub(){ const s=$("plSub"); if(s) s.textContent=plSay(PL_Q[PL.i])[1]; }
+function plOk(m){ plClear(); PL.ok++; PL.busy=performance.now()+9e9; if(m!=null) ppKeyCls(m,"k-hit",600); PL.fb=t("plOk"); const f=$("plFb"); if(f) f.textContent=PL.fb;
+  plLater(()=>{ if(PL.i+1<PL_Q.length){ PL.i++; plAsk(); } else plDone(null); },650); }
+function plDoubt(m){ if(PL.st!=="q") return; plClear(); if(m!=null) ppKeyCls(m,"pp-warn",320); plDone(PL_Q[PL.i].to); }
+function plDone(to){ plClear(); PL.st="res"; PL.to=to||"s2"; plApply(PL.to); plRender(); }
+// the lessons before the start are « known » (stars 0, place:1): the map ticks them in light grey, they can still be opened
+function plApply(to){ const p=ppS(), now=Date.now(), upto = to==="s2" ? PP_IDS.length : PP_IDS.indexOf(to); PL.placed=[]; PL.rt=[];
+  PP_IDS.slice(0,upto).forEach(id=>{ if(!p.done[id]){ p.done[id]={at:now, stars:0, place:1, tries:0}; PL.placed.push(id); } });
+  p.on=true; if(!p.start) p.start=now; p.cur=ppFirstOpen(p); p.step=0; p.place={to, at:now, ok:PL.ok};
+  S.onb={...(L4isO(S.onb)?S.onb:{}), place:to};
+  if(to==="s2"){ const r=rtS(); RT_STAGES[0].forEach(x=>{ if(!r.done[x.id]){ r.done[x.id]=now; PL.rt.push(x.id); } }); if(!r.st[1]) r.st[1]=now; }
+  else S.resume={kind:"pp", id:to, step:0, at:now, v:PP_V, inp:ppInp()};
+  save(); }
+function plUndo(){ const p=ppS(); Object.keys(p.done).forEach(id=>{ const d=p.done[id]; if(d && d.place && !(+d.stars>0)) delete p.done[id]; }); p.cur=ppFirstOpen(p); delete p.place;
+  const r=rtS(); (PL.rt||[]).forEach(id=>delete r.done[id]); if(PL.rt&&PL.rt.length && !RT_STAGES[0].every(x=>r.done[x.id])) delete r.st[1];
+  if(L4isO(S.onb)) delete S.onb.place; if(S.resume&&S.resume.kind==="pp") S.resume=null; save(); }
+const plAcqIds = () => PP_IDS.filter(id=>{ const d=((S.pp||{}).done||{})[id]; return d && d.place && !(+d.stars>0); });
+function plRenderRes(P){ const all=PL.to==="s2", n=all?0:ppNum(PL.to), acq=plAcqIds().length;
+  P.innerHTML='<div class="pp-lesson pl-wrap pl-res"><div class="pl-top"><span class="pp-badge">'+PP_FOOT+'</span><div class="pp-tt"><small>'+esc(t("plRes"))+'</small><b>'+esc(t("plT"))+'</b></div><span class="pp-push"></span></div>'
+    +'<div class="pl-rc">'+(PL.ok?'<span class="pl-chip">✓ '+esc(t("plGood")(PL.ok))+'</span>':'')+'<h2>'+esc(all?t("plAllT"):t("plStart")(n))+'</h2><p class="pl-rs">'+esc(all?t("plAllX"):ppTitle(PL.to))+'</p>'
+    +'<div class="pp-pmap pl-map">'+ppDots(PP_IDS,true)+'</div>'+(!all&&acq?'<p class="pl-note">'+esc(t("plAcqN")(acq))+'</p>':'')
+    +'<div class="pl-btns"><span><button class="pp-main" type="button" id="plMain">'+esc(all?t("plAllGo"):t("plHere"))+'</button>'+(ppInp()==="midi"?'<small class="pp-orc">'+esc(t("plOrC")(CNAME()))+'</small>':'')+'</span>'
+    +'<button class="pp-link" type="button" id="plRestart">'+esc(all?t("plAllPp"):t("plFromStart"))+'</button></div></div></div>';
+  P.querySelectorAll(".pl-map .pp-dot.acq .pp-dt").forEach(x=>x.textContent=t("plAcq"));
+  ppDotClick(P.querySelector(".pl-map"));
+  $("plMain").onclick=()=>{ if(all){ openPage("learn"); } else ppOpen(PL.to,0,0); };
+  $("plRestart").onclick=()=>{ plUndo(); ppBegin(); }; }
+{ const _pd=ppDots; ppDots=function(ids){ let h=_pd.apply(this,arguments); const d=((S.pp||{}).done)||{}; ids.forEach(id=>{ const x=d[id]; if(x && x.place && !(+x.stars>0)) h=h.replace(new RegExp('class="pp-dot done([^"]*)" data-id="'+id+'"'),'class="pp-dot done acq$1" data-id="'+id+'"'); }); return h; }; }
+{ const _rd=ppRender; ppRender=function(){ if(PP.view==="place"){ plRender(); return; } return _rd.apply(this,arguments); }; }
+{ const _pi=ppIn; ppIn=function(b, lone){ if(page==="pp" && PP.view==="place"){ if(anyModal()) return; b.forEach(ppPress); plIn(b, lone); return; } return _pi.apply(this,arguments); }; }
+{ const _ps=ppStop; ppStop=function(){ plClear(); return _ps.apply(this,arguments); }; }
+// first launch: « I know a few notes » → the placement test instead of the 3 chords
+{ const _go=fnGo; fnGo=function(){ if(FN.level==="notes"){ fnApply(); fnClose(); setInput(FN.how, FN.how!=="screen"); plOpen(); return; } return _go.apply(this,arguments); }; }
+
+// ======================= D23 · Garde tes progrès =======================
+// Proposé une fois après la leçon 3 (après le choix de l'objectif D21) ou au premier objectif atteint ; refusé = reproposé une seule fois
+// après la leçon 8, puis seulement dans Profil. Jamais pendant une partie ni au-dessus d'une autre fenêtre ; déjà connecté = rien.
+const ACC={pend:null, t:0, afterGoal:false};
+function accS(){ if(!L4isO(S.acct)) S.acct={n:0}; S.acct.n=Math.max(0,Math.min(2,S.acct.n|0)); return S.acct; }
+const accGuest = () => !user;
+function accWant(why){ if(!accGuest()) return false; const a=accS(); if(why==="p08" ? a.n!==1 : a.n!==0) return false; ACC.pend=why; accTry(); return true; }
+function accBusy(){ return anyModal() || FN.on || !!actNow() || (page==="pp" && (PP.view==="lesson"||PP.view==="place")) || !!($("gate") && !$("gate").hidden) || document.body.classList.contains("gate-on"); }
+function accTry(){ clearTimeout(ACC.t); if(!ACC.pend) return; if(!accGuest()){ ACC.pend=null; return; } if(accBusy()){ ACC.t=setTimeout(accTry,2000); return; } const w=ACC.pend; ACC.pend=null; accOpen(w); }
+function accEl(){ let m=$("accModal"); if(m) return m; m=document.createElement("div"); m.className="modal goal-modal acc-modal"; m.id="accModal"; m.hidden=true; m.setAttribute("role","dialog"); m.setAttribute("aria-modal","true"); m.setAttribute("aria-labelledby","accT");
+  m.innerHTML='<div class="modal-bg" data-close="accModal"></div><div class="modal-card"><div class="modal-body gl-body acc-body"><span class="pp-badge big">'+PP_FOOT+'</span><h2 id="accT"></h2><p id="accX"></p><div class="acc-chips" id="accChips"></div>'
+    +'<button class="acc-g" type="button" id="accG"><span class="acc-gi" aria-hidden="true">G</span><span></span></button><button class="acc-m" type="button" id="accM"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5.5" width="18" height="13" rx="2"/><path d="M3.5 7l8.5 6 8.5-6"/></svg><span></span></button>'
+    +'<div class="gl-foot"><small id="accFree"></small><button class="linkbtn" type="button" data-close="accModal" id="accLater"></button></div></div></div>';
+  document.body.appendChild(m);
+  $("accG").onclick=()=>{ closeMod("accModal"); authOpen("signup"); (async()=>{ for(let i=0;i<60 && !sb;i++) await new Promise(r=>setTimeout(r,100)); if(sb && typeof gateOAuth==="function") gateOAuth("google"); })(); };
+  $("accM").onclick=()=>{ closeMod("accModal"); authOpen("signup"); GATE.step="email"; GATE.otp=true; try{ gateRender(); }catch(e){} };
+  return m; }
+function accOpen(why){ const a=accS(), m=accEl(), n=ppDoneN(), st=typeof ppStarSum==="function"?ppStarSum():0, sk=Math.max(1,typeof effStreak==="function"?effStreak()|0:1);
+  a.n++; a.at=Date.now(); a.why=why; save();
+  $("accT").textContent=t("accT"); $("accX").textContent = n ? t("accX")(n) : t("accXg");
+  $("accChips").innerHTML=(n?'<span class="ok">✓ '+esc(t("accLes")(n))+'</span>':'')+(st?'<span class="st">★ '+esc(t("accSt")(st))+'</span>':'')+'<span class="fl">'+esc(t("accDay")(sk))+'</span>';
+  $("accG").lastChild.textContent=t("accG"); $("accM").lastChild.textContent=t("accMail"); $("accFree").textContent=t("accFree"); $("accLater").textContent=t("accLater");
+  openMod("accModal"); setTimeout(()=>{ try{ $("accG").focus({preventScroll:true}); }catch(e){} },30); }
+// after lesson 3 (first time): D21 (daily goal, if never asked) then D23; after lesson 8: D23 again if it was put off once
+{ const _fi=ppFinish; ppFinish=function(){ const id=PP.id, d0=((S.pp||{}).done||{})[id], first=!d0 || (d0.place && !(+d0.stars>0)), rev=!!PP.review; const r=_fi.apply(this,arguments);
+    if(!rev && first && id==="p03") setTimeout(()=>{ if(!(S.goal&&S.goal.asked) && page==="pp" && !anyModal()){ ACC.afterGoal=true; goalOpen(); } else accWant("p03"); },1400);
+    if(!rev && first && id==="p08") setTimeout(()=>accWant("p08"),1400);
+    return r; }; }
+{ const _cm=closeMod; closeMod=function(id){ const r=_cm.apply(this,arguments); if(id==="goalModal" && ACC.afterGoal){ ACC.afterGoal=false; setTimeout(()=>accWant("p03"),350); } return r; }; }
+// the first daily goal reached
+{ const _gt=goalTick; goalTick=function(){ const was=S.goal&&S.goal.done; const r=_gt.apply(this,arguments); const now=S.goal&&S.goal.done; if(now===dayStr() && was!==now && accGuest() && accS().n===0) setTimeout(()=>accWant("goal"),1200); return r; }; }
+{ const _op=openPage; openPage=function(){ const r=_op.apply(this,arguments); if(ACC.pend) setTimeout(accTry,400); setTimeout(wkCheck,700); return r; }; }
+
+// ======================= D24 · rappel de la prochaine leçon =======================
+// Dans l'app (catégorie Rappels, clé ppr-<jour>) : Premiers pas commencés et pas finis, pas encore joué aujourd'hui, à partir de l'heure
+// choisie (défaut 18 h, jamais à partir de 21 h), jamais si l'objectif du jour est atteint, 3 rappels sans retour au plus, puis un seul
+// « Ta place est gardée » 14 jours après la dernière séance. L'e-mail vient du serveur (job « path » de la fonction notify).
+const remHour = () => { const h=+S.settings.remindH; return Number.isInteger(h) && h>=6 && h<=20 ? h : 18; };
+function remS(){ if(!L4isO(S.ppRem)) S.ppRem={n:0}; return S.ppRem; }
+const lastPlayDay = () => Object.keys(S.xpDays||{}).filter(k=>(S.xpDays[k]|0)>0).sort().pop() || "";
+function remTitle(id, n){ const k=ppNum(id); return n===0 ? t("remT0")(k) : n===1 ? (id==="p08"?t("remMel"):t("remT1")(k)) : t("remT2")(k); }
+function remCheck(now=new Date()){ if(!ppStarted() || ppAllDone()) return false; const today=dayStr(now), h=now.getHours(); if(h<remHour() || h>=21) return false;
+  if(goalDone()) return false; const last=lastPlayDay(); if(!last || last>=today) return false;
+  const r=remS(); if(r.last===today) return false; const n = r.last && last<r.last ? (r.n|0) : 0; // played since the last reminder: the count starts again
+  if(n>=3){ if(last===addDays(-14) && r.kept!==last){ r.kept=last; save(); ntfAdd({key:"ppk-"+last, cat:"remind", type:"path", ti:t("remKeptT"), tx:t("remKeptX"), act:{k:"pp",l:"ntfPlay"}}); return true; } return false; }
+  const ri=ppResumeInfo(), id=ri?ri.id:ppFirstOpen(S.pp), i=PP_IDS.indexOf(id);
+  ntfAdd({key:"ppr-"+today, cat:"remind", type:"path", ti:remTitle(id,n), tx:ppTitle(id)+" · "+t("ppMin")(PP_MIN[i]), act:{k:"pp",l:"ntfPlay"}});
+  r.n=n+1; r.last=today; save(); return true; }
+{ const _nc=ntfCheck; ntfCheck=function(){ const r=_nc.apply(this,arguments); try{ remCheck(); }catch(e){} return r; }; }
+{ const _nd=ntfDo; ntfDo=function(a){ if(a && a.k==="pp"){ guardLeave(()=>{ const r=ppResumeInfo(); if(r) ppOpen(r.id,r.step,r.err); else openPage("learn"); }); return; } if(a && a.k==="week"){ wkOpen(a.v); return; } return _nd.apply(this,arguments); }; }
+// Réglages › Notifications : l'heure du rappel (aussi envoyée au serveur avec le fuseau)
+{ const _rn=renderNtfSet; renderNtfSet=function(){ _rn.apply(this,arguments); const box=$("ntfSet"); if(!box) return; const r=document.createElement("div"); r.className="ntf-row ntf-hour";
+    r.innerHTML='<span><b></b><small></small></span><select id="remHour"></select>'; r.querySelector("b").textContent=t("remHourL"); r.querySelector("small").textContent=t("remHourD");
+    const s=r.querySelector("select"); s.setAttribute("aria-label",t("remHourL")); for(let h=8;h<=20;h++){ const o=document.createElement("option"); o.value=h; o.textContent=(h<10?"0":"")+h+":00"; s.appendChild(o); } s.value=remHour();
+    s.onchange=()=>{ S.settings.remindH=+s.value; save(); ntfSavePrefs(); }; const note=box.querySelector(".ntf-note"); box.insertBefore(r, note||null); }; }
+
+// ======================= D25 · bilan de la semaine =======================
+// Le lundi (ou à la première ouverture de la semaine), une fois : la semaine passée (lundi → dimanche) si au moins un jour joué.
+function wkS(){ if(!L4isO(S.wkRev)) S.wkRev={}; return S.wkRev; }
+const wkPrev = () => { const d=pDate(wkKey(new Date())); d.setDate(d.getDate()-7); return dayStr(d); };
+function wkDays(mon){ const d=pDate(mon); return Array.from({length:7},(_,i)=>{ const x=new Date(d); x.setDate(d.getDate()+i); return dayStr(x); }); }
+const PL_NOTES={p02:1,p03:2,p04:4};
+function wkData(mon){ const days=wkDays(mon), xd=S.xpDays||{}, ps=S.playSec||{}, played=days.filter(k=>(xd[k]|0)>0||(ps[k]|0)>=60), sec=days.reduce((a,k)=>a+(ps[k]|0),0), g=goalCfg();
+  const t0=pDate(days[0]).getTime(), t1=t0+7*864e5, done=(S.pp&&S.pp.done)||{}, les=PP_IDS.filter(id=>{ const x=done[id]; return x && !x.place && +x.at>=t0 && +x.at<t1; });
+  const notes=les.reduce((a,id)=>a+(PL_NOTES[id]||0),0), goalOk=days.filter(k=>g.kind==="xp" ? (xd[k]|0)>=g.v : (ps[k]|0)>=g.v*60).length;
+  let best=null; if(les.length){ const b=les.slice().sort((a,c)=>((+done[c].stars||0)-(+done[a].stars||0))||PP_IDS.indexOf(c)-PP_IDS.indexOf(a))[0]; best={k:"les", id:b, txt:b==="p08"?t("pp08Song")||ppTitle(b):t("ppLesson")(ppNum(b))+" · "+ppTitle(b), stars:+done[b].stars||0}; }
+  else { const bd=days.slice().sort((a,c)=>(ps[c]|0)-(ps[a]|0))[0]; if((ps[bd]|0)>=60) best={k:"day", txt:t("wkBestDay")(pDate(bd).toLocaleDateString(S.settings.lang==="fr"?"fr-FR":"en-GB",{weekday:"long"}), Math.round((ps[bd]|0)/60))}; }
+  const xp=days.reduce((a,k)=>a+(xd[k]|0),0);
+  return {mon, days, played, n:played.length, min:Math.round(sec/60), les:les.length, notes, goalOk, xp, best, pp:ppStarted()}; }
+function wkCheck(){ try{ if(page!=="hub" || anyModal() || FN.on || ACC.pend || actNow() || document.body.classList.contains("gate-on")) return; if(!(S.onb&&S.onb.done) && !S.gate) return;
+    const mon=wkPrev(), w=wkS(); if(w.last && w.last>=mon) return; const d=wkData(mon); if(!d.n) return; w.last=mon; save();
+    try{ ntfAdd({key:"wk-"+mon, cat:"progress", type:"week", ti:t("wkNtfT"), tx:t("wkNtfX")(d.n,fmtN(d.min)), act:{k:"week",v:mon,l:"ntfSee"}}); }catch(e){}
+    wkOpen(mon); }catch(e){ console.warn(e); } }
+function wkEl(){ let m=$("wkModal"); if(m) return m; m=document.createElement("div"); m.className="modal goal-modal wk-modal"; m.id="wkModal"; m.hidden=true; m.setAttribute("role","dialog"); m.setAttribute("aria-modal","true"); m.setAttribute("aria-labelledby","wkT");
+  m.innerHTML='<div class="modal-bg" data-close="wkModal"></div><div class="modal-card"><div class="modal-body wk-body" id="wkBody"></div></div>'; document.body.appendChild(m); return m; }
+const WK_IC=['<rect x="4" y="5.5" width="16" height="14" rx="2"/><path d="M4 10h16M8.5 3.5v4M15.5 3.5v4"/>','<circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/>','<path d="M5 12.5l4.5 4.5L19 7.5"/>','<path d="M9 18V5l11-2v13M9 18a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0zM20 16a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0z"/>'];
+function wkOpen(mon){ mon=mon||wkPrev(); const d=wkData(mon), m=wkEl(), B=$("wkBody"), g=goalCfg(), L=S.settings.lang==="fr"?"fr-FR":"en-GB", fd=k=>pDate(k).toLocaleDateString(L,{day:"numeric",month:"long"}), valid=d.n>=3;
+  const tiles=[[d.n+"/7",t("wkDays")],[fmtN(d.min)+" min",t("wkMin")], d.pp?[fmtN(d.les),t("wkLes")]:[fmtN(d.xp),t("wkXp")], d.pp?[fmtN(d.notes),t("wkNotes")]:[fmtN(streaks().best||0),t("wkBestS")]];
+  const ri=ppStarted()&&!ppAllDone()?ppResumeInfo():null;
+  B.innerHTML='<div class="wk-h"><span class="wk-hi" aria-hidden="true"><svg viewBox="0 0 24 24">'+WK_IC[0]+'</svg></span><div><h2 id="wkT">'+esc(t("wkT"))+'</h2><p>'+esc(t("wkRange")(fd(d.days[0]),fd(d.days[6])))+'</p></div>'+(valid?'<span class="wk-valid">🏆 '+esc(t("wkValid"))+'</span>':'')+'</div>'
+    +'<div class="wk-tiles">'+tiles.map((x,i)=>'<div class="wk-tile"><span class="wk-ti c'+i+'" aria-hidden="true"><svg viewBox="0 0 24 24">'+WK_IC[i]+'</svg></span><b>'+esc(x[0])+'</b><small>'+esc(x[1])+'</small></div>').join("")+'</div>'
+    +'<div class="wk-row"><div class="wk-left"><div class="wk-cal"><small class="pp-k">'+esc(t("wkYour"))+'</small><ol>'+d.days.map((k,i)=>'<li class="'+(d.played.includes(k)?"on":"")+'"><i>'+(d.played.includes(k)?'<svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>':'')+'</i><span>'+esc(t("wkDOW")[i])+'</span></li>').join("")+'</ol></div>'
+    +(d.n===1?'<p class="wk-one">'+esc(t("wkOne")(ri?ri.n:0))+'</p>':d.best?'<div class="wk-best"><small>'+esc(t("wkBest"))+'</small><b>'+esc(d.best.txt)+'</b>'+(d.best.stars?'<span aria-hidden="true">'+"★".repeat(d.best.stars)+'</span>':'')+'<span class="wk-bo" aria-hidden="true">'+(OBJ.moon?OBJ.moon():"")+'</span></div>':'')+'</div>'
+    +'<div class="wk-goal"><b>'+esc(t("wkGoalQ")(g.v+" "+goalUnit(g)))+'</b><p>'+esc(t("wkGoalX")(d.goalOk,d.n))+'</p><div class="seg wk-adj" id="wkAdj">'+t("wkGoalB").map((x,i)=>'<button type="button" data-a="'+i+'" aria-pressed="'+(i===0)+'">'+esc(x)+'</button>').join("")+'</div>'
+    +'<div class="wk-btns"><button class="btn" type="button" id="wkShare">'+esc(t("wkShare"))+'</button><button class="pp-main" type="button" id="wkGo">'+esc(t("wkGo"))+'</button></div></div></div>';
+  let adj=0; $("wkAdj").querySelectorAll("button").forEach(b=>b.onclick=()=>{ adj=+b.dataset.a; $("wkAdj").querySelectorAll("button").forEach(x=>x.setAttribute("aria-pressed",x===b)); });
+  $("wkGo").onclick=()=>{ if(adj){ const L2=GOALS.filter(([k])=>k===g.kind).map(([,v])=>v), i=L2.indexOf(g.v), j=Math.max(0,Math.min(L2.length-1,i+(adj===1?1:-1))); if(L2[j]!==g.v){ goalSet(g.kind,L2[j]); toast(t("wkSaved")); } } closeMod("wkModal"); };
+  $("wkShare").onclick=async()=>{ const file=await shareCard(t("wkT"), d.n+"/7", t("wkShareT")(d.n,fmtN(d.min)), "#1f7a52"); shareIt({text:t("wkShareT")(d.n,fmtN(d.min)), url:refLink(), file}); };
+  if(!openMods.includes("wkModal")) openMod("wkModal"); else m.hidden=false; setTimeout(()=>{ try{ $("wkGo").focus({preventScroll:true}); }catch(e){} },30); }
+document.addEventListener("visibilitychange",()=>{ if(document.visibilityState==="visible") setTimeout(wkCheck,900); });
+setTimeout(wkCheck, 2600);
+
+// ======================= D28 · préparer le micro (piano acoustique) =======================
+// Fenêtre « On t'écoute » : 3 conseils, vu-mètre en direct (analyseur sur le flux du micro existant), la note entendue en grand,
+// « Ça marche » dès qu'un Do est reconnu. Bruit permanent, piano désaccordé (écart moyen → S.settings.micCents, utilisé par le moteur).
+const MP={on:false, raf:0, an:null, src:null, heard:null, okM:null, cents:[], noise:0, quiet:0, t0:0, after:null, tm:0, hist:[]};
+function mpDev(){ try{ const d=typeof mwDev==="function"?mwDev():null; if(d&&d.kind) return d.kind==="ipad"?"ipad":d.kind==="iphone"?"iphone":d.kind==="android"?"android":"other"; }catch(e){} return /iPad/.test(navigator.userAgent)?"ipad":/iPhone/.test(navigator.userAgent)?"iphone":"other"; }
+function mpEl(){ let m=$("mpModal"); if(m) return m; m=document.createElement("div"); m.className="modal goal-modal mp-modal"; m.id="mpModal"; m.hidden=true; m.setAttribute("role","dialog"); m.setAttribute("aria-modal","true"); m.setAttribute("aria-labelledby","mpT");
+  m.innerHTML='<div class="modal-bg"></div><div class="modal-card"><div class="modal-body gl-body mp-body"><span class="mp-chip" id="mpChip"></span><h2 id="mpT"></h2><ul class="mp-tips" id="mpTips"></ul>'
+    +'<div class="mp-live"><div class="mp-vu" id="mpVu" aria-hidden="true">'+Array.from({length:22},()=>'<i></i>').join("")+'</div><b class="mp-note" id="mpNote" aria-live="polite"></b><span class="mp-ck" id="mpCk" hidden><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span></div>'
+    +'<p class="mp-msg" id="mpMsg" role="status"></p><div class="mp-btns" id="mpBtns"></div></div></div>';
+  document.body.appendChild(m); return m; }
+const MP_TIP=['<rect x="6" y="3" width="12" height="18" rx="2"/><path d="M10.5 18h3"/>','<rect x="3" y="6" width="18" height="12" rx="2"/><path d="M8 3l4 3 4-3M9 21h6"/>','<path d="M8 13V6.5a1.5 1.5 0 0 1 3 0V11M11 11V4.5a1.5 1.5 0 0 1 3 0V11M14 11V6.5a1.5 1.5 0 0 1 3 0V14c0 4-2.5 7-6 7-2.6 0-4.4-1.4-5.6-3.6L3.6 14a1.5 1.5 0 0 1 2.6-1.5L8 15"/>'];
+function mpOpen(after){ const m=mpEl(); MP.on=true; MP.after=after||null; MP.heard=null; MP.okM=null; MP.cents=[]; MP.tune=null; MP.msgK=null; MP.noise=0; MP.quiet=0; MP.t0=performance.now(); MP.hist=[]; MP.st="wait";
+  $("mpT").textContent=t("mpT"); $("mpTips").innerHTML=t("mpTips")(t("mpDev")[mpDev()]).map((x,i)=>'<li><svg viewBox="0 0 24 24" aria-hidden="true">'+MP_TIP[i]+'</svg><span>'+esc(x)+'</span></li>').join("");
+  if(!openMods.includes("mpModal")) openMod("mpModal"); m.classList.toggle("mw-top", !!FN.on); mpPaint();
+  if(!micOn){ try{ $("micBtn").click(); }catch(e){} }
+  clearInterval(MP.tm); let tries=0; MP.tm=setInterval(()=>{ tries++; if(micStream && micOn){ clearInterval(MP.tm); MP.st="ok"; mpListen(); mpPaint(); } else if($("micBtn").classList.contains("err") || tries>40){ clearInterval(MP.tm); MP.st="no"; mpPaint(); } },150); }
+function mpListen(){ const c=audio(); if(!c||!micStream) return; try{ MP.src=c.createMediaStreamSource(micStream); MP.an=c.createAnalyser(); MP.an.fftSize=2048; MP.src.connect(MP.an); }catch(e){ return; }
+  const buf=new Float32Array(MP.an.fftSize), vu=$("mpVu"), bars=vu?[...vu.children]:[]; let last=0;
+  const loop=now=>{ if(!MP.on||!MP.an) return; MP.raf=requestAnimationFrame(loop); if(now-last<45) return; last=now;
+    MP.an.getFloatTimeDomainData(buf); let rms=0; for(let i=0;i<buf.length;i+=4) rms+=buf[i]*buf[i]; rms=Math.sqrt(rms/(buf.length/4));
+    MP.hist.push(Math.min(1,rms*9)); if(MP.hist.length>bars.length) MP.hist.shift(); bars.forEach((b,i)=>{ const v=MP.hist[i]||0; b.style.transform="scaleY("+Math.max(.08,v).toFixed(3)+")"; b.classList.toggle("hi",v>.25); });
+    const f=rms>=0.012?autoCorrelate(buf,c.sampleRate):-1;
+    if(f>0){ const x=69+12*Math.log2(f/440), cents=Math.round((x-Math.round(x))*100); MP.cents.push(cents); if(MP.cents.length>12) MP.cents.shift(); MP.noise=0; MP.quiet=0;
+      // a steady note (12 frames ≈ 0.5 s): its offset from the nearest semitone is how the piano is tuned (a sung or bent note is not steady)
+      if(MP.cents.length===12 && !MP.tune){ const s2=MP.cents.slice().sort((a,b)=>a-b), med=s2[6], spread=s2[10]-s2[1];
+        if(spread<=12 && Math.abs(med)>=25 && Math.abs(med)<=50){ S.settings.micCents=med; save(); MP.tune=med<0?"low":"high"; mpPaint(); }
+        else if(spread<=12 && Math.abs(med)<=12 && S.settings.micCents){ delete S.settings.micCents; save(); MP.tune="ok"; } } }
+    else { if(++MP.quiet>3) MP.cents=[]; if(rms>0.02){ MP.noise++; if(MP.noise===60 && !MP.okM){ MP.msgK="noise"; mpPaint(); } } else MP.noise=0; } };
+  MP.raf=requestAnimationFrame(loop); }
+function mpNoteIn(m){ if(!MP.on) return; const pc=md12(m); MP.heard=m; if(pc===0) MP.okM=m; MP.msgK=null;
+  mpPaint(); }
+function mpPaint(){ if(!$("mpModal")) return; const N=ppNames(), C=N[0], chip=$("mpChip"), st=MP.st;
+  chip.className="mp-chip "+(st==="ok"?"ok":st==="no"?"no":""); chip.innerHTML=INPUT_ICONS.mic+'<span></span>'; chip.lastChild.textContent=t(st==="ok"?"mpOk":st==="no"?"mpNo":"mpWait");
+  const note=$("mpNote"), ck=$("mpCk"); note.textContent=MP.heard!=null?N[md12(MP.heard)]:""; note.style.color=MP.heard!=null?"var(--note-"+md12(MP.heard)+")":""; ck.hidden=MP.okM==null;
+  $("mpVu").hidden = st==="no";
+  const msg = st==="no" ? t("mpDenied")+" "+t(isApp()?"mpDeniedApp":"mpDeniedWeb") : MP.okM!=null ? t("mpGot")(C)+(MP.tune==="low"||MP.tune==="high"?" "+t(MP.tune==="low"?"mpLow":"mpHigh"):"") : MP.msgK==="noise" ? t("mpNoise") : MP.heard!=null ? t("mpHeard")(N[md12(MP.heard)],C) : t("mpPlay")(C);
+  $("mpMsg").textContent=msg; $("mpMsg").classList.toggle("warn", MP.msgK==="noise" || st==="no");
+  const B=$("mpBtns"); B.innerHTML = st==="no"
+    ? '<button class="btn" type="button" id="mpScreen">'+esc(t("mpScreen"))+'</button><button class="pp-main" type="button" id="mpRetry">'+esc(t("mpRetry"))+'</button>'
+    : '<button class="linkbtn" type="button" id="mpLater">'+esc(t("mpLater"))+'</button><button class="pp-main" type="button" id="mpGo"'+(MP.okM==null?" disabled":"")+'>'+esc(t("mpGo"))+'</button>';
+  if($("mpLater")) $("mpLater").onclick=()=>mpClose(false); if($("mpGo")) $("mpGo").onclick=()=>mpClose(true);
+  if($("mpRetry")) $("mpRetry").onclick=()=>{ $("micBtn").classList.remove("err"); mpStopAn(); mpOpen(MP.after); };
+  if($("mpScreen")) $("mpScreen").onclick=()=>{ mpClose(false, true); }; }
+function mpStopAn(){ cancelAnimationFrame(MP.raf); clearInterval(MP.tm); try{ if(MP.src) MP.src.disconnect(); }catch(e){} MP.src=null; MP.an=null; }
+function mpClose(ok, screen){ mpStopAn(); MP.on=false; S.micPrep={at:Date.now(), ok:!!ok}; save(); closeMod("mpModal"); const after=MP.after; MP.after=null;
+  if(screen){ if(FN.on){ FN.how="screen"; FN.micErr=false; if(micOn) micStop(); fnRender(); } else setInput("screen",true); return; }
+  if(after) try{ after(ok?MP.okM:null); }catch(e){} }
+// every note goes to the window while it is open (the mic, the screen keys or a MIDI keyboard: only the mic is expected)
+{ const _mi=midiIn; midiIn=function(m, fromMidi){ if(MP.on){ mpNoteIn(m); return; } return _mi.apply(this,arguments); }; }
+// opened when the mic is chosen: first launch (« A real piano »), the input choice the first time, and from Settings
+{ const _fp=fnPick; fnPick=function(v){ const r=_fp.apply(this,arguments); if(v==="mic" && !S.micPrep) setTimeout(()=>{ if(FN.on && FN.how==="mic") mpOpen(m=>{ if(m!=null && FN.on && FN.st==="c" && !FN.done) fnNote(m); }); },60); return r; }; }
+{ const _si=setInput; setInput=async function(v, fromUser){ const r=await _si.apply(this,arguments); if(v==="mic" && fromUser && !S.micPrep && !FN.on && !MP.on) mpOpen(); return r; }; }
+{ const ta=$("tourAgain"); if(ta){ const b=document.createElement("button"); b.className="btn"; b.type="button"; b.id="plSetBtn"; ta.parentNode.appendChild(document.createTextNode(" ")); ta.parentNode.appendChild(b); b.onclick=()=>plOpen(); }
+  const ic=$("inCfg"); if(ic){ const b=document.createElement("button"); b.className="btn"; b.type="button"; b.id="mpSetBtn"; ic.after(b); b.onclick=()=>{ if(S.settings.input!=="mic") setInput("mic",true).then(()=>{ if(!MP.on) mpOpen(); }); else mpOpen(); }; } }
+{ const _rs=renderSettings; renderSettings=function(){ const r=_rs.apply(this,arguments); const a=$("plSetBtn"); if(a) a.textContent=t("plSet"); const b=$("mpSetBtn"); if(b){ b.textContent=t("mpSet"); b.hidden=!inputModes().includes("mic"); } return r; }; }
+try{ renderSettings(); }catch(e){}
+
+// ---- fusion entre appareils : compte proposé (nombre max), rappels (le plus récent), bilan (dernière semaine vue) ; micPrep reste local
+{ const _ms=mergeState; mergeState=function(local, cloud){ const r=_ms.apply(this,arguments), c=L4isO(cloud)?cloud:{}, M=r.merged;
+    const la=L4isO(local.acct)?local.acct:null, ca=L4isO(c.acct)?c.acct:null; if(la||ca){ const a={...(ca||{}), ...(la||{})}; a.n=Math.max(+(la&&la.n)||0, +(ca&&ca.n)||0); M.acct=a; }
+    const lr=L4isO(local.ppRem)?local.ppRem:null, cr=L4isO(c.ppRem)?c.ppRem:null; if(lr||cr) M.ppRem = !lr ? cr : !cr ? lr : String(cr.last||"")>String(lr.last||"") ? cr : lr;
+    const lw=L4isO(local.wkRev)?local.wkRev:null, cw=L4isO(c.wkRev)?c.wkRev:null; if(lw||cw) M.wkRev={last:[lw&&lw.last,cw&&cw.last].map(x=>String(x||"")).sort().pop()};
+    r.changed=JSON.stringify(M)!==JSON.stringify(local); return r; }; }
+/* ==== fin Premiers pas lot 4 ==== */
 
 // ---------- Boot ----------
 
