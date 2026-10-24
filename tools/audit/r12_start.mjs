@@ -23,13 +23,19 @@ const ev = (f, a) => page.evaluate(f, a), vis = id => ev(id => { const e = docum
 // 2. "Sign in" from the first screen: the sign-in form, then the full questionnaire when continuing as a guest
 await page.goto(URL); await wait(page, 1500);
 await ev(() => document.getElementById('fnLogin').click()); await wait(page, 300);
-check('« Se connecter » : écran de connexion', await vis('gate') && await ev(() => !!document.getElementById('gtEmail')));
-check('formulaire : e-mail, mot de passe, Google / Apple / Facebook, invité', await ev(() => !!document.getElementById('gtEmail') && !!document.getElementById('gtPwd') && document.querySelectorAll('.gt-s').length === 3 && !!document.getElementById('gateGuest')));
+check('« Se connecter » : écran de connexion façon chess.com, en mode Se connecter', await vis('gate') && await ev(() => !!document.querySelector('.gt-choose') && /Connecte-toi/.test(document.querySelector('.gt-h').textContent)));
+check('écran : « Continuer avec l’e-mail » d’abord, puis Google / Apple / Facebook, bascule et « Continuer sans compte »', await ev(() => !!document.getElementById('gtEmailGo') && document.querySelectorAll('.gt-s').length === 3 && !!document.getElementById('gtSwitch') && !!document.getElementById('gateGuest') && !document.getElementById('gtEmail')));
+await ev(() => document.getElementById('gtSwitch').click()); await wait(page, 100);
+check('bascule : « Crée ton compte Piano Challenges »', await ev(() => /Crée ton compte/.test(document.querySelector('.gt-h').textContent)));
+await ev(() => document.getElementById('gtEmailGo').click()); await wait(page, 150);
+check('« Continuer avec l’e-mail » : formulaire e-mail + mot de passe, retour « Autres options »', await ev(() => !!document.getElementById('gtEmail') && !!document.getElementById('gtPwd') && !!document.getElementById('gtBack') && !!document.getElementById('gateGuest')));
 await ev(() => document.querySelector('.gt-tabs [data-m=login]').click()); await wait(page, 100);
 check('onglet Se connecter : pas de prénom ni de case à cocher', await ev(() => !document.getElementById('gtName') && !document.getElementById('gtOk')));
 await ev(() => document.querySelector('.gt-tabs [data-m=signup]').click()); await wait(page, 100);
 await page.fill('#gtEmail', 'pas-un-mail'); await page.fill('#gtPwd', '123'); await ev(() => document.getElementById('gtGo').click()); await wait(page, 100);
 check('validation : message d’erreur', await ev(() => document.getElementById('gtMsg').classList.contains('err')));
+await ev(() => document.getElementById('gtBack').click()); await wait(page, 100);
+check('« Autres options » : retour au choix', await ev(() => !!document.getElementById('gtEmailGo')));
 await ev(() => document.getElementById('gateGuest').click()); await wait(page, 400);
 check('invité : onboarding question 1', !(await vis('gate')) && await vis('onb') && await ev(() => /1/.test(document.querySelector('.onb-k').textContent)));
 const pick = i => ev(i => document.querySelectorAll('.onb-opt')[i].click(), i);
@@ -57,6 +63,17 @@ await page.reload(); await wait(page, 1500);
 check('deuxième visite : plus rien ne s’affiche', !(await vis('gate')) && !(await vis('onb')) && !(await vis('tour')));
 await ev(() => document.getElementById('setBtn').click()); await wait(page, 300); await ev(() => document.getElementById('tourAgain').click()); await wait(page, 600);
 check('Réglages : revoir la présentation', await vis('tour'));
+// guests: « S'inscrire » / « Se connecter » at the top (and in the side menu), they open the sign-in screen in the right mode
+for (const k of ['#onbSkip', '#tourX']) for (let i = 0; i < 6; i++) { if (await page.isVisible(k)) await page.click(k); await wait(page, 150); }
+check('invité : « S’inscrire » et « Se connecter » en haut et dans le menu', await ev(() => { const v = s => { const e = document.querySelector(s); return !!e && !!e.offsetParent; };
+  return v('#topAuth [data-auth=signup]') && v('#topAuth [data-auth=login]') && (v('#sideAuth [data-auth=signup].btn') || v('#sideAuthIc')) && !v('#accountBtn'); }));
+await ev(() => document.querySelector('#topAuth [data-auth=login]').click()); await wait(page, 300);
+check('« Se connecter » en haut : écran ouvert en mode Se connecter', await vis('gate') && await ev(() => /Connecte-toi/.test(document.querySelector('.gt-h').textContent)));
+await ev(() => document.getElementById('gateGuest').click()); await wait(page, 300);
+await ev(() => document.querySelector('#topAuth [data-auth=signup]').click()); await wait(page, 300);
+check('« S’inscrire » en haut : écran ouvert en mode inscription', await vis('gate') && await ev(() => /Crée ton compte/.test(document.querySelector('.gt-h').textContent)));
+await ev(() => document.getElementById('gateGuest').click()); await wait(page, 300);
+check('connecté : plus de boutons S’inscrire / Se connecter, Profil revient', await ev(() => { document.body.classList.remove('guest'); const r = !document.querySelector('#topAuth').offsetParent && !document.querySelector('#sideAuth').offsetParent && !!document.getElementById('accountBtn').offsetParent; document.body.classList.add('guest'); return r; }));
 // a player from before the start screens (no gate, no onb in the saved state): the sign-in screen once, settings kept, no first-note screen
 await ev(() => { localStorage.setItem('memo-gammes-v1', JSON.stringify({ xp: 500, settings: { lang: 'fr', notation: 'fr', input: 'screen', fing: true } })); }); await page.reload(); await wait(page, 1500);
 check('ancien joueur : écran de connexion, pas « Joue ta première note »', await vis('gate') && await ev(() => !!document.getElementById('gateGuest') && !document.getElementById('fnGo')));

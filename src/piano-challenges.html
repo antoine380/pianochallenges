@@ -2081,6 +2081,40 @@ body.setup #setupPanel{flex:1 1 auto;min-height:0}
   .rank-card{flex:1 1 0;min-height:0} .rank-card .rank-list{flex:1 1 auto;min-height:0;overflow-y:auto}
   #accountPanel .acct-grid{flex:1 1 0;min-height:0;overflow:auto}
 }
+/* guests (24/10/2026, like chess.com): « S'inscrire » / « Se connecter » at the top and in the side menu; nothing changes for an account */
+.auth-bar,.side-auth{display:none}
+.auth-bar{align-items:center;gap:8px;flex:none} .auth-bar .btn{min-height:40px;padding:8px 16px;font-size:.9rem;white-space:nowrap}
+body.guest:not(.sess-wait) .top-auth{display:flex;justify-content:flex-end;padding:max(10px,env(safe-area-inset-top,0px)) max(var(--page-pad),env(safe-area-inset-right,0px)) 0 var(--page-pad)}
+body.guest:not(.sess-wait) #accountBtn{display:none}
+body.guest:not(.sess-wait) .side-auth{display:flex;flex-direction:column;gap:6px;padding:6px 2px 8px}
+.side-auth .btn{width:100%;min-height:40px;padding:8px 12px;font-size:.9rem;justify-content:center}
+.side-auth .auth-ic{display:none}
+.side.collapsed .side-auth .btn{display:none} .side.collapsed .side-auth .auth-ic{display:flex}
+body.gate-on .top-auth{visibility:hidden}
+@media (max-width:640px), (max-height:520px) and (orientation:landscape){
+  body.guest .top-auth{display:none!important}
+  body.guest:not(.sess-wait) .mb-auth{display:flex;margin-left:auto;gap:6px} body.guest:not(.sess-wait) .mb-auth .btn{min-height:38px;padding:7px 12px;font-size:.84rem}
+  body.guest:not(.sess-wait) :is(#mbSet,#mbLvlBtn){display:none} @media (max-width:430px){ body.guest:not(.sess-wait) .mbar-title{display:none} } body.guest:not(.sess-wait) .mbar-title{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+}
+@media (max-width:370px){ body.guest:not(.sess-wait) #mbNtf{display:none} }
+/* the sign-in screen, chess.com-like (one column: title, illustration, e-mail first, then Google / Apple / Facebook) */
+.gt-choose .gt-form{justify-content:center;gap:clamp(8px,1.4vh,14px)}
+.gt-choose .gt-top{margin-bottom:auto} .gt-choose .gt-noacct{margin-top:auto;color:var(--muted);font-weight:700}
+.gt-choose .gt-h{font-size:clamp(1.6rem,3.4vh,2.2rem)}
+.gt-ill{position:relative;display:none;place-items:center;flex:none;padding:4px 0} /* only where the night scene (.gt-art) is not shown */
+@media (max-width:640px), (max-width:900px) and (max-height:699px){ .gt-ill{display:grid} }
+.gt-ill-glow{position:absolute;left:50%;bottom:6%;width:min(300px,80%);height:28%;transform:translateX(-50%);border-radius:50%;background:radial-gradient(closest-side,color-mix(in srgb,#7a5bf5 45%,transparent),transparent)}
+.gt-ill-o{position:relative;width:clamp(80px,16vh,160px);filter:drop-shadow(0 18px 18px rgba(20,12,60,.35))} .gt-ill-o svg{width:100%;height:auto;display:block}
+.gt-ill-n{position:absolute;left:calc(50% + clamp(36px,7vh,70px));top:0;width:clamp(36px,6vh,64px);transform:rotate(12deg)} .gt-ill-n svg{width:100%;height:auto;display:block}
+.gt-mailgo{display:flex;align-items:center;justify-content:center;gap:10px;font-size:1.1rem;padding-block:clamp(12px,1.8vh,16px)}
+.gt-mailgo svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.gt-soc1{grid-template-columns:1fr;gap:8px} .gt-soc1 .gt-s{padding-block:clamp(10px,1.5vh,13px);font-size:.95rem}
+.gt-switch{margin:0;text-align:center;font-size:.9rem;color:var(--muted);font-weight:700} .gt-switch .gt-link{font-size:.9rem}
+.gt-back{display:flex;align-items:center;gap:6px;border:0;background:var(--surface-2);color:var(--ink);font-weight:800;border-radius:999px;padding:6px 12px 6px 8px}
+.gt-back svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
+.gt-mail .gt-or,.gt-mail .gt-soc{display:none}
+@media (max-width:640px){ .gt-choose .gt-form{padding:max(16px,env(safe-area-inset-top,0px)) max(18px,env(safe-area-inset-right,0px)) max(14px,env(safe-area-inset-bottom,0px)) max(18px,env(safe-area-inset-left,0px))} .gt-choose .gt-h{font-size:1.55rem} }
+@media (max-height:520px){ .gt-choose .gt-form{display:flex;align-content:normal} .gt-choose .gt-ill{display:none} .gt-choose .gt-soc1{grid-template-columns:repeat(3,minmax(0,1fr))} .gt-choose .gt-soc1 .gt-s span{font-size:.8rem} .gt-choose .gt-h{font-size:1.25rem} }
 /* GAMES: its header sits exactly like LEARN / PLAY / QUIZ (same top padding as .mode-page at every size) */
 #gamesPanel{padding-block:6px 10px}
 @media (max-height:820px), (max-width:900px){ #gamesPanel{padding-block:2px 6px} }
@@ -2200,6 +2234,7 @@ body.setup #setupPanel{flex:1 1 auto;min-height:0}
     <button class="nav-item" id="accountBtn" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8.5" r="4"/><path d="M4.5 20a7.5 7.5 0 0 1 15 0"/></svg><span class="lbl" data-i="secAccount"></span></button>
     <button class="nav-item" id="progBtn" type="button" aria-haspopup="dialog"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg><span class="lbl" data-i="progress"></span></button>
     <button class="nav-item" id="setBtn" type="button" aria-haspopup="dialog"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 15.2a3.2 3.2 0 1 0 0-6.4 3.2 3.2 0 0 0 0 6.4z"/><path d="M19.4 13.5a7.6 7.6 0 0 0 0-3l2-1.6-2-3.4-2.4 1a7.5 7.5 0 0 0-2.6-1.5L14 2.5h-4l-.4 2.5A7.5 7.5 0 0 0 7 6.5l-2.4-1-2 3.4 2 1.6a7.6 7.6 0 0 0 0 3l-2 1.6 2 3.4 2.4-1a7.5 7.5 0 0 0 2.6-1.5l.4 2.5h4l.4-2.5a7.5 7.5 0 0 0 2.6-1.5l2.4 1 2-3.4z"/></svg><span class="lbl" data-i="settings"></span></button>
+    <div class="side-auth" id="sideAuth"><button class="btn primary auth-up" type="button" data-auth="signup" data-i="authUp"></button><button class="btn auth-in" type="button" data-auth="login" data-i="authIn"></button><button class="nav-item auth-ic" type="button" data-auth="signup" id="sideAuthIc"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8.5" r="4"/><path d="M4.5 20a7.5 7.5 0 0 1 15 0"/><path d="M19 3v5M16.5 5.5h5"/></svg><span class="lbl" data-i="authUp"></span></button></div>
     <button class="nav-item" id="helpBtn" type="button" aria-haspopup="dialog"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M9.6 9.3a2.5 2.5 0 1 1 3.4 2.3c-.7.3-1 .8-1 1.5v.6"/><circle cx="12" cy="16.9" r=".5"/></svg><span class="lbl" data-i="help"></span></button>
     <div class="theme-row"><button class="nav-item theme-btn" id="themeBtn" type="button"><svg class="i-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.6 1.6M17.1 17.1l1.6 1.6M5.3 18.7l1.6-1.6M17.1 6.9l1.6-1.6"/></svg><svg class="i-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg><span class="lbl" id="themeLbl"></span></button><button class="inp-chip" id="inChip" type="button"></button></div>
     <div class="side-tools">
@@ -2214,10 +2249,12 @@ body.setup #setupPanel{flex:1 1 auto;min-height:0}
   <button class="mbar-btn" id="menuBtn" type="button" aria-label="Menu" aria-controls="side" aria-expanded="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
   <h1 class="mbar-title" id="mbTitle"></h1>
 <a id="homeLink2" href="/" hidden></a>
+  <div class="auth-bar mb-auth" id="mbAuth"><button class="btn primary auth-up" type="button" data-auth="signup" data-i="authUp"></button><button class="btn auth-in" type="button" data-auth="login" data-i="authIn"></button></div>
   <button class="mbar-btn ghost ntf-mb" id="mbNtf" type="button" aria-label="Notifications"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 16V11a6 6 0 0 1 12 0v5l1.5 2h-15z"/><path d="M10 20.5a2.2 2.2 0 0 0 4 0"/></svg><span class="nbadge" id="mbNtfBadge" hidden></span></button>
   <button class="mbar-btn ghost" id="mbSet" type="button" aria-label="Settings"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10.3 3.2a1.8 1.8 0 0 1 3.4 0l.4 1.2a1.8 1.8 0 0 0 2.4 1l1.1-.6a1.8 1.8 0 0 1 2.4 2.4l-.6 1.1a1.8 1.8 0 0 0 1 2.4l1.2.4a1.8 1.8 0 0 1 0 3.4l-1.2.4a1.8 1.8 0 0 0-1 2.4l.6 1.1a1.8 1.8 0 0 1-2.4 2.4l-1.1-.6a1.8 1.8 0 0 0-2.4 1l-.4 1.2a1.8 1.8 0 0 1-3.4 0l-.4-1.2a1.8 1.8 0 0 0-2.4-1l-1.1.6a1.8 1.8 0 0 1-2.4-2.4l.6-1.1a1.8 1.8 0 0 0-1-2.4l-1.2-.4a1.8 1.8 0 0 1 0-3.4l1.2-.4a1.8 1.8 0 0 0 1-2.4l-.6-1.1a1.8 1.8 0 0 1 2.4-2.4l1.1.6a1.8 1.8 0 0 0 2.4-1z"/><circle cx="12" cy="12" r="3"/></svg></button>
   <button class="mbar-lvl" id="mbLvlBtn" type="button" aria-haspopup="dialog"><span class="av" id="mbAv"></span><span class="mono" id="mbLvl">1</span></button>
 </header>
+<div class="auth-bar top-auth" id="topAuth"><button class="btn primary auth-up" type="button" data-auth="signup" data-i="authUp"></button><button class="btn auth-in" type="button" data-auth="login" data-i="authIn"></button></div>
 <div class="side-scrim" id="sideScrim"></div>
 <main class="main" id="main">
 <div class="wrap">
@@ -2883,7 +2920,7 @@ const TXT = {
     rankOrd:n=>ordFr(n), hsNewsT:"Actualités", hsRankT:"Classement de la semaine", hsRankMore:"Tout voir", hsRankLoad:"Chargement…", hsRankErr:"Classement indisponible pour l'instant.",
     hsNews:[["Nouveau look","Mode jour ou nuit, cartes en 3D : l'app fait peau neuve.","#6a4bf0","M12 3l2.4 5 5.6.8-4 3.9.9 5.5L12 15.6 7.1 18.2l.9-5.5-4-3.9 5.6-.8z"],["Jeux Play","Six mini-jeux sur le clavier lumineux, dans GAMES.","#1f7a52","M6 9h4M8 7v4M15 9h.01M18 11h.01M3 8a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4v5a4 4 0 0 1-7 2.5h-4A4 4 0 0 1 3 13z"],["Jeu libre","Joue ce que tu veux dans PLAY : chaque note s'allume dans sa couleur.","#0e7490","M9 18V5l12-2v13M9 18a3 3 0 1 1-6 0 3 3 0 0 1 6 0zM21 16a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"],["Entraînement du jour","10 exercices mélangés chaque jour pour garder ta série.","#a3306b","M12 3c1 3.5 5 6 5 11a5 5 0 0 1-10 0c0-2.2 1-3.8 2.2-5 .2 1.6 1 2.8 2.3 3.3C11 9.3 11.3 6 12 3z"]],
     wrongSr:"Fausse note : ",
-    lvT:"Quitter la partie ?", lvEndT:"Terminer la partie ?", lvLost:"Ta progression de cette partie sera perdue.", lvEndS:"La partie s'arrête ici : tu verras le bilan des exercices déjà faits.", lvSong:"Ta progression dans ce morceau sera perdue.", lvDuelR:"C'est une partie classée : quitter compte comme une défaite.", lvDuelOn:"Ton adversaire continue sans toi.", lvDuelF:"La partie amicale s'arrête pour toi.", lvQuizOn:"Les autres joueurs continuent sans toi.", lvEndGo:"Terminer", hubQuiz:"Un quiz de culture générale : tu réponds en jouant la bonne note ou le bon accord. Seul, à plusieurs ou en ligne.", hubQuizTags:"Culture générale · Notes et accords · Jusqu'à 4 joueurs · En ligne", setAppH:"Application", setGameTab:"Jeu", pfOverview:"Vue d'ensemble", qzAnsDN:"Tu réponds avec une note", qzAnsDC:"Tu réponds avec un accord", qzHelpNo:"Sans", qzHelpKeys:"Touches à jouer",
+    lvT:"Quitter la partie ?", lvEndT:"Terminer la partie ?", lvLost:"Ta progression de cette partie sera perdue.", lvEndS:"La partie s'arrête ici : tu verras le bilan des exercices déjà faits.", lvSong:"Ta progression dans ce morceau sera perdue.", lvDuelR:"C'est une partie classée : quitter compte comme une défaite.", lvDuelOn:"Ton adversaire continue sans toi.", lvDuelF:"La partie amicale s'arrête pour toi.", lvQuizOn:"Les autres joueurs continuent sans toi.", lvEndGo:"Terminer", hubQuiz:"Un quiz de culture générale : tu réponds en jouant la bonne note ou le bon accord. Seul, à plusieurs ou en ligne.", hubQuizTags:"Culture générale · Notes et accords · Jusqu'à 4 joueurs · En ligne", setAppH:"Application", setGameTab:"Jeu", pfOverview:"Vue d'ensemble", qzAnsDN:"Tu réponds avec une note", qzAnsDC:"Tu réponds avec un accord", qzHelpNo:"Sans", qzHelpKeys:"Touches à jouer", authUp:"S'inscrire", authIn:"Se connecter", gtTitleNew:"Crée ton compte Piano Challenges", gtTitleBack:"Connecte-toi", gtEmailGo:"Continuer avec l'e-mail", gtHave:"Déjà un compte ?", gtNone:"Pas encore de compte ?", gtNoAcct:"Continuer sans compte", gtOther:"Autres options",
     dailyShort:"Entraînement"},
   en:{help:"Help", helpTitle:"How it works", helpOk:"Let's go", tutNext:"Next", tutPrev:"Previous", close:"Close", stepOf:(i,n)=>"Step "+i+" of "+n,
     tut:[{h:"Read the challenge",p:"A scale, a chord or a progression appears with a countdown. Picture the notes in your head before the bar runs out."},
@@ -3050,7 +3087,7 @@ const TXT = {
     rankOrd:n=>ordEn(n), hsNewsT:"News", hsRankT:"This week's leaderboard", hsRankMore:"See all", hsRankLoad:"Loading…", hsRankErr:"Leaderboard unavailable right now.",
     hsNews:[["New look","Day or night mode and 3D cards: the app gets a makeover.","#6a4bf0","M12 3l2.4 5 5.6.8-4 3.9.9 5.5L12 15.6 7.1 18.2l.9-5.5-4-3.9 5.6-.8z"],["Play games","Six mini-games on the light-up keyboard, in GAMES.","#1f7a52","M6 9h4M8 7v4M15 9h.01M18 11h.01M3 8a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4v5a4 4 0 0 1-7 2.5h-4A4 4 0 0 1 3 13z"],["Free play","Play anything in PLAY: every note lights up in its colour.","#0e7490","M9 18V5l12-2v13M9 18a3 3 0 1 1-6 0 3 3 0 0 1 6 0zM21 16a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"],["Daily practice","10 mixed exercises every day to keep your streak.","#a3306b","M12 3c1 3.5 5 6 5 11a5 5 0 0 1-10 0c0-2.2 1-3.8 2.2-5 .2 1.6 1 2.8 2.3 3.3C11 9.3 11.3 6 12 3z"]],
     wrongSr:"Wrong note: ",
-    lvT:"Leave the game?", lvEndT:"End the game?", lvLost:"Your progress in this game will be lost.", lvEndS:"The game stops here: you'll see the summary of the exercises you've done.", lvSong:"Your progress in this song will be lost.", lvDuelR:"This is a rated game: leaving counts as a loss.", lvDuelOn:"Your opponent keeps playing without you.", lvDuelF:"The friendly game stops for you.", lvQuizOn:"The other players carry on without you.", lvEndGo:"End game", hubQuiz:"A general-knowledge quiz: you answer by playing the right note or chord. Alone, with friends or online.", hubQuizTags:"General knowledge · Notes and chords · Up to 4 players · Online", setAppH:"App", setGameTab:"Game", pfOverview:"Overview", qzAnsDN:"You answer with a note", qzAnsDC:"You answer with a chord", qzHelpNo:"Off", qzHelpKeys:"Keys to play",
+    lvT:"Leave the game?", lvEndT:"End the game?", lvLost:"Your progress in this game will be lost.", lvEndS:"The game stops here: you'll see the summary of the exercises you've done.", lvSong:"Your progress in this song will be lost.", lvDuelR:"This is a rated game: leaving counts as a loss.", lvDuelOn:"Your opponent keeps playing without you.", lvDuelF:"The friendly game stops for you.", lvQuizOn:"The other players carry on without you.", lvEndGo:"End game", hubQuiz:"A general-knowledge quiz: you answer by playing the right note or chord. Alone, with friends or online.", hubQuizTags:"General knowledge · Notes and chords · Up to 4 players · Online", setAppH:"App", setGameTab:"Game", pfOverview:"Overview", qzAnsDN:"You answer with a note", qzAnsDC:"You answer with a chord", qzHelpNo:"Off", qzHelpKeys:"Keys to play", authUp:"Sign up", authIn:"Log in", gtTitleNew:"Create your Piano Challenges account", gtTitleBack:"Log in", gtEmailGo:"Continue with email", gtHave:"Already have an account?", gtNone:"No account yet?", gtNoAcct:"Continue without an account", gtOther:"Other options",
     dailyShort:"Daily"}
 };
 const t = k => TXT[S.settings.lang][k];
@@ -6102,7 +6139,7 @@ const myName = () => gCut(String(myNameRaw()).replace(BIDI_G,"").replace(/[\u000
 // the name sent to profiles: 2 to 24 characters, no control or direction characters (check profiles_name_clean)
 const myNameDb = () => { const v=myName(); return nameErr(v) ? t("qzPlayer") : v; };
 async function setUser(u){
-  user=u; renderStatus(); document.body.classList.toggle("guest",!u);
+  user=u; renderStatus(); document.body.classList.toggle("guest",!u); document.body.classList.remove("sess-wait");
   if(u && page==="locked" && lockFor) openPage(lockFor);
   if(u){
     if(S.ownerId && S.ownerId!==u.id){
@@ -6762,21 +6799,47 @@ const SITE_URL = () => isApp() || !/^https?:/.test(location.protocol) ? "https:/
 // keys typed on the start screens stay there (fields keep working: only the app's shortcuts are stopped)
 document.addEventListener("keydown",e=>{ if(document.body.classList.contains("gate-on")) e.stopImmediatePropagation(); },true);
 function gateOpen(){ let g=$("gate"); if(!g){ g=document.createElement("div"); g.id="gate"; g.className="gate"; g.setAttribute("role","dialog"); g.setAttribute("aria-modal","true"); document.body.appendChild(g); }
-  document.body.classList.add("gate-on"); startInert(); g.hidden=false; gateRender(); gateConnect();
+  GATE.step="choose"; document.body.classList.add("gate-on"); startInert(); g.hidden=false; gateRender(); gateConnect();
   if(matchMedia("(pointer:fine)").matches) setTimeout(()=>($("gtName")||$("gtEmail"))?.focus(),50); }
 // the buttons wait for the sign-in service; offline: a message and "try again"
 function gateConnect(){ ensureCloud().then(()=>{ if(!$("gate")||$("gate").hidden) return; if(cloudFail){ GATE.msg=t("cloudErr"); GATE.err=true; GATE.retry=true; }
     else { GATE.retry=false; if(GATE.msg===t("cloudErr")) GATE.msg=""; } gateRender(); }).catch(()=>{}); }
 function gateClose(){ const g=$("gate"); if(g) g.hidden=true; document.body.classList.remove("gate-on"); startInert(); }
 function gateKeep(){ ["Email","Name"].forEach(k=>{ const e=$("gt"+k); if(e) GATE[k==="Email"?"email":"name"]=e.value.trim(); }); } // keep what was typed through a re-render
-function gateRender(){ gateKeep(); const g=$("gate"), m=GATE.mode, mark=$("homeLink").querySelector("svg").outerHTML;
-  g.innerHTML='<div class="gt-card"><div class="gt-form"><div class="gt-top"><span class="gt-logo">'+mark+'<b>Piano Challenges</b></span><button class="gt-lang" type="button" id="gtLang">'+(S.settings.lang==="fr"?"EN":"FR")+'</button></div>'
+// the sign-in screen, chess.com-like: a big title, one illustration, « Continue with email » first, then Google / Apple / Facebook,
+// a link to switch Sign up ↔ Log in and a discreet « Continue without an account ». The e-mail step is the form below (password or code).
+const GT_ICO={google:'<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="#4285F4" d="M22.5 12.3c0-.8-.1-1.5-.2-2.2H12v4.2h5.9a5 5 0 0 1-2.2 3.3v2.7h3.6c2-1.9 3.2-4.7 3.2-8z"/><path fill="#34A853" d="M12 23c3 0 5.5-1 7.3-2.7l-3.6-2.7c-1 .7-2.2 1.1-3.7 1.1-2.9 0-5.3-1.9-6.2-4.5H2.1v2.8A11 11 0 0 0 12 23z"/><path fill="#FBBC05" d="M5.8 14.2a6.6 6.6 0 0 1 0-4.3V7.1H2.1a11 11 0 0 0 0 9.9z"/><path fill="#EA4335" d="M12 5.4c1.6 0 3 .6 4.2 1.6l3.1-3.1A11 11 0 0 0 2.1 7.1l3.7 2.8C6.7 7.3 9.1 5.4 12 5.4z"/></svg>',
+  apple:'<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M16.4 12.6c0-2.4 2-3.6 2.1-3.7a4.6 4.6 0 0 0-3.6-2c-1.5-.2-3 .9-3.7.9-.8 0-2-.9-3.2-.8a4.8 4.8 0 0 0-4 2.5c-1.7 3-.4 7.4 1.2 9.8.8 1.2 1.8 2.5 3 2.4 1.2 0 1.7-.8 3.1-.8s1.9.8 3.2.8 2.1-1.2 2.9-2.4a10 10 0 0 0 1.3-2.7 4.2 4.2 0 0 1-2.3-4zM14 5.4a4.3 4.3 0 0 0 1-3.1 4.4 4.4 0 0 0-2.9 1.5 4.1 4.1 0 0 0-1 3c1.1.1 2.2-.6 2.9-1.4z"/></svg>',
+  facebook:'<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="#fff" d="M14 8.5V7c0-.7.2-1.2 1.3-1.2H17V2.6c-.3 0-1.3-.1-2.5-.1-2.5 0-4.2 1.5-4.2 4.3v1.7H7.5V12h2.8v9.5H14V12h2.8l.4-3.5z"/></svg>',
+  mail:'<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5.5" width="18" height="13" rx="3"/><path d="M4 7.5l8 6 8-6"/></svg>'};
+function gateChoose(){ const g=$("gate"), m=GATE.mode, mark=$("homeLink").querySelector("svg").outerHTML;
+  g.innerHTML='<div class="gt-card gt-choose"><div class="gt-form"><div class="gt-top"><span class="gt-logo">'+mark+'<b>Piano Challenges</b></span><button class="gt-lang" type="button" id="gtLang">'+(S.settings.lang==="fr"?"EN":"FR")+'</button></div>'
+    +'<h2 class="gt-h"></h2><div class="gt-ill" aria-hidden="true"><i class="gt-ill-glow"></i><span class="gt-ill-o">'+OBJ.runner()+'</span><span class="gt-ill-n">'+OBJ.staff()+'</span></div>'
+    +(S.refBy && S.refBy!==S.netId ? '<p class="gt-ref">'+pwI("gift")+'<span>'+esc(t("invRef"))+'</span></p>' : '')
+    +'<button type="button" class="gt-go gt-mailgo" id="gtEmailGo">'+GT_ICO.mail+'<span></span></button><p class="gt-msg" id="gtMsg" role="status"></p>'
+    +'<div class="gt-or"><span></span></div><div class="gt-soc gt-soc1"><button type="button" class="gt-s gt-google" data-p="google"></button><button type="button" class="gt-s gt-apple" data-p="apple"></button><button type="button" class="gt-s gt-fb" data-p="facebook"></button></div>'
+    +'<p class="gt-switch"><span></span> <button type="button" class="gt-link" id="gtSwitch"></button></p>'
+    +'<button class="gt-link gt-noacct" type="button" id="gateGuest"></button></div>'+gateArt()+'</div>';
+  g.querySelector(".gt-h").textContent=t(m==="signup"?"gtTitleNew":"gtTitleBack");
+  $("gtEmailGo").lastChild.textContent=t("gtEmailGo"); $("gtEmailGo").disabled=GATE.busy||!sb;
+  $("gtEmailGo").onclick=()=>{ Object.assign(GATE,{step:"email",msg:"",err:false}); gateRender(); if(matchMedia("(pointer:fine)").matches) setTimeout(()=>($("gtName")||$("gtEmail"))?.focus(),30); };
+  const msg=$("gtMsg"); msg.textContent=GATE.msg||(!sb&&!cloudFail?t("rankLoading"):""); msg.className="gt-msg"+(GATE.err?" err":"");
+  if(GATE.retry){ const r=document.createElement("button"); r.type="button"; r.className="gt-link"; r.textContent=t("gtRetry"); r.onclick=()=>{ cloudPromise=null; cloudFail=false; GATE.msg=""; GATE.err=false; GATE.retry=false; gateRender(); gateConnect(); }; msg.after(r); }
+  g.querySelector(".gt-or span").textContent=t("orLbl");
+  g.querySelectorAll(".gt-s").forEach(b=>{ const pv=b.dataset.p; b.innerHTML=GT_ICO[pv]+"<span></span>"; b.querySelector("span").textContent=t("gtWith")({google:"Google",apple:"Apple",facebook:"Facebook"}[pv]); b.disabled=GATE.busy||!sb; b.onclick=()=>gateOAuth(pv); });
+  g.querySelector(".gt-switch span").textContent=t(m==="signup"?"gtHave":"gtNone"); $("gtSwitch").textContent=t(m==="signup"?"authIn":"authUp");
+  $("gtSwitch").onclick=()=>{ Object.assign(GATE,{mode:m==="signup"?"login":"signup",msg:"",err:false}); gateRender(); };
+  $("gateGuest").textContent=t("gtNoAcct"); $("gateGuest").onclick=gateGuest;
+  $("gtLang").onclick=()=>{ document.querySelector('#langSeg [data-v="'+(S.settings.lang==="fr"?"en":"fr")+'"]').click(); gateRender(); }; }
+function gateRender(){ if(GATE.step!=="email"){ gateChoose(); return; } gateKeep(); const g=$("gate"), m=GATE.mode, mark=$("homeLink").querySelector("svg").outerHTML;
+  g.innerHTML='<div class="gt-card gt-mail"><div class="gt-form"><div class="gt-top"><button class="gt-back" type="button" id="gtBack"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg><span></span></button><button class="gt-lang" type="button" id="gtLang">'+(S.settings.lang==="fr"?"EN":"FR")+'</button></div>'
     +'<h2 class="gt-h"></h2><div class="seg gt-tabs"><button type="button" data-m="signup"></button><button type="button" data-m="login"></button></div>'
     +(S.refBy && S.refBy!==S.netId ? '<p class="gt-ref">'+pwI("gift")+'<span>'+esc(t("invRef"))+'</span></p>' : '')
     +'<form class="gt-f" id="gtForm" novalidate></form><p class="gt-msg" id="gtMsg" role="status"></p>'
     +'<div class="gt-or"><span></span></div><div class="gt-soc"><button type="button" class="gt-s gt-google" data-p="google"></button><button type="button" class="gt-s gt-apple" data-p="apple"></button><button type="button" class="gt-s gt-fb" data-p="facebook"></button></div>'
     +'<button class="gt-guest" type="button" id="gateGuest"></button></div>'+gateArt()+'</div>';
   g.querySelector(".gt-h").textContent=t(m==="signup"?"gtTitleUp":"gtTitleIn");
+  $("gtBack").lastChild.textContent=t("gtOther"); $("gtBack").onclick=()=>{ gateKeep(); Object.assign(GATE,{step:"choose",msg:"",err:false,otp:false,sent:false,confirm:false}); gateRender(); };
   const [tu,ti]=g.querySelectorAll(".gt-tabs button"); tu.textContent=t("gtSignup"); ti.textContent=t("gtLogin"); tu.setAttribute("aria-pressed",m==="signup"); ti.setAttribute("aria-pressed",m==="login");
   g.querySelectorAll(".gt-tabs button").forEach(b=>b.onclick=()=>{ Object.assign(GATE,{mode:b.dataset.m,msg:"",err:false,otp:false,sent:false,confirm:false}); gateRender(); });
   g.querySelector(".gt-or span").textContent=t("orLbl");
@@ -6832,6 +6895,9 @@ async function gateOAuth(pv){ if(!sb) return; GATE.msg=""; gateKeep();
   try{ await oauthLogin(pv); }catch(e){}
   if(loginStep.err && loginStep.msg){ GATE.msg = /not enabled|unsupported provider|provider/i.test(loginStep.msg) ? t("gtSoonProv") : loginStep.msg; GATE.err=true; loginStep.msg=""; loginStep.err=false; gateRender(); } }
 function gateGuest(){ S.gate="guest"; save(); gateClose(); startFlow(); }
+// guests: « Sign up » / « Log in » in the top bar, at the top of the page (tablets, computers) and in the side menu open the sign-in screen
+function authOpen(mode){ closeDrawer(); Object.assign(GATE,{mode:mode==="login"?"login":"signup",msg:"",err:false,otp:false,sent:false,confirm:false}); gateOpen(); }
+document.querySelectorAll("[data-auth]").forEach(b=>b.addEventListener("click",()=>authOpen(b.dataset.auth)));
 // after the gate: the onboarding questions, then the tour
 let deepLink=/^#(quiz|duel)-/.test(location.hash||"") || !!UNSUB;
 function startFlow(){ if(deepLink) return; if(!(S.onb&&S.onb.done)) onbOpen(); else if(!S.tourDone) tourStart(); else maybeAskInput(); }
@@ -7099,7 +7165,7 @@ applyStatic(); applySide(); buildKeyboard(); renderSettings(); render(); renderD
 setTimeout(()=>{ if(hasSession()) ensureCloud(); }, 400);
 { const sp=$("splash"); if(document.documentElement.classList.contains("native")){ const t0=performance.now(); setTimeout(()=>{ sp.classList.add("out"); setTimeout(()=>sp.remove(),400); }, Math.max(0,1500-t0)); } else sp.remove(); }
 const mobileWeb = (phoneMQ.matches||railMQ.matches) && !document.documentElement.classList.contains("native");
-document.body.classList.add("guest");
+document.body.classList.add("guest"); if(hasSession()) document.body.classList.add("sess-wait"); // a saved session: no « Sign up » flash before it loads
 restoreInput();
 { const nat=isApp(), wait=nat?1600:300;
   if(gateNeeded()){ save(); const op=(S.onb&&S.onb.legacy)?gateOpen:fnOpen; /* older players keep their settings: the sign-in screen once, not the first-note screen */ if(nat) setTimeout(op,wait); else op(); }
