@@ -2057,6 +2057,21 @@ body.setup #setupPanel{flex:1 1 auto;min-height:0}
   .pane-head h2.ph-title{display:none}
   :is(#learnPanel,#gamesPanel,#freePanel) .mode-h{display:none}
 }
+/* hub: four modes (QUIZ joined the home page, 24/10/2026): a 2 × 2 grid on tablets and computers, 4 in a row on landscape phones */
+#main .hub-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+@media (min-width:901px){
+  #main .hub-wrap .hub-grid .ptile{justify-content:flex-end;--os:clamp(80px,min(50cqh,44cqw),220px)}
+  #main .hub-wrap .hub-grid .ptile .obj{top:clamp(6px,4cqh,22px);right:clamp(8px,3cqw,22px)}
+  #main .hub-wrap .hub-grid .ptile :is(.h3,p,.tags){max-width:none}
+  #main .hub-wrap .hub-grid .ptile .h3{font-size:clamp(1.4rem,min(14cqh,11cqw),2.6rem)}
+  #main .hub-wrap .hub-grid .ptile p{font-size:clamp(.8rem,min(6.2cqh,4.4cqw),1.08rem)}
+  @container hb (max-height:300px){ #main .hub-grid .ptile .tags{display:none} }
+  @container hb (max-height:200px){ #main .hub-grid .ptile p{display:none} }
+}
+@media (max-height:420px) and (orientation:landscape){ #main .hub-grid{grid-template-columns:repeat(4,minmax(0,1fr))} }
+@media (max-width:640px){ #main .hub-grid .ptile{justify-content:flex-end;padding:12px 14px;--os:clamp(52px,min(50cqh,48cqw),112px)} #main .hub-grid .ptile .obj{top:4px;right:4px}
+  #main .hub-grid .ptile :is(p,.tags){display:none} #main .hub-grid .ptile .h3{max-width:none!important;font-size:clamp(1.15rem,min(17cqh,13cqw),1.8rem)!important}
+  @container hb (min-height:230px) and (min-width:160px){ #main .hub-grid .ptile p{display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;font-size:.76rem;max-width:none} } }
 /* ===== fin mise en page ===== */
 </style>
 
@@ -2187,6 +2202,7 @@ body.setup #setupPanel{flex:1 1 auto;min-height:0}
       <button class="ptile" type="button" data-mode="games" style="--tc:var(--m-games);--tc2:#4fae84"><span class="obj" data-obj="games"></span><span class="h3">GAMES</span><p data-i="hubGames"></p><span class="tags" data-i="hubGamesTags"></span></button>
       <button class="ptile" type="button" data-mode="play" style="--tc:var(--m-play);--tc2:#a08bff"><span class="obj" data-obj="play"></span><span class="h3">PLAY</span><p data-i="hubPlay"></p><span class="tags" data-i="hubPlayTags"></span></button>
       <button class="ptile" type="button" data-mode="learn" style="--tc:var(--m-learn);--tc2:#e07a70"><span class="obj" data-obj="learn"></span><span class="h3">LEARN</span><p data-i="hubLearn"></p><span class="tags" data-i="hubLearnTags"></span></button>
+      <button class="ptile" type="button" data-mode="quiz" style="--tc:var(--m-quiz);--tc2:#5b8cff"><span class="obj" data-obj="quizhub"></span><span class="h3">QUIZ</span><p data-i="hubQuiz"></p><span class="tags" data-i="hubQuizTags"></span></button>
     </div>
    </div>
    <aside class="hub-side" id="hubSide">
@@ -5469,6 +5485,10 @@ Object.assign(OBJ,{
   tower:()=>{ const o=O3(); const g=o.grad("#9aa3c7"); return o.raw('<path d="M60 8l6 30h-12zM50 40h20l8 36H42zM40 78h40l18 30H74c-4-10-8-14-14-14s-10 4-14 14H22z" fill="'+g+'"/><path d="M46 58h28M40 78h40" stroke="#6b7194" stroke-width="3"/>').svg(); },
   heartbeat:()=>{ const o=O3(); o.raw('<path d="M60 104C30 82 10 64 10 40a24 24 0 0 1 50-10 24 24 0 0 1 50 10c0 24-20 42-50 64z" fill="'+o.grad("#ff5a6e")+'"/>'); return o.raw('<path d="M18 60h22l8-14 12 28 10-20 6 6h26" stroke="#fff" stroke-width="5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>').svg(); },
   quiz:()=>{ const o=O3(); o.raw('<path d="M18 22h84a10 10 0 0 1 10 10v44a10 10 0 0 1-10 10H54l-22 18v-18H18A10 10 0 0 1 8 76V32a10 10 0 0 1 10-10z" fill="'+o.grad("#5b7cff")+'"/>'); return o.raw('<text x="60" y="72" text-anchor="middle" font-family="Fredoka,Nunito,sans-serif" font-weight="700" font-size="46" fill="#fff">?</text>').svg(); }
+  ,quizhub:()=>{ const o=O3(), F='font-family="Fredoka,Nunito,sans-serif" font-weight="700" text-anchor="middle"'; // the QUIZ mode on the home page: a white bubble over a yellow one (reads on the blue tile)
+    o.raw('<path d="M70 14h32a10 10 0 0 1 10 10v24a10 10 0 0 1-10 10h-6l-12 11V58H70a10 10 0 0 1-10-10V24a10 10 0 0 1 10-10z" fill="'+o.grad("#ffd23f")+'"/>');
+    o.raw('<path d="M18 38h54a12 12 0 0 1 12 12v32a12 12 0 0 1-12 12H46l-20 17V94h-8A12 12 0 0 1 6 82V50a12 12 0 0 1 12-12z" fill="'+o.grad("#fbfbff")+'"/>');
+    return o.raw('<text x="45" y="84" font-size="42" fill="#2563eb" '+F+'>?</text><text x="86" y="47" font-size="28" fill="#7a4d00" '+F+'>!</text>').svg(); }
 });
 
 // every object is cropped to its own drawing and pinned to the top-right corner of its box, so all objects sit at the same place
