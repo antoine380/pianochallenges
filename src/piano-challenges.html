@@ -8226,9 +8226,9 @@ function renderAch(){ const box=$("achBox"); if(!box) return; const c=achCtx(), 
   achNew.clear(); achPopClose(); }
 const achDate = d => { try{ return pDate(d).toLocaleDateString(S.settings.lang==="fr"?"fr-FR":"en-GB",{day:"numeric",month:"long",year:"numeric"}); }catch(e){ return d; } };
 // a click on a badge: how to get it (with the progress), or when it was earned and a « Share » button
-let achOpen=null;
+let achOpen=null, achST=0;
 function achPopClose(){ const p=$("achPop"); if(p) p.hidden=true; if(achOpen){ const b=$("achGrid").querySelector('[data-id="'+achOpen+'"]'); if(b) b.setAttribute("aria-expanded","false"); } achOpen=null; }
-function achPopOpen(id, btn){ const p=$("achPop"), box=$("achBox"), on=!!(S.badges||{})[id]; if(achOpen===id){ achPopClose(); return; } achPopClose(); achOpen=id; btn.setAttribute("aria-expanded","true");
+function achPopOpen(id, btn){ const p=$("achPop"), box=$("achBox"), on=!!(S.badges||{})[id]; if(achOpen===id){ achPopClose(); return; } achPopClose(); achOpen=id; btn.setAttribute("aria-expanded","true"); achST=$("achGrid").scrollTop;
   const [v,g]=achProg(id); p.innerHTML='<div class="ap-h"><b id="achPopT"></b><button type="button" class="ap-x">×</button></div><p></p>'+(on?'<small></small><button type="button" class="btn ap-sh"></button>':'<div class="bar"><i></i></div><small></small>');
   p.querySelector("b").textContent=achName(id); p.querySelector(".ap-x").setAttribute("aria-label",t("achClose")); p.querySelector("p").textContent=achHow(id);
   if(on){ p.querySelector("small").textContent=t("achOn")(achDate(S.badges[id])); const sh=p.querySelector(".ap-sh"); sh.innerHTML=pwI("share")+"<span></span>"; sh.lastChild.textContent=t("shareBtn"); sh.onclick=()=>achShare(id); }
@@ -8238,7 +8238,8 @@ function achPopOpen(id, btn){ const p=$("achPop"), box=$("achBox"), on=!!(S.badg
   let x=br.left+br.width/2-r.left-pw/2; x=Math.max(8,Math.min(r.width-pw-8,x)); let y=br.bottom-r.top+6; if(y+ph>r.height-4) y=Math.max(4,br.top-r.top-ph-6);
   p.style.left=x+"px"; p.style.top=y+"px"; (p.querySelector(".ap-sh")||p.querySelector(".ap-x")).focus({preventScroll:true}); }
 $("achGrid").addEventListener("click",e=>{ const b=e.target.closest(".ach-b"); if(b) achPopOpen(b.dataset.id,b); });
-$("achGrid").addEventListener("scroll",()=>achPopClose(),{passive:true});
+// a scroll of the grid closes the bubble, but not the one that brought a half-hidden badge into view just before the click (its event comes after)
+$("achGrid").addEventListener("scroll",()=>{ if(achOpen && Math.abs($("achGrid").scrollTop-achST)>2) achPopClose(); },{passive:true});
 document.addEventListener("pointerdown",e=>{ if(achOpen && !e.target.closest("#achPop,.ach-b")) achPopClose(); });
 document.addEventListener("keydown",e=>{ if(e.key==="Escape" && achOpen && page==="progress"){ const id=achOpen; achPopClose(); const b=$("achGrid").querySelector('[data-id="'+id+'"]'); if(b) b.focus(); e.stopPropagation(); } },true);
 // share a badge: the square picture of the app (shareCard) with the badge drawn on it
