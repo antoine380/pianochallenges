@@ -74,6 +74,11 @@ check('badges : premier passage silencieux (anciens badges notés) → aucun év
 await p.X('delete S.badges.xp10k; badgeCheck();'); await p.waitForTimeout(100);
 check('badges : un nouveau badge → track("badge",{id})', await p.X('TRK.q.some(e=>e.n==="badge" && e.p.id==="xp10k")'), await p.X('JSON.stringify(TRK.q.filter(e=>e.n==="badge"))'));
 await p.X('openPage("hub")'); await p.waitForTimeout(300);
+// étape 2 : premier lancement D2–D4 (fnNote redéfini) et Ma route
+await p.X('FN.on=true; FN.done=false; FN.st="c"; try{ fnNote(60); }catch(e){} FN.on=false; const g=document.getElementById("gate"); if(g) g.hidden=true; document.body.classList.remove("gate-on");'); await p.waitForTimeout(150);
+check('first_note : compté aussi avec le nouveau premier lancement (D3)', await p.X('TRK.q.some(e=>e.n==="first_note")'), await p.X('TRK.q.map(e=>e.n)'));
+await p.X('rtDone(RT_STAGES[0][0].id)'); await p.waitForTimeout(100);
+check('Ma route : route_step (étape, type)', await p.X('TRK.q.some(e=>e.n==="route_step" && e.p.stage==="1")'), await p.X('JSON.stringify(TRK.q.filter(e=>e.n.startsWith("route")))'));
 await p.X('trkFlush()'); await p.waitForTimeout(500); p.log.track.length = 1; // ce lot-ci ne compte pas dans les vérifications suivantes
 // fermeture : envoi immédiat (keepalive)
 await p.X('track("goal_reached",{kind:"min",v:10})'); await p.evaluate(() => dispatchEvent(new Event('pagehide'))); await p.waitForTimeout(600);

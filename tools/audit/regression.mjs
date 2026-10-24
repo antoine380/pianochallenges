@@ -41,11 +41,15 @@ for(const v of [{w:375,h:667},{w:667,h:375},{w:812,h:375}]){
   const c=await b.newContext({viewport:{width:v.w,height:v.h},isMobile:true,hasTouch:true,locale:'fr-FR'}); const pg=await c.newPage();
   await pg.goto(BASE); await pg.waitForTimeout(900);
   const fit=()=>pg.evaluate(()=>{ const p=document.querySelector('.fn-play'), d=document.scrollingElement; return {p:p.scrollHeight<=p.clientHeight+1, d:d.scrollHeight<=innerHeight+1, sh:p.scrollHeight, ch:p.clientHeight}; });
-  let f=await fit(), k=await inView(pg,'.fn-kb'), ft=await inView(pg,'.fn-foot');
-  ok(f.p && f.d && k&&k.ok && ft&&ft.ok, `${v.w}×${v.h} first run: one screen, keys and "Se connecter" visible (${f.sh}/${f.ch}, keys ${k&&k.bottom}, foot ${ft&&ft.bottom}/${v.h})`);
-  await pg.evaluate(()=>{ const k=document.querySelector('#fnKb [data-m="60"]'); k.dispatchEvent(new PointerEvent('pointerdown',{bubbles:true,cancelable:true})); }); await pg.waitForTimeout(400);
+  // First steps lot 2 (Oct 2026): D2 « what do you play on » (3 cards) → D3 « play a C » (keys) → D4 (the level, after the C)
+  let f=await fit(), c3=await inView(pg,'.fn-hwc[data-v=screen]'), ft=await inView(pg,'#fnLogin');
+  ok(f.p && f.d && c3&&c3.ok && ft&&ft.ok, `${v.w}×${v.h} first run (D2): one screen, the 3 cards and "J'ai déjà un compte" visible (${f.sh}/${f.ch}, card ${c3&&c3.bottom}, link ${ft&&ft.bottom}/${v.h})`);
+  await pg.evaluate(()=>document.querySelector('.fn-hwc[data-v=screen]').click()); await pg.waitForTimeout(300);
+  f=await fit(); const k=await inView(pg,'.fn-kb');
+  ok(f.p && f.d && k&&k.ok, `${v.w}×${v.h} first run (D3): one screen, keys visible (${f.sh}/${f.ch}, keys ${k&&k.bottom})`);
+  await pg.evaluate(()=>{ const k=document.querySelector('#fnKb [data-m="60"]'); k.dispatchEvent(new PointerEvent('pointerdown',{bubbles:true,cancelable:true})); }); await pg.waitForTimeout(1000);
   f=await fit(); const g=await inView(pg,'#fnGo');
-  ok(f.d && g&&g.ok, `${v.w}×${v.h} first run after the C: "Jouer mes 3 premiers accords" visible (${JSON.stringify(g)})`);
+  ok(f.d && g&&g.ok, `${v.w}×${v.h} first run after the C (D4): "Oui, je n'y connais rien" visible (${JSON.stringify(g)})`);
   await c.close();
 }
 for(const v of [{w:812,h:375},{w:667,h:375},{w:375,h:667}]){

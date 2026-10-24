@@ -24,8 +24,8 @@ const b = await chromium.launch({ executablePath: process.env.PW_CHROMIUM || und
 async function open(o = {}) {
   const ctx = await b.newContext({ viewport: o.viewport || { width: 1280, height: 800 }, locale: 'fr-FR' });
   await ctx.addInitScript(`window.__midiMode='ok';`); await ctx.addInitScript(INIT('ok'));
-  if (o.lat) await ctx.addInitScript(`window.midiLat=()=>${o.lat};`);
-  await ctx.addInitScript(seed(o.input || 'midi', o.acc || {}, o.extra || {}));
+  // midiLat() is the app's own now (MIDI lots 2-3): it reads S.midi.lat, the offset the timing assistant measured
+  await ctx.addInitScript(seed(o.input || 'midi', o.acc || {}, o.lat ? { ...(o.extra || {}), midi: { ...((o.extra || {}).midi || {}), lat: o.lat } } : (o.extra || {})));
   const p = await ctx.newPage(); const errs = []; p.on('pageerror', e => errs.push(e.message)); p.on('console', m => { if (m.type() === 'error' && !/ERR_TUNNEL|Failed to load resource/.test(m.text())) errs.push(m.text()); }); p.errs = errs; p.ctx = ctx;
   await p.goto(URL); await W(p, 1200); return p; }
 const toAcc = async p => { await click(p, '#modeNav [data-mode="learn"]'); await W(p, 300); await ev(p, () => document.querySelectorAll('#learnTiles .ptile')[5].click()); await W(p, 400); };

@@ -8,6 +8,7 @@ await page.click('.mode-item[data-mode="play"]'); await wait(page, 1500);
 await page.locator('#playSongs .ptile').first().click(); await wait(page, 1500); // PLAY = catalogue on the host page (C6); a tile opens the song in the frame
 let frame = page.frames().find(f => f.url().includes('play/'));
 console.log('iframe:', frame && frame.url());
+if (await frame.locator('#songGrid .tile').first().isVisible()) { await frame.locator('#songGrid .tile').first().click(); await wait(page, 500); }
 await frame.locator('#go').click(); await wait(page, 2500);
 const fstate = () => frame.evaluate(() => ({ score: document.getElementById('sScore').textContent, playVisible: !document.getElementById('play').hidden, ovHidden: document.getElementById('ov').hidden, ac: window.__cnt.ac, osc: window.__cnt.osc, held: [...document.querySelectorAll('.key.down')].map(k => +k.dataset.m), front: null }));
 let f = await fstate(); let h = await state(page);
@@ -50,7 +51,7 @@ await midi.on(page, 60); await wait(page, 60); await midi.off(page, 60); await m
 h = await state(page);
 console.log('notes après sortie : erreurs console nouvelles =', page.consoleErrors.slice(errBefore), '| erreurs page =', h.errors, '| page', h.page);
 // retour sur Play : l'iframe se recharge (nouvel AudioContext ?)
-await closeOnboarding(page); await page.click('.mode-item[data-mode="play"]'); await wait(page, 1500);
+await closeOnboarding(page); await page.click('.mode-item[data-mode="play"]'); await wait(page, 600); await page.evaluate(() => document.querySelector('#playSongs .ptile')?.click()); await wait(page, 1500);
 frame = page.frames().find(f => f.url().includes('play/'));
 console.log('retour Play: iframe', frame && frame.url(), 'ac iframe', frame && await frame.evaluate(() => window.__cnt.ac));
 await browser.close();
