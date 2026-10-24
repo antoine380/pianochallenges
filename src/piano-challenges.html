@@ -2406,6 +2406,52 @@ body[data-page="pp"] #ppPanel{display:flex;flex:1 1 auto;min-height:0;flex-direc
 @media (max-width:640px){ .pp-pmap .cur .pp-di{box-shadow:0 0 0 3px var(--bg),0 0 0 5px var(--good);animation:none} .pp-pmap .pp-ck{width:14px;height:14px} .pp-pmap .pp-ck svg{width:9px;height:9px} .pp-pmap .pp-dt,.pp-pmap .pp-ds{display:none} .pp-pcur{display:block} .pp-ph .pp-badge{width:44px;height:44px} .pp-prom li{padding:6px 12px} .pp-di{width:clamp(34px,10vw,44px)} .pp-pmap .pp-dn{width:17px;height:17px;font-size:.6rem} }
 @media (max-height:520px) and (orientation:landscape){ .pp-pmap{grid-template-columns:repeat(14,minmax(0,1fr))} .pp-pmap :is(.pp-dt,.pp-ds){display:none} .pp-pcur{display:block} .pp-ph .pp-badge{width:38px;height:38px} .pp-ph h2{font-size:1.5rem} .pp-psub{font-size:.9rem} .pp-prom li{padding:4px 10px;font-size:.8rem;box-shadow:none;background:var(--surface-2)} .pp-di{width:34px} .pp-pmap .pp-dn{width:16px;height:16px;font-size:.58rem} .pp-pgo .pp-main{font-size:1rem;padding:.55em 1.6em} }
 @media (prefers-reduced-motion:reduce){ #ppPanel *, .pp-map *, .pp-res{animation:none!important;transition:none!important} }
+/* ==== Succès (C10) : onglet « Succès » de la fiche Progression ==== */
+.ach{display:none}
+#progPane[data-tab="suc"] :is(#progFiche,#progCats,.prog-detail){display:none!important}
+#progPane[data-tab="suc"] .ach{display:flex;flex-direction:column;gap:var(--gap);position:relative;flex:1 1 auto;min-height:0}
+.ach-tiles{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:clamp(8px,1.2vw,16px);flex:none}
+.ach-t{position:relative;overflow:hidden;border-radius:var(--r-lg);color:#fff;background:linear-gradient(165deg,rgba(255,255,255,.16),rgba(255,255,255,0) 50%),var(--c);box-shadow:0 14px 26px -18px var(--c);
+  min-height:clamp(92px,17vh,156px);display:flex;flex-direction:column;justify-content:flex-end;padding:clamp(10px,1.2vw,16px);min-width:0}
+.ach-t .obj{position:absolute;top:8px;right:8px;width:48%;height:52%;pointer-events:none} .ach-t .obj svg{width:100%;height:100%;display:block}
+.ach-t b{position:relative;font-family:var(--f-display);font-weight:700;font-size:clamp(1.25rem,2.5vw,2.1rem);line-height:1.05;font-variant-numeric:tabular-nums;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ach-t span{position:relative;font-weight:800;font-size:clamp(.72rem,1.05vw,.9rem);line-height:1.2}
+.ach-card{flex:1 1 auto;min-height:0;display:flex;flex-direction:column;border-radius:var(--r-lg);background:#221d47;color:#fff;box-shadow:var(--shadow-card);overflow:hidden}
+.ach-h{display:flex;align-items:baseline;gap:10px;padding:12px 16px 2px;flex:none} .ach-h h3{margin:0;font-family:var(--f-display);font-weight:700;font-size:1.1rem} .ach-h span{color:#c9c4ea;font-weight:700;font-size:.86rem}
+.ach-grid{flex:1 1 auto;min-height:0;overflow-y:auto;overscroll-behavior:contain;display:grid;grid-template-columns:repeat(auto-fill,minmax(clamp(76px,8.6vw,110px),1fr));gap:10px 4px;padding:10px 10px 14px;align-content:start}
+.ach-b{border:0;background:none;color:#fff;display:flex;flex-direction:column;align-items:center;gap:6px;padding:4px 2px;border-radius:14px;font:inherit;cursor:pointer;min-width:0;-webkit-tap-highlight-color:transparent}
+.ach-b .ach-i{width:clamp(54px,6.2vw,80px);aspect-ratio:1;border-radius:50%;background:#2e2862;display:grid;place-items:center;box-shadow:inset 0 0 0 3px rgba(255,255,255,.07);transition:transform .15s}
+.ach-b.on .ach-i{background:radial-gradient(circle at 50% 40%,#3b3380,#221d47 75%);box-shadow:0 0 0 3px #ffd75a,0 0 18px -2px rgba(255,215,90,.55)}
+.ach-b .ach-i svg{width:68%;height:68%;display:block}
+.ach-b:not(.on) .ach-i svg{filter:grayscale(1) brightness(.85);opacity:.45}
+.ach-b .ach-n{font-weight:800;font-size:.76rem;line-height:1.15;text-align:center;overflow-wrap:break-word;max-width:100%}
+.ach-b:not(.on) .ach-n{color:#b9b3dc}
+.ach-b[aria-expanded="true"] .ach-i{transform:scale(1.06)}
+.ach-b:focus-visible{outline:3px solid #ffd75a;outline-offset:2px}
+@media (hover:hover){ .ach-b:hover .ach-i{transform:scale(1.06)} }
+.ach-b.new .ach-i{animation:achNew .8s ease-out 2}
+@keyframes achNew{50%{transform:scale(1.14)}}
+.ach-pop{position:absolute;z-index:6;width:min(330px,calc(100% - 16px));padding:12px 14px;border-radius:16px;background:#2b2560;color:#fff;box-shadow:0 18px 40px -12px rgba(0,0,0,.55);border:1px solid rgba(255,255,255,.14)}
+.ach-pop[hidden]{display:none}
+.ach-pop .ap-h{display:flex;align-items:flex-start;gap:8px} .ach-pop b{flex:1;font-family:var(--f-display);font-weight:700;font-size:1.05rem}
+.ach-pop .ap-x{border:0;background:rgba(255,255,255,.12);color:#fff;width:30px;height:30px;border-radius:50%;font-size:1.05rem;line-height:1;flex:none}
+.ach-pop p{margin:4px 0 8px;font-size:.86rem;color:#e2def7}
+.ach-pop .bar{height:7px;border-radius:999px;background:rgba(255,255,255,.16);overflow:hidden} .ach-pop .bar i{display:block;height:100%;background:#ffd75a;border-radius:inherit}
+.ach-pop small{display:block;margin-top:6px;font-weight:700;font-size:.78rem;color:#e2def7}
+.ach-pop .btn{margin-top:10px;min-height:40px;padding:8px 16px;background:#ffd75a;color:#1b1838;border:0}
+@media (prefers-reduced-motion:reduce){ .ach-b .ach-i{transition:none} .ach-b.new .ach-i{animation:none} }
+/* phones: the tab bar shows Overview and Achievements (the detail stays under the overview); the Achievements tab never scrolls the page */
+@media (max-width:640px), (max-height:520px){
+  #pfNav.set-nav{display:flex;align-self:flex-start;margin-bottom:var(--sp-2)} #pfNav [data-v="det"]{display:none} #pfNav{flex:none} #pfNav button{white-space:nowrap} .ach-grid{grid-template-columns:repeat(auto-fill,minmax(68px,1fr))} .ach-b .ach-n{font-size:.68rem;letter-spacing:-.01em} .ach-grid{padding-inline:6px;column-gap:2px}
+  body.pf-suc[data-page="progress"] .main{overflow:hidden}
+  body.pf-suc[data-page="progress"] #progressPage{flex:1 1 auto;min-height:0;display:flex;flex-direction:column}
+  body.pf-suc[data-page="progress"] #progressPage>.card{flex:1 1 0;min-height:0;display:flex;flex-direction:column;overflow:hidden}
+  body.pf-suc[data-page="progress"] #progPane{display:flex!important;flex-direction:column;flex:1 1 auto;min-height:0}
+}
+@media (max-width:640px){ .ach-tiles{grid-template-columns:repeat(3,minmax(0,1fr))} .ach-t{min-height:clamp(74px,12.5vh,120px)} .ach-t .obj{width:42%;height:48%} }
+@media (max-height:520px) and (orientation:landscape){ .ach-t{min-height:64px;padding:8px 10px} .ach-t b{font-size:1.05rem} .ach-t span{font-size:.68rem} .ach-t .obj{width:38%;height:50%;top:4px;right:4px} .ach-b .ach-i{width:48px} .ach-h{padding-top:8px} }
+@media (min-width:641px) and (min-height:521px) and (max-aspect-ratio:1/1){ .ach-tiles{grid-template-columns:repeat(3,minmax(0,1fr))} .ach-t{min-height:clamp(96px,12vh,150px)} }
+/* ==== fin Succès ==== */
 </style>
 
 <script>if(window.Capacitor&&window.webkit&&window.webkit.messageHandlers&&window.webkit.messageHandlers.bridge)document.documentElement.classList.add("native");</script>
@@ -2979,7 +3025,7 @@ body[data-page="pp"] #ppPanel{display:flex;flex:1 1 auto;min-height:0;flex-direc
       <p class="legal-links set-legal"><a href="/mentions-legales.html" data-i="legalNotice"></a> · <a href="/confidentialite.html" data-i="privacy"></a><br>© 2026 Antoine Bernard · <span data-i="rights"></span></p></section>
     </div>
     <div class="modal-body prog-body" id="progPane" data-tab="ov" hidden>
-      <div class="seg set-nav pf-nav" id="pfNav" role="tablist"><button type="button" role="tab" data-v="ov" data-i="pfOverview"></button><button type="button" role="tab" data-v="det" data-i="pfDetail"></button></div>
+      <div class="seg set-nav pf-nav" id="pfNav" role="tablist"><button type="button" role="tab" data-v="ov" data-i="pfOverview"></button><button type="button" role="tab" data-v="det" data-i="pfDetail"></button><button type="button" role="tab" data-v="suc" data-i="achTab"></button></div>
       <div class="pf" id="progFiche">
         <div class="pf-head"><span class="av" id="pfAv"></span><div class="pf-id"><span class="pf-k" id="pfK"></span><b id="pfName"></b><div class="xpbar"><i id="pfXp"></i></div><small id="pfXpTxt"></small></div><button class="btn" id="pfLevels" type="button" data-i="charMore"></button></div>
         <div class="pf-row">
@@ -2993,6 +3039,7 @@ body[data-page="pp"] #ppPanel{display:flex;flex:1 1 auto;min-height:0;flex-direc
         <div class="pf-dots" id="pfDots"></div>
         <h3 class="pf-detail-h" data-i="pfDetail"></h3>
       </div>
+      <div class="ach" id="achBox"><div class="ach-tiles" id="achTiles"></div><section class="ach-card" aria-labelledby="achH"><div class="ach-h"><h3 id="achH" data-i="achBadges"></h3><span id="achCount"></span></div><div class="ach-grid" id="achGrid" role="list"></div></section><div class="ach-pop" id="achPop" role="dialog" aria-labelledby="achPopT" hidden></div></div>
       <div class="prog-cats" id="progCats"></div>
       <div class="prog-detail">
         <div class="pd-head"><h3 class="ph-title" id="pdTitle"></h3><div class="types" id="pdTypes"></div><select id="viewSel" hidden></select></div>
@@ -3232,7 +3279,11 @@ const TXT = {
     pp02W:N=>["Le "+N[0]+" est juste à gauche des 2 noires.","Il y en a un dans chaque groupe."], pp02Sub1:"À gauche des 2 noires", pp02All:n=>"Joue tous les "+n+", de gauche à droite.", pp02AllS:n=>"Chaque "+n+" trouvé reste allumé.", pp02Order:n=>"De gauche à droite : cherche un "+n+" plus à droite.",
     pp02Mid:n=>"Le "+n+" du milieu s'appelle le "+n+" central. Joue-le.", pp02MidS:"Il est marqué d'une étoile.", pp02NotMid:n=>"C'est bien un "+n+", mais pas celui du milieu.",
     pp03W:N=>[N[0]+", "+N[2]+", "+N[4]+" : autour des 2 noires.",N[2]+" est entre les 2 noires, "+N[4]+" juste à droite."], pp03Run:N=>"Joue "+N[0]+", "+N[2]+", "+N[4]+".", pp03From1:n=>"Depuis le "+n+" central", pp03From2:n=>"Depuis un autre "+n,
-    pp03Hint:["À gauche des 2 noires","Entre les 2 noires","À droite des 2 noires"], pp03Ear:"Écoute et rejoue.", pp03EarS:"Les mêmes notes, dans le même ordre.", ppFnGo:"Commencer mes Premiers pas", ppFnOkS:"Étape 2 : ta première leçon, 2 minutes."},
+    pp03Hint:["À gauche des 2 noires","Entre les 2 noires","À droite des 2 noires"], pp03Ear:"Écoute et rejoue.", pp03EarS:"Les mêmes notes, dans le même ordre.", ppFnGo:"Commencer mes Premiers pas", ppFnOkS:"Étape 2 : ta première leçon, 2 minutes.",
+    achTab:"Succès", achBadges:"Badges", achCount:(n,N)=>n+" sur "+N, achT:["XP totale","Notes justes","Accords trouvés","Duels gagnés","Morceaux à 3 étoiles","Temps de jeu"], achGot:n=>"Nouveau badge : "+n+" !", achGotN:(n,k)=>"Nouveau badge : "+n+" (et "+k+" autre"+(k>1?"s":"")+")", achNtfT:n=>"Badge obtenu : "+n, achOn:d=>"Obtenu le "+d, achOff:"Pas encore obtenu", achShareK:"Badge obtenu", achShareTx:n=>"J'ai obtenu le badge « "+n+" » sur Piano Challenges !", achClose:"Fermer",
+    achB:{pp:["Premiers pas","Termine les leçons des Premiers pas."], goal7:["Objectif tenu","Atteins ton objectif du jour 7 jours."], maj12:["Les 12 majeurs","Réussis l'accord majeur dans les 12 tonalités."], fifths:["Cercle des quintes","Réussis les 12 gammes majeures."], minor:["Gammes mineures","Réussis les 12 gammes mineures."], sev:["Accords de 7e","Réussis 12 accords de 7e différents."], inv:["Accords renversés","Réussis 12 accords renversés."], harm:["Harmoniste","Réussis 25 exercices d'harmonie."], prog:["Progressions","Réussis 25 progressions d'accords."], ear:["Oreille d'or","Réussis 50 exercices d'oreille."],
+      duel1:["Premier duel","Gagne un duel classé."], duel10:["10 victoires de suite","Gagne 10 duels classés d'affilée."], elo:["ELO 1200","Atteins 1 200 d'ELO dans un jeu (après 5 parties)."], str7:["Une semaine","Joue 7 jours de suite."], str30:["Série de 30 jours","Joue 30 jours de suite."], night:["Noctambule","Gagne de l'XP entre 23 h et 5 h."], early:["Lève-tôt","Gagne de l'XP entre 5 h et 7 h."], sun:["Pianiste du dimanche","Gagne de l'XP un dimanche."], g100:["100 parties","Termine 100 parties (exercices, jeux, quiz, duels)."], rn100:["Saute-notes 100","Fais 100 points à Saute-notes."],
+      mem10:["Mémoire d'éléphant","Retiens une suite de 10 à Mémoire musicale."], sp:["Contre la montre","Trouve 25 réponses dans une partie de Contre la montre."], quiz50:["Maestro du quiz","Donne 50 bonnes réponses au quiz."], quiz4:["Le quiz à 4","Joue un quiz à 4 joueurs (les bots comptent)."], songs:["Mélomane","Joue les 5 morceaux de PLAY (au moins 1 étoile)."], song3:["Morceau parfait","Obtiens 3 étoiles sur un morceau."], staff:["Partition lue","Termine une partie avec le solfège en mode Lecture."], xp10k:["10 000 XP","Gagne 10 000 XP."], share:["Ambassadeur","Partage un résultat ou invite un ami."], douze:["Les Douze en or","Décroche l'or au jeu Les Douze."]}},
   en:{help:"Help", helpTitle:"How it works", helpOk:"Let's go", tutNext:"Next", tutPrev:"Previous", close:"Close", stepOf:(i,n)=>"Step "+i+" of "+n,
     tut:[{h:"Read the challenge",p:"A scale, a chord or a progression appears with a countdown. Picture the notes in your head before the bar runs out."},
          {h:"Pick and set up",p:"Before each game, pick the scale or chord as a card, then the timer and your helps. “Show the notes” shows the note names, “Light up the keys” shows where to play, and “Step-by-step help” gives nothing at first, then a hint every 8 s; the notes you find stay lit and a card builds up to help you remember them. Less help = more XP."},
@@ -3428,7 +3479,11 @@ const TXT = {
     pp02W:N=>[N[0]+" is just left of the 2 black keys.","There's one in every group."], pp02Sub1:"Left of the 2 black keys", pp02All:n=>"Play every "+n+", from left to right.", pp02AllS:n=>"Each "+n+" you find stays lit.", pp02Order:n=>"From left to right: look for "+ppArt(n)+" further right.",
     pp02Mid:n=>"The "+n+" in the middle is called middle "+n+". Play it.", pp02MidS:"It's marked with a star.", pp02NotMid:n=>"That's "+ppArt(n)+", but not the one in the middle.",
     pp03W:N=>[N[0]+", "+N[2]+", "+N[4]+": around the 2 black keys.",N[2]+" is between the 2 black keys, "+N[4]+" just to the right."], pp03Run:N=>"Play "+N[0]+", "+N[2]+", "+N[4]+".", pp03From1:n=>"From middle "+n, pp03From2:n=>"From another "+n,
-    pp03Hint:["Left of the 2 black keys","Between the 2 black keys","Right of the 2 black keys"], pp03Ear:"Listen and play it back.", pp03EarS:"The same notes, in the same order.", ppFnGo:"Start my first steps", ppFnOkS:"Step 2: your first lesson, 2 minutes."}
+    pp03Hint:["Left of the 2 black keys","Between the 2 black keys","Right of the 2 black keys"], pp03Ear:"Listen and play it back.", pp03EarS:"The same notes, in the same order.", ppFnGo:"Start my first steps", ppFnOkS:"Step 2: your first lesson, 2 minutes.",
+    achTab:"Achievements", achBadges:"Badges", achCount:(n,N)=>n+" of "+N, achT:["Total XP","Right notes","Chords found","Duels won","3-star songs","Time played"], achGot:n=>"New badge: "+n+"!", achGotN:(n,k)=>"New badge: "+n+" (and "+k+" more)", achNtfT:n=>"Badge earned: "+n, achOn:d=>"Earned on "+d, achOff:"Not earned yet", achShareK:"Badge earned", achShareTx:n=>"I earned the “"+n+"” badge on Piano Challenges!", achClose:"Close",
+    achB:{pp:["First steps","Finish the First steps lessons."], goal7:["Goal keeper","Reach your daily goal on 7 days."], maj12:["All 12 majors","Get the major chord right in all 12 keys."], fifths:["Circle of fifths","Get all 12 major scales right."], minor:["Minor scales","Get all 12 minor scales right."], sev:["7th chords","Get 12 different 7th chords right."], inv:["Inversions","Get 12 inverted chords right."], harm:["Harmonist","Pass 25 harmony exercises."], prog:["Progressions","Pass 25 chord progressions."], ear:["Golden ear","Pass 50 ear-training exercises."],
+      duel1:["First duel","Win a rated duel."], duel10:["10 wins in a row","Win 10 rated duels in a row."], elo:["ELO 1200","Reach a 1,200 rating in a game (after 5 games)."], str7:["One week","Play 7 days in a row."], str30:["30-day streak","Play 30 days in a row."], night:["Night owl","Earn XP between 11 pm and 5 am."], early:["Early bird","Earn XP between 5 and 7 am."], sun:["Sunday pianist","Earn XP on a Sunday."], g100:["100 games","Finish 100 games (exercises, games, quizzes, duels)."], rn100:["Note Jumper 100","Score 100 points in Note Jumper."],
+      mem10:["Elephant memory","Remember a sequence of 10 in Musical memory."], sp:["Against the clock","Find 25 answers in one game of Against the clock."], quiz50:["Quiz maestro","Give 50 right answers in the quiz."], quiz4:["Quiz for 4","Play a quiz with 4 players (bots count)."], songs:["Music lover","Play all 5 PLAY songs (at least 1 star)."], song3:["Perfect song","Get 3 stars on a song."], staff:["Sight reader","Finish a game with notation set to Reading."], xp10k:["10,000 XP","Earn 10,000 XP."], share:["Ambassador","Share a result or invite a friend."], douze:["Golden Twelve","Win gold in The Twelve game."]}}
 };
 const t = k => TXT[S.settings.lang][k];
 // data shown to people (scores, XP, other players' names): thousands separators in the app's language,
@@ -4236,7 +4291,7 @@ function midiFlush(){
   if(lone && midiStart(b[0])) return;
   b.forEach(x=>noteIn(x));
 }
-function hitSlot(j, m){
+function hitSlot(j, m){ try{ achInc("notes"); }catch(e){}
   found[j]=true; if(!chordLike(cur.sec)) hintReset(); idx=found.filter(Boolean).length; played.push(fold(m)); markPlayed(); renderSlots(j);
   if(idx===seq.length) success();
 }
@@ -4274,8 +4329,8 @@ function noteIn(m){ lastNoteAt=Date.now();
     if(pFound.has(pc)){ flashKey(m,"k-hit",150); return; }
     if(!pcs.includes(pc)){ wrongNote(m); return; }
     if(cur.sec==="prog" && S.settings.vl && pFound.size===0 && pc!==st.bassPc){ wrongNote(m); return; }
-    pFound.add(pc); played.push(fold(m)); markPlayed();
-    if(pFound.size===pcs.length){
+    pFound.add(pc); played.push(fold(m)); markPlayed(); try{ achInc("notes"); }catch(e){}
+    if(pFound.size===pcs.length){ try{ achInc("chords"); }catch(e){}
       found[pStep]=true; idx=found.filter(Boolean).length; const done=pStep; pStep++; pFound=new Set(); hintReset();
       renderSlots(done);
       if(idx===seq.length){ success(); return; }
@@ -4311,6 +4366,7 @@ function success(){
   if(cur.sec==="scales" && cur.ch) gain+=seq.length*2+(S.settings.sc7?4:0);
   if(cur.sec==="ear") gain=8+Math.min(combo,10)*2;
   else if(S.settings.guideN||S.settings.guideK||hintUsed) gain=Math.max(2,Math.round(gain/2));
+  try{ if(chordLike(cur.sec)) achInc("chords"); if(cur.inv) achInc("inv"); }catch(e){}
   bumpStreak(); addXP(gain); record(roundLevel(), secs); save();
   if(cur.sec!=="ear"){ const root=48+((chSeq()?seq[0].root.pc:seqMidis()[0])%12); [0,4,7,12].forEach((iv,i)=>tone(root+iv+24,i*.07,.5,.16)); }
   const sep=S.settings.lang==="fr"?",":".";
@@ -5152,7 +5208,7 @@ function runnerNote(m){
   const target=RN.obs.find(o=>!o.armed && !o.passed);
   if(!target) return;
   const have=new Set(RN.held.map(h=>h.pc));
-  if(target.pcs.every(p=>have.has(p))){ target.armed=true; RN.held=[];
+  if(target.pcs.every(p=>have.has(p))){ target.armed=true; RN.held=[]; try{ achHit(target.pcs.length); }catch(e){}
     if(target.inRing){ target.perfect=true; RN.cleared+=0; RN.bonus=(RN.bonus||0)+5; RN.flash={txt:t("rnPerfect"),t:performance.now()}; }
     rnHint(null); }
 }
@@ -5191,7 +5247,7 @@ function rnLoop(now){
       if(!o.passed && o.x+o.w < px){ o.passed=true; RN.cleared++; if(!DU.mode) RN.xp+=2; tone(84,0,.12,.08); }
       const hit = o.x < px+pw-6*u && o.x+o.w > px+6*u && RN.y < o.h-6*u;
       if(hit && RN.state==="run"){ RN.state="over"; clearKeys(); RN.crashAt=performance.now(); tone(40,0,.4,.2); if(DU.mode) duMe(RN.score,true);
-        if(!DU.mode && RN.score>(S.runnerBest||0)){ S.runnerBest=RN.score; RN.newBest=true; } if(RN.xp){ addXP(RN.xp); RN.xp=0; } save(); renderStatus(); }
+        if(!DU.mode && RN.score>(S.runnerBest||0)){ S.runnerBest=RN.score; RN.newBest=true; } if(RN.xp){ addXP(RN.xp); RN.xp=0; } try{ achEnd(); }catch(e){} save(); renderStatus(); }
     });
     RN.obs=RN.obs.filter(o=>o.x+o.w>-40);
     rnScore();
@@ -5267,7 +5323,7 @@ function spTick(now){
   if(HOLD){ SP.raf=requestAnimationFrame(spTick); return; } // the leave window is open: the clock waits (SP.end moves on resume)
   let left=(SP.end-now)/1000;
   // progressive: each answer gives back a little time, less and less
-  if(left<=0){ SP.state="over"; clearKeys(); if(DU.mode) duMe(SP.count,true); const best=(S.gameBest||{}).speed||0; SP.newBest=false; if(!DU.mode){ if(SP.count>best){ S.gameBest={...(S.gameBest||{}),speed:SP.count}; SP.newBest=true; } if(SP.count){ addXP(SP.count); renderStatus(); } } save(); tone(48,0,.4,.15); gmBoard(); gmScore(); return; }
+  if(left<=0){ SP.state="over"; clearKeys(); if(DU.mode) duMe(SP.count,true); const best=(S.gameBest||{}).speed||0; SP.newBest=false; if(!DU.mode){ if(SP.count>best){ S.gameBest={...(S.gameBest||{}),speed:SP.count}; SP.newBest=true; } if(SP.count){ addXP(SP.count); renderStatus(); } } try{ achEnd(); }catch(e){} save(); tone(48,0,.4,.15); gmBoard(); gmScore(); return; }
   $("gmBar").style.transform="scaleX("+Math.max(0,left/SP.dur)+")"; $("gmBar").classList.toggle("low",left<10);
   SP.raf=requestAnimationFrame(spTick);
 }
@@ -5276,7 +5332,7 @@ function spNote(m){
   if(SP.state!=="run"){ if(pc===0 && midiMode()) spGo(); return; }
   const now=performance.now(); SP.held=SP.held.filter(h=>now-h.t<1300); SP.held.push({pc,t:now});
   const have=new Set(SP.held.map(h=>h.pc));
-  if(SP.target && SP.target.pcs.every(p=>have.has(p))){ SP.count++; if(DU.mode) duMe(SP.count,false); if(gmDiff()==="prog") SP.end+=Math.max(300,1500-SP.count*60); tone(84,0,.1,.08); gmScore(); $("gmBoard").classList.remove("hit"); void $("gmBoard").offsetWidth; $("gmBoard").classList.add("hit"); spNext(); }
+  if(SP.target && SP.target.pcs.every(p=>have.has(p))){ try{ achHit(SP.target.pcs.length); }catch(e){} SP.count++; if(DU.mode) duMe(SP.count,false); if(gmDiff()==="prog") SP.end+=Math.max(300,1500-SP.count*60); tone(84,0,.1,.08); gmScore(); $("gmBoard").classList.remove("hit"); void $("gmBoard").offsetWidth; $("gmBoard").classList.add("hit"); spNext(); }
 }
 // ---------- Game: Musical memory (repeat a growing sequence) ----------
 const MM={state:"ready",seq:[],step:0,round:0,timer:0,timers:[],held:[]};
@@ -5297,10 +5353,10 @@ function mmNote(m){
   if(MM.state==="ready"||MM.state==="over"){ if(pc===0 && midiMode()) mmGo(); return; }
   if(MM.state!=="input") return;
   const it=MM.seq[MM.step], now=performance.now();
-  if(!it.pcs.includes(pc)){ MM.state="over"; tone(40,0,.4,.2); if(DU.mode) duMe(MM.round,true); clearTimeout(MM.inT); const best=(S.gameBest||{}).memory||0; MM.newBest=!DU.mode && MM.round>best; if(MM.newBest) S.gameBest={...(S.gameBest||{}),memory:MM.round}; if(MM.round && !DU.mode){ addXP(MM.round*2); renderStatus(); } save(); gmBoard(); gmScore(); return; }
+  if(!it.pcs.includes(pc)){ MM.state="over"; tone(40,0,.4,.2); if(DU.mode) duMe(MM.round,true); clearTimeout(MM.inT); const best=(S.gameBest||{}).memory||0; MM.newBest=!DU.mode && MM.round>best; if(MM.newBest) S.gameBest={...(S.gameBest||{}),memory:MM.round}; if(MM.round && !DU.mode){ addXP(MM.round*2); renderStatus(); } try{ achEnd(); }catch(e){} save(); gmBoard(); gmScore(); return; }
   MM.held=MM.held.filter(h=>now-h.t<1500); MM.held.push({pc,t:now});
   const have=new Set(MM.held.map(h=>h.pc));
-  if(it.pcs.every(p=>have.has(p))){ MM.step++; MM.held=[]; mmIdle(); $("gmBig").textContent=MM.step+" / "+MM.seq.length;
+  if(it.pcs.every(p=>have.has(p))){ try{ achHit(it.pcs.length); }catch(e){} MM.step++; MM.held=[]; mmIdle(); $("gmBig").textContent=MM.step+" / "+MM.seq.length;
     if(MM.step>=MM.seq.length){ MM.round++; gmScore(); if(DU.mode) duMe(MM.round,false); MM.state="listen"; $("gmSub").textContent=t("mmGood"); mmAdd(); MM.timers.push(setTimeout(mmPlay, 900)); } }
 }
 // shared board text for the two DOM games
@@ -7435,11 +7491,12 @@ async function shareIt(o){ const text=o.text+(o.url?" "+o.url:"");
       await navigator.share(d); return; } }catch(e){ if(e&&e.name==="AbortError") return; }
   copyText(text,null); }
 // a square picture of the result, in the app's colours
-function shareCard(k,big,sub,col){ return new Promise(res=>{ try{ const c=document.createElement("canvas"); c.width=c.height=1080; const g=c.getContext("2d");
+function shareCard(k,big,sub,col,pic){ return new Promise(res=>{ try{ const c=document.createElement("canvas"); c.width=c.height=1080; const g=c.getContext("2d");
     const bg=g.createLinearGradient(0,0,1080,1080); bg.addColorStop(0,"#2b1f74"); bg.addColorStop(1,col||"#7a5bf5"); g.fillStyle=bg; g.fillRect(0,0,1080,1080);
     g.globalAlpha=.18; g.fillStyle="#fff"; for(let i=0;i<14;i++){ g.fillRect(60+i*70,820,60,200); } g.globalAlpha=.3; g.fillStyle="#15122e"; for(let i=0;i<14;i++){ if([2,6,9,13].includes(i)) continue; g.fillRect(105+i*70,820,30,120); } g.globalAlpha=1;
     g.fillStyle="#ffd77a"; g.font="800 40px Nunito, system-ui, sans-serif"; g.fillText(t("shareImgK").toUpperCase(),80,130);
-    g.fillStyle="#fff"; g.font="700 64px Fredoka, Nunito, system-ui, sans-serif"; wrapTxt(g,k,80,230,920,72,2);
+    if(pic){ g.fillStyle="#221d47"; g.beginPath(); g.arc(880,200,140,0,Math.PI*2); g.fill(); g.lineWidth=14; g.strokeStyle="#ffd77a"; g.stroke(); g.drawImage(pic,790,110,180,180); } // Succès: the badge
+    g.fillStyle="#fff"; g.font="700 64px Fredoka, Nunito, system-ui, sans-serif"; wrapTxt(g,k,80,230,pic?640:920,72,2);
     let fs=260; g.font="700 "+fs+"px Fredoka, Nunito, system-ui, sans-serif"; while(g.measureText(big).width>920 && fs>80){ fs-=10; g.font="700 "+fs+"px Fredoka, Nunito, system-ui, sans-serif"; } g.fillText(big,72,560);
     g.font="700 48px Nunito, system-ui, sans-serif"; g.fillStyle="#e9e4ff"; wrapTxt(g,sub,80,650,920,58);
     g.font="800 40px Nunito, system-ui, sans-serif"; g.fillStyle="#fff"; g.fillText(t("shareImgCta"),80,790);
@@ -7929,6 +7986,140 @@ document.addEventListener("keydown",e=>{ if(page!=="pp" || anyModal() || documen
       const st=[a&&a.start,b&&b.start].filter(Boolean); if(st.length) o.start=Math.min(...st); r.merged.pp=o; }
     const ra=isO(local.resume)?local.resume:null, rb=isO(c.resume)?c.resume:null; if(ra||rb) r.merged.resume = !ra ? rb : !rb ? ra : (+rb.at||0)>(+ra.at||0) ? rb : ra; // the most recent
     r.changed=JSON.stringify(r.merged)!==JSON.stringify(local); return r; }; }
+
+/* ==== Succès (C10) : onglet « Succès » de la fiche Progression : 6 tuiles chiffrées et 30 badges ==== */
+// État : S.cnt = compteurs {notes, chords, inv, games, quiz, quiz4, night, early, sun, staff, share, wRun, wBest} (absents = 0) ;
+//   S.songStars = {id: étoiles 0-3} (copie de clavio:best, que le lecteur Play garde dans son localStorage) ; S.badges = {id: "AAAA-MM-JJ"}.
+// Fusion (mergeState) : compteurs et étoiles = max par clé (l'état fusionné repart vers le cloud : une somme compterait deux fois) ;
+//   badges = union, la date la plus ancienne.
+// badgeCheck() tourne en différé (badgeSoon, hors du chemin touche → son) après addXP, chaque fin de partie (achEnd), le quiz,
+// un duel classé, un partage, le retour du lecteur Play, et à l'ouverture de la fiche. Premier passage (S.badges absent) : les badges
+// déjà mérités sont notés sans notification ni fête (pas d'avalanche pour les anciens joueurs).
+const achO = x => !!x && typeof x==="object" && !Array.isArray(x);
+function achC(){ if(!achO(S.cnt)) S.cnt={}; return S.cnt; }
+const achN = k => { const v=+achC()[k]; return Number.isFinite(v)&&v>0?v:0; };
+function achInc(k,n=1){ achC()[k]=achN(k)+n; }
+function achHit(n){ achInc("notes",n); if(n>=3) achInc("chords"); } // a target of the games found: its notes, and a chord when it has 3 notes or more
+function achEnd(){ achInc("games"); badgeSoon(); }
+function achSongs(){ let cb={}; try{ cb=JSON.parse(localStorage.getItem("clavio:best")||"{}")||{}; }catch(e){} if(!achO(S.songStars)) S.songStars={};
+  if(achO(cb)) Object.entries(cb).forEach(([k,v])=>{ v=Math.min(3,+v||0); if(v>(+S.songStars[k]||0)) S.songStars[k]=v; }); return S.songStars; }
+const achWins = () => Object.values(S.elo||{}).reduce((a,e)=>a+((achO(e)&&+e.w)|0),0);
+const achSec = (sec,k) => (+((S.secStats||{})[sec]||{})[k])|0;
+// what the mastery says: chords found per type (as pitch classes), scales per type, inverted chords
+function achMast(){ const o={ch:{},sc:{},inv:0}; Object.entries(S.mastery||{}).forEach(([k,v])=>{ if(!(+v>=1)) return; const p=k.split(":"); let pc; try{
+    if(p[0]==="ch" && CTYPE[p[1]]){ pc=keyPc(p[2]); (o.ch[p[1]]=o.ch[p[1]]||new Set()).add(pc); if(+p[3]>0) o.inv++; }
+    else if(p.length===2 && TYPE[p[0]]){ pc=keyPc(p[1]); (o.sc[p[0]]=o.sc[p[0]]||new Set()).add(pc); } }catch(e){} }); return o; }
+const achSz = s => s ? s.size : 0;
+function achGoalDays(){ let n=0; try{ const g=goalCfg(); new Set([...Object.keys(S.xpDays||{}),...Object.keys(S.playSec||{})]).forEach(d=>{ if(goalNow(g,d)>=g.v) n++; }); }catch(e){} return n; }
+// « Les Douze en or » reads the other worksite's best scores without depending on it: a key douze-* worth "gold"/"or", {medal:"gold"} or a number ≥ 3 (1 bronze, 2 silver, 3 gold)
+const achDouze = () => Object.entries(S.gameBest||{}).some(([k,v])=>k.startsWith("douze-") && (v==="gold"||v==="or"||(achO(v)&&(v.medal==="gold"||v.gold))||(typeof v==="number"&&v>=3)));
+const achElo = () => Math.max(0,...Object.values(S.elo||{}).filter(e=>achO(e)&&(+e.n||0)>=5).map(e=>+e.r||0));
+// the 30 badges: [id, picture (OBJ), progress (c) => [value, goal]]
+const ACH=[
+  ["pp","feet",()=>[PP_READY.filter(id=>(((S.pp||{}).done)||{})[id]).length, PP_READY.length]],
+  ["goal7","pulse",()=>[achGoalDays(),7]],
+  ["maj12","chords",c=>[achSz(c.m.ch.maj),12]],
+  ["fifths","compass",c=>[achSz(c.m.sc.major),12]],
+  ["minor","scales",c=>[achSz(c.m.sc.minor),12]],
+  ["sev","seven",c=>[["maj7","dom7","min7","hdim7","dim7"].reduce((a,k)=>a+achSz(c.m.ch[k]),0),12]],
+  ["inv","climber",c=>[Math.max(c.m.inv,achN("inv")),12]],
+  ["harm","harmony",()=>[achSec("harmony","ok"),25]],
+  ["prog","prog",()=>[achSec("prog","ok"),25]],
+  ["ear","ear",()=>[achSec("ear","ok"),50]],
+  ["duel1","medal",()=>[achWins(),1]],
+  ["duel10","crown",()=>[Math.max(achN("wBest"),achN("wRun")),10]],
+  ["elo","soon",()=>[achElo(),1200]],
+  ["str7","daily",c=>[c.st.best,7]],
+  ["str30","mountain",c=>[c.st.best,30]],
+  ["night","moon",()=>[achN("night")?1:0,1]],
+  ["early","sun",()=>[achN("early")?1:0,1]],
+  ["sun","croissant",()=>[achN("sun")?1:0,1]],
+  ["g100","heart",()=>[achN("games"),100]],
+  ["rn100","runner",()=>[+S.runnerBest||0,100]],
+  ["mem10","memory",()=>[+((S.gameBest||{}).memory)||0,10]],
+  ["sp","speed",()=>[+((S.gameBest||{}).speed)||0,25]],
+  ["quiz50","quiz",()=>[achN("quiz"),50]],
+  ["quiz4","quizhub",()=>[achN("quiz4")?1:0,1]],
+  ["songs","play",c=>[SONGS_H.filter(s=>(+c.songs[s[0]]||0)>=1).length,SONGS_H.length]],
+  ["song3","star",c=>[SONGS_H.some(s=>(+c.songs[s[0]]||0)>=3)?1:0,1]],
+  ["staff","staff",()=>[achN("staff")?1:0,1]],
+  ["xp10k","planet",()=>[+S.xp||0,10000]],
+  ["share","gift",()=>[Math.max(achN("share"),+((S.refStats||{}).n)||0),1]],
+  ["douze","douze",()=>[achDouze()?1:0,1]]];
+const achName = id => (t("achB")[id]||[id])[0], achHow = id => (t("achB")[id]||["",""])[1];
+// new pictures (full 120 × 120 box, already centred)
+Object.assign(OBJ,{
+  feet:()=>{ const o=O3(); [[40,74,-12],[80,46,12]].forEach(([x,y,r])=>{ o.raw('<g transform="rotate('+r+' '+x+' '+y+')">').ball(x,y+8,14,"#3ddc84",22); [[-12,-22,5],[-4,-27,5],[4,-27,4.5],[11,-22,4]].forEach(([dx,dy,rr])=>o.ball(x+dx,y+dy-4,rr,"#3ddc84")); o.raw('</g>'); }); return o.svg(); },
+  seven:()=>{ const o=O3(); o.raw('<g transform="rotate(-10 60 60)">').block(26,14,68,92,"#fbfbff",12).block(32,20,56,16,"#5b7cff",6).raw('<text x="60" y="92" text-anchor="middle" font-family="Fredoka,Nunito,sans-serif" font-weight="700" font-size="54" fill="#2b2560">7</text></g>'); return o.svg(); },
+  douze:()=>{ const o=O3(); o.ball(60,62,46,"#ffc94a"); return o.raw('<circle cx="60" cy="62" r="34" fill="none" stroke="#e59b12" stroke-width="4"/><text x="60" y="78" text-anchor="middle" font-family="Fredoka,Nunito,sans-serif" font-weight="700" font-size="42" fill="#8a5a00">12</text>').svg(); }
+});
+const achSvg = id => { const b=ACH.find(x=>x[0]===id); return ((OBJ[b&&b[1]]||OBJ.star)()).replace("xMaxYMin","xMidYMid"); };
+function achCtx(){ return {m:achMast(), st:streaks(), songs:achSongs()}; }
+function achProg(id,c){ const b=ACH.find(x=>x[0]===id); try{ const [v,g]=b[2](c||achCtx()); return [Math.max(0,+v||0),g]; }catch(e){ return [0,1]; } }
+let achT=0, achNew=new Set();
+function badgeSoon(){ clearTimeout(achT); achT=setTimeout(()=>{ try{ badgeCheck(); }catch(e){} },500); }
+function badgeCheck(silent){ const first=!achO(S.badges); if(first) S.badges={}; const c=achCtx(), today=dayStr(), got=[];
+  ACH.forEach(([id])=>{ if(S.badges[id]) return; const [v,g]=achProg(id,c); if(v>=g){ S.badges[id]=today; got.push(id); } });
+  save(); if(!got.length) return got;
+  if(!(silent||first)){ got.forEach(id=>{ achNew.add(id); try{ ntfAdd({key:"badge-"+id, cat:"progress", type:"badge", ti:t("achNtfT")(achName(id)), tx:achHow(id), act:{k:"badges",l:"ntfSee"}}); }catch(e){} }); achParty(got); }
+  if(page==="progress") renderAch(); return got; }
+// the small celebration: a toast, three soft notes (interface sounds on), confetti when nothing is being played
+function achParty(got){ const n=achName(got[0]); toast(got.length>1?t("achGotN")(n,got.length-1):t("achGot")(n));
+  try{ if(S.settings.uiSound!==false && ctx && ctx.state==="running") [79,84,88].forEach((m,i)=>tone(m,i*.09,.35,.07)); }catch(e){}
+  const busy = phase==="listening" || (RN.on && RN.state==="run") || SP.state==="run" || MM.state==="input" || MM.state==="listen";
+  if(!busy && ["practice","daily"].includes(page)) try{ confetti(); }catch(e){} }
+const achFmtDur = sec => { const h=Math.floor(sec/3600), m=Math.floor(sec%3600/60); return h ? h+" h "+String(m).padStart(2,"0") : m+" min"; };
+const ACH_TILES=[["star","#6a3fd1"],["staff","#1f7a52"],["chords","#c9463c"],["medal","#b4461a"],["moon","#2c56d6"],["speed","#0e7490"]];
+function renderAch(){ const box=$("achBox"); if(!box) return; const c=achCtx(), L=t("achT"), sec=Object.values(S.playSec||{}).reduce((a,v)=>a+(+v||0),0);
+  const vals=[fmtN(S.xp), fmtN(achN("notes")), fmtN(achN("chords")), fmtN(achWins()), fmtN(SONGS_H.filter(s=>(+c.songs[s[0]]||0)>=3).length), achFmtDur(sec)];
+  const tl=$("achTiles"); tl.innerHTML=""; ACH_TILES.forEach(([o,col],i)=>{ const d=document.createElement("div"); d.className="ach-t"; d.style.setProperty("--c",col);
+    d.innerHTML='<span class="obj" aria-hidden="true">'+OBJ[o]()+'</span><b></b><span></span>'; d.children[1].textContent=vals[i]; d.children[2].textContent=L[i]; tl.appendChild(d); });
+  const B=S.badges||{}, n=ACH.filter(([id])=>B[id]).length; $("achCount").textContent=t("achCount")(n,ACH.length);
+  const gr=$("achGrid"); gr.innerHTML=""; ACH.forEach(([id])=>{ const on=!!B[id], b=document.createElement("button"); b.type="button"; b.className="ach-b"+(on?" on":"")+(achNew.has(id)?" new":""); b.dataset.id=id;
+    b.setAttribute("role","listitem"); b.setAttribute("aria-expanded","false"); b.setAttribute("aria-label",achName(id)+" · "+(on?t("achOn")(achDate(B[id])):t("achOff")));
+    b.innerHTML='<span class="ach-i" aria-hidden="true">'+achSvg(id)+'</span><span class="ach-n"></span>'; b.lastChild.textContent=achName(id); gr.appendChild(b); });
+  achNew.clear(); achPopClose(); }
+const achDate = d => { try{ return pDate(d).toLocaleDateString(S.settings.lang==="fr"?"fr-FR":"en-GB",{day:"numeric",month:"long",year:"numeric"}); }catch(e){ return d; } };
+// a click on a badge: how to get it (with the progress), or when it was earned and a « Share » button
+let achOpen=null;
+function achPopClose(){ const p=$("achPop"); if(p) p.hidden=true; if(achOpen){ const b=$("achGrid").querySelector('[data-id="'+achOpen+'"]'); if(b) b.setAttribute("aria-expanded","false"); } achOpen=null; }
+function achPopOpen(id, btn){ const p=$("achPop"), box=$("achBox"), on=!!(S.badges||{})[id]; if(achOpen===id){ achPopClose(); return; } achPopClose(); achOpen=id; btn.setAttribute("aria-expanded","true");
+  const [v,g]=achProg(id); p.innerHTML='<div class="ap-h"><b id="achPopT"></b><button type="button" class="ap-x">×</button></div><p></p>'+(on?'<small></small><button type="button" class="btn ap-sh"></button>':'<div class="bar"><i></i></div><small></small>');
+  p.querySelector("b").textContent=achName(id); p.querySelector(".ap-x").setAttribute("aria-label",t("achClose")); p.querySelector("p").textContent=achHow(id);
+  if(on){ p.querySelector("small").textContent=t("achOn")(achDate(S.badges[id])); const sh=p.querySelector(".ap-sh"); sh.innerHTML=pwI("share")+"<span></span>"; sh.lastChild.textContent=t("shareBtn"); sh.onclick=()=>achShare(id); }
+  else { p.querySelector(".bar i").style.width=Math.min(100,v/g*100)+"%"; p.querySelector("small").textContent=t("achOff")+" · "+fmtN(Math.min(v,g))+" / "+fmtN(g); }
+  p.querySelector(".ap-x").onclick=()=>{ achPopClose(); btn.focus(); };
+  p.hidden=false; const br=btn.getBoundingClientRect(), r=box.getBoundingClientRect(), pw=p.offsetWidth, ph=p.offsetHeight;
+  let x=br.left+br.width/2-r.left-pw/2; x=Math.max(8,Math.min(r.width-pw-8,x)); let y=br.bottom-r.top+6; if(y+ph>r.height-4) y=Math.max(4,br.top-r.top-ph-6);
+  p.style.left=x+"px"; p.style.top=y+"px"; (p.querySelector(".ap-sh")||p.querySelector(".ap-x")).focus({preventScroll:true}); }
+$("achGrid").addEventListener("click",e=>{ const b=e.target.closest(".ach-b"); if(b) achPopOpen(b.dataset.id,b); });
+$("achGrid").addEventListener("scroll",()=>achPopClose(),{passive:true});
+document.addEventListener("pointerdown",e=>{ if(achOpen && !e.target.closest("#achPop,.ach-b")) achPopClose(); });
+document.addEventListener("keydown",e=>{ if(e.key==="Escape" && achOpen && page==="progress"){ const id=achOpen; achPopClose(); const b=$("achGrid").querySelector('[data-id="'+id+'"]'); if(b) b.focus(); e.stopPropagation(); } },true);
+// share a badge: the square picture of the app (shareCard) with the badge drawn on it
+function achImg(id){ return new Promise(res=>{ let done=false; const fin=x=>{ if(!done){ done=true; res(x); } }; try{ const sv=achSvg(id).replace("<svg ",'<svg xmlns="http://www.w3.org/2000/svg" width="360" height="360" ');
+    const im=new Image(); im.onload=()=>fin(im); im.onerror=()=>fin(null); im.src="data:image/svg+xml;charset=utf-8,"+encodeURIComponent(sv); setTimeout(()=>fin(null),1500); }catch(e){ fin(null); } }); }
+async function achShare(id){ const img=await achImg(id), file=await shareCard(t("achShareK"), achName(id), achHow(id)+" · "+t("achOn")(achDate(S.badges[id])), "#c9900f", img);
+  shareIt({text:t("achShareTx")(achName(id)), url:refLink(), file}); }
+// hooks (wrappers: the original functions are not changed)
+{ const f=addXP; addXP=function(n){ const r=f.apply(this,arguments); if(n>0){ const d=new Date(), h=d.getHours(), c=achC(); if(h>=23||h<5) c.night=1; else if(h<7) c.early=1; if(d.getDay()===0) c.sun=1; } badgeSoon(); return r; }; }
+{ const f=finishGame; finishGame=function(){ const g=game; const r=f.apply(this,arguments); try{ if(g && g.results && g.results.some(Boolean)){ achInc("games"); if(S.settings.staff && S.settings.staffRead) achInc("staff"); } badgeSoon(); }catch(e){} return r; }; }
+{ const f=qzFinish; qzFinish=function(){ const r=f.apply(this,arguments); try{ const me=QZ.players.filter(p=>!p.bot&&!p.remote); achInc("quiz",me.reduce((a,p)=>a+((+p.ok)|0),0)); if(QZ.players.length>=4) achC().quiz4=1; achInc("games"); badgeSoon(); }catch(e){} return r; }; }
+{ const f=eloApply; eloApply=function(key,opp,res){ const r=f.apply(this,arguments); try{ const c=achC(); if(res===1){ c.wRun=achN("wRun")+1; c.wBest=Math.max(achN("wBest"),c.wRun); } else c.wRun=0; badgeSoon(); }catch(e){} return r; }; }
+{ const f=shareIt; shareIt=function(){ try{ achInc("share"); badgeSoon(); }catch(e){} return f.apply(this,arguments); }; }
+{ const f=pfTab; pfTab=function(v){ f.apply(this,arguments); document.body.classList.toggle("pf-suc",v==="suc"); achPopClose(); if(v==="suc"){ try{ badgeCheck(); }catch(e){} renderAch(); } }; }
+{ const f=renderFiche; renderFiche=function(){ const r=f.apply(this,arguments); if($("progPane").dataset.tab==="suc"){ try{ badgeCheck(); }catch(e){} renderAch(); } return r; }; }
+{ const f=ntfDo; ntfDo=function(a){ if(a && a.k==="badges"){ openSet("progress"); pfTab("suc"); return; } return f.apply(this,arguments); }; }
+NTF_ICON.badge="medal";
+window.addEventListener("message",e=>{ if(e.origin===location.origin && e.data && e.data.source==="clavio") badgeSoon(); }); // back from a song of the Play player: its stars
+{ const _ms=mergeState; mergeState=function(local, cloud){ const r=_ms.apply(this,arguments); const c=achO(cloud)?cloud:{}, m=r.merged;
+    const mx=(a,b)=>{ const o={}; [a,b].forEach(x=>{ if(achO(x)) Object.entries(x).forEach(([k,v])=>{ v=+v; if(Number.isFinite(v)) o[k]=Math.max(o[k]||0,v); }); }); return o; };
+    if(achO(local.cnt)||achO(c.cnt)) m.cnt=mx(local.cnt,c.cnt); // counters: max per key
+    if(achO(local.songStars)||achO(c.songStars)) m.songStars=mx(local.songStars,c.songStars);
+    if(achO(local.badges)||achO(c.badges)){ const o={}; [local.badges,c.badges].forEach(x=>{ if(achO(x)) Object.entries(x).forEach(([k,d])=>{ if(typeof d==="string" && (!o[k] || d<o[k])) o[k]=d; }); }); m.badges=o; } // union, the earliest date
+    r.changed=JSON.stringify(m)!==JSON.stringify(local); return r; }; }
+setTimeout(()=>{ try{ badgeCheck(); }catch(e){} },1500);
+/* ==== fin Succès ==== */
 
 // ---------- Boot ----------
 
