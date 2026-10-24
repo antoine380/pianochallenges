@@ -187,6 +187,7 @@ const playing = () => !document.getElementById('duHud').hidden && document.getEl
 const paired = await waitFor(B, playing, 12000) && await waitFor(C, playing, 6000);
 check('duel en ligne : les deux joueurs jouent', paired);
 if (paired) {
+  await B.bringToFront(); await W(B, 200);
   await click(B, '#rnQuit'); await W(B, 200); P = await panel(B);
   check('duel en ligne : « classée … défaite » + « adversaire continue sans toi »', P && /défaite/.test(P.s) && /adversaire continue sans toi/.test(P.s), P);
   const s1 = await tr(B, 'gmBar'); await W(B, 900);
@@ -202,6 +203,23 @@ const E = await open('en');
 await learn(E, 0); await key(E, 61); await W(E, 200); await mode(E, 'games'); await W(E, 200); P = await panel(E);
 check('EN : « Leave the game? » / Keep playing / Leave', P && P.t === 'Leave the game?' && await ev(E, () => document.getElementById('lvStay').textContent.startsWith('Keep playing') && document.getElementById('lvGo').textContent.startsWith('Leave')), P);
 await E.close();
+
+// ---- 12. ports MIDI virtuels (retour du 24/10/2026 : « Session réseau » sur l'iPad) ----
+const V = await open();
+await waitFor(V, () => document.getElementById('midiBtn').classList.contains('on'), 5000);
+await ev(V, () => { const M = window.__midi, mk = name => { const p = { id: 'v-' + name, name, state: 'connected', connection: 'open', type: 'input', _h: null }; Object.defineProperty(p, 'onmidimessage', { get() { return p._h; }, set(v) { p._h = v; } }); return p; };
+  ['Session re\u0301seau 1', 'SESSION RÉSEAU', 'Network Session 1', 'IAC Driver Bus 1'].forEach(n => M.access.inputs.set('v-' + n, mk(n))); if (M.access.onstatechange) M.access.onstatechange({}); });
+await W(V, 300);
+const shown = async () => ev(V, () => [document.getElementById('midiTxt').textContent, document.getElementById('hsMidiSub').textContent, document.getElementById('inStatus') ? document.getElementById('inStatus').textContent : ''].join(' | '));
+const virt = /session|r[ée]seau|network|iac/i;
+check('ports virtuels : ni dans le menu, ni sur l’accueil, ni dans les réglages', !virt.test(await shown()), await shown());
+await click(V, '#midiBtn'); await W(V, 300);
+check('ports virtuels : absents de la fenêtre Clavier MIDI', await ev(V, () => { const m = document.getElementById('midiModal'); return !/session|r[ée]seau|network|iac/i.test(m.textContent.normalize('NFC')); }));
+await V.keyboard.press('Escape'); await W(V, 200);
+await mode(V, 'quiz'); await W(V, 600);
+check('quiz : « 1 clavier MIDI détecté » (les ports virtuels ne comptent pas)', /^1 clavier MIDI détecté/.test(await txt(V, 'qzMidiHint')), await txt(V, 'qzMidiHint'));
+check('aucune erreur de page (V)', V.errs.length === 0, V.errs);
+await V.close();
 
 await b.close();
 console.log(fails.length ? `\n${fails.length} échec(s)` : '\nTout est bon');

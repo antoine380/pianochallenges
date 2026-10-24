@@ -113,6 +113,7 @@ public class MidiPlugin: CAPPlugin, CAPBridgedPlugin, UIAdaptivePresentationCont
             var offline: Int32 = 0
             MIDIObjectGetIntegerProperty(source, kMIDIPropertyOffline, &offline)
             if offline != 0 { continue }
+            if MidiPlugin.isVirtual(source) { continue } // network sessions / IAC are not keyboards: never shown nor connected
             if started && !connected.contains(uid) {
                 if MIDIPortConnectSource(inputPort, source, MidiPlugin.refCon(for: uid)) == noErr {
                     connected.insert(uid)
@@ -126,6 +127,13 @@ public class MidiPlugin: CAPPlugin, CAPBridgedPlugin, UIAdaptivePresentationCont
         if notify && signature != lastSignature { notifyListeners("statechange", data: ["inputs": inputs]) }
         lastSignature = signature
         return inputs
+    }
+
+    /// A network session (Wi-Fi MIDI, « Session réseau ») or a virtual bus: not a keyboard.
+    private static func isVirtual(_ source: MIDIEndpointRef) -> Bool {
+        if source == MIDINetworkSession.default().sourceEndpoint() { return true }
+        let n = name(of: source).folding(options: [.caseInsensitive, .diacriticInsensitive], locale: nil).lowercased()
+        return n.contains("network") || n.contains("session") || n.contains("reseau") || n.hasPrefix("iac")
     }
 
     private static func name(of object: MIDIObjectRef) -> String {

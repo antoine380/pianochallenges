@@ -3781,7 +3781,9 @@ function calibApply(){
 }
 // most keyboards say their size in their name ("Keystation 49", "Launchkey 61"...); a few are known models
 // a virtual MIDI port of the system (macOS / iOS "Network Session 1" / « Session réseau 1 », IAC driver) is not a keyboard: never listed nor listened to
-const midiVirtual = n => /network\s*session|session\s*r[ée]seau|^iac\b|iac\s*driver/i.test(String(n||""));
+// virtual ports are not keyboards (macOS / iOS network sessions « Session réseau », IAC buses): never listed, counted nor listened to.
+// Case and accents do not matter (iOS may send decomposed accents).
+const midiVirtual = n => /network|session|reseau|\biac\b|\bbus\b/.test(String(n||"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase());
 function guessKbdSize(name){
   if(!name || S.settings.kbdGuessFor===name) return;
   const n=String(name), m=n.match(/(^|\D)(24|25|32|37|49|61|76|88)(\D|$)/);
@@ -6506,7 +6508,8 @@ async function enableMidi(){
   if(!navigator.requestMIDIAccess){ $("midiBtn").classList.add("err"); $("midiTxt").textContent=t("midiNo"); notice(t("midiUnsupported")); return; }
   try{
     const acc=await navigator.requestMIDIAccess(); midiAcc=acc;
-    const bind=()=>{ document.querySelectorAll("#kbd .k-down").forEach(e=>e.classList.remove("k-down")); const names=[]; acc.inputs.forEach(inp=>{
+    const bind=()=>{ if(midiVirtual(S.settings.midiInput)){ S.settings.midiInput=""; save(); } // a virtual port saved as « the » keyboard would mute the real ones
+      document.querySelectorAll("#kbd .k-down").forEach(e=>e.classList.remove("k-down")); const names=[]; acc.inputs.forEach(inp=>{
         if((inp.state && inp.state!=="connected") || midiVirtual(inp.name)){ inp.onmidimessage=null; return; } // Chrome keeps unplugged ports in the map; virtual ports are not keyboards
         names.push(inp.name); inp.onmidimessage=ev=>{
         const [st,note,vel]=ev.data;
