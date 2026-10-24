@@ -1,5 +1,5 @@
 // T4 : page Play (iframe) — notes MIDI relayées, hôte silencieux, sortie de Play.
-import { launch, closeOnboarding, gotoExercise, state, midi, URL } from './lib.mjs';
+import { launch, closeOnboarding, gotoExercise, state, midi, URL, leaveIfAsked } from './lib.mjs';
 const wait = (p, ms) => p.waitForTimeout(ms);
 const { browser, page } = await launch({ mode: 'ok' });
 await page.goto(URL); await wait(page, 1000);
@@ -42,7 +42,7 @@ await page.keyboard.press('Space'); await wait(page, 150);
 console.log('Espace (focus hôte) → hôte playing =', (await state(page)).playing, 'prompt', (await state(page)).prompt);
 await wait(page, 500);
 // quitter Play → GAMES
-await page.click('.mode-item[data-mode="games"]'); await wait(page, 600); await closeOnboarding(page);
+await page.click('.mode-item[data-mode="games"]'); await wait(page, 600); await leaveIfAsked(page); await closeOnboarding(page); // morceau encore en cours : « Quitter la partie ? » → Quitter
 const src = await page.evaluate(() => document.getElementById('playFrame').getAttribute('src'));
 console.log('après GAMES: iframe src =', src, '| frames:', page.frames().map(x => x.url()));
 const errBefore = page.consoleErrors.length;
