@@ -1955,6 +1955,120 @@ body.setup #setupPanel{flex:1 1 auto;min-height:0}
 @media (max-height:420px) and (orientation:landscape){ #qzPlay .qz-kb{min-height:60px} #qzPlay{gap:6px} }
 #qzEnd:not([hidden]){flex:1 1 auto;justify-content:center}
 
+
+/* ---- quiz v3: bigger theme, names on the answers at the reveal only, the race on a staff (one note per player, its head = the face) ---- */
+#qzPlay .qz-top{gap:clamp(8px,1.2vw,14px)}
+#qzPlay .qz-chip{display:inline-flex;align-items:center;gap:8px;padding:4px 16px 4px 5px;font-family:var(--f-display);font-weight:600;font-size:clamp(1rem,1.1vw + .5rem,1.3rem);line-height:1.1;letter-spacing:.01em;
+  background:var(--tc);color:#fff;box-shadow:0 10px 18px -12px var(--tc);max-width:min(46%,320px);min-width:0;flex:none}
+#qzPlay .qz-chip b{font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-shadow:0 1px 2px rgba(0,0,0,.25)}
+.qz-ci{width:clamp(30px,2.4vw + 12px,42px);height:clamp(30px,2.4vw + 12px,42px);flex:none;border-radius:50%;display:grid;place-items:center;background:rgba(255,255,255,.22)}
+.qz-ci svg{width:86%;height:86%;display:block;filter:drop-shadow(0 3px 4px rgba(10,6,30,.35))}
+#qzPlay .qz-num{white-space:nowrap}
+#qzNext{margin-left:auto;--mc:var(--m-quiz)}
+/* your own choice when you are alone on this screen: a quiet outline, nothing for the others */
+.qz-a.wrong{opacity:1} .qz-a.wrong>:not(.qz-who){opacity:.5} .qz-a.wrong{background:color-mix(in srgb,var(--surface) 70%,transparent)}
+.qz-kb .ans.wrong{opacity:1;background:color-mix(in srgb,var(--ac) 38%,#2b2560);color:rgba(255,255,255,.6)}
+.nx-s{display:none}
+@media (max-width:640px){ .nx-l{display:none} .nx-s{display:inline} #qzNext kbd{display:none} }
+#qzAns{gap:clamp(14px,2.2vh,24px) clamp(14px,1.6vw,22px)}
+@media (max-width:640px){ #qzAns{gap:14px 10px} }
+@media (max-height:420px) and (orientation:landscape){ #qzAns{gap:9px 12px} }
+.qz-kb.plain .qz-w span{opacity:.75}
+/* settings: game configuration, help switch, keyboards, zones */
+.qz-difl{display:block;margin:2px 0 -2px} #qzSetup .qz-row.qz-conf1{margin-top:0}
+.qz-help{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:8px 12px;border-radius:var(--r-md);background:var(--surface);box-shadow:var(--shadow-card);cursor:pointer}
+.qz-help>span:first-child{display:flex;flex-direction:column;min-width:0} .qz-help b{font-weight:800;font-size:.92rem} .qz-help small{color:var(--muted);font-size:.74rem}
+.qz-help .sw{flex:none}
+.qz-helpbox{display:flex;flex-direction:column;gap:inherit} .qz-help .hs{display:none} #qzWhere{flex:none}
+@media (max-width:640px), (max-height:420px){ .qz-help small{display:none} .qz-help{padding:6px 12px} .qz-difl{display:none!important} }
+@media (max-width:640px){ #qzSetup #qzModeRow>.su-h{display:none} #qzSetup #qzModeRow>.seg{margin-top:4px} #qzSetup #qzPlayers{gap:4px 8px;padding:2px 0} #qzSetup #qzPlayers input{padding:5px 10px} #qzSetup #qzModeRow .su-h{margin-top:4px!important} .qz-zone svg{height:24px} .qz-zmap{margin-top:2px} #qzZoneDevRow{margin-top:4px}
+  #qzSetup .qz-theme{min-height:32px;padding:6px 10px} #qzSetup .qz-themes{gap:6px;padding-top:8px} #qzSetup .qz-theme b{font-size:.86rem} #qzSetup .qz-theme small{display:none} #qzSetup .qz-ti{width:30px;height:30px} .qz-box .qz-helpbox .su-h{display:none} .qz-box .qz-help{box-shadow:none;background:var(--surface-2);margin-top:6px} .qz-help .hl{display:none} .qz-help .hs{display:inline}
+  .qz-row>.qz-helpbox{flex:1;min-width:0} .qz-row>.qz-helpbox .qz-help{margin:0;padding:5px 10px} }
+@media (max-height:420px) and (orientation:landscape){ #qzSetup .su-side{display:grid!important;grid-template-columns:minmax(0,1fr) 200px;grid-template-rows:auto minmax(0,1fr) auto;gap:8px 10px;align-items:start}
+  #qzSetup #qzWhere{grid-column:2;grid-row:1;margin:0;width:100%} #qzSetup #qzLocalBox:not([hidden]){display:contents!important}
+  #qzSetup #qzLocalBox>.su-box{grid-column:1;grid-row:1/4;align-self:stretch;align-content:flex-start;min-height:0} #qzSetup #qzLocalBox>.qz-go{grid-column:2;grid-row:3;align-self:end}
+  #qzSetup #qzOnlineBox{grid-column:1/-1;grid-row:2/4} #qzSetup .qz-zone .zl{flex-direction:row;justify-content:space-between;align-items:baseline;padding:0 6px} #qzSetup .qz-zone svg{height:15px} #qzSetup .qz-zmap{margin-top:0}
+  #qzSetup #qzPlayers{grid-template-columns:repeat(2,auto minmax(0,1fr) auto);gap:4px 8px;padding:0} #qzSetup #qzPlayers[data-mode="dev"]{grid-template-columns:repeat(2,auto minmax(0,1fr) minmax(0,1fr))}
+  #qzSetup #qzPlayers input{padding:4px 8px} #qzSetup #qzPlayers .qz-sel{padding:4px 6px} #qzZoneDevRow .su-lbl{display:none}
+  #qzSetup #qzN{flex:1 1 200px;width:auto} #qzSetup #qzModeRow{flex:2 1 320px;width:auto} #qzSetup #qzModeRow .seg{margin:0} #qzSetup #qzZoneDevRow{width:100%;margin:0} .qz-zmap{width:100%} .qz-zone svg{height:20px} .qz-zone .zl{flex-direction:row;justify-content:space-between} #qzSetup .qz-helpbox{flex-direction:row;align-items:center} #qzSetup .qz-helpbox .su-h{display:none} }
+#qzPlayers{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:6px 8px;align-items:center;padding:4px 0}
+#qzPlayers .qz-pl{display:contents}
+#qzPlayers .qz-pin{justify-self:stretch;text-align:right}
+#qzPlayers[data-mode="dev"]{grid-template-columns:auto minmax(0,1fr) minmax(0,1.1fr)}
+#qzPlayers .qz-pin select,.qz-sel{width:100%;max-width:none;font:inherit;font-size:.82rem;font-weight:700;color:var(--ink);background:var(--surface-2);border:0;border-radius:10px;padding:7px 8px}
+#qzPlayers .dup select{box-shadow:0 0 0 2px var(--warn)}
+#qzZoneDevRow .qz-sel{flex:1;min-width:0}
+.qz-warn{color:var(--warn);font-weight:700;margin:0}
+.qz-zmap{display:flex;gap:3px;margin-top:6px}
+.qz-zone{flex:1 1 0;min-width:0;display:flex;flex-direction:column;gap:3px}
+.qz-zone .zl{display:flex;flex-direction:column;gap:0;padding:2px 6px;border-radius:8px;background:var(--pc);color:#15122e;line-height:1.15;min-width:0}
+.qz-zone .zl b{font-size:.76rem;font-weight:800;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0} .qz-zone .zl small{font-size:.66rem;font-weight:800;white-space:nowrap;opacity:.85}
+.qz-zone svg{display:block;width:100%;height:34px} .qz-zone .zw{fill:color-mix(in srgb,var(--pc) 30%,#fff);stroke:color-mix(in srgb,var(--pc) 60%,#000);stroke-width:.4} .qz-zone .zb{fill:#2b2560}
+.qz-a.mine{box-shadow:0 0 0 2px color-mix(in srgb,var(--ink) 45%,transparent),var(--shadow-card)}
+/* names on the chosen answer, at the reveal */
+.qz-who{position:absolute;top:auto;bottom:calc(100% - 11px);left:auto;right:10px;display:flex;flex-direction:row-reverse;gap:4px;z-index:2;pointer-events:none;max-width:calc(100% - 20px)}
+.qz-wc{display:inline-flex;align-items:center;gap:4px;height:22px;padding:0 8px 0 2px;border-radius:999px;background:var(--pc);color:#15122e;font-size:.74rem;font-weight:800;line-height:1;
+  box-shadow:0 0 0 2px var(--surface),0 6px 12px -8px rgba(10,6,30,.6);min-width:0;animation:qzWho 260ms var(--ease-out) both}
+.qz-wc b{font-weight:800;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:9ch}
+.qz-wc .av,.qz-kw .av{width:18px;height:18px;border-radius:50%;overflow:hidden;flex:none;display:block;background:#fff}
+.qz-wc .av svg,.qz-wc .av img,.qz-kw .av svg,.qz-kw .av img,.qz-hd .av svg,.qz-hd .av img{width:100%;height:100%;display:block;object-fit:cover}
+.qz-a{container-type:inline-size}
+@container (max-width:250px){ .qz-who.many .qz-wc{padding-right:2px} .qz-who.many .qz-wc b{display:none} .qz-who.many{gap:0} .qz-who.many .qz-wc+.qz-wc{margin-right:-5px} }
+@keyframes qzWho{from{opacity:0;transform:translateY(4px) scale(.96)}}
+.qz-kw{position:absolute;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:2px;pointer-events:none}
+.qz-w .qz-kw{bottom:calc(14px + 1.35rem);flex-direction:row;flex-wrap:wrap;justify-content:center;width:100%}
+.qz-b .qz-kw{top:6px}
+.qz-kw .av{box-shadow:0 0 0 2px var(--pc),0 0 0 3px #15122e}
+.qz-w,.qz-b{position:relative} .qz-b{position:absolute}
+/* the race */
+.qz-race{--sp:clamp(14px,2.9vh,32px);--hd:calc(var(--sp) * 1.16);flex:none;position:relative;background:var(--surface);border-radius:var(--r-lg);box-shadow:var(--shadow-card);
+  padding:calc(var(--sp) * 1.05) clamp(10px,1.4vw,18px) calc(var(--sp) * 1.3);container:race/inline-size;color:var(--ink)}
+.qz-staff{position:relative;height:calc(var(--sp) * 4 + 1.5px);
+  background:repeating-linear-gradient(to bottom,color-mix(in srgb,var(--ink) 34%,transparent) 0 1.5px,transparent 1.5px var(--sp))}
+.qz-clef{position:absolute;left:0;top:0;width:calc(var(--sp) * 3);height:calc(var(--sp) * 4);overflow:visible;fill:currentColor;font-family:Bravura;opacity:0;transition:opacity 200ms ease}
+.qz-race.fnt .qz-clef{opacity:.85}
+.qz-fin{position:absolute;right:0;top:0;height:100%;width:calc(var(--sp) * .55);border-left:1.5px solid var(--ink);border-right:calc(var(--sp) * .22) solid var(--m-quiz)}
+.qz-track{position:absolute;left:calc(var(--sp) * 2.9);right:calc(var(--sp) * .95);top:0;bottom:0}
+.qz-ln{position:absolute;left:0;width:calc(100% - var(--hd));height:var(--hd);top:calc((var(--s) + .5) * var(--sp) + .75px - var(--hd) / 2);transition:transform 600ms var(--ease-out);will-change:transform}
+.qz-ln.s0{--s:0} .qz-ln.s1{--s:1} .qz-ln.s2{--s:2} .qz-ln.s3{--s:3}
+.qz-hd{position:absolute;left:0;top:0;width:var(--hd);height:var(--hd);border-radius:50%;transition:transform 300ms var(--ease-out)}
+.qz-hd .av{position:absolute;inset:0;border-radius:50%;overflow:hidden;background:#fff;box-shadow:0 0 0 2px var(--pc),0 4px 10px -4px rgba(10,6,30,.55);transition:opacity 200ms ease,filter 200ms ease}
+.qz-lay{position:absolute;inset:0;pointer-events:none}
+.qz-st{position:absolute;width:2px;border-radius:1px;background:var(--ink);height:calc(var(--sp) * 2.6)}
+.qz-ln.s2 .qz-st,.qz-ln.s3 .qz-st{left:calc(var(--hd) - 2px);bottom:50%}
+.qz-ln.s0 .qz-st,.qz-ln.s1 .qz-st{left:0;top:50%}
+.qz-ok{position:absolute;right:-4px;top:-4px;width:max(13px,calc(var(--hd) * .5));height:max(13px,calc(var(--hd) * .5));border-radius:50%;background:var(--m-quiz);box-shadow:0 0 0 2px var(--surface);
+  opacity:0;transform:scale(.6);transition:opacity 160ms ease,transform 200ms var(--ease-out)}
+.qz-ok::after{content:"";position:absolute;left:30%;top:20%;width:28%;height:44%;border:solid #fff;border-width:0 2px 2px 0;transform:rotate(45deg)}
+.qz-ln.ans .qz-ok{opacity:1;transform:none}
+.qz-ln.ok .qz-ok{background:var(--good)} .qz-ln.ko .qz-ok{background:var(--bad)}
+.qz-ln.ko .qz-ok::after{left:44%;top:18%;width:0;height:64%;border-width:0 0 0 2px;transform:rotate(45deg);box-shadow:none}
+.qz-ln.ko .qz-ok::before{content:"";position:absolute;left:44%;top:18%;height:64%;border-left:2px solid #fff;transform:rotate(-45deg)}
+.qz-ln.wait .qz-hd .av{opacity:.55;filter:grayscale(.5)}
+.qz-ln.turn .qz-hd .av{box-shadow:0 0 0 2px var(--pc),0 0 0 5px color-mix(in srgb,var(--pc) 35%,transparent)}
+.qz-ln.lead .qz-hd{transform:scale(1.18)} .qz-ln.lead{z-index:1}
+.qz-ln.lead .qz-hd .av{box-shadow:0 0 0 2.5px var(--pc),0 6px 16px -4px var(--pc)}
+.qz-ln.gone{opacity:.45}
+.qz-tg{position:absolute;top:50%;left:calc(var(--hd) + 7px);transform:translateY(-50%);display:flex;align-items:baseline;gap:6px;white-space:nowrap;padding:0 7px;border-radius:999px;
+  background:color-mix(in srgb,var(--surface) 88%,transparent);font-size:min(.9rem,max(.58rem,calc(var(--sp) * .55)));line-height:1.2;pointer-events:none}
+.qz-ln.flip .qz-tg{left:auto;right:calc(100% + 7px)}
+.qz-ln.lead.flip .qz-tg{right:calc(100% + 9px)}
+.qz-tg b{font-weight:800;max-width:12ch;overflow:hidden;text-overflow:ellipsis}
+.qz-tg .qz-pts{font-family:var(--f-display);font-weight:700;font-variant-numeric:tabular-nums}
+.qz-tg small{font-weight:800;font-size:.86em;color:var(--muted)} .qz-tg small:empty{display:none}
+.qz-ln.ok .qz-tg small{color:var(--good)} .qz-ln.ko .qz-tg small{color:var(--bad)}
+@container race (max-width:430px){ .qz-ln.ans:not(.ok):not(.ko) .qz-tg small{display:none} .qz-tg b{max-width:8ch} }
+.qz-raceend{width:min(760px,100%)} .qz-raceend:empty{display:none}
+#qzEnd .qz-race{--sp:clamp(15px,2.6vh,28px)}
+@media (max-width:640px){ #qzPlay .qz-kb{min-height:84px} #qzPlay .qz-q{grid-template-columns:auto minmax(0,1fr);text-align:left;justify-items:start;gap:12px;padding:10px 12px} #qzPlay .qz-img{width:52px;height:52px;border-radius:14px} }
+/* phones in landscape: the race sits next to the piano */
+#qzNum .qn-w{white-space:pre}
+@media (max-width:640px){ #qzNum .qn-w{display:none} #qzQuit{font-size:0;width:40px;padding:0;display:inline-grid;place-items:center;flex:none} #qzQuit::before{content:"✕";font-size:1.05rem;font-weight:800} }
+@media (max-height:420px) and (orientation:landscape){ #qzPlay:not([hidden]){display:grid;grid-template-columns:minmax(0,1.45fr) minmax(0,1fr);grid-template-rows:auto auto auto minmax(0,1fr);align-content:stretch}
+  #qzPlay>.qz-top,#qzPlay>.qz-q,#qzPlay>.qz-ans{grid-column:1/-1} #qzPlay>.qz-kb{grid-column:1;max-height:none;height:auto} #qzPlay>.qz-race{grid-column:2;align-self:stretch;display:flex;flex-direction:column;justify-content:center}
+  .qz-race{--sp:16px;padding-block:15px 19px} .qz-tg{padding:0 5px} #qzPlay .qz-chip{padding:2px 12px 2px 3px;font-size:.95rem} .qz-ci{width:26px;height:26px} }
+@media (max-width:640px){ #qzPlay .qz-chip{max-width:52%} #qzPlay .qz-top .qz-timer{min-width:24px} #qzNext{padding-inline:12px} }
+@media (prefers-reduced-motion:reduce){ .qz-ln,.qz-hd,.qz-ok{transition:none} .qz-wc{animation:none} }
 /* ---- first launch "Play your first note": the card takes the screen, its keyboard takes the height left ---- */
 .fn-kb{flex:1 1 auto;height:auto;min-height:140px;max-height:clamp(170px,40vh,440px)}
 @media (min-width:761px) and (min-height:561px){ .fn-card{width:min(1600px,100%);height:calc(100dvh - 40px)} .fn-hero h1{font-size:clamp(2.2rem,min(4.4vw,7vh),4.4rem)} .fn-hero p{font-size:clamp(1.02rem,1.9vh,1.3rem)}
@@ -2155,10 +2269,13 @@ body.setup #setupPanel{flex:1 1 auto;min-height:0}
       <div class="qz-wrap">
         <div class="qz-col">
           <h3 class="su-h" data-i="qzThemeH"></h3><div class="qz-themes" id="qzThemes"></div>
-          <div class="qz-row"><span class="su-lbl" data-i="qzAnsH"></span><div class="seg su-seg" id="qzAnsType"></div></div>
-          <h3 class="su-h" data-i="qzDiffH"></h3><div class="qz-diffs" id="qzDiff"></div>
-          <div class="qz-row"><span class="su-lbl" data-i="qzCountH"></span><div class="seg su-seg" id="qzCount"></div><span class="su-lbl" data-i="qzTimeH"></span><div class="seg su-seg" id="qzTime"></div></div>
-          <label class="su-help mini"><input type="checkbox" id="qzKeysOpt"><span><b data-i="qzKeysT"></b></span></label>
+          <h3 class="su-h" data-i="qzConfH"></h3>
+          <div class="qz-row qz-conf1"><span class="su-lbl" data-i="qzAnsH"></span><div class="seg su-seg" id="qzAnsType"></div></div>
+          <span class="su-lbl qz-difl" data-i="qzDiffH"></span><div class="qz-diffs" id="qzDiff" role="group"></div>
+          <div class="qz-row"><span class="su-lbl" data-i="qzCountH"></span><div class="seg su-seg" id="qzCount"></div></div>
+          <div class="qz-row"><span class="su-lbl" data-i="qzTimeH"></span><div class="seg su-seg" id="qzTime"></div></div>
+          <div id="qzHelpBox" class="qz-helpbox"><h3 class="su-h" data-i="qzHelpH"></h3>
+          <label class="qz-help"><span><b><span class="hl" data-i="qzKeysT"></span><span class="hs" data-i="qzKeysS"></span></b><small data-i="qzKeysD"></small></span><span class="sw"><input type="checkbox" id="qzKeysOpt" role="switch"><i></i></span></label></div>
           <button class="btn primary qz-tonext" id="qzToPlayers" type="button" data-i="qzToPlayersT"></button>
         </div>
         <aside class="su-side">
@@ -2166,7 +2283,8 @@ body.setup #setupPanel{flex:1 1 auto;min-height:0}
           <div id="qzLocalBox" class="qz-box">
             <section class="su-box"><h3 class="su-h" data-i="qzPlayersH"></h3><div class="seg su-seg" id="qzN"></div>
               <div id="qzModeRow"><h3 class="su-h" style="margin-top:10px" data-i="qzModeH"></h3><div class="seg su-seg" id="qzMode"></div><p class="qz-hint" id="qzModeHelp"></p></div>
-              <div id="qzPlayers"></div>
+              <div id="qzZoneDevRow" class="qz-row" hidden><span class="su-lbl" data-i="qzZoneKbd"></span><select id="qzZoneDev" class="qz-sel"></select></div>
+              <div id="qzPlayers"></div><p class="qz-hint qz-warn" id="qzDevWarn" hidden></p><div class="qz-zmap" id="qzZoneMap" hidden></div>
               <div class="qz-row"><span class="su-lbl" data-i="qzBotsH"></span><div class="seg su-seg" id="qzBots"></div></div>
               <div class="qz-row" id="qzBotLvlRow"><span class="su-lbl" data-i="qzBotLvlH"></span><div class="seg su-seg" id="qzBotLvl"></div></div>
               <p class="qz-hint" id="qzMidiHint"></p></section>
@@ -2188,14 +2306,14 @@ body.setup #setupPanel{flex:1 1 auto;min-height:0}
       </div>
     </div>
     <div id="qzPlay" class="qz-col" hidden>
-      <div class="qz-top"><span class="qz-chip" id="qzTheme"></span><span class="qz-num" id="qzNum"></span><div class="qz-timer"><i id="qzBar"></i></div><button class="btn" id="qzQuit" type="button" data-i="qzQuit"></button></div>
+      <div class="qz-top"><span class="qz-chip" id="qzTheme"><span class="qz-ci" aria-hidden="true"></span><b></b></span><span class="qz-num" id="qzNum"></span><div class="qz-timer"><i id="qzBar"></i></div><button class="btn primary" id="qzNext" type="button" data-i="qzNextT" hidden></button><button class="btn" id="qzQuit" type="button" data-i="qzQuit"></button></div>
       <div class="qz-q"><div class="qz-img" id="qzImg"></div><div><p class="qz-turn" id="qzTurn" hidden></p><p class="qz-text" id="qzText"></p></div></div>
       <div class="qz-ans" id="qzAns"></div>
       <div class="qz-kb" id="qzKb" role="group"></div>
-      <div class="qz-foot"><div class="qz-scores" id="qzScores"></div><button class="btn primary" id="qzNext" type="button" data-i="qzNextT" hidden></button></div>
+      <div class="qz-race" id="qzRace" role="list"></div>
     </div>
     <div id="qzEnd" class="qz-col qz-end" hidden>
-      <p class="qz-endt" id="qzEndT"></p><div class="qz-podium" id="qzPodium"></div>
+      <p class="qz-endt" id="qzEndT"></p><div class="qz-podium" id="qzPodium"></div><div class="qz-raceend" id="qzRaceEnd"></div>
       <div class="qz-endb"><button class="btn" id="qzBack" type="button" data-i="qzSettings"></button><button class="btn primary" id="qzAgain" type="button" data-i="qzAgainT"></button></div>
     </div>
   </section>
@@ -2700,19 +2818,20 @@ const TXT = {
     duFriendly:"Amical", duBotTag:"bot", duGone:"a quitté", duOut:"terminé", duRated:"partie classée", duWinForfeit:"Victoire, ton adversaire est parti", duStalled:"Défaite : plus de nouvelles de toi pendant la partie", duWin:"Victoire !", duLoss:"Défaite", duDraw:"Égalité", duNewElo:"Nouvel ELO", duUnrated:"Partie amicale, ELO inchangé",
     duNewOpp:"Autre adversaire", duRematch:"Revanche", duRematchSent:"Revanche demandée…", duRematchAccept:"Accepter la revanche", duGoT:"Lancer la partie", duWaitOpp:(n,o,m)=>"Tu as fini avec "+m+". "+n+" joue encore ("+o+")…", eloL:"ELO", suFingT:"Doigtés (main droite)", optFing:"Doigtés sur le clavier (main droite)", suKeysH:"Tonalités", suKeysSimple:"Simples", suKeysSimpleD:"Sans dièse ni bémol : Do, Ré, Mi, Fa, Sol, La, Si", suKeysAll:"Toutes", suKeysAllD:"Avec les ♯ et les ♭", suKeysPick:"Au choix", suKeysPickD:"Je choisis les tonalités",
     suShuffleT:"Mélanger l'ordre", suLockedKeys:n=>n+" tonalité"+(n>1?"s":"")+" encore verrouillée"+(n>1?"s":"")+" (niveaux, ou « Tout débloquer » dans Réglages)", suNone:"Aucune tonalité débloquée dans ce choix", suModeN:"En notes", suModeND:"Do, Ré, Mi… une note après l'autre, de la tonique à l'octave.", suModeC:"En accords", suModeCD:"L'accord de chaque degré, du I au VII, plaqué ou note par note.", suNoChords:"Cette gamme n'a pas d'accords par degré.",
-    againB:"Recommencer", nextKeyB:l=>"Suivant : "+l, qzTabQuiz:"Quiz", qzTabPlayers:"Joueurs", qzToPlayersT:"Choisir les joueurs", optUiSound:"Sons de l'interface (survol des cartes, réponses du quiz)", qzAnsH:"Répondre avec", qzNotes:"Des notes", qzChords:"Des accords",
+    againB:"Recommencer", nextKeyB:l=>"Suivant : "+l, qzTabQuiz:"Quiz", qzTabPlayers:"Joueurs", qzToPlayersT:"Choisir les joueurs", optUiSound:"Sons de l'interface (survol des cartes, réponses du quiz)", qzAnsH:"Mode", qzNotes:"Des notes", qzChords:"Des accords",
     qzDiffN:["Do, Ré, Mi, Fa","4 notes blanches au hasard","4 notes au hasard, touches noires comprises"], qzDiffC:["Do, Fa, Sol, La mineur","Accords simples au hasard","Tous les accords, majeurs, mineurs et de 7e"],
-    qzBotsH:"Bots", qzBotLvlH:"Niveau", qzBotLvls:["Facile","Moyen","Fort"], qzBotThinks:"réfléchit…", qzYou:"toi", qzLeft:"a quitté",
+    qzBotsH:"Robots", qzBotLvlH:"Niveau", qzBotLvls:["Facile","Moyen","Fort"], qzBotThinks:"réfléchit…", qzYou:"toi", qzLeft:"a quitté",
     qzLocal:"Sur cet appareil", qzOnline:"En ligne", qzYourName:"Ton pseudo", qzGuest:"Invité", qzOnlineN:n=>n+(n>1?" joueurs en ligne":" joueur en ligne"), qzConnecting:"Connexion…",
     qzFriendH:"Avec un ami", qzCreateT:"Créer une partie", qzJoinT:"Rejoindre", qzCodeL:"Code", qzCopyT:"Copier le lien", qzCopied:"Lien copié", qzShareCode:"Donne ce code à tes amis (jusqu'à 4 joueurs), puis lance la partie.", qzWaitHost:"En attente du lancement par l'hôte…", qzHost:"hôte", qzLeaveT:"Quitter",
-    qzRandomH:"Joueur au hasard", qzSearchT:"Chercher un joueur", qzSearchingT:"Recherche d'un adversaire…", qzNobody:"Personne pour l'instant.", qzCancelT:"Annuler", qzVsBotT:"Jouer contre un bot",
+    qzRandomH:"Joueur au hasard", qzSearchT:"Chercher un joueur", qzSearchingT:"Recherche d'un adversaire…", qzNobody:"Personne pour l'instant.", qzCancelT:"Annuler", qzVsBotT:"Jouer contre un robot",
     qzNetErr:"Le jeu en ligne n'est pas disponible pour l'instant. Vérifie ta connexion.", qzNoRoom:"Partie introuvable : vérifie le code.", qzBadCode:"Le code fait 5 caractères.", qzHostLeft:"L'hôte a quitté la partie.", modeQuizSub:"De 1 à 4 joueurs", quizT:"Quiz", qzSub:"Réponds aux questions en jouant la note ou l'accord de la bonne réponse. Seul ou jusqu'à 4 joueurs.",
-    qzThemeH:"Thème", qzDiffH:"Difficulté", qzCountH:"Questions", qzTimeH:"Temps", qzKeysT:"Montrer les touches à jouer", qzPlayersH:"Joueurs", qzModeH:"Comment jouer à plusieurs ?", qzReady:"Prêt ?", qzGoT:"Lancer le quiz",
+    qzThemeH:"Thème", qzDiffH:"Niveau de difficulté", qzCountH:"Questions par partie", qzTimeH:"Temps pour répondre", qzKeysT:"Montrer les touches à jouer", qzPlayersH:"Joueurs", qzModeH:"Comment jouer à plusieurs ?", qzReady:"Prêt ?", qzGoT:"Lancer le quiz",
     qzQuestions:"questions", qzLoading:"Chargement des questions…", qzLoadErr:"Impossible de charger les questions. Vérifie ta connexion.",
     qzDiffs:["Facile","Moyen","Difficile"],
     qzModes:["Un clavier chacun","Zones d'un piano","Chacun son tour"], qzModeD:["Chaque joueur répond sur son clavier MIDI (ou sur l'écran). Le plus rapide gagne le plus de points.","Un seul piano partagé : chaque joueur joue dans sa zone du clavier.","Un seul clavier : les joueurs répondent à tour de rôle, une question chacun."],
     qzPlayer:"Joueur", qzKeyboard:"Clavier", qzScreen:"Écran", qzZone:"Zone", qzTurnN:n=>"Joue en "+n+(n===1?"er":"e"), qzMidiOk:n=>n+(n>1?" claviers MIDI détectés":" clavier MIDI détecté"), qzMidiNone:"Aucun clavier MIDI détecté : tu peux répondre en touchant les réponses ou avec le clavier de l'ordinateur.",
-    qzQ:(a,b)=>"Question "+a+" / "+b, qzPlay:"Joue", qzKbL:"Piano des réponses", qzTurnOf:n=>"Au tour de "+n, qzWaiting:"réfléchit…", qzAnswered:"a répondu", qzNoAns:"pas de réponse", qzWrong:"raté", qzQuit:"Quitter", qzNextT:"Question suivante",
+    qzQ:(a,b)=>"Question "+a+" / "+b, qzPlay:"Joue", qzKbL:"Piano des réponses", qzTurnOf:n=>"Au tour de "+n, qzRaceL:"La course : chaque note avance avec les points", qzSoloT:"Seul", qzNextS:"Suivante", qzConfH:"Configuration de la partie", qzHelpH:"Aide", qzKeysD:"Les réponses en couleur sur le piano", qzKeysS:"Touches à jouer", qzZoneKbd:"Piano partagé",
+    qzScreenOnce:"L'écran ne peut servir qu'à un joueur : branche un autre clavier MIDI (ou choisis « Chacun son tour »).", qzKbdOnce:"Chaque joueur a besoin de son propre clavier : branche un autre clavier MIDI ou choisis « Zones d'un piano ».", qzTaken:n=>" (pris par "+n+")", qzNoMidiZ:"Branche un clavier MIDI pour jouer en zones.", qzWaiting:"réfléchit…", qzAnswered:"a répondu", qzNoAns:"pas de réponse", qzWrong:"raté", qzQuit:"Quitter", qzNextT:"Question suivante",
     qzWinner:n=>n+" gagne !", qzSoloEnd:(a,b)=>a+" bonne"+(a>1?"s":"")+" réponse"+(a>1?"s":"")+" sur "+b, qzRight:(a,b)=>a+" / "+b+" bonnes réponses", qzSettings:"Changer les réglages", qzAgainT:"Rejouer", suKey:"Tonalité", suTimer:"Chrono", suHelps:"Aides", suHowT:"Comment ça marche ?", suGo:"Commencer", suMastered:"maîtrisées", suChange:"Changer de choix",
     suPickScale:"Quelle gamme ?", suPickChord:"Quel accord ?", suPickProg:"Quelle progression ?", suPickEar:"Qu'est-ce qu'on écoute ?",
     suSub_scales:"Choisis une gamme et sa tonalité, règle le chrono et les aides, puis joue-la jusqu'à la réussir.", suSub_chords:"Choisis un accord et sa tonalité. Chaque renversement coché est un exercice.", suSub_harmony:"Choisis une tonalité : chaque degré coché est un exercice.", suSub_prog:"Choisis une progression et sa tonalité, puis enchaîne les accords.", suSub_ear:"Choisis ce que tu veux reconnaître : 10 écoutes par partie.",
@@ -2865,19 +2984,20 @@ const TXT = {
     duFriendly:"Friendly", duBotTag:"bot", duGone:"left", duOut:"finished", duRated:"rated game", duWinForfeit:"You win, your opponent left", duStalled:"You lose: no sign of you during the game", duWin:"You win!", duLoss:"You lose", duDraw:"Draw", duNewElo:"New ELO", duUnrated:"Friendly game, ELO unchanged",
     duNewOpp:"New opponent", duRematch:"Rematch", duRematchSent:"Rematch asked…", duRematchAccept:"Accept the rematch", duGoT:"Start the game", duWaitOpp:(n,o,m)=>"You finished with "+m+". "+n+" is still playing ("+o+")…", eloL:"ELO", suFingT:"Fingering (right hand)", optFing:"Fingering on the keys (right hand)", suKeysH:"Keys", suKeysSimple:"Simple", suKeysSimpleD:"No sharp or flat: C, D, E, F, G, A, B", suKeysAll:"All", suKeysAllD:"With the ♯ and ♭", suKeysPick:"Pick", suKeysPickD:"I choose the keys",
     suShuffleT:"Shuffle the order", suLockedKeys:n=>n+" key"+(n!==1?"s":"")+" still locked (levels, or “Unlock everything” in Settings)", suNone:"No unlocked key in this choice", suModeN:"As notes", suModeND:"C, D, E… one note after another, from the root to the octave.", suModeC:"As chords", suModeCD:"The chord of each degree, from I to VII, at once or note by note.", suNoChords:"This scale has no chord per degree.",
-    againB:"Start again", nextKeyB:l=>"Next: "+l, qzTabQuiz:"Quiz", qzTabPlayers:"Players", qzToPlayersT:"Choose the players", optUiSound:"Interface sounds (card hover, quiz answers)", qzAnsH:"Answer with", qzNotes:"Notes", qzChords:"Chords",
+    againB:"Start again", nextKeyB:l=>"Next: "+l, qzTabQuiz:"Quiz", qzTabPlayers:"Players", qzToPlayersT:"Choose the players", optUiSound:"Interface sounds (card hover, quiz answers)", qzAnsH:"Mode", qzNotes:"Notes", qzChords:"Chords",
     qzDiffN:["C, D, E, F","4 random white notes","4 random notes, black keys included"], qzDiffC:["C, F, G, A minor","Random simple chords","Every chord: major, minor and 7th"],
-    qzBotsH:"Bots", qzBotLvlH:"Level", qzBotLvls:["Easy","Medium","Strong"], qzBotThinks:"thinking…", qzYou:"you", qzLeft:"left",
+    qzBotsH:"Robots", qzBotLvlH:"Level", qzBotLvls:["Easy","Medium","Strong"], qzBotThinks:"thinking…", qzYou:"you", qzLeft:"left",
     qzLocal:"On this device", qzOnline:"Online", qzYourName:"Your nickname", qzGuest:"Guest", qzOnlineN:n=>n+(n>1?" players online":" player online"), qzConnecting:"Connecting…",
     qzFriendH:"With a friend", qzCreateT:"Create a game", qzJoinT:"Join", qzCodeL:"Code", qzCopyT:"Copy link", qzCopied:"Link copied", qzShareCode:"Give this code to your friends (up to 4 players), then start the game.", qzWaitHost:"Waiting for the host to start…", qzHost:"host", qzLeaveT:"Leave",
-    qzRandomH:"Random player", qzSearchT:"Find a player", qzSearchingT:"Looking for an opponent…", qzNobody:"Nobody right now.", qzCancelT:"Cancel", qzVsBotT:"Play a bot",
+    qzRandomH:"Random player", qzSearchT:"Find a player", qzSearchingT:"Looking for an opponent…", qzNobody:"Nobody right now.", qzCancelT:"Cancel", qzVsBotT:"Play a robot",
     qzNetErr:"Online play isn't available right now. Check your connection.", qzNoRoom:"Game not found: check the code.", qzBadCode:"The code has 5 characters.", qzHostLeft:"The host left the game.", modeQuizSub:"1 to 4 players", quizT:"Quiz", qzSub:"Answer the questions by playing the note or chord of the right answer. On your own or up to 4 players.",
-    qzThemeH:"Topic", qzDiffH:"Difficulty", qzCountH:"Questions", qzTimeH:"Time", qzKeysT:"Show the keys to play", qzPlayersH:"Players", qzModeH:"How do several people play?", qzReady:"Ready?", qzGoT:"Start the quiz",
+    qzThemeH:"Topic", qzDiffH:"Difficulty level", qzCountH:"Questions per game", qzTimeH:"Time to answer", qzKeysT:"Show the keys to play", qzPlayersH:"Players", qzModeH:"How do several people play?", qzReady:"Ready?", qzGoT:"Start the quiz",
     qzQuestions:"questions", qzLoading:"Loading the questions…", qzLoadErr:"Couldn't load the questions. Check your connection.",
     qzDiffs:["Easy","Medium","Hard"],
     qzModes:["One keyboard each","Zones of one piano","Take turns"], qzModeD:["Each player answers on their own MIDI keyboard (or on screen). The fastest scores the most.","One shared piano: each player plays in their own part of the keyboard.","One keyboard: players answer in turn, one question each."],
     qzPlayer:"Player", qzKeyboard:"Keyboard", qzScreen:"Screen", qzZone:"Zone", qzTurnN:n=>"Plays "+["1st","2nd","3rd","4th"][n-1], qzMidiOk:n=>n+(n>1?" MIDI keyboards found":" MIDI keyboard found"), qzMidiNone:"No MIDI keyboard found: you can answer by tapping the answers or with the computer keyboard.",
-    qzQ:(a,b)=>"Question "+a+" / "+b, qzPlay:"Play", qzKbL:"Answer piano", qzTurnOf:n=>n+"'s turn", qzWaiting:"thinking…", qzAnswered:"answered", qzNoAns:"no answer", qzWrong:"missed", qzQuit:"Quit", qzNextT:"Next question",
+    qzQ:(a,b)=>"Question "+a+" / "+b, qzPlay:"Play", qzKbL:"Answer piano", qzTurnOf:n=>n+"'s turn", qzRaceL:"The race: each note moves on with the points", qzSoloT:"Solo", qzNextS:"Next", qzConfH:"Game settings", qzHelpH:"Help", qzKeysD:"The answers in colour on the piano", qzKeysS:"Keys to play", qzZoneKbd:"Shared piano",
+    qzScreenOnce:"The screen can only be used by one player: plug in another MIDI keyboard (or choose “Take turns”).", qzKbdOnce:"Each player needs their own keyboard: plug in another MIDI keyboard or choose “Zones of one piano”.", qzTaken:n=>" (taken by "+n+")", qzNoMidiZ:"Plug in a MIDI keyboard to play in zones.", qzWaiting:"thinking…", qzAnswered:"answered", qzNoAns:"no answer", qzWrong:"missed", qzQuit:"Quit", qzNextT:"Next question",
     qzWinner:n=>n+" wins!", qzSoloEnd:(a,b)=>a+" right answer"+(a!==1?"s":"")+" out of "+b, qzRight:(a,b)=>a+" / "+b+" right answers", qzSettings:"Change settings", qzAgainT:"Play again", suKey:"Key", suTimer:"Timer", suHelps:"Helps", suHowT:"How does it work?", suGo:"Start", suMastered:"mastered", suChange:"Change choice",
     suPickScale:"Which scale?", suPickChord:"Which chord?", suPickProg:"Which progression?", suPickEar:"What do we listen to?",
     suSub_scales:"Pick a scale and its key, set the timer and the helps, then play it until you nail it.", suSub_chords:"Pick a chord and its key. Each ticked inversion is one exercise.", suSub_harmony:"Pick a key: each ticked degree is one exercise.", suSub_prog:"Pick a progression and its key, then chain the chords.", suSub_ear:"Pick what you want to recognise: 10 listens per game.",
@@ -3649,6 +3769,8 @@ function calibApply(){
   calibMsg(t("kbDone")(hi-lo+1,octName(lo),octName(hi)));
 }
 // most keyboards say their size in their name ("Keystation 49", "Launchkey 61"...); a few are known models
+// a virtual MIDI port of the system (macOS / iOS "Network Session 1" / « Session réseau 1 », IAC driver) is not a keyboard: never listed nor listened to
+const midiVirtual = n => /network\s*session|session\s*r[ée]seau|^iac\b|iac\s*driver/i.test(String(n||""));
 function guessKbdSize(name){
   if(!name || S.settings.kbdGuessFor===name) return;
   const n=String(name), m=n.match(/(^|\D)(24|25|32|37|49|61|76|88)(\D|$)/);
@@ -5346,7 +5468,8 @@ const QZ={view:"setup", data:null, loading:null, list:[], i:0, ans:[], players:[
 const uiSound = () => S.settings.uiSound!==false;
 function qzCfg(){ S.settings.quiz=S.settings.quiz||{}; const c=S.settings.quiz;
   if(!(c.n>=1&&c.n<=4)) c.n=1; if(!["dev","zone","turn"].includes(c.mode)) c.mode="dev"; c.theme=c.theme||"all";
-  if(![5,10,20,30].includes(c.count)) c.count=10; if(![1,2,3].includes(c.diff)) c.diff=1; if(![10,20,30].includes(c.time)) c.time=20; if(c.keys==null) c.keys=true;
+  if(![5,10,20,30].includes(c.count)) c.count=10; if(![1,2,3].includes(c.diff)) c.diff=1; if(![5,10,20,30].includes(c.time)) c.time = typeof c.time==="number"&&c.time>0 ? [5,10,20,30].reduce((a,b)=>Math.abs(b-c.time)<Math.abs(a-c.time)?b:a) : 20;
+  if(!c.keysOff1){ c.keys=false; c.keysOff1=1; } // « Montrer les touches à jouer » starts off (Oct 2026), for old settings too
   if(!["notes","chords"].includes(c.ans)) c.ans = c.diff===1 ? "notes" : "chords";
   if(!(c.bots>=0&&c.bots<=3)) c.bots=0; if(![1,2,3].includes(c.botLvl)) c.botLvl=2; if(!["local","online"].includes(c.where)) c.where="local";
   c.names=c.names||[]; c.devs=c.devs||[]; return c; }
@@ -5371,17 +5494,40 @@ function qzKeys(pcs,col){ const W=[0,2,4,5,7,9,11], B=[[1,0],[3,1],[6,3],[8,4],[
   W.forEach((pc,i)=>{ s+='<rect x="'+(i*10+.4)+'" y="0" width="9.2" height="26" rx="1.6" fill="'+(on.has(pc)?col:"#ecebfa")+'" stroke="#c3bfe6" stroke-width=".5"/>'; });
   B.forEach(([pc,i])=>{ s+='<rect x="'+(i*10+7)+'" y="0" width="6" height="16" rx="1.2" fill="'+(on.has(pc)?col:"#2b2560")+'"/>'; });
   return s+"</svg>"; }
-function qzDevices(){ const out=[["screen",t("qzScreen")]]; try{ if(midiAcc) midiAcc.inputs.forEach(inp=>{ if(!inp.state||inp.state==="connected") out.push([String(inp.id||inp.name),inp.name]); }); }catch(e){} return out; }
-function qzZones(n){ const [lo,hi] = S.settings.kbdSize && S.settings.kbdSize!=="auto" ? [LOW,HIGH] : midiReady ? [36,96] : [48,84], oct=Math.max(n,Math.round((hi-lo+1)/12)), per=Math.max(1,Math.floor(oct/n)); return Array.from({length:n},(_,i)=>{ const a=lo+i*per*12, b=i===n-1?hi:a+per*12-1; return [a,b]; }); }
+function qzDevices(){ const out=[["screen",t("qzScreen")]]; try{ if(midiAcc) midiAcc.inputs.forEach(inp=>{ if((!inp.state||inp.state==="connected") && !midiVirtual(inp.name)) out.push([String(inp.id||inp.name),inp.name]); }); }catch(e){} return out; }
+// keys of a keyboard from its name (25, 49, 61 keys…), else the range used so far
+const QZ_KBD={24:[48,71],25:[48,72],32:[41,72],37:[48,84],49:[36,84],61:[36,96],76:[28,103],88:[21,108]};
+function qzRange(){ const c=qzCfg(), d=qzDevices().find(x=>x[0]===c.zoneDev&&x[0]!=="screen"), m=d&&String(d[1]).match(/(^|\D)(24|25|32|37|49|61|76|88)(\D|$)/);
+  if(m) return QZ_KBD[m[2]]; if(d && /lumi|keys block/i.test(d[1])) return QZ_KBD[24];
+  return S.settings.kbdSize && S.settings.kbdSize!=="auto" ? [LOW,HIGH] : midiReady ? [36,96] : [48,84]; }
+function qzZones(n){ const [lo,hi] = qzRange(), oct=Math.max(n,Math.round((hi-lo+1)/12)), base=Math.floor(oct/n), extra=oct%n; let a=lo;
+  return Array.from({length:n},(_,i)=>{ const o=base+(i<extra?1:0), b=i===n-1?hi:Math.min(hi,a+o*12-1), z=[a,b]; a=b+1; return z; }); }
 const qzMidiName=m=>qzRoots()[m%12]+(Math.floor(m/12)-1);
 const QZ_BOTS=["Robo Mozart","Robo Chopin","Robo Bach"];
+const QZ_BOT_AV=[[1,2,3],[4,5,6],[7,8,9]]; // a bot wears a character of its level (easy, medium, strong)
+// a profile photo from another player is only shown from the Google / Facebook picture hosts (no tracking pixel from anywhere else)
+const qzPhotoOk = u => typeof u==="string" && u.length<=400 && /^https:\/\/([a-z0-9-]+\.)*(googleusercontent\.com|fbcdn\.net|fbsbx\.com|facebook\.com)\/[^\s"'<>\\]*$/i.test(u);
+const qzMyPhoto = () => { const u=(typeof userPhoto==="function"&&userPhoto())||""; return qzPhotoOk(u)?u:""; };
+const qzMyAv = () => charIndex(levelInfo(S.xp).L);
 const qzSafe = s => gCut(String(s==null?"":s).replace(/[\u0000-\u001f\u007f<>]/g,"").replace(BIDI_G,"").trim(),14,48).trim(); // 14 graphemes, never half an emoji
 
 // ---------- setup ----------
 function renderQuiz(){ ["qzSetup","qzPlay","qzEnd"].forEach(id=>$(id).hidden = id!=="qz"+QZ.view[0].toUpperCase()+QZ.view.slice(1));
   if(QZ.view==="setup") renderQzSetup(); else if(QZ.view==="play") renderQzPlay(); else renderQzEnd(); }
 function qzSeg(id,vals,cur,lbl,on){ const box=$(id); box.innerHTML=""; vals.forEach(v=>{ const b=document.createElement("button"); b.type="button"; b.textContent=lbl(v); b.setAttribute("aria-pressed",cur===v); b.onclick=()=>on(v); box.appendChild(b); }); }
-function renderQzSetup(){ const c=qzCfg(), fr=S.settings.lang==="fr", re=()=>{ save(); renderQzSetup(); };
+// the zones of the shared piano drawn on a small keyboard: one colour, one name and its bounds per player
+function qzZoneMap(c,zones){ const box=$("qzZoneMap"); box.innerHTML=""; const isW=m=>[0,2,4,5,7,9,11].includes(m%12);
+  zones.forEach(([a,b],i)=>{ const z=document.createElement("div"); z.className="qz-zone"; z.style.setProperty("--pc",QZ_COLORS[i]); let w=0; for(let m=a;m<=b;m++) if(isW(m)) w++; z.style.flexGrow=w;
+    let k='<svg viewBox="0 0 '+(w*10)+' 30" preserveAspectRatio="none" aria-hidden="true">', x=0; const xs={};
+    for(let m=a;m<=b;m++) if(isW(m)){ xs[m]=x; k+='<rect x="'+(x*10+.5)+'" y="0" width="9" height="30" rx="1.5" class="zw"/>'; x++; }
+    for(let m=a;m<=b;m++) if(!isW(m) && xs[m-1]!=null) k+='<rect x="'+(xs[m-1]*10+6.5)+'" y="0" width="6" height="18" rx="1" class="zb"/>';
+    z.innerHTML='<span class="zl"><b></b><small></small></span>'+k+'</svg>'; nmPut(z.querySelector("b"),c.names[i]||t("qzPlayer")+" "+(i+1)); z.querySelector("small").textContent=qzMidiName(a)+" – "+qzMidiName(b);
+    box.appendChild(z); }); }
+const qzTabsMQ=matchMedia("(max-width:640px) and (min-height:421px)"); // phones upright: the quiz tab is full, the help goes to the players tab
+function qzHelpPlace(){ const hb=$("qzHelpBox"); if(!hb) return; const to = !qzTabsMQ.matches ? $("qzToPlayers").parentElement : qzCfg().where==="online" ? $("qzOnlineBox") : $("qzBots").parentElement; // next to the robots
+  if(!to||hb.parentElement===to) return; if(to===$("qzToPlayers").parentElement) $("qzToPlayers").before(hb); else to.appendChild(hb); }
+qzTabsMQ.addEventListener&&qzTabsMQ.addEventListener("change",qzHelpPlace);
+function renderQzSetup(){ const c=qzCfg(), fr=S.settings.lang==="fr", re=()=>{ save(); renderQzSetup(); }; qzHelpPlace();
   QZ.tab=QZ.tab||"quiz"; $("qzSetup").dataset.tab=QZ.tab; qzSeg("qzTabs",["quiz","players"],QZ.tab,v=>t(v==="quiz"?"qzTabQuiz":"qzTabPlayers"),v=>{ QZ.tab=v; renderQzSetup(); });
   const th=$("qzThemes"); th.innerHTML="";
   if(!QZ.data){ th.innerHTML='<p class="qz-load">'+t("qzLoading")+"</p>"; qzLoad().then(()=>{ if(page==="quiz") renderQuiz(); }).catch(()=>{ th.innerHTML='<p class="qz-load">'+t("qzLoadErr")+"</p>"; }); }
@@ -5394,26 +5540,37 @@ function renderQzSetup(){ const c=qzCfg(), fr=S.settings.lang==="fr", re=()=>{ s
   const dl=$("qzDiff"); dl.innerHTML=""; [1,2,3].forEach(v=>{ const b=document.createElement("button"); b.type="button"; b.className="qz-diff"; b.setAttribute("aria-pressed",c.diff===v);
     b.innerHTML="<b></b><small></small>"; b.querySelector("b").textContent=t("qzDiffs")[v-1]; b.querySelector("small").textContent=t(c.ans==="notes"?"qzDiffN":"qzDiffC")[v-1]; b.onclick=()=>{ c.diff=v; re(); }; dl.appendChild(b); });
   qzSeg("qzCount",[5,10,20,30],c.count,String,v=>{ c.count=v; re(); });
-  qzSeg("qzTime",[10,20,30],c.time,v=>v+" s",v=>{ c.time=v; re(); });
+  qzSeg("qzTime",[5,10,20,30],c.time,v=>v+" s",v=>{ c.time=v; re(); });
   $("qzKeysOpt").checked=!!c.keys;
   qzSeg("qzWhere",["local","online"],c.where,v=>t(v==="local"?"qzLocal":"qzOnline"),v=>{ c.where=v; save(); if(v==="online") netLobbyPeek(); else netLeave(); renderQzSetup(); });
-  $("qzLocalBox").hidden = c.where!=="local"; $("qzOnlineBox").hidden = c.where!=="online";
+  $("qzLocalBox").hidden = c.where!=="local"; $("qzOnlineBox").hidden = c.where!=="online"; qzHelpPlace();
   if(c.where==="online"){ renderQzNet(); return; }
-  qzSeg("qzN",[1,2,3,4],c.n,String,v=>{ c.n=v; c.bots=Math.min(c.bots,4-v); re(); });
+  qzSeg("qzN",[1,2,3,4],c.n,v=>v===1?t("qzSoloT"):String(v),v=>{ c.n=v; c.bots=Math.min(c.bots,4-v); re(); });
   $("qzModeRow").hidden = c.n===1;
   qzSeg("qzMode",["dev","zone","turn"],c.mode,v=>t("qzModes")[["dev","zone","turn"].indexOf(v)],v=>{ c.mode=v; re(); });
   $("qzModeHelp").textContent = c.n===1 ? "" : t("qzModeD")[["dev","zone","turn"].indexOf(c.mode)];
-  const devs=qzDevices(), zones=qzZones(c.n), pl=$("qzPlayers"); pl.innerHTML="";
+  const devs=qzDevices(), midis=devs.filter(d=>d[0]!=="screen"), pl=$("qzPlayers"); pl.innerHTML=""; pl.dataset.mode=c.n>1?c.mode:"solo";
+  // zones: the shared keyboard is chosen, and the zones are drawn on it
+  const zm=c.n>1&&c.mode==="zone"; $("qzZoneDevRow").hidden=!zm||!midis.length;
+  if(zm && midis.length){ if(!midis.some(d=>d[0]===c.zoneDev)) c.zoneDev=midis[0][0]; const zs=$("qzZoneDev"); zs.innerHTML=""; zs.setAttribute("aria-label",t("qzZoneKbd"));
+    midis.forEach(([v,l])=>{ const o=document.createElement("option"); o.value=v; o.textContent=l; zs.appendChild(o); }); zs.value=c.zoneDev; zs.onchange=()=>{ c.zoneDev=zs.value; re(); }; }
+  const zones=qzZones(c.n);
+  // one keyboard each: each player picks among the keyboards + the screen; picking one already used swaps the two players
+  if(c.n>1 && c.mode==="dev"){ for(let i=0;i<c.n;i++){ if(!devs.some(d=>d[0]===c.devs[i])){ const free=devs.find(d=>!c.devs.slice(0,c.n).includes(d[0])); c.devs[i]=(free||devs[0])[0]; } } }
+  const dup = c.n>1 && c.mode==="dev" ? c.devs.slice(0,c.n).find((d,i,a)=>a.indexOf(d)!==i) : null;
   for(let i=0;i<c.n;i++){ const row=document.createElement("div"); row.className="qz-pl"; row.style.setProperty("--pc",QZ_COLORS[i]);
     row.innerHTML='<i></i><input type="text" maxlength="14" autocorrect="off" spellcheck="false" enterkeyhint="done"><span class="qz-pin"></span>'; const inp=row.querySelector("input"); inp.id="qzName"+i; inp.value=c.names[i]||t("qzPlayer")+" "+(i+1); inp.setAttribute("aria-label",t("qzPlayer")+" "+(i+1));
-    inp.oninput=()=>{ c.names[i]=qzSafe(inp.value); save(); };
+    inp.oninput=()=>{ c.names[i]=qzSafe(inp.value); save(); if(zm) qzZoneMap(c,zones); };
     const pin=row.querySelector(".qz-pin");
-    if(c.n>1 && c.mode==="dev"){ const sel=document.createElement("select"); sel.id="qzDev"+i; sel.setAttribute("aria-label",t("qzKeyboard"));
-      devs.forEach(([v,l])=>{ const o=document.createElement("option"); o.value=v; o.textContent=l; sel.appendChild(o); });
-      sel.value = devs.some(d=>d[0]===c.devs[i]) ? c.devs[i] : (devs[i+1]||devs[0])[0]; c.devs[i]=sel.value; sel.onchange=()=>{ c.devs[i]=sel.value; save(); }; pin.appendChild(sel); }
-    else if(c.n>1 && c.mode==="zone") pin.textContent=t("qzZone")+" : "+qzMidiName(zones[i][0])+" – "+qzMidiName(zones[i][1]);
+    if(c.n>1 && c.mode==="dev"){ const sel=document.createElement("select"); sel.id="qzDev"+i; sel.className="qz-sel"; sel.setAttribute("aria-label",t("qzKeyboard"));
+      devs.forEach(([v,l])=>{ const o=document.createElement("option"); o.value=v; const j=c.devs.slice(0,c.n).indexOf(v); o.textContent=l+(j>=0&&j!==i?t("qzTaken")(pName(c.names[j]||t("qzPlayer")+" "+(j+1))):""); sel.appendChild(o); });
+      sel.value=c.devs[i]; if(dup&&c.devs[i]===dup) row.classList.add("dup");
+      sel.onchange=()=>{ const old=c.devs[i], j=c.devs.slice(0,c.n).indexOf(sel.value); if(j>=0&&j!==i) c.devs[j]=old; c.devs[i]=sel.value; re(); }; pin.appendChild(sel); }
+    else if(zm) pin.textContent=qzMidiName(zones[i][0])+" – "+qzMidiName(zones[i][1]);
     else if(c.n>1) pin.textContent=t("qzTurnN")(i+1);
     pl.appendChild(row); }
+  const warn=$("qzDevWarn"); warn.hidden=!dup && !(zm&&!midis.length); warn.textContent = zm&&!midis.length ? t("qzNoMidiZ") : dup==="screen" ? t("qzScreenOnce") : dup ? t("qzKbdOnce") : "";
+  $("qzZoneMap").hidden=!zm; if(zm) qzZoneMap(c,zones);
   qzSeg("qzBots",[...Array(5-c.n).keys()],c.bots,String,v=>{ c.bots=v; re(); });
   $("qzBotLvlRow").hidden = !c.bots;
   qzSeg("qzBotLvl",[1,2,3],c.botLvl,v=>t("qzBotLvls")[v-1],v=>{ c.botLvl=v; re(); });
@@ -5421,13 +5578,14 @@ function renderQzSetup(){ const c=qzCfg(), fr=S.settings.lang==="fr", re=()=>{ s
   $("qzGo").disabled=!QZ.data;
 }
 // ---------- a game ----------
-function qzBotPlayers(n,lvl,from){ return Array.from({length:n},(_,i)=>({name:QZ_BOTS[i%3], col:QZ_COLORS[from+i], bot:lvl, score:0, ok:0})); }
+function qzBotPlayers(n,lvl,from){ return Array.from({length:n},(_,i)=>({name:QZ_BOTS[i%3], col:QZ_COLORS[from+i], bot:lvl, av:QZ_BOT_AV[lvl-1][i%3], ph:"", score:0, shown:0, ok:0})); }
 function qzStart(){ const c=qzCfg(); if(!QZ.data) return;
   const src=QZ.data.q.filter(q=>c.theme==="all"||q[0]===c.theme);
   QZ.list=qzShuffle(src.slice()).slice(0,Math.min(c.count,src.length)); QZ.cfg={diff:c.diff,ans:c.ans,time:c.time,keys:c.keys};
-  QZ.players=Array.from({length:c.n},(_,i)=>({name:c.names[i]||t("qzPlayer")+" "+(i+1), col:QZ_COLORS[i], dev:c.n===1||c.mode!=="dev"?null:c.devs[i], score:0, ok:0, zone:c.mode==="zone"&&c.n>1?qzZones(c.n)[i]:null}))
+  const myAv=qzMyAv(), others=[3,6,1,9,4].filter(x=>x!==myAv); // player 1 = this account (photo or level), the friends next to them get other characters
+  QZ.players=Array.from({length:c.n},(_,i)=>({name:c.names[i]||t("qzPlayer")+" "+(i+1), col:QZ_COLORS[i], dev:c.n===1||c.mode!=="dev"?null:c.devs[i], av:i?others[i-1]:myAv, ph:i?"":qzMyPhoto(), score:0, shown:0, ok:0, zone:c.mode==="zone"&&c.n>1?qzZones(c.n)[i]:null}))
     .concat(qzBotPlayers(c.bots,c.botLvl,c.n));
-  QZ.mode=c.n===1?"solo":c.mode; QZ.i=-1; QZ.turn=-1; QZ.view="play"; audio(); qzNext(); }
+  QZ.gid=(QZ.gid||0)+1; QZ.mode=c.n===1?"solo":c.mode; QZ.zoneDev = c.mode==="zone" && qzDevices().some(d=>d[0]===c.zoneDev&&d[0]!=="screen") ? c.zoneDev : null; QZ.i=-1; QZ.turn=-1; QZ.view="play"; audio(); qzNext(); }
 function qzClearTimers(){ cancelAnimationFrame(QZ.raf); clearTimeout(QZ.revealT); QZ.botT.forEach(clearTimeout); QZ.botT=[]; }
 function qzNext(){ if(QZ.mode==="online" && !NET.host) return; const i=QZ.i+1; if(i>=QZ.list.length){ if(QZ.mode==="online") netSend({type:"end"}); qzFinish(); return; }
   if(QZ.mode==="online") netSend({type:"q",i}); qzShowQ(i); }
@@ -5445,7 +5603,7 @@ function qzTick(){ if(page!=="quiz"||QZ.view!=="play"||QZ.done) return; const le
 // which local player played this note?
 function qzWho(dev,m){ const P=QZ.players; if(QZ.mode==="online") return P.findIndex(p=>p.me); if(QZ.mode==="solo") return 0;
   if(QZ.mode==="turn"){ const hs=P.map((p,i)=>p.bot?-1:i).filter(i=>i>=0); return hs[QZ.turn]; }
-  if(QZ.mode==="zone") return P.findIndex(p=>!p.bot&&p.zone&&m>=p.zone[0]&&m<=p.zone[1]);
+  if(QZ.mode==="zone"){ if(QZ.zoneDev && dev!==QZ.zoneDev) return -1; return P.findIndex(p=>!p.bot&&p.zone&&m>=p.zone[0]&&m<=p.zone[1]); }
   return P.findIndex(p=>!p.bot&&p.dev===dev); }
 function quizIn(dev,m){ if(S.settings.midiC!==false && (QZ.view==="end" || (QZ.view==="play" && QZ.done))){ qzShortcut(m); return; }
   if(QZ.view!=="play"||QZ.done) return;
@@ -5466,7 +5624,7 @@ function qzPick(pi,k,ms){ if(QZ.done||QZ.picks[pi]!=null||!QZ.ans[k]) return; co
   const exp = QZ.mode==="solo"||QZ.mode==="turn" ? live.filter(i=>QZ.players[i].bot || i===qzWho("",0)) : live; // solo / turn: the human who answers and the bots
   const all = exp.every(i=>QZ.picks[i]!=null);
   if(all && (QZ.mode!=="online"||NET.host)) qzReveal(); else renderQzPlay(); }
-function qzReveal(fromNet){ if(QZ.done) return; QZ.done=true; QZ.doneAt=performance.now(); qzClearTimers();
+function qzReveal(fromNet){ if(QZ.done) return; QZ.done=true; QZ.doneAt=performance.now(); qzClearTimers(); QZ.players.forEach(p=>p.shown=p.score);
   if(QZ.mode==="online" && NET.host && !fromNet) netSend({type:"reveal",i:QZ.i});
   const r=QZ.ans.findIndex(a=>a.right); if(uiSound()) QZ.ans[r].tg.mid.forEach((m,i)=>tone(m,i*.03,.9,.16));
   renderQzPlay(); if(QZ.mode!=="online"||NET.host) QZ.revealT=setTimeout(()=>{ if(page==="quiz"&&QZ.view==="play"&&QZ.done) qzNext(); },4200); }
@@ -5480,50 +5638,82 @@ function renderQzKb(){ const kb=$("qzKb"); if(!kb) return; kb.innerHTML=""; kb.s
   const R=qzRoots(), own={}, cnt={}; QZ.ans.forEach(a=>{ const r=a.tg.pcs[0]; cnt[r]=(cnt[r]||0)+1; });
   QZ.ans.forEach((a,k)=>{ const r=a.tg.pcs[0]; if(cnt[r]===1) own[r]=k; });
   const W=[0,2,4,5,7,9,11], B=[[1,0],[3,1],[6,3],[8,4],[10,5]], col=["#ff5a6e","#3cc8f0","#ffd23f","#3ddc84"], ch=QZ.ans.some(a=>a.tg.pcs.length>1);
-  const key=(pc,cls)=>{ const b=document.createElement("button"); b.type="button"; b.className=cls; const k=own[pc], a=k!=null?QZ.ans[k]:null;
-    b.innerHTML='<span></span>'; b.firstChild.textContent = a ? (a.tg.sym||a.tg.name) : R[pc];
-    if(a){ b.classList.add("ans"); b.style.setProperty("--ac",col[k]); b.setAttribute("aria-label",a.tg.name+" : "+a.txt);
-      if(QZ.done) b.classList.add(a.right?"right":"wrong"); } else b.setAttribute("aria-label",R[pc]);
-    if(ch && a) b.classList.add("chd");
+  // help "show the keys to play" off: the keys stay neutral (note names only with the note-names option); at the reveal the right key lights up anyway
+  const help=!!(QZ.cfg&&QZ.cfg.keys); kb.classList.toggle("plain",!help);
+  const key=(pc,cls)=>{ const b=document.createElement("button"); b.type="button"; b.className=cls; const k=own[pc], a=k!=null?QZ.ans[k]:null, lit=a&&(help||(QZ.done&&a.right));
+    b.innerHTML='<span></span>'; b.firstChild.textContent = lit ? (a.tg.sym||a.tg.name) : (help||S.settings.labels) ? R[pc] : "";
+    if(a && !lit){ b.setAttribute("aria-label",R[pc]); if(QZ.done){ const who=qzPickers(k); if(who.length){ const w=document.createElement("span"); w.className="qz-kw"; w.setAttribute("aria-hidden","true");
+        who.forEach(p=>{ const d=document.createElement("i"); d.className="av"; d.style.setProperty("--pc",p.col); avFill(d,p.ph,p.av); w.appendChild(d); }); b.appendChild(w); } } }
+    else if(a){ b.classList.add("ans"); b.style.setProperty("--ac",col[k]); b.setAttribute("aria-label",a.tg.name+" : "+a.txt);
+      if(QZ.done){ b.classList.add(a.right?"right":"wrong"); const who=qzPickers(k); if(who.length){ const w=document.createElement("span"); w.className="qz-kw"; w.setAttribute("aria-hidden","true");
+        who.forEach(p=>{ const d=document.createElement("i"); d.className="av"; d.style.setProperty("--pc",p.col); avFill(d,p.ph,p.av); w.appendChild(d); }); b.appendChild(w); } } } else b.setAttribute("aria-label",R[pc]);
+    if(ch && lit) b.classList.add("chd");
     b.addEventListener("pointerdown",e=>{ if(e.button>0) return; b.classList.add("dn"); setTimeout(()=>b.classList.remove("dn"),160);
       if(k!=null) qzTap(k); else if(uiSound()) tone(60+pc,0,.5,.14); });
     b.addEventListener("click",e=>{ if(e.detail===0 && k!=null) qzTap(k); }); // keyboard (Enter / Space)
     return b; };
   W.forEach(pc=>kb.appendChild(key(pc,"qz-w")));
   B.forEach(([pc,i])=>{ const b=key(pc,"qz-b"); b.style.left="calc("+(i+1)+" * 100% / 7 - 4.6%)"; kb.appendChild(b); }); }
+// who chose answer k / which player is alone on this screen (solo, online: may see their own choice)
+const qzPickers = k => QZ.players.filter((p,i)=>QZ.picks[i]===k);
+const qzMine = () => QZ.mode==="solo" ? 0 : QZ.mode==="online" ? QZ.players.findIndex(p=>p.me) : -1;
+const qzShort = (s,bot) => gCut(bot?pName(s).split(/\s+/).pop():pName(s),10,24).trim(); // short name on the answers and the staff ("Mozart" for Robo Mozart)
+// the race: a staff from the clef to the final bar line, each player is a note whose head is their face, one space each;
+// it moves at the reveal by score / best possible score (200 points a question: the faster right answers go further)
+const QZ_SPACES=[[2],[1,2],[0,1,2],[0,1,2,3]];
+function renderQzRace(turnP){ const box=$("qzRace"); if(!box) return; const P=QZ.players, end=QZ.view==="end";
+  const slot=end?$("qzRaceEnd"):$("qzKb"); if(slot){ if(end){ if(box.parentElement!==slot) slot.appendChild(box); } else if(box.previousElementSibling!==slot) slot.after(box); }
+  const key=QZ.gid+":"+P.map(p=>p.id||p.name).join("|");
+  // three layers moving together: stems, then heads (faces), then name tags, so a name is never hidden by a stem or a neighbour's head
+  if(box.dataset.k!==key){ box.dataset.k=key; box.innerHTML='<div class="qz-staff"><svg class="qz-clef" viewBox="0 0 30 40" aria-hidden="true"><text x="2" y="30" font-size="33">\uE050</text></svg><div class="qz-track"><div class="qz-lay qz-stems" aria-hidden="true"></div><div class="qz-lay qz-heads"></div><div class="qz-lay qz-tags" aria-hidden="true"></div></div><span class="qz-fin" aria-hidden="true"></span></div>';
+    box.setAttribute("aria-label",t("qzRaceL")); const L=box.querySelectorAll(".qz-lay"), sp=QZ_SPACES[Math.min(4,P.length)-1]||[0,1,2,3];
+    P.forEach((p,i)=>{ const cls="qz-ln s"+(sp[i]!=null?sp[i]:i%4), mk=(lay,html)=>{ const d=document.createElement("div"); d.className=cls; d.style.setProperty("--pc",p.col); d.innerHTML=html; L[lay].appendChild(d); return d; };
+      mk(0,'<span class="qz-st"></span>'); const h=mk(1,'<span class="qz-hd"><i class="av"></i><i class="qz-ok"></i></span>'); h.setAttribute("role","listitem");
+      const tg=mk(2,'<span class="qz-tg"><b></b><span class="qz-pts"></span><small></small></span>');
+      avFill(h.querySelector(".av"),p.ph,p.av); nmPut(tg.querySelector("b"),qzShort(p.name,p.bot),p.me?" ("+t("qzYou")+")":""); tg.querySelector("b").title=pName(p.name); });
+    if(document.fonts&&document.fonts.load) document.fonts.load("40px Bravura").then(()=>box.classList.add("fnt")).catch(()=>{}); }
+  const max=200*Math.max(1,QZ.list.length), top=Math.max(...P.map(p=>p.shown||0)), lead=P.filter(p=>(p.shown||0)===top).length===1&&top>0;
+  const L=[...box.querySelectorAll(".qz-lay")].map(x=>x.children), tw=box.querySelector(".qz-track").clientWidth;
+  P.forEach((p,i)=>{ const els=[L[0][i],L[1][i],L[2][i]]; if(!els[2]) return; const st=QZ.picks[i], done=QZ.done||end, f=Math.min(1,(p.shown||0)/max);
+    const ok=!end&&QZ.done&&st!=null&&QZ.ans[st]&&QZ.ans[st].right;
+    const cl={lead:lead&&(p.shown||0)===top, gone:!!p.gone, turn:!done&&turnP===p, ans:!end&&st!=null, wait:!done&&st==null&&!p.gone, ok:!!ok, ko:!end&&QZ.done&&st!=null&&!ok};
+    els.forEach(e=>{ e.style.transform="translateX("+(f*100).toFixed(2)+"%)"; for(const c in cl) e.classList.toggle(c,cl[c]); });
+    const stt = end ? "" : p.gone ? t("qzLeft") : st==null ? (QZ.done?t("qzNoAns"):"") : !QZ.done ? t("qzAnswered") : ok ? "+"+fmtN(p.last) : t("qzWrong");
+    els[2].querySelector(".qz-pts").textContent=fmtN(p.shown||0); els[2].querySelector("small").textContent=stt;
+    // the name goes after the note, or before it when it would cross the final bar line
+    if(tw){ const hd=els[1].firstChild.offsetWidth, run=tw-hd, w=els[2].firstChild.offsetWidth+12; els[2].classList.toggle("flip", w>(1-f)*run && f*run>(1-f)*run); }
+    els[1].setAttribute("aria-label",pName(p.name)+" : "+fmtN(p.shown||0)+" pts"+(stt?" · "+stt:"")); }); }
 function renderQzPlay(){ if(!QZ.q) return; const q=QZ.q, fr=S.settings.lang==="fr", th=QZ.data.themes[q[0]]||{fr:"",en:"",col:"#6a4bf0"}, cf=QZ.cfg;
-  $("qzTheme").textContent=fr?th.fr:th.en; $("qzTheme").style.setProperty("--tc",th.col);
-  $("qzNum").textContent=t("qzQ")(QZ.i+1,QZ.list.length);
+  const chip=$("qzTheme"); chip.lastChild.textContent=fr?th.fr:th.en; chip.style.setProperty("--tc",th.col); if(chip.dataset.img!==th.img){ chip.dataset.img=th.img||""; chip.firstChild.innerHTML=OBJ[th.img]?OBJ[th.img]():""; }
+  { const n=t("qzQ")(QZ.i+1,QZ.list.length), j=n.indexOf(String(QZ.i+1)), el=$("qzNum"); el.innerHTML='<span class="qn-w"></span><span></span>'; el.firstChild.textContent=n.slice(0,j); el.lastChild.textContent=n.slice(j); } // phones: "1 / 10"
   $("qzImg").innerHTML=OBJ[q[1]]?OBJ[q[1]]():""; $("qzImg").style.setProperty("--tc",th.col);
   $("qzText").textContent=fr?q[2]:q[4];
   const turnP = QZ.mode==="turn" ? QZ.players[qzWho("",0)] : null;
   $("qzTurn").hidden = !turnP; if(turnP){ nmFill($("qzTurn"),t("qzTurnOf"),turnP.name); $("qzTurn").style.setProperty("--pc",turnP.col); }
-  const box=$("qzAns"); box.innerHTML="";
+  const box=$("qzAns"); box.innerHTML=""; const mine=qzMine();
   QZ.ans.forEach((a,k)=>{ const b=document.createElement("button"); b.type="button"; b.className="qz-a"; b.style.setProperty("--ac",["#ff5a6e","#3cc8f0","#ffd23f","#3ddc84"][k]);
     if(QZ.done) b.classList.add(a.right?"right":"wrong");
     b.innerHTML='<span class="qz-l"></span><span class="qz-at"></span><span class="qz-who"></span>'; b.dataset.pcs=a.tg.pcs.join(",");
     const lb=b.querySelector(".qz-l"); lb.innerHTML='<span class="ln"></span><span class="sh"></span>'; lb.firstChild.textContent=a.tg.name; lb.lastChild.textContent=a.tg.sym||a.tg.name; b.querySelector(".qz-at").textContent=a.txt; b.setAttribute("aria-label",t("qzPlay")+" "+a.tg.name+" : "+a.txt);
-    const who=b.querySelector(".qz-who"); QZ.players.forEach((p,i)=>{ if(QZ.picks[i]===k){ const d=document.createElement("i"); d.style.background=p.col; d.title=pName(p.name); who.appendChild(d); } });
+    const who=b.querySelector(".qz-who"), pk=QZ.done?qzPickers(k):[]; // before the reveal nothing tells who chose what (the others could copy)
+    pk.forEach(p=>{ const d=document.createElement("span"); d.className="qz-wc"; d.style.setProperty("--pc",p.col); d.innerHTML='<i class="av"></i><b></b>'; avFill(d.firstChild,p.ph,p.av); nmPut(d.lastChild,qzShort(p.name,p.bot)); who.appendChild(d); });
+    if(pk.length>2) who.classList.add("many"); if(pk.length) b.setAttribute("aria-label",b.getAttribute("aria-label")+" · "+pk.map(p=>pName(p.name)).join(", "));
+    if(!QZ.done && QZ.picks[mine]===k) b.classList.add("mine"); // alone on this screen (solo, online): your own choice stays, discreet
     b.onclick=()=>qzTap(k);
     box.appendChild(b); });
   renderQzKb();
-  const sb=$("qzScores"); sb.innerHTML="";
-  QZ.players.forEach((p,i)=>{ const d=document.createElement("div"); d.className="qz-ps"+(p.gone?" gone":""); d.style.setProperty("--pc",p.col); const st=QZ.picks[i];
-    if(turnP===p && !QZ.done) d.classList.add("turn");
-    d.innerHTML='<i></i><span><b></b><small></small></span><span class="qz-pts"></span>'; nmPut(d.querySelector("b"),p.name,p.me?" ("+t("qzYou")+")":"");
-    d.querySelector("small").textContent = p.gone ? t("qzLeft") : st==null ? (QZ.done?t("qzNoAns"):(turnP&&turnP!==p)?"":p.bot?t("qzBotThinks"):t("qzWaiting")) : !QZ.done ? t("qzAnswered") : QZ.ans[st].right ? "+"+p.last : t("qzWrong");
-    if(QZ.done && st!=null) d.classList.add(QZ.ans[st].right?"ok":"ko");
-    d.querySelector(".qz-pts").textContent=fmtN(p.score); sb.appendChild(d); });
+  renderQzRace(turnP);
   $("qzNext").hidden=!QZ.done || (QZ.mode==="online" && !NET.host); $("qzBar").parentElement.hidden=QZ.done;
-  $("qzNext").textContent=t("qzNextT"); if(midiReady && S.settings.midiC!==false){ const kb=document.createElement("kbd"); kb.textContent=CNAME(); $("qzNext").appendChild(kb); }
+  $("qzNext").innerHTML='<span class="nx-l"></span><span class="nx-s"></span>'; $("qzNext").firstChild.textContent=t("qzNextT"); $("qzNext").lastChild.textContent=t("qzNextS"); if(midiReady && S.settings.midiC!==false){ const kb=document.createElement("kbd"); kb.textContent=CNAME(); $("qzNext").appendChild(kb); }
 }
-function qzFinish(){ qzClearTimers(); QZ.view="end"; const me=QZ.players.filter(p=>!p.bot&&!p.remote);
+function qzFinish(){ qzClearTimers(); QZ.view="end"; QZ.players.forEach(p=>p.shown=p.score); const me=QZ.players.filter(p=>!p.bot&&!p.remote);
   if(me.length===1 && me[0].ok) addXP(Math.min(60,me[0].ok*3)); save(); renderQuiz(); if(QZ.players.some(p=>p.ok) && uiSound()) setTimeout(()=>confetti(),200); }
 function renderQzEnd(){ const P=QZ.players.map((p,i)=>({...p,i})).sort((a,b)=>b.score-a.score), box=$("qzPodium"); box.innerHTML="";
   const humans=QZ.players.filter(p=>!p.bot).length;
   if(QZ.players.length>1) nmFill($("qzEndT"),t("qzWinner"),P[0].name); else $("qzEndT").textContent=t("qzSoloEnd")(P[0].ok,QZ.list.length);
   P.forEach((p,r)=>{ const d=document.createElement("div"); d.className="qz-pod r"+(r+1); d.style.setProperty("--pc",p.col);
     d.innerHTML='<span class="qz-rk">'+(r+1)+'</span><b></b><span class="qz-sc"></span><small></small>'; nmPut(d.querySelector("b"),p.name); d.querySelector(".qz-sc").textContent=fmtN(p.score)+" pts"; d.querySelector("small").textContent=t("qzRight")(p.ok,QZ.list.length); box.appendChild(d); });
+  renderQzRace(null);
   $("qzAgain").hidden = QZ.mode==="online" && !NET.host; $("qzAgain").textContent=t("qzAgainT"); if(midiReady && S.settings.midiC!==false){ const kb=document.createElement("kbd"); kb.textContent=CNAME()+" / "+BNAME(); $("qzAgain").appendChild(kb); } }
 function qzQuit(){ qzClearTimers(); if(QZ.mode==="online") netLeave(); QZ.view="setup"; QZ.done=true; renderQuiz(); }
 $("qzGo").addEventListener("click",qzStart);
@@ -5547,7 +5737,7 @@ const NET_CODE="ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
 const netCode = () => Array.from({length:5},()=>NET_CODE[Math.floor(Math.random()*NET_CODE.length)]).join("");
 async function netSb(){ await ensureCloud(); if(!sb) throw new Error("offline"); return sb; }
 function netPeersOf(ch){ try{ return Object.values(ch.presenceState()).map(a=>a&&a[0]).filter(x=>x&&typeof x.id==="string"&&/^p[a-z0-9]{8}$/.test(x.id))
-  .map(x=>({id:x.id,name:qzSafe(x.name)||"?",lvl:x.lvl|0,host:!!x.host,wait:!!x.wait,at:+x.at||0})).sort((a,b)=>(b.host-a.host)||(a.at-b.at)||(a.id<b.id?-1:1)); }catch(e){ return []; } }
+  .map(x=>({id:x.id,name:qzSafe(x.name)||"?",lvl:Math.max(1,Math.min(999,x.lvl|0)),ph:qzPhotoOk(x.ph)?x.ph:"",host:!!x.host,wait:!!x.wait,at:+x.at||0})).sort((a,b)=>(b.host-a.host)||(a.at-b.at)||(a.id<b.id?-1:1)); }catch(e){ return []; } }
 function netSubscribe(ch){ return new Promise((res,rej)=>{ const to=setTimeout(()=>rej(new Error("timeout")),10000); ch.subscribe(st=>{ if(st==="SUBSCRIBED"){ clearTimeout(to); res(); } else if(st==="CHANNEL_ERROR"||st==="TIMED_OUT"||st==="CLOSED"){ clearTimeout(to); rej(new Error(st)); } }); }); }
 function netFail(){ NET.state="error"; NET.err=t("qzNetErr"); NET.searching=false; renderQzNet(); }
 function netDrop(ch){ try{ ch.untrack&&ch.untrack(); }catch(e){} try{ sb&&sb.removeChannel(ch); }catch(e){} }
@@ -5575,7 +5765,7 @@ async function netJoin(code,asHost){ try{ const c=await netSb(); if(NET.ch) netD
     Object.assign(NET,{ch,code,host:asHost,peers:[],state:asHost?"host":"guest",err:""});
     ch.on("broadcast",{event:"m"},({payload})=>netRecv(payload));
     ch.on("presence",{event:"sync"},()=>{ NET.peers=netPeersOf(ch); netPeersChanged(); });
-    await netSubscribe(ch); await ch.track({id:netId(),name:netName(),lvl:levelInfo(S.xp).L,host:asHost,at:Date.now()}); renderQzNet();
+    await netSubscribe(ch); await ch.track({id:netId(),name:netName(),lvl:levelInfo(S.xp).L,ph:qzMyPhoto(),host:asHost,at:Date.now()}); renderQzNet();
     if(!asHost) setTimeout(()=>{ if(NET.ch===ch && !NET.peers.some(p=>p.host)){ NET.err=t("qzNoRoom"); netDrop(ch); NET.ch=null; NET.state="idle"; renderQzNet(); } },4000);
   }catch(e){ netFail(); } }
 function netSend(p){ if(NET.ch) try{ NET.ch.send({type:"broadcast",event:"m",payload:p}); }catch(e){} }
@@ -5589,15 +5779,15 @@ function netPeersChanged(){ const P=NET.peers;
 // the host starts: same questions for everyone, players in arrival order
 function netStartGame(){ if(!NET.host||!QZ.data) return; const c=qzCfg(), Q=QZ.data.q;
   const idx=qzShuffle([...Q.keys()].filter(i=>c.theme==="all"||Q[i][0]===c.theme)).slice(0,c.count);
-  const players=NET.peers.slice(0,4).map(p=>({id:p.id,name:p.name}));
+  const players=NET.peers.slice(0,4).map(p=>({id:p.id,name:p.name,lvl:p.lvl,ph:p.ph}));
   const p={type:"start",idx,cfg:{diff:c.diff,ans:c.ans,time:c.time,keys:c.keys},players}; netSend(p); qzOnlineBegin(p); }
 function qzOnlineBegin(p){ const Q=QZ.data.q; QZ.list=p.idx.map(i=>Q[i]).filter(Boolean); QZ.cfg=p.cfg;
-  QZ.players=p.players.map((pl,i)=>({id:pl.id,name:pl.name,col:QZ_COLORS[i],me:pl.id===netId(),remote:pl.id!==netId(),score:0,ok:0}));
-  QZ.mode="online"; QZ.i=-1; QZ.turn=-1; QZ.q=null; QZ.view="play"; audio(); if(NET.host) qzNext(); else renderQuiz(); } // the guest waits for the host's first question
+  QZ.players=p.players.map((pl,i)=>{ const me=pl.id===netId(); return {id:pl.id,name:pl.name,col:QZ_COLORS[i],me,remote:!me,av:me?qzMyAv():charIndex(pl.lvl||1),ph:me?qzMyPhoto():(pl.ph||""),score:0,shown:0,ok:0}; });
+  QZ.gid=(QZ.gid||0)+1; QZ.mode="online"; QZ.i=-1; QZ.turn=-1; QZ.q=null; QZ.view="play"; audio(); if(NET.host) qzNext(); else renderQuiz(); } // the guest waits for the host's first question
 function netRecv(m){ if(!m||typeof m!=="object") return; const ok=(x,max)=>Number.isInteger(x)&&x>=0&&x<max;
   if(m.type==="start" && !NET.host && QZ.data){ if(!Array.isArray(m.idx)||!m.idx.every(i=>ok(i,QZ.data.q.length))||m.idx.length>30||!Array.isArray(m.players)||!m.players.length||m.players.length>4) return;
-    const cfg={diff:[1,2,3].includes(m.cfg&&m.cfg.diff)?m.cfg.diff:1, ans:m.cfg&&m.cfg.ans==="chords"?"chords":"notes", time:[10,20,30].includes(m.cfg&&m.cfg.time)?m.cfg.time:20, keys:!!(m.cfg&&m.cfg.keys)};
-    const players=m.players.filter(x=>x&&typeof x.id==="string").map(x=>({id:x.id,name:qzSafe(x.name)||"?"}));
+    const cfg={diff:[1,2,3].includes(m.cfg&&m.cfg.diff)?m.cfg.diff:1, ans:m.cfg&&m.cfg.ans==="chords"?"chords":"notes", time:[5,10,20,30].includes(m.cfg&&m.cfg.time)?m.cfg.time:20, keys:!!(m.cfg&&m.cfg.keys)};
+    const players=m.players.filter(x=>x&&typeof x.id==="string").map(x=>({id:x.id,name:qzSafe(x.name)||"?",lvl:Math.max(1,Math.min(999,x.lvl|0)),ph:qzPhotoOk(x.ph)?x.ph:""}));
     if(!players.some(x=>x.id===netId())) return; qzOnlineBegin({idx:m.idx,cfg,players}); return; }
   if(QZ.mode!=="online"||QZ.view!=="play") return;
   if(m.type==="q" && !NET.host && ok(m.i,QZ.list.length)){ qzShowQ(m.i); return; }
@@ -5628,7 +5818,7 @@ $("qzSearchBtn").addEventListener("click",netSearch);
 $("qzSearchCancel").addEventListener("click",netStopSearch);
 $("qzSearchBot").addEventListener("click",()=>{ netStopSearch(); const c=qzCfg(); c.where="local"; c.n=1; c.bots=Math.max(1,c.bots); save(); netLeave(); qzStart(); });
 $("qzNetName").addEventListener("change",e=>{ qzCfg().netName=qzSafe(e.target.value); save(); const tr={id:netId(),name:netName(),lvl:levelInfo(S.xp).L,at:Date.now()};
-  if(NET.ch) NET.ch.track({...tr,host:NET.host}); if(NET.lobby) NET.lobby.track({...tr,wait:NET.searching}); });
+  if(NET.ch) NET.ch.track({...tr,ph:qzMyPhoto(),host:NET.host}); if(NET.lobby) NET.lobby.track({...tr,wait:NET.searching}); });
 // a shared link pianochallenges.com/#quiz-ABCDE opens the quiz and joins that room
 function netFromHash(){ const m=/^#quiz-([A-Z2-9]{5})$/.exec(location.hash||""); if(!m) return; history.replaceState(null,"",location.pathname+location.search);
   const c=qzCfg(); c.where="online"; save(); openPage("quiz"); qzLoad().then(()=>{ netLobbyPeek(); netJoin(m[1],false); }); }
@@ -6231,7 +6421,7 @@ async function enableMidi(){
   try{
     const acc=await navigator.requestMIDIAccess(); midiAcc=acc;
     const bind=()=>{ document.querySelectorAll("#kbd .k-down").forEach(e=>e.classList.remove("k-down")); const names=[]; acc.inputs.forEach(inp=>{
-        if(inp.state && inp.state!=="connected"){ inp.onmidimessage=null; return; } // Chrome keeps unplugged ports in the map
+        if((inp.state && inp.state!=="connected") || midiVirtual(inp.name)){ inp.onmidimessage=null; return; } // Chrome keeps unplugged ports in the map; virtual ports are not keyboards
         names.push(inp.name); inp.onmidimessage=ev=>{
         const [st,note,vel]=ev.data;
         if(page==="quiz"){ if((st&0xf0)===0x90 && vel>0){ if(S.settings.midiSound) tone(note,0,.9,.1+.26*vel/127); if(!anyModal()) quizIn(String(inp.id||inp.name),note); } return; } // every keyboard counts: one per player
@@ -6247,7 +6437,7 @@ async function enableMidi(){
       $("midiBtn").classList.toggle("on",names.length>0); $("midiBtn").classList.remove("err");
       const shown = S.settings.midiInput && names.includes(S.settings.midiInput) ? S.settings.midiInput : names[0];
       $("midiTxt").textContent=names.length ? t("midiDev")+shown : t("midiNone");
-      if(names.length) guessKbdSize(shown); midiReady=names.length>0; midiNames=names; render(); if(midiOpen) renderMidiModal(); renderInputUI(); };
+      if(names.length) guessKbdSize(shown); midiReady=names.length>0; midiNames=names; render(); if(midiOpen) renderMidiModal(); renderInputUI(); if(page==="quiz"&&QZ.view==="setup") renderQzSetup(); };
     midiDenied=false; bind(); acc.onstatechange=bind; notice("");
   }catch(err){ midiDenied=true; $("midiBtn").classList.add("err"); $("midiTxt").textContent=t("midiBlocked"); notice(t("blocked")); if(midiOpen) renderMidiModal(); }
 }
@@ -6736,7 +6926,7 @@ function fnOpen(){ let g=$("gate"); if(!g){ g=document.createElement("div"); g.i
   FN.on=true; FN.done=false; FN.wrong=""; FN.how = fnModes().includes("midi") && !mobileWebNow() ? "midi" : "screen";
   document.body.classList.add("gate-on"); startInert(); g.hidden=false; fnRender(); if(FN.how==="midi") fnMidi(); }
 function fnMidi(){ if(!navigator.requestMIDIAccess && !window.__nativeMidi) return; enableMidi().then(()=>fnRender()).catch(()=>{}); }
-function fnMidiName(){ try{ const n=[]; if(midiAcc) midiAcc.inputs.forEach(i=>{ if(!i.state||i.state==="connected") n.push(i.name); }); return n[0]||""; }catch(e){ return ""; } }
+function fnMidiName(){ try{ const n=[]; if(midiAcc) midiAcc.inputs.forEach(i=>{ if((!i.state||i.state==="connected") && !midiVirtual(i.name)) n.push(i.name); }); return n[0]||""; }catch(e){ return ""; } }
 function fnRender(){ const g=$("gate"); if(!g||!FN.on) return; const mark=$("homeLink").querySelector("svg").outerHTML;
   const W=[0,2,4,5,7,9,11], keys=[0,1].map(o=>W.map(pc=>'<button type="button" class="w" data-m="'+(60+12*o+pc)+'">'+esc((S.settings.notation==="fr"?PC_FR:PC_EN)[pc])+'</button>').join("")).map((h,o)=>o?'<span class="fn-oct2">'+h+'</span>':h).join("");
   const bl=[1,3,6,8,10], blk=[0,1].map(o=>bl.map(pc=>{ const wi=W.indexOf(pc-1)+o*7; return '<button type="button" class="b'+(o?' fn-o2':'')+'" data-m="'+(60+12*o+pc)+'" data-wi="'+wi+'" aria-label="'+esc((S.settings.notation==="fr"?PC_FR:PC_EN)[pc])+'"></button>'; }).join("")).join("");
