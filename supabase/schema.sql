@@ -581,10 +581,10 @@ begin
     'new_accounts_30', (select count(*) from auth.users where created_at > now() - interval '30 days'),
     'new_devices_7', (select count(*) from (select anon_id from public.events group by anon_id having min(at) > now() - interval '7 days') s)
   ) into r;
-  -- temps de jeu : secondes déclarées par les fins d'activité (leçons, parties, quiz, duels), 7 jours
-  select jsonb_build_object('sec_7', coalesce(sum(case when (props ->> 'sec') ~ '^\d{1,6}$' then (props ->> 'sec')::integer end), 0),
-                            'sessions_7', count(*))
-    into play from public.events where at > now() - interval '7 days' and name in ('learn_end','game_end','quiz_end','duel_end','pp_lesson_done');
+  -- temps de jeu (événements « play » : secondes jouées, d'après le compteur de l'app) et activités terminées, 7 jours
+  select jsonb_build_object('sec_7', coalesce(sum(case when name = 'play' and (props ->> 'sec') ~ '^\d{1,6}$' then (props ->> 'sec')::integer end), 0),
+                            'sessions_7', count(*) filter (where name in ('learn_end','game_end','quiz_end','duel_end','pp_lesson_done')))
+    into play from public.events where at > now() - interval '7 days' and name in ('play','learn_end','game_end','quiz_end','duel_end','pp_lesson_done');
   -- rétention : appareils vus pour la première fois il y a N jours ou plus (60 derniers jours), revenus le jour N
   with f as (select anon_id, min((at at time zone 'Europe/Paris')::date) d0 from public.events group by anon_id),
        c as (select f.anon_id, f.d0 from f where f.d0 >= today - 60),
