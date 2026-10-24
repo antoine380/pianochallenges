@@ -47,9 +47,9 @@ const { browser } = await launch({ mode: 'ok' }); // the shared browser (context
 // ---------- CA-03: first launch, "I'm starting" → D6 then P01; no chord game. Other levels still get the chords.
 { const p = await ctx(browser, { w: 1280, h: 800 });
   await p.goto(URL); await W(p, 1500);
-  check('premier lancement : niveau « Je débute » choisi par défaut', await p.evaluate(() => document.querySelector('.fn-lv [data-v=debut]').getAttribute('aria-pressed') === 'true'));
-  await note(p, 60); await W(p, 400);
-  check('après le Do : le bouton annonce les Premiers pas', await p.evaluate(() => /Premiers pas/.test(document.getElementById('fnGo').textContent)));
+  check('premier lancement : « Joue un Do » d’abord, le niveau vient après (lot 2, D3)', await p.evaluate(() => !!document.querySelector('.fn-d3') && !document.querySelector('.fn-lv')));
+  await note(p, 60); await W(p, 1000);
+  check('après le Do (D4) : « Oui, je n’y connais rien » mène aux Premiers pas, ou un 2e Do', await p.evaluate(() => /je n'y connais rien/.test(document.getElementById('fnGo').textContent) && /Premiers pas/.test(document.querySelector('.fn-d4').textContent)));
   await note(p, 72); await W(p, 1600);
   const s0 = await S(p);
   check('CA-03 débutant : présentation des Premiers pas (D6), aucune partie d’accords', await view(p) === 'path' && await p.evaluate(() => !document.body.classList.contains('playing') && !document.getElementById('endModal')?.offsetParent), await view(p));
@@ -70,7 +70,7 @@ const { browser } = await launch({ mode: 'ok' }); // the shared browser (context
   check('Bravo : un Do seul ouvre la leçon suivante', await view(p) === 'lesson' && /Trouve tous les Do/.test(await p.evaluate(() => document.querySelector('.pp-tt b').textContent)));
   await note(p, 60); await W(p, 500);
   check('P02 : le Do est une réponse, il ne passe pas « Regarde »', /Regarde/i.test(await stepLbl(p)));
-  await click(p, '#ppMain'); await W(p, 400);
+  await click(p, '#ppMain'); await W(p, 700); // the exercise takes notes 300 ms after it shows (busy)
   for (const n of [48, 60, 72]) { await note(p, n); await W(p, 1000); }
   check('P02 À toi 2 : « Joue tous les Do »', /tous les Do/.test(await say(p)));
   await note(p, 60); await W(p, 300); await note(p, 48); await W(p, 400);
@@ -105,7 +105,7 @@ const { browser } = await launch({ mode: 'ok' }); // the shared browser (context
     for (const n of bad ? [64, 62, 60] : [62, 64]) { await note(p, n); await W(p, 300); } await W(p, 900); }
   st = await S(p);
   check('3 leçons faites : P03 réussie, 3/14', await view(p) === 'bravo' && st.pp.done.p03 && Object.keys(st.pp.done).length === 3, st.pp.done);
-  check('après P03 : la leçon 4 n’est pas encore écrite (retour au parcours)', /Retour au parcours/.test(await p.evaluate(() => document.getElementById('ppMain').textContent)));
+  check('après P03 : la leçon 4 est proposée (lot 2)', /Leçon suivante/.test(await p.evaluate(() => document.getElementById('ppMain').textContent)));
   // CA-12, older than 24 h: back to step 1
   await p.evaluate(() => { const S = JSON.parse(localStorage.getItem('memo-gammes-v1')); S.resume = { kind: 'pp', id: 'p02', step: 2, v: 1, at: Date.now() - 25 * 3600e3 }; localStorage.setItem('memo-gammes-v1', JSON.stringify(S)); });
   await p.reload(); await W(p, 1500);
@@ -116,8 +116,7 @@ const { browser } = await launch({ mode: 'ok' }); // the shared browser (context
 
 // ---------- other levels: unchanged (chords right away)
 { const p = await ctx(browser, { w: 1280, h: 800 }); await p.goto(URL); await W(p, 1500);
-  await p.evaluate(() => document.querySelector('.fn-lv [data-v=notes]').click()); await W(p, 200);
-  await note(p, 60); await W(p, 300); await note(p, 72); await W(p, 1600);
+  await note(p, 60); await W(p, 1000); await p.evaluate(() => document.querySelector('.fn-lv4 [data-v=notes]').click()); await W(p, 1600);
   check('CA-03 niveau « J’ai des bases » : partie d’accords comme avant', await p.evaluate(() => document.body.dataset.page === 'practice' && /Majeur/.test(document.getElementById('prompt').textContent)));
   await p.context().close(); }
 

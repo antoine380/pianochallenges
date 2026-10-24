@@ -9,11 +9,11 @@ const ev = (f, a) => page.evaluate(f, a), vis = id => ev(id => { const e = docum
 { const c = await browser.newContext({ viewport: { width: 1280, height: 800 }, locale: 'fr-FR' }); await c.addInitScript(INIT.replace('${MODE}', 'ok')); const p = await c.newPage();
   const e = (f, a) => p.evaluate(f, a); await p.goto(URL); await p.waitForTimeout(1500);
   check('premier lancement : « Joue ta première note », pas de formulaire', await e(() => !!document.querySelector('.fn-card') && !document.getElementById('gtEmail')));
-  check('clavier MIDI détecté et choisi, 3 niveaux', await e(() => document.querySelector('.fn-in[data-v=midi]').getAttribute('aria-pressed') === 'true' && /Fake/.test(document.querySelector('.fn-in[data-v=midi] small').textContent) && document.querySelectorAll('.fn-lv button').length === 3));
+  check('clavier MIDI détecté : choix de l’entrée sauté (D2), « Joue un Do » avec le nom du clavier (D3), niveau demandé après', await e(() => !document.querySelector('.fn-hwc') && /Fake/.test(document.querySelector('.fn-d3s').textContent) && !document.querySelector('.fn-lv')));
   await e(() => window.__midi.noteOn(62)); await p.waitForTimeout(150);
-  check('mauvaise note : on dit laquelle et où est le Do', await e(() => /Presque/.test(document.querySelector('#fnPrompt small').textContent)));
+  check('mauvaise note : on dit laquelle et où est le Do', await e(() => /c'est un Ré/.test(document.querySelector('#fnPrompt').textContent) && /2 touches noires/.test(document.querySelector('#fnPrompt small').textContent)));
   await e(() => window.__midi.noteOn(60)); await p.waitForTimeout(300);
-  check('un Do : bravo et bouton pour continuer', await e(() => /Bravo/.test(document.querySelector('#fnPrompt').textContent) && !document.getElementById('fnGo').hidden));
+  check('un Do : « Tu viens de jouer un Do ! » (puis le niveau, D4)', await e(() => /Tu viens de jouer un Do/.test(document.getElementById('fnPrompt').textContent)));
   await e(() => window.__midi.noteOn(72)); await p.waitForTimeout(1500);
   const S0 = await e(() => JSON.parse(localStorage.getItem('memo-gammes-v1')));
   check('un 2e Do (niveau « Je débute ») : les Premiers pas s’ouvrent (r21 vérifie la suite), invité, sans tutoriel', await e(() => document.body.dataset.page === 'pp' && !!document.querySelector('#ppPanel .pp-path')) && S0.gate === 'guest' && S0.onb && S0.onb.done && S0.tourDone === 1 && S0.settings.input === 'midi', { gate: S0.gate, input: S0.settings.input });
