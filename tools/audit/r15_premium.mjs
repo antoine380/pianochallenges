@@ -26,8 +26,9 @@ check('mensuel : bouton 17,99 €, pas de frise', await ev(() => /17,99/.test(do
 await page.keyboard.press('Escape'); await wait(page, 200);
 check('Échap ferme le paywall', !(await vis('pw')));
 await ev(() => document.querySelector('.mode-item[data-mode="play"]').click()); await wait(page, 500);
-check('PLAY : 3 morceaux sur 5 verrouillés', await ev(() => document.querySelectorAll('#playSongs .ptile.pw-lk').length === 3));
-await ev(() => document.querySelectorAll('#playSongs .ptile')[4].click()); await wait(page, 300);
+await wait(page, 600); // catalogue (C6) loaded on demand
+check('PLAY : 2 morceaux gratuits (lune, maman), les autres verrouillés', await ev(() => { const all = [...document.querySelectorAll('#playSongs .ptile[data-song]')], lk = all.filter(e => e.classList.contains('pw-lk')).map(e => e.dataset.song); return all.length >= 30 && lk.length === all.length - 2 && !lk.includes('lune') && !lk.includes('maman'); }));
+await ev(() => document.querySelector('#playSongs .ptile.pw-lk').click()); await wait(page, 300);
 check('morceau verrouillé → paywall (pas de lecteur)', await vis('pw') && await ev(() => document.body.dataset.page !== 'play'));
 await ev(() => document.getElementById('pwX').click()); await wait(page, 200);
 // duels: 3 a day
