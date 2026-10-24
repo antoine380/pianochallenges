@@ -2081,6 +2081,33 @@ body.setup #setupPanel{flex:1 1 auto;min-height:0}
   .rank-card{flex:1 1 0;min-height:0} .rank-card .rank-list{flex:1 1 auto;min-height:0;overflow-y:auto}
   #accountPanel .acct-grid{flex:1 1 0;min-height:0;overflow:auto}
 }
+/* GAMES: its header sits exactly like LEARN / PLAY / QUIZ (same top padding as .mode-page at every size) */
+#gamesPanel{padding-block:6px 10px}
+@media (max-height:820px), (max-width:900px){ #gamesPanel{padding-block:2px 6px} }
+@media (max-width:640px){ #gamesPanel{padding-block:0} }
+@media (max-height:420px) and (orientation:landscape){ #gamesPanel{padding-block:0} }
+/* quiz settings (24/10/2026): big section titles with a small icon, the game settings in one card, Mode and Difficulty as the same
+   choice cards, Help as a row like the time to answer; joyful theme colours at full saturation, « All topics » in every colour */
+#qzSetup .qz-h{display:flex;align-items:center;gap:10px;margin:2px 0 8px;font-family:var(--f-display);font-weight:700;font-size:clamp(1.05rem,.6vw + .8rem,1.35rem);letter-spacing:0;text-transform:none;color:var(--ink)}
+#qzSetup .qz-h svg{width:1.35em;height:1.35em;flex:none;box-sizing:border-box;padding:.2em;border-radius:.34em;fill:none;stroke:#fff;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;
+  background:linear-gradient(150deg,color-mix(in srgb,var(--m-quiz) 50%,#fff),var(--m-quiz));box-shadow:0 8px 16px -8px var(--m-quiz)}
+#qzSetup .qz-conf{display:flex;flex-direction:column;gap:8px;flex:none}
+#qzSetup .qz-conf>.su-lbl{margin-top:2px}
+#qzSetup .qz-conf .qz-row{margin-top:0;display:grid;grid-template-columns:minmax(150px,auto) 1fr;align-items:center;gap:10px}
+#qzSetup .qz-conf .qz-row>.seg{justify-self:start}
+#qzSetup .qz-ans{grid-template-columns:repeat(2,minmax(0,1fr))}
+#qzSetup .qz-conf .qz-diff{background:var(--surface-2);box-shadow:none}
+#qzSetup .qz-conf .qz-diff[aria-pressed="true"]{background:var(--m-quiz);color:#fff}
+.qz-theme{filter:none!important}
+.qz-theme.qz-all{background-image:radial-gradient(120% 80% at 90% -10%,rgba(255,255,255,.28),transparent 55%),linear-gradient(135deg,#d0262f,#b54708 22%,#2e7d32 44%,#0b6bcb 66%,#8e24aa 88%)}
+.qz-theme.qz-all[aria-pressed="true"]{--tc:#8e24aa}
+.qz-helprow{flex-wrap:nowrap}
+@media (max-width:640px), (max-height:420px){ #qzSetup .qz-conf .qz-row{grid-template-columns:auto minmax(0,1fr)} #qzSetup .qz-conf{gap:6px;padding:8px 10px}
+  #qzSetup .qz-conf .qz-row>.seg{justify-self:stretch;min-width:0} #qzSetup .qz-conf .qz-row>.seg button{flex:1 1 0;min-width:0;padding-inline:4px} #qzSetup .qz-conf .qz-row>.su-lbl{font-size:.66rem;letter-spacing:.06em} }
+@media (max-height:420px) and (orientation:landscape){ #qzSetup .qz-conf{flex:1 1 100%;flex-direction:row;flex-wrap:wrap;align-items:center;gap:6px 8px;padding:6px 8px}
+  #qzSetup .qz-conf>:is(.qz-h,.su-lbl){display:none} #qzSetup .qz-conf .qz-ans{flex:1 1 34%;min-width:0} #qzSetup .qz-conf #qzDiff{flex:1 1 60%;min-width:0}
+  #qzSetup .qz-conf .qz-row{display:flex;flex:1 1 auto;min-width:max-content} #qzSetup .qz-conf .qz-row>.seg button{flex:none;padding-inline:9px} #qzSetup .qz-conf .qz-diff{padding:5px 8px} }
+@media (min-width:641px) and (min-height:521px){ .qz .mode-h{display:block!important} .qz .mode-h p{display:none} }
 /* hub: four modes (QUIZ joined the home page, 24/10/2026): a 2 × 2 grid on tablets and computers, 4 in a row on landscape phones */
 #main .hub-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
 @media (min-width:901px){
@@ -2274,20 +2301,19 @@ body.setup #setupPanel{flex:1 1 auto;min-height:0}
       <div class="seg su-seg qz-tabs" id="qzTabs"></div>
       <div class="qz-wrap">
         <div class="qz-col">
-          <h3 class="su-h" data-i="qzThemeH"></h3><div class="qz-themes" id="qzThemes"></div>
-          <h3 class="su-h" data-i="qzConfH"></h3>
-          <div class="qz-row qz-conf1"><span class="su-lbl" data-i="qzAnsH"></span><div class="seg su-seg" id="qzAnsType"></div></div>
+          <h3 class="su-h qz-h"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="3.5" width="7" height="7" rx="2"/><rect x="13.5" y="3.5" width="7" height="7" rx="2"/><rect x="3.5" y="13.5" width="7" height="7" rx="2"/><rect x="13.5" y="13.5" width="7" height="7" rx="2"/></svg><span data-i="qzThemeH"></span></h3><div class="qz-themes" id="qzThemes"></div>
+          <section class="su-box qz-conf" id="qzConf"><h3 class="su-h qz-h"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h10M18 7h2M4 17h4M12 17h8"/><circle cx="16" cy="7" r="2.2"/><circle cx="10" cy="17" r="2.2"/></svg><span data-i="qzConfH"></span></h3>
+          <span class="su-lbl" data-i="qzAnsH"></span><div class="qz-diffs qz-ans" id="qzAnsType" role="group"></div>
           <span class="su-lbl qz-difl" data-i="qzDiffH"></span><div class="qz-diffs" id="qzDiff" role="group"></div>
           <div class="qz-row"><span class="su-lbl" data-i="qzCountH"></span><div class="seg su-seg" id="qzCount"></div></div>
           <div class="qz-row"><span class="su-lbl" data-i="qzTimeH"></span><div class="seg su-seg" id="qzTime"></div></div>
-          <div id="qzHelpBox" class="qz-helpbox"><h3 class="su-h" data-i="qzHelpH"></h3>
-          <label class="qz-help"><span><b><span class="hl" data-i="qzKeysT"></span><span class="hs" data-i="qzKeysS"></span></b><small data-i="qzKeysD"></small></span><span class="sw"><input type="checkbox" id="qzKeysOpt" role="switch"><i></i></span></label></div>
+          <div class="qz-row qz-helprow" id="qzHelpBox"><span class="su-lbl" data-i="qzHelpH"></span><div class="seg su-seg" id="qzKeysSeg" role="group"></div><input type="checkbox" id="qzKeysOpt" hidden></div></section>
           <button class="btn primary qz-tonext" id="qzToPlayers" type="button" data-i="qzToPlayersT"></button>
         </div>
         <aside class="su-side">
           <div class="seg su-seg qz-where" id="qzWhere"></div>
           <div id="qzLocalBox" class="qz-box">
-            <section class="su-box"><h3 class="su-h" data-i="qzPlayersH"></h3><div class="seg su-seg" id="qzN"></div>
+            <section class="su-box"><h3 class="su-h qz-h"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="8.5" r="3.5"/><path d="M2.5 20c.6-3.6 3.1-5.5 6.5-5.5s5.9 1.9 6.5 5.5"/><path d="M15.5 5.2a3.3 3.3 0 0 1 0 6.6M18 14.8c2 .7 3.2 2.4 3.5 5.2"/></svg><span data-i="qzPlayersH"></span></h3><div class="seg su-seg" id="qzN"></div>
               <div id="qzModeRow"><h3 class="su-h" style="margin-top:10px" data-i="qzModeH"></h3><div class="seg su-seg" id="qzMode"></div><p class="qz-hint" id="qzModeHelp"></p></div>
               <div id="qzZoneDevRow" class="qz-row" hidden><span class="su-lbl" data-i="qzZoneKbd"></span><select id="qzZoneDev" class="qz-sel"></select></div>
               <div id="qzPlayers"></div><p class="qz-hint qz-warn" id="qzDevWarn" hidden></p><div class="qz-zmap" id="qzZoneMap" hidden></div>
@@ -2857,7 +2883,7 @@ const TXT = {
     rankOrd:n=>ordFr(n), hsNewsT:"Actualités", hsRankT:"Classement de la semaine", hsRankMore:"Tout voir", hsRankLoad:"Chargement…", hsRankErr:"Classement indisponible pour l'instant.",
     hsNews:[["Nouveau look","Mode jour ou nuit, cartes en 3D : l'app fait peau neuve.","#6a4bf0","M12 3l2.4 5 5.6.8-4 3.9.9 5.5L12 15.6 7.1 18.2l.9-5.5-4-3.9 5.6-.8z"],["Jeux Play","Six mini-jeux sur le clavier lumineux, dans GAMES.","#1f7a52","M6 9h4M8 7v4M15 9h.01M18 11h.01M3 8a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4v5a4 4 0 0 1-7 2.5h-4A4 4 0 0 1 3 13z"],["Jeu libre","Joue ce que tu veux dans PLAY : chaque note s'allume dans sa couleur.","#0e7490","M9 18V5l12-2v13M9 18a3 3 0 1 1-6 0 3 3 0 0 1 6 0zM21 16a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"],["Entraînement du jour","10 exercices mélangés chaque jour pour garder ta série.","#a3306b","M12 3c1 3.5 5 6 5 11a5 5 0 0 1-10 0c0-2.2 1-3.8 2.2-5 .2 1.6 1 2.8 2.3 3.3C11 9.3 11.3 6 12 3z"]],
     wrongSr:"Fausse note : ",
-    lvT:"Quitter la partie ?", lvEndT:"Terminer la partie ?", lvLost:"Ta progression de cette partie sera perdue.", lvEndS:"La partie s'arrête ici : tu verras le bilan des exercices déjà faits.", lvSong:"Ta progression dans ce morceau sera perdue.", lvDuelR:"C'est une partie classée : quitter compte comme une défaite.", lvDuelOn:"Ton adversaire continue sans toi.", lvDuelF:"La partie amicale s'arrête pour toi.", lvQuizOn:"Les autres joueurs continuent sans toi.", lvEndGo:"Terminer", hubQuiz:"Un quiz de culture générale : tu réponds en jouant la bonne note ou le bon accord. Seul, à plusieurs ou en ligne.", hubQuizTags:"Culture générale · Notes et accords · Jusqu'à 4 joueurs · En ligne", setAppH:"Application", setGameTab:"Jeu", pfOverview:"Vue d'ensemble",
+    lvT:"Quitter la partie ?", lvEndT:"Terminer la partie ?", lvLost:"Ta progression de cette partie sera perdue.", lvEndS:"La partie s'arrête ici : tu verras le bilan des exercices déjà faits.", lvSong:"Ta progression dans ce morceau sera perdue.", lvDuelR:"C'est une partie classée : quitter compte comme une défaite.", lvDuelOn:"Ton adversaire continue sans toi.", lvDuelF:"La partie amicale s'arrête pour toi.", lvQuizOn:"Les autres joueurs continuent sans toi.", lvEndGo:"Terminer", hubQuiz:"Un quiz de culture générale : tu réponds en jouant la bonne note ou le bon accord. Seul, à plusieurs ou en ligne.", hubQuizTags:"Culture générale · Notes et accords · Jusqu'à 4 joueurs · En ligne", setAppH:"Application", setGameTab:"Jeu", pfOverview:"Vue d'ensemble", qzAnsDN:"Tu réponds avec une note", qzAnsDC:"Tu réponds avec un accord", qzHelpNo:"Sans", qzHelpKeys:"Touches à jouer",
     dailyShort:"Entraînement"},
   en:{help:"Help", helpTitle:"How it works", helpOk:"Let's go", tutNext:"Next", tutPrev:"Previous", close:"Close", stepOf:(i,n)=>"Step "+i+" of "+n,
     tut:[{h:"Read the challenge",p:"A scale, a chord or a progression appears with a countdown. Picture the notes in your head before the bar runs out."},
@@ -3024,7 +3050,7 @@ const TXT = {
     rankOrd:n=>ordEn(n), hsNewsT:"News", hsRankT:"This week's leaderboard", hsRankMore:"See all", hsRankLoad:"Loading…", hsRankErr:"Leaderboard unavailable right now.",
     hsNews:[["New look","Day or night mode and 3D cards: the app gets a makeover.","#6a4bf0","M12 3l2.4 5 5.6.8-4 3.9.9 5.5L12 15.6 7.1 18.2l.9-5.5-4-3.9 5.6-.8z"],["Play games","Six mini-games on the light-up keyboard, in GAMES.","#1f7a52","M6 9h4M8 7v4M15 9h.01M18 11h.01M3 8a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4v5a4 4 0 0 1-7 2.5h-4A4 4 0 0 1 3 13z"],["Free play","Play anything in PLAY: every note lights up in its colour.","#0e7490","M9 18V5l12-2v13M9 18a3 3 0 1 1-6 0 3 3 0 0 1 6 0zM21 16a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"],["Daily practice","10 mixed exercises every day to keep your streak.","#a3306b","M12 3c1 3.5 5 6 5 11a5 5 0 0 1-10 0c0-2.2 1-3.8 2.2-5 .2 1.6 1 2.8 2.3 3.3C11 9.3 11.3 6 12 3z"]],
     wrongSr:"Wrong note: ",
-    lvT:"Leave the game?", lvEndT:"End the game?", lvLost:"Your progress in this game will be lost.", lvEndS:"The game stops here: you'll see the summary of the exercises you've done.", lvSong:"Your progress in this song will be lost.", lvDuelR:"This is a rated game: leaving counts as a loss.", lvDuelOn:"Your opponent keeps playing without you.", lvDuelF:"The friendly game stops for you.", lvQuizOn:"The other players carry on without you.", lvEndGo:"End game", hubQuiz:"A general-knowledge quiz: you answer by playing the right note or chord. Alone, with friends or online.", hubQuizTags:"General knowledge · Notes and chords · Up to 4 players · Online", setAppH:"App", setGameTab:"Game", pfOverview:"Overview",
+    lvT:"Leave the game?", lvEndT:"End the game?", lvLost:"Your progress in this game will be lost.", lvEndS:"The game stops here: you'll see the summary of the exercises you've done.", lvSong:"Your progress in this song will be lost.", lvDuelR:"This is a rated game: leaving counts as a loss.", lvDuelOn:"Your opponent keeps playing without you.", lvDuelF:"The friendly game stops for you.", lvQuizOn:"The other players carry on without you.", lvEndGo:"End game", hubQuiz:"A general-knowledge quiz: you answer by playing the right note or chord. Alone, with friends or online.", hubQuizTags:"General knowledge · Notes and chords · Up to 4 players · Online", setAppH:"App", setGameTab:"Game", pfOverview:"Overview", qzAnsDN:"You answer with a note", qzAnsDC:"You answer with a chord", qzHelpNo:"Off", qzHelpKeys:"Keys to play",
     dailyShort:"Daily"}
 };
 const t = k => TXT[S.settings.lang][k];
@@ -5603,24 +5629,30 @@ function qzZoneMap(c,zones){ const box=$("qzZoneMap"); box.innerHTML=""; const i
     z.innerHTML='<span class="zl"><b></b><small></small></span>'+k+'</svg>'; nmPut(z.querySelector("b"),c.names[i]||t("qzPlayer")+" "+(i+1)); z.querySelector("small").textContent=qzMidiName(a)+" – "+qzMidiName(b);
     box.appendChild(z); }); }
 const qzTabsMQ=matchMedia("(max-width:640px) and (min-height:421px)"); // phones upright: the quiz tab is full, the help goes to the players tab
-function qzHelpPlace(){ const hb=$("qzHelpBox"); if(!hb) return; const to = !qzTabsMQ.matches ? $("qzToPlayers").parentElement : qzCfg().where==="online" ? $("qzOnlineBox") : $("qzBots").parentElement; // next to the robots
-  if(!to||hb.parentElement===to) return; if(to===$("qzToPlayers").parentElement) $("qzToPlayers").before(hb); else to.appendChild(hb); }
+// the help row: last row of the game settings card; with the two tabs (small screens) it goes to the Players tab, under the robots
+function qzHelpPlace(){ const hb=$("qzHelpBox"); if(!hb) return; const on=qzCfg().where==="online";
+  if(!qzTabsMQ.matches){ if(hb.parentElement!==$("qzConf")) $("qzConf").appendChild(hb); }
+  else if(on){ if(hb.parentElement!==$("qzOnlineBox")) $("qzOnlineBox").appendChild(hb); }
+  else if(hb.previousElementSibling!==$("qzBotLvlRow")) $("qzBotLvlRow").after(hb); }
 qzTabsMQ.addEventListener&&qzTabsMQ.addEventListener("change",qzHelpPlace);
 function renderQzSetup(){ const c=qzCfg(), fr=S.settings.lang==="fr", re=()=>{ save(); renderQzSetup(); }; qzHelpPlace();
   QZ.tab=QZ.tab||"quiz"; $("qzSetup").dataset.tab=QZ.tab; qzSeg("qzTabs",["quiz","players"],QZ.tab,v=>t(v==="quiz"?"qzTabQuiz":"qzTabPlayers"),v=>{ QZ.tab=v; renderQzSetup(); });
   const th=$("qzThemes"); th.innerHTML="";
   if(!QZ.data){ th.innerHTML='<p class="qz-load">'+t("qzLoading")+"</p>"; qzLoad().then(()=>{ if(page==="quiz") renderQuiz(); }).catch(()=>{ th.innerHTML='<p class="qz-load">'+t("qzLoadErr")+"</p>"; }); }
-  else { const all=[["all",{fr:"Tous les thèmes",en:"All topics",img:"globe",col:"#6a4bf0"}],...Object.entries(QZ.data.themes)];
+  else { const all=[["all",{fr:"Tous les thèmes",en:"All topics",img:"globe",col:"#4338ca"}],...Object.entries(QZ.data.themes)];
     all.forEach(([id,o])=>{ const n = id==="all" ? QZ.data.q.length : QZ.data.q.filter(q=>q[0]===id).length;
-      const b=document.createElement("button"); b.type="button"; b.className="qz-theme"; b.style.setProperty("--tc",o.col); b.setAttribute("aria-pressed",c.theme===id);
+      const b=document.createElement("button"); b.type="button"; b.className="qz-theme"+(id==="all"?" qz-all":""); b.style.setProperty("--tc",o.col); b.setAttribute("aria-pressed",c.theme===id);
       b.innerHTML='<span class="qz-ti">'+(OBJ[o.img]?OBJ[o.img]():"")+'</span><b></b><small></small>'; b.querySelector("b").textContent=fr?o.fr:o.en; b.querySelector("small").textContent=n+" "+t("qzQuestions");
       b.onclick=()=>{ c.theme=id; re(); }; th.appendChild(b); }); }
-  qzSeg("qzAnsType",["notes","chords"],c.ans,v=>t(v==="notes"?"qzNotes":"qzChords"),v=>{ c.ans=v; re(); });
-  const dl=$("qzDiff"); dl.innerHTML=""; [1,2,3].forEach(v=>{ const b=document.createElement("button"); b.type="button"; b.className="qz-diff"; b.setAttribute("aria-pressed",c.diff===v);
-    b.innerHTML="<b></b><small></small>"; b.querySelector("b").textContent=t("qzDiffs")[v-1]; b.querySelector("small").textContent=t(c.ans==="notes"?"qzDiffN":"qzDiffC")[v-1]; b.onclick=()=>{ c.diff=v; re(); }; dl.appendChild(b); });
+  // Mode and difficulty: the same big choice cards (Notes / Chords, then Easy / Medium / Hard described for the mode)
+  const card=(box,on,title,sub,fn)=>{ const b=document.createElement("button"); b.type="button"; b.className="qz-diff"; b.setAttribute("aria-pressed",on);
+    b.innerHTML="<b></b><small></small>"; b.querySelector("b").textContent=title; b.querySelector("small").textContent=sub; b.onclick=fn; box.appendChild(b); };
+  const al=$("qzAnsType"); al.innerHTML=""; ["notes","chords"].forEach(v=>card(al,c.ans===v,t(v==="notes"?"qzNotes":"qzChords"),t(v==="notes"?"qzAnsDN":"qzAnsDC"),()=>{ c.ans=v; re(); }));
+  const dl=$("qzDiff"); dl.innerHTML=""; [1,2,3].forEach(v=>card(dl,c.diff===v,t("qzDiffs")[v-1],t(c.ans==="notes"?"qzDiffN":"qzDiffC")[v-1],()=>{ c.diff=v; re(); }));
   qzSeg("qzCount",[5,10,20,30],c.count,String,v=>{ c.count=v; re(); });
   qzSeg("qzTime",[5,10,20,30],c.time,v=>v+" s",v=>{ c.time=v; re(); });
-  $("qzKeysOpt").checked=!!c.keys;
+  $("qzKeysOpt").checked=!!c.keys; $("qzHelpBox").title=t("qzKeysD");
+  qzSeg("qzKeysSeg",[false,true],!!c.keys,v=>t(v?"qzHelpKeys":"qzHelpNo"),v=>{ c.keys=v; $("qzKeysOpt").checked=v; re(); });
   qzSeg("qzWhere",["local","online"],c.where,v=>t(v==="local"?"qzLocal":"qzOnline"),v=>{ c.where=v; save(); if(v==="online") netLobbyPeek(); else netLeave(); renderQzSetup(); });
   $("qzLocalBox").hidden = c.where!=="local"; $("qzOnlineBox").hidden = c.where!=="online"; qzHelpPlace();
   if(c.where==="online"){ renderQzNet(); return; }
