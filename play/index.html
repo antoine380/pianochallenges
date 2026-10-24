@@ -210,6 +210,7 @@ button:focus-visible{outline:2px solid var(--coral);outline-offset:3px}
 </div>
 
 <script src="../assets/js/staff.js"></script>
+<script src="../assets/js/songs-data.js"></script>
 <script>
 (() => {
 /* ================= Language ================= */
@@ -225,8 +226,9 @@ fr:{midiScreen:"Clavier à l'écran",midiConnect:"Connecter un clavier MIDI",mid
  freeT:"Jeu libre",freeK:"Sans partition",freeD:"Joue ce que tu veux : chaque note s'allume dans sa couleur.",songsH:"Morceaux",songsSub:"Domaine public · à ton rythme",gamesH:"Jeux",gamesSub:"Une compétence par jeu",
  foot:"Prototype. Le son est un synthé intégré ; l'app finale utilisera le piano échantillonné Salamander. Clavier d'ordinateur : Q S D F G H J K L pour les blanches, Z E T Y U O P pour les noires.",
  back:"Retour",kbd:"Clavier",lives:"Vies",time:"Temps",streak:"Série",score:"Score",speed:"Vitesse",names:"Notes",fing:"Doigts",wait:"Attente",listen:"Écouter",metro:"Métro",hint:"Indice",replay:"Rejouer",sheet:"Partition",cascade:"Cascade",
- level:"Niveau",levels:['','Débutant','Facile','Intermédiaire'],trad:"Traditionnel",tradMozart:"Traditionnel (var. Mozart)",notes:"notes",record:"Record",play:"Jouer",library:"Bibliothèque",game:"Jeu",
- songIntro:(s,c)=>`${c} · ${s.notes.length} notes. Le morceau s'arrête jusqu'à ce que tu joues la <span style="color:${TONE[s.tone]}">bonne note</span>. Les chiffres indiquent le doigt à utiliser (1 = pouce).`,
+ level:"Niveau",levels:['','Facile','Moyen','Avancé'],trad:"Traditionnel",tradMozart:"Traditionnel (var. Mozart)",notes:"notes",record:"Record",play:"Jouer",library:"Bibliothèque",game:"Jeu",
+ songIntro:(s,c)=>`${c} · ${s.notes.length} notes. Le morceau s'arrête jusqu'à ce que tu joues la <span style="color:${s.col}">bonne note</span>. ${s.hands>1?'Main droite en haut, main gauche en bas (Do3 à Si3).':'Les chiffres indiquent le doigt à utiliser (1 = pouce).'}`,
+ arrH:"Version",oneHand:"une main",twoHands:"deux mains",byFrom:{fr:'Trad. français',gb:'Trad. anglais',us:'Trad. américain',de:'Trad. allemand',qc:'Trad. québécois',ru:'Trad. russe',sc:'Trad. écossais',wa:'Trad. gallois',fi:'Trad. finlandais'},
  listenHint:"« Écouter » joue d'abord le morceau pour toi.",listenedT:"Tu as écouté le morceau",listenedP:"À toi de jouer maintenant.",
  waitNote:"Le morceau attend la bonne note",perfect:"Parfait",good:"Bien",missed:"Raté",verdicts:['On recommence ?','Bien joué','Très bien','Parfait !'],
  acc:(a,sc,st)=>`Précision ${a} % · Score ${sc} · Meilleure série ${st}`,resPerfect:"Parfait",resGood:"Bien",resMissed:"Ratées",resWrong:"Fausses",tooFast:"Trop rapide ? Passe la vitesse à 75 %.",
@@ -248,8 +250,9 @@ en:{midiScreen:"On-screen keyboard",midiConnect:"Connect a MIDI keyboard",midiHo
  freeT:"Free play",freeK:"No score",freeD:"Play anything: every note lights up in its colour.",songsH:"Songs",songsSub:"Public domain · at your own pace",gamesH:"Games",gamesSub:"One skill per game",
  foot:"Prototype. The sound is a built-in synth; the final app will use the sampled Salamander piano. Computer keyboard: A S D F G H J K L for the white keys, W E T Y U O P for the black keys.",
  back:"Back",kbd:"Keyboard",lives:"Lives",time:"Time",streak:"Streak",score:"Score",speed:"Speed",names:"Names",fing:"Fingers",wait:"Wait",listen:"Listen",metro:"Metro",hint:"Hint",replay:"Replay",sheet:"Sheet",cascade:"Cascade",
- level:"Level",levels:['','Beginner','Easy','Intermediate'],trad:"Traditional",tradMozart:"Traditional (Mozart var.)",notes:"notes",record:"Best",play:"Play",library:"Library",game:"Game",
- songIntro:(s,c)=>`${c} · ${s.notes.length} notes. The song stops until you play the <span style="color:${TONE[s.tone]}">right note</span>. The numbers show which finger to use (1 = thumb).`,
+ level:"Level",levels:['','Easy','Medium','Advanced'],trad:"Traditional",tradMozart:"Traditional (Mozart var.)",notes:"notes",record:"Best",play:"Play",library:"Library",game:"Game",
+ songIntro:(s,c)=>`${c} · ${s.notes.length} notes. The song stops until you play the <span style="color:${s.col}">right note</span>. ${s.hands>1?'Right hand at the top, left hand below (C3 to B3).':'The numbers show which finger to use (1 = thumb).'}`,
+ arrH:"Version",oneHand:"one hand",twoHands:"two hands",byFrom:{fr:'French trad.',gb:'English trad.',us:'American trad.',de:'German trad.',qc:'Québécois trad.',ru:'Russian trad.',sc:'Scottish trad.',wa:'Welsh trad.',fi:'Finnish trad.'},
  listenHint:"“Listen” plays the song for you first.",listenedT:"You listened to the song",listenedP:"Now it's your turn.",
  waitNote:"The song is waiting for the right note",perfect:"Perfect",good:"Good",missed:"Missed",verdicts:['Try again?','Well played','Very good','Perfect!'],
  acc:(a,sc,st)=>`Accuracy ${a}% · Score ${sc} · Best streak ${st}`,resPerfect:"Perfect",resGood:"Good",resMissed:"Missed",resWrong:"Wrong",tooFast:"Too fast? Set the speed to 75%.",
@@ -276,25 +279,23 @@ const HUE=[352,10,28,37,46,146,170,194,211,228,250,271]; // same note colours as
 const col=(m,l=62,a=1)=>`hsla(${HUE[((m%12)+12)%12]},86%,${l}%,${a})`;
 const pc=m=>((m%12)+12)%12;
 const isBlack=m=>[1,3,6,8,10].includes(pc(m));
-const LOW=60, HIGH=83;
+let LOW=60, HIGH=83; // C4..B5; a two-hand song widens it down to C3 (setRange)
 const toMidi=n=>{const t=n.match(/^([A-G])(#?)(\d)$/);return 12*(+t[3]+1)+{C:0,D:2,E:4,F:5,G:7,A:9,B:11}[t[1]]+(t[2]?1:0)};
 const parse=(s,fing)=>{let b=0;const out=[];for(const tok of s.trim().split(/\s+/)){const[n,d]=tok.split(':');const dur=parseFloat(d);if(n!=='R')out.push({m:toMidi(n),s:b,d:dur,f:fing[n]||0});b+=dur}return out};
 
-const SONGS=[
- {id:'lune',title:'Au clair de la lune',composer:'trad',level:1,bpm:96,meter:[4,4],tone:'coral',fing:{C4:1,D4:2,E4:3},
-  seq:'C4:1 C4:1 C4:1 D4:1 E4:2 D4:2 C4:1 E4:1 D4:1 D4:1 C4:4 C4:1 C4:1 C4:1 D4:1 E4:2 D4:2 C4:1 E4:1 D4:1 D4:1 C4:4'},
- {id:'maman',title:LANG==='fr'?'Ah ! vous dirai-je, maman':'Twinkle, Twinkle, Little Star',composer:'tradMozart',level:1,bpm:100,tone:'cyan',fing:{C4:1,D4:2,E4:3,F4:4,G4:5,A4:5},
-  seq:'C4:1 C4:1 G4:1 G4:1 A4:1 A4:1 G4:2 F4:1 F4:1 E4:1 E4:1 D4:1 D4:1 C4:2 G4:1 G4:1 F4:1 F4:1 E4:1 E4:1 D4:2 G4:1 G4:1 F4:1 F4:1 E4:1 E4:1 D4:2 C4:1 C4:1 G4:1 G4:1 A4:1 A4:1 G4:2 F4:1 F4:1 E4:1 E4:1 D4:1 D4:1 C4:2'},
- {id:'ode',title:LANG==='fr'?'Ode à la joie':'Ode to Joy',composer:'L. van Beethoven',level:2,bpm:104,tone:'sun',fing:{C4:1,D4:2,E4:3,F4:4,G4:5},
-  seq:'E4:1 E4:1 F4:1 G4:1 G4:1 F4:1 E4:1 D4:1 C4:1 C4:1 D4:1 E4:1 E4:1.5 D4:.5 D4:2 E4:1 E4:1 F4:1 G4:1 G4:1 F4:1 E4:1 D4:1 C4:1 C4:1 D4:1 E4:1 D4:1.5 C4:.5 C4:2'},
- {id:'jacques',title:'Frère Jacques',composer:'trad',level:2,bpm:108,tone:'mint',fing:{G4:1,C5:1,D5:2,E5:3,F5:4,G5:5,A5:5},
-  seq:'C5:1 D5:1 E5:1 C5:1 C5:1 D5:1 E5:1 C5:1 E5:1 F5:1 G5:2 E5:1 F5:1 G5:2 G5:.5 A5:.5 G5:.5 F5:.5 E5:1 C5:1 G5:.5 A5:.5 G5:.5 F5:.5 E5:1 C5:1 C5:1 G4:1 C5:2 C5:1 G4:1 C5:2'},
- {id:'elise',title:LANG==='fr'?'Lettre à Élise':'Für Elise',composer:'L. van Beethoven',level:3,bpm:76,meter:[3,8],pickup:1,tone:'violet',fing:{E5:4,'D#5':3,D5:3,C5:2,B4:1,A4:1,'G#4':2,E4:2,C4:1},
-  seq:'E5:.5 D#5:.5 E5:.5 D#5:.5 E5:.5 B4:.5 D5:.5 C5:.5 A4:1.5 C4:.5 E4:.5 A4:.5 B4:1.5 E4:.5 G#4:.5 B4:.5 C5:1.5 E4:.5 E5:.5 D#5:.5 E5:.5 D#5:.5 E5:.5 B4:.5 D5:.5 C5:.5 A4:1.5 C4:.5 E4:.5 A4:.5 B4:1.5 E4:.5 C5:.5 B4:.5 A4:1.5'},
-];
-SONGS.forEach(s=>{s.notes=parse(s.seq,s.fing);s.end=Math.max(...s.notes.map(n=>n.s+n.d));s.by=T[LANG][s.composer]||s.composer});
+// Songs come from the shared catalogue (assets/js/songs-data.js, C6): one entry per song, one variant per arrangement (Easy / Medium / Advanced)
+const PS=window.PC_SONG;
+const SONGS=PS.list.map(d=>{const s={id:d.id,data:d,title:d.t[LANG==='fr'?0:1],bpm:d.bpm,meter:d.m,pickup:d.p,col:d.k,arrs:PS.arrs(d)};
+  s.by=d.by==='trad'?(tr('byFrom')[d.from]||tr('trad')):d.by;return s});
+// fingering of the melody: the song's own map, or a five-finger position when the melody fits in five white keys
+function fingOf(d){if(d.f)return n=>d.f[n.name]||0;const mel=PS.parseSeq(d.mel).notes,W=[0,2,4,5,7,9,11],wi=m=>Math.floor(m/12)*7+W.indexOf(pc(m));
+  if(mel.some(n=>isBlack(n.m)))return()=>0;const lo=Math.min(...mel.map(n=>wi(n.m))),hi=Math.max(...mel.map(n=>wi(n.m)));return hi-lo<=4?n=>wi(n.m)-lo+1:()=>0}
+function variant(s,lv){const a=s.arrs.find(x=>x.lv===lv)||s.arrs[0],fo=fingOf(s.data);
+  const notes=PS.build(s.data,a.lv).map(n=>({m:n.m,s:n.s,d:n.d,h:n.h,f:n.h===1?fo(n):0}));
+  return {...s,id:a.key,level:a.lv,hands:a.hands,notes,end:Math.max(...notes.map(n=>n.s+n.d)),base:s}}
+SONGS.forEach(s=>{s.v0=variant(s,s.arrs[0].lv)});
 const LEVEL=tr('levels');
-const TONE={coral:'#f26a5e',cyan:'#3ab8c8',sun:'#d9b23a',mint:'#3fae7c',violet:'#7a5cf5'};
+
 
 const GAMES=[
  {id:'runner',bg:'#3fae7c',notes:[{m:60,s:0,d:1},{m:62,s:1.5,d:1},{m:64,s:3,d:1}],lit:[0,2,4]},
@@ -343,16 +344,20 @@ function blip(freq,dur=.08,type='square',vol=.08,slide){
 const fanfare=()=>[0,.12,.24].forEach((d,i)=>setTimeout(()=>blip([660,880,1320][i],.18,'triangle',.08),d*1000));
 
 /* ================= Keyboard ================= */
-const WH=[];for(let m=LOW;m<=HIGH;m++)if(!isBlack(m))WH.push(m);
+const WH=[];
 function lane(m){if(m<LOW||m>HIGH)return null;const ww=1/WH.length;
   if(!isBlack(m))return{x:WH.indexOf(m)*ww,w:ww};const bw=ww*.6;return{x:(WH.indexOf(m-1)+1)*ww-bw/2,w:bw}}
 const kbd=document.getElementById('kbd'),keyEls=new Map();
 let showNames=true,showFing=true;
+function buildKeys(){WH.length=0;for(let m=LOW;m<=HIGH;m++)if(!isBlack(m))WH.push(m);kbd.innerHTML='';keyEls.clear();
 for(let m=LOW;m<=HIGH;m++){const L=lane(m),k=document.createElement('div');
   k.className='key '+(isBlack(m)?'b':'w');
   k.style.left=`calc(6px + (100% - 12px) * ${L.x})`;k.style.width=`calc((100% - 12px) * ${L.w} - 2px)`;
   k.style.setProperty('--kc',col(m,isBlack(m)?56:62));k.dataset.m=m;
-  k.innerHTML='<span class="lbl"></span><span class="fg"></span>';kbd.appendChild(k);keyEls.set(m,k)}
+  k.innerHTML='<span class="lbl"></span><span class="fg"></span>';kbd.appendChild(k);keyEls.set(m,k)}}
+buildKeys();
+// a two-hand arrangement needs the octave below middle C: the keyboard widens to C3..B5, and back to C4..B5 for the rest
+function setRange(lo,hi){if(lo===LOW&&hi===HIGH)return;LOW=lo;HIGH=hi;buildKeys();labelKeys();lastTargets='x';SV.sig=''}
 const FLATS=LANG==='fr'?['','Ré♭','','Mi♭','','','Sol♭','','La♭','','Si♭','']:['','D♭','','E♭','','','G♭','','A♭','','B♭',''];
 function labelKeys(){keyEls.forEach((k,m)=>{k.firstChild.textContent=!showNames?(pc(m)===0?NAMES[0]+(Math.floor(m/12)-1):''):(isBlack(m)?FLATS[pc(m)]:NAMES[pc(m)])})}
 labelKeys();
@@ -438,13 +443,13 @@ function tablet(x){
   return`<div class="tab"><div class="floor">${floor}</div><div class="mini">${mini}</div></div>`}
 function renderHome(){
   const g=$('songGrid');g.innerHTML='';let total=0;
-  SONGS.forEach(s=>{const b=best[s.id]||0;total+=b;
-    const c=document.createElement('button');c.className='tile';c.style.background=TONE[s.tone];
+  SONGS.forEach(s0=>{const s=s0.v0,b=best[s.id]||0;total+=b;
+    const c=document.createElement('button');c.className='tile';c.style.background=s.col;
     const mins=Math.round(s.end/s.bpm*60);
     c.innerHTML=tablet({notes:s.notes,lit:[pc(s.notes[0].m)]})+`<div class="tile-body"><span class="lvl">${tr('level')} ${s.level} · ${LEVEL[s.level]}</span><h3>${s.title}</h3>
       <div class="meta"><span>${s.by}</span>${starsHTML(b)}</div>
       <div class="meta"><span class="mono">${s.notes.length} ${tr('notes')} · ${mins} s</span><span class="mono">${s.bpm} BPM</span></div></div>`;
-    c.addEventListener('click',()=>openSong(s));g.appendChild(c)});
+    c.addEventListener('click',()=>openSong(s0));g.appendChild(c)});
   $('starTotal').textContent=total;
   const gg=$('gameGrid');gg.innerHTML='';
   GAMES.forEach(x=>{const c=document.createElement('button');c.className='tile';c.style.background=x.bg;
@@ -491,12 +496,13 @@ $('restart').addEventListener('click',()=>{if(mode==='song')startSong();else GAM
 
 /* ================= Song player ================= */
 const P={song:null,notes:[],t:0,playing:false,wait:true,listen:false,metro:false,score:0,streak:0,maxStreak:0,c:{p:0,b:0,m:0,w:0},frozen:false,lastBeat:-9};
-function openSong(s){mode='song';P.song=s;go('play');applySheet();
-  setBar({title:s.title,sub:`${s.by} · ${tr('level')} ${s.level}`,lives:false,time:false,streak:true,prog:true,tools:['song','speed','fing','names']});
+function openSong(s0,lv){const s=variant(s0.base||s0,lv||(s0.base?s0.level:s0.arrs[0].lv));setRange(s.hands>1?48:60,83);mode='song';P.song=s;go('play');applySheet();
+  setBar({title:s.title,sub:`${s.by} · ${LEVEL[s.level]}`,lives:false,time:false,streak:true,prog:true,tools:['song','speed','fing','names']});
   resetSong();
-  overlay(`<span class="lvl">${tr('level')} ${s.level} · ${LEVEL[s.level]}</span><h2>${s.title}</h2>
-    <p>${tr('songIntro')(s,s.by)}</p>
+  overlay(`<span class="lvl">${LEVEL[s.level]} · ${tr(s.hands>1?'twoHands':'oneHand')}</span><h2>${s.title}</h2>
+    <p>${tr('songIntro')(s,s.by)}</p>${s.arrs.length>1?`<div class="row arr" role="group" aria-label="${tr('arrH')}">${s.arrs.map(a=>`<button class="btn ${a.lv===s.level?'':'light'}" data-lv="${a.lv}" aria-pressed="${a.lv===s.level}">${LEVEL[a.lv]} · ${tr(a.hands>1?'twoHands':'oneHand')}</button>`).join('')}</div>`:''}
     <div class="row"><button class="btn" id="go">${tr('play')}</button></div><span class="hint">${tr('listenHint')}</span>`);
+  ovCard.querySelectorAll('[data-lv]').forEach(b=>b.onclick=()=>openSong(s.base,+b.dataset.lv));
   $('go').onclick=()=>{audio();startSong()}}
 function resetSong(){P.notes=P.song.notes.map(n=>({...n,st:0}));P.t=-2;P.score=0;P.streak=0;P.maxStreak=0;P.c={p:0,b:0,m:0,w:0};P.frozen=false;P.lastBeat=-9;fx.length=0;pops.length=0;P.playing=false;hud()}
 function startSong(){if(!P.song)return;resetSong();ov.hidden=true;P.playing=true}
@@ -653,7 +659,7 @@ if(HAS_STAFF&&document.fonts)document.fonts.load('40px Bravura').then(()=>{SV.si
 /* ================= Games ================= */
 const GAME={};
 let gs=null; // current game state
-function openGame(id){mode=id;const g=GAMES.find(x=>x.id===id);go('play');applySheet();
+function openGame(id){setRange(60,83);mode=id;const g=GAMES.find(x=>x.id===id);go('play');applySheet();
   setBar({title:g.t,sub:g.skill,lives:GAME[id].lives,time:GAME[id].timed,streak:false,prog:false,tools:GAME[id].tools||['fing','names']});
   GAME[id].reset();drawG=GAME[id].draw;
   overlay(`<span class="lvl">${tr('game')} · ${g.skill}</span><h2>${g.t}</h2><p>${g.intro}</p>${GAME[id].options?GAME[id].options():''}<div class="row"><button class="btn" id="go">${tr('play')}</button></div>`);
@@ -839,7 +845,7 @@ function frame(now){const dt=Math.min(.05,(now-last)/1000);last=now;
   requestAnimationFrame(frame)}
 renderHome();requestAnimationFrame(frame);
 if(VIEW.startsWith('game=')&&GAMES.some(g=>g.id===VIEW.slice(5)))openGame(VIEW.slice(5));
-if(VIEW.startsWith('song=')){const s=SONGS.find(x=>x.id===VIEW.slice(5));if(s)openSong(s)}
+if(VIEW.startsWith('song=')){const s=SONGS.find(x=>x.id===VIEW.slice(5)),ar=+((HASH.find(x=>x.startsWith('arr='))||'arr=0').slice(4));if(s)openSong(s,ar||0)}
 })();
 </script>
 
