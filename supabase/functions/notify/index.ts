@@ -3,7 +3,11 @@
 //   welcome : accounts created in the last 3 days that have not had the welcome e-mail
 //   streak  : streak of 3 days or more, played yesterday but not yet today (sent around 19:00 Paris time)
 //   weekly  : Sunday recap for the players active in the last 4 weeks
-//   preview : {job:"preview", user_id} sends the three e-mails to one account, to check them
+//   path    : every hour (cron pc-path at :05) — the next First steps lesson (screen D24, lot 4): accounts that started the First steps and
+//             have not played today, at their reminder hour (notif_prefs.remind_hour, time zone notif_prefs.tz), 3 reminders without return
+//             at most, then one « your spot is kept » 14 days after the last session. Who is due comes from SQL: path_due() / path_mark()
+//             (supabase/migrations/2026-10-25_reminder.sql). Uses the « Rappels » switch (email_streak) and the same unsubscribe link.
+//   preview : {job:"preview", user_id} sends the four e-mails to one account, to check them
 // Unsubscribe: the link (GET) only redirects to the site, which asks for a confirmation and then POSTs here (mail link scanners do not unsubscribe anyone);
 // mail clients' one-click unsubscribe (RFC 8058) POSTs directly: /functions/v1/notify?unsub=<token>&k=weekly|streak|social|news|all
 // Secrets: RESEND_API_KEY, NOTIFY_SECRET (SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY are provided by Supabase).
@@ -21,7 +25,7 @@ const MAX_PER_RUN = 90; // per job run (the Resend free plan allows 100 e-mails 
 
 type Lang = "fr" | "en";
 type Prefs = { user_id: string; email_weekly: boolean; email_streak: boolean; email_social: boolean; email_news: boolean; lang: Lang;
-  unsub_token: string; welcome_sent_at: string | null; last_streak_mail: string | null; last_weekly_mail: string | null };
+  unsub_token: string; welcome_sent_at: string | null; last_streak_mail: string | null; last_weekly_mail: string | null; last_path_mail?: string | null };
 
 // ---------- dates (Europe/Paris, like the players) ----------
 const parisDay = (d = new Date()) => new Intl.DateTimeFormat("en-CA", { timeZone: "Europe/Paris" }).format(d); // YYYY-MM-DD
@@ -74,7 +78,7 @@ const T = {
   en: { hi: (n: string) => `Hi ${n}!`, play: "Play now", why: "You get this e-mail because you have a Piano Challenges account.",
     unsubOne: "Stop this kind of e-mail", unsubAll: "Stop all e-mails", settings: "Choose your e-mails in the app (Settings › Notifications)" },
 };
-function layout(lang: Lang, p: Prefs, kind: string, title: string, inner: string, cta = SITE) {
+function layout(lang: Lang, p: Prefs, kind: string, title: string, inner: string, cta = SITE, btn?: string) {
   const t = T[lang], u1 = `${FN}?unsub=${p.unsub_token}&k=${kind}`, u2 = `${FN}?unsub=${p.unsub_token}&k=all`, one = kind === "news"; // the welcome e-mail: only "all"
   const html = `<!doctype html><html lang="${lang}"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>${esc(title)}</title></head>
 <body style="margin:0;background:#f1f2fb;font-family:Nunito,Segoe UI,Helvetica,Arial,sans-serif;color:#1b1838">
@@ -82,7 +86,7 @@ function layout(lang: Lang, p: Prefs, kind: string, title: string, inner: string
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:560px;background:#ffffff;border-radius:24px;overflow:hidden;box-shadow:0 12px 30px rgba(43,37,96,.12)">
 <tr><td style="background:linear-gradient(135deg,#8b6cff,#5b3fd6);padding:22px 28px;color:#fff;font-family:Fredoka,Nunito,Arial,sans-serif;font-size:22px;font-weight:700">🎹 Piano Challenges</td></tr>
 <tr><td style="padding:26px 28px 8px;font-size:16px;line-height:1.55">${inner}</td></tr>
-<tr><td style="padding:10px 28px 28px"><a href="${cta}" style="display:inline-block;background:#6a4bf0;color:#fff;text-decoration:none;font-weight:800;padding:13px 26px;border-radius:999px">${t.play}</a></td></tr>
+<tr><td style="padding:10px 28px 28px"><a href="${cta}" style="display:inline-block;background:#6a4bf0;color:#fff;text-decoration:none;font-weight:800;padding:13px 26px;border-radius:999px">${esc(btn || t.play)}</a></td></tr>
 </table>
 <p style="max-width:560px;font-size:12px;line-height:1.5;color:#6b6890;margin:16px auto 0">${t.why}<br>${one ? "" : `<a href="${u1}" style="color:#6b6890">${t.unsubOne}</a> · `}<a href="${u2}" style="color:#6b6890">${t.unsubAll}</a><br>${t.settings}</p>
 </td></tr></table></body></html>`;
@@ -146,6 +150,42 @@ ${w.games ? (fr ? `<br>${w.games} duel${w.games > 1 ? "s" : ""} classé${w.games
 }
 const GAME = { fr: { runner: "Saute-notes", speed: "Contre la montre", memory: "Mémoire musicale" }, en: { runner: "Note Jumper", speed: "Time attack", memory: "Musical memory" } } as const;
 
+// the First steps (14 lessons): titles and what each one teaches, with the note names of the language (same texts as the app, ppTi / ppCan)
+const PP_NOTES = { fr: ["Do", "Ré", "Mi", "Fa", "Sol", "La", "Si"], en: ["C", "D", "E", "F", "G", "A", "B"] } as const;
+const PP_MIN = [2, 2, 2, 3, 2, 2, 3, 3, 3, 2, 3, 3, 3, 3];
+function ppLesson(lang: Lang, i: number) {
+  const [C, D, E, F, G, A, B] = PP_NOTES[lang];
+  const fr = {
+    ti: ["Le clavier se répète", `Trouve tous les ${C}`, `${D} et ${E}`, `${F}, ${G}, ${A}, ${B}`, "Les 7 notes en éclair", "Grave, aigu, octave", "Ta main, tes doigts", "Ta première mélodie", "Joue avec la pulsation", "Ton premier accord", `${F} et ${G} : même forme`, "Changer d'accord en rythme", "La main gauche entre en jeu", "Ton premier morceau"],
+    can: ["Tu vas repérer les groupes de 2 et de 3 touches noires : ta boussole sur le clavier.", `Tu vas trouver un ${C} en une seconde, et le ${C} central.`, `Tu vas jouer ${C}, ${D} et ${E}.`, `Tu vas trouver les 4 notes autour des 3 touches noires, sans compter.`, "Tu vas nommer n'importe quelle touche blanche en un éclair.", "Tu vas te déplacer sur tout le clavier, du grave à l'aigu.", `Tu vas poser ta main en position de ${C} : un doigt par touche.`, "Tu vas jouer ta première mélodie : Au clair de la lune.", "Tu vas jouer en rythme avec le clic.", `Tu vas jouer ${C} majeur, ton premier accord.`, `Tu vas jouer ${F} et ${G} majeurs : de quoi accompagner des centaines de chansons.`, "Tu vas changer d'accord en rythme.", "Tu vas jouer avec les deux mains.", "Tu vas accompagner un morceau en entier."],
+  };
+  const en = {
+    ti: ["The keyboard repeats", `Find every ${C}`, `${D} and ${E}`, `${F}, ${G}, ${A}, ${B}`, "All 7 notes, fast", "Low, high, octave", "Your hand, your fingers", "Your first melody", "Play with the beat", "Your first chord", `${F} and ${G}: same shape`, "Change chords in time", "The left hand joins in", "Your first song"],
+    can: ["You'll spot the groups of 2 and 3 black keys: your compass on the keyboard.", `You'll find a ${C} in a second, and middle ${C}.`, `You'll play ${C}, ${D} and ${E}.`, "You'll find the 4 notes around the 3 black keys, without counting.", "You'll name any white key in a flash.", "You'll move all over the keyboard, from low to high.", `You'll place your hand in ${C} position: one finger per key.`, "You'll play your first melody: Au clair de la lune.", "You'll play in time with the click.", `You'll play ${C} major, your first chord.`, `You'll play ${F} and ${G} major: enough for hundreds of songs.`, "You'll change chords in time.", "You'll play with both hands.", "You'll play a whole song."],
+  };
+  const L = lang === "fr" ? fr : en; return { n: i + 1, ti: L.ti[i], can: L.can[i], min: PP_MIN[i] };
+}
+// D24: three lines (the lesson, what you learn, how many are left) and a « Pick up » button that opens the app on the hub card
+function pathMail(lang: Lang, name: string, lessonId: string, n: number, kind: "remind" | "kept") {
+  const fr = lang === "fr", i = Math.max(0, Math.min(13, parseInt(lessonId.slice(1), 10) - 1 || 0)), L = ppLesson(lang, i), left = 14 - i;
+  if (kind === "kept") {
+    const subject = fr ? "Ta place est gardée 🎹" : "Your spot is kept 🎹";
+    const inner = `<h1 style="font-family:Fredoka,Nunito,Arial,sans-serif;font-size:26px;margin:0 0 12px">${fr ? "Ta place est gardée" : "Your spot is kept"}</h1>
+<p>${esc(T[lang].hi(name))} ${fr ? `Tes Premiers pas t'attendent, quand tu veux : la leçon ${L.n} (${esc(L.ti)}) prend ${L.min} minutes.` : `Your First steps are waiting, whenever you like: lesson ${L.n} (${esc(L.ti)}) takes ${L.min} minutes.`}</p>`;
+    return { subject, inner, text: `${T[lang].hi(name)} ${fr ? `Ta place est gardée. Leçon ${L.n} : ${L.ti} (${L.min} min).` : `Your spot is kept. Lesson ${L.n}: ${L.ti} (${L.min} min).`} ${SITE}`,
+      title: fr ? "Ta place est gardée" : "Your spot is kept", body: fr ? "Tes Premiers pas t'attendent, quand tu veux." : "Your First steps are waiting, whenever you like." };
+  }
+  // the subject changes from one reminder to the next (never twice the same in a row)
+  const subjects = fr ? [`Ta leçon ${L.n} t'attend (${L.min} min)`, i === 7 ? "Ta mélodie t'attend" : `${L.min} minutes pour ta leçon ${L.n} ?`, `On reprend ? Ta leçon ${L.n} t'attend`]
+    : [`Lesson ${L.n} is waiting (${L.min} min)`, i === 7 ? "Your melody is waiting" : `${L.min} minutes for lesson ${L.n}?`, `Shall we go on? Lesson ${L.n} is waiting`];
+  const subject = subjects[Math.max(0, Math.min(2, n))];
+  const inner = `<h1 style="font-family:Fredoka,Nunito,Arial,sans-serif;font-size:26px;margin:0 0 12px">${fr ? "Leçon" : "Lesson"} ${L.n} · ${esc(L.ti)}</h1>
+<p>${esc(L.can)}</p>
+<p>${fr ? `${L.min} minutes suffisent. Il te reste ${left} leçon${left > 1 ? "s" : ""}.` : `${L.min} minutes are enough. ${left} lesson${left > 1 ? "s" : ""} to go.`}</p>`;
+  const text = `${fr ? `Leçon ${L.n} · ${L.ti}` : `Lesson ${L.n} · ${L.ti}`}\n${L.can}\n${SITE}`;
+  return { subject, inner, text, title: fr ? `Ta leçon ${L.n} t'attend` : `Lesson ${L.n} is waiting`, body: `${L.ti} · ${L.min} min` };
+}
+
 // ---------- jobs ----------
 async function jobWelcome() {
   const since = Date.now() - 3 * 86400000; let page = 1, sent = 0;
@@ -171,12 +211,29 @@ async function jobStreak() {
   const profs = (await profilesOf(ids, "id,name,streak")).filter((p: { streak: number }) => (p.streak || 0) >= 3);
   const prefs = await prefsFor(ids); let sent = 0;
   for (const pr of profs || []) {
-    let p = prefs.get(pr.id); if (p && (!p.email_streak || p.last_streak_mail === today || p.last_weekly_mail === today)) continue;
+    let p = prefs.get(pr.id); if (p && (!p.email_streak || p.last_streak_mail === today || p.last_weekly_mail === today || p.last_path_mail === today)) continue;
     const email = await emailOf(pr.id); if (!email) continue;
     if (!p) p = await ensurePrefs(pr.id, await langOf(pr.id));
     const m = streakMail(p.lang, pr.name || (p.lang === "fr" ? "musicien" : "musician"), pr.streak), l = layout(p.lang, p, "streak", m.subject, m.inner);
     await notifyRow(pr.id, "streak", "remind", p.lang === "fr" ? `Ta série de ${pr.streak} jours est en danger` : `Your ${pr.streak}-day streak is in danger`, p.lang === "fr" ? "Joue un exercice avant minuit pour la garder." : "Play one exercise before midnight to keep it.", "daily");
     if (await send(email, m.subject, l.html, m.text, l.unsub)) { sent++; await db.from("notif_prefs").update({ last_streak_mail: today }).eq("user_id", pr.id); }
+  }
+  return { sent };
+}
+async function jobPath() {
+  const { data, error } = await db.rpc("path_due", {}); if (error) { console.error("path_due", error.message); return { error: error.message }; }
+  const rows = (data || []) as { user_id: string; lang: Lang; kind: "remind" | "kept"; lesson: string; n: number; local_day: string }[];
+  const prefs = await prefsFor(rows.map(r => r.user_id)); let sent = 0;
+  for (const r of rows) {
+    const p = prefs.get(r.user_id); if (!p || !p.email_streak) continue;
+    const email = await emailOf(r.user_id); if (!email) continue;
+    const { data: prof } = await db.from("profiles").select("name").eq("id", r.user_id).maybeSingle();
+    const lang: Lang = p.lang === "en" ? "en" : "fr", m = pathMail(lang, prof?.name || (lang === "fr" ? "musicien" : "musician"), r.lesson || "p01", r.n | 0, r.kind);
+    // the button opens the app on the hub, where the « Pick up » card (D8) waits
+    const l = layout(lang, p, "streak", m.subject, m.inner, SITE + "?from=remind", lang === "fr" ? "Reprendre" : "Pick up");
+    await notifyRow(r.user_id, "path", "remind", m.title, m.body, "hub");
+    if (await send(email, m.subject, l.html, m.text, l.unsub)) sent++;
+    await db.rpc("path_mark", { p_user: r.user_id, p_kind: r.kind, p_day: r.local_day, p_n: r.n | 0 }); // counted even if Resend failed: never twice a day
   }
   return { sent };
 }
@@ -220,6 +277,7 @@ async function jobPreview(id: string) {
   const p = await ensurePrefs(id, await langOf(id)); const { data: prof } = await db.from("profiles").select("name,streak").eq("id", id).maybeSingle();
   const nm = prof?.name || (p.lang === "fr" ? "musicien" : "musician"), w = welcomeMail(p.lang, p, nm), lw = layout(p.lang, p, "news", w.subject, w.inner); await send(email, "[test] " + w.subject, lw.html, w.text, lw.unsub);
   const s = streakMail(p.lang, nm, Math.max(3, prof?.streak || 3)), ls = layout(p.lang, p, "streak", s.subject, s.inner); await send(email, "[test] " + s.subject, ls.html, s.text, ls.unsub);
+  const pm = pathMail(p.lang, nm, "p04", 0, "remind"), lp = layout(p.lang, p, "streak", pm.subject, pm.inner, SITE + "?from=remind", p.lang === "fr" ? "Reprendre" : "Pick up"); await send(email, "[test] " + pm.subject, lp.html, pm.text, lp.unsub);
   return { weekly: await jobWeekly(id) };
 }
 
@@ -246,7 +304,7 @@ Deno.serve(async (req) => {
   if (req.method !== "POST" || !SECRET || !same(req.headers.get("x-notify-secret") || "", SECRET)) return new Response("forbidden", { status: 403 });
   let body: { job?: string; user_id?: string } = {}; try { body = await req.json(); } catch (_) { /* empty */ }
   try {
-    const out = body.job === "welcome" ? await jobWelcome() : body.job === "streak" ? await jobStreak() : body.job === "weekly" ? await jobWeekly()
+    const out = body.job === "welcome" ? await jobWelcome() : body.job === "streak" ? await jobStreak() : body.job === "weekly" ? await jobWeekly() : body.job === "path" ? await jobPath()
       : body.job === "preview" && body.user_id ? await jobPreview(body.user_id) : { error: "unknown job" };
     return Response.json(out);
   } catch (e) { console.error(e); return Response.json({ error: String(e) }, { status: 500 }); }
