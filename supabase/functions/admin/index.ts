@@ -69,6 +69,9 @@ Deno.serve(async (req) => {
       if (!need("support")) return json(req, 403, { error: "support only" });
       const id = String(body.id || ""); if (!UUID.test(id) || id === myId) return json(req, 400, { error: "id" });
       const on = body.on !== false;
+      // un administrateur ne se suspend pas depuis le back office (un support ne peut pas bloquer un owner)
+      const { data: tAdm } = await db.from("admins").select("role").eq("user_id", id).maybeSingle();
+      if (on && tAdm) return json(req, 400, { error: "is admin" });
       const { error } = await db.auth.admin.updateUserById(id, { ban_duration: on ? "87600h" : "none" });
       if (error) return json(req, 500, { error: error.message });
       await log(on ? "user.suspend" : "user.unsuspend", id, {});
