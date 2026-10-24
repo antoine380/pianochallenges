@@ -2161,6 +2161,36 @@ body.gate-on .top-auth{visibility:hidden}
   #main .hub-grid .ptile :is(p,.tags){display:none} #main .hub-grid .ptile .h3{max-width:none!important;font-size:clamp(1.15rem,min(17cqh,13cqw),1.8rem)!important}
   @container hb (min-height:230px) and (min-width:160px){ #main .hub-grid .ptile p{display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;font-size:.76rem;max-width:none} } }
 /* ===== fin mise en page ===== */
+/* ==== Objectif (C9 / D21 / D22) ==== */
+:is(#lvlAv,#mbLvlBtn .av).goal-ring{--gp:0;--gr-c:var(--good);position:relative}
+:is(#lvlAv,#mbLvlBtn .av).goal-ring::before{content:"";position:absolute;inset:-5px;border-radius:50%;pointer-events:none;background:conic-gradient(var(--gr-c) calc(var(--gp) * 1turn),var(--line) 0);-webkit-mask:radial-gradient(farthest-side,transparent calc(100% - 4px),#000 calc(100% - 3.5px));mask:radial-gradient(farthest-side,transparent calc(100% - 4px),#000 calc(100% - 3.5px))}
+#mbLvlBtn .av.goal-ring::before{inset:-3px;-webkit-mask:radial-gradient(farthest-side,transparent calc(100% - 3px),#000 calc(100% - 2.5px));mask:radial-gradient(farthest-side,transparent calc(100% - 3px),#000 calc(100% - 2.5px))}
+#mbLvlBtn{padding-left:5px}
+:is(#lvlAv,#mbLvlBtn .av).goal-ring.done{--gr-c:var(--gold)} :is(#lvlAv,#mbLvlBtn .av).goal-ring.done::before{background:var(--gold);box-shadow:0 0 10px var(--gold)}
+.goal-ring.gl-win::before{animation:glWin 900ms var(--ease-out)} @keyframes glWin{0%{transform:scale(1)}35%{transform:scale(1.18)}100%{transform:scale(1)}}
+@media (prefers-reduced-motion:reduce){ .goal-ring.gl-win::before{animation:none} }
+.pf-goal{display:flex;align-items:center;flex-wrap:wrap;gap:6px 10px;padding:8px 14px;background:rgba(0,0,0,.14)}
+.pf-goal .gl-r{width:30px;height:30px;flex:none} .pf-goal .gl-r circle{fill:none;stroke-width:4} .pf-goal .gl-r .tr{stroke:rgba(255,255,255,.25)} .pf-goal .gl-r .fg{stroke:#fff;stroke-linecap:round;transform:rotate(-90deg);transform-origin:50% 50%}
+.pf-goal.done .gl-r .fg{stroke:#ffd75a}
+.pf-goal .gl-t{display:flex;flex-direction:column;min-width:0;flex:1 1 auto} .pf-goal .gl-t b{font-weight:800;font-size:.9rem;white-space:nowrap} .pf-goal .gl-t small{font-size:.74rem;opacity:.85;white-space:nowrap}
+.pf-goal .gl-chips{display:flex;gap:6px;flex-wrap:wrap}
+.pf-goal .gl-chip{display:inline-flex;align-items:center;gap:4px;border-radius:999px;padding:3px 8px;background:rgba(255,255,255,.16);font-size:.74rem;font-weight:800;white-space:nowrap}
+.pf-goal .gl-chip.ok{background:#ffd75a;color:#4a3200}
+.pf-sh b.gl-new{white-space:normal}
+#segGoal button{white-space:nowrap;padding-inline:6px;min-width:0}
+.pf-grid span.frz{background:rgba(124,196,255,.35);opacity:1}
+.goal-modal .modal-card{width:min(560px,100%)}
+.gl-body{display:flex;flex-direction:column;gap:12px;padding:22px}
+.gl-k{font-size:.74rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--good)}
+.gl-body h2{font-family:var(--f-display);font-size:1.5rem;margin:0;line-height:1.15} .gl-body p{margin:0;color:var(--muted)}
+.gl-opts{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px}
+.gl-opt{display:flex;flex-direction:column;align-items:center;gap:2px;padding:12px 4px;border-radius:14px;border:2px solid var(--line);background:var(--surface);color:var(--ink);min-width:0}
+.gl-opt b{font-family:var(--f-display);font-size:1.15rem;white-space:nowrap} .gl-opt small{font-size:.74rem;color:var(--muted);font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+.gl-opt[aria-pressed="true"]{border-color:var(--good);box-shadow:0 0 0 3px var(--good-soft)} .gl-opt[aria-pressed="true"] small{color:var(--good)}
+.gl-foot{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:4px} .gl-foot .linkbtn{align-self:center}
+@media (max-width:520px){ .gl-opts{grid-template-columns:repeat(3,minmax(0,1fr))} .gl-body{padding:18px 16px} .gl-body h2{font-size:1.3rem} }
+@media (max-height:420px){ .gl-body{gap:8px;padding:14px 18px} .gl-body h2{font-size:1.2rem} .gl-opt{padding:7px 4px} }
+/* ==== fin Objectif ==== */
 </style>
 
 <script>if(window.Capacitor&&window.webkit&&window.webkit.messageHandlers&&window.webkit.messageHandlers.bridge)document.documentElement.classList.add("native");</script>
@@ -2600,6 +2630,19 @@ body.gate-on .top-auth{visibility:hidden}
     </div>
   </div>
 </div>
+<div class="modal goal-modal" id="goalModal" role="dialog" aria-modal="true" aria-labelledby="glTitle" hidden>
+  <div class="modal-bg" data-close="goalModal"></div>
+  <div class="modal-card">
+    <div class="modal-body gl-body">
+      <span class="gl-k" data-i="goalKick"></span>
+      <h2 id="glTitle" data-i="goalQ"></h2>
+      <p data-i="goalSub"></p>
+      <div class="gl-opts" id="glOpts" role="group"></div>
+      <p class="hint" data-i="goalRingH"></p>
+      <div class="gl-foot"><button class="linkbtn" type="button" data-close="goalModal" data-i="goalLater"></button><button class="btn primary" id="glOk" type="button" data-i="goalOkB"></button></div>
+    </div>
+  </div>
+</div>
 <div class="modal" id="inputModal" role="dialog" aria-modal="true" aria-labelledby="inTitle" hidden>
   <div class="modal-bg"></div>
   <div class="modal-card">
@@ -2688,6 +2731,8 @@ body.gate-on .top-auth{visibility:hidden}
         </div><div class="field" id="delayField"><span data-i="difficulty"></span>
           <div class="seg diff" id="segDiff"><button type="button" data-v="0"><b data-i="noTimer"></b></button><button type="button" data-v="20"><b>20 s</b></button><button type="button" data-v="10"><b>10 s</b></button><button type="button" data-v="5"><b>5 s</b></button></div>
           <div class="range-row"><input type="range" id="delay" min="0" max="20" step="1" aria-label="Seconds"><output class="mono" id="delayOut"></output></div>
+        </div><div class="field" id="goalField"><span data-i="goalSetL"></span>
+          <div class="seg" id="segGoal"><button type="button" data-v="min:5">5 min</button><button type="button" data-v="min:10">10 min</button><button type="button" data-v="min:20">20 min</button><button type="button" data-v="xp:50">50 XP</button><button type="button" data-v="xp:100">100 XP</button></div>
         </div>
           <div class="set-checks"><label class="check" id="octField"><input type="checkbox" id="optOct"> <span data-i="optOct"></span></label>
           <label class="check"><input type="checkbox" id="optAuto"> <span data-i="optAuto"></span></label>
@@ -2707,6 +2752,7 @@ body.gate-on .top-auth{visibility:hidden}
         <div class="pf-row">
           <section class="pf-card pf-stats"><h3 data-i="pfAch"></h3><ul id="pfStats"></ul></section>
           <section class="pf-card pf-streak"><div class="pf-sh"><div><b id="pfDay"></b><small id="pfDayBest"></small></div><div class="r"><b id="pfWeek"></b><small id="pfWeekBest"></small></div></div>
+            <div class="pf-goal" id="pfGoal"></div>
             <div class="pf-cal"><div class="pf-calh"><button type="button" id="pfPrev" aria-label="&lt;">‹</button><b id="pfMonth"></b><button type="button" id="pfNext" aria-label="&gt;">›</button></div><div class="pf-grid" id="pfCal"></div></div></section>
           <section class="pf-card pf-journey"><h3 data-i="pfJourney"></h3><p id="pfJourneySub"></p><ul id="pfJourney"></ul></section>
           <section class="pf-card pf-recs"><h3 data-i="pfRecs"></h3><p id="pfRecsSub"></p><ul id="pfRecs"></ul></section>
@@ -2924,7 +2970,12 @@ const TXT = {
     hsNews:[["Nouveau look","Mode jour ou nuit, cartes en 3D : l'app fait peau neuve.","#6a4bf0","M12 3l2.4 5 5.6.8-4 3.9.9 5.5L12 15.6 7.1 18.2l.9-5.5-4-3.9 5.6-.8z"],["Jeux Play","Six mini-jeux sur le clavier lumineux, dans GAMES.","#1f7a52","M6 9h4M8 7v4M15 9h.01M18 11h.01M3 8a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4v5a4 4 0 0 1-7 2.5h-4A4 4 0 0 1 3 13z"],["Jeu libre","Joue ce que tu veux dans PLAY : chaque note s'allume dans sa couleur.","#0e7490","M9 18V5l12-2v13M9 18a3 3 0 1 1-6 0 3 3 0 0 1 6 0zM21 16a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"],["Entraînement du jour","10 exercices mélangés chaque jour pour garder ta série.","#a3306b","M12 3c1 3.5 5 6 5 11a5 5 0 0 1-10 0c0-2.2 1-3.8 2.2-5 .2 1.6 1 2.8 2.3 3.3C11 9.3 11.3 6 12 3z"]],
     wrongSr:"Fausse note : ",
     lvT:"Quitter la partie ?", lvEndT:"Terminer la partie ?", lvLost:"Ta progression de cette partie sera perdue.", lvEndS:"La partie s'arrête ici : tu verras le bilan des exercices déjà faits.", lvSong:"Ta progression dans ce morceau sera perdue.", lvDuelR:"C'est une partie classée : quitter compte comme une défaite.", lvDuelOn:"Ton adversaire continue sans toi.", lvDuelF:"La partie amicale s'arrête pour toi.", lvQuizOn:"Les autres joueurs continuent sans toi.", lvEndGo:"Terminer", hubQuiz:"Un quiz de culture générale : tu réponds en jouant la bonne note ou le bon accord. Seul, à plusieurs ou en ligne.", hubQuizTags:"Culture générale · Notes et accords · Jusqu'à 4 joueurs · En ligne", setAppH:"Application", setGameTab:"Jeu", pfOverview:"Vue d'ensemble", qzAnsDN:"Tu réponds avec une note", qzAnsDC:"Tu réponds avec un accord", qzHelpNo:"Sans", qzHelpKeys:"Touches à jouer", authUp:"S'inscrire", authIn:"Se connecter", gtTitleNew:"Crée ton compte Piano Challenges", gtTitleBack:"Connecte-toi", gtEmailGo:"Continuer avec l'e-mail", gtHave:"Déjà un compte ?", gtNone:"Pas encore de compte ?", gtNoAcct:"Continuer sans compte", gtOther:"Autres options",
-    dailyShort:"Entraînement", qzDraw:"Égalité !"},
+    dailyShort:"Entraînement", qzDraw:"Égalité !", goalSetL:"Mon objectif du jour", goalKick:"Bravo pour cette partie", goalQ:"Ton objectif du jour", goalSub:"Même 5 minutes font une vraie différence.", goalLater:"Plus tard", goalOkB:"C'est noté",
+    goalRingH:"L'anneau autour de ton avatar se remplit dans la journée, puis devient doré.", goalTags:["Tranquille","Régulier","Motivé","Joueur","À fond"],
+    goalOk:"Objectif du jour atteint !", goalOf:(a,b,u)=>a+" / "+b+" "+u, goalDay:"Objectif du jour", goalLeft:(n,u)=>"Encore "+n+" "+u+" : chaque minute compte.", goalSaved:"Objectif enregistré",
+    goalNtfX:(g)=>"Tu as joué ton objectif ("+g+"). À demain !", streakNew:"Nouvelle série : joue aujourd'hui", streakGo:"À toi", streakFrozen:"Ta série est protégée : on a utilisé un gel.",
+    frzNtfX:(n)=>"Gel utilisé hier. "+(n?"Il t'en reste "+n+".":"Ta série continue."), frzWonT:"Tu as gagné un gel de série", frzWonX:"7 jours de suite ! Il protégera ta série si tu fais une pause un jour.",
+    frzN:n=>n+(n>1?" gels":" gel"), frzUsed:"Gel utilisé hier", wkNow:(n)=>"Semaine : "+n+"/7", wkTip:"3 jours dans la semaine = semaine validée"},
   en:{help:"Help", helpTitle:"How it works", helpOk:"Let's go", tutNext:"Next", tutPrev:"Previous", close:"Close", stepOf:(i,n)=>"Step "+i+" of "+n,
     tut:[{h:"Read the challenge",p:"A scale, a chord or a progression appears with a countdown. Picture the notes in your head before the bar runs out."},
          {h:"Pick and set up",p:"Before each game, pick the scale or chord as a card, then the timer and your helps. “Show the notes” shows the note names, “Light up the keys” shows where to play, and “Step-by-step help” gives nothing at first, then a hint every 8 s; the notes you find stay lit and a card builds up to help you remember them. Less help = more XP."},
@@ -3091,7 +3142,12 @@ const TXT = {
     hsNews:[["New look","Day or night mode and 3D cards: the app gets a makeover.","#6a4bf0","M12 3l2.4 5 5.6.8-4 3.9.9 5.5L12 15.6 7.1 18.2l.9-5.5-4-3.9 5.6-.8z"],["Play games","Six mini-games on the light-up keyboard, in GAMES.","#1f7a52","M6 9h4M8 7v4M15 9h.01M18 11h.01M3 8a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4v5a4 4 0 0 1-7 2.5h-4A4 4 0 0 1 3 13z"],["Free play","Play anything in PLAY: every note lights up in its colour.","#0e7490","M9 18V5l12-2v13M9 18a3 3 0 1 1-6 0 3 3 0 0 1 6 0zM21 16a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"],["Daily practice","10 mixed exercises every day to keep your streak.","#a3306b","M12 3c1 3.5 5 6 5 11a5 5 0 0 1-10 0c0-2.2 1-3.8 2.2-5 .2 1.6 1 2.8 2.3 3.3C11 9.3 11.3 6 12 3z"]],
     wrongSr:"Wrong note: ",
     lvT:"Leave the game?", lvEndT:"End the game?", lvLost:"Your progress in this game will be lost.", lvEndS:"The game stops here: you'll see the summary of the exercises you've done.", lvSong:"Your progress in this song will be lost.", lvDuelR:"This is a rated game: leaving counts as a loss.", lvDuelOn:"Your opponent keeps playing without you.", lvDuelF:"The friendly game stops for you.", lvQuizOn:"The other players carry on without you.", lvEndGo:"End game", hubQuiz:"A general-knowledge quiz: you answer by playing the right note or chord. Alone, with friends or online.", hubQuizTags:"General knowledge · Notes and chords · Up to 4 players · Online", setAppH:"App", setGameTab:"Game", pfOverview:"Overview", qzAnsDN:"You answer with a note", qzAnsDC:"You answer with a chord", qzHelpNo:"Off", qzHelpKeys:"Keys to play", authUp:"Sign up", authIn:"Log in", gtTitleNew:"Create your Piano Challenges account", gtTitleBack:"Log in", gtEmailGo:"Continue with email", gtHave:"Already have an account?", gtNone:"No account yet?", gtNoAcct:"Continue without an account", gtOther:"Other options",
-    dailyShort:"Daily", qzDraw:"It's a draw!"}
+    dailyShort:"Daily", qzDraw:"It's a draw!", goalSetL:"My daily goal", goalKick:"Nice game", goalQ:"Your daily goal", goalSub:"Even 5 minutes make a real difference.", goalLater:"Later", goalOkB:"Got it",
+    goalRingH:"The ring around your avatar fills up during the day, then turns gold.", goalTags:["Easy","Steady","Keen","Gamer","All in"],
+    goalOk:"Daily goal reached!", goalOf:(a,b,u)=>a+" / "+b+" "+u, goalDay:"Daily goal", goalLeft:(n,u)=>n+" "+u+" to go: every minute counts.", goalSaved:"Goal saved",
+    goalNtfX:(g)=>"You played your goal ("+g+"). See you tomorrow!", streakNew:"New streak: play today", streakGo:"Play", streakFrozen:"Your streak is safe: a freeze was used.",
+    frzNtfX:(n)=>"Freeze used yesterday. "+(n?n+" left.":"Your streak goes on."), frzWonT:"You earned a streak freeze", frzWonX:"7 days in a row! It will protect your streak if you take a day off.",
+    frzN:n=>n+(n>1?" freezes":" freeze"), frzUsed:"Freeze used yesterday", wkNow:(n)=>"Week: "+n+"/7", wkTip:"3 days in a week = week done"}
 };
 const t = k => TXT[S.settings.lang][k];
 // data shown to people (scores, XP, other players' names): thousands separators in the app's language,
@@ -3516,13 +3572,16 @@ function addXP(n){
     SECS.forEach(sec=>typeList(sec).forEach(ty=>{ const key=sec==="scales"?ty.id:sec+":"+ty.id;
       if(typeOpenS(sec,ty.id) && !S.seenTypes.includes(key)){ S.seenTypes.push(key); if(ty.lvl>1) unlockNote(t("newType")+SEC[sec].name(ty)); } }));
   }
+  try{ goalTick(); }catch(e){}
 }
 const effStreak = () => S.streak && (S.streak.last===dayStr()||S.streak.last===addDays(-1)) ? S.streak.days|0 : 0; // a streak not kept yesterday is over
 function bumpStreak(){
   const today=dayStr();
   if(S.streak.last===today) return;
+  try{ freezeCheck(); }catch(e){} // Objectif: a missed day covered by a freeze keeps the streak going
   const y=addDays(-1);
   S.streak.days = S.streak.last===y ? S.streak.days+1 : 1; S.streak.last=today;
+  try{ freezeEarn(); }catch(e){}
 }
 function setMastery(it,v){
   const before=openRoots(it.sec,it.tid);
@@ -4210,7 +4269,8 @@ function openEnd(g){
     if(!user){ const ac=document.createElement("div"); ac.className="end-acct"; ac.id="endAcct"; ac.innerHTML='<div><b></b><small></small></div><button class="btn primary" type="button"></button>';
       ac.querySelector("b").textContent=t("endAcct"); ac.querySelector("small").textContent=t("endAcctS"); const ab=ac.querySelector("button"); ab.textContent=t("endAcctB");
       ab.onclick=()=>{ closeEnd(); PW.pending=false; GATE.mode="signup"; gateOpen(); }; body.appendChild(ac); }
-    if(paywallOn() && !isPremium() && !S.pwShown && n && good/n>=.8) PW.pending=true; }
+    if(paywallOn() && !isPremium() && !S.pwShown && n && good/n>=.8) PW.pending=true;
+    else if(n && good/n>=.8 && !(S.goal&&S.goal.asked)) GL.offer=true; }
   // one line per item, keeping its worst result
   const rank={good:0,warn:1,bad:2}, byKey=new Map();
   R.filter(r=>r.level!=="good").forEach(r=>{ const k=mkey(r.it), o=byKey.get(k); if(!o||rank[r.level]>rank[o.level]) byKey.set(k,r); });
@@ -4250,7 +4310,8 @@ function endReplay(g){ closeEnd(); page="practice"; if(g.sec!==S.section) switch
   const q=g.sec==="ear"?suQueue(g.sec):g.single?[{...g.queue[0]}]:g.queue.map(it=>({...it})); game=makeGame(q); game.label=g.label; game.single=!!g.single; game.i=-1; startRound(); }
 function closeEnd(){ if(!endOpen) return; endOpen=false; $("endModal").hidden=true; modalClosed();
   if(lvlUp){ lvlUp=0; ["lvlAv","mbLvlBtn"].forEach(id=>{ const a=$(id); if(!a) return; a.classList.remove("pulse"); void a.offsetWidth; a.classList.add("pulse"); a.addEventListener("animationend",()=>a.classList.remove("pulse"),{once:true}); }); }
-  if(PW.pending){ PW.pending=false; S.pwShown=1; save(); setTimeout(()=>{ if(!anyModal()) pwOpen("success"); },350); } } // the offer, once, after a first game played well
+  if(PW.pending){ PW.pending=false; S.pwShown=1; save(); setTimeout(()=>{ if(!anyModal()) pwOpen("success"); },350); } // the offer, once, after a first game played well
+  else if(GL.offer){ GL.offer=false; setTimeout(()=>{ if(!anyModal() && !game && phase==="idle") goalOpen(); },350); } } // Objectif: the daily goal, once
 function renderGameBar(){
   const bar=$("gamebar"), segs=$("segs"), lbl=$("gameLbl"), end=$("gameEnd");
   const g=game, total = g ? g.total : (S.settings.gameLen||Infinity);
@@ -4477,7 +4538,8 @@ function renderStatus(){
   const cEl=$("combo"), prevC=cEl.textContent; cEl.textContent="×"+combo;
   $("comboStat").classList.toggle("off",combo===0);
   if(prevC!==cEl.textContent && combo>0){ const st=$("comboStat"); st.classList.remove("pulse"); void st.offsetWidth; st.classList.add("pulse"); }
-  $("streak").textContent=fmtN(S.streak.days)+" "+t("day"); $("streakStat").classList.toggle("off",S.streak.days===0);
+  { const sk=effStreak(); $("streak").textContent=sk?fmtN(sk)+" "+t("day"):t("streakGo"); $("streakStat").classList.toggle("off",!sk); $("streakStat").title=sk?"":t("streakNew"); }
+  try{ goalRing(); }catch(e){}
 }
 function renderTypes(){
   const sec=S.section, cfg=SEC[sec], box=$("types"); box.innerHTML="";
@@ -5388,7 +5450,7 @@ function renderPlaySongs(){ const box=$("playSongs"); box.innerHTML=""; const fr
 // ----- time played: counted while notes come in (15 s ticks, 45 s of silence stops the clock) -----
 let lastNoteAt=0, playTick=0;
 setInterval(()=>{ if(document.hidden || Date.now()-lastNoteAt>45000) return; const d=dayStr(); if(!S.playSec||typeof S.playSec!=="object") S.playSec={};
-  S.playSec[d]=(S.playSec[d]|0)+15; if(++playTick%4===0) save(); },15000);
+  S.playSec[d]=(S.playSec[d]|0)+15; if(++playTick%4===0) save(); try{ goalTick(); }catch(e){} },15000);
 
 // ----- the light musical touch: a soft note when the pointer passes over a card (only once sound is unlocked) -----
 const HOVER_NOTES=[72,74,76,79,81,84];
@@ -5400,12 +5462,14 @@ let pfMonth=null;
 const pDate=s=>{ const [y,m,d]=s.split("-").map(Number); return new Date(y,m-1,d); };
 const wkKey=dt=>{ const d=new Date(dt.getFullYear(),dt.getMonth(),dt.getDate()); d.setDate(d.getDate()-((d.getDay()+6)%7)); return dayStr(d); };
 function streaks(){ const days=Object.keys(S.xpDays||{}).filter(k=>(S.xpDays[k]|0)>0).sort();
-  let best=0,run=0,prev=null; days.forEach(k=>{ const d=pDate(k); run = prev && Math.round((d-prev)/864e5)===1 ? run+1 : 1; best=Math.max(best,run); prev=d; });
-  const set=new Set(days); let cur=0; const d=new Date(); if(!set.has(dayStr(d))) d.setDate(d.getDate()-1); while(set.has(dayStr(d))){ cur++; d.setDate(d.getDate()-1); }
-  cur=Math.max(cur, S.streak&&S.streak.last===dayStr()?S.streak.days|0:0);
-  const wks=[...new Set(days.map(k=>wkKey(pDate(k))))].sort(); let wb=0,wr=0,wp=null; wks.forEach(k=>{ const d=pDate(k); wr = wp && Math.round((d-wp)/864e5)===7 ? wr+1 : 1; wb=Math.max(wb,wr); wp=d; });
+  let best=0,run=0,prev=null; const fz=frzDays(); days.forEach(k=>{ const d=pDate(k); let gap=prev?Math.round((d-prev)/864e5):0; if(prev && gap>1){ const x=new Date(prev); let ok=true; for(let i=1;i<gap;i++){ x.setDate(x.getDate()+1); if(!fz.has(dayStr(x))){ ok=false; break; } } if(ok) gap=1; }
+    run = prev && gap===1 ? run+1 : 1; best=Math.max(best,run); prev=d; });
+  const set=new Set(days), frz=frzDays(); let cur=0; const d=new Date(); if(!set.has(dayStr(d))) d.setDate(d.getDate()-1); while(set.has(dayStr(d))||frz.has(dayStr(d))){ if(set.has(dayStr(d))) cur++; d.setDate(d.getDate()-1); }
+  cur=Math.max(cur, effStreak());
+  const wn={}; days.forEach(k=>{ const w=wkKey(pDate(k)); wn[w]=(wn[w]|0)+1; }); const wkNow=wn[wkKey(new Date())]|0;
+  const wks=Object.keys(wn).filter(w=>wn[w]>=3).sort(); let wb=0,wr=0,wp=null; wks.forEach(k=>{ const d=pDate(k); wr = wp && Math.round((d-wp)/864e5)===7 ? wr+1 : 1; wb=Math.max(wb,wr); wp=d; });
   const ws=new Set(wks); let wc=0; const w=pDate(wkKey(new Date())); if(!ws.has(dayStr(w))) w.setDate(w.getDate()-7); while(ws.has(dayStr(w))){ wc++; w.setDate(w.getDate()-7); }
-  return {cur,best:Math.max(best,cur),wc,wb:Math.max(wb,wc),set}; }
+  return {cur,best:Math.max(best,cur),wc,wb:Math.max(wb,wc),set,frz,wkNow}; }
 const fmtDur=sec=>{ const h=Math.floor(sec/3600), m=Math.round(sec%3600/60); return h? h+" h "+String(m).padStart(2,"0")+" min" : m+" min"; };
 function renderFiche(){
   const li=levelInfo(S.xp), ph=(typeof userPhoto==="function"&&userPhoto())||"";
@@ -5418,12 +5482,12 @@ function renderFiche(){
   const play=S.playSec||{}, tot=Object.values(play).reduce((a,v)=>a+(v|0),0);
   const L=t("pfSt"), vals=[fmtN(S.xp)+" XP",fmtN(sum("ok")),fmtN(sum("perfect")),fmtN(mAll),fmtDur(tot),fmtDur(play[dayStr()]|0)], SC=["#0e7490","#8a3fd1","#6a3fd1","#b4461a","#c9463c","#1f7a52"];
   const ul=$("pfStats"); ul.innerHTML=""; L.forEach((l,i)=>{ const li2=document.createElement("li"); li2.style.background=SC[i]; li2.innerHTML="<span></span><b></b>"; li2.firstChild.textContent=l; li2.lastChild.textContent=vals[i]; ul.appendChild(li2); });
-  const st=streaks(); $("pfDay").textContent=t("pfDayS")(fmtN(st.cur)); $("pfDayBest").textContent=t("pfBest")(fmtN(st.best)); $("pfWeek").textContent=t("pfWeekS")(fmtN(st.wc)); $("pfWeekBest").textContent=t("pfBest")(fmtN(st.wb));
+  const st=streaks(); $("pfDay").textContent=st.cur?t("pfDayS")(fmtN(st.cur)):t("streakNew"); $("pfDay").classList.toggle("gl-new",!st.cur); try{ goalFiche(st); }catch(e){} $("pfDayBest").textContent=t("pfBest")(fmtN(st.best)); $("pfWeek").textContent=t("pfWeekS")(fmtN(st.wc)); $("pfWeekBest").textContent=t("pfBest")(fmtN(st.wb));
   if(!pfMonth){ const d=new Date(); pfMonth=new Date(d.getFullYear(),d.getMonth(),1); }
   $("pfMonth").textContent=t("pfMonths")[pfMonth.getMonth()]+" "+pfMonth.getFullYear();
   const cal=$("pfCal"); cal.innerHTML=t("pfDays").map(x=>"<i>"+x+"</i>").join(""); const first=(pfMonth.getDay()+6)%7, nd=new Date(pfMonth.getFullYear(),pfMonth.getMonth()+1,0).getDate(), today=dayStr();
   for(let i=0;i<first;i++) cal.appendChild(document.createElement("span"));
-  for(let d=1;d<=nd;d++){ const k=dayStr(new Date(pfMonth.getFullYear(),pfMonth.getMonth(),d)), e=document.createElement("span"); e.textContent=d; if(st.set.has(k)) e.className="on"; if(k===today) e.classList.add("today"); cal.appendChild(e); }
+  for(let d=1;d<=nd;d++){ const k=dayStr(new Date(pfMonth.getFullYear(),pfMonth.getMonth(),d)), e=document.createElement("span"); e.textContent=d; if(st.set.has(k)) e.className="on"; else if(st.frz.has(k)){ e.className="frz"; e.title=t("frzUsed"); } if(k===today) e.classList.add("today"); cal.appendChild(e); }
   $("pfJourneySub").textContent=t("pfJSub")(mAll,nAll); const ju=$("pfJourney"); ju.innerHTML="";
   jr.forEach(([sec,m,n])=>{ const li2=document.createElement("li"); li2.innerHTML='<span class="pj-t"><b></b><span class="pj-n"></span></span><span class="bar"><i></i></span>'; li2.querySelector("b").textContent=t(NM[sec]); li2.querySelector(".pj-n").textContent=fmtN(m)+" / "+fmtN(n); const bi=li2.querySelector(".bar i"); bi.style.width=(n?m/n*100:0)+"%"; bi.style.background=COL[sec]; ju.appendChild(li2); });
   $("pfRecsSub").textContent=t("pfRSub"); const ru=$("pfRecs"); ru.innerHTML=""; let cb={}, cg={}; try{ cb=JSON.parse(localStorage.getItem("clavio:best")||"{}")||{}; cg=JSON.parse(localStorage.getItem("clavio:gbest")||"{}")||{}; }catch(e){}
@@ -6185,6 +6249,8 @@ function mergeState(local, cloud){
   m.introSeen={...(isObj(c.introSeen)?c.introSeen:{}), ...(isObj(local.introSeen)?local.introSeen:{})};
   if(!(isObj(m.onb)&&m.onb.done) && isObj(c.onb)) m.onb=c.onb; if(!m.tourDone && c.tourDone) m.tourDone=c.tourDone; if(m.eloStart==null && c.eloStart!=null) m.eloStart=c.eloStart;
   m.profileName=c.profileName||local.profileName; if(!m.profileName) delete m.profileName;
+  { const lg=isObj(local.goal)?local.goal:null, cg=isObj(c.goal)?c.goal:null; if(lg||cg){ const g={...((cg&&num(cg.at)>num(lg&&lg.at))?cg:(lg||cg))}; g.done=[lg&&lg.done,cg&&cg.done].map(x=>String(x||"")).sort().pop()||undefined; if(!g.done) delete g.done; if((lg&&lg.asked)||(cg&&cg.asked)) g.asked=1; m.goal=g; } } // Objectif
+  { const lf=isObj(local.freeze)?local.freeze:null, cf=isObj(c.freeze)?c.freeze:null; if(lf||cf){ const f={...((cf&&num(cf.at)>num(lf&&lf.at))?cf:(lf||cf))}; f.used=[...new Set([...((lf&&Array.isArray(lf.used))?lf.used:[]),...((cf&&Array.isArray(cf.used))?cf.used:[])])].filter(x=>typeof x==="string").sort().slice(-40); f.n=Math.max(0,Math.min(2,num(f.n))); m.freeze=f; } }
   m.settings={...(isObj(local.settings)?local.settings:{})}; // this device's settings win
   return {merged:m, changed:JSON.stringify(m)!==JSON.stringify(local)};
 }
@@ -7164,6 +7230,67 @@ function fnGo(){ fnApply(); fnClose(); setInput(FN.how, FN.how!=="screen");
   try{ S.section="chords"; const st=suState("chords"); st.tids=["maj"].filter(id=>typeList("chords").some(ty=>ty.id===id)); if(!st.tids.length) st.tids=[typeList("chords")[0].id]; st.keys="simple"; st.shuffle=false; save(); }catch(e){}
   openPage("learn"); setTimeout(()=>{ const b=$("secTabs").querySelector('[data-v="chords"]'); if(b) b.click(); setTimeout(()=>{ try{ suStart(); }catch(e){} },250); },60); }
 function fnSkip(){ S.gate="guest"; S.onb={done:1, skipped:1, at:Date.now()}; S.tourDone=1; save(); fnClose(); openPage("hub"); maybeAskInput(); } // skip: nothing is set up (like the questionnaire's skip)
+/* ==== Objectif (C9 / D21 / D22) : objectif du jour, anneau autour de l'avatar, série hebdomadaire, gels de série ==== */
+// S.goal={kind:"min"|"xp", v, at, asked, done:"YYYY-MM-DD"} (absent = 10 min) · S.freeze={n:0..2, used:[jours couverts], at}
+const GL={offer:false};
+const GOALS=[["min",5],["min",10],["min",20],["xp",50],["xp",100]];
+function goalCfg(){ const g=S.goal; return g && (g.kind==="min"||g.kind==="xp") && +g.v>0 ? g : {kind:"min", v:10}; }
+const goalUnit = g => g.kind==="xp" ? "XP" : "min";
+function goalNow(g=goalCfg(), day=dayStr()){ return g.kind==="xp" ? ((S.xpDays||{})[day]|0) : Math.floor((((S.playSec||{})[day])|0)/60); }
+function goalPct(g=goalCfg()){ const v = g.kind==="xp" ? ((S.xpDays||{})[dayStr()]|0) : (((S.playSec||{})[dayStr()])|0)/60; return Math.max(0, Math.min(1, v/g.v)); }
+const goalDone = () => !!(S.goal && S.goal.done===dayStr()) || goalPct()>=1;
+function goalSet(kind, v){ const o=S.goal&&typeof S.goal==="object"?S.goal:{}; S.goal={...o, kind, v:+v, at:Date.now(), asked:1}; save(); goalRing(); }
+// the ring around #lvlAv (menu) and #mbAv (mobile bar); gold once the goal is reached
+function goalRing(){ const g=goalCfg(), p=goalPct(g), done=goalDone(), lbl=t("goalDay")+" : "+t("goalOf")(fmtN(Math.min(goalNow(g),g.v)),fmtN(g.v),goalUnit(g));
+  [$("lvlAv"), $("mbAv")].forEach(el=>{ if(!el) return; el.classList.add("goal-ring"); el.classList.toggle("done",done); el.style.setProperty("--gp", done?1:p.toFixed(3)); });
+  const a=$("lvlAv"); if(a){ const base=(a.getAttribute("aria-label")||"").split(" · "+t("goalDay"))[0]; a.setAttribute("aria-label", base+" · "+lbl); a.title=lbl; }
+  const sg=$("segGoal"); if(sg) sg.querySelectorAll("button").forEach(b=>b.setAttribute("aria-pressed", b.dataset.v===g.kind+":"+g.v)); }
+function goalFanfare(){ if(S.settings.uiSound===false || !ctx || ctx.state!=="running") return; [72,76,79,84].forEach((m,i)=>tone(m,i*.11,.32,.12)); [72,76,79,84].forEach(m=>tone(m,.5,1.1,.08)); }
+// called on each tick of time played and on each XP: once a day, the ring turns gold, a short fanfare, a notification
+function goalTick(){ const today=dayStr(); if(goalPct()>=1 && !(S.goal&&S.goal.done===today)){ const g=goalCfg();
+    S.goal={...(S.goal&&typeof S.goal==="object"?S.goal:{kind:g.kind, v:g.v, at:0}), done:today}; save();
+    try{ goalFanfare(); }catch(e){}
+    try{ ntfAdd({key:"goal-"+today, cat:"progress", type:"goal", ti:t("goalOk"), tx:t("goalNtfX")(fmtN(g.v)+" "+goalUnit(g)), act:{k:"progress",l:"ntfSee"}}); }catch(e){}
+    goalRing(); [$("lvlAv"),$("mbAv")].forEach(el=>{ if(!el) return; el.classList.remove("gl-win"); void el.offsetWidth; el.classList.add("gl-win"); setTimeout(()=>el.classList.remove("gl-win"),1000); }); }
+  else goalRing(); }
+// ---- streak freezes: one earned every 7 days of streak (2 at most), used on their own the day after a missed day ----
+function frzStore(){ if(!S.freeze||typeof S.freeze!=="object") S.freeze={n:0, used:[], at:0}; if(!Array.isArray(S.freeze.used)) S.freeze.used=[]; S.freeze.n=Math.max(0,Math.min(2,S.freeze.n|0)); return S.freeze; }
+const frzDays = () => new Set((S.freeze&&Array.isArray(S.freeze.used))?S.freeze.used:[]);
+function freezeCheck(){ const st=S.streak; if(!st || !st.last || !(st.days>0)) return false; const y=addDays(-1); if(st.last>=y) return false;
+  const f=frzStore(); if(!f.n) return false; const miss=[]; const d=pDate(st.last); for(let i=0;i<40;i++){ d.setDate(d.getDate()+1); const k=dayStr(d); if(k>y) break; miss.push(k); }
+  if(!miss.length || miss.length>f.n) return false; // more days missed than freezes: a new streak starts (never counted as a loss)
+  f.n-=miss.length; f.used=[...new Set([...f.used, ...miss])].sort().slice(-40); f.at=Date.now(); st.last=y; save();
+  try{ ntfAdd({key:"frz-"+dayStr(), cat:"progress", type:"freeze", ti:t("streakFrozen"), tx:t("frzNtfX")(f.n), act:{k:"progress",l:"ntfSee"}}); }catch(e){}
+  return true; }
+function freezeEarn(){ const d=S.streak&&S.streak.days|0; if(!d || d%7) return; const f=frzStore(); if(f.n>=2 || f.won===d+":"+S.streak.last) return;
+  f.n++; f.won=d+":"+S.streak.last; f.at=Date.now();
+  try{ ntfAdd({key:"frzw-"+S.streak.last, cat:"progress", type:"freezeWon", ti:t("frzWonT"), tx:t("frzWonX"), act:{k:"progress",l:"ntfSee"}}); }catch(e){} }
+// ---- the goal row of the progress sheet (streak card): ring, today, this week, freezes ----
+function goalFiche(st){ const box=$("pfGoal"); if(!box) return; const g=goalCfg(), done=goalDone(), p=done?1:goalPct(g), r=12, C=2*Math.PI*r;
+  const left=Math.max(0, g.v-goalNow(g)), f=frzStore(), y=addDays(-1);
+  box.className="pf-goal"+(done?" done":"");
+  box.innerHTML='<svg class="gl-r" viewBox="0 0 30 30" aria-hidden="true"><circle class="tr" cx="15" cy="15" r="'+r+'"/><circle class="fg" cx="15" cy="15" r="'+r+'" stroke-dasharray="'+(C*p).toFixed(2)+' '+C.toFixed(2)+'"/></svg>'
+    +'<span class="gl-t"><b></b><small></small></span><span class="gl-chips"><span class="gl-chip wk"></span>'+(f.n||f.used.includes(y)?'<span class="gl-chip fz"></span>':'')+'</span>';
+  box.querySelector("b").textContent = done ? t("goalOk") : t("goalOf")(fmtN(goalNow(g)),fmtN(g.v),goalUnit(g));
+  box.querySelector("small").textContent = done ? t("goalOf")(fmtN(g.v),fmtN(g.v),goalUnit(g)) : t("goalDay");
+  const wk=box.querySelector(".wk"); wk.textContent=t("wkNow")(st.wkNow)+(st.wkNow>=3?" ✓":""); wk.classList.toggle("ok",st.wkNow>=3); wk.title=t("wkTip");
+  const fz=box.querySelector(".fz"); if(fz){ fz.textContent="❄ "+(f.used.includes(y)&&!(S.xpDays||{})[y]?t("frzUsed"):t("frzN")(f.n)); }
+  box.title = done ? "" : t("goalLeft")(fmtN(left), goalUnit(g)); }
+// ---- choosing the goal: Settings (tab Partie) and, once, after a game played well ----
+$("segGoal").addEventListener("click",e=>{ const b=e.target.closest("button[data-v]"); if(!b) return; const [k,v]=b.dataset.v.split(":"); goalSet(k,+v); });
+let glPick="min:10";
+function goalOpen(){ const g=goalCfg(); glPick=g.kind+":"+g.v; S.goal={...(S.goal&&typeof S.goal==="object"?S.goal:{kind:g.kind, v:g.v, at:0}), asked:1}; save();
+  const box=$("glOpts"); box.innerHTML=""; const tags=t("goalTags");
+  GOALS.forEach(([k,v],i)=>{ const b=document.createElement("button"); b.type="button"; b.className="gl-opt"; b.dataset.v=k+":"+v; b.innerHTML="<b></b><small></small>"; b.firstChild.textContent=v+" "+(k==="xp"?"XP":"min"); b.lastChild.textContent=tags[i];
+    b.setAttribute("aria-pressed", b.dataset.v===glPick); b.onclick=()=>{ glPick=b.dataset.v; box.querySelectorAll(".gl-opt").forEach(x=>x.setAttribute("aria-pressed",x.dataset.v===glPick)); }; box.appendChild(b); });
+  openMod("goalModal"); setTimeout(()=>{ const sel=box.querySelector('[aria-pressed="true"]'); if(sel) sel.focus({preventScroll:true}); },30); }
+$("glOk").addEventListener("click",()=>{ const [k,v]=glPick.split(":"); goalSet(k,+v); closeMod("goalModal"); toast(t("goalSaved")); });
+Object.assign(NTF_ICON,{goal:"medal", freeze:"gift", freezeWon:"gift"});
+// on start, and when the app comes back the next day: a freeze may cover yesterday
+try{ freezeCheck(); }catch(e){}
+document.addEventListener("visibilitychange",()=>{ if(document.visibilityState==="visible"){ try{ freezeCheck(); goalRing(); renderStatus(); }catch(e){} } });
+setInterval(()=>{ try{ freezeCheck(); goalRing(); }catch(e){} }, 10*60*1000);
+/* ==== fin Objectif ==== */
 // ---------- Boot ----------
 
 applyStatic(); applySide(); buildKeyboard(); renderSettings(); render(); renderDaily(); openPage("hub");
