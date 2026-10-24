@@ -536,6 +536,7 @@ begin
   refresh materialized view concurrently public.stats_daily;
   delete from public.events where at < now() - interval '13 months';
   delete from public.client_errors where at < now() - interval '90 days';
+  delete from public.feedback where at < now() - interval '13 months'; -- « Signaler un problème » : 13 mois au plus (page Confidentialité)
 end $$;
 revoke all on function public.admin_nightly() from public, anon, authenticated;
 
