@@ -74,6 +74,12 @@ check('badges : premier passage silencieux (anciens badges notés) → aucun év
 await p.X('delete S.badges.xp10k; badgeCheck();'); await p.waitForTimeout(100);
 check('badges : un nouveau badge → track("badge",{id})', await p.X('TRK.q.some(e=>e.n==="badge" && e.p.id==="xp10k")'), await p.X('JSON.stringify(TRK.q.filter(e=>e.n==="badge"))'));
 await p.X('openPage("hub")'); await p.waitForTimeout(300);
+// morceaux importés (#song=imp:<id>) : jamais derrière le paywall, aucun song_open (ni id, ni titre, ni nom de fichier)
+await p.X('S.settings.paywall=true; RC.flags.paywall=true; S.prem={}; TRK.q=TRK.q.filter(e=>e.n!=="song_open"); openPlayWith("#song=imp:zz9test&arr=1");'); await p.waitForTimeout(500);
+check('import : paywall actif, le morceau importé s’ouvre sans paywall', await p.X('isPremium()===false && !document.body.classList.contains("pw-on") && /imp:zz9test/.test(playHash)'));
+check('import : aucun événement song_open pour un morceau importé', await p.X('!TRK.q.some(e=>e.n==="song_open")'), await p.X('JSON.stringify(TRK.q.filter(e=>e.n==="song_open"))'));
+await p.X('track("song_import",{fmt:"mid",n:120,ok:true}); S.settings.paywall=false; RC.flags.paywall=false; openPage("hub")'); await p.waitForTimeout(300);
+check('song_import : seulement format, nombre de notes, réussite (aucun texte libre)', await p.X('TRK.q.filter(e=>e.n==="song_import").every(e=>Object.keys(e.p).every(k=>["fmt","n","ok","err"].includes(k)))'));
 // étape 2 : premier lancement D2–D4 (fnNote redéfini) et Ma route
 await p.X('FN.on=true; FN.done=false; FN.st="c"; try{ fnNote(60); }catch(e){} FN.on=false; const g=document.getElementById("gate"); if(g) g.hidden=true; document.body.classList.remove("gate-on");'); await p.waitForTimeout(150);
 check('first_note : compté aussi avec le nouveau premier lancement (D3)', await p.X('TRK.q.some(e=>e.n==="first_note")'), await p.X('TRK.q.map(e=>e.n)'));

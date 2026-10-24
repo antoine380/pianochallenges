@@ -217,6 +217,7 @@ body.lesson.lbl-pale .key .lbl{opacity:.35}
 
 <script src="../assets/js/staff.js"></script>
 <script src="../assets/js/songs-data.js"></script>
+<script src="../assets/js/song-import.js"></script>
 <script>
 (() => {
 /* ================= Language ================= */
@@ -248,7 +249,8 @@ fr:{midiScreen:"Clavier à l'écran",midiConnect:"Connecter un clavier MIDI",mid
   blaster:['Accord Blaster','Joue l’accord affiché pour détruire l’astéroïde.','Accords','Des astéroïdes descendent avec un nom d’accord (C, Dm, Em, F, G, Am). Joue les trois notes de l’accord en même temps, dans n’importe quelle octave, pour tirer. Trois astéroïdes qui passent et c’est fini.'],
   climber:['Gamme Climber','Grimpe la tour en jouant la gamme sans faute, de plus en plus vite.','Gammes et doigté','Grimpe la tour en jouant la gamme, montée puis descente. Une fausse note et tu glisses d’un étage. Les chiffres indiquent le doigté (passage du pouce compris). 60 secondes.'],
   ear:['Oreille d’Or','Écoute une note ou une courte mélodie, puis rejoue-la de mémoire.','Oreille musicale','Tu entends d’abord un Do de référence, puis une note ou une courte mélodie. Rejoue-la de mémoire. 10 questions, de plus en plus longues.'],
-  staff:['Partition Express','Les notes arrivent sur une portée, pas en cascade.','Lecture de partition','Les notes glissent sur une portée en clé de sol, de droite à gauche. Joue chaque note quand elle atteint la barre. Une note manquée coûte une vie.']}},
+  staff:['Partition Express','Les notes arrivent sur une portée, pas en cascade.','Lecture de partition','Les notes glissent sur une portée en clé de sol, de droite à gauche. Joue chaque note quand elle atteint la barre. Une note manquée coûte une vie.']},
+ impBy:"Mon morceau",impGone:"Ce morceau n'est plus sur cet appareil. Importe-le à nouveau depuis PLAY › Mes morceaux.",impLoad:"Chargement du morceau…"},
 en:{midiScreen:"On-screen keyboard",midiConnect:"Connect a MIDI keyboard",midiHost:"Notes received from Piano Challenges",midiNone:"Web MIDI not available here",midiNo:"No MIDI keyboard found",midiDenied:"MIDI access denied",midiLbl:"MIDI: ",
  heroT:"There is a reason we say we \"play\" the piano",heroP:"Plug in any MIDI keyboard, or play the one on screen. Notes fall onto the keys; catch them at the right moment.",
  heroSongsT:"Play your first songs",heroSongsP:"Notes fall onto the keys; in wait mode, the song waits until you play the right one. Pick your speed, show note names and fingering.",
@@ -272,7 +274,8 @@ en:{midiScreen:"On-screen keyboard",midiConnect:"Connect a MIDI keyboard",midiHo
   blaster:['Chord Blaster','Play the chord shown to blast the asteroid.','Chords','Asteroids fall with a chord name (C, Dm, Em, F, G, Am). Play the three notes of the chord together, in any octave, to shoot. Three asteroids through and it is over.'],
   climber:['Scale Climber','Climb the tower by playing the scale without a slip, faster and faster.','Scales and fingering','Climb the tower by playing the scale, up then down. One wrong note and you slide down a floor. The numbers show the fingering (thumb-under included). 60 seconds.'],
   ear:['Golden Ear','Listen to a note or a short melody, then play it back from memory.','Musical ear','You first hear a reference C, then a note or a short melody. Play it back from memory. 10 questions, longer and longer.'],
-  staff:['Staff Express','Notes arrive on a staff, not in a cascade.','Sight reading','Notes slide along a treble-clef staff, right to left. Play each note when it reaches the bar. A missed note costs a life.']}}};
+  staff:['Staff Express','Notes arrive on a staff, not in a cascade.','Sight reading','Notes slide along a treble-clef staff, right to left. Play each note when it reaches the bar. A missed note costs a life.']},
+ impBy:"My song",impGone:"This song is no longer on this device. Import it again from PLAY › My songs.",impLoad:"Loading the song…"}};
 const tr=k=>T[LANG][k];
 const RM=matchMedia('(prefers-reduced-motion: reduce)').matches; // reduced motion: no screen shake in the games
 document.querySelectorAll('[data-i]').forEach(el=>el.textContent=tr(el.dataset.i));
@@ -296,7 +299,7 @@ const SONGS=PS.list.map(d=>{const s={id:d.id,data:d,title:d.t[LANG==='fr'?0:1],b
 // fingering of the melody: the song's own map, or a five-finger position when the melody fits in five white keys
 function fingOf(d){if(d.f)return n=>d.f[n.name]||0;const mel=PS.parseSeq(d.mel).notes,W=[0,2,4,5,7,9,11],wi=m=>Math.floor(m/12)*7+W.indexOf(pc(m));
   if(mel.some(n=>isBlack(n.m)))return()=>0;const lo=Math.min(...mel.map(n=>wi(n.m))),hi=Math.max(...mel.map(n=>wi(n.m)));return hi-lo<=4?n=>wi(n.m)-lo+1:()=>0}
-function variant(s,lv){const a=s.arrs.find(x=>x.lv===lv)||s.arrs[0],fo=fingOf(s.data);
+function variant(s,lv){if(s.imp)return impVariant(s,lv);const a=s.arrs.find(x=>x.lv===lv)||s.arrs[0],fo=fingOf(s.data);
   const notes=PS.build(s.data,a.lv).map(n=>({m:n.m,s:n.s,d:n.d,h:n.h,f:n.h===1?fo(n):0}));
   return {...s,id:a.key,level:a.lv,hands:a.hands,notes,end:Math.max(...notes.map(n=>n.s+n.d)),base:s}}
 SONGS.forEach(s=>{s.v0=variant(s,s.arrs[0].lv)});
@@ -569,6 +572,7 @@ function finishSong(){
   const acc=Math.round((P.c.p+P.c.b*.7)/(total+P.c.w*.25)*100);
   const stars=acc>=92?3:acc>=75?2:acc>=45?1:0;
   if(stars>(best[P.song.id]||0)){best[P.song.id]=stars;store.set('best',best)}
+  if(P.song.base&&P.song.base.imp&&window.PCImp)PCImp.db.best(P.song.base.imp,stars,P.score).catch(()=>{});
   if(stars>=2)fanfare();
   overlay(`<div class="big-stars">${[0,1,2].map(i=>`<span${i<stars?'':' class="off"'}>★</span>`).join('')}</div>
     <h2>${tr('verdicts')[stars]}</h2>
@@ -876,7 +880,21 @@ function frame(now){const dt=Math.min(.05,(now-last)/1000);last=now;
   requestAnimationFrame(frame)}
 renderHome();requestAnimationFrame(frame);
 if(VIEW.startsWith('game=')&&GAMES.some(g=>g.id===VIEW.slice(5)))openGame(VIEW.slice(5));
-if(VIEW.startsWith('song=')){const s=SONGS.find(x=>x.id===VIEW.slice(5)),ar=+((HASH.find(x=>x.startsWith('arr='))||'arr=0').slice(4));if(s)openSong(s,ar||0)}
+/* ==== Import de morceaux ==== */
+// #song=imp:<id>&arr=<1|2>: a song imported by the player (PLAY › Mes morceaux), read from this device (IndexedDB "pc-import", or the host's memory)
+function impVariant(s,lv){const a=s.arrs.find(x=>x.lv===lv)||s.arrs[0];
+  const notes=s.conv.notes.filter(n=>a.hands>1||n.h===1).map(n=>({m:n.m,s:n.s,d:n.d,h:n.h,f:n.h===1?n.f||0:0}));
+  return {...s,id:a.key,level:a.lv,hands:a.hands,notes,end:Math.max(...notes.map(n=>n.s+n.d)),base:s}}
+function impBase(rec){const conv=PCImp.convert(rec.model,{...rec.opts}),k='imp:'+rec.id,hasL=conv.nL>0;
+  return {id:k,imp:rec.id,title:String(rec.title||'').replace(/[<>&"]/g,''),by:tr('impBy'),bpm:conv.bpm,meter:conv.meter,pickup:conv.pickup||undefined,col:'#7a5bf5',conv,
+    arrs:hasL?[{lv:1,key:k,hands:1},{lv:2,key:k+'@2',hands:2}]:[{lv:1,key:k,hands:1}]}}
+async function openImported(id,lv){mode='song';go('play');overlay(`<p>${tr('impLoad')}</p>`);
+  let rec=null;try{rec=window.PCImp&&await PCImp.db.get(id)}catch(e){}
+  if(!rec||!rec.model){overlay(`<p>${tr('impGone')}</p><div class="row"><button class="btn light" data-h>${tr('library')}</button></div>`);return}
+  const b=impBase(rec);if(!b.conv.notes.length){overlay(`<p>${tr('impGone')}</p><div class="row"><button class="btn light" data-h>${tr('library')}</button></div>`);return}
+  b.v0=impVariant(b,1);openSong(b,b.arrs.some(a=>a.lv===lv)?lv:1)}
+if(VIEW.startsWith('song=imp:')){const ar=+((HASH.find(x=>x.startsWith('arr='))||'arr=0').slice(4));openImported(VIEW.slice(9),ar||1)}
+else if(VIEW.startsWith('song=')){const s=SONGS.find(x=>x.id===VIEW.slice(5)),ar=+((HASH.find(x=>x.startsWith('arr='))||'arr=0').slice(4));if(s)openSong(s,ar||0)}
 })();
 </script>
 
