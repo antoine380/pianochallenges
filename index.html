@@ -2091,6 +2091,106 @@ body.setup #setupPanel{flex:1 1 auto;min-height:0}
   .pane-head h2.ph-title{display:none}
   :is(#learnPanel,#gamesPanel,#freePanel) .mode-h{display:none}
 }
+/* ---- tablets and computers: content pages never scroll (24/10/2026). Settings and Progress show one tab at a time; a long list
+   (notifications, ranking) scrolls inside its own card; any other overflow scrolls inside the page card, never the page. Phones keep scrolling. ---- */
+.set-nav{display:none}
+@media (min-width:641px) and (min-height:521px){
+  body:is([data-page="settings"],[data-page="progress"],[data-page="notif"],[data-page="rank"],[data-page="account"]) .main{overflow:hidden}
+  .pane:not([hidden]):not(.lock){flex:1 1 0;min-height:0;display:flex;flex-direction:column}
+  #settingsPage>.card,#progressPage>.card{flex:1 1 0;min-height:0;overflow:auto;display:flex;flex-direction:column}
+  .set-nav{display:flex;align-self:flex-start;max-width:100%;flex:none;margin-bottom:var(--sp-2)} .set-nav button{white-space:nowrap}
+  #setPane{gap:var(--gap)} #setPane .set-sec[data-tab]:not(.on){display:none} #setPane .set-sec[data-tab]>h3{display:none}
+  #setPane .set-app{display:flex;flex-direction:column;gap:var(--sp-4)} #setPane .set-app .set-legal{margin-top:auto}
+  #progPane{display:flex!important;flex-direction:column;gap:var(--gap);flex:1 1 auto;min-height:0} #progPane[hidden]{display:none!important}
+  #progPane[data-tab="ov"] :is(#progCats,.prog-detail){display:none} #progPane[data-tab="det"] #progFiche{display:none} .pf-detail-h{display:none}
+  #progFiche{flex:1 1 auto;min-height:0;margin:0} #progFiche .pf-row{flex:1 1 auto;min-height:0;grid-auto-rows:minmax(0,1fr);padding:0}
+  #progFiche .pf-card{min-height:0} #progFiche .pf-card ul{flex:1 1 auto;min-height:0;overflow-y:auto;max-height:none}
+  #progFiche .pf-cal{flex:1 1 auto;min-height:0;display:flex;flex-direction:column} #progFiche .pf-grid{flex:1 1 auto;min-height:0;align-content:space-evenly}
+  #progFiche .pf-grid span{aspect-ratio:auto;width:min(100%,2.4em);height:auto;min-height:0;justify-self:center;align-self:stretch;max-height:2.4em}
+  #progFiche .pf-stats li{padding-block:clamp(4px,1vh,10px)} #progFiche .pf-journey li{padding-block:clamp(4px,.9vh,9px)}
+  #progPane[data-tab="det"] .prog-cats{flex:none;margin:0} #progPane[data-tab="det"] .prog-detail{flex:1 1 auto;min-height:0}
+  #progPane[data-tab="det"] .prog-detail .map{flex:1 1 auto;min-height:0;overflow-y:auto;align-content:start}
+  @media (min-aspect-ratio:1/1){ #progFiche .pf-row{grid-template-columns:repeat(4,minmax(0,1fr))} #progFiche .pf-head{padding:10px 16px} #progFiche .pf-head .av{width:52px;height:52px} #progPane .prog-cats{grid-template-columns:repeat(5,minmax(0,1fr))} }
+  .ntf-pane .ntf-card{flex:1 1 0;min-height:0;overflow:auto}
+  .rank-card{flex:1 1 0;min-height:0} .rank-card .rank-list{flex:1 1 auto;min-height:0;overflow-y:auto}
+  #accountPanel .acct-grid{flex:1 1 0;min-height:0;overflow:auto}
+}
+/* guests (24/10/2026, like chess.com): « S'inscrire » / « Se connecter » at the top and in the side menu; nothing changes for an account */
+.auth-bar,.side-auth{display:none}
+.auth-bar{align-items:center;gap:8px;flex:none} .auth-bar .btn{min-height:40px;padding:8px 16px;font-size:.9rem;white-space:nowrap}
+body.guest:not(.sess-wait) .top-auth{display:flex;justify-content:flex-end;padding:max(10px,env(safe-area-inset-top,0px)) max(var(--page-pad),env(safe-area-inset-right,0px)) 0 var(--page-pad)}
+body.guest:not(.sess-wait) #accountBtn{display:none}
+body.guest:not(.sess-wait) .side-auth{display:flex;flex-direction:column;gap:6px;padding:6px 2px 8px}
+.side-auth .btn{width:100%;min-height:40px;padding:8px 12px;font-size:.9rem;justify-content:center}
+.side-auth .auth-ic{display:none}
+.side.collapsed .side-auth .btn{display:none} .side.collapsed .side-auth .auth-ic{display:flex}
+body.gate-on .top-auth{visibility:hidden}
+@media (max-width:640px), (max-height:520px) and (orientation:landscape){
+  body.guest .top-auth{display:none!important}
+  body.guest:not(.sess-wait) .mb-auth{display:flex;margin-left:auto;gap:6px} body.guest:not(.sess-wait) .mb-auth .btn{min-height:38px;padding:7px 12px;font-size:.84rem}
+  body.guest:not(.sess-wait) :is(#mbSet,#mbLvlBtn){display:none} @media (max-width:430px){ body.guest:not(.sess-wait) .mbar-title{display:none} } body.guest:not(.sess-wait) .mbar-title{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+}
+@media (max-width:370px){ body.guest:not(.sess-wait) #mbNtf{display:none} }
+/* the sign-in screen, chess.com-like (one column: title, illustration, e-mail first, then Google / Apple / Facebook) */
+.gt-choose .gt-form{justify-content:center;gap:clamp(8px,1.4vh,14px)}
+.gt-choose .gt-top{margin-bottom:auto} .gt-choose .gt-noacct{margin-top:auto;color:var(--muted);font-weight:700}
+.gt-choose .gt-h{font-size:clamp(1.6rem,3.4vh,2.2rem)}
+.gt-ill{position:relative;display:none;place-items:center;flex:none;padding:4px 0} /* only where the night scene (.gt-art) is not shown */
+@media (max-width:640px), (max-width:900px) and (max-height:699px){ .gt-ill{display:grid} }
+.gt-ill-glow{position:absolute;left:50%;bottom:6%;width:min(300px,80%);height:28%;transform:translateX(-50%);border-radius:50%;background:radial-gradient(closest-side,color-mix(in srgb,#7a5bf5 45%,transparent),transparent)}
+.gt-ill-o{position:relative;width:clamp(80px,16vh,160px);filter:drop-shadow(0 18px 18px rgba(20,12,60,.35))} .gt-ill-o svg{width:100%;height:auto;display:block}
+.gt-ill-n{position:absolute;left:calc(50% + clamp(36px,7vh,70px));top:0;width:clamp(36px,6vh,64px);transform:rotate(12deg)} .gt-ill-n svg{width:100%;height:auto;display:block}
+.gt-mailgo{display:flex;align-items:center;justify-content:center;gap:10px;font-size:1.1rem;padding-block:clamp(12px,1.8vh,16px)}
+.gt-mailgo svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.gt-soc1{grid-template-columns:1fr;gap:8px} .gt-soc1 .gt-s{padding-block:clamp(10px,1.5vh,13px);font-size:.95rem}
+.gt-switch{margin:0;text-align:center;font-size:.9rem;color:var(--muted);font-weight:700} .gt-switch .gt-link{font-size:.9rem}
+.gt-back{display:flex;align-items:center;gap:6px;border:0;background:var(--surface-2);color:var(--ink);font-weight:800;border-radius:999px;padding:6px 12px 6px 8px}
+.gt-back svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
+.gt-mail .gt-or,.gt-mail .gt-soc{display:none}
+@media (max-width:640px){ .gt-choose .gt-form{padding:max(16px,env(safe-area-inset-top,0px)) max(18px,env(safe-area-inset-right,0px)) max(14px,env(safe-area-inset-bottom,0px)) max(18px,env(safe-area-inset-left,0px))} .gt-choose .gt-h{font-size:1.55rem} }
+@media (max-height:520px){ .gt-choose .gt-form{display:flex;align-content:normal} .gt-choose .gt-ill{display:none} .gt-choose .gt-soc1{grid-template-columns:repeat(3,minmax(0,1fr))} .gt-choose .gt-soc1 .gt-s span{font-size:.8rem} .gt-choose .gt-h{font-size:1.25rem} }
+/* GAMES: its header sits exactly like LEARN / PLAY / QUIZ (same top padding as .mode-page at every size) */
+#gamesPanel{padding-block:6px 10px}
+@media (max-height:820px), (max-width:900px){ #gamesPanel{padding-block:2px 6px} }
+@media (max-width:640px){ #gamesPanel{padding-block:0} }
+@media (max-height:420px) and (orientation:landscape){ #gamesPanel{padding-block:0} }
+/* quiz settings (24/10/2026): big section titles with a small icon, the game settings in one card, Mode and Difficulty as the same
+   choice cards, Help as a row like the time to answer; joyful theme colours at full saturation, « All topics » in every colour */
+#qzSetup .qz-h{display:flex;align-items:center;gap:10px;margin:2px 0 8px;font-family:var(--f-display);font-weight:700;font-size:clamp(1.05rem,.6vw + .8rem,1.35rem);letter-spacing:0;text-transform:none;color:var(--ink)}
+#qzSetup .qz-h svg{width:1.35em;height:1.35em;flex:none;box-sizing:border-box;padding:.2em;border-radius:.34em;fill:none;stroke:#fff;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;
+  background:linear-gradient(150deg,color-mix(in srgb,var(--m-quiz) 50%,#fff),var(--m-quiz));box-shadow:0 8px 16px -8px var(--m-quiz)}
+#qzSetup .qz-conf{display:flex;flex-direction:column;gap:8px;flex:none}
+#qzSetup .qz-conf>.su-lbl{margin-top:2px}
+#qzSetup .qz-conf .qz-row{margin-top:0;display:grid;grid-template-columns:minmax(150px,auto) 1fr;align-items:center;gap:10px}
+#qzSetup .qz-conf .qz-row>.seg{justify-self:start}
+#qzSetup .qz-ans{grid-template-columns:repeat(2,minmax(0,1fr))}
+#qzSetup .qz-conf .qz-diff{background:var(--surface-2);box-shadow:none}
+#qzSetup .qz-conf .qz-diff[aria-pressed="true"]{background:var(--m-quiz);color:#fff}
+.qz-theme{filter:none!important}
+.qz-theme.qz-all{background-image:radial-gradient(120% 80% at 90% -10%,rgba(255,255,255,.28),transparent 55%),linear-gradient(135deg,#d0262f,#b54708 22%,#2e7d32 44%,#0b6bcb 66%,#8e24aa 88%)}
+.qz-theme.qz-all[aria-pressed="true"]{--tc:#8e24aa}
+.qz-helprow{flex-wrap:nowrap}
+@media (max-width:640px), (max-height:420px){ #qzSetup .qz-conf .qz-row{grid-template-columns:auto minmax(0,1fr)} #qzSetup .qz-conf{gap:6px;padding:8px 10px}
+  #qzSetup .qz-conf .qz-row>.seg{justify-self:stretch;min-width:0} #qzSetup .qz-conf .qz-row>.seg button{flex:1 1 0;min-width:0;padding-inline:4px} #qzSetup .qz-conf .qz-row>.su-lbl{font-size:.66rem;letter-spacing:.06em} }
+@media (max-height:420px) and (orientation:landscape){ #qzSetup .qz-conf{flex:1 1 100%;flex-direction:row;flex-wrap:wrap;align-items:center;gap:6px 8px;padding:6px 8px}
+  #qzSetup .qz-conf>:is(.qz-h,.su-lbl){display:none} #qzSetup .qz-conf .qz-ans{flex:1 1 34%;min-width:0} #qzSetup .qz-conf #qzDiff{flex:1 1 60%;min-width:0}
+  #qzSetup .qz-conf .qz-row{display:flex;flex:1 1 auto;min-width:max-content} #qzSetup .qz-conf .qz-row>.seg button{flex:none;padding-inline:9px} #qzSetup .qz-conf .qz-diff{padding:5px 8px} }
+@media (min-width:641px) and (min-height:521px){ .qz .mode-h{display:block!important} .qz .mode-h p{display:none} }
+/* hub: four modes (QUIZ joined the home page, 24/10/2026): a 2 × 2 grid on tablets and computers, 4 in a row on landscape phones */
+#main .hub-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+@media (min-width:901px){
+  #main .hub-wrap .hub-grid .ptile{justify-content:flex-end;--os:clamp(80px,min(50cqh,44cqw),220px)}
+  #main .hub-wrap .hub-grid .ptile .obj{top:clamp(6px,4cqh,22px);right:clamp(8px,3cqw,22px)}
+  #main .hub-wrap .hub-grid .ptile :is(.h3,p,.tags){max-width:none}
+  #main .hub-wrap .hub-grid .ptile .h3{font-size:clamp(1.4rem,min(14cqh,11cqw),2.6rem)}
+  #main .hub-wrap .hub-grid .ptile p{font-size:clamp(.8rem,min(6.2cqh,4.4cqw),1.08rem)}
+  @container hb (max-height:300px){ #main .hub-grid .ptile .tags{display:none} }
+  @container hb (max-height:200px){ #main .hub-grid .ptile p{display:none} }
+}
+@media (max-height:420px) and (orientation:landscape){ #main .hub-grid{grid-template-columns:repeat(4,minmax(0,1fr))} }
+@media (max-width:640px){ #main .hub-grid .ptile{justify-content:flex-end;padding:12px 14px;--os:clamp(52px,min(50cqh,48cqw),112px)} #main .hub-grid .ptile .obj{top:4px;right:4px}
+  #main .hub-grid .ptile :is(p,.tags){display:none} #main .hub-grid .ptile .h3{max-width:none!important;font-size:clamp(1.15rem,min(17cqh,13cqw),1.8rem)!important}
+  @container hb (min-height:230px) and (min-width:160px){ #main .hub-grid .ptile p{display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;font-size:.76rem;max-width:none} } }
 /* ===== fin mise en page ===== */
 </style>
 
@@ -2168,6 +2268,7 @@ body.setup #setupPanel{flex:1 1 auto;min-height:0}
     <button class="nav-item" id="accountBtn" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8.5" r="4"/><path d="M4.5 20a7.5 7.5 0 0 1 15 0"/></svg><span class="lbl" data-i="secAccount"></span></button>
     <button class="nav-item" id="progBtn" type="button" aria-haspopup="dialog"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg><span class="lbl" data-i="progress"></span></button>
     <button class="nav-item" id="setBtn" type="button" aria-haspopup="dialog"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 15.2a3.2 3.2 0 1 0 0-6.4 3.2 3.2 0 0 0 0 6.4z"/><path d="M19.4 13.5a7.6 7.6 0 0 0 0-3l2-1.6-2-3.4-2.4 1a7.5 7.5 0 0 0-2.6-1.5L14 2.5h-4l-.4 2.5A7.5 7.5 0 0 0 7 6.5l-2.4-1-2 3.4 2 1.6a7.6 7.6 0 0 0 0 3l-2 1.6 2 3.4 2.4-1a7.5 7.5 0 0 0 2.6-1.5l.4 2.5h4l.4-2.5a7.5 7.5 0 0 0 2.6-1.5l2.4 1 2-3.4z"/></svg><span class="lbl" data-i="settings"></span></button>
+    <div class="side-auth" id="sideAuth"><button class="btn primary auth-up" type="button" data-auth="signup" data-i="authUp"></button><button class="btn auth-in" type="button" data-auth="login" data-i="authIn"></button><button class="nav-item auth-ic" type="button" data-auth="signup" id="sideAuthIc"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8.5" r="4"/><path d="M4.5 20a7.5 7.5 0 0 1 15 0"/><path d="M19 3v5M16.5 5.5h5"/></svg><span class="lbl" data-i="authUp"></span></button></div>
     <button class="nav-item" id="helpBtn" type="button" aria-haspopup="dialog"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M9.6 9.3a2.5 2.5 0 1 1 3.4 2.3c-.7.3-1 .8-1 1.5v.6"/><circle cx="12" cy="16.9" r=".5"/></svg><span class="lbl" data-i="help"></span></button>
     <div class="theme-row"><button class="nav-item theme-btn" id="themeBtn" type="button"><svg class="i-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.6 1.6M17.1 17.1l1.6 1.6M5.3 18.7l1.6-1.6M17.1 6.9l1.6-1.6"/></svg><svg class="i-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg><span class="lbl" id="themeLbl"></span></button><button class="inp-chip" id="inChip" type="button"></button></div>
     <div class="side-tools">
@@ -2182,10 +2283,12 @@ body.setup #setupPanel{flex:1 1 auto;min-height:0}
   <button class="mbar-btn" id="menuBtn" type="button" aria-label="Menu" aria-controls="side" aria-expanded="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
   <h1 class="mbar-title" id="mbTitle"></h1>
 <a id="homeLink2" href="/" hidden></a>
+  <div class="auth-bar mb-auth" id="mbAuth"><button class="btn primary auth-up" type="button" data-auth="signup" data-i="authUp"></button><button class="btn auth-in" type="button" data-auth="login" data-i="authIn"></button></div>
   <button class="mbar-btn ghost ntf-mb" id="mbNtf" type="button" aria-label="Notifications"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 16V11a6 6 0 0 1 12 0v5l1.5 2h-15z"/><path d="M10 20.5a2.2 2.2 0 0 0 4 0"/></svg><span class="nbadge" id="mbNtfBadge" hidden></span></button>
   <button class="mbar-btn ghost" id="mbSet" type="button" aria-label="Settings"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10.3 3.2a1.8 1.8 0 0 1 3.4 0l.4 1.2a1.8 1.8 0 0 0 2.4 1l1.1-.6a1.8 1.8 0 0 1 2.4 2.4l-.6 1.1a1.8 1.8 0 0 0 1 2.4l1.2.4a1.8 1.8 0 0 1 0 3.4l-1.2.4a1.8 1.8 0 0 0-1 2.4l.6 1.1a1.8 1.8 0 0 1-2.4 2.4l-1.1-.6a1.8 1.8 0 0 0-2.4 1l-.4 1.2a1.8 1.8 0 0 1-3.4 0l-.4-1.2a1.8 1.8 0 0 0-2.4-1l-1.1.6a1.8 1.8 0 0 1-2.4-2.4l.6-1.1a1.8 1.8 0 0 0-1-2.4l-1.2-.4a1.8 1.8 0 0 1 0-3.4l1.2-.4a1.8 1.8 0 0 0 1-2.4l-.6-1.1a1.8 1.8 0 0 1 2.4-2.4l1.1.6a1.8 1.8 0 0 0 2.4-1z"/><circle cx="12" cy="12" r="3"/></svg></button>
   <button class="mbar-lvl" id="mbLvlBtn" type="button" aria-haspopup="dialog"><span class="av" id="mbAv"></span><span class="mono" id="mbLvl">1</span></button>
 </header>
+<div class="auth-bar top-auth" id="topAuth"><button class="btn primary auth-up" type="button" data-auth="signup" data-i="authUp"></button><button class="btn auth-in" type="button" data-auth="login" data-i="authIn"></button></div>
 <div class="side-scrim" id="sideScrim"></div>
 <main class="main" id="main">
 <div class="wrap">
@@ -2221,6 +2324,7 @@ body.setup #setupPanel{flex:1 1 auto;min-height:0}
       <button class="ptile" type="button" data-mode="games" style="--tc:var(--m-games);--tc2:#4fae84"><span class="obj" data-obj="games"></span><span class="h3">GAMES</span><p data-i="hubGames"></p><span class="tags" data-i="hubGamesTags"></span></button>
       <button class="ptile" type="button" data-mode="play" style="--tc:var(--m-play);--tc2:#a08bff"><span class="obj" data-obj="play"></span><span class="h3">PLAY</span><p data-i="hubPlay"></p><span class="tags" data-i="hubPlayTags"></span></button>
       <button class="ptile" type="button" data-mode="learn" style="--tc:var(--m-learn);--tc2:#e07a70"><span class="obj" data-obj="learn"></span><span class="h3">LEARN</span><p data-i="hubLearn"></p><span class="tags" data-i="hubLearnTags"></span></button>
+      <button class="ptile" type="button" data-mode="quiz" style="--tc:var(--m-quiz);--tc2:#5b8cff"><span class="obj" data-obj="quizhub"></span><span class="h3">QUIZ</span><p data-i="hubQuiz"></p><span class="tags" data-i="hubQuizTags"></span></button>
     </div>
    </div>
    <aside class="hub-side" id="hubSide">
@@ -2268,20 +2372,19 @@ body.setup #setupPanel{flex:1 1 auto;min-height:0}
       <div class="seg su-seg qz-tabs" id="qzTabs"></div>
       <div class="qz-wrap">
         <div class="qz-col">
-          <h3 class="su-h" data-i="qzThemeH"></h3><div class="qz-themes" id="qzThemes"></div>
-          <h3 class="su-h" data-i="qzConfH"></h3>
-          <div class="qz-row qz-conf1"><span class="su-lbl" data-i="qzAnsH"></span><div class="seg su-seg" id="qzAnsType"></div></div>
+          <h3 class="su-h qz-h"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="3.5" width="7" height="7" rx="2"/><rect x="13.5" y="3.5" width="7" height="7" rx="2"/><rect x="3.5" y="13.5" width="7" height="7" rx="2"/><rect x="13.5" y="13.5" width="7" height="7" rx="2"/></svg><span data-i="qzThemeH"></span></h3><div class="qz-themes" id="qzThemes"></div>
+          <section class="su-box qz-conf" id="qzConf"><h3 class="su-h qz-h"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h10M18 7h2M4 17h4M12 17h8"/><circle cx="16" cy="7" r="2.2"/><circle cx="10" cy="17" r="2.2"/></svg><span data-i="qzConfH"></span></h3>
+          <span class="su-lbl" data-i="qzAnsH"></span><div class="qz-diffs qz-ans" id="qzAnsType" role="group"></div>
           <span class="su-lbl qz-difl" data-i="qzDiffH"></span><div class="qz-diffs" id="qzDiff" role="group"></div>
           <div class="qz-row"><span class="su-lbl" data-i="qzCountH"></span><div class="seg su-seg" id="qzCount"></div></div>
           <div class="qz-row"><span class="su-lbl" data-i="qzTimeH"></span><div class="seg su-seg" id="qzTime"></div></div>
-          <div id="qzHelpBox" class="qz-helpbox"><h3 class="su-h" data-i="qzHelpH"></h3>
-          <label class="qz-help"><span><b><span class="hl" data-i="qzKeysT"></span><span class="hs" data-i="qzKeysS"></span></b><small data-i="qzKeysD"></small></span><span class="sw"><input type="checkbox" id="qzKeysOpt" role="switch"><i></i></span></label></div>
+          <div class="qz-row qz-helprow" id="qzHelpBox"><span class="su-lbl" data-i="qzHelpH"></span><div class="seg su-seg" id="qzKeysSeg" role="group"></div><input type="checkbox" id="qzKeysOpt" hidden></div></section>
           <button class="btn primary qz-tonext" id="qzToPlayers" type="button" data-i="qzToPlayersT"></button>
         </div>
         <aside class="su-side">
           <div class="seg su-seg qz-where" id="qzWhere"></div>
           <div id="qzLocalBox" class="qz-box">
-            <section class="su-box"><h3 class="su-h" data-i="qzPlayersH"></h3><div class="seg su-seg" id="qzN"></div>
+            <section class="su-box"><h3 class="su-h qz-h"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="8.5" r="3.5"/><path d="M2.5 20c.6-3.6 3.1-5.5 6.5-5.5s5.9 1.9 6.5 5.5"/><path d="M15.5 5.2a3.3 3.3 0 0 1 0 6.6M18 14.8c2 .7 3.2 2.4 3.5 5.2"/></svg><span data-i="qzPlayersH"></span></h3><div class="seg su-seg" id="qzN"></div>
               <div id="qzModeRow"><h3 class="su-h" style="margin-top:10px" data-i="qzModeH"></h3><div class="seg su-seg" id="qzMode"></div><p class="qz-hint" id="qzModeHelp"></p></div>
               <div id="qzZoneDevRow" class="qz-row" hidden><span class="su-lbl" data-i="qzZoneKbd"></span><select id="qzZoneDev" class="qz-sel"></select></div>
               <div id="qzPlayers"></div><p class="qz-hint qz-warn" id="qzDevWarn" hidden></p><div class="qz-zmap" id="qzZoneMap" hidden></div>
@@ -2539,8 +2642,8 @@ body.setup #setupPanel{flex:1 1 auto;min-height:0}
   <div class="modal-bg" data-close="leaveModal"></div>
   <div class="modal-card small">
     <div class="modal-head"><h2 id="lvTitle" data-i="leaveTitle"></h2></div>
-    <div class="modal-body"><p data-i="leaveSub" style="margin:0"></p></div>
-    <div class="modal-foot end-foot"><button class="btn" id="lvGo" type="button" data-i="leaveGo"></button><button class="btn primary" type="button" data-close="leaveModal" data-i="leaveStay"></button></div>
+    <div class="modal-body"><p id="lvSub" data-i="leaveSub" style="margin:0"></p></div>
+    <div class="modal-foot end-foot"><button class="btn" id="lvGo" type="button" data-i="leaveGo"></button><button class="btn primary" id="lvStay" type="button" data-close="leaveModal" data-i="leaveStay"></button></div>
   </div>
 </div>
 <div class="modal" id="introModal" role="dialog" aria-modal="true" aria-labelledby="introTitle" hidden>
@@ -2586,8 +2689,9 @@ body.setup #setupPanel{flex:1 1 auto;min-height:0}
       <button class="modal-close" id="setX" type="button" aria-label="Close">×</button>
     </div>
     <div class="modal-body set-body" id="setPane">
-      <section class="set-sec" id="setPrem"><h3><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3.5 8.5l4 3.5L12 5l4.5 7 4-3.5-1.8 10h-13.4z"/><path d="M6 20.5h12"/></svg><span data-i="setPremH"></span></h3><div class="set-prem" id="setPremBox"></div></section>
-      <section class="set-sec"><h3><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2.5" y="7" width="19" height="11" rx="2"/><path d="M6.5 7v6M10 7v6M14 7v6M17.5 7v6"/></svg><span data-i="secInter"></span></h3>
+      <div class="seg set-nav" id="setNav" role="tablist"><button type="button" role="tab" data-v="inter" data-i="secInter"></button><button type="button" role="tab" data-v="game" data-i="setGameTab"></button><button type="button" role="tab" data-v="ntf" data-i="ntfTitle"></button><button type="button" role="tab" data-v="prem" data-i="setPremH"></button><button type="button" role="tab" data-v="app" data-i="setAppH"></button></div>
+      <section class="set-sec" id="setPrem" data-tab="prem"><h3><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3.5 8.5l4 3.5L12 5l4.5 7 4-3.5-1.8 10h-13.4z"/><path d="M6 20.5h12"/></svg><span data-i="setPremH"></span></h3><div class="set-prem" id="setPremBox"></div></section>
+      <section class="set-sec" data-tab="inter"><h3><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2.5" y="7" width="19" height="11" rx="2"/><path d="M6.5 7v6M10 7v6M14 7v6M17.5 7v6"/></svg><span data-i="secInter"></span></h3>
         <div class="set-grid"><div class="field" id="inputField"><span data-i="inLbl"></span>
           <div class="seg" id="segInput"></div>
           <p class="inp-status" id="inStatus"></p>
@@ -2601,7 +2705,7 @@ body.setup #setupPanel{flex:1 1 auto;min-height:0}
           <div class="set-checks"><label class="check"><input type="checkbox" id="optLabels"> <span data-i="optLabels"></span></label><label class="check"><input type="checkbox" id="optFing"> <span data-i="optFing"></span></label><label class="check"><input type="checkbox" id="optUiSound"> <span data-i="optUiSound"></span></label></div>
         </div>
       </section>
-      <section class="set-sec"><h3><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M10 8.5l5.5 3.5-5.5 3.5z"/></svg><span data-i="secGame"></span></h3>
+      <section class="set-sec" data-tab="game"><h3><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M10 8.5l5.5 3.5-5.5 3.5z"/></svg><span data-i="secGame"></span></h3>
         <div class="set-grid"><div class="field" id="dirField"><span data-i="direction"></span>
           <div class="seg" id="segDir">
             <button type="button" data-v="up" data-i="ascending"></button>
@@ -2621,12 +2725,14 @@ body.setup #setupPanel{flex:1 1 auto;min-height:0}
           <label class="check"><input type="checkbox" id="optAll"> <span data-i="optAll"></span></label></div>
         </div>
       </section>
-      <section class="set-sec"><h3><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 16V11a6 6 0 0 1 12 0v5l1.5 2h-15z"/><path d="M10 20.5a2.2 2.2 0 0 0 4 0"/></svg><span data-i="ntfTitle"></span></h3><div class="ntf-set" id="ntfSet"></div></section>
+      <section class="set-sec" data-tab="ntf"><h3><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 16V11a6 6 0 0 1 12 0v5l1.5 2h-15z"/><path d="M10 20.5a2.2 2.2 0 0 0 4 0"/></svg><span data-i="ntfTitle"></span></h3><div class="ntf-set" id="ntfSet"></div></section>
+      <section class="set-sec set-app" data-tab="app"><h3><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="6" y="2.5" width="12" height="19" rx="3"/><path d="M10.5 18.5h3"/></svg><span data-i="setAppH"></span></h3>
       <p class="set-reset"><button class="btn" id="tourAgain" type="button" data-i="tourAgainT"></button> <button class="btn" id="onbAgain" type="button" data-i="onbAgainT"></button></p>
       <p class="set-reset"><button class="danger" id="resetBtn" type="button"></button></p>
-      <p class="legal-links set-legal"><a href="/mentions-legales.html" data-i="legalNotice"></a> · <a href="/confidentialite.html" data-i="privacy"></a><br>© 2026 Antoine Bernard · <span data-i="rights"></span></p>
+      <p class="legal-links set-legal"><a href="/mentions-legales.html" data-i="legalNotice"></a> · <a href="/confidentialite.html" data-i="privacy"></a><br>© 2026 Antoine Bernard · <span data-i="rights"></span></p></section>
     </div>
-    <div class="modal-body prog-body" id="progPane" hidden>
+    <div class="modal-body prog-body" id="progPane" data-tab="ov" hidden>
+      <div class="seg set-nav pf-nav" id="pfNav" role="tablist"><button type="button" role="tab" data-v="ov" data-i="pfOverview"></button><button type="button" role="tab" data-v="det" data-i="pfDetail"></button></div>
       <div class="pf" id="progFiche">
         <div class="pf-head"><span class="av" id="pfAv"></span><div class="pf-id"><span class="pf-k" id="pfK"></span><b id="pfName"></b><div class="xpbar"><i id="pfXp"></i></div><small id="pfXpTxt"></small></div><button class="btn" id="pfLevels" type="button" data-i="charMore"></button></div>
         <div class="pf-row">
@@ -2695,8 +2801,8 @@ const TXT = {
     endTitle:"Partie terminée !", endDaily:"Entraînement du jour terminé !", perfectN:"sans faute", warnN:"avec 1 à 3 fautes", badN:"avec plus de 3 fautes",
     accuracy:"Précision", avgTime:"Temps moyen", xpWon:"XP gagnés", bestCombo:"Meilleur combo", toRework:"À retravailler", allPerfect:"Aucune erreur, bravo !",
     reworkBtn:"Retravailler mes erreurs", newGame:"Nouvelle partie", closeLbl:"Fermer", outOf:"exercices sans faute", tomorrow:"demain",
-    secHarmony:"Harmonie", secProg:"Progressions", secEar:"Oreille", secGames:"Jeux", secPlay:"Play", hub:"Accueil", learn:"Learn", learnTitle:"Qu'est-ce qu'on travaille ?", learnSub:"Choisis une matière : les exercices se jouent sur ton piano et sont corrigés note par note.", learnTiles:[["chords","Accords","Majeurs, mineurs, renversements, accords de 7e."],["scales","Gammes","Majeures, mineures, pentatoniques, en notes ou en accords."],["harmony","Harmonie","Les degrés d'une tonalité et leurs accords."],["prog","Progressions","Les enchaînements d'accords des chansons."],["ear","Oreille","Reconnais intervalles et accords à l'écoute."],["daily","Entraînement du jour","10 exercices mélangés, environ 5 minutes."]], modeLearnSub:"Théorie et exercices", modePlaySub:"Morceaux en cascade", modeGamesSub:"Mini-jeux", hubTitle:"Qu'est-ce qu'on joue aujourd'hui ?", hubSub:"Trois façons de progresser au piano. Tu peux changer à tout moment depuis le menu.", hubLearn:"Accords, gammes, harmonie, progressions et oreille, avec des exercices corrigés note par note.", hubPlay:"Des morceaux qui tombent sur le clavier, à ta vitesse, avec les doigtés. Le morceau t'attend si tu te trompes.", hubGames:"Des mini-jeux courts pour repérer les notes, tenir le tempo, lire une portée ou tendre l'oreille.", hubLearnTags:"Accords · Gammes · Harmonie · Progressions · Oreille · Entraînement du jour", hubPlayTags:"Cascade 3D · Mode attente · Vitesse · Noms des notes · Doigtés", hubGamesTags:"Saute-notes · Contre la montre · Mémoire · Note Runner · Rythme Pulse · Accord Blaster · Gamme Climber · Oreille d'Or · Partition Express", playGamesHead:"Jeux Play", playGamesSub:"Sur le clavier lumineux, avec les notes qui tombent", playGames:[["Note Runner","Saute les obstacles en jouant la note écrite dessus.","runner"],["Rythme Pulse","Frappe au moment exact où le cercle touche la cible.","pulse"],["Accord Blaster","Joue l'accord affiché pour détruire l'astéroïde.","blaster"],["Gamme Climber","Grimpe la tour en jouant la gamme sans faute.","climber"],["Oreille d'Or","Écoute une note ou une mélodie, puis rejoue-la.","ear"],["Partition Express","Lis les notes qui arrivent sur la portée.","staff"]], secRank:"Classement", secAccount:"Profil",
-    inTitle:"Comment vas-tu jouer ?", secInter:"Interaction", secGame:"Réglages de jeu", periods:{day:"Jour",week:"Semaine",month:"Mois",year:"Année",all:"Depuis le début"}, rankEmptyP:"Personne n'a encore gagné d'XP sur cette période. À toi de jouer !", pcSolved:n=>fmtN(n)+(n>1?" réussis":" réussi"), inChange:"Mode de jeu", leaveTitle:"Quitter l'entraînement du jour ?", leaveSub:"Tu es en cours. Si tu quittes, cet entraînement s'arrête et il faudra le recommencer.", leaveStay:"Continuer l'entraînement", leaveGo:"Quitter", dcStart:"Démarrer l'entraînement", inMidiApp:"Un clavier MIDI ? Sur iPhone et iPad, il faut l'app Piano Challenges (le navigateur ne gère pas le MIDI).", midiDone:"Terminer la configuration", midiSetupNeed:"Branche ton clavier en USB ou cherche-le en Bluetooth : il doit apparaître dans la liste pour continuer.", midiSetupOk:"Clavier détecté ! Joue quelques notes pour vérifier, puis termine la configuration.", backPlay:"← Retour", lockGuest:"Continuer sans compte pour l'instant", inSub:"Choisis une fois pour toutes. Tu pourras changer dans les Réglages.", inLbl:"Je joue avec",
+    secHarmony:"Harmonie", secProg:"Progressions", secEar:"Oreille", secGames:"Jeux", secPlay:"Play", hub:"Accueil", learn:"Learn", learnTitle:"Qu'est-ce qu'on travaille ?", learnSub:"Choisis une matière : les exercices se jouent sur ton piano et sont corrigés note par note.", learnTiles:[["chords","Accords","Majeurs, mineurs, renversements, accords de 7e."],["scales","Gammes","Majeures, mineures, pentatoniques, en notes ou en accords."],["harmony","Harmonie","Les degrés d'une tonalité et leurs accords."],["prog","Progressions","Les enchaînements d'accords des chansons."],["ear","Oreille","Reconnais intervalles et accords à l'écoute."],["daily","Entraînement du jour","10 exercices mélangés, environ 5 minutes."]], modeLearnSub:"Théorie et exercices", modePlaySub:"Morceaux en cascade", modeGamesSub:"Mini-jeux", hubTitle:"Qu'est-ce qu'on joue aujourd'hui ?", hubSub:"Quatre façons de progresser au piano. Tu peux changer à tout moment depuis le menu.", hubLearn:"Accords, gammes, harmonie, progressions et oreille, avec des exercices corrigés note par note.", hubPlay:"Des morceaux qui tombent sur le clavier, à ta vitesse, avec les doigtés. Le morceau t'attend si tu te trompes.", hubGames:"Des mini-jeux courts pour repérer les notes, tenir le tempo, lire une portée ou tendre l'oreille.", hubLearnTags:"Accords · Gammes · Harmonie · Progressions · Oreille · Entraînement du jour", hubPlayTags:"Cascade 3D · Mode attente · Vitesse · Noms des notes · Doigtés", hubGamesTags:"Saute-notes · Contre la montre · Mémoire · Note Runner · Rythme Pulse · Accord Blaster · Gamme Climber · Oreille d'Or · Partition Express", playGamesHead:"Jeux Play", playGamesSub:"Sur le clavier lumineux, avec les notes qui tombent", playGames:[["Note Runner","Saute les obstacles en jouant la note écrite dessus.","runner"],["Rythme Pulse","Frappe au moment exact où le cercle touche la cible.","pulse"],["Accord Blaster","Joue l'accord affiché pour détruire l'astéroïde.","blaster"],["Gamme Climber","Grimpe la tour en jouant la gamme sans faute.","climber"],["Oreille d'Or","Écoute une note ou une mélodie, puis rejoue-la.","ear"],["Partition Express","Lis les notes qui arrivent sur la portée.","staff"]], secRank:"Classement", secAccount:"Profil",
+    inTitle:"Comment vas-tu jouer ?", secInter:"Interaction", secGame:"Réglages de jeu", periods:{day:"Jour",week:"Semaine",month:"Mois",year:"Année",all:"Depuis le début"}, rankEmptyP:"Personne n'a encore gagné d'XP sur cette période. À toi de jouer !", pcSolved:n=>fmtN(n)+(n>1?" réussis":" réussi"), inChange:"Mode de jeu", leaveTitle:"Quitter l'entraînement du jour ?", leaveSub:"Tu es en cours. Si tu quittes, cet entraînement s'arrête et il faudra le recommencer.", leaveStay:"Continuer", leaveGo:"Quitter", dcStart:"Démarrer l'entraînement", inMidiApp:"Un clavier MIDI ? Sur iPhone et iPad, il faut l'app Piano Challenges (le navigateur ne gère pas le MIDI).", midiDone:"Terminer la configuration", midiSetupNeed:"Branche ton clavier en USB ou cherche-le en Bluetooth : il doit apparaître dans la liste pour continuer.", midiSetupOk:"Clavier détecté ! Joue quelques notes pour vérifier, puis termine la configuration.", backPlay:"← Retour", lockGuest:"Continuer sans compte pour l'instant", inSub:"Choisis une fois pour toutes. Tu pourras changer dans les Réglages.", inLbl:"Je joue avec",
     inModes:{screen:["Le clavier à l'écran","Touche les notes à l'écran, ou utilise le clavier de l'ordinateur.","Écran"],midi:["Mon clavier MIDI","Branché en USB ou connecté en Bluetooth. Le plus précis.","MIDI"],mic:["Mon piano, avec le micro","Pour un piano acoustique : l'app écoute les notes que tu joues.","Micro"]},
     inCfgMidi:"Connecter / régler le clavier MIDI", inCfgMic:"Activer le micro", inMidiNo:"Ce navigateur ne gère pas le MIDI : utilise Chrome ou Edge, l'app iPhone/iPad, ou le micro.",
     inMidiOk:n=>"Connecté : "+n, inMidiNone:"Aucun clavier détecté : branche-le ou connecte-le en Bluetooth.", inMicOk:"Le micro écoute.", inMicOff:"Micro pas encore activé.", inScreenOk:"Touche les notes à l'écran.",
@@ -2848,6 +2954,7 @@ const TXT = {
     rankOrd:n=>ordFr(n), hsNewsT:"Actualités", hsRankT:"Classement de la semaine", hsRankMore:"Tout voir", hsRankLoad:"Chargement…", hsRankErr:"Classement indisponible pour l'instant.",
     hsNews:[["Nouveau look","Mode jour ou nuit, cartes en 3D : l'app fait peau neuve.","#6a4bf0","M12 3l2.4 5 5.6.8-4 3.9.9 5.5L12 15.6 7.1 18.2l.9-5.5-4-3.9 5.6-.8z"],["Jeux Play","Six mini-jeux sur le clavier lumineux, dans GAMES.","#1f7a52","M6 9h4M8 7v4M15 9h.01M18 11h.01M3 8a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4v5a4 4 0 0 1-7 2.5h-4A4 4 0 0 1 3 13z"],["Jeu libre","Joue ce que tu veux dans PLAY : chaque note s'allume dans sa couleur.","#0e7490","M9 18V5l12-2v13M9 18a3 3 0 1 1-6 0 3 3 0 0 1 6 0zM21 16a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"],["Entraînement du jour","10 exercices mélangés chaque jour pour garder ta série.","#a3306b","M12 3c1 3.5 5 6 5 11a5 5 0 0 1-10 0c0-2.2 1-3.8 2.2-5 .2 1.6 1 2.8 2.3 3.3C11 9.3 11.3 6 12 3z"]],
     wrongSr:"Fausse note : ",
+    lvT:"Quitter la partie ?", lvEndT:"Terminer la partie ?", lvLost:"Ta progression de cette partie sera perdue.", lvEndS:"La partie s'arrête ici : tu verras le bilan des exercices déjà faits.", lvSong:"Ta progression dans ce morceau sera perdue.", lvDuelR:"C'est une partie classée : quitter compte comme une défaite.", lvDuelOn:"Ton adversaire continue sans toi.", lvDuelF:"La partie amicale s'arrête pour toi.", lvQuizOn:"Les autres joueurs continuent sans toi.", lvEndGo:"Terminer", hubQuiz:"Un quiz de culture générale : tu réponds en jouant la bonne note ou le bon accord. Seul, à plusieurs ou en ligne.", hubQuizTags:"Culture générale · Notes et accords · Jusqu'à 4 joueurs · En ligne", setAppH:"Application", setGameTab:"Jeu", pfOverview:"Vue d'ensemble", qzAnsDN:"Tu réponds avec une note", qzAnsDC:"Tu réponds avec un accord", qzHelpNo:"Sans", qzHelpKeys:"Touches à jouer", authUp:"S'inscrire", authIn:"Se connecter", gtTitleNew:"Crée ton compte Piano Challenges", gtTitleBack:"Connecte-toi", gtEmailGo:"Continuer avec l'e-mail", gtHave:"Déjà un compte ?", gtNone:"Pas encore de compte ?", gtNoAcct:"Continuer sans compte", gtOther:"Autres options",
     dailyShort:"Entraînement"},
   en:{help:"Help", helpTitle:"How it works", helpOk:"Let's go", tutNext:"Next", tutPrev:"Previous", close:"Close", stepOf:(i,n)=>"Step "+i+" of "+n,
     tut:[{h:"Read the challenge",p:"A scale, a chord or a progression appears with a countdown. Picture the notes in your head before the bar runs out."},
@@ -2862,8 +2969,8 @@ const TXT = {
     endTitle:"Game complete!", endDaily:"Daily practice complete!", perfectN:"perfect", warnN:"with 1–3 mistakes", badN:"with 4+ mistakes",
     accuracy:"Accuracy", avgTime:"Average time", xpWon:"XP earned", bestCombo:"Best combo", toRework:"To rework", allPerfect:"No mistakes, well done!",
     reworkBtn:"Rework my mistakes", newGame:"New game", closeLbl:"Close", outOf:"exercises without mistakes", tomorrow:"tomorrow",
-    secHarmony:"Harmony", secProg:"Progressions", secEar:"Ear", secGames:"Games", secPlay:"Play", hub:"Home", learn:"Learn", learnTitle:"What do we work on?", learnSub:"Pick a topic: exercises are played on your piano and checked note by note.", learnTiles:[["chords","Chords","Major, minor, inversions, 7th chords."],["scales","Scales","Major, minor, pentatonic, as notes or chords."],["harmony","Harmony","The degrees of a key and their chords."],["prog","Progressions","The chord sequences behind songs."],["ear","Ear","Recognise intervals and chords by ear."],["daily","Daily practice","10 mixed exercises, about 5 minutes."]], modeLearnSub:"Theory and exercises", modePlaySub:"Falling-note songs", modeGamesSub:"Mini-games", hubTitle:"What do we play today?", hubSub:"Three ways to get better at the piano. Switch any time from the menu.", hubLearn:"Chords, scales, harmony, progressions and ear training, checked note by note.", hubPlay:"Songs that fall onto the keys at your own speed, with fingering. The song waits for you when you miss.", hubGames:"Short mini-games to find the notes, keep the beat, read the staff or train your ear.", hubLearnTags:"Chords · Scales · Harmony · Progressions · Ear · Daily practice", hubPlayTags:"3D cascade · Wait mode · Speed · Note names · Fingering", hubGamesTags:"Note Jumper · Time attack · Memory · Note Runner · Rhythm Pulse · Chord Blaster · Scale Climber · Golden Ear · Staff Express", playGamesHead:"Play games", playGamesSub:"On the lit keyboard, with falling notes", playGames:[["Note Runner","Jump over obstacles by playing the note written on them.","runner"],["Rhythm Pulse","Hit a key exactly when the ring reaches the target.","pulse"],["Chord Blaster","Play the chord shown to blast the asteroid.","blaster"],["Scale Climber","Climb the tower by playing the scale without a slip.","climber"],["Golden Ear","Listen to a note or a short melody, then play it back.","ear"],["Staff Express","Read the notes as they reach the bar on the staff.","staff"]], secRank:"Leaderboard", secAccount:"Profile",
-    inTitle:"How will you play?", secInter:"Interaction", secGame:"Game settings", periods:{day:"Today",week:"This week",month:"This month",year:"This year",all:"All time"}, rankEmptyP:"Nobody has earned XP in this period yet. Your turn!", pcSolved:n=>fmtN(n)+" solved", inChange:"Play mode", leaveTitle:"Leave the daily practice?", leaveSub:"You are in the middle of it. If you leave, it stops and you will have to start again.", leaveStay:"Keep practising", leaveGo:"Leave", dcStart:"Start the practice", inMidiApp:"A MIDI keyboard? On iPhone and iPad you need the Piano Challenges app (the browser has no MIDI).", midiDone:"Finish set-up", midiSetupNeed:"Plug your keyboard in with USB or search for it over Bluetooth: it must show up in the list to continue.", midiSetupOk:"Keyboard detected! Play a few notes to check, then finish the set-up.", backPlay:"← Back", lockGuest:"Continue without an account for now", inSub:"Choose once. You can change it later in Settings.", inLbl:"I play with",
+    secHarmony:"Harmony", secProg:"Progressions", secEar:"Ear", secGames:"Games", secPlay:"Play", hub:"Home", learn:"Learn", learnTitle:"What do we work on?", learnSub:"Pick a topic: exercises are played on your piano and checked note by note.", learnTiles:[["chords","Chords","Major, minor, inversions, 7th chords."],["scales","Scales","Major, minor, pentatonic, as notes or chords."],["harmony","Harmony","The degrees of a key and their chords."],["prog","Progressions","The chord sequences behind songs."],["ear","Ear","Recognise intervals and chords by ear."],["daily","Daily practice","10 mixed exercises, about 5 minutes."]], modeLearnSub:"Theory and exercises", modePlaySub:"Falling-note songs", modeGamesSub:"Mini-games", hubTitle:"What do we play today?", hubSub:"Four ways to get better at the piano. Switch any time from the menu.", hubLearn:"Chords, scales, harmony, progressions and ear training, checked note by note.", hubPlay:"Songs that fall onto the keys at your own speed, with fingering. The song waits for you when you miss.", hubGames:"Short mini-games to find the notes, keep the beat, read the staff or train your ear.", hubLearnTags:"Chords · Scales · Harmony · Progressions · Ear · Daily practice", hubPlayTags:"3D cascade · Wait mode · Speed · Note names · Fingering", hubGamesTags:"Note Jumper · Time attack · Memory · Note Runner · Rhythm Pulse · Chord Blaster · Scale Climber · Golden Ear · Staff Express", playGamesHead:"Play games", playGamesSub:"On the lit keyboard, with falling notes", playGames:[["Note Runner","Jump over obstacles by playing the note written on them.","runner"],["Rhythm Pulse","Hit a key exactly when the ring reaches the target.","pulse"],["Chord Blaster","Play the chord shown to blast the asteroid.","blaster"],["Scale Climber","Climb the tower by playing the scale without a slip.","climber"],["Golden Ear","Listen to a note or a short melody, then play it back.","ear"],["Staff Express","Read the notes as they reach the bar on the staff.","staff"]], secRank:"Leaderboard", secAccount:"Profile",
+    inTitle:"How will you play?", secInter:"Interaction", secGame:"Game settings", periods:{day:"Today",week:"This week",month:"This month",year:"This year",all:"All time"}, rankEmptyP:"Nobody has earned XP in this period yet. Your turn!", pcSolved:n=>fmtN(n)+" solved", inChange:"Play mode", leaveTitle:"Leave the daily practice?", leaveSub:"You are in the middle of it. If you leave, it stops and you will have to start again.", leaveStay:"Keep playing", leaveGo:"Leave", dcStart:"Start the practice", inMidiApp:"A MIDI keyboard? On iPhone and iPad you need the Piano Challenges app (the browser has no MIDI).", midiDone:"Finish set-up", midiSetupNeed:"Plug your keyboard in with USB or search for it over Bluetooth: it must show up in the list to continue.", midiSetupOk:"Keyboard detected! Play a few notes to check, then finish the set-up.", backPlay:"← Back", lockGuest:"Continue without an account for now", inSub:"Choose once. You can change it later in Settings.", inLbl:"I play with",
     inModes:{screen:["The on-screen keyboard","Tap the notes on screen, or use your computer keyboard.","Screen"],midi:["My MIDI keyboard","Plugged in with USB or connected over Bluetooth. The most accurate.","MIDI"],mic:["My piano, with the mic","For an acoustic piano: the app listens to the notes you play.","Mic"]},
     inCfgMidi:"Connect / set up the MIDI keyboard", inCfgMic:"Turn the mic on", inMidiNo:"This browser has no MIDI: use Chrome or Edge, the iPhone/iPad app, or the mic.",
     inMidiOk:n=>"Connected: "+n, inMidiNone:"No keyboard detected: plug it in or connect it over Bluetooth.", inMicOk:"The mic is listening.", inMicOff:"Mic not turned on yet.", inScreenOk:"Tap the notes on screen.",
@@ -3014,6 +3121,7 @@ const TXT = {
     rankOrd:n=>ordEn(n), hsNewsT:"News", hsRankT:"This week's leaderboard", hsRankMore:"See all", hsRankLoad:"Loading…", hsRankErr:"Leaderboard unavailable right now.",
     hsNews:[["New look","Day or night mode and 3D cards: the app gets a makeover.","#6a4bf0","M12 3l2.4 5 5.6.8-4 3.9.9 5.5L12 15.6 7.1 18.2l.9-5.5-4-3.9 5.6-.8z"],["Play games","Six mini-games on the light-up keyboard, in GAMES.","#1f7a52","M6 9h4M8 7v4M15 9h.01M18 11h.01M3 8a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4v5a4 4 0 0 1-7 2.5h-4A4 4 0 0 1 3 13z"],["Free play","Play anything in PLAY: every note lights up in its colour.","#0e7490","M9 18V5l12-2v13M9 18a3 3 0 1 1-6 0 3 3 0 0 1 6 0zM21 16a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"],["Daily practice","10 mixed exercises every day to keep your streak.","#a3306b","M12 3c1 3.5 5 6 5 11a5 5 0 0 1-10 0c0-2.2 1-3.8 2.2-5 .2 1.6 1 2.8 2.3 3.3C11 9.3 11.3 6 12 3z"]],
     wrongSr:"Wrong note: ",
+    lvT:"Leave the game?", lvEndT:"End the game?", lvLost:"Your progress in this game will be lost.", lvEndS:"The game stops here: you'll see the summary of the exercises you've done.", lvSong:"Your progress in this song will be lost.", lvDuelR:"This is a rated game: leaving counts as a loss.", lvDuelOn:"Your opponent keeps playing without you.", lvDuelF:"The friendly game stops for you.", lvQuizOn:"The other players carry on without you.", lvEndGo:"End game", hubQuiz:"A general-knowledge quiz: you answer by playing the right note or chord. Alone, with friends or online.", hubQuizTags:"General knowledge · Notes and chords · Up to 4 players · Online", setAppH:"App", setGameTab:"Game", pfOverview:"Overview", qzAnsDN:"You answer with a note", qzAnsDC:"You answer with a chord", qzHelpNo:"Off", qzHelpKeys:"Keys to play", authUp:"Sign up", authIn:"Log in", gtTitleNew:"Create your Piano Challenges account", gtTitleBack:"Log in", gtEmailGo:"Continue with email", gtHave:"Already have an account?", gtNone:"No account yet?", gtNoAcct:"Continue without an account", gtOther:"Other options",
     dailyShort:"Daily"}
 };
 const t = k => TXT[S.settings.lang][k];
@@ -3770,7 +3878,9 @@ function calibApply(){
 }
 // most keyboards say their size in their name ("Keystation 49", "Launchkey 61"...); a few are known models
 // a virtual MIDI port of the system (macOS / iOS "Network Session 1" / « Session réseau 1 », IAC driver) is not a keyboard: never listed nor listened to
-const midiVirtual = n => /network\s*session|session\s*r[ée]seau|^iac\b|iac\s*driver/i.test(String(n||""));
+// virtual ports are not keyboards (macOS / iOS network sessions « Session réseau », IAC buses): never listed, counted nor listened to.
+// Case and accents do not matter (iOS may send decomposed accents).
+const midiVirtual = n => /network|session|reseau|\biac\b|\bbus\b/.test(String(n||"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase());
 function guessKbdSize(name){
   if(!name || S.settings.kbdGuessFor===name) return;
   const n=String(name), m=n.match(/(^|\D)(24|25|32|37|49|61|76|88)(\D|$)/);
@@ -3837,6 +3947,7 @@ function autoHelp(){ let h=$("autoHelp"); if(!h){ h=document.createElement("div"
   tr.onclick=()=>{ h.hidden=true; }; sh.onclick=()=>{ h.hidden=true; if(phase==="listening") reveal(false); }; h.hidden=false; }
 function noteIn(m){ lastNoteAt=Date.now();
   if(FN.on){ fnNote(m); return; } // the first screen (mic)
+  if(LV.on) return; // the leave window is open
   if(page==="quiz"){ if(!anyModal()) quizIn("screen",m); return; } // screen keyboard, computer keyboard, mic
   if(page==="play"){ playSend("noteon",m); setTimeout(()=>playSend("noteoff",m),400); return; } // screen keyboard / mic: no release event, so release after 400 ms
   if(!["practice","daily","games","free"].includes(page)) return; // no exercise on the other pages: nothing to feed
@@ -4562,6 +4673,17 @@ let setOpen=false; // always false since Settings became a page; still read by k
 // Settings and Progress are pages of their own (the old window's content is moved into them)
 $("setHost").appendChild($("setPane")); $("progHost").appendChild($("progPane"));
 $("setPane").classList.remove("modal-body"); $("progPane").classList.remove("modal-body"); $("progPane").hidden=false; $("setModal").remove();
+// Settings on tablets and computers: one section at a time behind tabs (no page scroll); phones keep the whole list
+const setTabsMQ=window.matchMedia("(min-width:641px) and (min-height:521px)");
+let setTabV="inter";
+function setTab(v){ setTabV=v||setTabV; $("setNav").querySelectorAll("button").forEach(b=>{ const on=b.dataset.v===setTabV; b.setAttribute("aria-pressed",on); b.setAttribute("aria-selected",on); });
+  $("setPane").querySelectorAll(".set-sec[data-tab]").forEach(x=>x.classList.toggle("on",x.dataset.tab===setTabV)); }
+$("setNav").addEventListener("click",e=>{ const b=e.target.closest("button[data-v]"); if(b) setTab(b.dataset.v); });
+setTab();
+// Progress on tablets and computers: the overview (fiche) and the detail per topic are two tabs
+function pfTab(v){ $("progPane").dataset.tab=v; $("pfNav").querySelectorAll("button").forEach(b=>{ const on=b.dataset.v===v; b.setAttribute("aria-pressed",on); b.setAttribute("aria-selected",on); }); }
+$("pfNav").addEventListener("click",e=>{ const b=e.target.closest("button[data-v]"); if(b) pfTab(b.dataset.v); });
+pfTab("ov");
 function openSet(tab){ closeDrawer(); if(tab==="progress") progSec=S.section; openPage(tab==="progress"?"progress":"settings"); }
 function closeSet(){ if(INFO_PAGES.includes(page)){ page="practice"; returnPage=null; paused=false; render(); renderDaily(); } } // e.g. a tile picked on the Progress page starts that exercise
 $("setBtn").addEventListener("click",()=>openSet("settings")); $("mbSet").addEventListener("click",()=>openSet("settings")); $("progBtn").addEventListener("click",()=>openSet("progress"));
@@ -4571,9 +4693,58 @@ $("kbDetect").addEventListener("click",()=>{ if(calib){ calibApply(); return; } 
 $("homeLink").addEventListener("click",e=>{ e.preventDefault(); guardLeave(()=>{ goHome(); openPage("hub"); }); });
 $("homeLink2").addEventListener("click",e=>{ e.preventDefault(); goHome(); openPage("hub"); });
 
-// leaving a daily practice in progress asks first
-let leaveFn=null;
-function guardLeave(fn){ if(game && game.daily && game.i>=0 && (page==="daily" || (INFO_PAGES.includes(page) && returnPage==="daily"))){ leaveFn=fn; closeDrawer(); openMod("leaveModal"); return true; } fn(); return false; }
+// ---------- Leaving an activity in progress asks first (#leaveModal) ----------
+// An exercise or the daily practice (after the first note), a game, a duel, a song or a Play game, a quiz. Asked by the quit buttons
+// (Quitter, Salon, Terminer la partie) and by the menu (modes, sections, home, ranking, notifications, profile). Settings and Progress
+// open on top without stopping anything: they never ask. The activity holds still while the window is open (HOLD), except online
+// (the others keep playing). Esc / a lone C = keep playing, a lone B = leave.
+let leaveFn=null, HOLD=false;
+const LV={on:false,a:null,at:0,pass:false,buf:[],t:0,mm:false};
+const lvBase = () => INFO_PAGES.includes(page) ? returnPage : page;
+function actNow(){ const pg=lvBase();
+  if(pg==="play"){ try{ const w=$("playFrame").contentWindow; if(w && w.clavioBusy && w.clavioBusy()) return {k:"play", song:!playHash.startsWith("#game")}; }catch(e){} return null; }
+  if(pg==="quiz") return QZ.view==="play" ? {k:"quiz", online:QZ.mode==="online"} : null;
+  if(pg==="games"){ if(!RN.on) return null;
+    if(DU.mode && ["count","play","wait"].includes(DU.view)) return {k:"duel", online:DU.mode!=="bot", rated:!!DU.rated};
+    if(DU.view!=="solo") return null;
+    const run = GM==="runner" ? RN.state==="run" : GM==="speed" ? SP.state==="run" : MM.state==="listen"||MM.state==="input";
+    return run ? {k:"game"} : null; }
+  if((pg==="practice"||pg==="daily") && game && !endOpen && (game.i>0 || game.results.some(Boolean) || played.length>0 || errors>0 || idx>0)) return {k:game.daily?"daily":"learn"};
+  return null; }
+function guardLeave(fn){ const a=LV.pass||LV.on ? null : actNow(); if(a){ lvOpen(a,fn); return true; } fn(); return false; }
+function lvOpen(a, fn, end){ leaveFn=fn; LV.a=a; closeDrawer();
+  $("lvTitle").textContent = end ? t("lvEndT") : a.k==="daily" ? t("leaveTitle") : t("lvT");
+  $("lvSub").textContent = end ? t("lvEndS") : a.k==="daily" ? t("leaveSub") : a.k==="duel" ? (a.rated ? t("lvDuelR") : t("lvDuelF"))+(a.online ? " "+t("lvDuelOn") : "")
+    : a.k==="quiz" && a.online ? t("lvQuizOn") : a.k==="play" && a.song ? t("lvSong") : t("lvLost");
+  const go=$("lvGo"), st=$("lvStay"); go.textContent = end ? t("lvEndGo") : t("leaveGo"); st.textContent=t("leaveStay"); duKbd(st,CNAME()); duKbd(go,BNAME());
+  lvHold(true); LV.on=true; openMod("leaveModal"); st.focus({preventScroll:true}); }
+// called by closeMod("leaveModal"): Keep playing (button, Esc, backdrop, C) or just before Leave runs
+function lvAfter(){ if(!LV.on) return; LV.on=false; lvHold(false); LV.a=null; }
+function lvHold(on){ const a=LV.a; if(!a) return; const now=performance.now();
+  if(on){ if(HOLD || a.online) return; HOLD=true; LV.at=now;
+    if(a.k==="play"){ try{ $("playFrame").contentWindow.clavioHold(true); }catch(e){} }
+    if(a.k==="game"||a.k==="duel"){ if(MM.state==="listen"){ MM.timers.forEach(clearTimeout); MM.timers=[]; LV.mm=true; } clearTimeout(MM.inT); }
+    if(a.k==="quiz") qzHold(true);
+    return; }
+  if(!HOLD) return; HOLD=false; const d=now-LV.at;
+  if(a.k==="play"){ try{ $("playFrame").contentWindow.clavioHold(false); }catch(e){} }
+  if(a.k==="game"||a.k==="duel"){ if(SP.state==="run") SP.end+=d; DU.t0+=d;
+    if(LV.mm){ LV.mm=false; if(RN.on && GM==="memory" && MM.state==="listen") mmPlay(); } else if(MM.state==="input") mmIdle(); }
+  if(a.k==="quiz") qzHold(false,d); }
+// MIDI while the window is open: the notes are commands only (a lone C stays, a lone B leaves, a chord does nothing)
+function lvNote(m){ if(S.settings.midiC===false) return; LV.buf.push(((m%12)+12)%12); clearTimeout(LV.t);
+  LV.t=setTimeout(()=>{ const b=LV.buf; LV.buf=[]; if(b.length!==1 || !LV.on) return; if(b[0]===0) closeMod("leaveModal"); else if(b[0]===11) $("lvGo").click(); },120); }
+// the menu and the quit buttons: asked first when they would end the activity; "Leave" replays the click
+const LV_NAV="#homeLink,#modeNav [data-mode],#secTabs button,#dailyCard,#rankBtn,#ntfBtn,#mbNtf,#accountBtn", LV_QUIT="#rnQuit,#duToLobby,#gameEnd,#qzQuit";
+function lvLeaves(el){ const base=lvBase();
+  if(el.matches(LV_QUIT)) return true;
+  if(el.dataset.mode) return ({quiz:"quiz",learn:"learn",play:"free",games:"games"})[el.dataset.mode]!==base;
+  if(el.id==="dailyCard") return base!=="daily";
+  if(el.closest("#secTabs")) return !(el.dataset.v==="games" && base==="games");
+  return true; }
+document.addEventListener("click",e=>{ if(LV.pass || LV.on || !e.target.closest) return; const el=e.target.closest(LV_NAV+","+LV_QUIT); if(!el || !lvLeaves(el)) return;
+  const a=actNow(); if(!a) return; e.preventDefault(); e.stopImmediatePropagation();
+  lvOpen(a,()=>{ LV.pass=true; try{ el.click(); }finally{ LV.pass=false; } }, el.id==="gameEnd"); },true);
 // ---------- Sidebar, drawer, games page ----------
 const phoneMQ=window.matchMedia("(max-width:640px)"), railMQ=window.matchMedia("(max-height:520px) and (orientation:landscape)");
 function setNav(){
@@ -4677,7 +4848,7 @@ function rnLoop(now){
   if(cv.width!==Math.round(W*dpr)||cv.height!==Math.round(H*dpr)){ cv.width=Math.round(W*dpr); cv.height=Math.round(H*dpr); }
   const g=cv.getContext("2d"); g.setTransform(dpr,0,0,dpr,0,0);
   const u=H/200, ground=H-26*u, px=Math.max(60*u,W*.12), pw=46*u, ph=44*u;
-  if(RN.state==="run"){
+  if(RN.state==="run" && !HOLD){
     const df=gmDiff(), base={slow:W/5.6, mid:W/4, fast:W/2.9, prog:W/5.6}[df];
     if(!RN.speed) RN.speed=base;
     if(df==="prog" && RN.cleared>=3) RN.speed=Math.min(W/2.4, RN.speed + dt*W*0.0064);
@@ -4778,6 +4949,7 @@ function spGo(){ if(DU.view!=="solo" && DU.view!=="play") return; if(SP.state===
 function spNext(){ let n; do{ n=SP.pool[Math.floor(gRnd()*SP.pool.length)]; }while(SP.pool.length>1 && SP.target && n.label===SP.target.label); SP.target=n; SP.held=[]; rnHintPcs(n.pcs); gmBoard(); }
 function spTick(now){
   if(!RN.on || GM!=="speed" || SP.state!=="run") return;
+  if(HOLD){ SP.raf=requestAnimationFrame(spTick); return; } // the leave window is open: the clock waits (SP.end moves on resume)
   let left=(SP.end-now)/1000;
   // progressive: each answer gives back a little time, less and less
   if(left<=0){ SP.state="over"; clearKeys(); if(DU.mode) duMe(SP.count,true); const best=(S.gameBest||{}).speed||0; SP.newBest=false; if(!DU.mode){ if(SP.count>best){ S.gameBest={...(S.gameBest||{}),speed:SP.count}; SP.newBest=true; } if(SP.count){ addXP(SP.count); renderStatus(); } } save(); tone(48,0,.4,.15); gmBoard(); gmScore(); return; }
@@ -4951,7 +5123,7 @@ function duGo(){ DU.view="play"; DU.t0=performance.now(); duRender(); audio();
   clearInterval(DU.hb); if(DU.mode!=="bot"){ DU.opp.lastAt=Date.now(); DU.hb=setInterval(()=>{ if(DU.view!=="play"&&DU.view!=="wait"){ clearInterval(DU.hb); return; } duSend({t:"hb"});
       if(!DU.opp.done && Date.now()-DU.opp.lastAt>25000){ duSend({t:"stall"}); duFinish(1,"forfeit"); } },4000); }
   if(DU.game==="runner"){ RN.state="ready"; rnGo(); } else if(DU.game==="speed") spGo(); else mmGo();
-  if(DU.opp.bot!=null && DU.opp.plan){ let i=0; DU.sim=setInterval(()=>{ if(DU.view!=="play"&&DU.view!=="wait"){ clearInterval(DU.sim); return; } const el=performance.now()-DU.t0, P=DU.opp.plan;
+  if(DU.opp.bot!=null && DU.opp.plan){ let i=0; DU.sim=setInterval(()=>{ if(DU.view!=="play"&&DU.view!=="wait"){ clearInterval(DU.sim); return; } if(HOLD) return; const el=performance.now()-DU.t0, P=DU.opp.plan;
       while(i<P.length && P[i][0]<=el){ DU.opp.score=P[i][1]; if(P[i][2]) DU.opp.done=true; i++; } duHud(); duCheck(); },200); } }
 function duMe(score, done){ if(!DU.mode || (DU.view!=="play"&&DU.view!=="wait")) return; if(score===DU.me.score && done===DU.me.done) return;
   DU.me={score, done:DU.me.done||done}; if(DU.mode!=="bot") duSend({t:"sc",s:score,d:DU.me.done});
@@ -5178,7 +5350,7 @@ function renderNtfSet(){ const box=$("ntfSet"); if(!box) return; const p=ntfPref
 $("ntfBtn").addEventListener("click",()=>{ closeDrawer(); guardLeave(()=>openPage("notif")); });
 $("mbNtf").addEventListener("click",()=>guardLeave(()=>openPage("notif")));
 $("ntfAllRead").addEventListener("click",()=>{ ntfStore().list.forEach(n=>n.read=true); save(); ntfBadge(); renderNotifs(); });
-$("ntfSetBtn").addEventListener("click",()=>{ openSet("settings"); setTimeout(()=>$("ntfSet")?.scrollIntoView({block:"start",behavior:"smooth"}),80); });
+$("ntfSetBtn").addEventListener("click",()=>{ openSet("settings"); setTab("ntf"); setTimeout(()=>{ if(!setTabsMQ.matches) $("ntfSet")?.scrollIntoView({block:"start",behavior:"smooth"}); },80); });
 $("ntfTabs").addEventListener("click",e=>{ const b=e.target.closest("[data-v]"); if(!b) return; ntfFilter=b.dataset.v; renderNotifs(); });
 setTimeout(()=>{ try{ ntfCheck(); }catch(e){ console.warn(e); } },1500);
 
@@ -5450,6 +5622,10 @@ Object.assign(OBJ,{
   tower:()=>{ const o=O3(); const g=o.grad("#9aa3c7"); return o.raw('<path d="M60 8l6 30h-12zM50 40h20l8 36H42zM40 78h40l18 30H74c-4-10-8-14-14-14s-10 4-14 14H22z" fill="'+g+'"/><path d="M46 58h28M40 78h40" stroke="#6b7194" stroke-width="3"/>').svg(); },
   heartbeat:()=>{ const o=O3(); o.raw('<path d="M60 104C30 82 10 64 10 40a24 24 0 0 1 50-10 24 24 0 0 1 50 10c0 24-20 42-50 64z" fill="'+o.grad("#ff5a6e")+'"/>'); return o.raw('<path d="M18 60h22l8-14 12 28 10-20 6 6h26" stroke="#fff" stroke-width="5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>').svg(); },
   quiz:()=>{ const o=O3(); o.raw('<path d="M18 22h84a10 10 0 0 1 10 10v44a10 10 0 0 1-10 10H54l-22 18v-18H18A10 10 0 0 1 8 76V32a10 10 0 0 1 10-10z" fill="'+o.grad("#5b7cff")+'"/>'); return o.raw('<text x="60" y="72" text-anchor="middle" font-family="Fredoka,Nunito,sans-serif" font-weight="700" font-size="46" fill="#fff">?</text>').svg(); }
+  ,quizhub:()=>{ const o=O3(), F='font-family="Fredoka,Nunito,sans-serif" font-weight="700" text-anchor="middle"'; // the QUIZ mode on the home page: a white bubble over a yellow one (reads on the blue tile)
+    o.raw('<path d="M70 14h32a10 10 0 0 1 10 10v24a10 10 0 0 1-10 10h-6l-12 11V58H70a10 10 0 0 1-10-10V24a10 10 0 0 1 10-10z" fill="'+o.grad("#ffd23f")+'"/>');
+    o.raw('<path d="M18 38h54a12 12 0 0 1 12 12v32a12 12 0 0 1-12 12H46l-20 17V94h-8A12 12 0 0 1 6 82V50a12 12 0 0 1 12-12z" fill="'+o.grad("#fbfbff")+'"/>');
+    return o.raw('<text x="45" y="84" font-size="42" fill="#2563eb" '+F+'>?</text><text x="86" y="47" font-size="28" fill="#7a4d00" '+F+'>!</text>').svg(); }
 });
 
 // every object is cropped to its own drawing and pinned to the top-right corner of its box, so all objects sit at the same place
@@ -5524,24 +5700,30 @@ function qzZoneMap(c,zones){ const box=$("qzZoneMap"); box.innerHTML=""; const i
     z.innerHTML='<span class="zl"><b></b><small></small></span>'+k+'</svg>'; nmPut(z.querySelector("b"),c.names[i]||t("qzPlayer")+" "+(i+1)); z.querySelector("small").textContent=qzMidiName(a)+" – "+qzMidiName(b);
     box.appendChild(z); }); }
 const qzTabsMQ=matchMedia("(max-width:640px) and (min-height:421px)"); // phones upright: the quiz tab is full, the help goes to the players tab
-function qzHelpPlace(){ const hb=$("qzHelpBox"); if(!hb) return; const to = !qzTabsMQ.matches ? $("qzToPlayers").parentElement : qzCfg().where==="online" ? $("qzOnlineBox") : $("qzBots").parentElement; // next to the robots
-  if(!to||hb.parentElement===to) return; if(to===$("qzToPlayers").parentElement) $("qzToPlayers").before(hb); else to.appendChild(hb); }
+// the help row: last row of the game settings card; with the two tabs (small screens) it goes to the Players tab, under the robots
+function qzHelpPlace(){ const hb=$("qzHelpBox"); if(!hb) return; const on=qzCfg().where==="online";
+  if(!qzTabsMQ.matches){ if(hb.parentElement!==$("qzConf")) $("qzConf").appendChild(hb); }
+  else if(on){ if(hb.parentElement!==$("qzOnlineBox")) $("qzOnlineBox").appendChild(hb); }
+  else if(hb.previousElementSibling!==$("qzBotLvlRow")) $("qzBotLvlRow").after(hb); }
 qzTabsMQ.addEventListener&&qzTabsMQ.addEventListener("change",qzHelpPlace);
 function renderQzSetup(){ const c=qzCfg(), fr=S.settings.lang==="fr", re=()=>{ save(); renderQzSetup(); }; qzHelpPlace();
   QZ.tab=QZ.tab||"quiz"; $("qzSetup").dataset.tab=QZ.tab; qzSeg("qzTabs",["quiz","players"],QZ.tab,v=>t(v==="quiz"?"qzTabQuiz":"qzTabPlayers"),v=>{ QZ.tab=v; renderQzSetup(); });
   const th=$("qzThemes"); th.innerHTML="";
   if(!QZ.data){ th.innerHTML='<p class="qz-load">'+t("qzLoading")+"</p>"; qzLoad().then(()=>{ if(page==="quiz") renderQuiz(); }).catch(()=>{ th.innerHTML='<p class="qz-load">'+t("qzLoadErr")+"</p>"; }); }
-  else { const all=[["all",{fr:"Tous les thèmes",en:"All topics",img:"globe",col:"#6a4bf0"}],...Object.entries(QZ.data.themes)];
+  else { const all=[["all",{fr:"Tous les thèmes",en:"All topics",img:"globe",col:"#4338ca"}],...Object.entries(QZ.data.themes)];
     all.forEach(([id,o])=>{ const n = id==="all" ? QZ.data.q.length : QZ.data.q.filter(q=>q[0]===id).length;
-      const b=document.createElement("button"); b.type="button"; b.className="qz-theme"; b.style.setProperty("--tc",o.col); b.setAttribute("aria-pressed",c.theme===id);
+      const b=document.createElement("button"); b.type="button"; b.className="qz-theme"+(id==="all"?" qz-all":""); b.style.setProperty("--tc",o.col); b.setAttribute("aria-pressed",c.theme===id);
       b.innerHTML='<span class="qz-ti">'+(OBJ[o.img]?OBJ[o.img]():"")+'</span><b></b><small></small>'; b.querySelector("b").textContent=fr?o.fr:o.en; b.querySelector("small").textContent=n+" "+t("qzQuestions");
       b.onclick=()=>{ c.theme=id; re(); }; th.appendChild(b); }); }
-  qzSeg("qzAnsType",["notes","chords"],c.ans,v=>t(v==="notes"?"qzNotes":"qzChords"),v=>{ c.ans=v; re(); });
-  const dl=$("qzDiff"); dl.innerHTML=""; [1,2,3].forEach(v=>{ const b=document.createElement("button"); b.type="button"; b.className="qz-diff"; b.setAttribute("aria-pressed",c.diff===v);
-    b.innerHTML="<b></b><small></small>"; b.querySelector("b").textContent=t("qzDiffs")[v-1]; b.querySelector("small").textContent=t(c.ans==="notes"?"qzDiffN":"qzDiffC")[v-1]; b.onclick=()=>{ c.diff=v; re(); }; dl.appendChild(b); });
+  // Mode and difficulty: the same big choice cards (Notes / Chords, then Easy / Medium / Hard described for the mode)
+  const card=(box,on,title,sub,fn)=>{ const b=document.createElement("button"); b.type="button"; b.className="qz-diff"; b.setAttribute("aria-pressed",on);
+    b.innerHTML="<b></b><small></small>"; b.querySelector("b").textContent=title; b.querySelector("small").textContent=sub; b.onclick=fn; box.appendChild(b); };
+  const al=$("qzAnsType"); al.innerHTML=""; ["notes","chords"].forEach(v=>card(al,c.ans===v,t(v==="notes"?"qzNotes":"qzChords"),t(v==="notes"?"qzAnsDN":"qzAnsDC"),()=>{ c.ans=v; re(); }));
+  const dl=$("qzDiff"); dl.innerHTML=""; [1,2,3].forEach(v=>card(dl,c.diff===v,t("qzDiffs")[v-1],t(c.ans==="notes"?"qzDiffN":"qzDiffC")[v-1],()=>{ c.diff=v; re(); }));
   qzSeg("qzCount",[5,10,20,30],c.count,String,v=>{ c.count=v; re(); });
   qzSeg("qzTime",[5,10,20,30],c.time,v=>v+" s",v=>{ c.time=v; re(); });
-  $("qzKeysOpt").checked=!!c.keys;
+  $("qzKeysOpt").checked=!!c.keys; $("qzHelpBox").title=t("qzKeysD");
+  qzSeg("qzKeysSeg",[false,true],!!c.keys,v=>t(v?"qzHelpKeys":"qzHelpNo"),v=>{ c.keys=v; $("qzKeysOpt").checked=v; re(); });
   qzSeg("qzWhere",["local","online"],c.where,v=>t(v==="local"?"qzLocal":"qzOnline"),v=>{ c.where=v; save(); if(v==="online") netLobbyPeek(); else netLeave(); renderQzSetup(); });
   $("qzLocalBox").hidden = c.where!=="local"; $("qzOnlineBox").hidden = c.where!=="online"; qzHelpPlace();
   if(c.where==="online"){ renderQzNet(); return; }
@@ -5594,10 +5776,18 @@ function qzShowQ(i){ qzClearTimers(); QZ.i=i; const cf=QZ.cfg, q=QZ.list[i], fr=
   QZ.ans=answers; QZ.q=q; QZ.picks={}; QZ.ms={}; QZ.buf={}; QZ.done=false; const humans=QZ.players.filter(p=>!p.bot).length; QZ.turn=(QZ.turn+1)%Math.max(1,humans);
   QZ.dur=cf.time*1000; QZ.t0=performance.now();
   // bots answer after a while, more or less right depending on their level
+  QZ.botPlan=[];
   QZ.players.forEach((p,pi)=>{ if(!p.bot || (QZ.mode==="online" && !NET.host)) return; const L=p.bot, acc=[.55,.75,.92][L-1], rng=[[.3,.75],[.18,.5],[.08,.3]][L-1];
     const ms=QZ.dur*(rng[0]+Math.random()*(rng[1]-rng[0])), right=Math.random()<acc, k=right?QZ.ans.findIndex(a=>a.right):QZ.ans.findIndex(a=>!a.right);
-    QZ.botT.push(setTimeout(()=>{ if(!QZ.done && QZ.i===i){ qzPick(pi,k,ms); if(QZ.mode==="online") netSend({type:"ans",id:p.id,i,o:QZ.ans[k].o,ms:Math.round(ms)}); } },ms)); });
-  renderQuiz(); QZ.raf=requestAnimationFrame(qzTick); }
+    QZ.botPlan.push({pi,k,ms,i}); });
+  qzArmBots(); renderQuiz(); QZ.raf=requestAnimationFrame(qzTick); }
+// the robots' answers of this question, each at its time (counted from QZ.t0, which moves on after a pause)
+function qzArmBots(){ const el=performance.now()-QZ.t0; (QZ.botPlan||[]).forEach(({pi,k,ms,i})=>{ if(QZ.picks[pi]!=null || i!==QZ.i) return; const p=QZ.players[pi];
+  QZ.botT.push(setTimeout(()=>{ if(!QZ.done && QZ.i===i){ qzPick(pi,k,ms); if(QZ.mode==="online") netSend({type:"ans",id:p.id,i,o:QZ.ans[k].o,ms:Math.round(ms)}); } },Math.max(0,ms-el))); }); }
+// the leave window holds a local quiz still: the clock, the robots and the next question wait
+function qzHold(on,d){ if(QZ.view!=="play") return; if(on){ cancelAnimationFrame(QZ.raf); clearTimeout(QZ.revealT); QZ.botT.forEach(clearTimeout); QZ.botT=[]; return; }
+  if(QZ.done){ const left=Math.max(800,4200-(LV.at-QZ.doneAt)); QZ.doneAt+=d; QZ.revealT=setTimeout(()=>{ if(page==="quiz"&&QZ.view==="play"&&QZ.done) qzNext(); },left); }
+  else { QZ.t0+=d; qzArmBots(); QZ.raf=requestAnimationFrame(qzTick); } }
 function qzTick(){ if(page!=="quiz"||QZ.view!=="play"||QZ.done) return; const left=Math.max(0,1-(performance.now()-QZ.t0)/QZ.dur); const b=$("qzBar"); if(b) b.style.transform="scaleX("+left+")";
   if(left<=0){ if(QZ.mode!=="online"||NET.host) qzReveal(); return; } QZ.raf=requestAnimationFrame(qzTick); }
 // which local player played this note?
@@ -5899,7 +6089,8 @@ let playHash="#songs"; // #songs = song library, #games = Play games, #game=<id>
 function playOpen(){ const f=$("playFrame"); const src="play/index.html"+playHash+"&lang="+(S.settings.lang==="fr"?"fr":"en")+(staffOn()?"&staff=1&clef="+staffClef():""); const old=f.getAttribute("src");
   if(old!==src){ f.onload=()=>{ if(page==="play" && !anyWin()) f.focus(); }; f.src=src; if(old){ try{ f.contentWindow.location.reload(); }catch(e){} } } // a hash-only change would not reload the page: force it
   $("playPanel").hidden=false; }
-addEventListener("message",e=>{ if(SAME_ORIGIN!=="*" && e.origin!==SAME_ORIGIN) return; const d=e.data; if(d && d.source==="clavio" && d.type==="free") openPage("free"); if(d && d.source==="clavio" && d.type==="home" && page==="play") openPage(playHash.startsWith("#game")?"games":"free"); });
+addEventListener("message",e=>{ if(SAME_ORIGIN!=="*" && e.origin!==SAME_ORIGIN) return; const d=e.data; if(d && d.source==="clavio" && d.type==="free") openPage("free"); if(d && d.source==="clavio" && d.type==="home" && page==="play") openPage(playHash.startsWith("#game")?"games":"free");
+  if(d && d.source==="clavio" && d.type==="askLeave" && page==="play" && !LV.on) lvOpen(actNow()||{k:"play",song:!playHash.startsWith("#game")},()=>{ try{ $("playFrame").contentWindow.clavioLeave(); }catch(e){} }); }); // the frame's back button during a song / a game
 function openPlayWith(h){ const sg=/^#song=([a-z]+)/.exec(h); if(sg && premSong(sg[1])){ pwOpen("songs"); return; } playHash=h; if(page==="play"){ playOpen(); setNav(); } else openPage("play"); }
 function goMode(m){ closeDrawer(); if(m==="quiz") openPage("quiz"); else if(m==="learn") openPage("learn"); else if(m==="play") openPage("free"); else openPage("games"); }
 document.querySelectorAll("[data-mode]").forEach(b=>b.addEventListener("click",()=>{ const m=b.dataset.mode; if(page==="daily" && game && game.daily){ guardLeave(()=>{ game=null; goMode(m); }); return; } goMode(m); }));
@@ -5982,7 +6173,7 @@ const myName = () => gCut(String(myNameRaw()).replace(BIDI_G,"").replace(/[\u000
 // the name sent to profiles: 2 to 24 characters, no control or direction characters (check profiles_name_clean)
 const myNameDb = () => { const v=myName(); return nameErr(v) ? t("qzPlayer") : v; };
 async function setUser(u){
-  user=u; renderStatus(); document.body.classList.toggle("guest",!u);
+  user=u; renderStatus(); document.body.classList.toggle("guest",!u); document.body.classList.remove("sess-wait");
   if(u && page==="locked" && lockFor) openPage(lockFor);
   if(u){
     if(S.ownerId && S.ownerId!==u.id){
@@ -6200,9 +6391,9 @@ function renderAccount(){
 // ---- simple windows: characters + intros
 const openMods=[];
 function openMod(id){ if(!openMods.includes(id)){ modalOpened(); openMods.push(id); } $(id).hidden=false; const f=$(id).querySelector(".modal-close"); if(f) f.focus({preventScroll:true}); }
-function closeMod(id){ $(id).hidden=true; const i=openMods.indexOf(id); if(i>=0){ openMods.splice(i,1); modalClosed(); } }
+function closeMod(id){ $(id).hidden=true; const i=openMods.indexOf(id); if(i>=0){ openMods.splice(i,1); if(id==="leaveModal") lvAfter(); modalClosed(); } }
 document.addEventListener("click",e=>{ const c=e.target.closest("[data-close]"); if(c) closeMod(c.dataset.close); });
-$("lvGo").addEventListener("click",()=>{ closeMod("leaveModal"); const f=leaveFn; leaveFn=null; if(f){ clearTimeout(advanceTimer); cancelAnimationFrame(raf); clearPlayTimers(); f(); } });
+$("lvGo").addEventListener("click",()=>{ const k=LV.a&&LV.a.k; closeMod("leaveModal"); const f=leaveFn; leaveFn=null; if(f){ if(k==="learn"||k==="daily"){ clearTimeout(advanceTimer); cancelAnimationFrame(raf); clearPlayTimers(); } f(); } });
 function openChars(){
   closeDrawer(); const L=levelInfo(S.xp).L, ci=charIndex(L), g=$("charGrid"); g.innerHTML="";
   t("chars").forEach((c,i)=>{ const got=L>=CHAR_LVL[i], d=document.createElement("div");
@@ -6420,10 +6611,12 @@ async function enableMidi(){
   if(!navigator.requestMIDIAccess){ $("midiBtn").classList.add("err"); $("midiTxt").textContent=t("midiNo"); notice(t("midiUnsupported")); return; }
   try{
     const acc=await navigator.requestMIDIAccess(); midiAcc=acc;
-    const bind=()=>{ document.querySelectorAll("#kbd .k-down").forEach(e=>e.classList.remove("k-down")); const names=[]; acc.inputs.forEach(inp=>{
+    const bind=()=>{ if(midiVirtual(S.settings.midiInput)){ S.settings.midiInput=""; save(); } // a virtual port saved as « the » keyboard would mute the real ones
+      document.querySelectorAll("#kbd .k-down").forEach(e=>e.classList.remove("k-down")); const names=[]; acc.inputs.forEach(inp=>{
         if((inp.state && inp.state!=="connected") || midiVirtual(inp.name)){ inp.onmidimessage=null; return; } // Chrome keeps unplugged ports in the map; virtual ports are not keyboards
         names.push(inp.name); inp.onmidimessage=ev=>{
         const [st,note,vel]=ev.data;
+        if(LV.on){ if((st&0xf0)===0x90 && vel>0) lvNote(note); return; } // the leave window: C = keep playing, B = leave
         if(page==="quiz"){ if((st&0xf0)===0x90 && vel>0){ if(S.settings.midiSound) tone(note,0,.9,.1+.26*vel/127); if(!anyModal()) quizIn(String(inp.id||inp.name),note); } return; } // every keyboard counts: one per player
         if(S.settings.midiInput && inp.name!==S.settings.midiInput) return;
         if(page==="play"){ if((st&0xf0)===0x90 && vel>0) playSend("noteon",note,vel/127); else if((st&0xf0)===0x80 || ((st&0xf0)===0x90 && vel===0)) playSend("noteoff",note); return; }
@@ -6640,21 +6833,47 @@ const SITE_URL = () => isApp() || !/^https?:/.test(location.protocol) ? "https:/
 // keys typed on the start screens stay there (fields keep working: only the app's shortcuts are stopped)
 document.addEventListener("keydown",e=>{ if(document.body.classList.contains("gate-on")) e.stopImmediatePropagation(); },true);
 function gateOpen(){ let g=$("gate"); if(!g){ g=document.createElement("div"); g.id="gate"; g.className="gate"; g.setAttribute("role","dialog"); g.setAttribute("aria-modal","true"); document.body.appendChild(g); }
-  document.body.classList.add("gate-on"); startInert(); g.hidden=false; gateRender(); gateConnect();
+  GATE.step="choose"; document.body.classList.add("gate-on"); startInert(); g.hidden=false; gateRender(); gateConnect();
   if(matchMedia("(pointer:fine)").matches) setTimeout(()=>($("gtName")||$("gtEmail"))?.focus(),50); }
 // the buttons wait for the sign-in service; offline: a message and "try again"
 function gateConnect(){ ensureCloud().then(()=>{ if(!$("gate")||$("gate").hidden) return; if(cloudFail){ GATE.msg=t("cloudErr"); GATE.err=true; GATE.retry=true; }
     else { GATE.retry=false; if(GATE.msg===t("cloudErr")) GATE.msg=""; } gateRender(); }).catch(()=>{}); }
 function gateClose(){ const g=$("gate"); if(g) g.hidden=true; document.body.classList.remove("gate-on"); startInert(); }
 function gateKeep(){ ["Email","Name"].forEach(k=>{ const e=$("gt"+k); if(e) GATE[k==="Email"?"email":"name"]=e.value.trim(); }); } // keep what was typed through a re-render
-function gateRender(){ gateKeep(); const g=$("gate"), m=GATE.mode, mark=$("homeLink").querySelector("svg").outerHTML;
-  g.innerHTML='<div class="gt-card"><div class="gt-form"><div class="gt-top"><span class="gt-logo">'+mark+'<b>Piano Challenges</b></span><button class="gt-lang" type="button" id="gtLang">'+(S.settings.lang==="fr"?"EN":"FR")+'</button></div>'
+// the sign-in screen, chess.com-like: a big title, one illustration, « Continue with email » first, then Google / Apple / Facebook,
+// a link to switch Sign up ↔ Log in and a discreet « Continue without an account ». The e-mail step is the form below (password or code).
+const GT_ICO={google:'<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="#4285F4" d="M22.5 12.3c0-.8-.1-1.5-.2-2.2H12v4.2h5.9a5 5 0 0 1-2.2 3.3v2.7h3.6c2-1.9 3.2-4.7 3.2-8z"/><path fill="#34A853" d="M12 23c3 0 5.5-1 7.3-2.7l-3.6-2.7c-1 .7-2.2 1.1-3.7 1.1-2.9 0-5.3-1.9-6.2-4.5H2.1v2.8A11 11 0 0 0 12 23z"/><path fill="#FBBC05" d="M5.8 14.2a6.6 6.6 0 0 1 0-4.3V7.1H2.1a11 11 0 0 0 0 9.9z"/><path fill="#EA4335" d="M12 5.4c1.6 0 3 .6 4.2 1.6l3.1-3.1A11 11 0 0 0 2.1 7.1l3.7 2.8C6.7 7.3 9.1 5.4 12 5.4z"/></svg>',
+  apple:'<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M16.4 12.6c0-2.4 2-3.6 2.1-3.7a4.6 4.6 0 0 0-3.6-2c-1.5-.2-3 .9-3.7.9-.8 0-2-.9-3.2-.8a4.8 4.8 0 0 0-4 2.5c-1.7 3-.4 7.4 1.2 9.8.8 1.2 1.8 2.5 3 2.4 1.2 0 1.7-.8 3.1-.8s1.9.8 3.2.8 2.1-1.2 2.9-2.4a10 10 0 0 0 1.3-2.7 4.2 4.2 0 0 1-2.3-4zM14 5.4a4.3 4.3 0 0 0 1-3.1 4.4 4.4 0 0 0-2.9 1.5 4.1 4.1 0 0 0-1 3c1.1.1 2.2-.6 2.9-1.4z"/></svg>',
+  facebook:'<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="#fff" d="M14 8.5V7c0-.7.2-1.2 1.3-1.2H17V2.6c-.3 0-1.3-.1-2.5-.1-2.5 0-4.2 1.5-4.2 4.3v1.7H7.5V12h2.8v9.5H14V12h2.8l.4-3.5z"/></svg>',
+  mail:'<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5.5" width="18" height="13" rx="3"/><path d="M4 7.5l8 6 8-6"/></svg>'};
+function gateChoose(){ const g=$("gate"), m=GATE.mode, mark=$("homeLink").querySelector("svg").outerHTML;
+  g.innerHTML='<div class="gt-card gt-choose"><div class="gt-form"><div class="gt-top"><span class="gt-logo">'+mark+'<b>Piano Challenges</b></span><button class="gt-lang" type="button" id="gtLang">'+(S.settings.lang==="fr"?"EN":"FR")+'</button></div>'
+    +'<h2 class="gt-h"></h2><div class="gt-ill" aria-hidden="true"><i class="gt-ill-glow"></i><span class="gt-ill-o">'+OBJ.runner()+'</span><span class="gt-ill-n">'+OBJ.staff()+'</span></div>'
+    +(S.refBy && S.refBy!==S.netId ? '<p class="gt-ref">'+pwI("gift")+'<span>'+esc(t("invRef"))+'</span></p>' : '')
+    +'<button type="button" class="gt-go gt-mailgo" id="gtEmailGo">'+GT_ICO.mail+'<span></span></button><p class="gt-msg" id="gtMsg" role="status"></p>'
+    +'<div class="gt-or"><span></span></div><div class="gt-soc gt-soc1"><button type="button" class="gt-s gt-google" data-p="google"></button><button type="button" class="gt-s gt-apple" data-p="apple"></button><button type="button" class="gt-s gt-fb" data-p="facebook"></button></div>'
+    +'<p class="gt-switch"><span></span> <button type="button" class="gt-link" id="gtSwitch"></button></p>'
+    +'<button class="gt-link gt-noacct" type="button" id="gateGuest"></button></div>'+gateArt()+'</div>';
+  g.querySelector(".gt-h").textContent=t(m==="signup"?"gtTitleNew":"gtTitleBack");
+  $("gtEmailGo").lastChild.textContent=t("gtEmailGo"); $("gtEmailGo").disabled=GATE.busy||!sb;
+  $("gtEmailGo").onclick=()=>{ Object.assign(GATE,{step:"email",msg:"",err:false}); gateRender(); if(matchMedia("(pointer:fine)").matches) setTimeout(()=>($("gtName")||$("gtEmail"))?.focus(),30); };
+  const msg=$("gtMsg"); msg.textContent=GATE.msg||(!sb&&!cloudFail?t("rankLoading"):""); msg.className="gt-msg"+(GATE.err?" err":"");
+  if(GATE.retry){ const r=document.createElement("button"); r.type="button"; r.className="gt-link"; r.textContent=t("gtRetry"); r.onclick=()=>{ cloudPromise=null; cloudFail=false; GATE.msg=""; GATE.err=false; GATE.retry=false; gateRender(); gateConnect(); }; msg.after(r); }
+  g.querySelector(".gt-or span").textContent=t("orLbl");
+  g.querySelectorAll(".gt-s").forEach(b=>{ const pv=b.dataset.p; b.innerHTML=GT_ICO[pv]+"<span></span>"; b.querySelector("span").textContent=t("gtWith")({google:"Google",apple:"Apple",facebook:"Facebook"}[pv]); b.disabled=GATE.busy||!sb; b.onclick=()=>gateOAuth(pv); });
+  g.querySelector(".gt-switch span").textContent=t(m==="signup"?"gtHave":"gtNone"); $("gtSwitch").textContent=t(m==="signup"?"authIn":"authUp");
+  $("gtSwitch").onclick=()=>{ Object.assign(GATE,{mode:m==="signup"?"login":"signup",msg:"",err:false}); gateRender(); };
+  $("gateGuest").textContent=t("gtNoAcct"); $("gateGuest").onclick=gateGuest;
+  $("gtLang").onclick=()=>{ document.querySelector('#langSeg [data-v="'+(S.settings.lang==="fr"?"en":"fr")+'"]').click(); gateRender(); }; }
+function gateRender(){ if(GATE.step!=="email"){ gateChoose(); return; } gateKeep(); const g=$("gate"), m=GATE.mode, mark=$("homeLink").querySelector("svg").outerHTML;
+  g.innerHTML='<div class="gt-card gt-mail"><div class="gt-form"><div class="gt-top"><button class="gt-back" type="button" id="gtBack"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg><span></span></button><button class="gt-lang" type="button" id="gtLang">'+(S.settings.lang==="fr"?"EN":"FR")+'</button></div>'
     +'<h2 class="gt-h"></h2><div class="seg gt-tabs"><button type="button" data-m="signup"></button><button type="button" data-m="login"></button></div>'
     +(S.refBy && S.refBy!==S.netId ? '<p class="gt-ref">'+pwI("gift")+'<span>'+esc(t("invRef"))+'</span></p>' : '')
     +'<form class="gt-f" id="gtForm" novalidate></form><p class="gt-msg" id="gtMsg" role="status"></p>'
     +'<div class="gt-or"><span></span></div><div class="gt-soc"><button type="button" class="gt-s gt-google" data-p="google"></button><button type="button" class="gt-s gt-apple" data-p="apple"></button><button type="button" class="gt-s gt-fb" data-p="facebook"></button></div>'
     +'<button class="gt-guest" type="button" id="gateGuest"></button></div>'+gateArt()+'</div>';
   g.querySelector(".gt-h").textContent=t(m==="signup"?"gtTitleUp":"gtTitleIn");
+  $("gtBack").lastChild.textContent=t("gtOther"); $("gtBack").onclick=()=>{ gateKeep(); Object.assign(GATE,{step:"choose",msg:"",err:false,otp:false,sent:false,confirm:false}); gateRender(); };
   const [tu,ti]=g.querySelectorAll(".gt-tabs button"); tu.textContent=t("gtSignup"); ti.textContent=t("gtLogin"); tu.setAttribute("aria-pressed",m==="signup"); ti.setAttribute("aria-pressed",m==="login");
   g.querySelectorAll(".gt-tabs button").forEach(b=>b.onclick=()=>{ Object.assign(GATE,{mode:b.dataset.m,msg:"",err:false,otp:false,sent:false,confirm:false}); gateRender(); });
   g.querySelector(".gt-or span").textContent=t("orLbl");
@@ -6710,6 +6929,9 @@ async function gateOAuth(pv){ if(!sb) return; GATE.msg=""; gateKeep();
   try{ await oauthLogin(pv); }catch(e){}
   if(loginStep.err && loginStep.msg){ GATE.msg = /not enabled|unsupported provider|provider/i.test(loginStep.msg) ? t("gtSoonProv") : loginStep.msg; GATE.err=true; loginStep.msg=""; loginStep.err=false; gateRender(); } }
 function gateGuest(){ S.gate="guest"; save(); gateClose(); startFlow(); }
+// guests: « Sign up » / « Log in » in the top bar, at the top of the page (tablets, computers) and in the side menu open the sign-in screen
+function authOpen(mode){ closeDrawer(); Object.assign(GATE,{mode:mode==="login"?"login":"signup",msg:"",err:false,otp:false,sent:false,confirm:false}); gateOpen(); }
+document.querySelectorAll("[data-auth]").forEach(b=>b.addEventListener("click",()=>authOpen(b.dataset.auth)));
 // after the gate: the onboarding questions, then the tour
 let deepLink=/^#(quiz|duel)-/.test(location.hash||"") || !!UNSUB;
 function startFlow(){ if(deepLink) return; if(!(S.onb&&S.onb.done)) onbOpen(); else if(!S.tourDone) tourStart(); else maybeAskInput(); }
@@ -6977,7 +7199,7 @@ applyStatic(); applySide(); buildKeyboard(); renderSettings(); render(); renderD
 setTimeout(()=>{ if(hasSession()) ensureCloud(); }, 400);
 { const sp=$("splash"); if(document.documentElement.classList.contains("native")){ const t0=performance.now(); setTimeout(()=>{ sp.classList.add("out"); setTimeout(()=>sp.remove(),400); }, Math.max(0,1500-t0)); } else sp.remove(); }
 const mobileWeb = (phoneMQ.matches||railMQ.matches) && !document.documentElement.classList.contains("native");
-document.body.classList.add("guest");
+document.body.classList.add("guest"); if(hasSession()) document.body.classList.add("sess-wait"); // a saved session: no « Sign up » flash before it loads
 restoreInput();
 { const nat=isApp(), wait=nat?1600:300;
   if(gateNeeded()){ save(); const op=(S.onb&&S.onb.legacy)?gateOpen:fnOpen; /* older players keep their settings: the sign-in screen once, not the first-note screen */ if(nat) setTimeout(op,wait); else op(); }
