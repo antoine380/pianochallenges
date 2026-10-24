@@ -2191,6 +2191,81 @@ body.gate-on .top-auth{visibility:hidden}
 @media (max-width:520px){ .gl-opts{grid-template-columns:repeat(3,minmax(0,1fr))} .gl-body{padding:18px 16px} .gl-body h2{font-size:1.3rem} }
 @media (max-height:420px){ .gl-body{gap:8px;padding:14px 18px} .gl-body h2{font-size:1.2rem} .gl-opt{padding:7px 4px} }
 /* ==== fin Objectif ==== */
+/* ==== MIDI lot 1 (24/10/2026) : pastille d'état M1, carte M2, test M8, toasts et pause M13 ==== */
+:root{--md-ok:var(--good);--md-wait:var(--warn);--md-mic:#3b82f6;--md-off:var(--muted);--md-plug:var(--brand)}
+.inp-chip.md-pill i{background:var(--md-off)}
+.md-pill.md-ok i{background:var(--md-ok)} .md-pill.md-wait i{background:var(--md-wait);animation:mdBlink 1.6s ease-in-out infinite}
+.md-pill:is(.md-mic,.md-micoff) i{background:var(--md-mic)} .md-pill.md-micoff i{opacity:.55} .md-pill.md-plug i{background:var(--md-plug)}
+@keyframes mdBlink{50%{opacity:.35}}
+.md-pill .mp-ic{display:grid;place-items:center;flex:none} .md-pill .mp-ic svg{width:22px;height:22px}
+.md-pill .mp-t{display:none}
+/* menu ouvert : la pastille prend la ligne, le jour/nuit devient une icône */
+.side:not(.collapsed) .theme-row #themeBtn{flex:none;width:auto} .side:not(.collapsed) .theme-row #themeBtn .lbl{display:none}
+.side:not(.collapsed) .md-pill{flex:1;min-width:0;width:auto;display:flex;align-items:center;gap:8px;padding:0 10px;justify-content:flex-start;color:var(--ink);border:1px solid var(--line)}
+.side:not(.collapsed) .md-pill .mp-t{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;flex:1;min-width:0;text-align:left;font-weight:800;font-size:.8rem;line-height:1.12;overflow:hidden;overflow-wrap:anywhere}
+.side:not(.collapsed) .md-pill .cg{display:none}
+.side:not(.collapsed) .md-pill i{position:static;flex:none;order:-1;width:10px;height:10px;border:0;box-shadow:0 0 0 3px color-mix(in srgb,currentColor 0%,transparent)}
+.side:not(.collapsed) .md-pill .mp-ic{display:none}
+.side:not(.collapsed) .md-pill.md-ok{border-color:color-mix(in srgb,var(--md-ok) 55%,transparent);background:color-mix(in srgb,var(--md-ok) 12%,var(--surface-2))}
+.side:not(.collapsed) .md-pill.md-wait{border-color:color-mix(in srgb,var(--md-wait) 55%,transparent);background:color-mix(in srgb,var(--md-wait) 12%,var(--surface-2))}
+.side:not(.collapsed) .md-pill.md-plug{border-style:dashed;border-color:color-mix(in srgb,var(--md-plug) 60%,transparent);color:var(--accent)}
+.md-mb{position:relative} .md-mb i{position:absolute;right:5px;top:7px;width:9px;height:9px;border-radius:50%;background:var(--md-off);box-shadow:0 0 0 2px var(--bg)}
+.md-mb.md-ok i{background:var(--md-ok)} .md-mb.md-wait i{background:var(--md-wait);animation:mdBlink 1.6s ease-in-out infinite} .md-mb:is(.md-mic,.md-micoff) i{background:var(--md-mic)} .md-mb.md-plug i{background:var(--md-plug)}
+/* carte « Ton clavier » de l'accueil (M2) */
+.hs-midi .obj{display:none} .hs-midi .hs-k{display:none} .hs-acts{display:flex;align-items:center;gap:6px;flex:none} .hs-midi .hs-more{display:none}
+.hs-midi.md-promo{flex-direction:column;align-items:flex-start;gap:6px;color:#fff;padding:14px 16px;--tc:#5a3fd6;--os:80px;
+  background-color:var(--tc);background-image:radial-gradient(120% 80% at 90% -10%,rgba(255,255,255,.28),transparent 55%),linear-gradient(160deg,#8b6cff,var(--tc) 66%);box-shadow:0 18px 30px -16px var(--tc),inset 0 1px 0 rgba(255,255,255,.4)}
+.hs-midi.md-promo .hs-ic{display:none} .hs-midi.md-promo .obj{display:block;position:absolute;top:-12px;right:-4px;width:var(--os);height:var(--os);filter:drop-shadow(0 12px 10px rgba(10,6,30,.45));pointer-events:none}
+.hs-midi.md-promo .obj svg{width:100%;height:100%;display:block}
+.hs-midi.md-promo .hs-k{display:block} .hs-midi.md-promo .hs-t{max-width:calc(100% - 64px)}
+.hs-midi.md-promo .hs-t b{font-family:var(--f-display);font-weight:700;font-size:1.2rem;line-height:1.1}
+.hs-midi.md-promo .hs-t small{color:#fff;opacity:.95;font-weight:600}
+.hs-midi.md-promo .hs-acts{width:100%;justify-content:space-between}
+.hs-midi.md-promo .btn{background:#fff;color:#1b1838;border:0;box-shadow:0 6px 14px -6px rgba(10,6,30,.5)}
+.hs-midi.md-promo .hs-more{display:inline-block;color:#fff;opacity:.95}
+.hs-midi.md-ok .hs-t b{color:var(--good)} .hs-midi.md-ok .hs-t b::before{content:"✓ "}
+@media (min-width:901px) and (max-height:820px){ .hs-midi.md-promo{padding:11px 14px;gap:4px;--os:64px} .hs-midi.md-promo .hs-k{display:none} .hs-midi.md-promo .hs-t b{font-size:1.05rem} }
+@media (max-width:900px) and (max-height:900px){ .hs-midi.md-promo .hs-k{display:none} }
+/* test « joue une note » (M8), en tête de la fenêtre Clavier MIDI */
+.md-test{display:flex;flex-direction:column;gap:8px;padding:10px;border-radius:var(--r-md);background:var(--surface-2);margin-bottom:6px}
+.mt-row{display:flex;gap:10px;align-items:stretch;min-height:96px}
+.mt-note{flex:none;width:78px;border-radius:12px;background:var(--surface);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;text-align:center}
+.mt-note b{font-family:var(--f-display);font-size:1.8rem;line-height:1;color:var(--nc,var(--accent))} .mt-note small{font-size:.68rem;color:var(--muted);font-weight:700}
+.mt-kb{position:relative;flex:1;min-width:0;display:flex;gap:2px;border-top:3px solid var(--hit-line,var(--brand));border-radius:4px}
+.mt-kb .w{flex:1;background:var(--key-white);border-radius:0 0 5px 5px;box-shadow:inset 0 -2px 0 var(--key-white-edge);position:relative}
+.mt-kb .b{position:absolute;top:0;height:58%;background:var(--key-black);border-radius:0 0 4px 4px;z-index:1}
+.mt-kb .on{background:var(--nc)!important;box-shadow:0 0 14px var(--nc)}
+.mt-kb .w small{position:absolute;bottom:3px;left:0;right:0;text-align:center;font-size:.55rem;color:var(--key-label);font-weight:700}
+.mt-vel{flex:none;width:36px;display:flex;flex-direction:column;align-items:center;gap:3px;font-size:.55rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.mt-vel i{flex:1;width:12px;border-radius:999px;background:var(--surface);position:relative;overflow:hidden}
+.mt-vel i b{position:absolute;left:0;right:0;bottom:0;height:0;background:linear-gradient(0deg,var(--good),var(--gold),var(--warn));transition:height .15s}
+.mt-vel em{font-style:normal;font-family:var(--f-display);font-size:.9rem;color:var(--ink)}
+.mt-msg{margin:0;font-weight:800;font-size:.92rem} .mt-msg.ok{color:var(--good)} .mt-msg small{display:block;font-weight:600;color:var(--muted);font-size:.78rem}
+.mt-steps{display:grid;grid-template-columns:1fr 1.4fr;gap:8px}
+.mt-step{display:flex;flex-direction:column;gap:4px;padding:8px 10px;border-radius:12px;background:var(--surface);font-size:.82rem;min-width:0}
+.mt-step b{font-weight:800} .mt-step small{color:var(--muted);font-size:.76rem;font-weight:600} .mt-step small.ok{color:var(--good)}
+.mt-btns{display:flex;flex-wrap:wrap;gap:4px} .mt-btns .btn{min-height:32px;padding:4px 10px;font-size:.78rem}
+.mt-btns .btn[aria-pressed="true"]{box-shadow:inset 0 0 0 2px var(--brand)}
+@media (max-width:520px){ .mt-steps{grid-template-columns:1fr} .mt-note{width:62px} .mt-note b{font-size:1.4rem} }
+/* toasts du clavier (M13), en haut */
+.md-toast{text-align:left;position:fixed;left:50%;top:max(12px,env(safe-area-inset-top));transform:translate(-50%,-12px);z-index:450;width:min(92vw,380px);display:flex;align-items:center;gap:10px;padding:8px 10px 8px 8px;border-radius:999px;
+  background:var(--surface);color:var(--ink);box-shadow:inset 0 0 0 1px var(--line),var(--shadow-float);opacity:0;pointer-events:none;transition:opacity 220ms var(--ease-out),transform 220ms var(--ease-out)}
+.md-toast.on{opacity:1;transform:translate(-50%,0);pointer-events:auto}
+.md-toast .mt-ic{width:36px;height:36px;border-radius:50%;display:grid;place-items:center;flex:none;color:#fff;background:var(--good)}
+.md-toast.md-lost .mt-ic{background:#d9761f} .md-toast .mt-ic svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.md-toast .mt-tx{display:flex;flex-direction:column;flex:1;min-width:0} .md-toast b{font-weight:800;font-size:.88rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap} .md-toast small{color:var(--muted);font-size:.76rem;font-weight:600}
+.md-toast .btn{flex:none;min-height:34px;padding:4px 14px;font-size:.82rem}
+/* fenêtre de pause (M13) */
+.md-lost{align-items:center;text-align:center;gap:10px;padding:24px 22px 18px}
+.md-lost .ml-ic{width:58px;height:58px;border-radius:16px;display:grid;place-items:center;color:#fff;background:linear-gradient(150deg,#f5a15a,#d9761f);box-shadow:0 10px 20px -10px #d9761f}
+.md-lost .ml-ic svg{width:30px;height:30px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.md-lost h2{margin:0;font-family:var(--f-display);font-size:1.45rem} .md-lost .ml-sub{margin:0;color:var(--muted)}
+.md-lost .btn{width:100%;justify-content:center;gap:8px} .md-lost .btn svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.md-lost .ml-wait{margin:0;display:flex;align-items:center;gap:8px;font-size:.84rem;color:var(--muted);font-weight:600}
+.md-lost .ml-wait i{width:14px;height:14px;border-radius:50%;border:2px solid var(--line);border-top-color:var(--brand);animation:mdSpin 1s linear infinite} .md-lost.back .ml-wait{color:var(--good);font-weight:800}
+@keyframes mdSpin{to{transform:rotate(360deg)}}
+@media (prefers-reduced-motion:reduce){ .md-pill.md-wait i,.md-mb.md-wait i,.md-lost .ml-wait i{animation:none} .md-toast{transition:opacity 120ms} .mt-vel i b{transition:none} }
+/* ==== fin MIDI lot 1 ==== */
 </style>
 
 <script>if(window.Capacitor&&window.webkit&&window.webkit.messageHandlers&&window.webkit.messageHandlers.bridge)document.documentElement.classList.add("native");</script>
@@ -2283,6 +2358,7 @@ body.gate-on .top-auth{visibility:hidden}
   <h1 class="mbar-title" id="mbTitle"></h1>
 <a id="homeLink2" href="/" hidden></a>
   <div class="auth-bar mb-auth" id="mbAuth"><button class="btn primary auth-up" type="button" data-auth="signup" data-i="authUp"></button><button class="btn auth-in" type="button" data-auth="login" data-i="authIn"></button></div>
+  <button class="mbar-btn ghost md-mb" id="mbMidi" type="button" aria-label="MIDI"></button>
   <button class="mbar-btn ghost ntf-mb" id="mbNtf" type="button" aria-label="Notifications"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 16V11a6 6 0 0 1 12 0v5l1.5 2h-15z"/><path d="M10 20.5a2.2 2.2 0 0 0 4 0"/></svg><span class="nbadge" id="mbNtfBadge" hidden></span></button>
   <button class="mbar-btn ghost" id="mbSet" type="button" aria-label="Settings"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10.3 3.2a1.8 1.8 0 0 1 3.4 0l.4 1.2a1.8 1.8 0 0 0 2.4 1l1.1-.6a1.8 1.8 0 0 1 2.4 2.4l-.6 1.1a1.8 1.8 0 0 0 1 2.4l1.2.4a1.8 1.8 0 0 1 0 3.4l-1.2.4a1.8 1.8 0 0 0-1 2.4l.6 1.1a1.8 1.8 0 0 1-2.4 2.4l-1.1-.6a1.8 1.8 0 0 0-2.4 1l-.4 1.2a1.8 1.8 0 0 1-3.4 0l-.4-1.2a1.8 1.8 0 0 0-2.4-1l-1.1.6a1.8 1.8 0 0 1-2.4-2.4l.6-1.1a1.8 1.8 0 0 0-1-2.4l-1.2-.4a1.8 1.8 0 0 1 0-3.4l1.2-.4a1.8 1.8 0 0 0 1-2.4l-.6-1.1a1.8 1.8 0 0 1 2.4-2.4l1.1.6a1.8 1.8 0 0 0 2.4-1z"/><circle cx="12" cy="12" r="3"/></svg></button>
   <button class="mbar-lvl" id="mbLvlBtn" type="button" aria-haspopup="dialog"><span class="av" id="mbAv"></span><span class="mono" id="mbLvl">1</span></button>
@@ -2329,7 +2405,7 @@ body.gate-on .top-auth{visibility:hidden}
    <aside class="hub-side" id="hubSide">
     <button class="hs-card hs-daily" id="hsDaily" type="button"><span class="obj" data-obj="daily"></span><span class="hs-k" data-i="hsDailyK"></span><b data-i="dailyTitle"></b><small id="hsDailySub"></small><span class="hs-go" id="hsDailyGo"></span></button>
     <button class="hs-card hs-inv" id="hsInv" type="button"><span class="obj" data-obj="gift"></span><b data-i="invHubT"></b><small data-i="invHubSF"></small></button>
-    <div class="hs-card hs-midi" id="hsMidi"><span class="hs-ic"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2.5" y="7" width="19" height="11" rx="2"/><path d="M6.5 7v6M10 7v6M14 7v6M17.5 7v6"/></svg><i id="hsMidiDot"></i></span><span class="hs-t"><b data-i="hsMidiT"></b><small id="hsMidiSub"></small></span><button class="btn" id="hsMidiBtn" type="button"></button></div>
+    <div class="hs-card hs-midi" id="hsMidi"><span class="obj" id="hsMidiObj" aria-hidden="true"></span><span class="hs-ic"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2.5" y="7" width="19" height="11" rx="2"/><path d="M6.5 7v6M10 7v6M14 7v6M17.5 7v6"/></svg><i id="hsMidiDot"></i></span><span class="hs-t"><span class="hs-k" id="hsMidiK"></span><b id="hsMidiT"></b><small id="hsMidiSub"></small></span><span class="hs-acts"><button class="btn" id="hsMidiBtn" type="button"></button><button class="hs-more" id="hsMidiLater" type="button" data-i="mdLater"></button></span></div>
     <div class="hs-card hs-news" id="hsNews"><div class="hs-h"><b data-i="hsNewsT"></b><span class="hs-dots" id="hsDots"></span></div><div class="hs-slides" id="hsSlides"></div></div>
     <div class="hs-card hs-rank"><div class="hs-h"><b data-i="hsRankT"></b><button class="hs-more" id="hsRankMore" type="button" data-i="hsRankMore"></button></div><ol class="hs-list" id="hsRank"></ol></div>
    </aside></div>
@@ -2671,6 +2747,12 @@ body.gate-on .top-auth{visibility:hidden}
   <div class="modal-card small">
     <div class="modal-head"><h2 id="midiTitle" data-i="midiTitle"></h2><button class="modal-close" id="midiX" type="button" aria-label="Close">×</button></div>
     <div class="modal-body midi-body">
+      <div class="md-test" id="mdTest" hidden>
+        <div class="mt-row"><div class="mt-note"><b id="mtName">♪</b><small id="mtSub"></small></div><div class="mt-kb" id="mtKb" aria-hidden="true"></div><div class="mt-vel" aria-hidden="true"><span data-i="mdForce"></span><i><b id="mtBar"></b></i><em id="mtVel"></em></div></div>
+        <p class="mt-msg" id="mtMsg" role="status" aria-live="polite"></p>
+        <div class="mt-steps"><div class="mt-step" id="mtTouch"><b data-i="mdLoudSoft"></b><small id="mtTouchRes"></small></div>
+          <div class="mt-step" id="mtTwice"><b data-i="mdTwice"></b><span class="mt-btns"><button class="btn" type="button" data-v="yes" data-i="mdYes"></button><button class="btn" type="button" data-v="no" data-i="mdNo"></button><button class="btn" type="button" data-v="none" data-i="mdNone"></button></span><small id="mtTwiceRes"></small></div></div>
+      </div>
       <div class="midi-status"><span class="dot"></span><span id="mStTxt"></span><span class="spacer"></span><button class="btn primary" id="mEnable" type="button" data-i="midiOff"></button></div>
       <p class="notice midi-setup" id="midiSetupMsg" hidden></p>
       <p class="mdev-h" data-i="midiFound"></p>
@@ -2689,7 +2771,18 @@ body.gate-on .top-auth{visibility:hidden}
       <label class="check"><input type="checkbox" id="optMidiC"> <span data-i="optMidiC"></span></label>
       <p class="hint" data-i="midiHint"></p>
     </div>
-    <div class="modal-foot end-foot"><button class="btn primary" id="midiOk" type="button" data-i="closeLbl"></button></div>
+    <div class="modal-foot end-foot"><button class="btn" id="mdChange" type="button" data-i="mdChange"></button><button class="btn primary" id="midiOk" type="button" data-i="closeLbl"></button></div>
+  </div>
+</div>
+<div class="modal" id="mdLost" role="dialog" aria-modal="true" aria-labelledby="mdLostT" hidden>
+  <div class="modal-bg"></div>
+  <div class="modal-card small md-lost">
+    <span class="ml-ic" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M9 3v4M15 3v4M7 7h10v4a5 5 0 0 1-10 0zM12 16v5M4 4l16 16"/></svg></span>
+    <h2 id="mdLostT" data-i="mdLost"></h2>
+    <p class="ml-sub" id="mdLostS"></p>
+    <button class="btn primary" id="mdGoScreen" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2.5" y="4" width="19" height="13" rx="2"/><path d="M8 21h8M12 17v4"/></svg><span data-i="mdGoScreen"></span></button>
+    <button class="btn" id="mdWaitKb" type="button" data-i="mdWaitKb"></button>
+    <p class="ml-wait" id="mdLostWait"><i aria-hidden="true"></i><span id="mdLostWaitT"></span></p>
   </div>
 </div>
 <div class="modal" id="setModal" role="dialog" aria-modal="true" aria-labelledby="setTitle" hidden>
@@ -2975,7 +3068,15 @@ const TXT = {
     goalOk:"Objectif du jour atteint !", goalOf:(a,b,u)=>a+" / "+b+" "+u, goalDay:"Objectif du jour", goalLeft:(n,u)=>"Encore "+n+" "+u+" : chaque minute compte.", goalSaved:"Objectif enregistré",
     goalNtfX:(g)=>"Tu as joué ton objectif ("+g+"). À demain !", streakNew:"Nouvelle série : joue aujourd'hui", streakGo:"À toi", streakFrozen:"Ta série est protégée : on a utilisé un gel.",
     frzNtfX:(n)=>"Gel utilisé hier. "+(n?"Il t'en reste "+n+".":"Ta série continue."), frzWonT:"Tu as gagné un gel de série", frzWonX:"7 jours de suite ! Il protégera ta série si tu fais une pause un jour.",
-    frzN:n=>n+(n>1?" gels":" gel"), frzUsed:"Gel utilisé hier", wkNow:(n)=>"Semaine : "+n+"/7", wkTip:"3 jours dans la semaine = semaine validée"},
+    frzN:n=>n+(n>1?" gels":" gel"), frzUsed:"Gel utilisé hier", wkNow:(n)=>"Semaine : "+n+"/7", wkTip:"3 jours dans la semaine = semaine validée",
+    mdPromise:"Ton piano devient une manette.", mdPromiseSub:"Branche ton clavier : chaque note est reconnue instantanément, même les accords.", mdPlug:"Brancher mon clavier", mdPlugShort:"Brancher un clavier", mdOn:n=>n, mdNKb:n=>n+" claviers", mdWait:"Clavier : en attente", mdScreen:"Écran", mdMic:"Micro", mdMicOff:"Micro coupé",
+    mdHubK:"Clavier MIDI", mdHubT:"Branche ton clavier", mdHubS:"Accords reconnus d'un coup, aucun bruit gênant. 2 minutes.", mdHubOff:"Aucun clavier branché.", mdHubNo:"Ton clavier marche dans l'app Piano Challenges ou dans Chrome.", mdHubHow:"Voir comment", mdTest:"Tester", mdLater:"Plus tard", mdKeysN:n=>n+" touches", mdConnected:"Connecté",
+    mdPressAny:"Appuie sur n'importe quelle touche", mdTalks:"Ton clavier parle à Piano Challenges !", mdFrom:(n,p)=>n+" reçu de « "+p+" »", mdForce:"Force", mdForceN:v=>"force "+v,
+    mdLoudSoft:"Appuie fort, puis doucement.", mdTouchOk:"Sensible au toucher ✓", mdTouchNo:"Toujours la même force : ton clavier n'est pas sensible au toucher.", mdTouchVals:(a,b)=>"fort "+a+" · doux "+b,
+    mdTwice:"Tu entends le son deux fois ?", mdYes:"Oui", mdNo:"Non", mdNone:"Je n'entends rien", mdTwiceYes:"Son de l'app coupé : ton piano joue seul.", mdTwiceNo:"Parfait, on garde comme ça.", mdTwiceNone:"Son de l'app activé : tu entends les notes ici.",
+    mdChange:"Changer d'entrée", mdDetected:n=>"Clavier détecté : "+n, mdOnNow:n=>n+" connecté", mdUse:"Utiliser", mdWasScreen:"Tu jouais sur l'écran", mdWasMic:"Tu jouais au micro", mdWasNone:"Joue avec dès maintenant",
+    mdLostT:"Clavier déconnecté", mdLostPill:"La pastille du menu passe à l'orange", mdLostOn:"Joue sur l'écran", mdLost:"Ton clavier s'est déconnecté", mdLostSub:"On a mis la partie en pause. Rebranche ton clavier ou continue à l'écran.",
+    mdGoScreen:"Continuer sur l'écran", mdWaitKb:"Attendre mon clavier", mdWaitAuto:"Dès qu'il revient : reprise après 3 s", mdWaiting:"En attente de ton clavier…", mdBack:s=>"Clavier revenu : reprise dans "+s+" s"},
   en:{help:"Help", helpTitle:"How it works", helpOk:"Let's go", tutNext:"Next", tutPrev:"Previous", close:"Close", stepOf:(i,n)=>"Step "+i+" of "+n,
     tut:[{h:"Read the challenge",p:"A scale, a chord or a progression appears with a countdown. Picture the notes in your head before the bar runs out."},
          {h:"Pick and set up",p:"Before each game, pick the scale or chord as a card, then the timer and your helps. “Show the notes” shows the note names, “Light up the keys” shows where to play, and “Step-by-step help” gives nothing at first, then a hint every 8 s; the notes you find stay lit and a card builds up to help you remember them. Less help = more XP."},
@@ -3147,7 +3248,15 @@ const TXT = {
     goalOk:"Daily goal reached!", goalOf:(a,b,u)=>a+" / "+b+" "+u, goalDay:"Daily goal", goalLeft:(n,u)=>n+" "+u+" to go: every minute counts.", goalSaved:"Goal saved",
     goalNtfX:(g)=>"You played your goal ("+g+"). See you tomorrow!", streakNew:"New streak: play today", streakGo:"Play", streakFrozen:"Your streak is safe: a freeze was used.",
     frzNtfX:(n)=>"Freeze used yesterday. "+(n?n+" left.":"Your streak goes on."), frzWonT:"You earned a streak freeze", frzWonX:"7 days in a row! It will protect your streak if you take a day off.",
-    frzN:n=>n+(n>1?" freezes":" freeze"), frzUsed:"Freeze used yesterday", wkNow:(n)=>"Week: "+n+"/7", wkTip:"3 days in a week = week done"}
+    frzN:n=>n+(n>1?" freezes":" freeze"), frzUsed:"Freeze used yesterday", wkNow:(n)=>"Week: "+n+"/7", wkTip:"3 days in a week = week done",
+    mdPromise:"Your piano becomes a game controller.", mdPromiseSub:"Plug in your keyboard: every note is recognised instantly, even chords.", mdPlug:"Connect my keyboard", mdPlugShort:"Connect a keyboard", mdOn:n=>n, mdNKb:n=>n+" keyboards", mdWait:"Keyboard: waiting", mdScreen:"Screen", mdMic:"Mic", mdMicOff:"Mic off",
+    mdHubK:"MIDI keyboard", mdHubT:"Plug in your keyboard", mdHubS:"Chords recognised at once, no noise in the way. 2 minutes.", mdHubOff:"No keyboard connected.", mdHubNo:"Your keyboard works in the Piano Challenges app or in Chrome.", mdHubHow:"See how", mdTest:"Test", mdLater:"Later", mdKeysN:n=>n+" keys", mdConnected:"Connected",
+    mdPressAny:"Press any key", mdTalks:"Your keyboard is talking to Piano Challenges!", mdFrom:(n,p)=>n+" from “"+p+"”", mdForce:"Force", mdForceN:v=>"force "+v,
+    mdLoudSoft:"Press hard, then softly.", mdTouchOk:"Touch-sensitive ✓", mdTouchNo:"Always the same force: your keyboard isn't touch-sensitive.", mdTouchVals:(a,b)=>"hard "+a+" · soft "+b,
+    mdTwice:"Do you hear the sound twice?", mdYes:"Yes", mdNo:"No", mdNone:"I hear nothing", mdTwiceYes:"App sound off: your piano plays on its own.", mdTwiceNo:"Great, we'll keep it that way.", mdTwiceNone:"App sound on: you hear the notes here.",
+    mdChange:"Change input", mdDetected:n=>"Keyboard found: "+n, mdOnNow:n=>n+" connected", mdUse:"Use it", mdWasScreen:"You were playing on screen", mdWasMic:"You were playing with the mic", mdWasNone:"Play with it right away",
+    mdLostT:"Keyboard disconnected", mdLostPill:"The menu badge turns orange", mdLostOn:"Play on the screen", mdLost:"Your keyboard disconnected", mdLostSub:"The game is paused. Plug your keyboard back in or carry on on screen.",
+    mdGoScreen:"Continue on screen", mdWaitKb:"Wait for my keyboard", mdWaitAuto:"As soon as it's back: resumes after 3 s", mdWaiting:"Waiting for your keyboard…", mdBack:s=>"Keyboard back: resuming in "+s+" s"}
 };
 const t = k => TXT[S.settings.lang][k];
 // data shown to people (scores, XP, other players' names): thousands separators in the app's language,
@@ -6057,10 +6166,7 @@ function hsAuto(){ clearInterval(hsTimer); if(matchMedia("(prefers-reduced-motio
 function renderHubSide(){
   const done=!!(S.daily&&S.daily.date===dayStr());
   $("hsDaily").classList.toggle("done",done); $("hsDailySub").textContent=$("dailySub").textContent; $("hsDailyGo").textContent=t(done?"hsDailyDone":"hsDailyGo");
-  const midiOn=midiReady && S.settings.input==="midi";
-  $("hsMidiDot").classList.toggle("on",midiOn);
-  $("hsMidiSub").textContent = midiReady ? t("inMidiOk")(midiNames.join(", ")) : midiPossible() ? t("hsMidiOff") : t("hsMidiNo");
-  $("hsMidiBtn").textContent=t(midiOn?"hsMidiChange":"hsMidiConnect");
+  mdHub(); // « Ton clavier » card (M2)
   if(hsNewsLang!==S.settings.lang){ hsNewsLang=S.settings.lang; const box=$("hsSlides"), dots=$("hsDots"); box.innerHTML=""; dots.innerHTML="";
     t("hsNews").forEach(([ti,su,c,ic],i)=>{ const d=document.createElement("div"); d.className="hs-slide";
       d.innerHTML='<span class="nb" style="background:linear-gradient(150deg,'+shade(c,.35)+','+c+')"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="'+ic+'"/></svg></span><span><b></b><small></small></span>';
@@ -6098,7 +6204,7 @@ async function myRank(since){ if(!sb||!user) return null;
     const r=Array.isArray(data)?data[0]:data; if(error||!r||!(+r.rank>0)) return null; return {rank:+r.rank|0, xp:+r.xp||0}; }catch(e){ return null; } }
 $("hsDaily").addEventListener("click",()=>$("dailyCard").click());
 $("hsRankMore").addEventListener("click",()=>$("rankBtn").click());
-$("hsMidiBtn").addEventListener("click",()=>{ if(midiPossible()) setInput("midi",true); else openInputChooser(true); });
+$("hsMidiBtn").addEventListener("click",()=>{ if(midiReady && S.settings.input!=="mic") openMidi(); else if(midiPossible()) setInput("midi",true); else openInputChooser(true); });
 document.querySelectorAll(".obj[data-obj]").forEach(e=>{ e.innerHTML=OBJ[e.dataset.obj](); });
 const MODE_COL={quiz:"#2563eb",games:"#26805a",play:"#7a5bf5",learn:"#c9463c"}; // same as --m-games/--m-play/--m-learn; shades only darken so white text stays ≥ 4.5:1
 // each tile has its own hue (white text ≥ 4.5:1 on each), like a shelf of game boxes
@@ -6557,6 +6663,7 @@ function renderInputUI(){
   $("inStatus").textContent=st; $("inCfg").textContent=cfg; $("inCfg").hidden=!cfg; if(page==="hub") renderHubSide();
   const ok = m==="screen" || (m==="midi"&&midiReady) || (m==="mic"&&micOn);
   const chip=$("inChip"); chip.innerHTML=INPUT_ICONS[m]+'<span class="cg"><svg viewBox="0 0 24 24"><path d="M10.3 3.2a1.8 1.8 0 0 1 3.4 0l.4 1.2a1.8 1.8 0 0 0 2.4 1l1.1-.6a1.8 1.8 0 0 1 2.4 2.4l-.6 1.1a1.8 1.8 0 0 0 1 2.4l1.2.4a1.8 1.8 0 0 1 0 3.4l-1.2.4a1.8 1.8 0 0 0-1 2.4l.6 1.1a1.8 1.8 0 0 1-2.4 2.4l-1.1-.6a1.8 1.8 0 0 0-2.4 1l-.4 1.2a1.8 1.8 0 0 1-3.4 0l-.4-1.2a1.8 1.8 0 0 0-2.4-1l-1.1.6a1.8 1.8 0 0 1-2.4-2.4l.6-1.1a1.8 1.8 0 0 0-1-2.4l-1.2-.4a1.8 1.8 0 0 1 0-3.4l1.2-.4a1.8 1.8 0 0 0 1-2.4l-.6-1.1a1.8 1.8 0 0 1 2.4-2.4l1.1.6a1.8 1.8 0 0 0 2.4-1z"/><circle cx="12" cy="12" r="3"/></svg></span><i class="'+(ok?"on":"off")+'"></i>'; chip.title=M[m][0]+" — "+st; chip.setAttribute("aria-label",chip.title);
+  mdPill();
 }
 let midiSetup=null; // {prev} while the player is connecting a MIDI keyboard after choosing MIDI
 async function setInput(v, fromUser){
@@ -6573,7 +6680,7 @@ async function setInput(v, fromUser){
   renderInputUI(); render();
 }
 $("inCfg").addEventListener("click",()=>{ const m=S.settings.input; if(m==="midi") openMidi(); else if(m==="mic") $("micBtn").click(); });
-$("inChip").addEventListener("click",()=>openInputChooser(true));
+$("inChip").addEventListener("click",()=>mdPillClick());
 function openInputChooser(change){
   const box=$("inOpts"), M=t("inModes"), curM=S.settings.input; box.innerHTML="";
   $("inTitle").textContent = change ? t("inChange") : t("inTitle"); $("inSubT").textContent = change ? "" : t("inSub"); $("inX").hidden=!change;
@@ -6628,7 +6735,7 @@ function renderMidiModal(){
   sel.value = midiNames.includes(S.settings.midiInput) ? S.settings.midiInput : "";
   renderSettings();
 }
-function openMidi(){ if(!midiOpen) modalOpened(); midiOpen=true; renderMidiModal(); startMidiPoll(); $("midiModal").hidden=false; $("midiOk").focus(); }
+function openMidi(){ if(!midiOpen) modalOpened(); midiOpen=true; mtReset(); renderMidiModal(); startMidiPoll(); $("midiModal").hidden=false; $("midiOk").focus(); }
 function closeMidi(){ if(!midiOpen) return; midiOpen=false; $("midiModal").hidden=true;
   if(midiSetup){ const prev=midiSetup.prev; midiSetup=null; S.settings.input = midiReady ? "midi" : (prev && prev!=="midi" ? prev : undefined); if(!S.settings.input) delete S.settings.input; save(); renderInputUI(); render(); } if(calib){ calib=null; calibMsg(""); $("kbDetect").textContent=t("kbDetect"); } clearInterval(midiPoll); modalClosed(); }
 let midiPoll=0; // in the app, look for newly paired / plugged keyboards while the window is open
@@ -6643,8 +6750,8 @@ $("mInput").addEventListener("change",e=>{ S.settings.midiInput=e.target.value; 
 $("optMidiC").addEventListener("change",e=>{ S.settings.midiC=e.target.checked; save(); render(); });
 $("midiBtn").addEventListener("click", ()=>{ if(midiAcc) openMidi(); else enableMidi(); });
 let midiDenied=false; // the browser refused requestMIDIAccess
-async function enableMidi(){
-  audio();
+async function enableMidi(quiet){
+  if(!quiet) audio(); // quiet: watching for a keyboard in the background (M13), no sound needed yet
   if(!navigator.requestMIDIAccess){ $("midiBtn").classList.add("err"); $("midiTxt").textContent=t("midiNo"); notice(t("midiUnsupported")); return; }
   try{
     const acc=await navigator.requestMIDIAccess(); midiAcc=acc;
@@ -6654,6 +6761,7 @@ async function enableMidi(){
         names.push(inp.name); inp.onmidimessage=ev=>{
         const [st,note,vel]=ev.data;
         if(LV.on){ if((st&0xf0)===0x90 && vel>0) lvNote(note); return; } // the leave window: C = keep playing, B = leave
+        if(midiOpen && !calib && (st&0xf0)===0x90 && vel>0){ pressKey(note); mtNote(note,vel,inp.name); return; } // the MIDI window: the « play a note » test (M8)
         if(page==="quiz"){ if((st&0xf0)===0x90 && vel>0){ if(S.settings.midiSound) tone(note,0,.9,.1+.26*vel/127); if(!anyModal()) quizIn(String(inp.id||inp.name),note); } return; } // every keyboard counts: one per player
         if(S.settings.midiInput && inp.name!==S.settings.midiInput) return;
         if(page==="play"){ if((st&0xf0)===0x90 && vel>0) playSend("noteon",note,vel/127); else if((st&0xf0)===0x80 || ((st&0xf0)===0x90 && vel===0)) playSend("noteoff",note); return; }
@@ -6667,7 +6775,7 @@ async function enableMidi(){
       $("midiBtn").classList.toggle("on",names.length>0); $("midiBtn").classList.remove("err");
       const shown = S.settings.midiInput && names.includes(S.settings.midiInput) ? S.settings.midiInput : names[0];
       $("midiTxt").textContent=names.length ? t("midiDev")+shown : t("midiNone");
-      if(names.length) guessKbdSize(shown); midiReady=names.length>0; midiNames=names; render(); if(midiOpen) renderMidiModal(); renderInputUI(); if(page==="quiz"&&QZ.view==="setup") renderQzSetup(); };
+      if(names.length) guessKbdSize(shown); midiReady=names.length>0; midiNames=names; render(); if(midiOpen) renderMidiModal(); renderInputUI(); if(page==="quiz"&&QZ.view==="setup") renderQzSetup(); mdPorts(names); };
     midiDenied=false; bind(); acc.onstatechange=bind; notice("");
   }catch(err){ midiDenied=true; $("midiBtn").classList.add("err"); $("midiTxt").textContent=t("midiBlocked"); notice(t("blocked")); if(midiOpen) renderMidiModal(); }
 }
@@ -7291,6 +7399,115 @@ try{ freezeCheck(); }catch(e){}
 document.addEventListener("visibilitychange",()=>{ if(document.visibilityState==="visible"){ try{ freezeCheck(); goalRing(); renderStatus(); }catch(e){} } });
 setInterval(()=>{ try{ freezeCheck(); goalRing(); }catch(e){} }, 10*60*1000);
 /* ==== fin Objectif ==== */
+/* ==== MIDI lot 1 (24/10/2026) : pastille d'état M1, toasts et pause M13, carte d'accueil M2, test « joue une note » M8 ==== */
+// S.midi = {hw:{name, vel}, seenAt, tested, later} : propre à cet appareil (mergeState garde la valeur locale ; un état ancien sans la clé marche)
+var MD={prev:null, paused:null, hold:false, cd:0, tt:0, wait:false};
+const mdS=()=>{ if(!S.midi||typeof S.midi!=="object"||Array.isArray(S.midi)) S.midi={}; return S.midi; };
+const mdTrunc=n=>{ n=String(n||""); return n.length>18 ? n.slice(0,17)+"…" : n; };
+const mdQuiet=()=>(typeof startUI==="function"&&startUI()) || FN.on;
+const MD_GEAR='<span class="cg"><svg viewBox="0 0 24 24"><path d="M10.3 3.2a1.8 1.8 0 0 1 3.4 0l.4 1.2a1.8 1.8 0 0 0 2.4 1l1.1-.6a1.8 1.8 0 0 1 2.4 2.4l-.6 1.1a1.8 1.8 0 0 0 1 2.4l1.2.4a1.8 1.8 0 0 1 0 3.4l-1.2.4a1.8 1.8 0 0 0-1 2.4l.6 1.1a1.8 1.8 0 0 1-2.4 2.4l-1.1-.6a1.8 1.8 0 0 0-2.4 1l-.4 1.2a1.8 1.8 0 0 1-3.4 0l-.4-1.2a1.8 1.8 0 0 0-2.4-1l-1.1.6a1.8 1.8 0 0 1-2.4-2.4l.6-1.1a1.8 1.8 0 0 0-1-2.4l-1.2-.4a1.8 1.8 0 0 1 0-3.4l1.2-.4a1.8 1.8 0 0 0 1-2.4l-.6-1.1a1.8 1.8 0 0 1 2.4-2.4l1.1.6a1.8 1.8 0 0 0 2.4-1z"/><circle cx="12" cy="12" r="3"/></svg></span>';
+const MD_PLUG='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 3v4M15 3v4M7 7h10v4a5 5 0 0 1-10 0zM12 16v5"/></svg>';
+const MD_UNPLUG='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 3v4M15 3v4M7 7h10v4a5 5 0 0 1-10 0zM12 16v5M4 4l16 16"/></svg>';
+const MD_CHECK='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>';
+OBJ.midikbd=()=>{ const o=O3(); o.raw('<path d="M98 86c14 4 16 18 6 26" stroke="#2b2560" stroke-width="5" fill="none" stroke-linecap="round"/>'); o.block(96,104,14,14,"#d8d6ee",4);
+  o.block(8,48,104,46,"#3a3478",12); o.block(14,54,92,8,"#5b4bd6",4); o.raw('<rect x="16" y="66" width="88" height="24" rx="4" fill="#fbfbff"/><g fill="#2b2560">'+[25,37,55,67,79].map(x=>'<rect x="'+x+'" y="66" width="7" height="14" rx="2"/>').join("")+'</g><g stroke="#d8d6ee" stroke-width="1.2">'+[28,40,52,64,76,88].map(x=>'<path d="M'+(x+.5)+' 80v10"/>').join("")+'</g>');
+  return o.ball(30,26,9,"#ff5a6e").ball(58,16,8,"#ffd23f").ball(84,28,8,"#3cc8f0").svg(); };
+// ---- état affiché (M1) ----
+function mdState(){ const m=S.settings.input, poss=midiPossible();
+  if(m==="mic") return {k:micOn?"mic":"micoff", lbl:t(micOn?"mdMic":"mdMicOff")};
+  if(midiReady){ const n=midiNames.length, one=S.settings.midiInput&&midiNames.includes(S.settings.midiInput)?S.settings.midiInput:(n===1?midiNames[0]:"");
+    return one ? {k:"ok", lbl:mdTrunc(one), full:one} : {k:"ok", lbl:t("mdNKb")(n), full:midiNames.join(", ")}; }
+  if(m==="midi" && poss) return {k:"wait", lbl:t("mdWait")};
+  if(poss && !mdS().seenAt) return {k:"plug", lbl:t("mdPlugShort")};
+  return {k:"screen", lbl:t("mdScreen")}; }
+function mdPill(){ if(!MD) return; const s=mdState(), c=$("inChip"), mb=$("mbMidi");
+  const ic = s.k==="plug" ? MD_PLUG : INPUT_ICONS[s.k==="ok"||s.k==="wait" ? "midi" : s.k==="screen" ? "screen" : "mic"];
+  if(c){ c.className="inp-chip md-pill md-"+s.k; c.innerHTML='<span class="mp-ic">'+ic+'</span><span class="lbl mp-t"></span>'+MD_GEAR+'<i class="'+(s.k==="wait"||s.k==="micoff"?"off":"on")+'"></i>';
+    c.querySelector(".mp-t").textContent=s.lbl; c.title=s.full||s.lbl; c.setAttribute("aria-label",c.title); c.dataset.st=s.k; }
+  if(mb){ mb.className="mbar-btn ghost md-mb md-"+s.k; mb.innerHTML=INPUT_ICONS[s.k==="screen"?"screen":s.k.startsWith("mic")?"mic":"midi"]+'<i></i>'; mb.title=s.full||s.lbl; mb.setAttribute("aria-label",mb.title); } }
+function mdPillClick(){ closeDrawer(); if(!midiPossible()){ openInputChooser(true); return; }
+  if(!midiAcc && !midiDenied && S.settings.input!=="mic"){ setInput("midi",true).then(()=>{ if(!midiOpen) openMidi(); }); return; }
+  openMidi(); }
+$("mbMidi").addEventListener("click",mdPillClick);
+$("mdChange").addEventListener("click",()=>{ closeMidi(); openInputChooser(true); });
+// ---- carte « Ton clavier » de l'accueil (M2) ----
+function mdHub(){ const c=$("hsMidi"); if(!c||!MD) return; const s=mdS(), poss=midiPossible(), ok=midiReady && S.settings.input!=="mic";
+  const st = ok ? "ok" : !poss ? "no" : (s.later && Date.now()-s.later<7*864e5) ? "later" : "promo";
+  c.className="hs-card hs-midi md-"+st; $("hsMidiDot").classList.toggle("on",ok);
+  const o=$("hsMidiObj"); if(st==="promo" && !o.firstChild) o.innerHTML=OBJ.midikbd();
+  const kb=/^\d+$/.test(S.settings.kbdSize||"") ? t("mdKeysN")(S.settings.kbdSize) : t("mdConnected"), st1=mdState();
+  $("hsMidiK").textContent=t("mdHubK");
+  $("hsMidiT").textContent = st==="ok" ? (st1.k==="ok"?st1.lbl:mdTrunc(midiNames[0])) : st==="promo" ? t("mdHubT") : t("hsMidiT");
+  $("hsMidiT").title = st==="ok" ? (st1.full||"") : "";
+  $("hsMidiSub").textContent = st==="ok" ? kb : st==="promo" ? t("mdHubS") : st==="no" ? t("mdHubNo") : t("mdHubOff");
+  $("hsMidiBtn").textContent = st==="ok" ? t("mdTest") : st==="promo" ? t("mdPlug") : st==="no" ? t("mdHubHow") : t("hsMidiConnect"); }
+$("hsMidiLater").addEventListener("click",()=>{ mdS().later=Date.now(); save(); mdHub(); });
+// ---- branchements à chaud (M13) ----
+function mdToast(kind, title, sub, btn, ms, act){ let el=$("mdToast");
+  if(!el){ el=document.createElement("div"); el.id="mdToast"; el.setAttribute("role","status"); el.setAttribute("aria-live","polite"); document.body.appendChild(el); }
+  el.className="md-toast md-"+kind; el.innerHTML='<span class="mt-ic">'+(kind==="lost"?MD_UNPLUG:kind==="ok"?MD_CHECK:INPUT_ICONS.midi)+'</span><span class="mt-tx"><b></b><small></small></span>'+(btn?'<button class="btn primary" type="button"></button>':'');
+  el.querySelector("b").textContent=title; const sm=el.querySelector("small"); sm.textContent=sub||""; sm.hidden=!sub;
+  if(btn){ const b=el.querySelector("button"); b.textContent=btn; b.onclick=()=>{ mdToastHide(); if(act) act(); }; }
+  requestAnimationFrame(()=>el.classList.add("on")); clearTimeout(MD.tt); MD.tt=setTimeout(mdToastHide,ms||3000); }
+function mdToastHide(){ const el=$("mdToast"); if(el) el.classList.remove("on"); clearTimeout(MD.tt); }
+function mdPorts(names){ const prev=MD.prev, s=mdS(); MD.prev=names.slice(); if(midiOpen) mtRender();
+  if(names.length){ const nm=S.settings.midiInput&&names.includes(S.settings.midiInput)?S.settings.midiInput:names[0];
+    if(!s.seenAt || !s.hw || s.hw.name!==nm){ s.seenAt=s.seenAt||Date.now(); s.hw = s.hw&&s.hw.name===nm ? s.hw : {name:nm}; save(); } }
+  if(prev===null) return; // the first look is not a change
+  const added=names.filter(n=>!prev.includes(n)), gone=prev.filter(n=>!names.includes(n));
+  if(added.length){ if(MD.paused){ mdBack(); return; } if(mdQuiet() || midiOpen) return;
+    if(S.settings.input==="midi") mdToast("ok", t("mdOnNow")(mdTrunc(added[0])), "", null, 3000);
+    else mdToast("found", t("mdDetected")(mdTrunc(added[0])), t(S.settings.input==="mic"?"mdWasMic":S.settings.input==="screen"?"mdWasScreen":"mdWasNone"), t("mdUse"), 5000, ()=>{ setInput("midi"); }); return; }
+  if(gone.length && !names.length){ if(MD.paused){ mdCdStop(); return; } mdLostNow(); } }
+function mdLostNow(){ const a = (S.settings.input==="midi" && !LV.on) ? actNow() : null;
+  const pause = a && (a.k==="learn" || a.k==="daily" || a.k==="game" || (a.k==="duel" && !a.online));
+  if(!pause){ if(!mdQuiet()) mdToast("lost", t("mdLostT"), a&&a.online ? t("mdLostOn") : S.settings.input==="midi" ? t("mdLostPill") : "", null, a&&a.online?4000:3000); return; }
+  mdToastHide(); MD.paused=a; MD.wait=false; mdHold(true); mdLostRender(); openMod("mdLost"); $("mdGoScreen").focus({preventScroll:true}); }
+// the games hold still like behind the « Leave the game? » window (lvHold); LEARN pauses by itself under a window (pauseRound)
+function mdHold(on){ const a=MD.paused; if(!a || a.k==="learn" || a.k==="daily") return;
+  if(on){ if(HOLD) return; const keep=LV.a; LV.a=a; lvHold(true); LV.a=keep; MD.hold=true; return; }
+  if(!MD.hold) return; MD.hold=false; const keep=LV.a; LV.a=a; lvHold(false); LV.a=keep; }
+function mdLostRender(back){ $("mdLostS").textContent=t("mdLostSub"); $("mdLost").querySelector(".md-lost").classList.toggle("back",!!back);
+  $("mdLostWaitT").textContent = back ? t("mdBack")(back) : MD.wait ? t("mdWaiting") : t("mdWaitAuto"); $("mdWaitKb").setAttribute("aria-pressed",MD.wait); }
+function mdBack(){ mdCdStop(); let n=3; mdLostRender(n); MD.cd=setInterval(()=>{ n--; if(n<=0){ mdCdStop(); mdResume(); } else mdLostRender(n); },1000); }
+function mdCdStop(){ clearInterval(MD.cd); MD.cd=0; if(MD.paused) mdLostRender(); }
+function mdResume(){ if(!MD.paused) return; clearInterval(MD.cd); MD.cd=0; mdHold(false); MD.paused=null; closeMod("mdLost"); renderInputUI(); }
+$("mdGoScreen").addEventListener("click",async ()=>{ if(!MD.paused) return; await setInput("screen"); mdResume(); });
+$("mdWaitKb").addEventListener("click",()=>{ MD.wait=true; if(!MD.cd) mdLostRender(); });
+document.addEventListener("keydown",e=>{ if(MD.paused && e.key==="Escape"){ e.preventDefault(); e.stopImmediatePropagation(); $("mdGoScreen").click(); } },true);
+// watch for a keyboard in the background when MIDI was already allowed (the app, or a browser permission granted before): no prompt
+function mdWatch(){ if(midiAcc || !navigator.requestMIDIAccess || !midiPossible() || S.settings.input==="midi") return;
+  if(document.documentElement.classList.contains("native")){ enableMidi(true); return; }
+  try{ navigator.permissions.query({name:"midi"}).then(p=>{ if(p && p.state==="granted" && !midiAcc) enableMidi(true); }).catch(()=>{}); }catch(e){} }
+// ---- test « joue une note » en tête de la fenêtre Clavier MIDI (M8) ----
+const MT={vels:[], lo:48, last:null, twice:""};
+function mtReset(){ MT.vels=[]; MT.last=null; MT.twice=""; mtRender(); }
+function mtTouch(){ const v=MT.vels; if(v.length<2) return null; const mx=Math.max(...v), mn=Math.min(...v); if(mx-mn>=40) return true; if(mx===mn) return false; return null; }
+function mtNote(m, v, port){ MT.vels.push(v); MT.last={m,v,port};
+  if(S.settings.midiSound) tone(m,0,.9,.1+.26*v/127);
+  const s=mdS(); s.tested=Date.now(); s.hw={...(s.hw&&s.hw.name===port?s.hw:{}), name:port}; const r=mtTouch(); if(r!=null) s.hw.vel=r; save();
+  if(m<MT.lo || m>=MT.lo+24) MT.lo=Math.max(0,Math.min(103,12*Math.floor(m/12)));
+  mtRender(); }
+function mtKb(){ const kb=$("mtKb"); if(!kb) return; if(kb.dataset.lo==String(MT.lo)) return; kb.dataset.lo=MT.lo; kb.innerHTML="";
+  const whites=[], WH=[0,2,4,5,7,9,11]; for(let m=MT.lo;m<MT.lo+24;m++) if(WH.includes(m%12)) whites.push(m);
+  whites.forEach(m=>{ const w=document.createElement("span"); w.className="w"; w.dataset.m=m; if(m%12===0){ const l=document.createElement("small"); l.textContent=octName(m); w.appendChild(l); } kb.appendChild(w); });
+  const ww=100/whites.length; for(let m=MT.lo;m<MT.lo+24;m++) if(!WH.includes(m%12)){ const i=whites.indexOf(m-1); const b=document.createElement("span"); b.className="b"; b.dataset.m=m; b.style.left="calc("+((i+1)*ww)+"% - "+(ww*.3)+"%)"; b.style.width=(ww*.6)+"%"; kb.appendChild(b); } }
+function mtRender(){ const box=$("mdTest"); if(!box) return; box.hidden=!midiReady; if(!midiReady) return; mtKb();
+  const L=MT.last, kb=$("mtKb"); kb.querySelectorAll(".on").forEach(e=>e.classList.remove("on"));
+  const msg=$("mtMsg"); msg.classList.toggle("ok",!!L);
+  if(L){ const pc=L.m%12, nc="var(--note-"+pc+")"; const k=kb.querySelector('[data-m="'+L.m+'"]'); if(k){ k.style.setProperty("--nc",nc); k.classList.add("on"); }
+    $("mtName").textContent=(S.settings.notation==="fr"?PC_FR:PC_EN)[pc]; $("mtName").parentNode.style.setProperty("--nc",nc);
+    $("mtSub").textContent=octName(L.m)+" · "+t("mdForceN")(L.v); $("mtBar").style.height=Math.round(L.v/127*100)+"%"; $("mtVel").textContent=L.v;
+    msg.textContent=t("mdTalks"); const sm=document.createElement("small"); sm.textContent=t("mdFrom")(octName(L.m),L.port); msg.appendChild(sm); }
+  else { $("mtName").textContent="♪"; $("mtName").parentNode.style.removeProperty("--nc"); $("mtSub").textContent=""; $("mtBar").style.height="0"; $("mtVel").textContent=""; msg.textContent=t("mdPressAny"); }
+  const r=mtTouch(), tr=$("mtTouchRes"), v=MT.vels; tr.className = r ? "ok" : "";
+  tr.textContent = r===true ? t("mdTouchVals")(Math.max(...v),Math.min(...v))+" · "+t("mdTouchOk") : r===false ? t("mdTouchNo") : v.length ? t("mdForceN")(v[v.length-1]) : "";
+  $("mtTwice").querySelectorAll("[data-v]").forEach(b=>b.setAttribute("aria-pressed",b.dataset.v===MT.twice));
+  $("mtTwiceRes").textContent = MT.twice==="yes" ? t("mdTwiceYes") : MT.twice==="none" ? t("mdTwiceNone") : MT.twice==="no" ? t("mdTwiceNo") : ""; }
+$("mtTwice").addEventListener("click",e=>{ const b=e.target.closest("[data-v]"); if(!b) return; MT.twice=b.dataset.v;
+  if(MT.twice==="yes") S.settings.midiSound=false; else if(MT.twice==="none") S.settings.midiSound=true;
+  save(); renderSettings(); mtRender(); });
+/* ==== fin MIDI lot 1 ==== */
 // ---------- Boot ----------
 
 applyStatic(); applySide(); buildKeyboard(); renderSettings(); render(); renderDaily(); openPage("hub");
@@ -7298,7 +7515,7 @@ setTimeout(()=>{ if(hasSession()) ensureCloud(); }, 400);
 { const sp=$("splash"); if(document.documentElement.classList.contains("native")){ const t0=performance.now(); setTimeout(()=>{ sp.classList.add("out"); setTimeout(()=>sp.remove(),400); }, Math.max(0,1500-t0)); } else sp.remove(); }
 const mobileWeb = (phoneMQ.matches||railMQ.matches) && !document.documentElement.classList.contains("native");
 document.body.classList.add("guest"); if(hasSession()) document.body.classList.add("sess-wait"); // a saved session: no « Sign up » flash before it loads
-restoreInput();
+restoreInput(); mdWatch();
 { const nat=isApp(), wait=nat?1600:300;
   if(gateNeeded()){ save(); const op=(S.onb&&S.onb.legacy)?gateOpen:fnOpen; /* older players keep their settings: the sign-in screen once, not the first-note screen */ if(nat) setTimeout(op,wait); else op(); }
   else if(!(S.onb&&S.onb.done) || !S.tourDone){ save(); if(hasSession()) ensureCloud().finally(()=>setTimeout(startFlow,wait)); else setTimeout(startFlow,wait); }

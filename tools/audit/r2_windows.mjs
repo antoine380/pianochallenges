@@ -14,7 +14,7 @@ const WIN = {
   help: { open: () => page.evaluate(() => document.getElementById('helpBtn').click()), close: () => page.keyboard.press('Escape'), id: 'helpModal' },
   midi: { open: () => page.evaluate(() => document.getElementById('midiBtn').click()), close: () => page.keyboard.press('Escape'), id: 'midiModal' },
   levels: { open: () => page.evaluate(() => document.getElementById('charMore').click()), close: () => page.keyboard.press('Escape'), id: 'charModal' }, // the avatar now opens the progress sheet; « Niveaux » opens the levels window
-  input: { open: () => page.evaluate(() => document.getElementById('inChip').click()), close: () => page.keyboard.press('Escape'), id: 'inputModal' },
+  input: { open: () => page.evaluate(() => document.getElementById('mdChange').click()), close: () => page.keyboard.press('Escape'), id: 'inputModal' },
   settings: { open: () => page.evaluate(() => document.getElementById('setBtn').click()), close: () => page.evaluate(() => document.querySelector('#secTabs [data-v="chords"]').click()), id: 'settingsPage' },
   progress: { open: () => page.evaluate(() => document.getElementById('progBtn').click()), close: () => page.evaluate(() => document.querySelector('#secTabs [data-v="chords"]').click()), id: 'progressPage' },
 };
@@ -31,7 +31,8 @@ for (const [name, w] of Object.entries(WIN)) {
   await page.evaluate(ns => ns.forEach(n => window.__midi.noteOn(n)), exp); await wait(page, 150);
   const sIn = await state(page);
   check(`${name} : aucune case validée fenêtre ouverte`, sIn.nSlotsOk === 0 && sIn.kBad.length === 0, { slots: sIn.slots, sbVal: sIn.sbVal });
-  if (name === 'midi') check('midi : les notes allument les touches (test du clavier)', sIn.kPress.length > 0 || sIn.kHit.length > 0, { kPress: sIn.kPress, kHit: sIn.kHit });
+  // MIDI lot 1 (24/10/2026) : dans la fenêtre Clavier MIDI, les notes vont au test « joue une note » (mini clavier #mtKb)
+  if (name === 'midi') { const mt = await page.evaluate(() => document.querySelectorAll('#mtKb .on').length); check('midi : les notes allument les touches (test du clavier)', mt > 0 || sIn.kPress.length > 0 || sIn.kHit.length > 0, { mt, kPress: sIn.kPress, kHit: sIn.kHit }); }
   await w.close(); await wait(page, 500);
   const sOut = await state(page);
   check(`${name} : l’exercice reprend à la fermeture (phase écoute)`, sOut.page === 'practice' && sOut.playing && sOut.slots.some(c => /cur/.test(c)), { page: sOut.page, playing: sOut.playing, slots: sOut.slots, modals: sOut.modals });
