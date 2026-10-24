@@ -41,7 +41,7 @@ await ev(() => document.getElementById('qzQuit').click()); await wait(page, 200)
 // 1) solo, easy (notes), 3 questions, right answer on the first keyboard
 await set({ n: 1, diff: 1, ans: 'notes', bots: 0, where: 'local', count: 5, time: 20, theme: 'all', keys: true, keysOff1: 1 }); await page.reload(); await wait(page, 800); await closeOnboarding(page);
 await openQuiz();
-check('quiz : 200 questions chargées à la demande', await ev(() => window.QUIZ_DATA.q.length === 200 && document.querySelectorAll('#qzThemes .qz-theme').length === 11), await ev(() => [window.QUIZ_DATA.q.length, document.querySelectorAll('#qzThemes .qz-theme').length]));
+check('quiz : 1000 questions (100 par thème) chargées à la demande', await ev(() => window.QUIZ_DATA.q.length === 1000 && Object.keys(window.QUIZ_DATA.themes).every(t => window.QUIZ_DATA.q.filter(q => q[0] === t).length === 100) && document.querySelectorAll('#qzThemes .qz-theme').length === 11), await ev(() => [window.QUIZ_DATA.q.length, document.querySelectorAll('#qzThemes .qz-theme').length]));
 check('réglages : « Seul · 2 · 3 · 4 » sur une ligne', await ev(() => { const b = [...document.querySelectorAll('#qzN button')]; return b.map(x => x.textContent).join('·') === 'Seul·2·3·4' && new Set(b.map(x => Math.round(x.getBoundingClientRect().top))).size === 1; }));
 await ev(() => document.getElementById('qzGo').click()); await wait(page, 300);
 check('thème plus gros : image + nom, plus grand que le numéro', await ev(() => { const c = document.getElementById('qzTheme'), n = document.getElementById('qzNum');
