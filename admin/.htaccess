@@ -1,0 +1,18 @@
+# Back office Piano Challenges (/admin) : jamais indexé, jamais en cache, CSP stricte (le site et Supabase seulement).
+# Les en-têtes « always set » ci-dessous remplacent ceux du .htaccess racine pour ce dossier.
+<IfModule mod_headers.c>
+  Header always set X-Robots-Tag "noindex, nofollow, noarchive"
+  Header always set Cache-Control "no-store, max-age=0"
+  Header always set Pragma "no-cache"
+  Header always set X-Frame-Options "DENY"
+  Header always set Referrer-Policy "no-referrer"
+  Header always set Permissions-Policy "microphone=(), midi=(), camera=(), geolocation=()"
+  Header always set Content-Security-Policy "default-src 'none'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data:; connect-src 'self' https://ijdxeasxmgevuchyuenn.supabase.co; base-uri 'none'; form-action 'none'; frame-ancestors 'none'"
+</IfModule>
+<IfModule mod_expires.c>
+  ExpiresActive Off
+</IfModule>
+# une adresse inconnue sous /admin ne renvoie pas vers l'app
+ErrorDocument 404 "Not found"
+DirectoryIndex index.html
+Options -Indexes

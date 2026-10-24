@@ -1,0 +1,584 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow,noarchive">
+<meta name="referrer" content="no-referrer">
+<title>Back office · Piano Challenges</title>
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<style>
+@font-face{font-family:"Fredoka";font-style:normal;font-weight:600;font-display:swap;src:url(/assets/fonts/fredoka-latin-600-normal.woff2) format("woff2")}
+@font-face{font-family:"Fredoka";font-style:normal;font-weight:700;font-display:swap;src:url(/assets/fonts/fredoka-latin-700-normal.woff2) format("woff2")}
+@font-face{font-family:"Nunito";font-style:normal;font-weight:500;font-display:swap;src:url(/assets/fonts/nunito-latin-500-normal.woff2) format("woff2")}
+@font-face{font-family:"Nunito";font-style:normal;font-weight:600;font-display:swap;src:url(/assets/fonts/nunito-latin-600-normal.woff2) format("woff2")}
+@font-face{font-family:"Nunito";font-style:normal;font-weight:700;font-display:swap;src:url(/assets/fonts/nunito-latin-700-normal.woff2) format("woff2")}
+@font-face{font-family:"Nunito";font-style:normal;font-weight:800;font-display:swap;src:url(/assets/fonts/nunito-latin-800-normal.woff2) format("woff2")}
+/* jetons du design system de l'app (thème clair lavande, sombre violet nuit) */
+:root{
+  --bg:#f1f2fb; --surface:#ffffff; --surface-2:#e9eaf8; --ink:#1b1838; --muted:#5a567f; --line:#dcdcf0;
+  --accent:#5b3fe0; --accent-soft:#e6e0ff; --on-accent:#ffffff; --brand:#6a4bf0;
+  --good:#16794e; --good-soft:#d3f1e2; --bad:#c0352f; --bad-soft:#fadcdc; --warn:#b4530a; --warn-soft:#fde6cf; --gold:#f5b62a;
+  --chart:#6a4bf0; --chart-soft:rgba(106,75,240,.14); --grid:#e3e3f3;
+  --shadow-card:0 18px 40px -24px rgba(70,60,160,.35);
+  --r-sm:10px; --r-md:16px; --r-lg:24px;
+  --f-display:"Fredoka","Nunito","Avenir Next Rounded",system-ui,sans-serif;
+  --f-body:"Nunito","Avenir Next","Segoe UI",system-ui,sans-serif;
+  --side:224px; --gap:14px; color-scheme:light;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#15122e; --surface:#221d47; --surface-2:#2d2759; --ink:#f3f1ff; --muted:#aea8dc; --line:#3a3370;
+  --accent:#a996ff; --accent-soft:#3a2f7a; --on-accent:#15122e;
+  --good:#4fd892; --good-soft:#173d34; --bad:#ff7b7b; --bad-soft:#4a2036; --warn:#ffa25a; --warn-soft:#4a2e1c; --gold:#ffc94a;
+  --chart:#a996ff; --chart-soft:rgba(169,150,255,.16); --grid:#332c66; --shadow-card:0 18px 40px -20px rgba(6,4,20,.8); color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#15122e; --surface:#221d47; --surface-2:#2d2759; --ink:#f3f1ff; --muted:#aea8dc; --line:#3a3370;
+  --accent:#a996ff; --accent-soft:#3a2f7a; --on-accent:#15122e;
+  --good:#4fd892; --good-soft:#173d34; --bad:#ff7b7b; --bad-soft:#4a2036; --warn:#ffa25a; --warn-soft:#4a2e1c; --gold:#ffc94a;
+  --chart:#a996ff; --chart-soft:rgba(169,150,255,.16); --grid:#332c66; --shadow-card:0 18px 40px -20px rgba(6,4,20,.8); color-scheme:dark}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0;overflow:hidden}
+body{background:var(--bg);color:var(--ink);font:500 15px/1.45 var(--f-body);-webkit-font-smoothing:antialiased}
+h1,h2,h3{font-family:var(--f-display);font-weight:700;margin:0;letter-spacing:.005em}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+[hidden]{display:none!important}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:7px 14px;font-weight:800;font-size:.86rem;min-height:36px;white-space:nowrap}
+.btn:hover{border-color:var(--accent)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
+.btn.danger{color:var(--bad);border-color:color-mix(in srgb,var(--bad) 45%,var(--line))}
+.btn.danger.fill{background:var(--bad);color:#fff;border-color:var(--bad)}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.btn.sm{min-height:30px;padding:4px 10px;font-size:.8rem}
+input,select,textarea{background:var(--surface-2);border:1px solid var(--line);border-radius:12px;padding:8px 10px;min-height:38px;font-size:16px;max-width:100%}
+textarea{resize:vertical;min-height:80px;width:100%}
+label.f{display:flex;flex-direction:column;gap:4px;font-size:.8rem;font-weight:800;color:var(--muted)}
+.muted{color:var(--muted)} .small{font-size:.8rem}
+.ic{width:20px;height:20px;flex:none;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+
+/* ---------- connexion ---------- */
+#login{position:fixed;inset:0;display:grid;place-items:center;padding:16px;overflow:auto}
+.lg-card{width:min(440px,100%);background:var(--surface);border-radius:var(--r-lg);box-shadow:var(--shadow-card);padding:28px;display:flex;flex-direction:column;gap:14px;border:1px solid var(--line)}
+.lg-brand{display:flex;align-items:center;gap:10px} .lg-brand .logo{width:42px;height:42px;border-radius:12px;background:#1b1838;display:grid;place-items:center}
+.lg-brand .logo svg{width:26px;height:26px} .lg-brand small{display:block;color:var(--muted);font-weight:700}
+.lg-card form{display:flex;flex-direction:column;gap:12px}
+.lg-card input{width:100%}
+.lg-qr{display:flex;gap:14px;align-items:center;flex-wrap:wrap} .lg-qr img{width:168px;height:168px;background:#fff;border-radius:12px;padding:6px}
+.lg-secret{font:700 .8rem/1.3 ui-monospace,Menlo,monospace;word-break:break-all;background:var(--surface-2);border-radius:10px;padding:6px 8px}
+.code{letter-spacing:.4em;font:800 1.4rem/1 var(--f-display);text-align:center}
+.msg{border-radius:12px;padding:8px 12px;font-size:.88rem;font-weight:700}
+.msg.err{background:var(--bad-soft);color:var(--bad)} .msg.ok{background:var(--good-soft);color:var(--good)} .msg.info{background:var(--accent-soft);color:var(--ink)}
+
+/* ---------- coque ---------- */
+#shell{position:fixed;inset:0;display:grid;grid-template-columns:var(--side) minmax(0,1fr);grid-template-rows:auto minmax(0,1fr)}
+.side{grid-row:1/3;background:var(--surface);border-right:1px solid var(--line);display:flex;flex-direction:column;padding:14px 10px;gap:4px;overflow:auto}
+.side .brand{display:flex;align-items:center;gap:10px;padding:4px 8px 12px}
+.side .brand .logo{width:34px;height:34px;border-radius:10px;background:#1b1838;display:grid;place-items:center;flex:none} .side .brand .logo svg{width:22px;height:22px}
+.side .brand b{font-family:var(--f-display);font-size:1.02rem;line-height:1.1} .side .brand small{display:block;color:var(--muted);font-weight:700;font-size:.74rem}
+.nav{display:flex;align-items:center;gap:10px;border:0;background:transparent;border-radius:12px;padding:8px 10px;text-align:left;font-weight:800;font-size:.9rem;color:var(--ink);width:100%}
+.nav:hover{background:var(--surface-2)} .nav[aria-current="page"]{background:var(--accent-soft);box-shadow:inset 0 0 0 1.5px var(--accent)}
+.nav .ic{color:var(--accent)} .nav .soon{margin-left:auto;font-size:.66rem;font-weight:800;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+.side .foot{margin-top:auto;display:flex;flex-direction:column;gap:6px;padding:8px 6px 0;border-top:1px solid var(--line)}
+.side .who{font-size:.78rem;color:var(--muted);overflow-wrap:anywhere} .role{display:inline-block;border-radius:999px;padding:1px 8px;font-size:.7rem;font-weight:800;background:var(--accent-soft);color:var(--ink);text-transform:uppercase;letter-spacing:.05em}
+.top{display:flex;align-items:center;gap:10px;padding:12px 20px;border-bottom:1px solid var(--line);background:var(--bg);min-height:62px}
+.top h1{font-size:1.35rem;display:flex;align-items:center;gap:10px;min-width:0} .top h1 .hic{width:34px;height:34px;border-radius:10px;background:var(--accent);display:grid;place-items:center;flex:none}
+.top h1 .hic .ic{color:var(--on-accent);width:20px;height:20px}
+.top .sp{flex:1} #menuBtn{display:none}
+#main{overflow:auto;padding:18px 20px 24px;min-height:0;overscroll-behavior:contain}
+.idle{font-size:.74rem;color:var(--muted);white-space:nowrap}
+
+/* ---------- cartes, grilles ---------- */
+.grid{display:grid;gap:var(--gap);grid-auto-flow:row dense} .g2{grid-template-columns:repeat(2,minmax(0,1fr))} .g3{grid-template-columns:repeat(3,minmax(0,1fr))} .g4{grid-template-columns:repeat(4,minmax(0,1fr))}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-md);padding:14px 16px;box-shadow:var(--shadow-card);min-width:0;display:flex;flex-direction:column;gap:10px}
+.card h3{font-size:1rem;display:flex;align-items:center;gap:8px} .card h3 .sp{flex:1}
+.card .sub{margin:-6px 0 0;color:var(--muted);font-size:.8rem}
+.span2{grid-column:span 2} .span3{grid-column:span 3} .span4{grid-column:1/-1}
+.kpi{gap:2px} .kpi small{color:var(--muted);font-weight:800;font-size:.76rem;text-transform:uppercase;letter-spacing:.05em}
+.kpi b{font:700 1.9rem/1.1 var(--f-display)} .kpi span{font-size:.8rem;color:var(--muted)}
+.alerts{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px}
+.alerts li{display:flex;gap:8px;align-items:center;border-radius:12px;padding:8px 10px;font-size:.88rem;font-weight:700}
+.alerts .warning{background:var(--warn-soft);color:var(--warn)} .alerts .serious{background:var(--bad-soft);color:var(--bad)} .alerts .good{background:var(--good-soft);color:var(--good)}
+.bars{display:flex;flex-direction:column;gap:6px}
+.bar{display:grid;grid-template-columns:minmax(80px,42%) minmax(0,1fr) auto;gap:8px;align-items:center;font-size:.84rem}
+.bar .l{white-space:nowrap;overflow:hidden;text-overflow:ellipsis} .bar .t{height:12px;border-radius:999px;background:var(--surface-2);overflow:hidden}
+.bar .t i{display:block;height:100%;border-radius:999px;background:var(--chart);min-width:2px} .bar .v{font-weight:800;font-variant-numeric:tabular-nums;white-space:nowrap}
+.chart{position:relative} .chart svg{display:block;width:100%;height:auto;overflow:visible}
+.chart .tip{position:absolute;pointer-events:none;background:var(--ink);color:var(--bg);border-radius:8px;padding:4px 8px;font-size:.76rem;font-weight:800;white-space:nowrap;transform:translate(-50%,-120%)}
+.empty{color:var(--muted);font-size:.86rem;padding:8px 0}
+table{width:100%;border-collapse:collapse;font-size:.85rem}
+th{text-align:left;color:var(--muted);font-size:.72rem;text-transform:uppercase;letter-spacing:.05em;font-weight:800;padding:6px 8px;border-bottom:1px solid var(--line);position:sticky;top:0;background:var(--surface)}
+td{padding:7px 8px;border-bottom:1px solid var(--line);vertical-align:top} tr.click{cursor:pointer} tr.click:hover td{background:var(--surface-2)}
+td.num,th.num{text-align:right;font-variant-numeric:tabular-nums}
+.tw{overflow:auto;max-height:100%;min-height:0}
+.chip{display:inline-block;border-radius:999px;padding:1px 8px;font-size:.72rem;font-weight:800;background:var(--surface-2);white-space:nowrap}
+.chip.good{background:var(--good-soft);color:var(--good)} .chip.bad{background:var(--bad-soft);color:var(--bad)} .chip.gold{background:color-mix(in srgb,var(--gold) 25%,transparent)} .chip.warn{background:var(--warn-soft);color:var(--warn)}
+.filters{display:flex;flex-wrap:wrap;gap:8px;align-items:flex-end;margin-bottom:var(--gap)}
+.seg{display:inline-flex;background:var(--surface-2);border-radius:999px;padding:2px}
+.seg button{border:0;background:transparent;border-radius:999px;padding:6px 12px;font-weight:800;font-size:.82rem}
+.seg button[aria-pressed="true"]{background:var(--surface);box-shadow:0 1px 4px rgba(0,0,0,.12)}
+.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.kv{display:grid;grid-template-columns:auto minmax(0,1fr);gap:4px 12px;font-size:.86rem;margin:0} .kv dt{color:var(--muted);font-weight:700} .kv dd{margin:0;word-break:break-word}
+.fb{border:1px solid var(--line);border-radius:12px;padding:10px 12px;display:flex;flex-direction:column;gap:6px} .fb p{margin:0;white-space:pre-wrap;word-break:break-word}
+.news-row{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.6fr) 110px 120px auto;gap:6px;align-items:center}
+.news-row input,.news-row select{min-width:0;width:100%}
+.soonbox{display:flex;flex-direction:column;align-items:flex-start;gap:10px;max-width:640px}
+
+/* ---------- panneau d'un joueur, fenêtre de confirmation ---------- */
+.scrim{position:fixed;inset:0;background:rgba(15,12,40,.45);z-index:20}
+#userPane{position:fixed;top:0;right:0;bottom:0;width:min(560px,100%);background:var(--bg);z-index:21;border-left:1px solid var(--line);display:flex;flex-direction:column;box-shadow:-20px 0 60px -30px rgba(0,0,0,.5)}
+#userPane .ph{display:flex;align-items:center;gap:10px;padding:14px 16px;border-bottom:1px solid var(--line)} #userPane .ph h2{font-size:1.2rem;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#userPane .pb{overflow:auto;padding:14px 16px;display:flex;flex-direction:column;gap:12px;min-height:0}
+#dlg{position:fixed;inset:0;display:grid;place-items:center;z-index:30;padding:16px}
+#dlg .box{background:var(--surface);border-radius:var(--r-lg);padding:20px;width:min(460px,100%);display:flex;flex-direction:column;gap:12px;box-shadow:0 30px 80px -20px rgba(0,0,0,.5);border:1px solid var(--line)}
+#dlg .box .row{justify-content:flex-end}
+#toast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:8px 16px;border-radius:999px;font-weight:800;font-size:.86rem;z-index:40;max-width:calc(100% - 32px)}
+
+/* ---------- tailles ---------- */
+@media (max-width:1180px){ .g4{grid-template-columns:repeat(2,minmax(0,1fr))} .g3{grid-template-columns:repeat(2,minmax(0,1fr))} .span3{grid-column:1/-1} }
+@media (max-width:900px){
+  #shell{grid-template-columns:minmax(0,1fr)}
+  .side{position:fixed;top:0;bottom:0;left:0;width:min(280px,86vw);z-index:25;transform:translateX(-105%);transition:transform .25s cubic-bezier(.32,.72,0,1);box-shadow:20px 0 60px -30px rgba(0,0,0,.5)}
+  body.drawer .side{transform:none} #menuBtn{display:inline-flex}
+  .top{padding:10px 12px;min-height:56px} .top h1{font-size:1.1rem} .top h1 .hic{width:30px;height:30px} #main{padding:12px 12px 20px}
+  .g2,.g3,.g4{grid-template-columns:minmax(0,1fr)} .span2,.span3{grid-column:auto}
+  .news-row{grid-template-columns:minmax(0,1fr) minmax(0,1fr)} .news-row .wide{grid-column:1/-1}
+  .idle{display:none}
+}
+@media (max-width:900px){ .g4{grid-template-columns:repeat(2,minmax(0,1fr))} .g4>.card:not(.kpi){grid-column:1/-1} }
+@media (max-width:420px){ .kpi b{font-size:1.45rem} .kpi{padding:10px 12px} .kpi span{font-size:.74rem} .top .btn .txt{display:none} }
+@media (prefers-reduced-motion:reduce){ .side{transition:none} }
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="logo" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="3" fill="#fff"/><path d="M8 5v8M12 5v8M16 5v8" stroke="#1b1838" stroke-width="1.6"/><rect x="6.6" y="5" width="2.6" height="7" rx=".6" fill="#1b1838"/><rect x="14.8" y="5" width="2.6" height="7" rx=".6" fill="#1b1838"/><circle cx="18.5" cy="18.5" r="3.6" fill="#7a5bf5"/></symbol>
+</svg>
+
+<!-- connexion : mot de passe puis code TOTP (premier passage : enrôlement avec QR code) -->
+<div id="login" hidden>
+  <div class="lg-card" role="main">
+    <div class="lg-brand"><span class="logo"><svg><use href="#logo"/></svg></span><div><h1 style="font-size:1.35rem">Back office</h1><small>Piano Challenges · accès réservé</small></div></div>
+    <div id="lgMsg" class="msg" hidden></div>
+    <form id="lgPw" autocomplete="on">
+      <label class="f">E-mail<input id="lgEmail" type="email" autocomplete="username" required></label>
+      <label class="f">Mot de passe<input id="lgPass" type="password" autocomplete="current-password" required></label>
+      <button class="btn primary" type="submit" id="lgGo">Se connecter</button>
+    </form>
+    <form id="lgEnroll" hidden>
+      <p style="margin:0">Première connexion : ajoute la double authentification. Scanne ce QR code avec une application d'authentification (Google Authenticator, 1Password, Authy…), puis tape le code à 6 chiffres.</p>
+      <div class="lg-qr"><img id="lgQr" alt="QR code de la double authentification"><div style="flex:1;min-width:160px"><small class="muted">Ou saisis cette clé :</small><div class="lg-secret" id="lgSecret"></div></div></div>
+      <label class="f">Code à 6 chiffres<input id="lgCode1" class="code" inputmode="numeric" autocomplete="one-time-code" maxlength="6" pattern="[0-9]{6}" required></label>
+      <button class="btn primary" type="submit">Activer et entrer</button>
+    </form>
+    <form id="lgCode" hidden>
+      <p style="margin:0">Ouvre ton application d'authentification et tape le code à 6 chiffres de « Piano Challenges ».</p>
+      <label class="f">Code à 6 chiffres<input id="lgCode2" class="code" inputmode="numeric" autocomplete="one-time-code" maxlength="6" pattern="[0-9]{6}" required></label>
+      <button class="btn primary" type="submit">Vérifier</button>
+    </form>
+    <div id="lgDenied" hidden><p style="margin:0 0 10px">Ce compte n'a pas accès au back office.</p></div>
+    <button class="btn" type="button" id="lgOut" hidden>Changer de compte</button>
+  </div>
+</div>
+
+<div id="shell" hidden>
+  <nav class="side" id="side" aria-label="Back office">
+    <div class="brand"><span class="logo"><svg><use href="#logo"/></svg></span><div><b>Piano Challenges</b><small>Back office</small></div></div>
+    <div id="navList"></div>
+    <div class="foot">
+      <div class="who"><span class="role" id="meRole"></span> <span id="meEmail"></span></div>
+      <button class="btn sm" type="button" id="themeBtn">Thème : auto</button>
+      <button class="btn sm" type="button" id="outBtn">Se déconnecter</button>
+    </div>
+  </nav>
+  <header class="top">
+    <button class="btn sm" id="menuBtn" type="button" aria-label="Menu"><svg class="ic" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+    <h1 id="pgTitle"></h1><span class="sp"></span>
+    <span class="idle" id="idleTxt"></span>
+    <button class="btn sm" type="button" id="reloadBtn" title="Recharger"><svg class="ic" viewBox="0 0 24 24"><path d="M20 12a8 8 0 1 1-2.3-5.6M20 4v5h-5"/></svg><span class="txt">Recharger</span></button>
+  </header>
+  <main id="main" tabindex="-1"></main>
+</div>
+
+<div class="scrim" id="paneScrim" hidden></div>
+<aside id="userPane" hidden aria-label="Fiche du joueur"><div class="ph"><h2 id="upTitle"></h2><button class="btn sm" type="button" id="upClose">Fermer</button></div><div class="pb" id="upBody"></div></aside>
+<div id="dlg" hidden role="dialog" aria-modal="true" aria-labelledby="dlgT"><div class="scrim" data-x></div><div class="box" style="position:relative;z-index:31"><h2 id="dlgT" style="font-size:1.2rem"></h2><p id="dlgP" style="margin:0"></p><div id="dlgF"></div><div class="row"><button class="btn" type="button" data-x>Annuler</button><button class="btn primary" type="button" id="dlgOk">Confirmer</button></div></div></div>
+<div id="toast" role="status" hidden></div>
+
+<script src="/assets/js/supabase-2.116.0.js"></script>
+<script>
+(()=>{
+"use strict";
+const SUPA_URL="https://ijdxeasxmgevuchyuenn.supabase.co", SUPA_KEY="sb_publishable_6o1XurqA3viU17YsXJQizg_H7HpMtqC";
+const LOCAL=/^(localhost|127\.)/.test(location.hostname);
+const IDLE_MS=(LOCAL && +new URLSearchParams(location.search).get("idle")) || 30*60e3; // déconnexion après 30 min sans action
+const $=id=>document.getElementById(id);
+const esc=s=>String(s==null?"":s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const fmtN=n=>(+n||0).toLocaleString("fr-FR");
+const pct=(a,b)=>b?Math.round(a*1000/b)/10+" %":"—";
+const fmtD=d=>{ if(!d) return "—"; const x=new Date(d); return isNaN(x)?"—":x.toLocaleDateString("fr-FR",{day:"numeric",month:"short",year:"2-digit"}); };
+const fmtDT=d=>{ if(!d) return "—"; const x=new Date(d); return isNaN(x)?"—":x.toLocaleString("fr-FR",{day:"numeric",month:"short",hour:"2-digit",minute:"2-digit"}); };
+const dayISO=d=>{ const x=new Date(d); return x.getFullYear()+"-"+String(x.getMonth()+1).padStart(2,"0")+"-"+String(x.getDate()).padStart(2,"0"); };
+const addD=n=>{ const x=new Date(); x.setDate(x.getDate()+n); return dayISO(x); };
+const ROLE_RANK={owner:3,support:2,lecture:1};
+const A={sb:null, role:null, email:"", page:"dash", factor:null, idleT:0, idleAt:0, f:{from:addD(-29), to:addD(0), lang:"", dev:"", inp:"", per:30}, last:null, users:{q:"",off:0}, fbStatus:"new"};
+const can=r=>(ROLE_RANK[A.role]||0)>=ROLE_RANK[r];
+
+// ---------- icônes et pages ----------
+const IC={dash:"M4 13h6V4H4zM14 20h6v-9h-6zM14 4v4h6V4zM4 20h6v-4H4z", stats:"M4 20V10M10 20V4M16 20v-7M22 20H2", users:"M16 19v-1a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v1M9 10a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7zM22 19v-1a4 4 0 0 0-3-3.9M16 3.1a3.5 3.5 0 0 1 0 6.8",
+  content:"M12 3v3M12 18v3M4.2 6.2l2.1 2.1M17.7 15.7l2.1 2.1M3 12h3M18 12h3M6.3 15.7l-2.1 2.1M19.8 6.2l-2.1 2.1M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6z", notifs:"M6 16V11a6 6 0 0 1 12 0v5l1.5 2h-15zM10 20.5a2.2 2.2 0 0 0 4 0",
+  leagues:"M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0zM17 6h3v2a3 3 0 0 1-3 3M7 6H4v2a3 3 0 0 0 3 3", support:"M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12zM9 10h6M9 14h4",
+  system:"M4 5h16v10H4zM8 19h8M12 15v4", pay:"M3 7h18v10H3zM3 11h18M7 15h3", warn:"M12 3l9.5 17h-19zM12 10v4M12 17.5v.01", ok:"M5 12.5l4.5 4.5L19 7"};
+const icon=k=>'<svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="'+IC[k]+'"/></svg>';
+const PAGES=[["dash","Tableau de bord"],["stats","Statistiques"],["users","Joueurs"],["content","Contenu et réglages"],["notifs","Notifications"],["leagues","Ligues et duels"],["support","Support"],["system","Système"],["pay","Paiements",1]];
+
+// ---------- thème ----------
+function themeApply(){ let v=null; try{ v=localStorage.getItem("pc-admin-theme"); }catch(e){} if(v==="light"||v==="dark") document.documentElement.dataset.theme=v; else delete document.documentElement.dataset.theme;
+  $("themeBtn").textContent="Thème : "+(v==="light"?"clair":v==="dark"?"sombre":"auto"); }
+$("themeBtn").onclick=()=>{ let v=null; try{ v=localStorage.getItem("pc-admin-theme"); }catch(e){} const n=v==="light"?"dark":v==="dark"?"":"light"; try{ n?localStorage.setItem("pc-admin-theme",n):localStorage.removeItem("pc-admin-theme"); }catch(e){} themeApply(); if(A.page) go(A.page); };
+themeApply();
+
+// ---------- petits outils d'interface ----------
+let toastT=0; function toast(x){ const t=$("toast"); t.textContent=x; t.hidden=false; clearTimeout(toastT); toastT=setTimeout(()=>t.hidden=true,3200); }
+function lgMsg(x,k){ const m=$("lgMsg"); m.hidden=!x; m.className="msg "+(k||"err"); m.textContent=x||""; }
+// fenêtre de confirmation ; type = mot à recopier pour les actions irréversibles
+function ask(title, text, {ok="Confirmer", danger=false, type="", input=null}={}){ return new Promise(res=>{
+  $("dlgT").textContent=title; $("dlgP").textContent=text; const f=$("dlgF"); f.innerHTML=""; let inp=null;
+  if(type||input){ inp=document.createElement("input"); inp.style.width="100%"; inp.value=input&&input.value||""; inp.placeholder=type?("Tape "+type):(input&&input.ph||""); if(input&&input.max) inp.maxLength=input.max; f.appendChild(inp); }
+  const b=$("dlgOk"); b.textContent=ok; b.className="btn "+(danger?"danger fill":"primary"); $("dlg").hidden=false;
+  const chk=()=>{ b.disabled = !!type && inp.value.trim()!==type; }; if(inp){ inp.oninput=chk; setTimeout(()=>inp.focus(),30); } else setTimeout(()=>b.focus(),30); chk();
+  const done=v=>{ $("dlg").hidden=true; b.onclick=null; $("dlg").onclick=null; document.removeEventListener("keydown",kd,true); res(v); };
+  const kd=e=>{ if(e.key==="Escape"){ e.stopPropagation(); done(null); } else if(e.key==="Enter" && !b.disabled){ e.preventDefault(); done(inp?inp.value:true); } };
+  document.addEventListener("keydown",kd,true);
+  b.onclick=()=>done(inp?inp.value:true); $("dlg").onclick=e=>{ if(e.target.closest("[data-x]")) done(null); };
+}); }
+function download(name, text, type){ const a=document.createElement("a"); a.href=URL.createObjectURL(new Blob([text],{type})); a.download=name; document.body.appendChild(a); a.click(); setTimeout(()=>{ URL.revokeObjectURL(a.href); a.remove(); },500); }
+
+// ---------- données ----------
+class Denied extends Error{}
+async function rpc(name, args){ const {data,error}=await A.sb.rpc(name, args||{});
+  if(error){ if(error.code==="42501" || /forbidden/i.test(error.message||"")) throw new Denied(error.message); throw new Error(error.message||String(error)); } return data; }
+async function edge(body){ const {data,error}=await A.sb.functions.invoke("admin",{body}); if(error) throw new Error(error.message||"Erreur de la fonction admin"); if(data&&data.error) throw new Error(data.error); return data; }
+async function act(fn, okMsg){ try{ const r=await fn(); if(okMsg) toast(okMsg); return r; }catch(e){ if(e instanceof Denied){ toast("Action refusée pour ton rôle."); return null; } toast("Erreur : "+(e.message||e)); return null; } }
+
+// ---------- graphiques SVG faits main (une série : pas de légende, le titre de la carte la nomme) ----------
+function lineChart(points, {h=180, fmt=v=>fmtN(v), label="actifs"}={}){
+  if(!points || !points.length) return '<div class="empty">Pas encore de données.</div>';
+  const W=640, H=h, pl=34, pr=8, pt=10, pb=22, max=Math.max(1,...points.map(p=>+p.v||0)), n=points.length;
+  const raw=max/4, mag=Math.pow(10,Math.floor(Math.log10(raw))), stp=[1,2,2.5,5,10].map(k=>k*mag).find(v=>v>=raw)||10*mag, tick=Math.max(1,stp), top=tick*4; /* graduations rondes */
+  const x=i=>pl+(n===1?(W-pl-pr)/2:i*(W-pl-pr)/(n-1)), y=v=>pt+(H-pt-pb)*(1-v/top);
+  let g=""; for(let k=0;k<=4;k++){ const v=top*k/4, yy=y(v); g+='<line x1="'+pl+'" x2="'+(W-pr)+'" y1="'+yy+'" y2="'+yy+'" stroke="var(--grid)" stroke-width="1"/><text x="'+(pl-6)+'" y="'+(yy+4)+'" text-anchor="end" font-size="11" fill="var(--muted)">'+esc(fmtN(Math.round(v)))+'</text>'; }
+  const d=points.map((p,i)=>(i?"L":"M")+x(i).toFixed(1)+" "+y(+p.v||0).toFixed(1)).join(" ");
+  const area=d+" L"+x(n-1).toFixed(1)+" "+y(0)+" L"+x(0).toFixed(1)+" "+y(0)+" Z";
+  const step=Math.max(1,Math.ceil(n/6)); let lab=""; points.forEach((p,i)=>{ if(i%step===0||i===n-1) lab+='<text x="'+x(i)+'" y="'+(H-6)+'" text-anchor="middle" font-size="11" fill="var(--muted)">'+esc(String(p.k).slice(5))+'</text>'; });
+  const last=points[n-1];
+  const hits=points.map((p,i)=>'<rect x="'+(x(i)-(W-pl-pr)/Math.max(1,n-1)/2)+'" y="0" width="'+Math.max(6,(W-pl-pr)/Math.max(1,n-1))+'" height="'+H+'" fill="transparent" data-i="'+i+'"/>').join("");
+  return '<div class="chart" data-pts="'+esc(JSON.stringify(points.map(p=>[p.k,fmt(+p.v||0)])))+'" data-label="'+esc(label)+'"><svg viewBox="0 0 '+W+' '+H+'" role="img" aria-label="'+esc(label+" par jour")+'">'+g
+    +'<path d="'+area+'" fill="var(--chart-soft)"/><path d="'+d+'" fill="none" stroke="var(--chart)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>'
+    +'<circle cx="'+x(n-1)+'" cy="'+y(+last.v||0)+'" r="4" fill="var(--chart)" stroke="var(--surface)" stroke-width="2"/>'+lab
+    +'<line class="cross" x1="0" x2="0" y1="'+pt+'" y2="'+(H-pb)+'" stroke="var(--muted)" stroke-width="1" stroke-dasharray="3 3" visibility="hidden"/>'+hits+'</svg><div class="tip" hidden></div></div>';
+}
+function wireCharts(root){ root.querySelectorAll(".chart[data-pts]").forEach(c=>{ const pts=JSON.parse(c.dataset.pts), svg=c.querySelector("svg"), tip=c.querySelector(".tip"), cross=c.querySelector(".cross");
+  svg.addEventListener("pointermove",e=>{ const r=e.target.closest("rect[data-i]"); if(!r){ tip.hidden=true; cross.setAttribute("visibility","hidden"); return; } const i=+r.dataset.i, bb=svg.getBoundingClientRect(), vb=svg.viewBox.baseVal;
+    const cx=(+r.getAttribute("x")+ +r.getAttribute("width")/2); cross.setAttribute("x1",cx); cross.setAttribute("x2",cx); cross.setAttribute("visibility","visible");
+    tip.hidden=false; tip.textContent=pts[i][0]+" · "+pts[i][1]+" "+c.dataset.label; tip.style.left=(cx/vb.width*bb.width)+"px"; tip.style.top=(e.clientY-bb.top)+"px"; });
+  svg.addEventListener("pointerleave",()=>{ tip.hidden=true; cross.setAttribute("visibility","hidden"); }); }); }
+function bars(rows, {fmt=v=>fmtN(v), max=null, empty="Pas encore de données."}={}){
+  rows=(rows||[]).filter(r=>r); if(!rows.length) return '<div class="empty">'+esc(empty)+'</div>';
+  const m=max||Math.max(1,...rows.map(r=>+r.v||0));
+  return '<div class="bars">'+rows.map(r=>'<div class="bar" title="'+esc(r.l+" : "+fmt(+r.v||0)+(r.x?" · "+r.x:""))+'"><span class="l">'+esc(r.l)+'</span><span class="t"><i style="width:'+Math.max(0,Math.min(100,(+r.v||0)*100/m))+'%"></i></span><span class="v">'+esc(fmt(+r.v||0))+(r.x?' <small class="muted">'+esc(r.x)+'</small>':'')+'</span></div>').join("")+'</div>';
+}
+const kpi=(label, v, sub)=>'<div class="card kpi"><small>'+esc(label)+'</small><b>'+esc(v)+'</b><span>'+esc(sub||"")+'</span></div>';
+const card=(title, inner, cls="", extra="")=>'<section class="card '+cls+'"><h3>'+esc(title)+'<span class="sp"></span>'+extra+'</h3>'+inner+'</section>';
+const hm=sec=>{ sec=+sec||0; const h=Math.floor(sec/3600), m=Math.round(sec%3600/60); return h?h+" h "+String(m).padStart(2,"0"):m+" min"; };
+const INP={midi:"Clavier MIDI",mic:"Micro",screen:"Écran",none:"Pas encore choisi"};
+const ACT={learn_end:"LEARN",game_end:"Jeu solo",quiz_end:"Quiz",duel_end:"Duel",pp_lesson_done:"Premiers pas"};
+const WHAT={chords:"Accords",scales:"Gammes",harmony:"Harmonie",prog:"Progressions",ear:"Oreille",daily:"Entraînement du jour",runner:"Saute-notes",speed:"Contre la montre",memory:"Mémoire musicale"};
+const TIERS=["Bronze","Argent","Or","Saphir","Rubis","Diamant"];
+
+// ---------- navigation ----------
+function buildNav(){ $("navList").innerHTML=PAGES.map(([k,l,soon])=>'<button class="nav" type="button" data-p="'+k+'">'+icon(k)+'<span>'+esc(l)+'</span>'+(soon?'<span class="soon">bientôt</span>':'')+'</button>').join(""); }
+$("navList").addEventListener("click",e=>{ const b=e.target.closest("[data-p]"); if(b){ document.body.classList.remove("drawer"); go(b.dataset.p); } });
+$("menuBtn").onclick=()=>document.body.classList.toggle("drawer");
+$("reloadBtn").onclick=()=>go(A.page);
+$("main").addEventListener("click",e=>{ if(document.body.classList.contains("drawer")) document.body.classList.remove("drawer"); });
+let goSeq=0;
+async function go(p){ A.page=p; const seq=++goSeq; const P=PAGES.find(x=>x[0]===p)||PAGES[0];
+  document.querySelectorAll("#navList .nav").forEach(b=>b.toggleAttribute("aria-current",false)); const cur=document.querySelector('#navList [data-p="'+p+'"]'); if(cur) cur.setAttribute("aria-current","page");
+  $("pgTitle").innerHTML='<span class="hic">'+icon(P[0])+'</span><span>'+esc(P[1])+'</span>';
+  const m=$("main"); m.innerHTML='<div class="empty">Chargement…</div>'; m.scrollTop=0;
+  try{ const html=await (VIEWS[p]||VIEWS.dash)(); if(seq!==goSeq) return; m.innerHTML=html; wireCharts(m); (WIRE[p]||(()=>{}))(m); }
+  catch(e){ if(seq!==goSeq) return; if(e instanceof Denied){ await signOut("Session refusée : reconnecte-toi avec ton code."); return; }
+    m.innerHTML='<div class="msg err" data-err="1">Impossible de charger cette page : '+esc(e.message||e)+'</div><p class="muted small">Les fonctions SQL du back office sont-elles installées (supabase/migrations/2026-10-25_admin.sql) ?</p>'; }
+}
+
+// ---------- 1. tableau de bord ----------
+const VIEWS={}, WIRE={};
+VIEWS.dash=async()=>{ const d=await rpc("admin_dashboard"); const r=d.retention||{}, R=k=>{ const x=r[k]||{}; return [pct(x.back||0,x.cohort||0), (x.cohort|0)+" appareils"]; };
+  const AL={errors:a=>"Erreurs JS : "+a.n+" en 24 h", feedback:a=>a.n+" message"+(a.n>1?"s":"")+" de support à lire", no_events:()=>"Aucun événement reçu depuis 24 h (mesure coupée ou app hors ligne ?)", stats_stale:()=>"Statistiques par jour pas rafraîchies (tâche de nuit pc-admin-nightly)"};
+  const alerts=(d.alerts||[]).map(a=>'<li class="'+esc(a.lvl)+'">'+icon("warn")+'<span>'+esc((AL[a.k]||(()=>a.k))(a))+'</span></li>').join("") || '<li class="good">'+icon("ok")+'<span>Rien à signaler.</span></li>';
+  const ser=(d.series||[]).map(x=>({k:x.day, v:x.actors}));
+  return '<div class="grid g4">'
+    +kpi("Actifs aujourd'hui", fmtN(d.active_day), "appareils ou comptes")+kpi("Actifs 7 jours", fmtN(d.active_7), fmtN(d.new_devices_7)+" nouveaux appareils")+kpi("Actifs 30 jours", fmtN(d.active_30), fmtN(d.guests_30)+" sans compte")
+    +kpi("Comptes", fmtN(d.accounts), "+"+fmtN(d.new_accounts_7)+" en 7 j · +"+fmtN(d.new_accounts_30)+" en 30 j")
+    +kpi("Temps de jeu 7 jours", hm((d.play||{}).sec_7), fmtN((d.play||{}).sessions_7)+" activités terminées")
+    +kpi("Rétention J1", ...R("d1"))+kpi("Rétention J7", ...R("d7"))+kpi("Rétention J30", ...R("d30"))
+    +card("Actifs par jour (30 jours)", lineChart(ser,{label:"actifs"}), "span3")
+    +card("Alertes", '<ul class="alerts">'+alerts+'</ul>')
+    +'</div>'; };
+
+// ---------- 2. statistiques ----------
+const PER=[[7,"7 j"],[30,"30 j"],[90,"90 j"],[365,"1 an"]];
+function filtersHtml(){ const f=A.f, sel=(id,v,opts)=>'<select id="'+id+'">'+opts.map(([k,l])=>'<option value="'+k+'"'+(k===v?" selected":"")+'>'+esc(l)+'</option>').join("")+'</select>';
+  return '<div class="filters"><div class="seg" id="fPer">'+PER.map(([n,l])=>'<button type="button" data-n="'+n+'" aria-pressed="'+(f.per===n)+'">'+l+'</button>').join("")+'</div>'
+    +'<label class="f">Du<input type="date" id="fFrom" value="'+f.from+'"></label><label class="f">Au<input type="date" id="fTo" value="'+f.to+'"></label>'
+    +'<label class="f">Langue'+sel("fLang",f.lang,[["","Toutes"],["fr","Français"],["en","Anglais"]])+'</label>'
+    +'<label class="f">Appareil'+sel("fDev",f.dev,[["","Tous"],["phone","Téléphone"],["tablet","Tablette"],["desktop","Ordinateur"]])+'</label>'
+    +'<label class="f">Entrée'+sel("fInp",f.inp,[["","Toutes"],["midi","MIDI"],["mic","Micro"],["screen","Écran"]])+'</label>'
+    +'<button class="btn" type="button" id="fCsv">Exporter en CSV</button></div>'; }
+VIEWS.stats=async()=>{ const f=A.f, s=await rpc("admin_stats",{p_from:f.from,p_to:f.to,p_lang:f.lang,p_dev:f.dev,p_inp:f.inp}); A.last=s;
+  const F=s.funnel||[0,0,0,0,0], FL=["Premier lancement","Première note","Leçon 1 terminée","Leçon 3 terminée","Compte créé"];
+  const funnel=bars(F.map((v,i)=>({l:FL[i], v, x:i?pct(v,F[0]):""})),{max:Math.max(1,F[0])});
+  const pp=bars((s.pp||[]).map(x=>({l:"Leçon "+String(x.id).slice(1), v:x.n, x:x.stars?("★ "+x.stars):""})));
+  const totI=Object.values(s.inputs||{}).reduce((a,b)=>a+b,0); const inputs=bars(Object.entries(s.inputs||{}).sort((a,b)=>b[1]-a[1]).map(([k,v])=>({l:INP[k]||k, v, x:pct(v,totI)})));
+  const kb=bars((s.keyboards||[]).map(x=>({l:x.name, v:x.n})),{empty:"Aucun clavier MIDI vu sur la période."});
+  const acts=bars((s.activities||[]).map(x=>({l:(ACT[x.name]||x.name)+(x.what?" · "+(WHAT[x.what]||x.what):""), v:x.n, x:fmtN(x.actors)+" joueurs"})));
+  const q=s.quiz||{}, du=s.duels||{}, g=s.goal||{};
+  const quiz='<dl class="kv"><dt>Parties</dt><dd>'+fmtN(q.n)+'</dd><dt>Dont en ligne</dt><dd>'+fmtN(q.online)+'</dd><dt>Joueurs par partie</dt><dd>'+(q.players??"—")+'</dd><dt>Bonnes réponses (solo)</dt><dd>'+(q.ok_rate!=null?Math.round(q.ok_rate*100)+" %":"—")+'</dd></dl>';
+  const duels='<dl class="kv"><dt>Duels</dt><dd>'+fmtN(du.n)+' (bots '+fmtN(du.bot)+' · en ligne '+fmtN(du.online)+' · amis '+fmtN(du.friend)+')</dd><dt>Résultats</dt><dd>'+fmtN(du.win)+' victoires · '+fmtN(du.draw)+' nuls · '+fmtN(du.loss)+' défaites</dd><dt>ELO moyen (classés)</dt><dd>'+(du.elo_avg??"—")+'</dd></dl>'
+    +bars((s.elo||[]).map(x=>({l:x.b+"–"+(x.b+199), v:x.n})),{empty:"Pas encore de duel classé."});
+  const goal='<dl class="kv"><dt>Objectifs atteints</dt><dd>'+fmtN(g.n)+'</dd><dt>Joueurs</dt><dd>'+fmtN(g.actors)+'</dd></dl>'+bars(Object.entries(g.by||{}).map(([k,v])=>({l:k.replace("min","min").replace(/^xp/,"XP"), v})));
+  const st=s.streaks||{}; const streaks=bars(["0","1-2","3-6","7-29","30+"].map(k=>({l:k+" j", v:st[k]||0})));
+  const badges=bars((s.badges||[]).map(x=>({l:x.id, v:x.n})),{empty:"Aucun badge reçu sur la période (les badges arrivent avec leur chantier)."});
+  const devs=bars(Object.entries(s.devices||{}).sort((a,b)=>b[1]-a[1]).map(([k,v])=>({l:k.replace("phone","Téléphone").replace("tablet","Tablette").replace("desktop","Ordinateur").replace("·web"," · web").replace("·ios"," · app iOS"), v})));
+  const ser=(s.series||[]).map(x=>({k:x.day, v:x.actors}));
+  return filtersHtml()+'<div class="grid g3">'
+    +card("Actifs par jour", lineChart(ser,{label:"actifs",h:150}), "span4", '<small class="muted">'+fmtN(s.actors)+' actifs · '+fmtN(s.events)+' événements</small>')
+    +card("Entonnoir du premier lancement", funnel+'<small class="muted">Par appareil, sur la période. % du premier lancement.</small>')
+    +card("Premiers pas, leçon par leçon", pp)
+    +card("Façon de jouer", inputs)
+    +card("Claviers MIDI", kb)
+    +card("Activités terminées", acts, "span2")
+    +card("Quiz", quiz)
+    +card("Duels et ELO", duels)
+    +card("Objectif du jour", goal)
+    +card("Séries des comptes (aujourd'hui)", streaks)
+    +card("Badges", badges)
+    +card("Appareils", devs)
+    +card("Langues", bars(Object.entries(s.langs||{}).map(([k,v])=>({l:k==="fr"?"Français":k==="en"?"Anglais":k, v}))))
+    +'</div>'; };
+function statsCsv(){ const s=A.last||{}, L=[], q=v=>{ v=String(v==null?"":v); return /[",;\n]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v; }, row=(...a)=>L.push(a.map(q).join(","));
+  row("Piano Challenges — statistiques", A.f.from+" au "+A.f.to, "langue "+(A.f.lang||"toutes"), "appareil "+(A.f.dev||"tous"), "entrée "+(A.f.inp||"toutes"));
+  row(); row("jour","actifs","événements"); (s.series||[]).forEach(x=>row(x.day,x.actors,x.events));
+  row(); row("entonnoir","appareils"); ["premier lancement","première note","leçon 1","leçon 3","compte"].forEach((l,i)=>row(l,(s.funnel||[])[i]||0));
+  row(); row("leçon","appareils","étoiles moyennes"); (s.pp||[]).forEach(x=>row(x.id,x.n,x.stars));
+  row(); row("entrée","joueurs"); Object.entries(s.inputs||{}).forEach(([k,v])=>row(k,v));
+  row(); row("clavier","appareils"); (s.keyboards||[]).forEach(x=>row(x.name,x.n));
+  row(); row("activité","type","fois","joueurs"); (s.activities||[]).forEach(x=>row(x.name,x.what,x.n,x.actors));
+  row(); row("badge","joueurs"); (s.badges||[]).forEach(x=>row(x.id,x.n));
+  return "﻿"+L.join("\n"); }
+WIRE.stats=m=>{ const f=A.f;
+  m.querySelector("#fPer").onclick=e=>{ const b=e.target.closest("[data-n]"); if(!b) return; f.per=+b.dataset.n; f.from=addD(-(f.per-1)); f.to=addD(0); go("stats"); };
+  ["fFrom","fTo"].forEach(id=>m.querySelector("#"+id).onchange=e=>{ if(!e.target.value) return; f[id==="fFrom"?"from":"to"]=e.target.value; f.per=0; go("stats"); });
+  [["fLang","lang"],["fDev","dev"],["fInp","inp"]].forEach(([id,k])=>m.querySelector("#"+id).onchange=e=>{ f[k]=e.target.value; go("stats"); });
+  m.querySelector("#fCsv").onclick=()=>download("piano-challenges-stats-"+f.from+"-"+f.to+".csv", statsCsv(), "text/csv;charset=utf-8"); };
+
+// ---------- 3. joueurs ----------
+VIEWS.users=async()=>{ const u=A.users, d=await rpc("admin_users",{p_q:u.q,p_limit:50,p_offset:u.off}); const rows=d.rows||[];
+  const tr=rows.map(r=>'<tr class="click" data-id="'+esc(r.id)+'" tabindex="0"><td><b>'+esc(r.name||"—")+'</b>'+(can("support")?'<br><small class="muted">'+esc(r.email||"")+'</small>':'')+'</td><td>'+fmtD(r.created_at)+'</td><td>'+fmtD(r.last_sign_in)+'</td><td class="num">'+fmtN(r.level)+' · '+fmtN(r.xp)+' XP</td><td class="num">'+fmtN(r.streak)+' j</td><td>'+(r.banned?'<span class="chip bad">suspendu</span> ':'')+(r.prem_until?'<span class="chip gold">Premium</span>':'')+'</td></tr>').join("");
+  return '<div class="filters"><label class="f" style="flex:1;min-width:200px">Rechercher '+(can("support")?"(pseudo, e-mail ou identifiant)":"(pseudo ou identifiant)")+'<input id="uQ" type="search" value="'+esc(u.q)+'" placeholder="ex. Antoine"></label><button class="btn primary" id="uGo" type="button">Chercher</button></div>'
+    +'<section class="card" style="min-height:0"><h3>'+fmtN(d.total)+' comptes<span class="sp"></span><small class="muted">'+(rows.length?(u.off+1)+"–"+(u.off+rows.length):"0")+'</small></h3>'
+    +(rows.length?'<div class="tw"><table><thead><tr><th>Joueur</th><th>Créé</th><th>Dernière connexion</th><th class="num">Niveau</th><th class="num">Série</th><th>État</th></tr></thead><tbody>'+tr+'</tbody></table></div>':'<div class="empty">Aucun joueur trouvé.</div>')
+    +'<div class="row"><button class="btn sm" id="uPrev" type="button"'+(u.off?"":" disabled")+'>Précédents</button><button class="btn sm" id="uNext" type="button"'+(rows.length===50?"":" disabled")+'>Suivants</button></div></section>'; };
+WIRE.users=m=>{ const q=m.querySelector("#uQ"), run=()=>{ A.users.q=q.value.trim(); A.users.off=0; go("users"); };
+  m.querySelector("#uGo").onclick=run; q.onkeydown=e=>{ if(e.key==="Enter") run(); };
+  m.querySelector("#uPrev").onclick=()=>{ A.users.off=Math.max(0,A.users.off-50); go("users"); }; m.querySelector("#uNext").onclick=()=>{ A.users.off+=50; go("users"); };
+  m.querySelectorAll("tr[data-id]").forEach(tr=>{ tr.onclick=()=>userOpen(tr.dataset.id); tr.onkeydown=e=>{ if(e.key==="Enter") userOpen(tr.dataset.id); }; }); };
+async function userOpen(id){ $("paneScrim").hidden=false; $("userPane").hidden=false; $("upTitle").textContent="Chargement…"; $("upBody").innerHTML="";
+  let u; try{ u=await rpc("admin_user",{p_id:id}); }catch(e){ $("upBody").innerHTML='<div class="msg err">'+esc(e.message)+'</div>'; return; }
+  const p=u.profile||{}, g=u.progress||{}, prem=u.prem_until&&new Date(u.prem_until)>new Date(), banned=u.banned_until&&new Date(u.banned_until)>new Date();
+  $("upTitle").textContent=p.name||"Sans pseudo";
+  const xp=(u.xp_days||[]).slice().reverse().map(x=>({k:x.day, v:x.xp}));
+  const ev=(u.events||[]).slice(0,15).map(e=>'<tr><td>'+fmtDT(e.at)+'</td><td>'+esc(e.name)+'</td><td class="small muted">'+esc(Object.entries(e.props||{}).map(([k,v])=>k+"="+v).join(" · ").slice(0,90))+'</td></tr>').join("");
+  const B=(id,txt,need,cls="")=>'<button class="btn sm '+cls+'" type="button" id="'+id+'"'+(can(need)?"":" disabled title=\"Rôle "+need+" requis\"")+'>'+esc(txt)+'</button>';
+  $("upBody").innerHTML='<dl class="kv"><dt>Identifiant</dt><dd class="small">'+esc(u.id)+'</dd>'+(u.email?'<dt>E-mail</dt><dd>'+esc(u.email)+'</dd>':'')
+    +'<dt>Compte créé</dt><dd>'+fmtDT(u.created_at)+'</dd><dt>Dernière connexion</dt><dd>'+fmtDT(u.last_sign_in)+'</dd><dt>Connexion</dt><dd>'+esc((u.providers||[]).join(", ")||"—")+'</dd>'
+    +'<dt>Niveau / XP</dt><dd>'+fmtN(p.level)+' · '+fmtN(p.xp)+' XP · série '+fmtN(p.streak)+' j</dd><dt>Langue / entrée</dt><dd>'+esc(g.lang||"—")+' · '+esc(INP[g.input]||g.input||"—")+'</dd>'
+    +'<dt>Premiers pas</dt><dd>'+(g.pp?Object.keys(g.pp).length+" leçon(s)":"—")+'</dd><dt>Premium offert</dt><dd>'+(prem?"jusqu'au "+fmtD(u.prem_until):"non")+'</dd>'
+    +'<dt>État</dt><dd>'+(banned?'<span class="chip bad">suspendu</span>':'<span class="chip good">actif</span>')+(u.admin_role?' <span class="role">'+esc(u.admin_role)+'</span>':'')+'</dd>'
+    +'<dt>Sauvegarde</dt><dd>'+(g.size?fmtN(g.size)+" octets · "+fmtDT(g.updated_at):"aucune")+'</dd></dl>'
+    +'<div class="row">'+B("uaRename","Renommer","support")+B("uaPrem","Offrir 1 mois Premium","support")+(prem?B("uaPremOff","Retirer le Premium","support"):"")+B("uaBan",banned?"Réactiver":"Suspendre","support")+B("uaExport","Export RGPD (JSON)","support")+'</div>'
+    +'<div class="row">'+B("uaReset","Réinitialiser la progression","owner","danger")+B("uaDel","Supprimer le compte","owner","danger")+'</div>'
+    +card("XP des 30 derniers jours", lineChart(xp,{h:140,label:"XP"}))
+    +card("Derniers événements", ev?'<div class="tw"><table><tbody>'+ev+'</tbody></table></div>':'<div class="empty">Aucun.</div>')
+    +((u.feedback||[]).length?card("Messages au support", (u.feedback||[]).map(f=>'<div class="fb"><small class="muted">'+fmtDT(f.at)+' · '+esc(FBK[f.kind]||f.kind)+' · '+esc(FBS[f.status]||f.status)+'</small><p>'+esc(f.msg)+'</p></div>').join("")):"");
+  wireCharts($("upBody"));
+  const on=(i,fn)=>{ const b=$(i); if(b && !b.disabled) b.onclick=fn; };
+  on("uaRename", async()=>{ const v=await ask("Renommer le joueur","Nouveau pseudo (2 à 24 caractères).",{ok:"Renommer",input:{value:p.name||"",max:24}}); if(v==null) return; if(await act(()=>rpc("admin_user_rename",{p_id:id,p_name:v}),"Pseudo changé.")) userOpen(id); });
+  on("uaPrem", async()=>{ if(!await ask("Offrir un mois Premium ?","30 jours de Premium pour "+(p.name||"ce joueur")+". L'app le lit à la prochaine connexion.",{ok:"Offrir"})) return; if(await act(()=>rpc("admin_user_premium",{p_id:id,p_days:30}),"Mois Premium offert.")) userOpen(id); });
+  on("uaPremOff", async()=>{ if(!await ask("Retirer le Premium offert ?","",{ok:"Retirer",danger:true})) return; if(await act(()=>rpc("admin_user_premium",{p_id:id,p_days:0}),"Premium retiré.")) userOpen(id); });
+  on("uaBan", async()=>{ if(!await ask(banned?"Réactiver le compte ?":"Suspendre le compte ?", banned?"Le joueur pourra se reconnecter.":"Le joueur ne pourra plus se connecter (sa progression est gardée).",{ok:banned?"Réactiver":"Suspendre",danger:!banned})) return; if(await act(()=>edge({action:"suspend",id,on:!banned}),banned?"Compte réactivé.":"Compte suspendu.")) userOpen(id); });
+  on("uaExport", async()=>{ const d=await act(()=>rpc("admin_user_export",{p_id:id}),"Export prêt."); if(d) download("rgpd-"+id+".json", JSON.stringify(d,null,2), "application/json"); });
+  on("uaReset", async()=>{ if(await ask("Réinitialiser la progression ?","XP, niveau, série et sauvegarde de "+(p.name||"ce joueur")+" seront effacés. C'est irréversible.",{ok:"Réinitialiser",danger:true,type:"EFFACER"})==null) return; if(await act(()=>rpc("admin_user_reset",{p_id:id}),"Progression réinitialisée.")) userOpen(id); });
+  on("uaDel", async()=>{ if(await ask("Supprimer le compte ?","Le compte et toutes ses données seront supprimés définitivement.",{ok:"Supprimer",danger:true,type:"SUPPRIMER"})==null) return; if(await act(()=>edge({action:"delete_user",id}),"Compte supprimé.")){ userClose(); go("users"); } });
+}
+function userClose(){ $("paneScrim").hidden=true; $("userPane").hidden=true; }
+$("upClose").onclick=userClose; $("paneScrim").onclick=userClose;
+document.addEventListener("keydown",e=>{ if(e.key==="Escape" && !$("userPane").hidden && $("dlg").hidden) userClose(); });
+
+// ---------- 4. contenu et réglages à distance ----------
+const NEWS_IC=[["Étoile","M12 3l2.4 5 5.6.8-4 3.9.9 5.5L12 15.6 7.1 18.2l.9-5.5-4-3.9 5.6-.8z"],["Manette","M6 9h4M8 7v4M15 9h.01M18 11h.01M3 8a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4v5a4 4 0 0 1-7 2.5h-4A4 4 0 0 1 3 13z"],["Note","M9 18V5l12-2v13M9 18a3 3 0 1 1-6 0 3 3 0 0 1 6 0zM21 16a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"],["Flamme","M12 3c1 3.5 5 6 5 11a5 5 0 0 1-10 0c0-2.2 1-3.8 2.2-5 .2 1.6 1 2.8 2.3 3.3C11 9.3 11.3 6 12 3z"]];
+const NEWS_COL=[["Violet","#6a4bf0"],["Vert","#1f7a52"],["Bleu","#0e7490"],["Framboise","#a3306b"],["Corail","#c9463c"]];
+let CFG={};
+function newsRow(L,n){ n=n||["","","#6a4bf0",NEWS_IC[0][1]]; const o=(arr,v)=>arr.map(([l,k])=>'<option value="'+esc(k)+'"'+(k===v?" selected":"")+'>'+esc(l)+'</option>').join("");
+  return '<div class="news-row" data-l="'+L+'"><input class="wide" maxlength="60" placeholder="Titre" value="'+esc(n[0])+'"><input class="wide" maxlength="160" placeholder="Texte" value="'+esc(n[1])+'"><select>'+o(NEWS_COL,n[2])+'</select><select>'+o(NEWS_IC,n[3])+'</select><button class="btn sm" type="button" data-rm>Retirer</button></div>'; }
+VIEWS.content=async()=>{ const list=await rpc("admin_config_list"); CFG={}; (list||[]).forEach(r=>CFG[r.key]=r);
+  const ro=!can("owner"), dis=ro?" disabled":"", fl=(CFG.flags||{}).value||{}, nw=(CFG.news||{}).value||{}, dy=(CFG.daily||{}).value||{}, po=(CFG.prem_offer||{}).value;
+  const upd=k=>CFG[k]?'<small class="muted">modifié le '+fmtDT(CFG[k].updated_at)+'</small>':'<small class="muted">valeur intégrée à l\'app</small>';
+  const others=Object.keys(CFG).filter(k=>!["flags","news","daily","prem_offer"].includes(k));
+  return (ro?'<div class="msg info" style="margin-bottom:12px">Lecture seule : seul un owner peut modifier les réglages.</div>':'')+'<div class="grid g2">'
+    +card("Interrupteurs (flags)", '<label class="row"><input type="checkbox" id="cPay"'+(fl.paywall===true?" checked":"")+dis+'> Offre Premium visible pour tous (aperçu, le paiement n\'est pas branché)</label>'
+      +'<label class="row"><input type="checkbox" id="cAna"'+(fl.analytics!==false?" checked":"")+dis+'> Mesure d\'usage active (coupe l\'envoi pour tout le monde si décoché)</label>'
+      +'<label class="f">Part des sessions qui remontent leurs erreurs JS (0 à 1)<input id="cErr" type="number" min="0" max="1" step="0.05" value="'+(Number.isFinite(fl.errSample)?fl.errSample:0.25)+'"'+dis+'></label>'
+      +'<div class="row"><button class="btn primary" type="button" id="cFlagsSave"'+dis+'>Enregistrer</button>'+upd("flags")+'</div>')
+    +card("Entraînement du jour", '<label class="f">Nombre d\'exercices par défaut (3 à 20, vide = 10)<input id="cDaily" type="number" min="3" max="20" value="'+esc(dy.len||"")+'"'+dis+'></label><small class="muted">Un joueur qui a choisi sa longueur dans l\'app garde la sienne.</small><div class="row"><button class="btn primary" type="button" id="cDailySave"'+dis+'>Enregistrer</button>'+upd("daily")+'</div>')
+    +card("Actualités de l'accueil", ["fr","en"].map(L=>'<b>'+(L==="fr"?"Français":"Anglais")+'</b><div class="bars" id="cNews_'+L+'">'+((nw[L]||[]).map(n=>newsRow(L,n)).join("")||"")+'</div><button class="btn sm" type="button" data-add="'+L+'"'+dis+'>Ajouter une actualité</button>').join("")
+      +'<small class="muted">Vide = les actualités intégrées à l\'app. 8 au plus par langue. Les nouvelles créent aussi une notification « Nouveautés ».</small><div class="row"><button class="btn primary" type="button" id="cNewsSave"'+dis+'>Publier</button><button class="btn" type="button" id="cNewsReset"'+dis+'>Revenir aux actualités intégrées</button>'+upd("news")+'</div>', "span2")
+    +card("Offre Premium (prem_offer)", '<textarea id="cPrem" rows="5" spellcheck="false"'+dis+' placeholder=\'{"year":139,"month":17.99,"trialDays":7}\'>'+esc(po?JSON.stringify(po,null,2):"")+'</textarea><small class="muted">Objet JSON, lu par l\'app si le module de l\'offre (PREM_OFFER) est présent. Vide = supprimer.</small><div class="row"><button class="btn primary" type="button" id="cPremSave"'+dis+'>Enregistrer</button>'+upd("prem_offer")+'</div>')
+    +card("Autres clés", others.length?'<table><tbody>'+others.map(k=>'<tr><td><b>'+esc(k)+'</b></td><td class="small"><code>'+esc(JSON.stringify(CFG[k].value).slice(0,120))+'</code></td></tr>').join("")+'</tbody></table>':'<div class="empty">Aucune.</div>')
+    +'</div>'; };
+async function cfgSet(k, v){ const r=await act(()=>rpc("admin_config_set",{p_key:k,p_value:v}),"Enregistré. Les joueurs le reçoivent à leur prochain lancement."); if(r) go("content"); }
+WIRE.content=m=>{ if(!can("owner")) return;
+  m.querySelector("#cFlagsSave").onclick=()=>{ const e=+m.querySelector("#cErr").value; cfgSet("flags",{paywall:m.querySelector("#cPay").checked, analytics:m.querySelector("#cAna").checked, errSample:Number.isFinite(e)?Math.max(0,Math.min(1,e)):0.25}); };
+  m.querySelector("#cDailySave").onclick=()=>{ const v=parseInt(m.querySelector("#cDaily").value,10); if(m.querySelector("#cDaily").value==="") return cfgSet("daily",null); if(!(v>=3&&v<=20)) return toast("Entre 3 et 20."); cfgSet("daily",{len:v}); };
+  m.querySelectorAll("[data-add]").forEach(b=>b.onclick=()=>{ const box=m.querySelector("#cNews_"+b.dataset.add); if(box.children.length>=8) return toast("8 actualités au plus."); box.insertAdjacentHTML("beforeend",newsRow(b.dataset.add)); });
+  m.addEventListener("click",e=>{ const r=e.target.closest("[data-rm]"); if(r) r.closest(".news-row").remove(); });
+  m.querySelector("#cNewsSave").onclick=async()=>{ const v={}; let bad=false; ["fr","en"].forEach(L=>{ const rows=[...m.querySelectorAll("#cNews_"+L+" .news-row")].map(r=>{ const [a,b2,c,d]=r.querySelectorAll("input,select"); return [a.value.trim(),b2.value.trim(),c.value,d.value]; }).filter(r=>r[0]||r[1]);
+      if(rows.some(r=>!r[0]||!r[1])) bad=true; if(rows.length) v[L]=rows; });
+    if(bad) return toast("Chaque actualité a besoin d'un titre et d'un texte.");
+    if(!Object.keys(v).length) return toast("Ajoute au moins une actualité, ou reviens aux actualités intégrées.");
+    if(await ask("Publier les actualités ?","Elles remplacent celles de l'accueil pour tous les joueurs.",{ok:"Publier"})) cfgSet("news",v); };
+  m.querySelector("#cNewsReset").onclick=async()=>{ if(await ask("Revenir aux actualités intégrées ?","",{ok:"Revenir"})) cfgSet("news",null); };
+  m.querySelector("#cPremSave").onclick=()=>{ const t=m.querySelector("#cPrem").value.trim(); if(!t) return cfgSet("prem_offer",null); let v; try{ v=JSON.parse(t); }catch(e){ return toast("JSON invalide."); } if(!v||typeof v!=="object"||Array.isArray(v)) return toast("Il faut un objet JSON."); cfgSet("prem_offer",v); }; };
+
+// ---------- 5. notifications ----------
+const GROUPS=[["all","Tous les comptes"],["active7","Actifs ces 7 jours"],["inactive14","Inactifs depuis 14 jours"],["fr","Comptes en français"],["en","Comptes en anglais"],["user","Un joueur (identifiant)"]];
+const LINKS=[["","Aucun lien"],["hub","Accueil"],["learn","LEARN"],["daily","Entraînement du jour"],["free","PLAY"],["rank","Classement"],["progress","Progression"],["game:runner","Saute-notes"],["game:speed","Contre la montre"],["game:memory","Mémoire musicale"]];
+VIEWS.notifs=async()=>{ const d=await rpc("admin_notifs"); const opt=a=>a.map(([k,l])=>'<option value="'+k+'">'+esc(l)+'</option>').join("");
+  const send=can("support")?'<label class="f">Destinataires<select id="nGroup">'+opt(can("owner")?GROUPS:GROUPS.slice(-1))+'</select></label><label class="f" id="nUserL" hidden>Identifiant du joueur<input id="nUser" placeholder="uuid"></label>'
+    +'<label class="f">Titre<input id="nTitle" maxlength="120"></label><label class="f">Texte<textarea id="nBody" maxlength="300" rows="3"></textarea></label><label class="f">Bouton dans la notification<select id="nAct">'+opt(LINKS)+'</select></label>'
+    +'<div class="row"><button class="btn primary" type="button" id="nSend">Envoyer dans l\'app</button><small class="muted" id="nCount"></small></div>'
+    +'<div class="row"><button class="btn" type="button" id="nPreview">M\'envoyer l\'aperçu des 3 e-mails</button><small class="muted">bienvenue, série, récap (job « preview » de la fonction notify)</small></div>'
+    :'<div class="empty">Rôle support requis pour envoyer.</div>';
+  const kinds=bars(Object.entries(d.by_kind||{}).sort((a,b)=>b[1]-a[1]).map(([k,v])=>({l:k,v})),{empty:"Aucune notification serveur sur 30 jours."});
+  const rec=(d.recent||[]).map(r=>'<tr><td>'+fmtDT(r.at)+'</td><td><b>'+esc(r.title)+'</b><br><small class="muted">'+esc(r.body)+'</small></td><td>'+esc(r.kind)+'</td><td class="num">'+fmtN(r.n)+'</td></tr>').join("");
+  const jobs=(d.jobs||[]).map(j=>'<tr><td><b>'+esc(j.name)+'</b></td><td><code>'+esc(j.schedule)+'</code></td><td>'+(j.active?'<span class="chip good">active</span>':'<span class="chip bad">arrêtée</span>')+'</td><td>'+(j.last?fmtDT(j.last.at)+' · '+esc(j.last.status):"—")+'</td></tr>').join("");
+  const pr=d.prefs||{};
+  return '<div class="grid g2">'+card("Envoyer une notification",send)
+    +card("Envois des 30 derniers jours", kinds+'<small class="muted">Préférences e-mail : '+fmtN(pr.n)+' comptes · récap '+fmtN(pr.weekly)+' · série '+fmtN(pr.streak)+'</small>')
+    +card("Historique (regroupé par message)", rec?'<div class="tw" style="max-height:340px"><table><thead><tr><th>Dernier envoi</th><th>Message</th><th>Type</th><th class="num">Comptes</th></tr></thead><tbody>'+rec+'</tbody></table></div>':'<div class="empty">Rien sur 30 jours.</div>',"span2")
+    +card("Tâches planifiées (pg_cron)", jobs?'<div class="tw"><table><thead><tr><th>Tâche</th><th>Quand (UTC)</th><th>État</th><th>Dernier passage</th></tr></thead><tbody>'+jobs+'</tbody></table></div>':'<div class="empty">Aucune tâche visible (pg_cron absent ou pas encore lancé).</div>',"span2")+'</div>'; };
+WIRE.notifs=m=>{ if(!can("support")) return; const g=m.querySelector("#nGroup"), cnt=m.querySelector("#nCount");
+  const upd=async()=>{ const u=g.value==="user"; m.querySelector("#nUserL").hidden=!u; cnt.textContent=""; if(u) return; try{ const n=await rpc("admin_notify_count",{p_group:g.value}); cnt.textContent=fmtN(n)+" destinataires"; g.dataset.n=n; }catch(e){ cnt.textContent=""; } };
+  g.onchange=upd; upd();
+  m.querySelector("#nSend").onclick=async()=>{ const title=m.querySelector("#nTitle").value.trim(), body=m.querySelector("#nBody").value.trim(), a=m.querySelector("#nAct").value, u=g.value==="user";
+    if(title.length<2) return toast("Il faut un titre."); const uid=m.querySelector("#nUser").value.trim();
+    if(u && !/^[0-9a-f-]{36}$/i.test(uid)) return toast("Identifiant de joueur invalide.");
+    if(!await ask("Envoyer la notification ?", u?"À un joueur.":"À "+fmtN(g.dataset.n||0)+" comptes ("+GROUPS.find(x=>x[0]===g.value)[1].toLowerCase()+"). Impossible d'annuler.",{ok:"Envoyer"})) return;
+    const r=await act(()=>edge(u?{action:"notify",user_id:uid,title,body,action_link:a||null}:{action:"notify",group:g.value,title,body,action_link:a||null})); if(r){ toast("Envoyée à "+fmtN(r.sent)+" compte(s)."); go("notifs"); } };
+  m.querySelector("#nPreview").onclick=async()=>{ if(await ask("M'envoyer l'aperçu ?","Les 3 e-mails (bienvenue, série, récap) partent vers l'adresse de ton compte.",{ok:"Envoyer"})) act(()=>edge({action:"preview"}),"Aperçu envoyé : regarde ta boîte mail."); }; };
+
+// ---------- 6. ligues et duels ----------
+VIEWS.leagues=async()=>{ const [L,s]=await Promise.all([rpc("admin_leagues"), rpc("admin_stats",{p_from:addD(-29),p_to:addD(0),p_lang:"",p_dev:"",p_inp:""})]); const du=s.duels||{};
+  let lg;
+  if(!L.installed) lg=card("Ligues", '<div class="msg info">Ligues non installées.</div><p class="muted small" style="margin:0">Lance supabase/migrations/2026-10-24_leagues.sql dans l\'éditeur SQL de Supabase pour les activer : cet écran les affichera.</p>',"span2");
+  else { const gr=L.groups||[], byT={}; gr.forEach(x=>{ (byT[x.tier]=byT[x.tier]||[]).push(x); });
+    const tiers=bars([5,4,3,2,1,0].map(t=>({l:TIERS[t], v:(byT[t]||[]).reduce((a,x)=>a+x.n,0), x:(byT[t]||[]).length+" groupe(s)"})),{empty:"Aucun groupe cette semaine."});
+    const wk=(L.weeks||[]).map(w=>'<tr><td>'+fmtD(w.week)+'</td><td>'+(w.formed_at?fmtDT(w.formed_at):"—")+'</td><td>'+(w.closed_at?fmtDT(w.closed_at):"—")+'</td></tr>').join("");
+    const dis=can("owner")?"":" disabled";
+    lg=card("Ligue de la semaine du "+fmtD(L.week), tiers+'<div class="row"><button class="btn" type="button" id="lgForm"'+dis+'>Former les groupes</button><button class="btn" type="button" id="lgClose"'+dis+'>Clôturer la semaine</button><small class="muted">Normalement fait par pg_cron (lundi 00 h 05, dimanche 20 h, heure de Paris).</small></div>')
+      +card("Semaines", wk?'<table><thead><tr><th>Semaine</th><th>Formée</th><th>Close</th></tr></thead><tbody>'+wk+'</tbody></table>':'<div class="empty">Aucune.</div>'); }
+  return '<div class="grid g2">'+lg
+    +card("Duels (30 jours)", '<dl class="kv"><dt>Duels</dt><dd>'+fmtN(du.n)+'</dd><dt>Contre</dt><dd>bots '+fmtN(du.bot)+' · en ligne '+fmtN(du.online)+' · amis '+fmtN(du.friend)+'</dd><dt>Résultats</dt><dd>'+fmtN(du.win)+' / '+fmtN(du.draw)+' / '+fmtN(du.loss)+' (V/N/D)</dd><dt>ELO moyen</dt><dd>'+(du.elo_avg??"—")+'</dd></dl>'
+      +bars(Object.entries(du.by_game||{}).map(([k,v])=>({l:WHAT[k]||k,v}))))
+    +card("Répartition des ELO (30 jours)", bars((s.elo||[]).map(x=>({l:x.b+"–"+(x.b+199), v:x.n})),{empty:"Pas encore de duel classé."}))+'</div>'; };
+WIRE.leagues=m=>{ const f=m.querySelector("#lgForm"), c=m.querySelector("#lgClose");
+  if(f&&!f.disabled) f.onclick=async()=>{ if(await ask("Former les groupes ?","Range les joueurs actifs de cette semaine qui n'ont pas encore de groupe.",{ok:"Former"})) { if(await act(()=>rpc("admin_league_action",{p_action:"form"}),"Groupes formés.")) go("leagues"); } };
+  if(c&&!c.disabled) c.onclick=async()=>{ if(await ask("Clôturer la semaine ?","Fige les rangs, décide montées et descentes et prévient les joueurs. À faire seulement si la tâche du dimanche a échoué.",{ok:"Clôturer",danger:true})) { if(await act(()=>rpc("admin_league_action",{p_action:"close"}),"Semaine close.")) go("leagues"); } }; };
+
+// ---------- 7. support ----------
+const FBK={bug:"Problème",idea:"Idée",other:"Autre"}, FBS={new:"Nouveau",seen:"Vu",done:"Traité"};
+VIEWS.support=async()=>{ if(!can("support")) return '<div class="msg info">Rôle support requis.</div>'; const list=await rpc("admin_feedback",{p_status:A.fbStatus,p_limit:100});
+  const items=(list||[]).map(f=>{ const c=f.ctx||{}; return '<div class="fb" data-id="'+esc(f.id)+'"><div class="row"><span class="chip '+(f.kind==="bug"?"warn":"")+'">'+esc(FBK[f.kind]||f.kind)+'</span><small class="muted">'+fmtDT(f.at)+(f.name?' · '+esc(f.name):'')+' · '+esc([c.ver,c.dev,c.plat,c.inp,c.lang,c.page,c.midi].filter(Boolean).join(" · "))+'</small><span class="sp" style="flex:1"></span><span class="chip">'+esc(FBS[f.status])+'</span></div>'
+    +'<p>'+esc(f.msg)+'</p>'+(f.contact?'<small>Répondre à : <b>'+esc(f.contact)+'</b></small>':'')+(f.note?'<small class="muted">Note : '+esc(f.note)+'</small>':'')
+    +'<div class="row">'+(f.status!=="seen"?'<button class="btn sm" type="button" data-st="seen">Marquer vu</button>':'')+(f.status!=="done"?'<button class="btn sm" type="button" data-st="done">Traité</button>':'')+'<button class="btn sm" type="button" data-note>Note</button>'+(f.user_id?'<button class="btn sm" type="button" data-user="'+esc(f.user_id)+'">Fiche du joueur</button>':'')+'</div></div>'; }).join("");
+  return '<div class="filters"><div class="seg" id="sSt">'+[["new","Nouveaux"],["seen","Vus"],["done","Traités"],["","Tous"]].map(([k,l])=>'<button type="button" data-k="'+k+'" aria-pressed="'+(A.fbStatus===k)+'">'+l+'</button>').join("")+'</div></div>'
+    +'<section class="card"><h3>Messages « Signaler un problème »<span class="sp"></span><small class="muted">'+fmtN((list||[]).length)+'</small></h3>'+(items||'<div class="empty">Aucun message.</div>')+'</section>'; };
+WIRE.support=m=>{ const s=m.querySelector("#sSt"); if(!s) return; s.onclick=e=>{ const b=e.target.closest("[data-k]"); if(b){ A.fbStatus=b.dataset.k; go("support"); } };
+  m.querySelectorAll(".fb[data-id]").forEach(el=>el.onclick=async e=>{ const id=+el.dataset.id, st=e.target.closest("[data-st]"), nt=e.target.closest("[data-note]"), us=e.target.closest("[data-user]");
+    if(st){ if(await act(()=>rpc("admin_feedback_set",{p_id:id,p_status:st.dataset.st}),"C'est noté.")) go("support"); }
+    else if(nt){ const v=await ask("Note interne","Visible seulement dans le back office.",{ok:"Enregistrer",input:{max:1000}}); if(v!=null && await act(()=>rpc("admin_feedback_set",{p_id:id,p_status:"seen",p_note:v}),"Note enregistrée.")) go("support"); }
+    else if(us) userOpen(us.dataset.user); }); };
+
+// ---------- 8. système ----------
+VIEWS.system=async()=>{ const [s, ver, log]=await Promise.all([rpc("admin_system"), fetch("/version.txt",{cache:"no-store"}).then(r=>r.ok?r.text():"").catch(()=>""), can("support")?rpc("admin_log_list",{p_limit:100}):Promise.resolve(null)]);
+  const vers=(s.versions||[]).map(v=>'<tr><td><code>'+esc(v.ver)+'</code></td><td>'+esc(v.plat==="ios"?"app iOS":v.plat)+'</td><td class="num">'+fmtN(v.n)+'</td><td>'+fmtDT(v.last)+'</td></tr>').join("");
+  const errs=(s.errors||[]).map(e=>'<tr><td><b>'+esc(e.msg)+'</b><br><small class="muted">'+esc(e.src||"")+(e.line?":"+e.line:"")+' · '+esc(e.ver||"")+'</small></td><td class="num">'+fmtN(e.n)+'</td><td class="num">'+fmtN(e.devices)+'</td><td>'+fmtDT(e.last)+'</td></tr>').join("");
+  const lg=log?(log.map(l=>'<tr><td>'+fmtDT(l.at)+'</td><td>'+esc(l.who||"serveur")+'</td><td><b>'+esc(l.action)+'</b></td><td class="small">'+esc(l.target||"")+'</td><td class="small muted">'+esc(JSON.stringify(l.detail||{}).slice(0,100))+'</td></tr>').join("")):null;
+  return '<div class="grid g4">'+kpi("Version en ligne", (ver||"?").trim(), "version.txt du site")+kpi("Erreurs JS 24 h", fmtN(s.errors_24h), "échantillon des sessions")+kpi("Événements stockés", fmtN(s.events_total), "conservés 13 mois")+kpi("Statistiques à jour au", s.stats_day?fmtD(s.stats_day):"jamais", "tâche de nuit")
+    +card("Versions vues (30 jours)", vers?'<div class="tw" style="max-height:260px"><table><thead><tr><th>Version</th><th>Où</th><th class="num">Appareils</th><th>Dernière fois</th></tr></thead><tbody>'+vers+'</tbody></table></div>':'<div class="empty">Aucune.</div>',"span2")
+    +card("Erreurs JS (7 jours)", errs?'<div class="tw" style="max-height:260px"><table><thead><tr><th>Message</th><th class="num">Fois</th><th class="num">Appareils</th><th>Dernière</th></tr></thead><tbody>'+errs+'</tbody></table></div>':'<div class="empty">Aucune erreur remontée.</div>',"span2")
+    +(lg!=null?card("Journal du back office", lg?'<div class="tw" style="max-height:300px"><table><thead><tr><th>Quand</th><th>Qui</th><th>Action</th><th>Cible</th><th>Détail</th></tr></thead><tbody>'+lg+'</tbody></table></div>':'<div class="empty">Vide.</div>',"span4"):"")+'</div>'; };
+
+// ---------- 9. paiements ----------
+VIEWS.pay=async()=>'<section class="card soonbox"><h3>'+icon("pay")+' Paiements : bientôt</h3><p style="margin:0">Cet écran suivra les abonnements quand le paiement sera branché : Stripe Checkout sur le site, achat intégré Apple dans l\'app iOS, état de l\'abonnement dans Supabase.</p><p class="muted small" style="margin:0">En attendant, un mois Premium peut être offert depuis la fiche d\'un joueur (Joueurs › Offrir 1 mois Premium).</p></section>';
+
+// ---------- session, double authentification, inactivité ----------
+function showLogin(step){ $("shell").hidden=true; $("login").hidden=false; userClose(); $("dlg").hidden=true;
+  ["lgPw","lgEnroll","lgCode","lgDenied"].forEach(id=>$(id).hidden=true); $({pw:"lgPw",enroll:"lgEnroll",code:"lgCode",denied:"lgDenied"}[step]).hidden=false;
+  $("lgOut").hidden = step==="pw";
+  setTimeout(()=>{ const f=$({pw:"lgEmail",enroll:"lgCode1",code:"lgCode2"}[step]); if(f) f.focus(); },30); }
+async function signOut(msg){ clearTimeout(A.idleT); A.role=null; try{ await A.sb.auth.signOut(); }catch(e){} $("main").innerHTML=""; showLogin("pw"); lgMsg(msg||"", "info"); }
+async function afterPassword(){ // la session existe (aal1) : code TOTP, ou enrôlement la première fois
+  const {data:aal}=await A.sb.auth.mfa.getAuthenticatorAssuranceLevel();
+  if(aal && aal.currentLevel==="aal2") return enter();
+  const {data:fs,error}=await A.sb.auth.mfa.listFactors(); if(error) throw error;
+  const tot=(fs&&fs.totp||[]).filter(f=>f.status==="verified");
+  if(tot.length){ A.factor=tot[0].id; showLogin("code"); return; }
+  // ancienne tentative d'enrôlement inachevée : on la retire avant d'en créer une nouvelle
+  for(const f of (fs&&fs.all||[]).filter(f=>f.factor_type==="totp"&&f.status!=="verified")){ try{ await A.sb.auth.mfa.unenroll({factorId:f.id}); }catch(e){} }
+  const {data:en,error:e2}=await A.sb.auth.mfa.enroll({factorType:"totp", friendlyName:"Back office "+new Date().toISOString().slice(0,10)}); if(e2) throw e2;
+  A.factor=en.id; $("lgQr").src=en.totp.qr_code; $("lgSecret").textContent=en.totp.secret; showLogin("enroll"); }
+async function verify(code){ const {data:ch,error}=await A.sb.auth.mfa.challenge({factorId:A.factor}); if(error) throw error;
+  const {error:e2}=await A.sb.auth.mfa.verify({factorId:A.factor, challengeId:ch.id, code}); if(e2) throw e2; await enter(); }
+async function enter(){ let me; try{ me=await rpc("admin_me"); }catch(e){ if(e instanceof Denied){ showLogin("denied"); lgMsg(""); return; } throw e; }
+  A.role=me.role; A.email=me.email||""; $("meRole").textContent=me.role; $("meEmail").textContent=A.email; lgMsg("");
+  $("login").hidden=true; $("shell").hidden=false; buildNav(); idleReset(); go(A.page||"dash"); }
+function idleReset(){ A.idleAt=Date.now(); clearTimeout(A.idleT); if(A.role) A.idleT=setTimeout(()=>signOut("Déconnecté après "+Math.round(IDLE_MS/60000)+" min sans activité."), IDLE_MS); }
+["pointerdown","keydown","wheel","touchstart"].forEach(t=>addEventListener(t,()=>{ if(A.role && Date.now()-A.idleAt>2000) idleReset(); },{passive:true,capture:true}));
+setInterval(()=>{ if(!A.role) return; const left=Math.max(0,IDLE_MS-(Date.now()-A.idleAt)); $("idleTxt").textContent=left<5*60e3?"Déconnexion dans "+Math.ceil(left/60000)+" min":""; },20000);
+$("outBtn").onclick=()=>signOut("Tu es déconnecté.");
+$("lgOut").onclick=()=>signOut("");
+const busy=(form,on)=>form.querySelectorAll("button,input").forEach(x=>x.disabled=on);
+$("lgPw").onsubmit=async e=>{ e.preventDefault(); const f=e.target; busy(f,true); lgMsg("");
+  try{ const {error}=await A.sb.auth.signInWithPassword({email:$("lgEmail").value.trim(), password:$("lgPass").value}); $("lgPass").value=""; if(error) throw error; await afterPassword(); }
+  catch(err){ lgMsg(/invalid/i.test(err.message||"")?"E-mail ou mot de passe incorrect.":(err.message||"Connexion impossible.")); }
+  busy(f,false); };
+for(const [fid,iid] of [["lgEnroll","lgCode1"],["lgCode","lgCode2"]]) $(fid).onsubmit=async e=>{ e.preventDefault(); const f=e.target, c=$(iid).value.replace(/\D/g,"");
+  if(c.length!==6) return lgMsg("Le code a 6 chiffres."); busy(f,true); lgMsg("");
+  try{ await verify(c); }catch(err){ lgMsg(/invalid|expired/i.test(err.message||"")?"Code incorrect ou expiré : réessaie avec le code affiché maintenant.":(err.message||"Vérification impossible.")); $(iid).value=""; }
+  busy(f,false); };
+
+// ---------- démarrage ----------
+(async()=>{
+  if(!window.supabase || !window.supabase.createClient){ $("login").hidden=false; lgMsg("Impossible de charger Supabase."); return; }
+  // session à part de celle de l'app (sessionStorage, autre clé) : se connecter ici ne connecte pas l'app, et l'onglet fermé = déconnecté
+  A.sb=window.supabase.createClient(SUPA_URL, SUPA_KEY, {auth:{storage:window.sessionStorage, storageKey:"pc-admin-auth", persistSession:true, autoRefreshToken:true, detectSessionInUrl:false}});
+  A.sb.auth.onAuthStateChange(ev=>{ if(ev==="SIGNED_OUT" && A.role){ A.role=null; showLogin("pw"); } });
+  try{ const {data}=await A.sb.auth.getSession(); if(data && data.session) await afterPassword(); else showLogin("pw"); }
+  catch(e){ showLogin("pw"); lgMsg(e.message||String(e)); }
+})();
+})();
+</script>
+</body>
+</html>
