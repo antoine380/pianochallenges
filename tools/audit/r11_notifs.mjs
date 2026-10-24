@@ -26,7 +26,7 @@ check('action « Jouer » : ouvre l’entraînement du jour', await ev(() => doc
 check('pastille à 0', await badge() === 0);
 // settings
 await ev(() => document.getElementById('setBtn').click()); await wait(page, 300);
-check('Réglages : 5 lignes (4 catégories + récap), e-mail désactivé pour un invité', await ev(() => document.querySelectorAll('#ntfSet .ntf-row:not(.ntf-hd)').length === 5 && [...document.querySelectorAll('#ntfSet .ntf-row:not(.ntf-hd) .sw:last-child input')].every(i => i.disabled)));
+check('Réglages : 5 lignes (4 catégories + récap), e-mail désactivé pour un invité', await ev(() => document.querySelectorAll('#ntfSet .ntf-row:not(.ntf-hd):not(.ntf-hour)').length === 5 && [...document.querySelectorAll('#ntfSet .ntf-row:not(.ntf-hd):not(.ntf-hour) .sw:last-child input')].every(i => i.disabled)));
 await ev(() => document.querySelectorAll('#ntfSet .ntf-row:not(.ntf-hd)')[1].querySelector('.sw input').click()); await wait(page, 100);
 check('Progrès coupé dans l’app : enregistré', await ev(() => JSON.parse(localStorage.getItem('memo-gammes-v1')).settings.ntf.progress.app === false));
 check('aucune erreur JS', (await ev(() => window.__cnt.consoleErrors)).length === 0, await ev(() => window.__cnt.consoleErrors));
