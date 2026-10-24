@@ -9,7 +9,7 @@ const mode = (p, m) => click(p, `.mode-item[data-mode="${m}"]`);
 const sec = async (p, v) => { await mode(p, 'learn'); await W(250); await p.evaluate(v => document.querySelector('#secTabs [data-v="' + v + '"]').click(), v); await W(500); };
 const SC = [
   ['Paywall — offre annuelle', async p => { await click(p, '#premBtn'); await W(500); }],
-  ['Paywall — offre mensuelle', async p => { await click(p, '#premBtn'); await W(300); await click(p, '.pw-plan[data-p=month]'); await W(300); }],
+  ['Paywall — formule Famille choisie', async p => { await click(p, '#premBtn'); await W(300); await click(p, '.pw-pick[data-p=family]'); await W(900); }],
   ['Paywall — essai commencé', async p => { await click(p, '#premBtn'); await W(300); await click(p, '#pwGo'); await W(900); }],
   ['Paywall — après une tonalité verrouillée', async p => { await sec(p, 'scales'); await p.evaluate(() => document.querySelectorAll('#suKeyMode .su-km')[1].click()); await W(500); }],
   ['LEARN — écran de départ en gratuit (verrous)', async p => { await sec(p, 'chords'); }],
