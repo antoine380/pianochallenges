@@ -160,8 +160,13 @@ await ev(A, () => { const c = document.getElementById(document.getElementById('r
 await ev(A, () => window.__midi.disconnect(0)); await W(A, 300);
 const r1 = await ev(A, () => document.getElementById('rnScore').textContent); await W(A, 700); const r2 = await ev(A, () => document.getElementById('rnScore').textContent);
 check('jeu : débranché = fenêtre de pause et défilement arrêté', await vis(A, 'mdLost') && r1 === r2 && +r1 > 0, { r1, r2 });
-await ev(A, () => window.__midi.reconnect(0)); await W(A, 3600);
-check('jeu : rebranché = reprise après 3 s, le défilement repart', !(await vis(A, 'mdLost')) && +(await ev(A, () => document.getElementById('rnScore').textContent)) > +r2);
+// compte à rebours de 3 s (setInterval) puis le score monte d'environ 4 points/s : on attend la fermeture (≤ 6 s, machine chargée)
+// puis la reprise du score (≤ 3 s) au lieu d'un délai fixe de 3,6 s qui laissait parfois moins d'un point d'avance
+const tRe = Date.now(); await ev(A, () => window.__midi.reconnect(0)); await W(A, 2500);
+const stillAt25 = await vis(A, 'mdLost');
+const closed = await waitFor(A, () => { const e = document.getElementById('mdLost'); return !e || e.hidden; }, 6000); const dRe = Date.now() - tRe;
+const moved = closed && await waitFor(A, r2 => +document.getElementById('rnScore').textContent > +r2, 3000, r2);
+check('jeu : rebranché = reprise après 3 s, le défilement repart', stillAt25 && closed && moved && dRe >= 2900, { stillAt25, closed, moved, dRe, r2, now: await ev(A, () => document.getElementById('rnScore').textContent) });
 check('aucune erreur de page (jeu)', A.errs.length === 0, A.errs);
 await A.ctx.close();
 
