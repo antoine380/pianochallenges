@@ -32,6 +32,17 @@ for (const [w, h] of [[1024, 768], [1180, 820], [1440, 900]]) {
   await p.context().close();
 }
 
+// ---- 2. quiz à 2, personne ne marque : « Égalité ! » (avant : « Joueur 1 gagne ! » à 0 – 0) ----
+{ const p = await open(1180, 820);
+  await p.evaluate(() => document.querySelector('#modeNav [data-mode=quiz]').click()); await W(p, 800);
+  await p.evaluate(() => { document.querySelectorAll('#qzN button')[1].click(); document.querySelectorAll('#qzBots button')[0]?.click(); document.querySelectorAll('#qzCount button')[0].click(); document.querySelectorAll('#qzTime button')[0].click(); }); await W(p, 200);
+  await p.evaluate(() => [...document.querySelectorAll('#qzMode button')].find(b => /tour|turn/i.test(b.textContent)).click()); await W(p, 200);
+  await p.evaluate(() => document.getElementById('qzGo').click());
+  const t0 = Date.now(); while (Date.now() - t0 < 90000) { const st = await p.evaluate(() => { if (!document.getElementById('qzEnd').hidden) return 'end'; const n = document.getElementById('qzNext'); if (!n.hidden) n.click(); return ''; }); if (st) break; await W(p, 400); }
+  const end = await p.evaluate(() => !document.getElementById('qzEnd').hidden && document.getElementById('qzEndT').textContent);
+  check('quiz à 2 sans aucun point : « Égalité ! »', end === 'Égalité !', end);
+  await p.context().close(); }
+
 await b.close();
 console.log(fails.length ? `\n${fails.length} échec(s)` : '\nTout est bon');
 process.exit(fails.length ? 1 : 0);
