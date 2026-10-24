@@ -1,9 +1,13 @@
 // T6 : micro — refus, flux oscillateur (La 440, Do 261,6, accord), coupure, intervalles.
 import { launch, closeOnboarding, gotoExercise, state, URL } from './lib.mjs';
 const wait = (p, ms) => p.waitForTimeout(ms);
+// D28 (lot 4): choosing the mic opens « Préparer le micro » (#mpModal) once: close it, this test drives the mic itself
+const mpClose = async p => { if (await p.isVisible('#mpModal')) { await p.keyboard.press('Escape'); await p.waitForTimeout(300); } if (await p.isVisible('#mpModal')) await p.evaluate(() => document.querySelector('#mpModal [data-close]')?.click()); };
 { // refus
   const { browser, page } = await launch({ mode: 'ok', gum: 'deny' });
   await page.goto(URL); await wait(page, 1000);
+  await closeOnboarding(page, 'screen'); // first launch (Oct 2026): no input choice at start any more, « Changer » (#mdChange) of the MIDI panel opens it
+  await page.evaluate(() => document.getElementById('mdChange').click()); await wait(page, 300);
   await page.locator('#inOpts .inp-opt').nth(2).click(); await wait(page, 800);
   const s = await state(page);
   console.log('getUserMedia refusé → micTxt:', s.micTxt, '| notice:', (s.notice || '').slice(0, 60), '| modals:', s.modals, '| input mémorisé:', await page.evaluate(() => JSON.parse(localStorage.getItem('memo-gammes-v1')).settings.input), '| chip:', await page.evaluate(() => document.getElementById('inChip').title), '| erreurs', s.errors);
@@ -12,8 +16,10 @@ const wait = (p, ms) => p.waitForTimeout(ms);
 { // accepté : flux depuis un oscillateur
   const { browser, page } = await launch({ mode: 'ok', gum: 'osc' });
   await page.goto(URL); await wait(page, 1000);
+  await closeOnboarding(page, 'screen'); // first launch (Oct 2026): no input choice at start any more, « Changer » (#mdChange) of the MIDI panel opens it
+  await page.evaluate(() => document.getElementById('mdChange').click()); await wait(page, 300);
   await page.locator('#inOpts .inp-opt').nth(2).click(); await wait(page, 800);
-  await closeOnboarding(page, 'mic');
+  await closeOnboarding(page, 'mic'); await mpClose(page);
   let s = await state(page);
   console.log('micro accepté → micTxt:', s.micTxt, '| intervalles actifs:', s.intervals, '| AudioContext:', s.ac, '| chip:', await page.evaluate(() => document.getElementById('inChip').title));
   await gotoExercise(page, 'scales');
@@ -45,13 +51,13 @@ const wait = (p, ms) => p.waitForTimeout(ms);
   s = await state(page);
   console.log('clic #micBtn quand le micro est actif → avant', before, '| après: micTxt', s.micTxt, 'intervalles', s.intervals, 'pistes', await page.evaluate(() => window.__micStream.getTracks().map(t => t.readyState)));
   // coupure via le chip → clavier écran
-  await page.evaluate(() => document.getElementById('inChip').click()); await wait(page, 300);
+  await page.evaluate(() => document.getElementById('mdChange').click()); await wait(page, 300);
   await page.locator('#inOpts .inp-opt').nth(0).click(); await wait(page, 400);
   s = await state(page);
   console.log('passage au clavier écran → micTxt', s.micTxt, 'intervalles', s.intervals, 'pistes', await page.evaluate(() => window.__micStream.getTracks().map(t => t.readyState)), 'AudioContext', s.ac);
   // retour micro → nouveau getUserMedia, intervalles
-  await page.evaluate(() => document.getElementById('inChip').click()); await wait(page, 300);
-  await page.locator('#inOpts .inp-opt').nth(2).click(); await wait(page, 600);
+  await page.evaluate(() => document.getElementById('mdChange').click()); await wait(page, 300);
+  await page.locator('#inOpts .inp-opt').nth(2).click(); await wait(page, 600); await mpClose(page);
   s = await state(page); console.log('retour micro → intervalles', s.intervals, 'AudioContext', s.ac);
   // reload : le micro doit revenir après un premier toucher
   await page.reload(); await wait(page, 1000); await closeOnboarding(page, 'mic');

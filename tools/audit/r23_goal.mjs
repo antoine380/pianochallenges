@@ -10,7 +10,7 @@ const fails = []; const check = (n, ok, d) => { console.log((ok ? 'OK   ' : 'FAI
 const b = await chromium.launch(process.env.PW_CHROMIUM ? { executablePath: process.env.PW_CHROMIUM } : {});
 const STATE = { xp: 120, xpDays: {}, streak: { days: 0, last: '' }, gate: 'guest', onb: { done: 1 }, tourDone: 1, langV2: true, pwShown: 1,
   introSeen: { hub: 1, learn: 1, games: 1, chords: 1, scales: 1, settings: 1, progress: 1, notif: 1 }, stats: {}, mastery: {}, srs: {}, secStats: {},
-  notifs: { list: [], keys: {}, init: 1, nv2: 1 }, settings: { lang: 'fr', notation: 'fr', input: 'screen', uiSound: true } };
+  acct: { n: 2 }, notifs: { list: [], keys: {}, init: 1, nv2: 1 }, settings: { lang: 'fr', notation: 'fr', input: 'screen', uiSound: true } };
 
 async function open(vp, st = STATE) {
   const c = await b.newContext({ viewport: vp, hasTouch: vp.width < 900 });

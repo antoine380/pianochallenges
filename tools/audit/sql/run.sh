@@ -1,5 +1,6 @@
 #!/bin/bash
-# Teste supabase/migrations/2026-10-25_admin.sql dans un Postgres local jetable (base pc_admin_test, recréée à chaque fois).
+# Teste les migrations dans l'ordre (2026-10-24_leagues, 2026-10-25_admin, 2026-10-25_reminder) dans un Postgres local jetable
+# (base pc_admin_test, recréée à chaque fois), puis les vérifications du back office (checks.sql) et du rappel de leçon (run_reminder.sh).
 # Ligues : chargées si supabase/migrations/2026-10-24_leagues.sql existe (ou LEAGUES_SQL=<chemin>).
 # Usage (root, Postgres 16 local démarré : pg_ctlcluster 16 main start) : bash tools/audit/sql/run.sh
 set -e
@@ -22,11 +23,15 @@ if os.path.exists(lg):
   open(t+'/2.sql','w').write(l)
 PY
 cp supabase/migrations/2026-10-25_admin.sql $TMP/3.sql
+# rappel de leçon (lot 4) après l'admin, sans la planification (pg_cron n'existe pas ici)
+python3 -c "import sys; s=open('supabase/migrations/2026-10-25_reminder.sql').read(); open(sys.argv[1],'w').write(s.split('-- 5. chaque heure')[0])" $TMP/5.sql
 cp tools/audit/sql/checks.sql $TMP/4.sql
 chmod 644 $TMP/*.sql
 run(){ $P "psql -X -q -t -v ON_ERROR_STOP=1 -d $DB -f $1" 2>&1 | { grep -E "NOTICE:  ok|ERROR|ÉCHEC" || true; } | sed -E "s/^psql:[^ ]+ (NOTICE:  )?/  /"; test ${PIPESTATUS[0]} -eq 0; }
 run $TMP/0.sql; run $TMP/1.sql
 if [ -f $TMP/2.sql ]; then run $TMP/2.sql; echo "  (ligues installées)"; fi
 run $TMP/3.sql; run $TMP/3.sql   # deux fois : idempotente
+run $TMP/5.sql; run $TMP/5.sql; echo "  (rappel de leçon installé après l'admin, deux fois)"
 run $TMP/4.sql
-echo "SQL OK"
+echo "SQL OK (leagues → admin → reminder, back office)"
+bash tools/audit/sql/run_reminder.sh

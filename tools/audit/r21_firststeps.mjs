@@ -117,7 +117,7 @@ const { browser } = await launch({ mode: 'ok' }); // the shared browser (context
 // ---------- other levels: unchanged (chords right away)
 { const p = await ctx(browser, { w: 1280, h: 800 }); await p.goto(URL); await W(p, 1500);
   await note(p, 60); await W(p, 1000); await p.evaluate(() => document.querySelector('.fn-lv4 [data-v=notes]').click()); await W(p, 1600);
-  check('CA-03 niveau « J’ai des bases » : partie d’accords comme avant', await p.evaluate(() => document.body.dataset.page === 'practice' && /Majeur/.test(document.getElementById('prompt').textContent)));
+  check('CA-03 niveau « Je connais quelques notes » : test de placement D5 (lot 4), pas de partie', await p.evaluate(() => document.body.dataset.page === 'pp' && !!document.getElementById('plGo')));
   await p.context().close(); }
 
 // ---------- CA-05: 3 mistakes → 2 stars (CA-06 « Show me » on the way), 6 mistakes → 1 star
