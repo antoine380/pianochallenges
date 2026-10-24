@@ -100,7 +100,7 @@ check('theme-color suit le bouton jour/nuit', t0.join() === '#f1f2fb,#15122e' &&
 errs.push(...p.errs); await p.context().close();
 
 // 6) first run keys: no callout, no selection
-p = await (async () => { const c = await b.newContext({ viewport: { width: 375, height: 667 }, isMobile: true, hasTouch: true, locale: 'fr-FR' }); const pg = await c.newPage(); pg.errs = []; pg.on('pageerror', e => pg.errs.push(e.message)); await pg.goto(URL); await pg.waitForTimeout(800); return pg; })();
+p = await (async () => { const c = await b.newContext({ viewport: { width: 375, height: 667 }, isMobile: true, hasTouch: true, locale: 'fr-FR' }); const pg = await c.newPage(); pg.errs = []; pg.on('pageerror', e => pg.errs.push(e.message)); await pg.goto(URL); await pg.waitForTimeout(800); await pg.evaluate(() => document.querySelector('.fn-hwc[data-v=screen]')?.click()); await pg.waitForTimeout(300); return pg; })(); // D2 → D3
 check('« Joue ta première note » : touches sans sélection ni menu', await ev(p, () => { const k = document.querySelector('#fnKb .w'), s = getComputedStyle(k), e = new MouseEvent('contextmenu', { bubbles: true, cancelable: true }); k.dispatchEvent(e);
   return (s.webkitUserSelect || s.userSelect) === 'none' && e.defaultPrevented; }) && /\.fn-kb,\.fn-kb \*\{[^}]*-webkit-touch-callout:none/.test(css)); // Chromium has no -webkit-touch-callout: read from the CSS
 errs.push(...p.errs); await p.context().close();

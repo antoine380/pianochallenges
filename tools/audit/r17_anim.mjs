@@ -39,10 +39,11 @@ check('mouvement réduit : transition de couleur gardée, pas de transform', awa
 await page.emulateMedia({ reducedMotion: 'no-preference' });
 // 5. first C: confetti inside the card that is on screen
 { const c = await browser.newContext({ viewport: { width: 1280, height: 800 }, locale: 'fr-FR' }); await c.addInitScript(INIT.replace('${MODE}', 'ok')); const p = await c.newPage();
-  await p.goto(URL); await wait(p, 1500); const k = await p.locator('#fnKb [data-m="60"]').boundingBox(); await p.mouse.click(k.x + k.width / 2, k.y + k.height * .8); await wait(p, 100);
+  await p.goto(URL); await wait(p, 1500); if (await p.evaluate(() => !!document.querySelector('.fn-hwc[data-v=screen]'))) { await p.click('.fn-hwc[data-v=screen]'); await wait(p, 300); } // D2 → D3 (premier lancement remanié)
+  const k = await p.locator('#fnKb [data-m="60"]').boundingBox(); await p.mouse.click(k.x + k.width / 2, k.y + k.height * .8); await wait(p, 100);
   const cf = await p.evaluate(() => { const cv = document.querySelector('canvas.confetti'); return cv && { parent: cv.parentElement.className, w: cv.getBoundingClientRect().width, focus: document.activeElement && document.activeElement.id }; });
-  check('première note : confettis dessinés dans la carte visible', cf && cf.parent === 'fn-card' && cf.w > 300, cf);
-  await wait(p, 100); check('première note : le bouton a le focus tout de suite', await p.evaluate(() => document.activeElement && document.activeElement.id === 'fnGo'));
+  check('première note : confettis dessinés dans la carte visible', cf && /(^| )fn-card( |$)/.test(cf.parent) && cf.w > 300, cf);
+  await wait(p, 800); check('première note : le bouton a le focus dès D4 (niveau demandé après le Do)', await p.evaluate(() => document.activeElement && document.activeElement.id === 'fnGo'));
   await c.close(); }
 check('aucune erreur JS', errs.length === 0, errs);
 await browser.close();
