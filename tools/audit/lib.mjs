@@ -134,16 +134,20 @@ export async function state(page) {
   });
 }
 
+// « Quitter la partie ? » (24/10/2026) : une navigation en pleine activité demande d'abord ; les tests qui changent de page confirment.
+export async function leaveIfAsked(page) { if (await page.isVisible('#leaveModal')) { await page.click('#lvGo'); await page.waitForTimeout(300); } }
+
 // Va sur Learn > Accords et ouvre une tuile (page practice, phase idle).
 export async function gotoExercise(page, sec = 'chords') {
+  await leaveIfAsked(page);
   await page.evaluate(() => document.querySelector('.mode-item[data-mode="learn"]').click());
-  await page.waitForTimeout(400); await closeOnboarding(page);
+  await page.waitForTimeout(400); await leaveIfAsked(page); await closeOnboarding(page);
   await page.locator('#learnTiles .ptile').first().click();
   await page.waitForTimeout(400);
   await closeOnboarding(page);
   // si la section n'est pas la bonne, cliquer le bouton de section
   await page.evaluate(s => { const b = document.querySelector('#secTabs [data-v="' + s + '"]'); if (b) b.click(); }, sec);
-  await page.waitForTimeout(500); await closeOnboarding(page);
+  await page.waitForTimeout(500); await leaveIfAsked(page); await closeOnboarding(page);
 }
 
 export const midi = {
