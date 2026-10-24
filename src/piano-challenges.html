@@ -2644,6 +2644,157 @@ button.ac-chip{cursor:pointer} button.ac-chip[aria-pressed="false"]{color:var(--
 .fb-foot{display:flex;justify-content:flex-end;align-items:center;gap:12px}
 @media (max-height:520px) and (orientation:landscape){ .fb-body{padding:12px 16px;gap:6px} .fb-sub{display:none} .fb-body textarea{min-height:70px} }
 /* ==== fin Mesure ==== */
+/* ==== Import de morceaux (MIDI / MusicXML) ==== */
+/* PLAY: « Mes morceaux » chip in the bar (the catalogue keeps its rows) + first-use bubble; #impPanel = the collection (import tile + list), the preview and the tutorial: no page scroll, the lists scroll in their card */
+[data-page="free"] #freePanel{position:relative}
+.pc-mine .pc-n{font-style:normal;min-width:20px;height:20px;padding:0 6px;border-radius:999px;background:var(--m-play);color:#fff;font:800 .72rem/20px var(--f-body);text-align:center}
+.pc-mine[aria-pressed="true"] .pc-n{background:#fff;color:var(--m-play)}
+.imp-hb{flex:none;display:inline-flex;align-items:center;gap:5px;border:0;border-radius:999px;padding:4px 12px 4px 5px;background:var(--surface-2);color:var(--ink);font:800 .78rem/1.2 var(--f-body);cursor:pointer;white-space:nowrap;min-height:30px}
+.imp-hb>span[aria-hidden]{display:inline-grid;place-items:center;width:20px;height:20px;border-radius:50%;background:var(--m-play);color:#fff;font:800 .74rem/1 var(--f-display)}
+@media (hover:hover) and (pointer:fine){ .imp-hb:hover{box-shadow:inset 0 0 0 2px var(--m-play)} }
+.imp-tip{position:absolute;z-index:6;display:flex;flex-direction:column;gap:8px;width:max-content;max-width:min(270px,calc(100% - 8px));padding:12px 12px 10px 14px;border-radius:16px;background:var(--m-play);color:#fff;font:700 .84rem/1.3 var(--f-body);box-shadow:0 16px 30px -14px rgba(60,30,160,.7);animation:impTip .5s cubic-bezier(.3,1.5,.5,1) both}
+.imp-tip::before{content:"";position:absolute;top:-6px;left:calc(var(--ax,50%) - 7px);width:14px;height:14px;background:inherit;transform:rotate(45deg);border-radius:3px}
+.imp-tip b{font-weight:800}
+.imp-tip-r{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.imp-tip-go{border:0;border-radius:999px;background:#fff;color:#4a2fc0;font:800 .78rem/1 var(--f-body);padding:7px 12px;cursor:pointer}
+.imp-tip-x{border:0;background:rgba(255,255,255,.18);border-radius:50%;color:#fff;width:28px;height:28px;display:grid;place-items:center;cursor:pointer;padding:0}
+.imp-tip-x svg,.imp-x svg{width:14px;height:14px;stroke:currentColor;stroke-width:2.6;stroke-linecap:round;fill:none}
+.imp-x svg{width:18px;height:18px}
+@keyframes impTip{from{opacity:0;transform:translateY(-6px)}}
+.imp-add{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;border:2.5px dashed color-mix(in srgb,var(--m-play) 70%,transparent);border-radius:var(--r-lg,24px);background:color-mix(in srgb,var(--m-play) 8%,var(--surface));color:var(--ink);cursor:pointer;padding:14px;min-height:0;min-width:0}
+.imp-add svg{width:clamp(30px,6vh,52px);height:clamp(30px,6vh,52px);flex:none;stroke:var(--m-play);stroke-width:2.6;stroke-linecap:round;fill:none}
+.imp-add b{font:700 clamp(1rem,2.6vh,1.35rem)/1.15 var(--f-display);text-align:center}
+.imp-add small{font:700 .82rem/1.2 var(--f-body);color:var(--muted);text-align:center}
+.imp-add .imp-drop{font-weight:600;font-size:.76rem}
+@media (hover:hover) and (pointer:fine){ .imp-add:hover{border-style:solid;background:color-mix(in srgb,var(--m-play) 14%,var(--surface))} }
+body.imp-drag[data-page="free"] #freePanel::after{content:"";position:absolute;inset:0;border:3px dashed var(--m-play);border-radius:var(--r-xl);background:color-mix(in srgb,var(--m-play) 10%,transparent);pointer-events:none;z-index:7}
+.imp-fo{place-items:center;padding:0} .imp-fo svg{width:58%;height:58%;fill:none;stroke:#fff;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.imp-cb{flex:1 1 0;min-height:0;display:grid;grid-template-columns:minmax(200px,1fr) minmax(0,2fr);grid-template-rows:minmax(0,1fr);gap:clamp(10px,2vw,18px)}
+/* the panel */
+.imp{flex:1 1 0;min-height:0;display:flex}
+.imp[hidden],body.pc-kb[data-page="free"] .imp{display:none!important}
+.imp-card{position:relative;flex:1 1 0;min-width:0;min-height:0;display:flex;flex-direction:column;gap:clamp(6px,1.4vh,14px);background:var(--surface);border-radius:var(--r-xl,24px);padding:clamp(12px,2.2vh,22px);box-shadow:0 18px 40px -26px rgba(10,6,30,.5),inset 0 0 0 1px var(--line);overflow:hidden}
+.imp-top{display:flex;align-items:center;gap:clamp(8px,1.6vw,16px);padding-right:44px;flex:none;min-width:0}
+.imp-fi{flex:none;width:clamp(42px,8vh,64px);aspect-ratio:1/1.1;border-radius:14px;display:grid;place-items:end center;padding-bottom:7px;background:linear-gradient(160deg,#9b7dff,var(--m-play));color:#fff;font:700 clamp(.8rem,1.8vh,1.05rem)/1 var(--f-display);box-shadow:0 10px 20px -12px var(--m-play)}
+.imp-fi.err{place-items:center;padding:0;background:linear-gradient(160deg,#e8665c,#c9463c);font-size:1.6rem;box-shadow:0 10px 20px -12px #c9463c}
+.imp-tt{display:flex;flex-direction:column;gap:2px;min-width:0;flex:1 1 auto}
+.imp-k,.imp-opts h4,.imp-tracks h4,.imp-faq h4{margin:0;font:800 .7rem/1.2 var(--f-body);letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.imp-title{font:700 clamp(1.05rem,2.6vh,1.5rem)/1.15 var(--f-display);color:var(--ink);background:transparent;border:0;border-bottom:2px dashed var(--line);border-radius:0;padding:2px 0;width:100%;min-width:0}
+.imp-title:focus{outline:none;border-bottom:2px solid var(--m-play)}
+.imp-meta{font:700 clamp(.74rem,1.6vh,.9rem)/1.25 var(--f-body);color:var(--muted)}
+.imp-h{margin:0;font:700 clamp(1.1rem,2.8vh,1.6rem)/1.15 var(--f-display)}
+.imp-x{z-index:2}
+.imp-body{flex:1 1 0;min-height:0;display:grid;grid-template-columns:minmax(0,1.35fr) minmax(250px,1fr);gap:clamp(10px,2vw,20px)}
+.imp-tracks{display:flex;flex-direction:column;gap:6px;min-height:0}
+.imp-tl{flex:1 1 0;min-height:0;overflow-y:auto;display:flex;flex-direction:column;gap:clamp(5px,1vh,10px);padding:2px;overscroll-behavior:contain}
+.imp-trk{display:grid;grid-template-columns:6px minmax(0,1fr) auto;align-items:center;gap:6px 12px;padding:clamp(7px,1.3vh,12px) 12px;border-radius:16px;background:var(--surface-2)}
+.imp-trk.off .imp-ti{opacity:.6}
+.imp-bar{align-self:stretch;border-radius:4px;background:var(--rc)}
+.imp-ti{display:flex;flex-direction:column;gap:2px;min-width:0}
+.imp-ti b{font:800 .95rem/1.2 var(--f-body);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.imp-ti small{font:600 .76rem/1.2 var(--f-body);color:var(--muted)}
+.imp-roll{width:100%;height:clamp(12px,2.2vh,20px);border-radius:4px;background:color-mix(in srgb,var(--ink) 8%,transparent);margin-top:3px}
+.imp-seg{display:inline-flex;flex-wrap:wrap;gap:4px}
+.imp-seg button,.imp-pill{border:0;border-radius:999px;padding:6px 11px;min-height:34px;background:var(--surface);color:var(--ink);font:800 .8rem/1.1 var(--f-body);cursor:pointer;box-shadow:inset 0 0 0 1px var(--line)}
+.imp-opts .imp-seg button,.imp-pill{background:var(--surface-2);box-shadow:none}
+.imp-seg button[aria-pressed="true"],.imp-pill[aria-pressed="true"]{background:var(--m-play);color:#fff;box-shadow:none}
+.imp-role button[data-r="lh"][aria-pressed="true"]{background:#c9463c}
+.imp-role button[data-r="both"][aria-pressed="true"]{background:#0e7490}
+.imp-role button[data-r="off"][aria-pressed="true"]{background:#6b6790}
+.imp-seg button:disabled{opacity:.45;cursor:not-allowed}
+.imp-opts{display:flex;flex-direction:column;gap:clamp(6px,1.3vh,12px);min-height:0;overflow-y:auto;background:color-mix(in srgb,var(--surface-2) 55%,var(--surface));border-radius:20px;padding:clamp(10px,1.8vh,18px);overscroll-behavior:contain}
+.imp-opt{display:flex;flex-direction:column;gap:4px}
+.imp-opt>span{font:800 .8rem/1.2 var(--f-body)}
+.imp-tr{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.imp-sq{width:34px;height:34px;border-radius:10px;border:0;background:var(--surface-2);color:var(--ink);font:800 1.1rem/1 var(--f-body);cursor:pointer}
+.imp-sq:disabled{opacity:.4}
+.imp-tr b{min-width:2.2em;text-align:center;font:700 1.05rem/1 var(--f-display)}
+.imp-ck{display:flex;align-items:center;gap:8px;font:700 .84rem/1.25 var(--f-body);cursor:pointer}
+.imp-ck input{width:20px;height:20px;accent-color:var(--m-play);flex:none}
+.imp-key{margin:0;font:700 .88rem/1.3 var(--f-body)}
+.imp-priv{margin:0;font:600 .76rem/1.35 var(--f-body);color:var(--muted)}
+.imp-priv::before{content:"🔒 ";filter:grayscale(1)}
+.imp-foot{display:flex;align-items:center;justify-content:flex-end;gap:14px;flex:none}
+.imp-foot .imp-priv{flex:1 1 auto;min-width:0}
+.imp-go{min-width:min(330px,40%);display:inline-flex;align-items:center;justify-content:center;gap:10px;font-size:clamp(1rem,2.2vh,1.2rem);min-height:48px;flex:none}
+.imp-go kbd{font:800 .72rem/1 var(--f-body);background:rgba(255,255,255,.22);border-radius:6px;padding:3px 6px}
+.imp-go:disabled{opacity:.5}
+.imp-acts{display:flex;gap:10px;flex-wrap:wrap;flex:none}
+.imp-errb{display:flex;align-items:center;gap:16px;padding-right:44px;flex:1 1 auto;min-height:0}
+.imp-errb h3{margin:0 0 4px;font:700 1.25rem/1.2 var(--f-display)} .imp-errb p{margin:0;font:600 .95rem/1.4 var(--f-body);color:var(--muted);max-width:60ch}
+/* manage */
+.imp-mine{list-style:none;margin:0;padding:2px;flex:1 1 0;min-height:0;overflow-y:auto;display:flex;flex-direction:column;gap:8px;overscroll-behavior:contain}
+.imp-mine li{display:flex;align-items:center;gap:10px;padding:8px 10px 8px 12px;border-radius:16px;background:var(--surface-2);min-height:54px}
+.imp-mine .imp-empty{flex-direction:column;align-items:flex-start;gap:8px;padding:16px 18px;background:transparent;box-shadow:inset 0 0 0 1.5px var(--line)}
+.imp-empty>b{font:700 1rem/1.3 var(--f-display)}
+.imp-empty ol{margin:0;padding:0;list-style:none;counter-reset:st;display:flex;flex-direction:column;gap:6px}
+.imp-empty ol li{counter-increment:st;display:flex;align-items:center;gap:8px;font:700 .86rem/1.2 var(--f-body);color:var(--muted);background:none;min-height:0;padding:0}
+.imp-empty ol li::before{content:counter(st);width:22px;height:22px;border-radius:50%;background:color-mix(in srgb,var(--m-play) 16%,transparent);color:var(--ink);display:grid;place-items:center;font:700 .74rem/1 var(--f-display);flex:none}
+.imp-dot{flex:none;width:12px;height:12px;border-radius:50%;background:var(--rc)}
+.imp-mt{flex:1 1 auto;min-width:0;display:flex;flex-direction:column;gap:2px}
+.imp-mt b{font:800 .95rem/1.2 var(--f-body);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.imp-mt small{font:600 .76rem/1.2 var(--f-body);color:var(--muted)}
+.imp-st{flex:none;color:var(--gold,#e0a800);letter-spacing:.1em;font-size:.85rem}
+.imp-mine .btn{min-height:38px;padding:6px 14px;flex:none}
+.imp-mine li>.imp-title{flex:1 1 auto;font-size:1rem}
+.imp-ic{display:inline-flex;gap:2px;flex:none}
+.imp-ic button{width:36px;height:36px;border:0;border-radius:10px;background:transparent;color:var(--ink);display:grid;place-items:center;cursor:pointer}
+.imp-ic svg{width:19px;height:19px;stroke:currentColor;stroke-width:2;fill:none;stroke-linecap:round;stroke-linejoin:round}
+@media (hover:hover) and (pointer:fine){ .imp-ic button:hover{background:var(--surface)} }
+.imp-danger{background:#c9463c!important;color:#fff}
+/* help */
+.imp-hh{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;padding-right:44px;flex:none}
+.imp-dev{font:800 .74rem/1 var(--f-body);padding:5px 10px;border-radius:999px;background:color-mix(in srgb,var(--m-play) 14%,transparent);color:var(--ink)}
+.imp-scroll{flex:1 1 0;min-height:0;overflow-y:auto;display:flex;flex-direction:column;gap:clamp(8px,1.6vh,16px);overscroll-behavior:contain;padding:2px}
+.imp-steps{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:clamp(8px,1.4vw,14px)}
+.imp-steps li{position:relative;display:flex;flex-direction:column;gap:4px;padding:10px 12px 12px;border-radius:18px;background:var(--surface-2);min-width:0}
+.imp-ill{display:block;height:clamp(54px,11vh,90px)}
+.imp-ill svg{width:100%;height:100%}
+.imp-ill .f2{fill:var(--surface);stroke:var(--line);stroke-width:2}
+.imp-ill .ln{fill:none;stroke:var(--ink);stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round}
+.imp-ill .ln.ac2{stroke:var(--m-play)} .imp-ill .ln.w{stroke:#fff}
+.imp-ill .ac{fill:var(--m-play)} .imp-ill text{fill:#fff;font:800 9px var(--f-body)}
+.imp-ill .hand{fill:var(--surface);stroke:var(--ink);stroke-width:2;stroke-linejoin:round}
+.imp-ill .wk{fill:#fff;stroke:#c9c6e4;stroke-width:.8} .imp-ill .wk.lh{fill:#f2b6b0} .imp-ill .wk.rh{fill:#c9bcff}
+.imp-ill .tl{fill:#c9463c;font-size:8px} .imp-ill .tr2{fill:var(--m-play);font-size:8px}
+.imp-n{position:absolute;top:8px;left:10px;width:24px;height:24px;border-radius:50%;background:var(--m-play);color:#fff;display:grid;place-items:center;font:700 .8rem/1 var(--f-display)}
+.imp-steps b{font:700 clamp(.9rem,1.9vh,1.05rem)/1.2 var(--f-display)}
+.imp-sx p{margin:0 0 4px;font:600 clamp(.76rem,1.55vh,.86rem)/1.38 var(--f-body);color:var(--muted)}
+.imp-sx p:first-child{color:var(--ink)}
+.imp-faq{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px 12px}
+.imp-faq h4{grid-column:1/-1}
+.imp-faq details{border-radius:14px;background:var(--surface-2);padding:8px 12px}
+.imp-faq summary{cursor:pointer;font:800 .86rem/1.3 var(--f-body);list-style:none;display:flex;justify-content:space-between;gap:8px}
+.imp-faq summary::-webkit-details-marker{display:none}
+.imp-faq summary::after{content:"+";font:700 1rem/1 var(--f-display);color:var(--m-play)}
+.imp-faq details[open] summary::after{content:"–"}
+.imp-faq details p{margin:6px 0 0;font:600 .82rem/1.4 var(--f-body);color:var(--muted)}
+/* iPad portrait and small screens */
+@media (max-width:900px){ .imp-steps{grid-template-columns:repeat(2,minmax(0,1fr))} }
+@media (max-width:900px) and (orientation:portrait){ .imp-cb{grid-template-columns:minmax(0,1fr);grid-template-rows:auto minmax(0,1fr)} .imp-cb .imp-add{min-height:clamp(64px,16vh,170px)} }
+@media (max-width:700px){
+  .imp-body{display:flex;flex-direction:column;overflow-y:auto;overscroll-behavior:contain}
+  .imp-tracks,.imp-opts{flex:none;min-height:auto}
+  .imp-tl{flex:none;overflow:visible}
+  .imp-opts{overflow:visible}
+  .imp-steps{grid-template-columns:minmax(0,1fr)} .imp-steps li{display:grid;grid-template-columns:76px minmax(0,1fr);column-gap:10px;align-items:start} .imp-steps li .imp-ill{grid-row:1/3;height:60px;margin-top:22px} .imp-steps li b{margin-top:4px;grid-column:2} .imp-steps li .imp-sx{grid-column:2}
+  .imp-trk{grid-template-columns:6px minmax(0,1fr)} .imp-trk .imp-role{grid-column:2;flex-wrap:nowrap} .imp-role button{padding:6px 8px;font-size:.74rem;min-height:32px}
+  .imp-foot{flex-direction:column;align-items:stretch;gap:6px} .imp-foot .imp-priv{font-size:.7rem} .imp-go{width:100%}
+  .imp-faq{grid-template-columns:minmax(0,1fr)}
+  .imp-cb{display:flex;flex-direction:column} .imp-cb .imp-add{flex:none;flex-direction:row;gap:10px;padding:10px} .imp-cb .imp-add small{display:none}
+  .imp-hb>span:not([aria-hidden]){display:none} .imp-hb{padding:4px}
+  .imp-mine li{flex-wrap:wrap} .imp-mine .imp-mt{flex-basis:calc(100% - 140px)}
+}
+@media (max-height:500px) and (orientation:landscape){
+  .imp-card{padding:10px 12px;gap:6px} .imp-fi{width:38px;border-radius:10px;padding-bottom:4px}
+  .imp-body{grid-template-columns:minmax(0,1.3fr) minmax(220px,1fr)} .imp-trk{grid-template-columns:6px minmax(0,1fr);padding:6px 10px;gap:4px 10px} .imp-trk .imp-role{grid-column:2;flex-wrap:nowrap} .imp-role button{padding:5px 9px;min-height:30px;font-size:.74rem}
+  .imp-go{min-height:40px} .imp-foot .imp-priv{font-size:.7rem}
+  .imp-steps{grid-template-columns:repeat(4,minmax(0,1fr))} .imp-ill{height:46px}
+  .imp-cb .imp-add{padding:8px} .imp-add .imp-drop{display:none}
+}
+@media (max-width:640px){ .pcat-bar{gap:4px} .pcat-bar .pc-chip{padding:6px 8px;gap:5px;font-size:.78rem} .pc-mine span{display:none} }
+@media (prefers-reduced-motion:reduce){ .imp-tip{animation:none} }
+/* ==== fin Import de morceaux ==== */
 </style>
 
 <script>if(window.Capacitor&&window.webkit&&window.webkit.messageHandlers&&window.webkit.messageHandlers.bridge)document.documentElement.classList.add("native");</script>
@@ -2794,6 +2945,7 @@ button.ac-chip{cursor:pointer} button.ac-chip[aria-pressed="false"]{color:var(--
     <div class="pcat-bar" id="pcBar" role="toolbar"></div>
     <div class="pc-rows" id="playSongs"></div>
     <div class="gr" id="grPanel" hidden></div>
+    <div class="imp" id="impPanel" hidden></div>
   </section>
 
   <section class="mode-page su" id="setupPanel" hidden>
@@ -3508,7 +3660,39 @@ const TXT = {
     accRH:"Main droite", accRHs:"l'accord, au-dessus du Do central", accLH:"Main gauche", accLHs:"1 · 5 · 8 de l'accord, en dessous", accSplitC:"Do central", accSplit:"Séparation", accMeasure:(a,b,c,d)=>"Mesure "+a+" / "+b+" · Boucle "+c+" / "+d,
     accJust:"Justesse", accReg:"Régularité", accWaitShort:"Attente", accLegOk:"parfait ±80 ms", accLegMid:"un peu tôt / tard", accLegBad:"manquée ou fausse", accLegWOk:"du premier coup", accLegWMid:"après une erreur", accUpHint:"2 boucles parfaites → +5 bpm", accUpNow:n=>"+5 bpm : "+n,
     accEnd:"Terminer", accGrid:"Grille", accDone:"Bien joué !", accDoneLow:"Partie terminée", accNew:"Nouveau record", accNext:"Pattern suivant", accAgain:"Rejouer", accSetup:"Changer les réglages", accStarTW:"en rythme seulement",
-    trkOpt:"Aider à améliorer l'app", trkOptS:"Envoie des statistiques anonymes (écrans ouverts, parties jouées, type de clavier). Jamais ce que tu joues ni qui tu es.", fbBtnT:"Signaler un problème", fbSub:"Dis-nous ce qui ne va pas ou ce que tu aimerais voir. La version de l'app et le type d'appareil sont joints.", fbBug:"Problème", fbIdea:"Idée", fbOther:"Autre", fbPh:"Que s'est-il passé ? Sur quel écran ?", fbContactPh:"Ton e-mail, si tu veux une réponse (facultatif)", fbCancel:"Annuler", fbSendT:"Envoyer", fbShort:"Écris au moins quelques mots.", fbSending:"Envoi…", fbThanks:"Merci ! Ton message est bien arrivé.", fbFail:"Pas de connexion pour l'instant. Réessaie dans un moment.", fbCtx:v=>"Joint : version "+v},
+    trkOpt:"Aider à améliorer l'app", trkOptS:"Envoie des statistiques anonymes (écrans ouverts, parties jouées, type de clavier). Jamais ce que tu joues ni qui tu es.", fbBtnT:"Signaler un problème", fbSub:"Dis-nous ce qui ne va pas ou ce que tu aimerais voir. La version de l'app et le type d'appareil sont joints.", fbBug:"Problème", fbIdea:"Idée", fbOther:"Autre", fbPh:"Que s'est-il passé ? Sur quel écran ?", fbContactPh:"Ton e-mail, si tu veux une réponse (facultatif)", fbCancel:"Annuler", fbSendT:"Envoyer", fbShort:"Écris au moins quelques mots.", fbSending:"Envoi…", fbThanks:"Merci ! Ton message est bien arrivé.", fbFail:"Pas de connexion pour l'instant. Réessaie dans un moment.", fbCtx:v=>"Joint : version "+v,
+    impRow:"Mes morceaux", impCount:n=>n?n+(n>1?" morceaux":" morceau")+" · sur cet appareil":"Tes fichiers MIDI et MusicXML", impTracks:n=>n+(n>1?" pistes":" piste"),
+    impTx:{how:"Comment faire ?", howL:"Comment importer un morceau ?", drop:"ou glisse le fichier ici", tip:"Nouveau : joue tes propres fichiers MIDI et MusicXML !", add:"Importer un morceau", addS:"Fichier MIDI ou MusicXML", notes:"notes",
+      track:"Piste", drums:"Canal 10 · batterie (ignorée d'office)", range:(a,b)=>"Notes de "+a+" à "+b, role:{rh:"Main droite",lh:"Main gauche",both:"Les deux",off:"—"},
+      roleL:{rh:"Cette piste va à la main droite",lh:"Cette piste va à la main gauche",both:"Les deux mains, séparées au Do central",off:"Ignorer cette piste"},
+      previewK:"Import · aperçu", editK:"Réglages du morceau", titleL:"Titre du morceau", tracksH:"Pistes détectées", optsH:"Options", versionH:"Version", easy:"Facile · main droite", two:"Deux mains", noLh:"Aucune piste en main gauche",
+      trH:"Transposer (demi-tons)", trDown:"Un demi-ton plus bas", trUp:"Un demi-ton plus haut", easyKey:"Tonalité facile", qH:"Rythme", qOff:"Tel quel",
+      mono:"Une note à la fois en main droite (la plus aiguë)", keyL:k=>"Tonalité probable : "+k, priv:"Le fichier reste sur cet appareil : il n'est jamais envoyé ni partagé.",
+      play:"Jouer", errT:"Ce fichier ne s'ouvre pas", other:"Choisir un autre fichier", kept:(n,m)=>n+" / "+m+" morceaux · gardés sur cet appareil", empty:"Aucun morceau pour l'instant. Importe ton premier fichier !",
+      ok:"OK", cancel:"Annuler", del:"Supprimer", delQ:x=>"Supprimer « "+x+" » ?", delS:"Le morceau, ses étoiles et ton record disparaissent de cet appareil.", rec:n=>"record "+n, settingsL:"Réglages (mains, transposition, rythme)", renL:"Renommer"},
+    impErr:{format:"Ce n'est pas un fichier MIDI ou MusicXML. Formats acceptés : .mid, .midi, .musicxml, .xml et .mxl. Un PDF, un MP3 ou un fichier de logiciel (.mscz, .gp) ne marche pas : exporte-le d'abord en MIDI ou en MusicXML.",
+      size:"Ce fichier dépasse 2 Mo. Un morceau en MIDI ou MusicXML fait d'habitude moins de 200 Ko : vérifie que c'est le bon fichier.", empty:"Ce fichier est vide.",
+      midiBad:"Ce fichier MIDI est abîmé ou incomplet. Télécharge-le à nouveau, ou essaie une autre version.", xmlBad:"Ce fichier MusicXML est abîmé ou incomplet. Exporte-le à nouveau depuis ton logiciel de partition.",
+      timewise:"Ce MusicXML est écrit mesure par mesure (« timewise »), une forme rare. Exporte-le à nouveau en MusicXML standard (MuseScore le fait).", mxlBad:"Ce fichier .mxl ne s'ouvre pas. Exporte-le en .musicxml non compressé.",
+      mxlNoDs:"Ce navigateur ne sait pas décompresser les fichiers .mxl. Exporte le morceau en .musicxml (non compressé), ou mets ton navigateur à jour.", protected:"Ce fichier est protégé (chiffré) : il ne peut pas être lu. Seuls les fichiers non protégés s'importent.",
+      noNotes:"Ce fichier ne contient aucune note à jouer.", full:"Tu as déjà 50 morceaux sur cet appareil. Supprimes-en un dans « Mes morceaux » pour en importer un nouveau.", load:"Pas moyen de charger l'outil d'import. Vérifie ta connexion et réessaie."},
+    impGm:["Piano","Percussions mélodiques","Orgue","Guitare","Basse","Cordes","Ensemble","Cuivres","Anches","Flûtes","Synthé (mélodie)","Synthé (nappe)","Effets synthé","Instruments du monde","Percussions","Effets sonores","Batterie"],
+    impHelp:{title:"Comment importer un morceau ?", s1t:"Trouve un fichier", s2t:"Enregistre-le", s3t:"Importe-le", s4t:"Choisis les mains et joue",
+      s1:["Un fichier MIDI (.mid) contient les notes d'un morceau, sans le son : c'est ce qu'un clavier enregistre. Un fichier MusicXML (.musicxml ou .mxl) est une partition écrite que les logiciels de musique savent lire.",
+        "On en trouve sur les sites de partitions et de fichiers MIDI (cherche « titre du morceau midi »). Le logiciel MuseScore exporte toute partition en MusicXML (Fichier › Exporter).",
+        "Choisis des fichiers que tu as le droit d'utiliser (domaine public, libres ou achetés), pour ton usage personnel."],
+      s4:["L'app trouve les pistes : la plus aiguë va à la main droite, la plus grave à la main gauche, la batterie est ignorée. Change si besoin.","Puis « Jouer », ou un Do seul sur ton clavier. Le morceau reste dans « Mes morceaux »."],
+      dev:{iosApp:{name:"Sur ton iPad ou iPhone (app)", save:["Dans Safari, touche le lien du fichier puis « Télécharger » : il arrive dans l'app Fichiers, dossier Téléchargements.","Depuis Mail ou Messages : touche le fichier, puis Partager › Enregistrer dans Fichiers."], imp:["Touche « Importer un morceau », puis « Parcourir » dans le petit menu : l'app Fichiers s'ouvre.","Va dans Récents ou Téléchargements et touche ton fichier."]},
+        iosWeb:{name:"Sur ton iPad ou iPhone (Safari)", save:["Touche le lien du fichier puis « Télécharger » : il arrive dans l'app Fichiers, dossier Téléchargements.","Depuis Mail ou Messages : touche le fichier, puis Partager › Enregistrer dans Fichiers."], imp:["Touche « Importer un morceau », puis « Parcourir » : l'app Fichiers s'ouvre.","Va dans Récents ou Téléchargements et touche ton fichier."]},
+        android:{name:"Sur ton appareil Android", save:["Touche le lien du fichier : il arrive dans le dossier Téléchargements.","Depuis un e-mail : touche la pièce jointe, puis Télécharger."], imp:["Touche « Importer un morceau » : le sélecteur de fichiers s'ouvre.","Choisis Téléchargements (ou Fichiers), puis ton fichier."]},
+        mac:{name:"Sur ton Mac", save:["Clique le lien du fichier : il arrive dans le dossier Téléchargements (Finder).","Depuis Mail : glisse la pièce jointe sur le bureau ou dans Téléchargements."], imp:["Clique « Importer un morceau » et choisis ton fichier dans Téléchargements.","Ou glisse le fichier depuis le Finder directement sur cette page."]},
+        win:{name:"Sur ton PC Windows", save:["Clique le lien du fichier : il arrive dans le dossier Téléchargements (Explorateur de fichiers).","Depuis un e-mail : enregistre la pièce jointe dans Téléchargements."], imp:["Clique « Importer un morceau » et choisis ton fichier dans Téléchargements.","Ou glisse le fichier depuis l'Explorateur directement sur cette page."]},
+        other:{name:"Sur ton appareil", save:["Télécharge le fichier : il arrive d'habitude dans le dossier Téléchargements."], imp:["Touche ou clique « Importer un morceau », puis choisis ton fichier.","Sur un ordinateur, tu peux aussi le glisser sur cette page."]}},
+      faqH:"Questions fréquentes",
+      faq:[["Le morceau est trop difficile","Choisis la version Facile (main droite seule), coche « Une note à la fois », passe le rythme en 1/8, ou touche « Tonalité facile » (moins de touches noires). Dans le lecteur, le mode Attente attend chaque note et la vitesse descend jusqu'à 50 %."],
+        ["Il y a trop de notes, ou de la batterie","Un fichier MIDI a souvent plusieurs pistes (batterie, basse, cordes…). Garde la mélodie en main droite et la basse en main gauche, et mets « — » sur les autres. La batterie (canal 10) est ignorée d'office."],
+        ["Le fichier ne s'ouvre pas","Formats acceptés : .mid, .midi, .musicxml, .xml et .mxl, 2 Mo au plus. Un PDF, un MP3 ou un fichier de logiciel (.mscz, .gp) doit d'abord être exporté en MIDI ou MusicXML. Un fichier protégé (chiffré) ne peut pas être lu. Si un .mxl refuse de s'ouvrir, exporte-le en .musicxml non compressé."],
+        ["Mes morceaux sont-ils partagés ?","Non. Le fichier est lu sur cet appareil et y reste (dans l'app ou dans ce navigateur) : il n'est jamais envoyé sur Internet, ni sur ton compte, ni aux autres joueurs. Il n'apparaît donc pas sur tes autres appareils."]]}},
   en:{help:"Help", helpTitle:"How it works", helpOk:"Let's go", tutNext:"Next", tutPrev:"Previous", close:"Close", stepOf:(i,n)=>"Step "+i+" of "+n,
     tut:[{h:"Read the challenge",p:"A scale, a chord or a progression appears with a countdown. Picture the notes in your head before the bar runs out."},
          {h:"Pick and set up",p:"Before each game, pick the scale or chord as a card, then the timer and your helps. “Show the notes” shows the note names, “Light up the keys” shows where to play, and “Step-by-step help” gives nothing at first, then a hint every 8 s; the notes you find stay lit and a card builds up to help you remember them. Less help = more XP."},
@@ -3725,7 +3909,39 @@ const TXT = {
     accRH:"Right hand", accRHs:"the chord, above middle C", accLH:"Left hand", accLHs:"1 · 5 · 8 of the chord, below", accSplitC:"Middle C", accSplit:"Split", accMeasure:(a,b,c,d)=>"Bar "+a+" / "+b+" · Loop "+c+" / "+d,
     accJust:"Accuracy", accReg:"Steadiness", accWaitShort:"Wait", accLegOk:"perfect ±80 ms", accLegMid:"a bit early / late", accLegBad:"missed or wrong", accLegWOk:"first time", accLegWMid:"after a mistake", accUpHint:"2 perfect loops → +5 bpm", accUpNow:n=>"+5 bpm: "+n,
     accEnd:"Finish", accGrid:"Grid", accDone:"Well played!", accDoneLow:"Game over", accNew:"New record", accNext:"Next pattern", accAgain:"Play again", accSetup:"Change the settings", accStarTW:"in time only",
-    trkOpt:"Help improve the app", trkOptS:"Sends anonymous statistics (screens opened, games played, keyboard type). Never what you play or who you are.", fbBtnT:"Report a problem", fbSub:"Tell us what is wrong or what you would like to see. The app version and the device type are attached.", fbBug:"Problem", fbIdea:"Idea", fbOther:"Other", fbPh:"What happened? On which screen?", fbContactPh:"Your e-mail, if you want a reply (optional)", fbCancel:"Cancel", fbSendT:"Send", fbShort:"Write at least a few words.", fbSending:"Sending…", fbThanks:"Thanks! Your message has arrived.", fbFail:"No connection right now. Try again in a moment.", fbCtx:v=>"Attached: version "+v}
+    trkOpt:"Help improve the app", trkOptS:"Sends anonymous statistics (screens opened, games played, keyboard type). Never what you play or who you are.", fbBtnT:"Report a problem", fbSub:"Tell us what is wrong or what you would like to see. The app version and the device type are attached.", fbBug:"Problem", fbIdea:"Idea", fbOther:"Other", fbPh:"What happened? On which screen?", fbContactPh:"Your e-mail, if you want a reply (optional)", fbCancel:"Cancel", fbSendT:"Send", fbShort:"Write at least a few words.", fbSending:"Sending…", fbThanks:"Thanks! Your message has arrived.", fbFail:"No connection right now. Try again in a moment.", fbCtx:v=>"Attached: version "+v,
+    impRow:"My songs", impCount:n=>n?n+(n>1?" songs":" song")+" · on this device":"Your MIDI and MusicXML files", impTracks:n=>n+(n>1?" tracks":" track"),
+    impTx:{how:"How does it work?", howL:"How to import a song?", drop:"or drop the file here", tip:"New: play your own MIDI and MusicXML files!", add:"Import a song", addS:"MIDI or MusicXML file", notes:"notes",
+      track:"Track", drums:"Channel 10 · drums (ignored by default)", range:(a,b)=>"Notes from "+a+" to "+b, role:{rh:"Right hand",lh:"Left hand",both:"Both",off:"—"},
+      roleL:{rh:"This track goes to the right hand",lh:"This track goes to the left hand",both:"Both hands, split at middle C",off:"Ignore this track"},
+      previewK:"Import · preview", editK:"Song settings", titleL:"Song title", tracksH:"Tracks found", optsH:"Options", versionH:"Version", easy:"Easy · right hand", two:"Two hands", noLh:"No track for the left hand",
+      trH:"Transpose (semitones)", trDown:"One semitone down", trUp:"One semitone up", easyKey:"Easy key", qH:"Rhythm", qOff:"As played",
+      mono:"One note at a time in the right hand (the highest)", keyL:k=>"Probable key: "+k, priv:"The file stays on this device: it is never uploaded or shared.",
+      play:"Play", errT:"This file won't open", other:"Choose another file", kept:(n,m)=>n+" / "+m+" songs · kept on this device", empty:"No song yet. Import your first file!",
+      ok:"OK", cancel:"Cancel", del:"Delete", delQ:x=>"Delete “"+x+"”?", delS:"The song, its stars and your best score are removed from this device.", rec:n=>"best "+n, settingsL:"Settings (hands, transpose, rhythm)", renL:"Rename"},
+    impErr:{format:"This isn't a MIDI or MusicXML file. Accepted formats: .mid, .midi, .musicxml, .xml and .mxl. A PDF, an MP3 or a program's own file (.mscz, .gp) won't work: export it to MIDI or MusicXML first.",
+      size:"This file is over 2 MB. A MIDI or MusicXML song is usually under 200 KB: check it is the right file.", empty:"This file is empty.",
+      midiBad:"This MIDI file is damaged or incomplete. Download it again, or try another version.", xmlBad:"This MusicXML file is damaged or incomplete. Export it again from your notation program.",
+      timewise:"This MusicXML is written bar by bar (“timewise”), a rare form. Export it again as standard MusicXML (MuseScore does).", mxlBad:"This .mxl file won't open. Export it as uncompressed .musicxml.",
+      mxlNoDs:"This browser can't unzip .mxl files. Export the song as .musicxml (uncompressed), or update your browser.", protected:"This file is protected (encrypted): it can't be read. Only unprotected files can be imported.",
+      noNotes:"This file has no notes to play.", full:"You already have 50 songs on this device. Delete one in “My songs” to import a new one.", load:"The import tool couldn't load. Check your connection and try again."},
+    impGm:["Piano","Chromatic percussion","Organ","Guitar","Bass","Strings","Ensemble","Brass","Reed","Pipe","Synth lead","Synth pad","Synth effects","World instruments","Percussion","Sound effects","Drums"],
+    impHelp:{title:"How to import a song?", s1t:"Find a file", s2t:"Save it", s3t:"Import it", s4t:"Pick the hands and play",
+      s1:["A MIDI file (.mid) holds the notes of a song, without the sound: it is what a keyboard records. A MusicXML file (.musicxml or .mxl) is a written score that music programs can read.",
+        "You'll find them on sheet-music and MIDI-file websites (search for “song title midi”). The MuseScore program exports any score to MusicXML (File › Export).",
+        "Use files you have the right to use (public domain, free or bought), for your personal use."],
+      s4:["The app finds the tracks: the highest goes to the right hand, the lowest to the left hand, drums are ignored. Change it if needed.","Then “Play”, or a lone C on your keyboard. The song stays in “My songs”."],
+      dev:{iosApp:{name:"On your iPad or iPhone (app)", save:["In Safari, tap the file's link then “Download”: it goes to the Files app, Downloads folder.","From Mail or Messages: tap the file, then Share › Save to Files."], imp:["Tap “Import a song”, then “Browse” in the small menu: the Files app opens.","Go to Recents or Downloads and tap your file."]},
+        iosWeb:{name:"On your iPad or iPhone (Safari)", save:["Tap the file's link then “Download”: it goes to the Files app, Downloads folder.","From Mail or Messages: tap the file, then Share › Save to Files."], imp:["Tap “Import a song”, then “Browse”: the Files app opens.","Go to Recents or Downloads and tap your file."]},
+        android:{name:"On your Android device", save:["Tap the file's link: it goes to the Downloads folder.","From an e-mail: tap the attachment, then Download."], imp:["Tap “Import a song”: the file picker opens.","Choose Downloads (or Files), then your file."]},
+        mac:{name:"On your Mac", save:["Click the file's link: it goes to the Downloads folder (Finder).","From Mail: drag the attachment to the desktop or to Downloads."], imp:["Click “Import a song” and choose your file in Downloads.","Or drag the file from the Finder straight onto this page."]},
+        win:{name:"On your Windows PC", save:["Click the file's link: it goes to the Downloads folder (File Explorer).","From an e-mail: save the attachment to Downloads."], imp:["Click “Import a song” and choose your file in Downloads.","Or drag the file from File Explorer straight onto this page."]},
+        other:{name:"On your device", save:["Download the file: it usually goes to the Downloads folder."], imp:["Tap or click “Import a song”, then choose your file.","On a computer, you can also drag it onto this page."]}},
+      faqH:"Frequent questions",
+      faq:[["The song is too hard","Pick the Easy version (right hand only), tick “One note at a time”, set the rhythm to 1/8, or tap “Easy key” (fewer black keys). In the player, Wait mode waits for each note and the speed goes down to 50%."],
+        ["Too many notes, or drums","A MIDI file often has several tracks (drums, bass, strings…). Keep the melody in the right hand and the bass in the left hand, and set the others to “—”. Drums (channel 10) are ignored by default."],
+        ["The file won't open","Accepted formats: .mid, .midi, .musicxml, .xml and .mxl, 2 MB at most. A PDF, an MP3 or a program's own file (.mscz, .gp) must first be exported to MIDI or MusicXML. A protected (encrypted) file can't be read. If an .mxl refuses to open, export it as uncompressed .musicxml."],
+        ["Are my songs shared?","No. The file is read on this device and stays there (in the app or in this browser): it is never sent over the Internet, to your account or to other players. So it doesn't appear on your other devices either."]]}}
 };
 const t = k => TXT[S.settings.lang][k];
 // data shown to people (scores, XP, other players' names): thousands separators in the app's language,
@@ -6697,7 +6913,7 @@ function playOpen(){ const f=$("playFrame"); const src="play/index.html"+playHas
   $("playPanel").hidden=false; }
 addEventListener("message",e=>{ if(SAME_ORIGIN!=="*" && e.origin!==SAME_ORIGIN) return; const d=e.data; if(d && d.source==="clavio" && d.type==="free") openPage("free"); if(d && d.source==="clavio" && d.type==="home" && page==="play") openPage(playHash.startsWith("#game")?"games":"free");
   if(d && d.source==="clavio" && d.type==="askLeave" && page==="play" && !LV.on) lvOpen(actNow()||{k:"play",song:!playHash.startsWith("#game")},()=>{ try{ $("playFrame").contentWindow.clavioLeave(); }catch(e){} }); }); // the frame's back button during a song / a game
-function openPlayWith(h){ const sg=/^#song=([a-z]+)/.exec(h); if(sg && !isPremium() && !window.PC_SONGS && typeof pcLoad==="function"){ pcLoad().then(()=>openPlayWith(h)).catch(()=>{}); return; } if(sg && premSong(sg[1])){ pwOpen("songs"); return; } playHash=h; if(page==="play"){ playOpen(); setNav(); } else openPage("play"); }
+function openPlayWith(h){ const sg=/^#song=([a-z]+)(?=&|$)/.exec(h); /* #song=imp:<id> = a song imported on this device: never behind the paywall */ if(sg && !isPremium() && !window.PC_SONGS && typeof pcLoad==="function"){ pcLoad().then(()=>openPlayWith(h)).catch(()=>{}); return; } if(sg && premSong(sg[1])){ pwOpen("songs"); return; } playHash=h; if(page==="play"){ playOpen(); setNav(); } else openPage("play"); }
 function goMode(m){ closeDrawer(); if(m==="quiz") openPage("quiz"); else if(m==="learn") openPage("learn"); else if(m==="play"){ PC.view="cat"; openPage("free"); } else openPage("games"); }
 document.querySelectorAll("[data-mode]").forEach(b=>b.addEventListener("click",()=>{ const m=b.dataset.mode; if(page==="daily" && game && game.daily){ guardLeave(()=>{ game=null; goMode(m); }); return; } goMode(m); }));
 function playClose(){ const f=$("playFrame"); if(f.getAttribute("src")) f.removeAttribute("src"); $("playPanel").hidden=true; }
@@ -8653,7 +8869,7 @@ addEventListener("resize",()=>{ if(page==="acc" && ACC.view==="play" && ACC.run)
 const APP_BUILD="dev"; // remplacé par tools/build.py par la date de construction (version.txt)
 const TRK={q:[], t:0, off:false, anon:null, sent:0, errs:[], errT:0, errSeen:new Set(), errOn:null, ports:new Set(), first:false};
 const RC={flags:{}, daily:{}, at:0};
-const TRK_NAMES=new Set(["app_open","first_note","input_mode","midi_connected","pp_lesson_done","learn_end","game_end","quiz_end","duel_end","goal_reached","badge","signup","login","play","feedback","acc_end","song_open"]);
+const TRK_NAMES=new Set(["song_import","app_open","first_note","input_mode","midi_connected","pp_lesson_done","learn_end","game_end","quiz_end","duel_end","goal_reached","badge","signup","login","play","feedback","acc_end","song_open"]);
 function trkDevLocal(){ return location.protocol==="file:" || (/^https?:$/.test(location.protocol) && /^(localhost|127\.|0\.0\.0\.0|\[::1\])/.test(location.hostname)); }
 function trkNet(){ if(!trkDevLocal()) return true; try{ return localStorage.getItem("pc-trk-test")==="1"; }catch(e){ return false; } }
 function trkOn(){ return S.settings.analytics!==false && RC.flags.analytics!==false && !TRK.off; }
@@ -8742,7 +8958,7 @@ function trkGame(game, score){ if(!DU.mode) track("game_end", {game, score:score
 { const o=accFinish; accFinish=function(){ const r=o.apply(this, arguments); try{ const x=ACC.res; if(x && ACC.view==="end"){ const P=ACC_PATS[x.id]||{};
   track("acc_end", {style:P.st||"", pattern:x.id, stars:x.stars|0, tempo:x.bpm|0, target:x.tg|0, mode:x.mode||"", pct:Math.round(((x.s||{}).just||0)*100), full:!!x.full}); } }catch(e){} return r; }; }
 // PLAY : ouverture d'un morceau du catalogue (#song=<id>&arr=<version>), pas quand le paywall l'arrête
-{ const o=openPlayWith; openPlayWith=function(h){ const r=o.apply(this, arguments); try{ const m=/^#song=([a-z]+)(?:&arr=(\d))?/.exec(h||"");
+{ const o=openPlayWith; openPlayWith=function(h){ const r=o.apply(this, arguments); try{ const m=/^#song=([a-z]+)(?=&|$)(?:&arr=(\d))?/.exec(h||""); /* not for a song imported on this device (#song=imp:…): only song_import */
   if(m && playHash===h) track("song_open", {id:m[1], arr:+(m[2]||1)}); }catch(e){} return r; }; }
 // badges : seulement si l'app a une fonction de badges (badgeCheck renvoie les nouveaux badges) ; sinon rien
 function trkBadge(id){ if(id!=null) track("badge", {id:String(id)}); }
@@ -8779,6 +8995,208 @@ document.addEventListener("keydown", e=>{ if(e.code==="Escape" && !$("fbModal").
 rcLoad();
 setTimeout(()=>{ trkAnon(); track("app_open", {first:TRK.first, ret:(()=>{ try{ const l=+localStorage.getItem("pc-trk-last")||0; localStorage.setItem("pc-trk-last", String(Date.now())); return l?Math.min(999,Math.floor((Date.now()-l)/864e5)):-1; }catch(e){ return -1; } })(), midi:!!(S.midi&&S.midi.hw)}); }, 1500);
 /* ==== fin Mesure ==== */
+/* ==== Import de morceaux (MIDI / MusicXML, chantier IMPORT) ==== */
+// PLAY › « Mes morceaux » : a row after the catalogue with an « Import a song » tile and the player's own songs. The file is read here
+// (assets/js/song-import.js, loaded on demand), converted to the catalogue's format and kept on this device only (IndexedDB "pc-import",
+// memory fallback window.PC_IMP_MEM shared with the player frame). Never uploaded; track() only gets {fmt, n, ok, err}.
+// Views of the PLAY page (PC.view): "imp" = preview (tracks, hands, options), "help" = how to import (4 steps + FAQ), "mine" = manage list.
+const IMP={list:[], loaded:false, loading:null, draft:null, err:null, editId:null, ren:null, del:null, from:"cat", step:0};
+const IMP_COL=["#6a3fd1","#2c56d6","#0e7490","#1f7a52","#b4461a","#a3306b","#c9463c","#8a3fd1"];
+const impT = k => t("impTx")[k];
+function impLib(){ if(window.PCImp) return Promise.resolve();
+  if(!IMP.loading) IMP.loading=new Promise((res,rej)=>{ const sc=document.createElement("script"); sc.src="assets/js/song-import.js"; sc.async=true; sc.onload=()=>res(); sc.onerror=()=>{ IMP.loading=null; rej(); }; document.head.appendChild(sc); });
+  return IMP.loading; }
+async function impRefresh(){ try{ await impLib(); IMP.list=await PCImp.db.list(); }catch(e){ IMP.list=[]; } IMP.loaded=true; }
+const impDur = sec => { sec=Math.max(1,Math.round(sec)); return sec<60 ? sec+" s" : Math.floor(sec/60)+" min"+(sec%60?" "+String(sec%60).padStart(2,"0"):""); };
+const impNote = m => (S.settings.notation==="fr"?PC_FR:PC_EN)[((m%12)+12)%12]+(Math.floor(m/12)-1);
+const impKey = k => { const n=(S.settings.notation==="fr"?PC_FR:PC_EN)[k.pc]; return S.settings.lang==="fr" ? (k.minor ? n.toLowerCase()+" mineur" : n+" majeur") : n+(k.minor?" minor":" major"); };
+function impDevice(){ const ua=navigator.userAgent||"", ios=/iPad|iPhone|iPod/.test(ua) || (/Macintosh/.test(ua) && navigator.maxTouchPoints>1);
+  if(ios) return isApp() ? "iosApp" : "iosWeb"; if(/Android/.test(ua)) return "android"; if(/Macintosh/.test(ua)) return "mac"; if(/Windows/.test(ua)) return "win"; return "other"; }
+// ---- the hidden file input: no accept attribute (iOS greys out .musicxml / .mxl, which have no system type): the content is checked after reading
+function impPick(){ let i=$("impFile"); if(!i){ i=document.createElement("input"); i.type="file"; i.id="impFile"; i.hidden=true; i.setAttribute("aria-hidden","true"); i.tabIndex=-1; document.body.appendChild(i);
+    i.addEventListener("change",()=>{ const f=i.files&&i.files[0]; i.value=""; if(f) impFile(f); }); }
+  i.click(); }
+function impFail(code){ IMP.err=code; IMP.draft=null; PC.view="imp"; renderPlaySongs(); try{ track("song_import",{fmt:"?",n:0,ok:false,err:code}); }catch(e){} }
+async function impFile(f){ IMP.editId=null; impTipDone();
+  try{ await impLib(); }catch(e){ impFail("load"); return; }
+  if(!IMP.loaded) await impRefresh();
+  if(IMP.list.length>=PCImp.MAX_SONGS){ impFail("full"); return; }
+  if(f.size>PCImp.MAX_BYTES){ impFail("size"); return; }
+  let model; try{ model=await PCImp.parse(f.name, await f.arrayBuffer()); }catch(e){ impFail(e&&e.code||"format"); return; }
+  const roles=PCImp.autoRoles(model), lh=model.tracks.some(x=>roles[x.id]==="lh"||roles[x.id]==="both");
+  IMP.err=null; IMP.draft={model, title:model.title, opts:{roles, tr:0, mono:true, q:4, lv:lh?2:1}};
+  PC.view="imp"; PC.kb=false; if(page!=="free") openPage("free"); renderPlaySongs(); }
+function impConv(){ const d=IMP.draft; return PCImp.convert(d.model,d.opts); }
+async function impSave(){ const d=IMP.draft; if(!d) return null; const c=impConv(); if(!c.notes.length) return null;
+  const old=IMP.editId ? IMP.list.find(r=>r.id===IMP.editId) : null;
+  const rec={ id: old?old.id:PCImp.newId(), title:(d.title||"").trim().slice(0,60)||d.model.title, fmt:d.model.fmt, created: old?old.created:Date.now(), n:c.notes.length,
+    dur:Math.round(c.end/c.bpm*60), model:d.model, opts:{...d.opts}, best: old&&old.best || {stars:0,score:0} };
+  const where=await PCImp.db.put(rec); IMP.mem = where==="mem";
+  if(!old) try{ track("song_import",{fmt:d.model.fmt, n:c.notes.length, ok:true}); }catch(e){}
+  await impRefresh(); return rec; }
+async function impPlay(){ const d=IMP.draft; if(!d) return; const rec=await impSave(); if(!rec) return; const lv=d.opts.lv===2&&impConv().nL?2:1;
+  IMP.draft=null; IMP.editId=null; PC.view="cat"; openPlayWith("#song=imp:"+rec.id+"&arr="+lv); }
+function impPlayRec(r){ const lv=r.opts&&r.opts.lv===2?2:1; openPlayWith("#song=imp:"+r.id+"&arr="+lv); }
+function impEdit(r){ IMP.editId=r.id; IMP.err=null; IMP.draft={model:r.model, title:r.title, opts:{...r.opts, roles:{...r.opts.roles}}}; PC.view="imp"; renderPlaySongs(); }
+const impBest = r => { const b=pcBest(); return Math.max(r.best&&r.best.stars|0, b["imp:"+r.id]|0, b["imp:"+r.id+"@2"]|0); };
+// ---- first-use bubble (once per device: closed, tutorial opened or a song imported)
+const impTipOn = () => { try{ return !localStorage.getItem("pc-imp-tip"); }catch(e){ return false; } };
+function impTipDone(){ try{ localStorage.setItem("pc-imp-tip","1"); }catch(e){} document.querySelectorAll(".imp-tip").forEach(e=>e.remove()); const hb=$("impHelpBtn"); if(hb) hb.hidden=false; }
+function impHelp(from){ impTipDone(); IMP.from=from||PC.view||"cat"; PC.view="help"; PC.kb=false; renderPlaySongs(); }
+
+// ---- the « My songs » chip of the PLAY bar (the catalogue keeps its 5 rows: no page scroll) and its first-use bubble
+const IMP_ICO='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3.5 7.5a2 2 0 012-2h4l2 2h7a2 2 0 012 2v8a2 2 0 01-2 2h-13a2 2 0 01-2-2z"/><path d="M12 10.5v6M9 13.5h6"/></svg>';
+function impChip(){ const bar=$("pcBar"); if(!bar) return; const mine=["imp","help","mine"].includes(PC.view) && !PC.kb;
+  if(mine){ bar.hidden=false; bar.querySelectorAll("[data-lv]").forEach(x=>x.setAttribute("aria-pressed","false")); }
+  const n=IMP.list.length, b=document.createElement("button"); b.type="button"; b.className="pc-chip pc-mine"; b.id="pcMine"; b.setAttribute("aria-pressed",mine);
+  b.innerHTML=IMP_ICO+'<span></span>'+(n?'<em class="pc-n"></em>':''); b.querySelector("span").textContent=t("impRow"); if(n) b.querySelector("em").textContent=n;
+  b.setAttribute("aria-label",t("impRow")+(n?" · "+t("impCount")(n):"")); b.title=impT("addS");
+  b.onclick=()=>{ impTipDone(); PC.kb=false; PC.view = PC.view==="mine" ? "cat" : "mine"; IMP.ren=IMP.del=null; renderPlaySongs(); };
+  const fr=$("pcFree"); bar.insertBefore(b, fr||null); }
+function impTip(){ document.getElementById("impTip")?.remove(); const c=$("pcMine"); if(!c || !impTipOn() || page!=="free" || PC.view!=="cat" || PC.kb) return;
+  const panel=$("freePanel"), pr=panel.getBoundingClientRect(), r=c.getBoundingClientRect(); if(!r.width || r.right>innerWidth+1) return;
+  const tip=document.createElement("div"); tip.id="impTip"; tip.className="imp-tip"; tip.setAttribute("role","note");
+  tip.innerHTML='<b></b><span class="imp-tip-r"><button type="button" class="imp-tip-go"></button><button type="button" class="imp-tip-x"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button></span>';
+  tip.querySelector("b").textContent=impT("tip"); tip.querySelector(".imp-tip-go").textContent=impT("how"); tip.querySelector(".imp-tip-go").onclick=()=>impHelp("cat");
+  tip.querySelector(".imp-tip-x").setAttribute("aria-label",t("close")); tip.querySelector(".imp-tip-x").onclick=impTipDone;
+  panel.appendChild(tip); const w=tip.offsetWidth, x=Math.max(4, Math.min(r.left+r.width/2-pr.left-w/2, pr.width-w-4));
+  tip.style.left=x+"px"; tip.style.top=(r.bottom-pr.top+10)+"px"; tip.style.setProperty("--ax",(r.left+r.width/2-pr.left-x)+"px"); }
+addEventListener("resize",()=>{ if(page==="free") impTip(); });
+// ---- small SVG preview of a track (a piano roll squeezed into one line)
+function impRoll(x,col){ const ns=x.notes, end=Math.max(1,...ns.map(n=>n.s+n.d)), lo=x.lo, sp=Math.max(1,x.hi-lo), k=Math.max(1,Math.ceil(ns.length/600));
+  let r=""; for(let i=0;i<ns.length;i+=k){ const n=ns[i]; r+='<rect x="'+(n.s/end*300).toFixed(1)+'" y="'+(19-(n.m-lo)/sp*16).toFixed(1)+'" width="'+Math.max(1.4,n.d/end*300-.6).toFixed(1)+'" height="3" rx="1.2"/>'; }
+  return '<svg class="imp-roll" viewBox="0 0 300 24" preserveAspectRatio="none" aria-hidden="true" style="fill:'+col+'">'+r+'</svg>'; }
+const impTrackName = (x,i) => x.name || (x.drum ? t("impGm")[16] : x.prog>=0 ? t("impGm")[x.prog>>3] : impT("track")+" "+(i+1));
+const IMP_ROLE_COL={rh:"#7a5bf5", lh:"#c9463c", both:"#0e7490", off:"#8a86a8"};
+
+// ---- the preview screen
+function impRender(){ const box=$("impPanel"); box.innerHTML=""; box.dataset.v=PC.view;
+  if(PC.view==="help") return impRenderHelp(box); if(PC.view==="mine") return impRenderMine(box);
+  const card=document.createElement("div"); card.className="imp-card"; box.appendChild(card);
+  const x=document.createElement("button"); x.type="button"; x.className="gr-x imp-x"; x.id="impClose"; x.setAttribute("aria-label",t("close")); x.innerHTML='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>';
+  x.onclick=()=>{ IMP.draft=null; IMP.err=null; IMP.editId=null; PC.view="cat"; renderPlaySongs(); }; card.appendChild(x);
+  if(IMP.err || !IMP.draft){ const code=IMP.err||"format", e=t("impErr");
+    card.insertAdjacentHTML("beforeend",'<div class="imp-errb" role="alert"><span class="imp-fi err" aria-hidden="true">!</span><div><h3></h3><p></p></div></div><div class="imp-acts"><button type="button" class="btn primary" id="impRetry"></button><button type="button" class="btn" id="impErrHelp"></button></div>');
+    card.querySelector("h3").textContent=impT("errT"); card.querySelector(".imp-errb p").textContent=e[code]||e.format;
+    $("impRetry").textContent=code==="full"?t("impRow"):impT("other"); $("impRetry").onclick=code==="full"?()=>{ PC.view="mine"; renderPlaySongs(); }:impPick;
+    $("impErrHelp").textContent=impT("how"); $("impErrHelp").onclick=()=>impHelp("imp"); return; }
+  const d=IMP.draft, m=d.model, c=impConv(), key=PCImp.keyOf(m,d.opts), kk={pc:((key.pc+d.opts.tr)%12+12)%12, minor:key.minor};
+  const ext=m.fmt==="mid"?".mid":m.fmt==="mxl"?".mxl":".xml";
+  card.insertAdjacentHTML("beforeend",'<div class="imp-top"><span class="imp-fi" aria-hidden="true"></span><div class="imp-tt"><span class="imp-k"></span><input id="impTitle" class="imp-title" maxlength="60" autocomplete="off" spellcheck="false"><small class="imp-meta" id="impMeta"></small></div><button type="button" class="imp-hb" id="impHelp2"><span aria-hidden="true">?</span><span></span></button></div>'
+    +'<div class="imp-body"><section class="imp-tracks" aria-labelledby="impTrH"><h4 id="impTrH"></h4><div class="imp-tl" id="impTracks"></div></section>'
+    +'<section class="imp-opts"><h4></h4><div class="imp-opt"><span></span><div class="imp-seg" id="impLv" role="group"></div></div>'
+    +'<div class="imp-opt"><span></span><div class="imp-tr"><button type="button" class="imp-sq" id="impTrM">−</button><b id="impTrV"></b><button type="button" class="imp-sq" id="impTrP">+</button><button type="button" class="imp-pill" id="impEasy"></button></div></div>'
+    +'<div class="imp-opt"><span></span><div class="imp-seg" id="impQ" role="group"></div></div>'
+    +'<label class="imp-ck"><input type="checkbox" id="impMono"><span></span></label>'
+    +'<p class="imp-key" id="impKeyL"></p></section></div>'
+    +'<div class="imp-foot"><p class="imp-priv"></p><button type="button" class="btn primary imp-go" id="impGo"><span></span><kbd>'+(S.settings.notation==="fr"?"Do":"C")+'</kbd></button></div>');
+  card.querySelector(".imp-fi").textContent=ext; card.querySelector(".imp-k").textContent=IMP.editId?impT("editK"):impT("previewK");
+  const ti=$("impTitle"); ti.value=d.title; ti.setAttribute("aria-label",impT("titleL")); ti.oninput=()=>{ d.title=ti.value.replace(/[<>&"]/g,""); };
+  ti.onkeydown=e=>{ if(e.key==="Enter") ti.blur(); };
+  $("impHelp2").lastChild.textContent=impT("how"); $("impHelp2").setAttribute("aria-label",impT("howL")); $("impHelp2").onclick=()=>impHelp("imp");
+  $("impMeta").textContent=[t("impTracks")(m.tracks.length), impDur(c.end/c.bpm*60), c.bpm+" BPM", m.meter.join("/"), c.notes.length+" "+impT("notes")].join(" · ");
+  card.querySelector("#impTrH").textContent=impT("tracksH");
+  const tl=$("impTracks");
+  m.tracks.forEach((x,i)=>{ const role=d.opts.roles[x.id]||"off", row=document.createElement("div"); row.className="imp-trk"+(role==="off"?" off":""); row.dataset.t=x.id; row.style.setProperty("--rc",IMP_ROLE_COL[role]);
+    row.innerHTML='<i class="imp-bar" aria-hidden="true"></i><div class="imp-ti"><b></b><small></small>'+impRoll(x,IMP_ROLE_COL[role])+'</div><div class="imp-seg imp-role" role="group"></div>';
+    row.querySelector("b").textContent=impTrackName(x,i);
+    row.querySelector("small").textContent=x.drum ? impT("drums") : impT("range")(impNote(x.lo),impNote(x.hi))+" · "+x.notes.length+" "+impT("notes");
+    const g=row.querySelector(".imp-role"); g.setAttribute("aria-label",impTrackName(x,i));
+    ["rh","lh","both","off"].forEach(k=>{ const b=document.createElement("button"); b.type="button"; b.dataset.r=k; b.textContent=impT("role")[k]; b.title=impT("roleL")[k]; b.setAttribute("aria-pressed",role===k);
+      b.onclick=()=>{ d.opts.roles[x.id]=k; const lh=impConv().nL>0; if(!lh) d.opts.lv=1; else if(k==="lh"||k==="both") d.opts.lv=2; impRender(); }; g.appendChild(b); });
+    tl.appendChild(row); });
+  const opts=card.querySelector(".imp-opts"), labs=opts.querySelectorAll(".imp-opt>span");
+  opts.querySelector("h4").textContent=impT("optsH"); labs[0].textContent=impT("versionH"); labs[1].textContent=impT("trH"); labs[2].textContent=impT("qH");
+  const seg=(el,items,cur,fn)=>items.forEach(([v,l,dis])=>{ const b=document.createElement("button"); b.type="button"; b.dataset.v=v; b.textContent=l; b.setAttribute("aria-pressed",cur===v); if(dis){ b.disabled=true; b.title=impT("noLh"); } b.onclick=()=>{ fn(v); impRender(); }; el.appendChild(b); });
+  seg($("impLv"),[[1,impT("easy")],[2,impT("two"),!c.nL]],c.nL?d.opts.lv:1,v=>d.opts.lv=v); $("impLv").setAttribute("aria-label",impT("versionH"));
+  seg($("impQ"),[[0,impT("qOff")],[2,"1/8"],[4,"1/16"]],d.opts.q,v=>d.opts.q=v); $("impQ").setAttribute("aria-label",impT("qH"));
+  $("impTrV").textContent=(d.opts.tr>0?"+":"")+d.opts.tr; $("impTrM").disabled=d.opts.tr<=-6; $("impTrP").disabled=d.opts.tr>=6;
+  $("impTrM").setAttribute("aria-label",impT("trDown")); $("impTrP").setAttribute("aria-label",impT("trUp"));
+  $("impTrM").onclick=()=>{ d.opts.tr=Math.max(-6,d.opts.tr-1); impRender(); }; $("impTrP").onclick=()=>{ d.opts.tr=Math.min(6,d.opts.tr+1); impRender(); };
+  const ez=PCImp.easyTr(m,d.opts); $("impEasy").textContent=impT("easyKey"); $("impEasy").setAttribute("aria-pressed",d.opts.tr===ez && ez!==0); $("impEasy").onclick=()=>{ d.opts.tr=ez; impRender(); };
+  $("impMono").checked=!!d.opts.mono; $("impMono").onchange=e=>{ d.opts.mono=e.target.checked; impRender(); }; opts.querySelector(".imp-ck span").textContent=impT("mono");
+  $("impKeyL").textContent=impT("keyL")(impKey(kk));
+  card.querySelector(".imp-priv").textContent=impT("priv");
+  $("impGo").firstChild.textContent=impT("play"); $("impGo").disabled=!c.notes.length; $("impGo").onclick=impPlay; }
+
+// ---- « My songs »: play, settings, rename, delete
+function impRenderMine(box){ const card=document.createElement("div"); card.className="imp-card imp-coll"; box.appendChild(card);
+  card.insertAdjacentHTML("beforeend",'<button type="button" class="gr-x imp-x" id="impClose"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>'
+    +'<div class="imp-top"><span class="imp-fi imp-fo" aria-hidden="true">'+IMP_ICO+'</span><div class="imp-tt"><h3 class="imp-h"></h3><small class="imp-meta"></small></div><button type="button" class="imp-hb" id="impHelpBtn"><span aria-hidden="true">?</span><span></span></button></div>'
+    +'<div class="imp-cb"><button type="button" class="imp-add" id="impAdd">'+'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg><b></b><small></small><small class="imp-drop"></small></button><ul class="imp-mine" id="impMine"></ul></div>');
+  $("impClose").setAttribute("aria-label",t("close")); $("impClose").onclick=()=>{ PC.view="cat"; renderPlaySongs(); };
+  card.querySelector(".imp-h").textContent=t("impRow"); card.querySelector(".imp-meta").textContent=impT("kept")(IMP.list.length,window.PCImp?PCImp.MAX_SONGS:50);
+  const hb=$("impHelpBtn"); hb.lastChild.textContent=impT("how"); hb.setAttribute("aria-label",impT("howL")); hb.onclick=()=>impHelp("mine");
+  const add=$("impAdd"); add.querySelector("b").textContent=impT("add"); add.querySelector("small").textContent=impT("addS"); add.querySelector(".imp-drop").textContent=matchMedia("(hover:hover) and (pointer:fine)").matches?impT("drop"):"";
+  add.setAttribute("aria-label",impT("add")+" · "+impT("addS")); add.onclick=impPick;
+  const ul=$("impMine");
+  if(!IMP.list.length){ const H=t("impHelp"), li=document.createElement("li"); li.className="imp-empty"; li.innerHTML='<b></b><ol></ol><button type="button" class="imp-hb" id="impHelpBtn2"><span aria-hidden="true">?</span><span></span></button>';
+    li.querySelector("b").textContent=impT("empty"); [H.s1t,H.s2t,H.s3t,H.s4t].forEach(x=>{ const e=document.createElement("li"); e.textContent=x; li.querySelector("ol").appendChild(e); });
+    li.querySelector("#impHelpBtn2").lastChild.textContent=impT("howL"); li.querySelector("#impHelpBtn2").onclick=()=>impHelp("mine"); ul.appendChild(li); }
+  IMP.list.forEach((r,i)=>{ const li=document.createElement("li"); li.dataset.imp=r.id; li.style.setProperty("--rc",IMP_COL[i%IMP_COL.length]); const st=impBest(r);
+    if(IMP.ren===r.id){ li.innerHTML='<i class="imp-dot"></i><input class="imp-title" maxlength="60"><button type="button" class="btn primary" data-a="ok"></button><button type="button" class="btn" data-a="no"></button>';
+      const inp=li.querySelector("input"); inp.value=r.title; inp.setAttribute("aria-label",impT("titleL"));
+      const ok=async()=>{ const v=inp.value.replace(/[<>&"]/g,"").trim().slice(0,60); if(v){ r.title=v; await PCImp.db.put(r); await impRefresh(); } IMP.ren=null; impRender(); };
+      li.querySelector("[data-a=ok]").textContent=impT("ok"); li.querySelector("[data-a=ok]").onclick=ok; li.querySelector("[data-a=no]").textContent=impT("cancel"); li.querySelector("[data-a=no]").onclick=()=>{ IMP.ren=null; impRender(); };
+      inp.onkeydown=e=>{ if(e.key==="Enter") ok(); if(e.key==="Escape"){ e.stopPropagation(); IMP.ren=null; impRender(); } }; ul.appendChild(li); setTimeout(()=>{ inp.focus(); inp.select(); },0); return; }
+    if(IMP.del===r.id){ li.innerHTML='<i class="imp-dot"></i><span class="imp-mt"><b></b><small></small></span><button type="button" class="btn imp-danger" data-a="yes"></button><button type="button" class="btn" data-a="no"></button>';
+      li.querySelector("b").textContent=impT("delQ")(r.title); li.querySelector("small").textContent=impT("delS");
+      li.querySelector("[data-a=yes]").textContent=impT("del"); li.querySelector("[data-a=yes]").onclick=async()=>{ await PCImp.db.del(r.id); try{ const b=pcBest(); delete b["imp:"+r.id]; delete b["imp:"+r.id+"@2"]; localStorage.setItem("clavio:best",JSON.stringify(b)); }catch(e){} IMP.del=null; await impRefresh(); impRender(); };
+      li.querySelector("[data-a=no]").textContent=impT("cancel"); li.querySelector("[data-a=no]").onclick=()=>{ IMP.del=null; impRender(); }; ul.appendChild(li); return; }
+    li.innerHTML='<i class="imp-dot"></i><span class="imp-mt"><b></b><small></small></span><span class="imp-st" aria-hidden="true"></span><button type="button" class="btn primary" data-a="play"></button><span class="imp-ic">'
+      +'<button type="button" data-a="set"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h10M18 7h2M4 17h4M12 17h8"/><circle cx="16" cy="7" r="2"/><circle cx="10" cy="17" r="2"/></svg></button>'
+      +'<button type="button" data-a="ren"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20h4L19 9l-4-4L4 16z"/></svg></button>'
+      +'<button type="button" data-a="del"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 7h14M10 7V4h4v3M7 7l1 13h8l1-13"/></svg></button></span>';
+    li.querySelector("b").textContent=r.title; li.querySelector("small").textContent=[r.n+" "+impT("notes"), impDur(r.dur), r.best&&r.best.score?impT("rec")(r.best.score):""].filter(Boolean).join(" · ");
+    li.querySelector(".imp-st").textContent=pcStarTxt(st);
+    const A=k=>li.querySelector('[data-a="'+k+'"]');
+    A("play").textContent=impT("play"); A("play").onclick=()=>impPlayRec(r);
+    A("set").setAttribute("aria-label",impT("settingsL")+" · "+r.title); A("set").title=impT("settingsL"); A("set").onclick=()=>impEdit(r);
+    A("ren").setAttribute("aria-label",impT("renL")+" · "+r.title); A("ren").title=impT("renL"); A("ren").onclick=()=>{ IMP.ren=r.id; IMP.del=null; impRender(); };
+    A("del").setAttribute("aria-label",impT("del")+" · "+r.title); A("del").title=impT("del"); A("del").onclick=()=>{ IMP.del=r.id; IMP.ren=null; impRender(); };
+    ul.appendChild(li); }); }
+
+// ---- « How to import a song? »: 4 illustrated steps (texts for the device in hand) + a short FAQ
+const IMP_ILL=[
+  '<svg viewBox="0 0 96 72" aria-hidden="true"><rect x="22" y="6" width="40" height="54" rx="6" class="f2"/><path d="M50 6v12h12" class="ln"/><path d="M34 44V24l16-4v20" class="ln"/><circle cx="31" cy="44" r="4" class="ac"/><circle cx="47" cy="40" r="4" class="ac"/><rect x="52" y="44" width="30" height="16" rx="5" class="ac"/><text x="67" y="55.5" text-anchor="middle">.mid</text></svg>',
+  '<svg viewBox="0 0 96 72" aria-hidden="true"><path d="M12 22a5 5 0 015-5h20l6 6h36a5 5 0 015 5v30a5 5 0 01-5 5H17a5 5 0 01-5-5z" class="f2"/><path d="M48 8v30M38 28l10 10 10-10" class="ln ac2"/><rect x="34" y="46" width="28" height="10" rx="3" class="ac"/></svg>',
+  '<svg viewBox="0 0 96 72" aria-hidden="true"><rect x="10" y="20" width="62" height="26" rx="13" class="ac"/><path d="M33 33h16M41 25v16" class="ln w"/><path d="M66 40l4 22 6-7 9 9 4-4-9-9 8-5z" class="hand"/></svg>',
+  '<svg viewBox="0 0 96 72" aria-hidden="true"><rect x="6" y="22" width="84" height="40" rx="5" class="f2"/>'+[0,1,2,3,4,5,6,7,8,9,10,11].map(i=>'<rect x="'+(8+i*6.8)+'" y="24" width="6" height="36" rx="1.5" class="wk'+(i<5?' lh':i>6?' rh':'')+'"/>').join("")+'<path d="M24 16v-8M68 16v-8" class="ln"/><text x="24" y="20" text-anchor="middle" class="tl">MG</text><text x="68" y="20" text-anchor="middle" class="tr2">MD</text></svg>'];
+function impRenderHelp(box){ const dev=impDevice(), H=t("impHelp"), D=H.dev[dev]||H.dev.other;
+  const card=document.createElement("div"); card.className="imp-card imp-help"; box.appendChild(card);
+  card.insertAdjacentHTML("beforeend",'<button type="button" class="gr-x imp-x" id="impClose"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>'
+    +'<div class="imp-hh"><h3 class="imp-h" id="impHelpT"></h3><span class="imp-dev"></span></div><div class="imp-scroll"><ol class="imp-steps"></ol><div class="imp-faq"><h4></h4></div></div>'
+    +'<div class="imp-acts"><button type="button" class="btn primary" id="impHelpGo"></button></div>');
+  if(dev==="iosWeb"||dev==="mac") card.querySelector(".imp-hh").classList.add("dv");
+  $("impClose").setAttribute("aria-label",t("close")); $("impClose").onclick=()=>{ PC.view=IMP.from==="imp"&&(IMP.draft||IMP.err)?"imp":IMP.from==="mine"?"mine":"cat"; renderPlaySongs(); };
+  $("impHelpT").textContent=H.title; card.querySelector(".imp-dev").textContent=D.name;
+  const ol=card.querySelector(".imp-steps");
+  [[H.s1t,H.s1],[H.s2t,D.save],[H.s3t,D.imp],[H.s4t,H.s4]].forEach(([ti,tx],i)=>{ const li=document.createElement("li"); li.innerHTML='<span class="imp-ill">'+IMP_ILL[i]+'</span><span class="imp-n">'+(i+1)+'</span><b></b><div class="imp-sx"></div>';
+    li.querySelector("b").textContent=ti; [].concat(tx).forEach(p=>{ const e=document.createElement("p"); e.textContent=p; li.querySelector(".imp-sx").appendChild(e); }); ol.appendChild(li); });
+  const fq=card.querySelector(".imp-faq"); fq.querySelector("h4").textContent=H.faqH;
+  H.faq.forEach(([q,a])=>{ const dt=document.createElement("details"); dt.innerHTML="<summary></summary><p></p>"; dt.firstChild.textContent=q; dt.lastChild.textContent=a; fq.appendChild(dt); });
+  $("impHelpGo").textContent=impT("add"); $("impHelpGo").onclick=impPick; }
+
+// ---- PLAY page: the views above take the place of the catalogue; the « My songs » chip sits in the bar
+const _impBar=pcBar; pcBar=function(){ _impBar(); impChip(); };
+const _impRPS=renderPlaySongs;
+renderPlaySongs=function(){ const ip=$("impPanel"); const mine=["imp","help","mine"].includes(PC.view) && !PC.kb;
+  if(ip) ip.hidden=!mine;
+  if(!IMP.loaded && page==="free" && !IMP.refreshing){ IMP.refreshing=1; impRefresh().then(()=>{ IMP.refreshing=0; if(page==="free") renderPlaySongs(); }); }
+  if(mine && window.PC_SONG){ document.body.classList.remove("pc-kb"); pcBar(); $("grPanel").hidden=true; $("playSongs").hidden=true; impTip();
+    if(PC.view!=="help" && !window.PCImp){ impLib().then(()=>{ if(page==="free") renderPlaySongs(); }).catch(()=>{}); return; }
+    impRender(); return; }
+  if(mine) PC.view="cat";
+  _impRPS(); requestAnimationFrame(impTip); };
+// Do alone on the MIDI keyboard = Play on the preview
+const _impMS=midiStart;
+midiStart=function(note){ if(page==="free" && PC.view==="imp" && IMP.draft && note%12===0 && !anyWin() && S.settings.midiC!==false && !$("impPanel").hidden){ impPlay(); return true; } return _impMS(note); };
+// the screen keyboard / computer keyboard / mic go through noteIn: same shortcut there when the free piano is hidden
+// drag and drop on a computer: drop a file anywhere on the PLAY page
+addEventListener("dragover",e=>{ if(page!=="free" || !e.dataTransfer || ![...(e.dataTransfer.types||[])].includes("Files")) return; e.preventDefault(); e.dataTransfer.dropEffect="copy"; document.body.classList.add("imp-drag"); });
+addEventListener("dragleave",e=>{ if(e.target===document.documentElement || !e.relatedTarget) document.body.classList.remove("imp-drag"); });
+addEventListener("drop",e=>{ document.body.classList.remove("imp-drag"); if(page!=="free" || !e.dataTransfer || !e.dataTransfer.files || !e.dataTransfer.files.length) return; e.preventDefault(); if(anyWin()) return; impFile(e.dataTransfer.files[0]); });
+/* ==== fin Import de morceaux ==== */
 
 // ---------- Boot ----------
 
