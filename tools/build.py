@@ -44,9 +44,13 @@ img{{max-width:100%}}
 </head>
 <body>
 '''
+# version de la construction, lue par l'app (APP_BUILD : événements de mesure, « Signaler un problème ») et par le back office (version.txt)
+STAMP=__import__("datetime").datetime.now(__import__("datetime").timezone.utc).strftime("%Y-%m-%dT%H:%MZ")
+assert 'const APP_BUILD="dev";' in body
+body=body.replace('const APP_BUILD="dev";','const APP_BUILD="'+STAMP+'";',1)
 body=body.replace("https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.116.0/dist/umd/supabase.js","/assets/js/supabase-2.116.0.js")
 assert "/assets/js/supabase-2.116.0.js" in body
 out=head+body+"\n</body>\n</html>\n"
 (ROOT/"index.html").write_text(out,encoding="utf-8")
-(ROOT/"version.txt").write_text(__import__("datetime").datetime.now(__import__("datetime").timezone.utc).strftime("%Y-%m-%dT%H:%MZ")+"\n")
+(ROOT/"version.txt").write_text(STAMP+"\n")
 print("index.html", len(out))
