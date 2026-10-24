@@ -102,3 +102,10 @@ set role authenticated;
 select pg_temp.ok(case when to_regclass('public.league_members') is null then (public.admin_leagues() ->> 'installed') = 'false'
   else (public.admin_league_action('form') ->> 'ok') = 'true' and (public.admin_leagues() ->> 'installed') = 'true' end, 'ligues : détectées (ou « non installées »), former');
 reset role;
+
+-- 8. la fonction Edge « admin » (clé service) : journal et destinataires
+select pg_temp.as_user(null, null);
+set role service_role;
+insert into public.admin_log (admin_id, action, target) values ('00000000-0000-0000-0000-00000000000a', 'user.delete', 'x');
+select pg_temp.ok((select count(*) from public.admin_notify_targets('all')) = 3, 'service_role : journal + admin_notify_targets');
+reset role;

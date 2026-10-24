@@ -39,6 +39,8 @@ create table if not exists public.admin_log (
 create index if not exists admin_log_at_idx on public.admin_log (at desc);
 alter table public.admin_log enable row level security;
 revoke all on public.admin_log from anon, authenticated;
+grant select, insert on public.admin_log to service_role;            -- la fonction Edge « admin » écrit le journal
+grant usage on sequence public.admin_log_id_seq to service_role;
 
 create or replace function public.admin_log_frozen()
 returns trigger language plpgsql as $$
@@ -593,6 +595,7 @@ returns table (user_id uuid) language sql stable security definer set search_pat
     else false end
 $$;
 revoke all on function public.admin_notify_targets(text) from public, anon, authenticated;
+grant execute on function public.admin_notify_targets(text) to service_role; -- la fonction Edge « admin » (clé service)
 
 -- ligues (si la migration des ligues est installée)
 create or replace function public.admin_leagues()
