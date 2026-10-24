@@ -2649,6 +2649,8 @@ button.mw-opt:active{transform:scale(.98)}
 .fn-top .fn-mw{display:none;float:none;margin-left:auto;margin-right:12px}
 @media (max-height:560px) and (min-width:700px){ .fn-top .fn-mw{display:inline} }
 @media (max-width:760px) and (max-height:740px){ .fn-top .fn-mw{display:inline} .fn-top:has(.fn-mw) .fn-step{display:none} }
+/* étape 2 : M3 in the remade first launch (foot of D2, under « Plug in your keyboard » on D3) */
+.fn-foot .fn-mw,.fn-d3s .fn-mw{float:none;font-size:.86rem;padding:2px 0}
 /* Settings › My keyboard */
 .mk-field{grid-column:1/-1}
 .mk-card{display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:16px;background:var(--surface-2);flex-wrap:wrap}
@@ -8641,7 +8643,7 @@ function ppBeatMark(j,k,d){ const B=BT.B; if(!B||B.res[j]) return; B.res[j]={k,d
     const it=PP.items[PP.ii]; if(it){ if(B.run.e>=4){ PP.fb=t("pp09Early"); PP.fbk=""; ppPrompt(); B.run.e=0; } else if(B.run.l>=4){ PP.fb=t("pp09Late"); PP.fbk=""; ppPrompt(); B.run.l=0; }
       else if(B.chordGrid && B.late2>=2 && !B.told){ B.told=1; PP.fb=t("pp12Prep"); PP.fbk=""; ppPrompt(); } } } }
 // a note during the beat: matched to the nearest open expected hit (latency of the mic taken off)
-function ppBeatNote(m){ const B=BT.B; if(!B||B.auto) return; const tm=ppT(m)-(ppInp()==="mic"?80:0), pc=md12(m), W1=B.w1||120, W2=ppW2(B), sp=ppSpan(B); let best=-1, bd=1e9;
+function ppBeatNote(m){ const B=BT.B; if(!B||B.auto) return; const tm=ppT(m)-(ppInp()==="mic"?80:ppInp()==="midi"&&typeof midiLat==="function"?midiLat():0), pc=md12(m), W1=B.w1||120, W2=ppW2(B), sp=ppSpan(B); let best=-1, bd=1e9;
   B.ev.forEach((e,j)=>{ if(B.res[j]) return; const te=B.t0+e.b*B.spb, d=tm-te; if(d<-W2 || d>W2+sp) return; const c=B.col[j]; if(c.t!=null && d>W2+sp) return; const ad=Math.abs(c.t!=null?0:d); if(ad<bd){ bd=ad; best=j; } });
   if(best<0) return; const e=B.ev[best], c=B.col[best], te=B.t0+e.b*B.spb;
   const cls = d => Math.abs(d)<=W1 ? "g" : d<0 ? "o" : "b";
@@ -8963,7 +8965,7 @@ function mwOpen(step){ try{ closeDrawer(); }catch(e){} if(midiOpen) closeMidi();
   const el=$("mwiz"); el.classList.toggle("mw-top", document.body.classList.contains("gate-on") || (typeof startUI==="function"&&startUI()));
   openMod("mwiz"); mwEnter(); }
 function mwClose(){ if(!MW.on) return; MW.on=false; mwStop(); if(MW.lat) MW.lat.run=false; const s=mdS(); s.wizard={...(s.wizard||{}), step:MW.step}; save(); closeMod("mwiz"); mdPill(); try{ mdHub(); }catch(e){} try{ mkRender(); }catch(e){}
-  if(FN.on){ if(midiReady && fnModes().includes("midi")) FN.how="midi"; fnRender(); } }
+  if(FN.on){ if(midiReady && fnModes().includes("midi") && (fnMidiName() || FN.st!=="hw")){ FN.how="midi"; if(FN.st==="hw"){ FN.st="c"; FN.t0=Date.now(); } } fnRender(); } }
 function mwStop(){ clearTimeout(MW.tm); clearInterval(MW.poll); clearTimeout(MW.go); MW.tm=MW.poll=MW.go=0; if(MW.lat) clearTimeout(MW.lat.tm); }
 function mwGo(step, back){ if(!back && step!==MW.step) MW.hist.push(MW.step); MW.step=step; MW.found=""; MW.still=false; MW.solved=false; MW.msg=""; MW.open=-1; mwStop(); mwEnter(); }
 function mwPrev(){ const p=MW.hist.pop(); if(p) mwGo(p,true); }
@@ -9024,7 +9026,7 @@ function mwFinish(){ const s=mdS(), h=mwHw(); if(MW.conn) h.conn=MW.conn; h.dev=
   if(midiReady && S.settings.input!=="midi" && !FN.on) setInput("midi"); }
 function mwPlay(){ mwClose(); if(FN.on && $("fnKb")) return; /* the first screen: « play a C » comes next */ }
 function mwFallback(v){ const s=mdS(); s.wizard={...(s.wizard||{}), gaveUp:Date.now()}; save(); mwClose();
-  if(FN.on){ const b=$("gate")&&$("gate").querySelector('.fn-in[data-v="'+v+'"]'); if(b) b.click(); return; }
+  if(FN.on){ if(typeof fnPick==="function" && FN.st) fnPick(v); else { const b=$("gate")&&$("gate").querySelector('.fn-in[data-v="'+v+'"]'); if(b) b.click(); } return; }
   setInput(v, v!=="screen"); }
 // ---- M11 trouble: 5 lines at most, by device, connection and step ----
 function mwFixes(){ const d=mwDev(), seen=midiNames.length>0, c=MW.conn||mwHw().conn||"", L=[], add=(i,p)=>{ if(!L.some(x=>x.i===i)) L.push({i,p}); };
@@ -9143,10 +9145,10 @@ document.addEventListener("keydown",e=>{ if(MW.on && e.key==="Escape"){ e.preven
 { const _mp=mdPorts; mdPorts=function(names){ _mp.apply(this,arguments); try{ mwPorts(names); }catch(e){} try{ mkRender(); }catch(e){} }; }
 // M3: the first screen gets one link « Connect my keyboard » next to « You play with » (fnRender itself is untouched)
 { const _fr=fnRender; fnRender=function(){ _fr.apply(this,arguments); try{ mwFnLink(); }catch(e){} }; }
-function mwFnLink(){ const g=$("gate"); if(!g||!FN.on||fnMidiName()) return; const l=g.querySelector(".fn-play .fn-lbl"), top=g.querySelector(".fn-play .fn-top");
-  // one entry, two places: next to « You play with », or in the top row on small screens where that label is hidden (CSS)
-  [[l,"fnMw"],[top,"fnMw2"]].forEach(([host,id])=>{ if(!host||host.querySelector(".fn-mw")) return; const b=document.createElement("button"); b.type="button"; b.className="fn-mw"; b.id=id; b.textContent=t("mdPlug")+" ›"; b.onclick=()=>mwOpen();
-    if(id==="fnMw2") host.insertBefore(b, host.querySelector(".fn-skip")); else host.appendChild(b); }); }
+function mwFnLink(){ const g=$("gate"); if(!g||!FN.on||fnMidiName()) return;
+  // Étape 2 : the first launch is now D2 (what you play on) → D3 (« play a C ») → D4; one link, in the foot of D2, or under « Plug in your keyboard » on D3 (MIDI waiting)
+  const host = FN.st==="hw" ? g.querySelector(".fn-play .fn-foot > span") : (FN.st==="c" && FN.how==="midi") ? g.querySelector(".fn-play .fn-d3s") : null;
+  if(!host || host.querySelector(".fn-mw")) return; const b=document.createElement("button"); b.type="button"; b.className="fn-mw"; b.id="fnMw"; b.textContent=t("mdPlug")+" ›"; b.onclick=()=>mwOpen(); host.appendChild(b); }
 // the choice of input, without MIDI here: « See how » opens M12
 { const _oc=openInputChooser; openInputChooser=function(){ _oc.apply(this,arguments); const n=$("inOpts")&&$("inOpts").querySelector(".inp-note"); if(n && !n.hidden && !n.querySelector(".mw-link")){ const b=document.createElement("button"); b.type="button"; b.className="mw-link"; b.textContent=" "+t("mdHubHow")+" ›"; b.onclick=()=>{ closeMod("inputModal"); mwOpen(); }; n.appendChild(b); } }; }
 $("mdWizB").addEventListener("click",()=>{ closeMidi(); mwOpen(); });

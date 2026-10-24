@@ -77,14 +77,14 @@ await click(P, '#fnMw'); await W(P, 300);
 check('CA-M06 sans requestMIDIAccess : le lien ouvre M12 (jamais d’autorisation)', await step(P) === 'safari' && await ev(P, () => window.__cnt.midiAccessCalls === 0) && /Chrome ou Edge/.test(await body(P)) && /L'app Piano Challenges/.test(await body(P)));
 check('M12 au-dessus de l’écran de premier lancement', await ev(P, () => { const r = document.querySelector('#mwiz .mw-card').getBoundingClientRect(); const el = document.elementFromPoint(r.left + r.width / 2, r.top + 30); return !!el && !!el.closest('#mwiz'); }));
 await A(P, 'screen'); await W(P, 300);
-check('M12 « Jouer sur l’écran » referme et choisit l’écran sur le premier lancement', await step(P) === '' && await ev(P, () => document.querySelector('#gate .fn-in[data-v=screen]')?.getAttribute('aria-pressed') === 'true'));
+check('M12 « Jouer sur l’écran » referme et choisit l’écran sur le premier lancement (D3 « Sur l’écran »)', await step(P) === '' && await ev(P, () => !!document.querySelector('#gate .fn-play.fn-st-c') && /Sur l'écran/.test(document.querySelector('#gate .fn-pill')?.textContent || '')));
 check('aucune erreur de page (M06)', P.errs.length === 0, P.errs);
 await P.ctx.close();
 
 // ---- M3 : premier lancement, clavier branché → le lien disparaît (le clavier est déjà vu) ----
 P = await open({ fresh: true });
 await waitFor(P, () => !!document.querySelector('#gate .fn-card'), 3000); await W(P, 600);
-check('M3 clavier détecté au premier lancement : pas de lien d’aide, « Détecté : … »', await ev(P, () => !document.getElementById('fnMw') && /Détecté : Fake Keyboard 61/.test(document.getElementById('gate').textContent)));
+check('M3 clavier détecté au premier lancement : pas de lien d’aide, « Détecté : … »', await ev(P, () => !document.getElementById('fnMw') && /reconnu : Fake Keyboard 61/.test(document.getElementById('gate').textContent)));
 await P.ctx.close();
 P = await open({ fresh: true, empty: true, viewport: { width: 1024, height: 768 } });
 await waitFor(P, () => !!document.getElementById('fnMw'), 3000);
@@ -98,9 +98,9 @@ if (await ev(P, () => !!document.querySelector('#mwiz [data-a=rmeasure]'))) awai
 await A(P, 'rskip'); await W(P, 200);
 check('M10 au premier lancement : bouton « Joue un Do pour commencer »', await step(P) === 'ready' && /Joue un Do pour commencer/.test(await ev(P, () => document.getElementById('mwFoot').textContent)));
 await ev(P, () => window.__midi.noteOn(60, 90)); await W(P, 400);
-check('M10 un Do seul referme l’assistant, retour au premier lancement en MIDI', await step(P) === '' && await ev(P, () => document.querySelector('#gate .fn-in[data-v=midi]')?.getAttribute('aria-pressed') === 'true'));
+check('M10 un Do seul referme l’assistant, retour au premier lancement en MIDI (D3 « Avec ton clavier »)', await step(P) === '' && await ev(P, () => !!document.querySelector('#gate .fn-play.fn-st-c') && /Avec ton clavier/.test(document.querySelector('#gate .fn-pill')?.textContent || '')));
 await ev(P, () => window.__midi.noteOn(60, 90)); await W(P, 300);
-check('… puis un Do valide la première note', await ev(P, () => /c'est un Do/.test(document.getElementById('fnPrompt')?.textContent || '')));
+check('… puis un Do valide la première note', await ev(P, () => /Tu viens de jouer un Do/.test(document.getElementById('gate')?.textContent || '')));
 check('aucune erreur de page (M3)', P.errs.length === 0, P.errs);
 await P.ctx.close();
 
