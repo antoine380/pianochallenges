@@ -1943,10 +1943,13 @@ body.setup #setupPanel{flex:1 1 auto;min-height:0}
 #qzSetup .qz-theme b{font-size:clamp(.92rem,min(17cqh,9cqw),1.45rem);max-width:calc(100% - 30px)}
 #qzSetup .qz-theme small{font-size:clamp(.7rem,min(10cqh,6cqw),.9rem)}
 #qzSetup .qz-ti{width:clamp(34px,min(52cqh,34cqw),96px);height:clamp(34px,min(52cqh,34cqw),96px)}
+/* short iPad / laptop landscape: the theme rows get less than 56px; the tiles shrink with them instead of overlapping (and the « n questions » line goes) */
+@media (max-height:820px) and (min-height:600px) and (min-width:1001px){ #qzSetup .qz-theme{min-height:0;padding-block:5px} }
+@container qt (max-height:56px){ #qzSetup .qz-theme small{display:none} #qzSetup .qz-theme b{font-size:.86rem;line-height:1.05} }
 #qzSetup .qz-diff{padding:clamp(8px,1.4vh,16px) 14px}
 #qzSetup .qz-wrap>.su-side{min-height:0}
-#qzLocalBox:not([hidden]),#qzOnlineBox:not([hidden]){flex:1 1 auto}
-#qzLocalBox>.su-box{flex:0 1 auto}
+#qzLocalBox:not([hidden]),#qzOnlineBox:not([hidden]){flex:1 1 auto;min-height:0}
+#qzLocalBox>.su-box{flex:0 1 auto;min-height:0;overflow-y:auto;overscroll-behavior:contain} /* 4 players, zones: the card scrolls, « Start » stays on screen */
 #qzLocalBox .qz-go{margin-top:auto}
 #qzPlay:not([hidden]){flex:1 1 auto;min-height:0;gap:var(--gap)}
 #qzPlay .qz-kb{flex:1 1 auto;height:auto;min-height:110px;max-height:clamp(150px,44vh,460px)}
@@ -2148,7 +2151,7 @@ body.gate-on .top-auth{visibility:hidden}
 .gt-back svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
 .gt-mail .gt-or,.gt-mail .gt-soc{display:none}
 @media (max-width:640px){ .gt-choose .gt-form{padding:max(16px,env(safe-area-inset-top,0px)) max(18px,env(safe-area-inset-right,0px)) max(14px,env(safe-area-inset-bottom,0px)) max(18px,env(safe-area-inset-left,0px))} .gt-choose .gt-h{font-size:1.55rem} }
-@media (max-height:520px){ .gt-choose .gt-form{display:flex;align-content:normal} .gt-choose .gt-ill{display:none} .gt-choose .gt-soc1{grid-template-columns:repeat(3,minmax(0,1fr))} .gt-choose .gt-soc1 .gt-s span{font-size:.8rem} .gt-choose .gt-h{font-size:1.25rem} }
+@media (max-height:520px){ .gt-choose .gt-form{display:flex;align-content:normal} .gt-choose .gt-ill{display:none} .gt-choose .gt-soc1{grid-template-columns:repeat(3,minmax(0,1fr))} .gt-choose .gt-soc1 .gt-google{grid-column:auto} .gt-choose .gt-form .gt-h{display:block} .gt-choose .gt-soc1 .gt-s span{font-size:.8rem} .gt-choose .gt-h{font-size:1.25rem} }
 /* GAMES: its header sits exactly like LEARN / PLAY / QUIZ (same top padding as .mode-page at every size) */
 #gamesPanel{padding-block:6px 10px}
 @media (max-height:820px), (max-width:900px){ #gamesPanel{padding-block:2px 6px} }
@@ -2506,7 +2509,7 @@ body.gate-on .top-auth{visibility:hidden}
     <div class="seg rank-per" id="rankPer"></div>
     <div class="card rank-card">
       <ol class="rank-list" id="rankList"></ol>
-      <div class="rank-cta"><p data-i="rankCta"></p><button class="btn primary" id="rankLogin" type="button" data-i="loginBtn"></button></div>
+      <div class="rank-cta"><p data-i="rankCta"></p><button class="btn primary" id="rankLogin" type="button" data-i="authUp"></button></div>
     </div>
   </section>
 
@@ -2955,7 +2958,7 @@ const TXT = {
     hsNews:[["Nouveau look","Mode jour ou nuit, cartes en 3D : l'app fait peau neuve.","#6a4bf0","M12 3l2.4 5 5.6.8-4 3.9.9 5.5L12 15.6 7.1 18.2l.9-5.5-4-3.9 5.6-.8z"],["Jeux Play","Six mini-jeux sur le clavier lumineux, dans GAMES.","#1f7a52","M6 9h4M8 7v4M15 9h.01M18 11h.01M3 8a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4v5a4 4 0 0 1-7 2.5h-4A4 4 0 0 1 3 13z"],["Jeu libre","Joue ce que tu veux dans PLAY : chaque note s'allume dans sa couleur.","#0e7490","M9 18V5l12-2v13M9 18a3 3 0 1 1-6 0 3 3 0 0 1 6 0zM21 16a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"],["Entraînement du jour","10 exercices mélangés chaque jour pour garder ta série.","#a3306b","M12 3c1 3.5 5 6 5 11a5 5 0 0 1-10 0c0-2.2 1-3.8 2.2-5 .2 1.6 1 2.8 2.3 3.3C11 9.3 11.3 6 12 3z"]],
     wrongSr:"Fausse note : ",
     lvT:"Quitter la partie ?", lvEndT:"Terminer la partie ?", lvLost:"Ta progression de cette partie sera perdue.", lvEndS:"La partie s'arrête ici : tu verras le bilan des exercices déjà faits.", lvSong:"Ta progression dans ce morceau sera perdue.", lvDuelR:"C'est une partie classée : quitter compte comme une défaite.", lvDuelOn:"Ton adversaire continue sans toi.", lvDuelF:"La partie amicale s'arrête pour toi.", lvQuizOn:"Les autres joueurs continuent sans toi.", lvEndGo:"Terminer", hubQuiz:"Un quiz de culture générale : tu réponds en jouant la bonne note ou le bon accord. Seul, à plusieurs ou en ligne.", hubQuizTags:"Culture générale · Notes et accords · Jusqu'à 4 joueurs · En ligne", setAppH:"Application", setGameTab:"Jeu", pfOverview:"Vue d'ensemble", qzAnsDN:"Tu réponds avec une note", qzAnsDC:"Tu réponds avec un accord", qzHelpNo:"Sans", qzHelpKeys:"Touches à jouer", authUp:"S'inscrire", authIn:"Se connecter", gtTitleNew:"Crée ton compte Piano Challenges", gtTitleBack:"Connecte-toi", gtEmailGo:"Continuer avec l'e-mail", gtHave:"Déjà un compte ?", gtNone:"Pas encore de compte ?", gtNoAcct:"Continuer sans compte", gtOther:"Autres options",
-    dailyShort:"Entraînement"},
+    dailyShort:"Entraînement", qzDraw:"Égalité !"},
   en:{help:"Help", helpTitle:"How it works", helpOk:"Let's go", tutNext:"Next", tutPrev:"Previous", close:"Close", stepOf:(i,n)=>"Step "+i+" of "+n,
     tut:[{h:"Read the challenge",p:"A scale, a chord or a progression appears with a countdown. Picture the notes in your head before the bar runs out."},
          {h:"Pick and set up",p:"Before each game, pick the scale or chord as a card, then the timer and your helps. “Show the notes” shows the note names, “Light up the keys” shows where to play, and “Step-by-step help” gives nothing at first, then a hint every 8 s; the notes you find stay lit and a card builds up to help you remember them. Less help = more XP."},
@@ -3122,7 +3125,7 @@ const TXT = {
     hsNews:[["New look","Day or night mode and 3D cards: the app gets a makeover.","#6a4bf0","M12 3l2.4 5 5.6.8-4 3.9.9 5.5L12 15.6 7.1 18.2l.9-5.5-4-3.9 5.6-.8z"],["Play games","Six mini-games on the light-up keyboard, in GAMES.","#1f7a52","M6 9h4M8 7v4M15 9h.01M18 11h.01M3 8a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4v5a4 4 0 0 1-7 2.5h-4A4 4 0 0 1 3 13z"],["Free play","Play anything in PLAY: every note lights up in its colour.","#0e7490","M9 18V5l12-2v13M9 18a3 3 0 1 1-6 0 3 3 0 0 1 6 0zM21 16a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"],["Daily practice","10 mixed exercises every day to keep your streak.","#a3306b","M12 3c1 3.5 5 6 5 11a5 5 0 0 1-10 0c0-2.2 1-3.8 2.2-5 .2 1.6 1 2.8 2.3 3.3C11 9.3 11.3 6 12 3z"]],
     wrongSr:"Wrong note: ",
     lvT:"Leave the game?", lvEndT:"End the game?", lvLost:"Your progress in this game will be lost.", lvEndS:"The game stops here: you'll see the summary of the exercises you've done.", lvSong:"Your progress in this song will be lost.", lvDuelR:"This is a rated game: leaving counts as a loss.", lvDuelOn:"Your opponent keeps playing without you.", lvDuelF:"The friendly game stops for you.", lvQuizOn:"The other players carry on without you.", lvEndGo:"End game", hubQuiz:"A general-knowledge quiz: you answer by playing the right note or chord. Alone, with friends or online.", hubQuizTags:"General knowledge · Notes and chords · Up to 4 players · Online", setAppH:"App", setGameTab:"Game", pfOverview:"Overview", qzAnsDN:"You answer with a note", qzAnsDC:"You answer with a chord", qzHelpNo:"Off", qzHelpKeys:"Keys to play", authUp:"Sign up", authIn:"Log in", gtTitleNew:"Create your Piano Challenges account", gtTitleBack:"Log in", gtEmailGo:"Continue with email", gtHave:"Already have an account?", gtNone:"No account yet?", gtNoAcct:"Continue without an account", gtOther:"Other options",
-    dailyShort:"Daily"}
+    dailyShort:"Daily", qzDraw:"It's a draw!"}
 };
 const t = k => TXT[S.settings.lang][k];
 // data shown to people (scores, XP, other players' names): thousands separators in the app's language,
@@ -4735,7 +4738,7 @@ function lvHold(on){ const a=LV.a; if(!a) return; const now=performance.now();
 function lvNote(m){ if(S.settings.midiC===false) return; LV.buf.push(((m%12)+12)%12); clearTimeout(LV.t);
   LV.t=setTimeout(()=>{ const b=LV.buf; LV.buf=[]; if(b.length!==1 || !LV.on) return; if(b[0]===0) closeMod("leaveModal"); else if(b[0]===11) $("lvGo").click(); },120); }
 // the menu and the quit buttons: asked first when they would end the activity; "Leave" replays the click
-const LV_NAV="#homeLink,#modeNav [data-mode],#secTabs button,#dailyCard,#rankBtn,#ntfBtn,#mbNtf,#accountBtn", LV_QUIT="#rnQuit,#duToLobby,#gameEnd,#qzQuit";
+const LV_NAV="#homeLink,#modeNav [data-mode],#secTabs button,#dailyCard,#rankBtn,#ntfBtn,#mbNtf,#accountBtn,[data-auth]", LV_QUIT="#rnQuit,#duToLobby,#gameEnd,#qzQuit";
 function lvLeaves(el){ const base=lvBase();
   if(el.matches(LV_QUIT)) return true;
   if(el.dataset.mode) return ({quiz:"quiz",learn:"learn",play:"free",games:"games"})[el.dataset.mode]!==base;
@@ -4744,7 +4747,8 @@ function lvLeaves(el){ const base=lvBase();
   return true; }
 document.addEventListener("click",e=>{ if(LV.pass || LV.on || !e.target.closest) return; const el=e.target.closest(LV_NAV+","+LV_QUIT); if(!el || !lvLeaves(el)) return;
   const a=actNow(); if(!a) return; e.preventDefault(); e.stopImmediatePropagation();
-  lvOpen(a,()=>{ LV.pass=true; try{ el.click(); }finally{ LV.pass=false; } }, el.id==="gameEnd"); },true);
+  // Sign up / Log in: the sign-in screen covers the app, so the activity stops first (back home, as with the logo)
+  lvOpen(a,()=>{ LV.pass=true; try{ if(el.dataset.auth) $("homeLink").click(); el.click(); }finally{ LV.pass=false; } }, el.id==="gameEnd"); },true);
 // ---------- Sidebar, drawer, games page ----------
 const phoneMQ=window.matchMedia("(max-width:640px)"), railMQ=window.matchMedia("(max-height:520px) and (orientation:landscape)");
 function setNav(){
@@ -5900,7 +5904,8 @@ function qzFinish(){ qzClearTimers(); QZ.view="end"; QZ.players.forEach(p=>p.sho
   if(me.length===1 && me[0].ok) addXP(Math.min(60,me[0].ok*3)); save(); renderQuiz(); if(QZ.players.some(p=>p.ok) && uiSound()) setTimeout(()=>confetti(),200); }
 function renderQzEnd(){ const P=QZ.players.map((p,i)=>({...p,i})).sort((a,b)=>b.score-a.score), box=$("qzPodium"); box.innerHTML="";
   const humans=QZ.players.filter(p=>!p.bot).length;
-  if(QZ.players.length>1) nmFill($("qzEndT"),t("qzWinner"),P[0].name); else $("qzEndT").textContent=t("qzSoloEnd")(P[0].ok,QZ.list.length);
+  if(QZ.players.length>1 && P[0].score===P[1].score) $("qzEndT").textContent=t("qzDraw"); // a tie at the top (0 – 0 included) has no winner
+  else if(QZ.players.length>1) nmFill($("qzEndT"),t("qzWinner"),P[0].name); else $("qzEndT").textContent=t("qzSoloEnd")(P[0].ok,QZ.list.length);
   P.forEach((p,r)=>{ const d=document.createElement("div"); d.className="qz-pod r"+(r+1); d.style.setProperty("--pc",p.col);
     d.innerHTML='<span class="qz-rk">'+(r+1)+'</span><b></b><span class="qz-sc"></span><small></small>'; nmPut(d.querySelector("b"),p.name); d.querySelector(".qz-sc").textContent=fmtN(p.score)+" pts"; d.querySelector("small").textContent=t("qzRight")(p.ok,QZ.list.length); box.appendChild(d); });
   renderQzRace(null);
@@ -6278,10 +6283,10 @@ function renderLock(){
   $("lockTitle").textContent=t("lockTitle")(lockFor);
   const ul=$("lockList"); ul.innerHTML=""; t("perks").forEach(x=>{ const li=document.createElement("li"); li.textContent=x; ul.appendChild(li); });
 }
-$("lockGo").addEventListener("click",()=>openPage("account"));
+$("lockGo").addEventListener("click",()=>authOpen("signup"));
 $("lockGuest").addEventListener("click",()=>{ guestPass=true; document.body.classList.remove("guest"); openPage(lockFor||"games"); });
 function renderWelcome(){ const ul=$("wcList"); ul.innerHTML=""; t("perks").forEach(x=>{ const li=document.createElement("li"); li.textContent=x; ul.appendChild(li); }); }
-$("wcSignup").addEventListener("click",()=>{ closeMod("welcomeModal"); openPage("account"); });
+$("wcSignup").addEventListener("click",()=>{ closeMod("welcomeModal"); authOpen("signup"); });
 function renderRankPer(){ const box=$("rankPer"), P=t("periods"), cur=S.settings.rankPer||"week"; box.innerHTML="";
   Object.keys(P).forEach(k=>{ const b=document.createElement("button"); b.type="button"; b.textContent=P[k]; b.setAttribute("aria-pressed",k===cur); b.onclick=()=>{ S.settings.rankPer=k; save(); renderRank(); }; box.appendChild(b); }); }
 let rankTok=0;
@@ -6440,7 +6445,7 @@ function autoIntro(k){ if(!(S.introSeen||{})[k]) setTimeout(()=>showIntro(k),250
 document.querySelectorAll("[data-intro]").forEach(b=>b.addEventListener("click",()=>showIntro(b.dataset.intro)));
 $("rankBtn").addEventListener("click",()=>{ closeDrawer(); guardLeave(()=>openPage("rank")); });
 $("accountBtn").addEventListener("click",()=>{ closeDrawer(); guardLeave(()=>openPage("account")); });
-$("rankLogin").addEventListener("click",()=>openPage("account"));
+$("rankLogin").addEventListener("click",()=>authOpen("signup")); // guests: the sign-in screen (the Profile page is hidden for them)
 function goHome(){
   page="practice"; closeDrawer();
   // back to the start screen: no game running, first tab, top of the page
@@ -6913,7 +6918,7 @@ function gateForm(){ const f=$("gtForm"); f.innerHTML=""; const m=GATE.mode;
   const alt=document.createElement("button"); alt.type="button"; alt.className="gt-link"; alt.textContent=t("gtUseCode"); alt.onclick=()=>{ GATE.email=em.value.trim(); Object.assign(GATE,{otp:true,sent:false,msg:"",err:false}); gateRender(); }; f.appendChild(alt);
   f.onsubmit=async e=>{ e.preventDefault(); if(!sb) return; GATE.email=em.value.trim(); if(name) GATE.name=name.value.trim();
     const bad = !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(GATE.email) ? "gtBadMail" : pw.value.length<8 ? "gtBadPwd" : m==="signup"&&GATE.name&&nameErr(GATE.name) ? nameErr(GATE.name) : m==="signup"&&!ok.checked ? "gtNeedOk" : "";
-    if(bad){ GATE.msg=t(bad); GATE.err=true; gateForm(); return; }
+    if(bad){ GATE.msg=t(bad); GATE.err=true; const g=$("gtMsg"); g.textContent=GATE.msg; g.className="gt-msg err"; return; } // the form stays as typed (password, consent)
     GATE.busy=true; GATE.msg=""; gateForm();
     try{ if(m==="signup"){
         const {data,error}=await sb.auth.signUp({email:GATE.email, password:pw.value, options:{data:{name:GATE.name||undefined}, emailRedirectTo: isApp()?undefined:location.origin+location.pathname}}); if(error) throw error;
