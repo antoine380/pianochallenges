@@ -5,7 +5,7 @@
 // déconnexion après inactivité (?idle= en local) ; thème clair / sombre. Captures dans /home/claude/captures-admin/.
 // Usage : PORT=8797 NODE_PATH=… PW_CHROMIUM=… node tools/audit/r40_admin.mjs
 import { createRequire } from 'module';
-import { mkdirSync } from 'fs';
+import { mkdirSync, readFileSync } from 'fs';
 import { FAKE_ADMIN } from './fakesb.mjs';
 const { chromium } = createRequire(import.meta.url)('playwright');
 const PORT = process.env.PORT || '8767', URL = `http://localhost:${PORT}/admin/`;
@@ -78,6 +78,8 @@ await p.selectOption('#fLang', 'en'); await p.waitForTimeout(400);
 check('filtre de langue : la page se recharge avec le filtre', await p.evaluate(() => document.getElementById('fLang').value === 'en'));
 const [dl] = await Promise.all([p.waitForEvent('download', { timeout: 3000 }).catch(() => null), p.click('#fCsv')]);
 check('export CSV téléchargé', !!dl && /\.csv$/.test(dl.suggestedFilename()), dl && dl.suggestedFilename());
+if (dl) { const csv = readFileSync(await dl.path(), 'utf8'); // a cell starting with = + - @ is neutralised (apostrophe), numbers stay numbers
+  check('export CSV : formules neutralisées (« \'= »), chiffres intacts', /"'=HYPERLINK\(""http:\/\/x""\)",1/.test(csv) && !/^=|,=/m.test(csv) && /Roland FP-30X,40/.test(csv), csv.split('\n').filter(l => /HYPER|Roland/.test(l))); }
 // joueurs : fiche + action → journal
 await goPage(p, 'users');
 await p.fill('#uQ', 'léa'); await p.click('#uGo'); await p.waitForTimeout(400);

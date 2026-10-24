@@ -367,7 +367,7 @@ VIEWS.stats=async()=>{ const f=A.f, s=await rpc("admin_stats",{p_from:f.from,p_t
     +card("Appareils", devs)
     +card("Langues", bars(Object.entries(s.langs||{}).map(([k,v])=>({l:k==="fr"?"Français":k==="en"?"Anglais":k, v}))))
     +'</div>'; };
-function statsCsv(){ const s=A.last||{}, L=[], q=v=>{ v=String(v==null?"":v); return /[",;\n]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v; }, row=(...a)=>L.push(a.map(q).join(","));
+function statsCsv(){ const s=A.last||{}, L=[], q=v=>{ const num=typeof v==="number"; v=String(v==null?"":v); if(!num && /^[=+\-@\t\r]/.test(v)) v="'"+v; return /[",;\n\r]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v; }, row=(...a)=>L.push(a.map(q).join(","));
   row("Piano Challenges — statistiques", A.f.from+" au "+A.f.to, "langue "+(A.f.lang||"toutes"), "appareil "+(A.f.dev||"tous"), "entrée "+(A.f.inp||"toutes"));
   row(); row("jour","actifs","événements"); (s.series||[]).forEach(x=>row(x.day,x.actors,x.events));
   row(); row("entonnoir","appareils"); ["premier lancement","première note","leçon 1","leçon 3","compte"].forEach((l,i)=>row(l,(s.funnel||[])[i]||0));
