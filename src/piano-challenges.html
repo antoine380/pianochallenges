@@ -2538,6 +2538,152 @@ body[data-page="pp"] #ppPanel{display:flex;flex:1 1 auto;min-height:0;flex-direc
   .fn-ck{width:44px;box-shadow:none} .fn-d4 h3{font-size:1.05rem} .fn-lv4 button{padding:6px 16px;min-height:44px} .fn-d4 > p{display:none} }
 @media (prefers-reduced-motion:reduce){ .fn-ring,.fn-kb .fn-this,.pp-reflex i,.hint-bubble{animation:none} .pp-reflex i{transform:scaleX(.5)} }
 /* ==== fin Parcours 2-3 ==== */
+/* ==== MIDI lots 2-3 (24/10/2026) : assistant « Brancher mon clavier » M4–M12, M3, Réglages « Mon clavier » ==== */
+.mw.mw-top{z-index:9100}
+.mw .mw-card{width:min(900px,100%);max-height:100%;padding:18px 22px 16px;gap:12px;overflow:hidden}
+.mw-head{display:flex;align-items:center;gap:12px;flex:none}
+.mw-ic{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;flex:none;color:#fff;background:linear-gradient(150deg,#8b6cff,#5a3fd6);box-shadow:0 8px 16px -8px #5a3fd6}
+.mw[data-step="trouble"] .mw-ic{background:linear-gradient(150deg,#f5a15a,#d9761f);box-shadow:0 8px 16px -8px #d9761f}
+.mw-ic svg,.mw-bi svg,.mw-ok svg,.mw-chev svg,.mw-dots svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.md-wiz{float:right;text-transform:none;letter-spacing:0;font-size:.82rem}
+.mw .mw-card{background:var(--surface)} .mw .btn{display:inline-flex;align-items:center;gap:6px}
+.mw-ti{font-family:var(--f-display);font-weight:700;font-size:1.05rem;white-space:nowrap}
+.mw-dots{list-style:none;margin:0 auto 0 4px;padding:0;display:flex;align-items:center;gap:6px}
+.mw-dots li{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;font-weight:800;font-size:.8rem;background:var(--surface-2);color:var(--muted);position:relative}
+.mw-dots li+li{margin-left:12px} .mw-dots li+li::before{content:"";position:absolute;right:100%;top:50%;width:12px;height:2px;margin-right:3px;background:var(--line)}
+.mw-dots li.cur{background:var(--brand);color:#fff;box-shadow:0 0 0 4px color-mix(in srgb,var(--brand) 25%,transparent)} .mw-dots li.done{background:color-mix(in srgb,var(--good) 18%,var(--surface-2));color:var(--good)} .mw-dots svg{width:14px;height:14px;stroke-width:3}
+.mw-head .modal-close{margin-left:auto}
+.mw-body{flex:1 1 auto;min-height:0;display:flex;flex-direction:column;gap:10px;overflow-y:auto;overscroll-behavior:contain}
+.mw-dup{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+.mw-body h2{margin:0;font-family:var(--f-display);font-weight:700;font-size:1.7rem;line-height:1.1}
+.mw-sub,.mw-txt{margin:-4px 0 0;color:var(--muted);font-size:.95rem} .mw-txt{color:var(--ink);margin:0} .mw-txt small{display:block;color:var(--muted);font-size:.82rem;margin-top:2px}
+.mw-k{margin:0;font-weight:800;font-size:.74rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.mw-opts{display:grid;gap:10px} .mw-opts.n4{grid-template-columns:repeat(4,minmax(0,1fr))} .mw-opts.n3{grid-template-columns:repeat(3,minmax(0,1fr))} .mw-opts.n2{grid-template-columns:repeat(2,minmax(0,1fr))}
+.mw-opt{display:flex;flex-direction:column;align-items:flex-start;gap:3px;text-align:left;padding:10px;border-radius:18px;border:0;background:var(--surface-2);color:var(--ink);font:inherit;box-shadow:inset 0 0 0 1px var(--line);min-width:0}
+button.mw-opt{cursor:pointer;transition:box-shadow 160ms var(--ease-out),transform 160ms var(--ease-out)}
+@media (hover:hover){ button.mw-opt:hover{box-shadow:inset 0 0 0 2px color-mix(in srgb,var(--brand) 60%,transparent)} }
+button.mw-opt:active{transform:scale(.98)}
+.mw-opt[aria-pressed="true"]{box-shadow:inset 0 0 0 2px var(--brand);background:color-mix(in srgb,var(--brand) 14%,var(--surface-2))}
+.mw-opt b{font-family:var(--f-display);font-weight:700;font-size:1.05rem;line-height:1.15} .mw-opt small{color:var(--muted);font-size:.8rem;line-height:1.3}
+.mw-go{margin-top:auto;padding-top:4px;color:var(--accent);font-weight:800;font-size:.84rem}
+.mw-art{width:100%;height:88px;border-radius:12px;background:color-mix(in srgb,var(--ink) 7%,var(--surface));display:grid;place-items:center;margin-bottom:4px;flex:none}
+.mw-art>svg{width:82%;height:82%}
+.mw-plugs{display:flex;justify-content:center;gap:6px} .mw-plugs svg{width:38%;height:70%}
+.mw-opt.mw-h{flex-direction:row;align-items:center;gap:10px} .mw-opt.mw-h .mw-art{width:72px;height:52px;margin:0} .mw-opt.mw-h .mw-art svg{width:80%}
+.mw-rt{display:flex;flex-direction:column;min-width:0;flex:1} .mw-rt b{font-weight:800} .mw-rt small{color:var(--muted);font-size:.82rem}
+/* drawings: one palette, both themes */
+.mw{--mw-bd:#3a3478;--mw-k:#fbfbff;--mw-kb:#2b2560;--mw-kl:#d8d6ee;--mw-ac:#7a5bf5;--mw-ac2:#c8bfff;--mw-wd:#9a5b32;--mw-wd2:#5e3418;--mw-dv:#4b438f;--mw-sc:#c9c2ff;--mw-pl:#d8d6ee;--mw-ph:#3a3478;--mw-ln:#8d86c9}
+.mw svg .bd{fill:var(--mw-bd)} .mw svg .k{fill:var(--mw-k)} .mw svg .kb{fill:var(--mw-kb)} .mw svg .kl{stroke:var(--mw-kl);stroke-width:.8} .mw svg .ac{fill:var(--mw-ac)} .mw svg .ac2{fill:var(--mw-ac2)} .mw svg .dk{fill:#1b1838} .mw svg .ok{fill:#35c58a} .mw svg .gd{fill:#f5b62a}
+.mw svg .wd{fill:var(--mw-wd)} .mw svg .wd2{fill:var(--mw-wd2)} .mw svg .wd3{stroke:var(--mw-wd2);stroke-width:4;stroke-linecap:round} .mw svg .ln2{stroke:#e9c9a0;stroke-width:2;stroke-linecap:round}
+.mw svg .ln{stroke:var(--mw-ln);stroke-width:4;stroke-linecap:round;fill:none} .mw svg .ln3{stroke:var(--mw-ln);stroke-width:2;stroke-dasharray:3 4} .mw svg .dash{fill:none;stroke:var(--accent);stroke-width:2.5;stroke-dasharray:7 6} .mw svg .q{fill:var(--accent);font:700 30px var(--f-display)}
+.mw svg .pl{fill:var(--mw-pl);stroke:var(--mw-ph);stroke-width:1.5} .mw svg .ph{fill:var(--mw-ph)} .mw svg .wv{fill:none;stroke:var(--accent);stroke-width:2.6;stroke-linecap:round}
+.mw svg .dv{fill:var(--mw-dv)} .mw svg .sc{fill:var(--mw-sc)} .mw svg .dk2{fill:var(--mw-bd)} .mw svg .bub{fill:var(--surface);stroke:var(--line);stroke-width:2}
+.mw svg .tl{fill:var(--ink);font:800 15px var(--f-body)} .mw svg .ts{fill:var(--muted);font:600 13px var(--f-body)} .mw svg .ac3{fill:var(--accent)}
+/* rows, banners */
+.mw-row{display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:16px;background:var(--surface-2);box-shadow:inset 0 0 0 1px var(--line)}
+.mw-row .btn{flex:none} .mw-bi{display:inline-grid;place-items:center} .mw-bi svg{width:18px;height:18px}
+.mw-radio{width:22px;height:22px;border-radius:50%;flex:none;box-shadow:inset 0 0 0 2px var(--brand)} .mw-radio.on{background:radial-gradient(circle,var(--brand) 40%,transparent 44%)}
+.mw-found{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:14px;background:color-mix(in srgb,var(--good) 14%,var(--surface));box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--good) 45%,transparent);color:var(--ink)}
+.mw-found b{color:var(--good)} .mw-ok{width:28px;height:28px;border-radius:50%;display:grid;place-items:center;flex:none;color:#fff;background:#16794e} .mw-ok svg{width:16px;height:16px;stroke-width:3}
+.mw-sp{flex:1}
+.mw-tip{margin:0;font-size:.86rem;color:var(--muted)}
+.mw-link{border:0;background:none;padding:0;font:inherit;font-weight:800;color:var(--accent);cursor:pointer;text-decoration:none}
+.mw-link:hover{text-decoration:underline}
+.mw-warn{margin:0;padding:8px 12px;border-radius:12px;background:var(--warn-soft);color:var(--ink);font-size:.86rem;font-weight:600}
+.mw-q{margin:2px 0 -2px} .mw-q small{color:var(--muted)}
+.mw-draw{border-radius:16px;background:color-mix(in srgb,var(--ink) 6%,var(--surface));padding:8px;display:flex;justify-content:center;flex:none}
+.mw-cable{width:100%;max-width:600px;height:auto;max-height:200px}
+.mw-two{display:grid;grid-template-columns:1fr 1fr;gap:10px} .mw-two>:only-child{grid-column:1/-1}
+.mw-spin{width:20px;height:20px;border-radius:50%;flex:none;border:3px solid var(--line);border-top-color:var(--brand);animation:mdSpin 1s linear infinite}
+.mw-spin.ok{animation:none;border-color:var(--good);background:var(--good)}
+.mw-still{padding:8px 12px;border-radius:14px;background:var(--warn-soft);font-size:.84rem} .mw-still ul{margin:4px 0 0;padding-left:18px;color:var(--ink)} .mw-still .mw-link{float:right}
+.mw-steps{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.mw-steps li{display:flex;gap:10px;align-items:flex-start;padding:12px;border-radius:16px;background:var(--surface-2);box-shadow:inset 0 0 0 1px var(--line)}
+.mw-n{width:28px;height:28px;border-radius:50%;flex:none;display:grid;place-items:center;font-weight:800;background:var(--brand);color:#fff}
+/* M8 in the assistant */
+.mw-msg{margin:0;display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:14px;background:var(--surface-2)} .mw-msg>span:not(.mw-ok){display:flex;flex-direction:column;flex:1;min-width:0}
+.mw-msg.ok{background:color-mix(in srgb,var(--good) 14%,var(--surface))} .mw-msg.ok b{color:var(--good)} .mw-msg.bad{background:var(--warn-soft)} .mw-msg small{color:var(--muted);font-size:.8rem;font-weight:600}
+.mw-trow{min-height:0;height:150px;flex:none} .mw-trow .mt-note{background:var(--surface-2);width:92px} .mw-trow .mt-note b{font-size:2.4rem} .mw-trow .mt-vel i{background:var(--surface-2)}
+.mw-kb .w.on,.mw-kb .b.on{background:var(--nc)!important;box-shadow:0 0 14px var(--nc)}
+.mw-tsteps{display:grid;grid-template-columns:1fr 1.5fr 1fr;gap:8px} .mw-tsteps .mt-step{background:var(--surface-2)} .mw-tsteps .mt-step.done{box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--good) 45%,transparent)}
+.mw-tsteps small.ok{color:var(--good);font-weight:800}
+/* M9 */
+.mw-ends{display:flex;justify-content:space-between;font-weight:800;font-size:.86rem;color:var(--bad)} .mw-ends .ok{color:var(--good)}
+.mw-strip{position:relative;display:flex;gap:1px;height:110px;flex:none;border-top:3px solid var(--hit-line);border-radius:4px}
+.mw-strip .w{flex:1;background:var(--key-white);border-radius:0 0 3px 3px;opacity:.55} .mw-strip .w.in{opacity:1;background:color-mix(in srgb,var(--brand) 26%,var(--key-white))} .mw-strip .w.edge{background:var(--note-0);opacity:1}
+.mw-strip .b{position:absolute;top:0;height:60%;background:var(--key-black);border-radius:0 0 2px 2px;opacity:.6} .mw-strip .b.in{opacity:1}
+.mw-res{margin:0;display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;min-height:1.6em} .mw-res b{font-family:var(--f-display);font-size:1.4rem} .mw-res small{color:var(--muted)} .mw-res .bad{color:var(--bad);font-weight:800}
+/* M10 */
+.mw-ready{position:relative;display:flex;flex-direction:column;gap:10px;padding-right:120px} .mw-robj{position:absolute;right:0;top:-6px;width:110px;height:110px} .mw-robj svg{width:100%;height:100%}
+.mw-fiche{display:flex;flex-direction:column;gap:8px;padding:12px;border-radius:16px;background:var(--surface-2)}
+.mw-nm{display:flex;align-items:center;gap:8px;font-size:1.05rem} .mw-nm i{width:10px;height:10px;border-radius:50%;background:var(--good)} .mw-tag{font-size:.72rem;font-weight:800;color:var(--good);padding:2px 8px;border-radius:999px;background:color-mix(in srgb,var(--good) 15%,transparent)}
+.mw-chips,.mw-chips2{display:flex;flex-wrap:wrap;gap:6px} .mw-chips span,.mw-chips2 span{padding:4px 10px;border-radius:999px;background:var(--surface);font-size:.8rem;font-weight:700} .mw-chips .ok{color:var(--good)}
+.mw-chips2 span{background:var(--surface-2);padding:6px 12px;font-size:.84rem}
+.mw-adv{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.mw-adv li{display:flex;flex-direction:column;gap:6px;font-size:.84rem;font-weight:700}
+.mw-ai{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;color:#fff;font:700 .78rem var(--f-display)} .mw-ai.a0{background:#c9463c} .mw-ai.a1{background:#5a3fd6} .mw-ai.a2{background:#b4530a}
+.mw .btn.mw-big{min-width:200px;justify-content:center}
+/* M11 */
+.mw-fix{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px}
+.mw-fix li{border-radius:16px;background:var(--surface-2);box-shadow:inset 0 0 0 1px var(--line)} .mw-fix li.open{box-shadow:inset 0 0 0 2px var(--brand)}
+.mw-fh{display:flex;align-items:center;gap:10px;width:100%;min-height:56px;padding:8px 14px;border:0;background:none;color:var(--ink);font:inherit;text-align:left;cursor:pointer}
+.mw-chev{flex:none;color:var(--muted);transition:transform 160ms var(--ease-out)} .mw-fix li.open .mw-chev{transform:rotate(90deg);color:var(--accent)}
+.mw-fb2{display:flex;align-items:center;gap:12px;padding:0 14px 12px} .mw-fb2 p{margin:0;flex:1;font-size:.9rem} .mw-fb2 .btn{flex:none}
+.mw-fart{width:110px;height:64px;border-radius:12px;background:color-mix(in srgb,var(--ink) 7%,var(--surface));display:grid;place-items:center;flex:none} .mw-fart svg{width:90%;height:90%}
+.mw-mail{white-space:nowrap}
+/* M12 */
+.mw-card2{display:flex;align-items:center;gap:14px;padding:12px;border-radius:18px;background:var(--surface-2);box-shadow:inset 0 0 0 1px var(--line)} .mw-card2.best{box-shadow:inset 0 0 0 2px var(--brand)}
+.mw-card2 .mw-art{width:96px;height:72px;margin:0} .mw-card2 b{font-family:var(--f-display);font-weight:700;font-size:1.1rem}
+.mw-soon{flex:none;padding:8px 14px;border-radius:999px;background:var(--surface);font-weight:800;font-size:.84rem;color:var(--accent)}
+/* calibration */
+.mw-lat{display:flex;flex-direction:column;align-items:center;gap:14px;padding:14px;border-radius:16px;background:var(--surface-2)}
+.mw-ldots{display:flex;gap:10px} .mw-ldots i{width:18px;height:18px;border-radius:50%;background:var(--surface);box-shadow:inset 0 0 0 2px var(--line)} .mw-ldots i.on{background:var(--good);box-shadow:none}
+.mw-lat[data-run="1"] .mw-ldots i:not(.on){animation:mwBeat 300ms var(--ease-out) var(--d)} @keyframes mwBeat{from{box-shadow:inset 0 0 0 9px var(--brand)}}
+.mw-tap{min-width:200px;min-height:64px;border-radius:20px;border:0;background:var(--brand);color:#fff;font:700 1.1rem var(--f-display);touch-action:manipulation} .mw-tap:disabled{opacity:.45}
+/* foot */
+.mw-foot{display:flex;align-items:center;gap:8px;flex-wrap:wrap;flex:none;padding-top:12px;border-top:1px solid var(--line)}
+.mw-fb{color:var(--muted);font-size:.86rem;font-weight:600}
+/* the first launch link (M3) and the input chooser link */
+.fn-mw{float:right;border:0;background:none;padding:0;font:800 .78rem var(--f-body);letter-spacing:0;text-transform:none;color:var(--accent);cursor:pointer}
+.inp-note .mw-link{font-size:inherit}
+.fn-top .fn-mw{display:none;float:none;margin-left:auto;margin-right:12px}
+@media (max-height:560px) and (min-width:700px){ .fn-top .fn-mw{display:inline} }
+@media (max-width:760px) and (max-height:740px){ .fn-top .fn-mw{display:inline} .fn-top:has(.fn-mw) .fn-step{display:none} }
+/* Settings › My keyboard */
+.mk-field{grid-column:1/-1}
+.mk-card{display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:16px;background:var(--surface-2);flex-wrap:wrap}
+.mk-dot{width:10px;height:10px;border-radius:50%;background:var(--muted);flex:none} .mk-card.on .mk-dot{background:var(--good)}
+.mk-t{display:flex;flex-direction:column;min-width:0;flex:1 1 180px} .mk-t b{font-weight:800;overflow:hidden;text-overflow:ellipsis;white-space:nowrap} .mk-t small{color:var(--muted);font-size:.82rem}
+.mk-acts{display:flex;flex-wrap:wrap;gap:6px} .mk-acts .btn{min-height:36px;padding:4px 12px;font-size:.84rem} .mk-acts .btn:not(.primary){background:var(--surface);box-shadow:inset 0 0 0 1px var(--line)}
+/* tablets in portrait, phones */
+@media (max-width:820px){ .mw .mw-card{padding:16px} .mw-fb{display:none} .mw-opts.n4{grid-template-columns:repeat(2,minmax(0,1fr))} .mw-steps{grid-template-columns:1fr} .mw-steps li{padding:8px 10px} .mw-tsteps{grid-template-columns:1fr 1fr} .mw-tsteps .mt-step:nth-child(2){grid-column:1/-1;order:3}
+  .mw-adv{grid-template-columns:1fr} .mw-adv li{flex-direction:row;align-items:center} .mw-two{grid-template-columns:1fr} }
+@media (max-width:640px){ .mw{padding:0} .mw .mw-card{border-radius:0;height:100%;max-height:100%;width:100%;padding:calc(10px + env(safe-area-inset-top,0px)) 14px calc(10px + env(safe-area-inset-bottom,0px));gap:8px}
+  .mw-ti{display:none} .mw-dots{margin-left:0} .mw-body h2.mw-dup{position:static;width:auto;height:auto;overflow:visible;clip:auto} .mw-body h2{font-size:1.35rem} .mw-sub{font-size:.84rem} .mw-art{height:62px} .mw-opt{padding:8px;border-radius:14px} .mw-opt b{font-size:.95rem} .mw-opt small{font-size:.74rem}
+  .mw-go{display:none} .mw-row{flex-wrap:wrap;padding:8px 10px} .mw-row .btn{width:100%;justify-content:center} .mw-fb{display:none} .mw-foot{padding-top:8px} .mw-foot .btn{min-height:40px;padding:6px 12px;font-size:.86rem}
+  .mw-foot .btn.ghost:not(.mw-back){flex:1 1 40%;justify-content:center} .mw-foot .btn.primary{flex:1 1 100%;justify-content:center} .mw-foot .mw-sp{display:none}
+  .mw-trow{height:116px} .mw-trow .mt-note{width:64px} .mw-trow .mt-note b{font-size:1.6rem} .mw-strip{height:80px}
+  .mw-ready{padding-right:0} .mw-robj{width:64px;height:64px;top:-4px} .mw-ready h2{padding-right:70px}
+  .mw-card2{flex-wrap:wrap;gap:8px 12px} .mw-card2 .mw-art{width:64px;height:54px} .mw-card2 .mw-rt{flex:1 1 60%} .mw-card2 .btn,.mw-soon{width:100%;justify-content:center;text-align:center}
+  .mw-fb2{flex-wrap:wrap} .mw-fb2 .btn{width:100%;justify-content:center} .mw-fart{display:none} .mw-fh{min-height:50px;padding:6px 12px} .mw-fh small{font-size:.76rem}
+  .mw-cable .ts{display:none} .mw-txt{font-size:.88rem} .mw-txt small{font-size:.78rem}
+  .mw-conn .mw-art{height:46px} .mw-port .mw-art{width:52px;height:40px} .mw-port .mw-opt{padding:6px 8px} .mw-q small{display:block;font-size:.76rem} }
+/* phones in landscape, small heights */
+@media (max-height:560px){ .mw{padding:0} .mw .mw-card{border-radius:0;height:100%;max-height:100%;width:100%;padding:8px max(14px,env(safe-area-inset-right,0px)) 8px max(14px,env(safe-area-inset-left,0px));gap:6px}
+  .mw-head .mw-ic{width:32px;height:32px} .mw-head .modal-close{width:36px;height:36px} .mw-body{gap:6px} .mw-body h2{font-size:1.2rem} .mw-sub{display:none}
+  .mw-opts.n4{grid-template-columns:repeat(4,minmax(0,1fr))} .mw-art{height:46px} .mw-opt{padding:6px 8px;gap:1px} .mw-opt b{font-size:.9rem} .mw-opt small{display:none} .mw-go{display:none}
+  .mw-row{padding:6px 10px} .mw-row small{display:none} .mw-foot{padding-top:6px} .mw-foot .btn{min-height:36px;padding:4px 12px;font-size:.84rem} .mw-fb{display:none}
+  .mw-steps{grid-template-columns:repeat(3,minmax(0,1fr))} .mw-steps li{padding:6px 8px} .mw-steps small{font-size:.74rem}
+  .mw-draw{padding:2px} .mw-cable{max-height:96px} .mw-txt small{display:none} .mw-txt{font-size:.84rem} .mw-two{grid-template-columns:1fr 1fr} .mw-still ul{display:none}
+  .mw-trow{height:84px} .mw-trow .mt-note{width:60px} .mw-trow .mt-note b{font-size:1.4rem} .mw-tsteps{grid-template-columns:1fr 1.5fr 1fr} .mw-tsteps .mt-step:nth-child(2){grid-column:auto;order:0} .mw-tsteps .mt-step{padding:5px 8px} .mw-msg{padding:5px 8px}
+  .mw-strip{height:56px} .mw-res b{font-size:1.1rem}
+  .mw-ready{padding-right:80px;gap:6px} .mw-robj{width:70px;height:70px} .mw-ready h2{padding-right:0} .mw-adv{grid-template-columns:repeat(3,minmax(0,1fr))} .mw-adv li{flex-direction:row;align-items:center;font-size:.78rem} .mw-ai{width:28px;height:28px} .mw-fiche{padding:8px;gap:5px}
+  .mw-fix{gap:5px} .mw-fh{min-height:40px;padding:4px 12px} .mw-fh small{display:none} .mw-fart{display:none} .mw-chips2 span{padding:3px 10px}
+  .mw-card2{padding:6px 10px} .mw-card2 .mw-art{width:60px;height:44px} .mw-card2 small{font-size:.76rem}
+  .mw-lat{padding:8px;gap:8px} .mw-tap{min-height:48px} }
+@media (max-width:640px) and (max-height:560px){ .mw-body h2{font-size:1.15rem} }
+@media (prefers-reduced-motion:reduce){ .mw-spin{animation:none} .mw-lat[data-run="1"] .mw-ldots i:not(.on){animation:none} button.mw-opt,.mw-chev{transition:none} }
+/* ==== fin MIDI lots 2-3 ==== */
 </style>
 
 <script>if(window.Capacitor&&window.webkit&&window.webkit.messageHandlers&&window.webkit.messageHandlers.bridge)document.documentElement.classList.add("native");</script>
@@ -3027,7 +3173,7 @@ body[data-page="pp"] #ppPanel{display:flex;flex:1 1 auto;min-height:0;flex-direc
       </div>
       <div class="midi-status"><span class="dot"></span><span id="mStTxt"></span><span class="spacer"></span><button class="btn primary" id="mEnable" type="button" data-i="midiOff"></button></div>
       <p class="notice midi-setup" id="midiSetupMsg" hidden></p>
-      <p class="mdev-h" data-i="midiFound"></p>
+      <p class="mdev-h"><span data-i="midiFound"></span><button class="mw-link md-wiz" id="mdWizB" type="button" data-i="mdWizard"></button></p>
       <ul class="mdev" id="mDevList"></ul>
       <div class="mconn">
         <div class="mc-card"><span class="mc-h"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v13M12 3l-2.5 3h5zM7 10v3l5 3M17 8v3l-5 3"/><circle cx="12" cy="19" r="2"/><rect x="5.6" y="8" width="2.8" height="2.8" rx=".5"/><circle cx="17" cy="7" r="1.4"/></svg>USB</span><p id="mcUsb"></p></div>
@@ -3057,6 +3203,15 @@ body[data-page="pp"] #ppPanel{display:flex;flex:1 1 auto;min-height:0;flex-direc
     <p class="ml-wait" id="mdLostWait"><i aria-hidden="true"></i><span id="mdLostWaitT"></span></p>
   </div>
 </div>
+<!-- MIDI lots 2-3 : assistant « Brancher mon clavier » (M4 à M12), rempli par mwRender() -->
+<div class="modal mw" id="mwiz" role="dialog" aria-modal="true" aria-labelledby="mwH" hidden>
+  <div class="modal-bg"></div>
+  <div class="modal-card mw-card">
+    <div class="mw-head"><span class="mw-ic" id="mwIc" aria-hidden="true"></span><b class="mw-ti" id="mwTi"></b><ol class="mw-dots" id="mwDots" aria-hidden="true"></ol><button class="modal-close" id="mwX" type="button" aria-label="Close">×</button></div>
+    <div class="mw-body" id="mwBody"></div>
+    <div class="mw-foot" id="mwFoot"></div>
+  </div>
+</div>
 <div class="modal" id="setModal" role="dialog" aria-modal="true" aria-labelledby="setTitle" hidden>
   <div class="modal-bg" id="setBg"></div>
   <div class="modal-card wide">
@@ -3080,6 +3235,7 @@ body[data-page="pp"] #ppPanel{display:flex;flex:1 1 auto;min-height:0;flex-direc
           <div class="field"><span data-i="staffLbl"></span><div class="seg" id="segStaff"><button type="button" data-v="off" data-i="staffOff"></button><button type="button" data-v="on" data-i="staffOnT"></button><button type="button" data-v="read" data-i="staffReadT"></button></div></div>
           <div class="field" id="clefField"><span data-i="clefLbl"></span><div class="seg" id="segClef"><button type="button" data-v="auto" data-i="clefAuto"></button><button type="button" data-v="treble" data-i="clefG"></button><button type="button" data-v="bass" data-i="clefF"></button><button type="button" data-v="grand" data-i="clefGF"></button></div></div>
           <div class="set-checks"><label class="check"><input type="checkbox" id="optLabels"> <span data-i="optLabels"></span></label><label class="check"><input type="checkbox" id="optFing"> <span data-i="optFing"></span></label><label class="check"><input type="checkbox" id="optUiSound"> <span data-i="optUiSound"></span></label></div>
+          <div class="field mk-field" id="mkField" hidden><span data-i="mdMine"></span><div class="mk-card" id="mkCard"></div></div>
         </div>
       </section>
       <section class="set-sec" data-tab="game"><h3><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M10 8.5l5.5 3.5-5.5 3.5z"/></svg><span data-i="secGame"></span></h3>
@@ -3401,7 +3557,32 @@ const TXT = {
     ppLvlMidi:n=>"Clavier reconnu · joue un 2e "+n+" pour commencer les Premiers pas.",
     lblFade:names=>"Tu connais "+names+" : on enlève leurs étiquettes.", lblT:"Étiquettes", lblModes:["Aucune","Do Ré Mi","C D E","Les deux"], lblFadeOpt:"Les retirer quand je les connais", lblCount:n=>n+"/12 notes sans étiquette",
     hintOk:"Compris", hintAgain:"Revoir les explications", hintAgainOk:"Les explications reviendront au bon moment.",
-    hintTxt:{resume:"Ta leçon t'attend ici chaque jour.",map:"Ton parcours : chaque pastille est une leçon de 2 minutes.",inp:"Ici, tu vois comment tu joues : clavier, micro ou écran.",star:"Ce Do est au milieu du clavier. Il te sert de repère.",fing:"Les numéros, ce sont tes doigts : 1 = pouce, 5 = petit doigt.",labels:"Quand tu connais une note, son nom s'efface. Il revient si tu hésites."}},
+    hintTxt:{resume:"Ta leçon t'attend ici chaque jour.",map:"Ton parcours : chaque pastille est une leçon de 2 minutes.",inp:"Ici, tu vois comment tu joues : clavier, micro ou écran.",star:"Ce Do est au milieu du clavier. Il te sert de repère.",fing:"Les numéros, ce sont tes doigts : 1 = pouce, 5 = petit doigt.",labels:"Quand tu connais une note, son nom s'efface. Il revient si tu hésites."},
+    mdWizT:"Brancher mon clavier", mdWhat:"Qu'as-tu devant toi ?", mdWhatS:d=>"On te montre le bon câble et les bons réglages pour ton appareil : "+d+".", mdApp:"app Piano Challenges",
+    mdDevL:{ipad:"iPad",iphone:"iPhone",mac:"Mac",win:"PC Windows",android:"Android",cros:"Chromebook",linux:"ordinateur"},
+    mdHw:["Clavier MIDI","Piano numérique","Piano acoustique","Rien pour l'instant"], mdHwS:["Petit clavier sans haut-parleur, avec une prise USB.","Avec haut-parleurs, souvent 61 ou 88 touches.","Un vrai piano à cordes : on l'écoute au micro.","On t'aide à choisir. En attendant, joue sur l'écran."], mdHwGo:["Câble ou sans fil ›","Câble ou sans fil ›","Préparer le micro ›","Quel clavier choisir ? ›"],
+    mdAlready:"Mon clavier est déjà branché", mdAlreadyS:"On le cherche tout de suite et on passe au test.", mdDetect:"Le détecter", mdLooking:"On cherche ton clavier…", mdLookingS:"Dès qu'il arrive, on passe tout seul au test.", mdNoneFound:"Aucun clavier trouvé pour l'instant.", mdFound:n=>"✓ "+n+" détecté", mdTestNow:"Tester maintenant",
+    mdNoKb:"Pas de clavier sous la main ?", mdUseMic:"Jouer au micro", mdUseScreen:"Jouer sur l'écran", mdNext:"Continuer", mdPrev:"Retour",
+    mdHow:"Comment se branche-t-il ?", mdConn:[["Prise carrée (USB-B) ou USB-C","À l'arrière du clavier, souvent marquée « USB » ou « USB to Host »."],["Sans fil (Bluetooth)","C'est souvent écrit sur le clavier, près des boutons."],["Prises rondes à 5 broches","Marquées « MIDI IN » et « MIDI OUT » : pianos plus anciens."]],
+    mdDunno:"Je ne sais pas", mdDunnoS:"Regarde à l'arrière du clavier : les prises y sont presque toujours.", mdPort:d=>"Quel port a ton "+d+" ?", mdPortS:"Regarde le bord, là où tu le charges.", mdPorts:[["USB-C","Port ovale et plat : iPad récents, iPhone 15 et plus."],["Lightning","Port fin et rectangulaire : iPad et iPhone plus anciens."]],
+    mdWinBt:"Sur Windows, le câble est plus simple : le navigateur voit rarement un clavier Bluetooth.",
+    mdCableT:"Branche le câble", mdCableUsbc:"Il te faut un câble USB-C vers USB-B. Branche-le au clavier, puis à l'iPad. Allume le clavier.", mdCableLight:"Il te faut l'adaptateur Lightning vers USB 3 et le câble USB du clavier. Branche l'iPad sur le secteur.", mdCableMac:"Il te faut un câble USB-B vers USB-C (ou USB-A selon ton Mac). Branche-le, allume le clavier : rien à installer.", mdCablePc:"Il te faut un câble USB : prise carrée côté clavier, prise rectangulaire côté ordinateur. Un pilote seulement si le fabricant le demande.", mdCableAndroid:"Il te faut un câble USB-C (OTG) vers USB-B. Accepte l'autorisation MIDI quand Chrome la demande.", mdCableDin:"Il te faut une interface USB-MIDI : la prise MIDI OUT du piano va sur l'entrée de l'interface, puis l'USB sur ton appareil.", mdCableAlt:"Ton clavier a un port USB-C ? Un câble USB-C vers USB-C marche aussi.",
+    mdKbYou:"Ton clavier", mdEnd:{usbb:"prise carrée USB-B",usbc:"port USB-C",usba:"prise USB-A",light:"port Lightning",din:"MIDI OUT (5 broches)"}, mdCableN:{usbc:"Câble USB-C vers USB-B",light:"Adaptateur Lightning + câble USB",mac:"Câble USB-B vers USB-C",pc:"Câble USB-B vers USB-A",android:"Câble USB-C (OTG) vers USB-B",din:"Interface USB-MIDI"}, mdYourDev:{ipad:"Ton iPad",iphone:"Ton iPhone",mac:"Ton Mac",win:"Ton ordinateur",android:"Ton téléphone",cros:"Ton Chromebook",linux:"Ton ordinateur"},
+    mdStill:"Toujours rien ?", mdStillL:["Certains câbles ne font que charger : essaie celui du clavier.","Un clavier sans alimentation : branche-le sur le secteur.","Vérifie qu'il est bien allumé."], mdMoreHelp:"Plus d'aide ›",
+    mdBtT:"Connecte-le sans fil", mdBtIos:[["Allume ton clavier","Et active son Bluetooth (un bouton ou un menu « Bluetooth MIDI »)."],["Touche « Chercher mon clavier »","La fenêtre Bluetooth de ton appareil s'ouvre."],["Touche son nom","Attends « Connecté », puis ferme la fenêtre."]], mdBtFind:"Chercher mon clavier", mdBtAfter:"Quand tu fermes la fenêtre, on vérifie tout seul que le clavier est là.",
+    mdBtMac:[["Ouvre Configuration audio et MIDI","Dans Applications › Utilitaires."],["Fenêtre › Afficher le studio MIDI","Puis clique sur l'icône Bluetooth."],["Clique sur Connecter","À côté de ton clavier, puis reviens ici."]], mdBtOther:"Le Bluetooth MIDI n'est pas toujours reconnu par le navigateur. Le plus simple : un câble USB.", mdBtCable:"Passer au câble", mdBtNot:"Le clavier n'est pas apparu ?",
+    mdPickKb:"Appuie sur une touche du clavier que tu veux utiliser.", mdPicked:n=>"On utilise « "+n+" ».", mdPedal:"Tu as une pédale ? Appuie dessus.", mdPedalOk:"Pédale reconnue ✓", mdNoPedal:"Je n'en ai pas", mdSilent:"Le clavier est vu, mais aucune note n'arrive.", mdLatAsk:"En Bluetooth, cale le rythme (30 s) ›",
+    mdRangeT:"Joue la touche la plus à gauche, puis la plus à droite.", mdRangeS:"L'écran, les leçons à deux mains et la séparation des mains s'adaptent à ton clavier.", mdLeft:"La plus à gauche", mdRight:"La plus à droite", mdKeys:(n,a,b)=>n+" touches · de "+a+" à "+b, mdGuess:n=>"On pense que ton clavier a "+n+" touches. C'est juste ?", mdMeasure:"Mesurer", mdRangeShort:"Joue bien les deux extrémités.", mdOkBtn:"C'est bon", mdRedo:"Recommencer", mdSkip:"Passer", mdFull88:"piano complet : 88 touches",
+    mdReady:"Ton clavier est prêt !", mdReadyS:"Tout est réglé. Tu pourras refaire le test dans Réglages › Mon clavier.", mdVelOk:"Sensible au toucher ✓", mdVelNo:"Toucher fixe", mdPedOk:"Pédale ✓", mdSndPiano:"Son : celui de ton piano", mdSndApp:"Son : celui de l'app",
+    mdAdv:["Accords reconnus d'un coup","Joue un Do pour continuer, un Si pour recommencer","Le son suit la force de ta frappe"], mdAdvNoVel:"Duels et quiz au clavier", mdPlay:"Jouer", mdPlayC:"Joue un Do pour commencer", mdRetest:"Refaire le test",
+    mdTrouble:"Ça ne marche pas ?", mdRetry:"Réessayer", mdSolved:"✓ Résolu !", mdStillNo:"Toujours rien : essaie une autre piste.", mdSupport:"Écrire au support", mdStepN:{hw:"Étape 1 : qu'as-tu ?",how:"Étape 2 : la connexion",cable:"Étape 3 : le câble",bt:"Étape 3 : le Bluetooth",test:"Étape 4 : le test",range:"Étape 4 : l'étendue"}, mdConnN:{usb:"Câble USB",bt:"Bluetooth",din:"Prises MIDI"},
+    mdFix:[["Aucun clavier dans la liste","Clavier éteint ou en veille","Allume ton clavier (certains s'éteignent tout seuls après 30 min)."],["Câble branché, toujours rien","Câble de charge seulement (sans données)","Certains câbles ne font que charger. Essaie un autre câble, idéalement celui livré avec le clavier."],["Rien sur l'iPad (Lightning)","Adaptateur sans alimentation ou ancien adaptateur","Utilise l'adaptateur Lightning vers USB 3 et branche l'iPad sur le secteur."],["Le navigateur bloque le MIDI","Autorisation MIDI refusée","Autorise le MIDI : clique sur le cadenas à gauche de l'adresse › Appareils MIDI › Autoriser, puis recharge la page."],["Rien sous Windows, alors qu'il marche ailleurs","Port déjà utilisé par une autre app","Ferme les autres logiciels de musique et les autres onglets de Piano Challenges, puis débranche et rebranche le clavier."],["Bluetooth : le clavier n'apparaît pas","Déjà connecté ailleurs, ou Bluetooth éteint","Déconnecte-le de ton téléphone ou de ton ordinateur, active le Bluetooth du clavier, puis cherche à nouveau."],["Bluetooth : des coupures","Piles faibles, trop loin, interférences","Change les piles, rapproche-toi à moins de 2 m, ou passe au câble."],["Clavier vu, aucune note","Il envoie peut-être sur son 2e port","Choisis l'autre port dans la liste de la fenêtre Clavier MIDI."],["Piano numérique : aucune note","Câble sur la mauvaise prise USB","Sur ton piano, utilise la prise carrée « USB to Host », pas la prise pour clé USB."],["Les notes sonnent deux fois","Son du piano + son de l'app","Coupe le son de l'app : ton piano joue le sien."],["Notes décalées d'une octave","Petit clavier, octave choisie sur le clavier","L'app suit toute seule. Sinon, refais la mesure de l'étendue."],["Retard entre la touche et le son","Bluetooth, ou écouteurs Bluetooth","Pour le rythme, préfère le câble et évite les écouteurs Bluetooth. Tu peux aussi caler le rythme."],["Prises rondes seulement","Piano ancien sans USB","Il te faut une interface USB-MIDI : le MIDI OUT du piano va sur l'entrée de l'interface."]],
+    mdFixAct:{10:"Couper le son de l'app",11:"Mesurer l'étendue",12:"Caler le rythme"}, mdMailS:"Piano Challenges : mon clavier ne marche pas", mdMailB:(d,b,p)=>"Appareil : "+d+"\nNavigateur : "+b+"\nClaviers vus : "+p+"\n\nCe qui se passe :\n",
+    mdSafari:"Safari ne sait pas encore lire un clavier", mdSafariS:"Le navigateur d'Apple ne transmet pas les notes d'un clavier MIDI aux sites web. Ton clavier n'y est pour rien.", mdNoMidiT:"Ce navigateur ne lit pas les claviers ici", mdNoMidiS:"Ici, les notes d'un clavier MIDI n'arrivent pas jusqu'au site. Ton clavier n'y est pour rien.", mdForKb:"Pour jouer avec ton clavier :",
+    mdAppT:"L'app Piano Challenges", mdAppS:"Pour iPad et iPhone. Câble ou Bluetooth, tout marche. Ta progression te suit.", mdAppSoon:"Bientôt sur l'App Store", mdChromeT:"Chrome ou Edge sur un ordinateur", mdChromeS:"Ouvre pianochallenges.com sur ton Mac ou ton PC, branche le clavier.", mdChromeHere:"Ouvre cette page dans Chrome ou Edge", mdChromeHereS:"Sur ce Mac, Chrome et Edge lisent ton clavier, sans rien installer.", mdCopy:"Copier le lien", mdCopied:"Lien copié !", mdMeanwhile:"En attendant : joue au micro ou sur l'écran.",
+    mdNoneT:"Pas encore de clavier ?", mdNoneS:"Tout clavier « USB MIDI » ou « Bluetooth MIDI » marche. Pour un iPad, prévois le câble ou l'adaptateur.", mdBuy:[["25 touches","Pour commencer : petit, léger, pas cher."],["49 touches","Pour jouer aux deux mains."],["88 touches lestées","Le toucher d'un vrai piano."]],
+    mdLatT:"Caler le rythme", mdLatS:"Joue une touche sur chaque clic (ou tape le bouton) : 8 clics. On mesure le petit retard de ta connexion.", mdLatGo:"Lancer le métronome", mdLatTap:"Tape ici", mdLatRes:n=>"Décalage mesuré : "+n+" ms", mdLatNone:"Pas assez de notes à temps : réessaie.", mdLatHint:"Les jeux de rythme élargissent leur marge d'autant.", mdLatAgain:"Recommencer",
+    mdMine:"Mon clavier", mdMineNone:"Aucun clavier branché pour l'instant.", mdWizard:"Assistant de connexion", mdRangeB:"Étendue", mdLatB:"Caler le rythme", mdLatN:n=>"décalage "+n+" ms"},
   en:{help:"Help", helpTitle:"How it works", helpOk:"Let's go", tutNext:"Next", tutPrev:"Previous", close:"Close", stepOf:(i,n)=>"Step "+i+" of "+n,
     tut:[{h:"Read the challenge",p:"A scale, a chord or a progression appears with a countdown. Picture the notes in your head before the bar runs out."},
          {h:"Pick and set up",p:"Before each game, pick the scale or chord as a card, then the timer and your helps. “Show the notes” shows the note names, “Light up the keys” shows where to play, and “Step-by-step help” gives nothing at first, then a hint every 8 s; the notes you find stay lit and a card builds up to help you remember them. Less help = more XP."},
@@ -3634,7 +3815,32 @@ const TXT = {
     ppLvlMidi:n=>"Keyboard connected · play a second "+n+" to start your First steps.",
     lblFade:names=>"You know "+names+": the labels are coming off.", lblT:"Labels", lblModes:["None","Do Ré Mi","C D E","Both"], lblFadeOpt:"Remove them once I know them", lblCount:n=>n+"/12 notes without a label",
     hintOk:"Got it", hintAgain:"See the explanations again", hintAgainOk:"The explanations will come back at the right time.",
-    hintTxt:{resume:"Your lesson waits for you here every day.",map:"Your path: each dot is a two-minute lesson.",inp:"Here you see how you play: keyboard, mic or screen.",star:"This C is in the middle of the keyboard. It's your landmark.",fing:"The numbers are your fingers: 1 = thumb, 5 = little finger.",labels:"When you know a note, its name fades. It comes back if you hesitate."}}
+    hintTxt:{resume:"Your lesson waits for you here every day.",map:"Your path: each dot is a two-minute lesson.",inp:"Here you see how you play: keyboard, mic or screen.",star:"This C is in the middle of the keyboard. It's your landmark.",fing:"The numbers are your fingers: 1 = thumb, 5 = little finger.",labels:"When you know a note, its name fades. It comes back if you hesitate."},
+    mdWizT:"Connect my keyboard", mdWhat:"What do you have?", mdWhatS:d=>"We'll show you the right cable and settings for your device: "+d+".", mdApp:"Piano Challenges app",
+    mdDevL:{ipad:"iPad",iphone:"iPhone",mac:"Mac",win:"Windows PC",android:"Android",cros:"Chromebook",linux:"computer"},
+    mdHw:["MIDI keyboard","Digital piano","Acoustic piano","Nothing yet"], mdHwS:["A small keyboard without speakers, with a USB port.","With speakers, often 61 or 88 keys.","A real string piano: we listen through the mic.","We'll help you choose. Meanwhile, play on screen."], mdHwGo:["Cable or wireless ›","Cable or wireless ›","Set up the mic ›","Which keyboard? ›"],
+    mdAlready:"My keyboard is already plugged in", mdAlreadyS:"We look for it right away and go to the test.", mdDetect:"Detect it", mdLooking:"Looking for your keyboard…", mdLookingS:"As soon as it shows up, we move on to the test.", mdNoneFound:"No keyboard found yet.", mdFound:n=>"✓ "+n+" found", mdTestNow:"Test it now",
+    mdNoKb:"No keyboard at hand?", mdUseMic:"Play with the mic", mdUseScreen:"Play on screen", mdNext:"Continue", mdPrev:"Back",
+    mdHow:"How does it connect?", mdConn:[["Square plug (USB-B) or USB-C","On the back of the keyboard, often marked “USB” or “USB to Host”."],["Wireless (Bluetooth)","It's often written on the keyboard, near the buttons."],["Round 5-pin sockets","Marked “MIDI IN” and “MIDI OUT”: older pianos."]],
+    mdDunno:"I don't know", mdDunnoS:"Look at the back of the keyboard: the sockets are almost always there.", mdPort:d=>"Which port does your "+d+" have?", mdPortS:"Look at the edge, where you charge it.", mdPorts:[["USB-C","Flat oval port: recent iPads, iPhone 15 and later."],["Lightning","Thin rectangular port: older iPads and iPhones."]],
+    mdWinBt:"On Windows, a cable is simpler: the browser rarely sees a Bluetooth keyboard.",
+    mdCableT:"Plug in the cable", mdCableUsbc:"You need a USB-C to USB-B cable. Plug it into the keyboard, then the iPad. Turn the keyboard on.", mdCableLight:"You need the Lightning to USB 3 adapter and the keyboard's USB cable. Plug the iPad into power.", mdCableMac:"You need a USB-B to USB-C cable (or USB-A, depending on your Mac). Plug it in, turn the keyboard on: nothing to install.", mdCablePc:"You need a USB cable: square plug on the keyboard side, flat plug on the computer side. A driver only if the maker asks for one.", mdCableAndroid:"You need a USB-C (OTG) to USB-B cable. Accept the MIDI permission when Chrome asks.", mdCableDin:"You need a USB-MIDI interface: the piano's MIDI OUT goes into the interface's input, then USB into your device.", mdCableAlt:"Your keyboard has a USB-C port? A USB-C to USB-C cable works too.",
+    mdKbYou:"Your keyboard", mdEnd:{usbb:"square USB-B plug",usbc:"USB-C port",usba:"USB-A plug",light:"Lightning port",din:"MIDI OUT (5-pin)"}, mdCableN:{usbc:"USB-C to USB-B cable",light:"Lightning adapter + USB cable",mac:"USB-B to USB-C cable",pc:"USB-B to USB-A cable",android:"USB-C (OTG) to USB-B cable",din:"USB-MIDI interface"}, mdYourDev:{ipad:"Your iPad",iphone:"Your iPhone",mac:"Your Mac",win:"Your computer",android:"Your phone",cros:"Your Chromebook",linux:"Your computer"},
+    mdStill:"Still nothing?", mdStillL:["Some cables only charge: try the one that came with the keyboard.","A keyboard without power: plug it into the mains.","Check that it's switched on."], mdMoreHelp:"More help ›",
+    mdBtT:"Connect it wirelessly", mdBtIos:[["Turn your keyboard on","And switch on its Bluetooth (a button or a “Bluetooth MIDI” menu)."],["Tap “Find my keyboard”","Your device's Bluetooth window opens."],["Tap its name","Wait for “Connected”, then close the window."]], mdBtFind:"Find my keyboard", mdBtAfter:"When you close the window, we check by ourselves that the keyboard is there.",
+    mdBtMac:[["Open Audio MIDI Setup","In Applications › Utilities."],["Window › Show MIDI Studio","Then click the Bluetooth icon."],["Click Connect","Next to your keyboard, then come back here."]], mdBtOther:"Bluetooth MIDI isn't always recognised by the browser. The simplest: a USB cable.", mdBtCable:"Use a cable instead", mdBtNot:"The keyboard didn't show up?",
+    mdPickKb:"Press a key on the keyboard you want to use.", mdPicked:n=>"Using “"+n+"”.", mdPedal:"Got a pedal? Press it.", mdPedalOk:"Pedal recognised ✓", mdNoPedal:"I don't have one", mdSilent:"The keyboard is seen, but no notes arrive.", mdLatAsk:"On Bluetooth, sync the timing (30 s) ›",
+    mdRangeT:"Play the leftmost key, then the rightmost.", mdRangeS:"The screen, two-hand lessons and the hand split adapt to your keyboard.", mdLeft:"Leftmost", mdRight:"Rightmost", mdKeys:(n,a,b)=>n+" keys · "+a+" to "+b, mdGuess:n=>"We think your keyboard has "+n+" keys. Is that right?", mdMeasure:"Measure", mdRangeShort:"Make sure you play both ends.", mdOkBtn:"Looks good", mdRedo:"Start over", mdSkip:"Skip", mdFull88:"full piano: 88 keys",
+    mdReady:"Your keyboard is ready!", mdReadyS:"All set. You can run the test again in Settings › My keyboard.", mdVelOk:"Touch-sensitive ✓", mdVelNo:"Fixed velocity", mdPedOk:"Pedal ✓", mdSndPiano:"Sound: your piano's", mdSndApp:"Sound: the app's",
+    mdAdv:["Chords recognised at once","Play a C to continue, a B to start over","The sound follows how hard you play"], mdAdvNoVel:"Duels and quiz on the keyboard", mdPlay:"Play", mdPlayC:"Play a C to start", mdRetest:"Run the test again",
+    mdTrouble:"Not working?", mdRetry:"Try again", mdSolved:"✓ Fixed!", mdStillNo:"Still nothing: try another lead.", mdSupport:"Write to support", mdStepN:{hw:"Step 1: what you have",how:"Step 2: the connection",cable:"Step 3: the cable",bt:"Step 3: Bluetooth",test:"Step 4: the test",range:"Step 4: the range"}, mdConnN:{usb:"USB cable",bt:"Bluetooth",din:"MIDI sockets"},
+    mdFix:[["No keyboard in the list","Keyboard off or asleep","Turn your keyboard on (some switch off by themselves after 30 min)."],["Cable plugged in, still nothing","Charge-only cable (no data)","Some cables only charge. Try another cable, ideally the one that came with the keyboard."],["Nothing on the iPad (Lightning)","Adapter without power, or an old adapter","Use the Lightning to USB 3 adapter and plug the iPad into power."],["The browser blocks MIDI","MIDI permission refused","Allow MIDI: click the padlock left of the address › MIDI devices › Allow, then reload the page."],["Nothing on Windows, but it works elsewhere","Port already used by another app","Close other music software and other Piano Challenges tabs, then unplug and replug the keyboard."],["Bluetooth: the keyboard doesn't show up","Connected elsewhere, or Bluetooth off","Disconnect it from your phone or computer, switch on the keyboard's Bluetooth, then search again."],["Bluetooth: dropouts","Low batteries, too far, interference","Change the batteries, get within 2 m, or use a cable."],["Keyboard seen, no notes","It may send on its 2nd port","Pick the other port in the list of the MIDI keyboard window."],["Digital piano: no notes","Cable in the wrong USB socket","On your piano, use the square “USB to Host” socket, not the one for USB sticks."],["Notes sound twice","Piano sound + app sound","Mute the app sound: your piano plays its own."],["Notes shifted by an octave","Small keyboard, octave set on the keyboard","The app follows by itself. Otherwise, measure the range again."],["Lag between key and sound","Bluetooth, or Bluetooth headphones","For rhythm, prefer a cable and avoid Bluetooth headphones. You can also sync the timing."],["Round sockets only","Older piano without USB","You need a USB-MIDI interface: the piano's MIDI OUT goes into the interface's input."]],
+    mdFixAct:{10:"Mute the app sound",11:"Measure the range",12:"Sync the timing"}, mdMailS:"Piano Challenges: my keyboard doesn't work", mdMailB:(d,b,p)=>"Device: "+d+"\nBrowser: "+b+"\nKeyboards seen: "+p+"\n\nWhat happens:\n",
+    mdSafari:"Safari can't read a keyboard yet", mdSafariS:"Apple's browser doesn't pass a MIDI keyboard's notes to websites. It's not your keyboard's fault.", mdNoMidiT:"This browser can't read keyboards here", mdNoMidiS:"Here, a MIDI keyboard's notes don't reach the website. It's not your keyboard's fault.", mdForKb:"To play with your keyboard:",
+    mdAppT:"The Piano Challenges app", mdAppS:"For iPad and iPhone. Cable or Bluetooth, it all works. Your progress follows you.", mdAppSoon:"Soon on the App Store", mdChromeT:"Chrome or Edge on a computer", mdChromeS:"Open pianochallenges.com on your Mac or PC, plug in the keyboard.", mdChromeHere:"Open this page in Chrome or Edge", mdChromeHereS:"On this Mac, Chrome and Edge read your keyboard, nothing to install.", mdCopy:"Copy the link", mdCopied:"Link copied!", mdMeanwhile:"Meanwhile: play with the mic or on screen.",
+    mdNoneT:"No keyboard yet?", mdNoneS:"Any “USB MIDI” or “Bluetooth MIDI” keyboard works. For an iPad, get the cable or adapter too.", mdBuy:[["25 keys","To start: small, light, affordable."],["49 keys","To play with both hands."],["88 weighted keys","The feel of a real piano."]],
+    mdLatT:"Sync the timing", mdLatS:"Play a key on each click (or tap the button): 8 clicks. We measure your connection's small delay.", mdLatGo:"Start the metronome", mdLatTap:"Tap here", mdLatRes:n=>"Measured offset: "+n+" ms", mdLatNone:"Not enough notes on time: try again.", mdLatHint:"Rhythm games widen their margin by that much.", mdLatAgain:"Start over",
+    mdMine:"My keyboard", mdMineNone:"No keyboard plugged in yet.", mdWizard:"Connection guide", mdRangeB:"Range", mdLatB:"Sync timing", mdLatN:n=>"offset "+n+" ms"}
 };
 const t = k => TXT[S.settings.lang][k];
 // data shown to people (scores, XP, other players' names): thousands separators in the app's language,
@@ -4407,7 +4613,8 @@ function guessKbdSize(name){
 // keep the on-screen keyboard on the same keys as the MIDI keyboard: if a played note is outside, shift by octaves
 function followMidi(n){
   if(n>=LOW && n<=HIGH) return;
-  const shift = n<LOW ? -Math.ceil((LOW-n)/12)*12 : Math.ceil((n-HIGH)/12)*12, lo=LOW+shift, hi=HIGH+shift;
+  const shift = n<LOW ? -Math.ceil((LOW-n)/12)*12 : Math.ceil((n-HIGH)/12)*12; let lo=LOW+shift, hi=HIGH+shift;
+  const hw=(S.midi&&S.midi.hw)||{}; if(hw.lo>=21 && hw.hi>hw.lo && hw.hi-hw.lo<=HIGH-LOW && n>=hw.lo && n<=hw.hi){ hi=hw.lo+(HIGH-LOW); lo=hw.lo; } // the measured keyboard (M9) fits: show it whole, in one move
   if(lo<21 || hi>108) return;
   Object.assign(S.settings,{kbdSize:"custom",kbdLow:lo,kbdHigh:hi}); save(); buildKeyboard(); renderSettings();
   if(cur && typeof markPlayed==="function") markPlayed();
@@ -6584,7 +6791,7 @@ async function myRank(since){ if(!sb||!user) return null;
     const r=Array.isArray(data)?data[0]:data; if(error||!r||!(+r.rank>0)) return null; return {rank:+r.rank|0, xp:+r.xp||0}; }catch(e){ return null; } }
 $("hsDaily").addEventListener("click",()=>$("dailyCard").click());
 $("hsRankMore").addEventListener("click",()=>$("rankBtn").click());
-$("hsMidiBtn").addEventListener("click",()=>{ if(midiReady && S.settings.input!=="mic") openMidi(); else if(midiPossible()) setInput("midi",true); else openInputChooser(true); });
+$("hsMidiBtn").addEventListener("click",()=>{ if(midiReady && S.settings.input!=="mic") openMidi(); else mwOpen(); }); // not connected: the assistant (M4), or M12 without MIDI here
 document.querySelectorAll(".obj[data-obj]").forEach(e=>{ e.innerHTML=OBJ[e.dataset.obj](); });
 const MODE_COL={quiz:"#2563eb",games:"#26805a",play:"#7a5bf5",learn:"#c9463c"}; // same as --m-games/--m-play/--m-learn; shades only darken so white text stays ≥ 4.5:1
 // each tile has its own hue (white text ≥ 4.5:1 on each), like a shelf of game boxes
@@ -7141,6 +7348,7 @@ async function enableMidi(quiet){
         names.push(inp.name); inp.onmidimessage=ev=>{
         const [st,note,vel]=ev.data;
         if(LV.on){ if((st&0xf0)===0x90 && vel>0) lvNote(note); return; } // the leave window: C = keep playing, B = leave
+        if(MW.on && mwMsg(st,note,vel,inp)) return; // the « Connect my keyboard » assistant (MIDI lots 2-3) gets every message while it is open
         if(midiOpen && !calib && (st&0xf0)===0x90 && vel>0){ pressKey(note); mtNote(note,vel,inp.name); return; } // the MIDI window: the « play a note » test (M8)
         if(page==="quiz"){ if((st&0xf0)===0x90 && vel>0){ if(S.settings.midiSound) tone(note,0,.9,.1+.26*vel/127); if(!anyModal()) quizIn(String(inp.id||inp.name),note); } return; } // every keyboard counts: one per player
         if(S.settings.midiInput && inp.name!==S.settings.midiInput) return;
@@ -7807,6 +8015,7 @@ function mdPill(){ if(!MD) return; const s=mdState(), c=$("inChip"), mb=$("mbMid
     c.querySelector(".mp-t").textContent=s.lbl; c.title=s.full||s.lbl; c.setAttribute("aria-label",c.title); c.dataset.st=s.k; }
   if(mb){ mb.className="mbar-btn ghost md-mb md-"+s.k; mb.innerHTML=INPUT_ICONS[s.k==="screen"?"screen":s.k.startsWith("mic")?"mic":"midi"]+'<i></i>'; mb.title=s.full||s.lbl; mb.setAttribute("aria-label",mb.title); } }
 function mdPillClick(){ closeDrawer(); if(!midiPossible()){ openInputChooser(true); return; }
+  if(mdState().k==="plug"){ mwOpen(); return; } // never connected here: the step-by-step assistant (M4)
   if(!midiAcc && !midiDenied && S.settings.input!=="mic"){ setInput("midi",true).then(()=>{ if(!midiOpen) openMidi(); }); return; }
   openMidi(); }
 $("mbMidi").addEventListener("click",mdPillClick);
@@ -7836,11 +8045,11 @@ function mdPorts(names){ const prev=MD.prev, s=mdS(); MD.prev=names.slice(); if(
     if(!s.seenAt || !s.hw || s.hw.name!==nm){ s.seenAt=s.seenAt||Date.now(); s.hw = s.hw&&s.hw.name===nm ? s.hw : {name:nm}; save(); } }
   if(prev===null) return; // the first look is not a change
   const added=names.filter(n=>!prev.includes(n)), gone=prev.filter(n=>!names.includes(n));
-  if(added.length){ if(MD.paused){ mdBack(); return; } if(mdQuiet() || midiOpen) return;
+  if(added.length){ if(MD.paused){ mdBack(); return; } if(mdQuiet() || midiOpen || (MW&&MW.on)) return;
     if(S.settings.input==="midi") mdToast("ok", t("mdOnNow")(mdTrunc(added[0])), "", null, 3000);
     else mdToast("found", t("mdDetected")(mdTrunc(added[0])), t(S.settings.input==="mic"?"mdWasMic":S.settings.input==="screen"?"mdWasScreen":"mdWasNone"), t("mdUse"), 5000, ()=>{ setInput("midi"); }); return; }
   if(gone.length && !names.length){ if(MD.paused){ mdCdStop(); return; } mdLostNow(); } }
-function mdLostNow(){ const a = (S.settings.input==="midi" && !LV.on) ? actNow() : null;
+function mdLostNow(){ if(MW&&MW.on) return; const a = (S.settings.input==="midi" && !LV.on) ? actNow() : null;
   const pause = a && (a.k==="learn" || a.k==="daily" || a.k==="game" || (a.k==="duel" && !a.online));
   if(!pause){ if(!mdQuiet()) mdToast("lost", t("mdLostT"), a&&a.online ? t("mdLostOn") : S.settings.input==="midi" ? t("mdLostPill") : "", null, a&&a.online?4000:3000); return; }
   mdToastHide(); MD.paused=a; MD.wait=false; mdHold(true); mdLostRender(); openMod("mdLost"); $("mdGoScreen").focus({preventScroll:true}); }
@@ -8610,6 +8819,266 @@ fnNote=function(m, el){ if(!FN.on) return; const pc=md12(m);
 { const _go=fnGo; fnGo=function(){ if(FN.level==="adv"){ fnApply(); fnClose(); setInput(FN.how, FN.how!=="screen"); openPage("hub"); return; } return _go.apply(this,arguments); }; }
 { const _fc=fnClose; fnClose=function(){ clearTimeout(FN.nt); clearInterval(FN.pi); return _fc.apply(this,arguments); }; }
 /* ==== fin Parcours 2-3 ==== */
+
+/* ==== MIDI lots 2-3 (24/10/2026) : assistant « Brancher mon clavier » M4–M7 (matrice par appareil), M9 étendue, M10 prêt, M11 dépannage, M12 navigateur sans MIDI,
+   M3 (lien depuis le premier lancement), Réglages « Mon clavier », calage de latence (midiLat) ==== */
+// S.midi (lot 1, propre à l'appareil) gagne : hw.{keys,lo,hi,ped,conn:"usb"|"bt"|"din",dev:"ipad-usbc"|"ipad-lightning"|"iphone-…"|"mac"|"win"|"android"|"cros"|"linux"}, wizard:{step,done,gaveUp}, lat (ms, −50…150)
+var MW={on:false, step:"hw", hist:[], hw:"", conn:"", port:"", found:"", still:false, tm:0, poll:0, go:0, t:null, r:null, lat:null, open:-1, retry:0, solved:false, detecting:false, msg:"", btAsked:false, copied:false};
+const MW_SUPPORT="a.bernard@me.com"; // « Écrire au support » (e-mail prérempli : appareil, navigateur, noms des ports, rien de personnel)
+const mwHw=()=>{ const s=mdS(); if(!s.hw||typeof s.hw!=="object") s.hw={}; return s.hw; };
+function midiLat(){ const v=+(S.midi&&S.midi.lat); return isFinite(v) ? Math.max(-50,Math.min(150,Math.round(v))) : 0; }
+try{ window.midiLat=midiLat; }catch(e){} // the Play frame (same origin) widens its rhythm windows with it
+// ---- the device (§4.1) ----
+function mwDev(){ const de=document.documentElement, nat=de.classList.contains("native"), ua=navigator.userAgent||"", pf=String((navigator.userAgentData&&navigator.userAgentData.platform)||navigator.platform||"");
+  const touchMac=/mac/i.test(pf) && navigator.maxTouchPoints>1, ios=/iPad|iPhone|iPod/.test(ua) || touchMac;
+  const kind = ios ? (/iPhone|iPod/.test(ua) ? "iphone" : "ipad") : /android/i.test(ua+" "+pf) ? "android" : /cros/i.test(ua+" "+pf) ? "cros" : /win/i.test(pf) ? "win" : /mac/i.test(pf) ? "mac" : "linux";
+  const br = nat ? "" : /Edg\//.test(ua) ? "Edge" : /Firefox\//.test(ua) ? "Firefox" : /(Chrome|CriOS)\//.test(ua) ? "Chrome" : /Safari\//.test(ua) ? "Safari" : "";
+  return {nat, ios, kind, br, ok:midiPossible()}; }
+const mwDevLbl=d=>t("mdDevL")[d.kind]+(d.nat ? ", "+t("mdApp") : d.br ? ", "+d.br : "");
+function mwDevKey(){ const d=mwDev(); return d.ios ? d.kind+"-"+(MW.port==="light"?"lightning":"usbc") : d.kind; }
+// ---- simple vector drawings (no brand): instruments, plugs, devices ----
+const mwKeys=(x,y,w,h,n)=>{ const ww=w/n; let o='<rect class="k" x="'+x+'" y="'+y+'" width="'+w+'" height="'+h+'" rx="2"/>'; for(let i=1;i<n;i++) o+='<path class="kl" d="M'+(x+i*ww).toFixed(1)+' '+y+'v'+h+'"/>';
+  for(let i=0;i<n-1;i++){ if([2,6].includes(i%7)) continue; o+='<rect class="kb" x="'+(x+(i+1)*ww-ww*.3).toFixed(1)+'" y="'+y+'" width="'+(ww*.6).toFixed(1)+'" height="'+(h*.6).toFixed(1)+'" rx="1"/>'; } return o; };
+const MWA={
+  midi:()=>'<svg viewBox="0 0 120 72" aria-hidden="true"><rect class="bd" x="10" y="16" width="100" height="42" rx="7"/><circle class="ac2" cx="21" cy="25" r="3.5"/><circle class="ac2" cx="31" cy="25" r="3.5"/>'+[42,52,62,72].map(x=>'<rect class="ac" x="'+x+'" y="21.5" width="7.5" height="7" rx="1.5"/>').join("")+'<rect class="dk" x="86" y="22" width="16" height="6" rx="1.5"/>'+mwKeys(16,33,88,20,14)+'</svg>',
+  digital:()=>'<svg viewBox="0 0 120 72" aria-hidden="true"><path class="ln" d="M22 44v24M98 44v24"/><rect class="bd" x="6" y="14" width="108" height="32" rx="5"/>'+[12,17,22].map(x=>'<circle class="ac2" cx="'+x+'" cy="20" r="1.4"/>').join("")+'<rect class="dk" x="50" y="17.5" width="14" height="4" rx="1"/><circle class="ok" cx="70" cy="19.5" r="1.8"/>'+mwKeys(11,25,98,17,20)+'</svg>',
+  acoustic:()=>'<svg viewBox="0 0 120 72" aria-hidden="true"><rect class="wd" x="28" y="6" width="64" height="40" rx="4"/><rect class="wd2" x="35" y="12" width="50" height="14" rx="2"/>'+[42,50,58,66,74].map((x,i)=>'<path class="ln2" d="M'+x+' 15v'+(i%2?8:6)+'"/>').join("")+'<rect class="wd" x="22" y="44" width="76" height="6" rx="2"/>'+mwKeys(26,50,68,9,14)+'<path class="wd3" d="M30 59v9M90 59v9"/><rect class="gd" x="57" y="62" width="2.6" height="2.6"/><rect class="gd" x="61" y="62" width="2.6" height="2.6"/></svg>',
+  none:()=>'<svg viewBox="0 0 120 72" aria-hidden="true"><rect class="dash" x="22" y="18" width="76" height="36" rx="8"/><text x="60" y="46" text-anchor="middle" class="q">?</text></svg>',
+  usbb:()=>'<svg viewBox="0 0 48 32" aria-hidden="true"><path class="pl" d="M14 6h20v20H14z"/><path class="ph" d="M18 11l3-2h6l3 2v10H18z"/></svg>',
+  usbc:()=>'<svg viewBox="0 0 48 32" aria-hidden="true"><rect class="pl" x="6" y="9" width="36" height="14" rx="7"/><rect class="ph" x="13" y="14" width="22" height="4" rx="2"/></svg>',
+  usba:()=>'<svg viewBox="0 0 48 32" aria-hidden="true"><rect class="pl" x="6" y="9" width="36" height="14" rx="1.5"/><rect class="ph" x="10" y="12" width="28" height="5" rx="1"/></svg>',
+  light:()=>'<svg viewBox="0 0 48 32" aria-hidden="true"><rect class="pl" x="9" y="11" width="30" height="10" rx="5"/><rect class="ph" x="14" y="14.5" width="20" height="3" rx="1.5"/></svg>',
+  din:()=>'<svg viewBox="0 0 48 32" aria-hidden="true"><circle class="pl" cx="24" cy="16" r="12"/>'+[[16,16],[32,16],[18.3,10.3],[29.7,10.3],[24,8]].map(([x,y])=>'<circle class="ph" cx="'+x+'" cy="'+y+'" r="1.8"/>').join("")+'<rect class="ph" x="22" y="24.5" width="4" height="3" rx="1"/></svg>',
+  waves:()=>'<svg viewBox="0 0 48 32" aria-hidden="true"><rect class="pl" x="5" y="13" width="24" height="12" rx="2"/><path class="wv" d="M33 12a6 6 0 0 1 0 10M37 9a10 10 0 0 1 0 16M41 6a14 14 0 0 1 0 22"/></svg>',
+  ipad:()=>'<svg viewBox="0 0 60 80" aria-hidden="true"><rect class="dv" x="6" y="4" width="48" height="72" rx="7"/><rect class="sc" x="11" y="10" width="38" height="58" rx="3"/><rect class="ac" x="14" y="56" width="32" height="8" rx="1.5"/></svg>',
+  iphone:()=>'<svg viewBox="0 0 60 80" aria-hidden="true"><rect class="dv" x="14" y="4" width="32" height="72" rx="8"/><rect class="sc" x="18" y="11" width="24" height="56" rx="3"/><rect class="ac" x="20" y="56" width="20" height="7" rx="1.5"/></svg>',
+  laptop:()=>'<svg viewBox="0 0 80 60" aria-hidden="true"><rect class="dv" x="12" y="6" width="56" height="38" rx="4"/><rect class="sc" x="17" y="11" width="46" height="28" rx="2"/><path class="dv" d="M4 46h72l-5 7H9z"/></svg>',
+  monitor:()=>'<svg viewBox="0 0 80 60" aria-hidden="true"><rect class="dv" x="6" y="4" width="68" height="42" rx="4"/><rect class="sc" x="11" y="9" width="58" height="32" rx="2"/>'+[16,21,26].map((x,i)=>'<circle cx="'+x+'" cy="14" r="1.6" fill="'+["#f0566b","#f2b23a","#35c58a"][i]+'"/>').join("")+'<rect class="ac" x="20" y="27" width="40" height="6" rx="1.5"/><path class="dv" d="M34 46h12l3 8H31z"/></svg>',
+  appdev:()=>'<svg viewBox="0 0 60 80" aria-hidden="true"><rect class="dv" x="10" y="4" width="40" height="72" rx="7"/><rect class="sc" x="15" y="10" width="30" height="60" rx="3"/><rect x="20" y="26" width="20" height="20" rx="5" fill="#fff"/><path d="M25 30v12M30 30v12M35 30v12" stroke="#7a5bf5" stroke-width="3" stroke-linecap="round"/><rect class="ac" x="20" y="54" width="20" height="4" rx="2"/></svg>',
+  cablex:()=>'<svg viewBox="0 0 120 72" aria-hidden="true"><path class="ln" d="M14 36h92"/><rect class="pl" x="6" y="29" width="14" height="14" rx="2"/><rect class="pl" x="100" y="29" width="14" height="14" rx="3"/><circle cx="60" cy="36" r="13" fill="none" stroke="#f0566b" stroke-width="4"/><path d="M52 28l16 16M68 28L52 44" stroke="#f0566b" stroke-width="4" stroke-linecap="round"/></svg>'
+};
+const MW_ICON={kb:'<svg viewBox="0 0 24 24"><rect x="2.5" y="7" width="19" height="11" rx="2"/><path d="M6.5 7v6M10 7v6M14 7v6M17.5 7v6"/></svg>', fix:'<svg viewBox="0 0 24 24"><path d="M9 3v4M15 3v4M7 7h10v4a5 5 0 0 1-10 0zM12 16v5"/></svg>', web:'<svg viewBox="0 0 24 24"><rect x="3" y="4.5" width="18" height="15" rx="2.5"/><path d="M3 9h18M6.5 6.8h.01M9 6.8h.01"/></svg>', clock:'<svg viewBox="0 0 24 24"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.5 2M9.5 2.5h5"/></svg>',
+  search:'<svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5"/></svg>', mic:'<svg viewBox="0 0 24 24"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5.5 11a6.5 6.5 0 0 0 13 0M12 17.5V21"/></svg>', screen:'<svg viewBox="0 0 24 24"><rect x="2.5" y="4" width="19" height="13" rx="2"/><path d="M8 21h8M12 17v4"/></svg>',
+  chev:'<svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg>', retry:'<svg viewBox="0 0 24 24"><path d="M20 12a8 8 0 1 1-2.3-5.6M20 4v4h-4"/></svg>', copy:'<svg viewBox="0 0 24 24"><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V5a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h3"/></svg>', check:'<svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>'};
+// cable drawing (M6): keyboard → cable → device, the right plug at each end
+function mwCableArt(){ const d=mwDev(), din=MW.conn==="din", key=mwCableKey(), dev=d.kind, devArt = dev==="ipad"?MWA.ipad():dev==="iphone"||dev==="android"?MWA.iphone():dev==="mac"||dev==="cros"?MWA.laptop():MWA.monitor();
+  const end2 = key==="light" ? "light" : key==="pc" ? "usba" : "usbc";
+  let h='<svg class="mw-cable" viewBox="0 0 600 176" role="img" aria-label="'+esc(t("mdCableN")[key])+'"><g transform="translate(6,62)">'+(din?'<rect class="wd" x="0" y="0" width="150" height="46" rx="6"/>'+mwKeys(8,22,134,20,18):'<rect class="bd" x="0" y="4" width="150" height="42" rx="7"/>'+mwKeys(8,18,134,22,18))+'</g>';
+  h+='<path class="ln" d="M156 84H'+(din?250:470)+'"/>'; if(din) h+='<rect class="dk2" x="250" y="66" width="80" height="36" rx="8"/><path class="ln" d="M330 84H470"/>';
+  h+='<rect class="pl" x="150" y="76" width="14" height="16" rx="2"/><rect class="pl" x="460" y="77" width="14" height="14" rx="4"/>';
+  h+='<g transform="translate(478,20) scale(1.6)">'+devArt.replace(/^<svg[^>]*>|<\/svg>$/g,"")+'</g>';
+  const art=s=>s.replace(/^<svg[^>]*>|<\/svg>$/g,""), bub=(cx,a)=>'<g transform="translate('+(cx-22)+',2)"><circle class="bub" cx="22" cy="22" r="21"/><g transform="translate(4,8) scale(.75)">'+art(a)+'</g></g><path class="ln3" d="M'+cx+' 44v26"/>';
+  h+=bub(160, din?MWA.din():MWA.usbb())+bub(466, MWA[end2]());
+  h+='<text class="tl" x="80" y="140" text-anchor="middle">'+esc(t("mdKbYou"))+'</text><text class="ts" x="80" y="158" text-anchor="middle">'+esc(t("mdEnd")[din?"din":"usbb"])+'</text>';
+  h+='<text class="tl ac3" x="'+(din?290:310)+'" y="'+(din?126:72)+'" text-anchor="middle">'+esc(t("mdCableN")[key])+'</text>';
+  h+='<text class="tl" x="518" y="164" text-anchor="middle">'+esc(t("mdYourDev")[dev])+'</text>';
+  return h+'</svg>'; }
+function mwCableKey(){ const d=mwDev(); if(MW.conn==="din") return "din"; if(d.ios) return MW.port==="light"?"light":"usbc"; return d.kind==="mac"?"mac":d.kind==="android"?"android":d.kind==="cros"?"pc":"pc"; }
+// ---- open / close / navigate ----
+function mwOpen(step){ try{ closeDrawer(); }catch(e){} if(midiOpen) closeMidi(); const d=mwDev(), h=mwHw();
+  Object.assign(MW,{on:true, hist:[], hw:"", found:"", still:false, solved:false, detecting:false, msg:"", btAsked:false, copied:false, open:-1});
+  MW.conn=h.conn||""; MW.port = /lightning/.test(h.dev||"") ? "light" : /usbc/.test(h.dev||"") ? "usbc" : "";
+  MW.step = !d.ok ? "safari" : (step||"hw");
+  const el=$("mwiz"); el.classList.toggle("mw-top", document.body.classList.contains("gate-on") || (typeof startUI==="function"&&startUI()));
+  openMod("mwiz"); mwEnter(); }
+function mwClose(){ if(!MW.on) return; MW.on=false; mwStop(); if(MW.lat) MW.lat.run=false; const s=mdS(); s.wizard={...(s.wizard||{}), step:MW.step}; save(); closeMod("mwiz"); mdPill(); try{ mdHub(); }catch(e){} try{ mkRender(); }catch(e){}
+  if(FN.on){ if(midiReady && fnModes().includes("midi")) FN.how="midi"; fnRender(); } }
+function mwStop(){ clearTimeout(MW.tm); clearInterval(MW.poll); clearTimeout(MW.go); MW.tm=MW.poll=MW.go=0; if(MW.lat) clearTimeout(MW.lat.tm); }
+function mwGo(step, back){ if(!back && step!==MW.step) MW.hist.push(MW.step); MW.step=step; MW.found=""; MW.still=false; MW.solved=false; MW.msg=""; MW.open=-1; mwStop(); mwEnter(); }
+function mwPrev(){ const p=MW.hist.pop(); if(p) mwGo(p,true); }
+function mwEnter(){ const st=MW.step, s=mdS(); s.wizard={...(s.wizard||{}), step:st};
+  if(["hw","cable","bt","trouble"].includes(st)) mwListen();
+  if(st==="cable"){ MW.tm=setTimeout(()=>{ if(MW.on&&MW.step==="cable"&&!midiReady){ MW.still=true; mwRender(); } },20000); }
+  if(st==="test"){ MW.t={vels:[], last:null, lo:48, ped:!!mwHw().ped, pedAsk:true, twice:"", picked:"", n:0}; MW.tm=setTimeout(()=>{ if(MW.on&&MW.step==="test"&&MW.t&&!MW.t.n){ MW.t.silent=true; mwRender(); } },15000); }
+  if(st==="range") mwRangeStart();
+  if(st==="ready") mwFinish();
+  if(st==="lat") MW.lat={run:false, beats:[], hits:[], res:undefined};
+  mwRender(); }
+// detection in the background: the browser asks once for MIDI (a step the player chose), the app re-reads its ports every 2 s (Bluetooth pairing, hub…)
+function mwListen(){ if(!midiPossible()) return; if(!midiAcc && !midiDenied && navigator.requestMIDIAccess && MW.step!=="hw") enableMidi(true).then(()=>{ if(MW.on) mwRender(); });
+  clearInterval(MW.poll); if(window.__nativeMidi) MW.poll=setInterval(()=>{ if(!MW.on) return; try{ window.__nativeMidi.listInputs().catch(()=>{}); }catch(e){} },2000); }
+// a port arrives or leaves while the assistant is open (called by mdPorts)
+function mwPorts(names){ if(!MW.on) return; const n=names[0];
+  if(n && ["cable","bt","trouble"].includes(MW.step)){ MW.found=n; if(MW.step==="trouble") MW.solved=true; mwRender(); clearTimeout(MW.go); MW.go=setTimeout(()=>{ if(MW.on && midiReady) mwGo("test"); },1000); return; }
+  mwRender(); }
+// every MIDI message goes here first while the assistant is open (the game underneath does not get them)
+function mwMsg(st, note, vel, inp){ if(!MW.on) return false; const ty=st&0xf0, name=inp&&inp.name||"";
+  if(ty===0xB0){ if(note===64 && vel>=64 && MW.step==="test" && MW.t){ MW.t.ped=true; mwHw().ped=true; save(); mwRender(); } return true; }
+  if(ty!==0x90 || !vel) return true;
+  if(S.settings.midiSound) tone(note,0,.9,.1+.26*vel/127);
+  const st2=MW.step;
+  if(["hw","how","cable","bt","trouble"].includes(st2)){ mwGo("test"); mwTestNote(note,vel,name); return true; }
+  if(st2==="test") mwTestNote(note,vel,name);
+  else if(st2==="range") mwRangeNote(note);
+  else if(st2==="lat") mwLatHit(performance.now());
+  else if(st2==="ready" && note%12===0) mwPlay();
+  return true; }
+// ---- M8 in the assistant: a note, loud / soft, twice, pedal ----
+function mwTestNote(m, v, name){ const T=MW.t; if(!T) return; T.n++; T.vels.push(v); T.last={m,v,name}; T.silent=false;
+  if(midiNames.length>1 && !T.picked && name){ T.picked=name; S.settings.midiInput=name; }
+  const s=mdS(), h=mwHw(); s.tested=Date.now(); if(name && h.name!==name){ s.hw={name}; } const r=mwTouch(); if(r!=null) mwHw().vel=r; save();
+  if(m<T.lo || m>=T.lo+24) T.lo=Math.max(0,Math.min(103,12*Math.floor(m/12))); mwRender(); }
+function mwTouch(){ const v=MW.t?MW.t.vels:[]; if(v.length<2) return null; const mx=Math.max(...v), mn=Math.min(...v); if(mx-mn>=30) return true; if(mx===mn) return false; return null; }
+function mwKb2(lo, on, nc){ const WH=[0,2,4,5,7,9,11], wh=[]; for(let m=lo;m<lo+24;m++) if(WH.includes(m%12)) wh.push(m); const ww=100/wh.length;
+  let h=wh.map(m=>'<span class="w'+(m===on?' on':'')+'"'+(m===on?' style="--nc:'+nc+'"':'')+'>'+(m%12===0?'<small>'+esc(octName(m))+'</small>':'')+'</span>').join("");
+  for(let m=lo;m<lo+24;m++) if(!WH.includes(m%12)){ const i=wh.indexOf(m-1); h+='<span class="b'+(m===on?' on':'')+'" style="left:calc('+((i+1)*ww)+'% - '+(ww*.3)+'%);width:'+(ww*.6)+'%'+(m===on?';--nc:'+nc:'')+'"></span>'; }
+  return '<div class="mt-kb mw-kb" aria-hidden="true">'+h+'</div>'; }
+// ---- M9 range ----
+function mwRangeStart(){ const sz=S.settings.kbdSize||"auto", h=mwHw(); MW.r={lo:null, hi:null, mode: /^\d+$/.test(sz) && !(h.lo>0) ? "guess" : "measure", err:""}; }
+function mwRangeNote(m){ const R=MW.r; if(!R) return; if(R.mode==="guess") R.mode="measure"; R.lo=R.lo==null?m:Math.min(R.lo,m); R.hi=R.hi==null?m:Math.max(R.hi,m); R.err=""; mwRender(); }
+function mwRangeApply(){ const R=MW.r; if(!R||R.lo==null||R.hi-R.lo<11){ if(R){ R.err=t("mdRangeShort"); mwRender(); } return; }
+  let lo=R.lo, hi=R.hi; const white=m=>[0,2,4,5,7,9,11].includes(m%12); while(!white(lo)) lo--; while(!white(hi)) hi++;
+  Object.assign(S.settings,{kbdSize:"custom",kbdLow:lo,kbdHigh:hi}); Object.assign(mwHw(),{lo,hi,keys:hi-lo+1}); save(); buildKeyboard(); renderSettings(); mwGo("ready"); }
+function mwRangeGuessOk(){ const sz=S.settings.kbdSize; if(KB_PRESETS && KB_PRESETS[sz]){ const [lo,hi]=KB_PRESETS[sz]; Object.assign(mwHw(),{lo,hi,keys:+sz}); save(); } mwGo("ready"); }
+function mwKeysTxt(){ const h=mwHw(); if(h.lo>0 && h.hi>h.lo) return t("mdKeys")(h.keys||h.hi-h.lo+1, octName(h.lo), octName(h.hi)); const sz=S.settings.kbdSize;
+  if(sz==="custom" && S.settings.kbdHigh>S.settings.kbdLow) return t("mdKeys")(S.settings.kbdHigh-S.settings.kbdLow+1, octName(S.settings.kbdLow), octName(S.settings.kbdHigh));
+  return /^\d+$/.test(sz||"") ? t("mdKeysN")(sz) : ""; }
+// a strip of the 88 keys with the measured part lit (M9)
+function mwStrip(lo, hi){ let w='', b=''; const WH=[0,2,4,5,7,9,11], wh=[]; for(let m=21;m<=108;m++) if(WH.includes(m%12)) wh.push(m); const ww=100/wh.length;
+  wh.forEach(m=>{ const inR=lo!=null&&m>=lo&&m<=hi, edge=m===lo||m===hi; w+='<span class="w'+(inR?' in':'')+(edge?' edge':'')+'"></span>'; });
+  for(let m=22;m<108;m++) if(!WH.includes(m%12)){ const i=wh.indexOf(m-1); b+='<span class="b'+(lo!=null&&m>=lo&&m<=hi?' in':'')+'" style="left:calc('+((i+1)*ww)+'% - '+(ww*.32)+'%);width:'+(ww*.64)+'%"></span>'; }
+  return '<div class="mw-strip" aria-hidden="true">'+w+b+'</div>'; }
+// ---- M10 ----
+function mwFinish(){ const s=mdS(), h=mwHw(); if(MW.conn) h.conn=MW.conn; h.dev=mwDevKey(); if(!h.name && midiNames[0]) h.name=midiNames[0]; s.wizard={...(s.wizard||{}), done:Date.now()}; save();
+  if(midiReady && S.settings.input!=="midi" && !FN.on) setInput("midi"); }
+function mwPlay(){ mwClose(); if(FN.on && $("fnKb")) return; /* the first screen: « play a C » comes next */ }
+function mwFallback(v){ const s=mdS(); s.wizard={...(s.wizard||{}), gaveUp:Date.now()}; save(); mwClose();
+  if(FN.on){ const b=$("gate")&&$("gate").querySelector('.fn-in[data-v="'+v+'"]'); if(b) b.click(); return; }
+  setInput(v, v!=="screen"); }
+// ---- M11 trouble: 5 lines at most, by device, connection and step ----
+function mwFixes(){ const d=mwDev(), seen=midiNames.length>0, c=MW.conn||mwHw().conn||"", L=[], add=(i,p)=>{ if(!L.some(x=>x.i===i)) L.push({i,p}); };
+  if(!seen){ if(!d.nat && midiDenied) add(4,0); if(d.kind==="win") add(5,1); if(d.ios && MW.port==="light") add(3,1); if(c==="bt"){ add(6,1); add(7,3); } if(c==="din") add(13,1);
+    if(c!=="bt") add(2,2); add(1,2); if(MW.hw==="digital") add(9,3); if(!d.nat && !midiDenied) add(4,4); }
+  else { add(8,1); if(c!=="bt") add(9,2); add(10,2); if(c==="bt"){ add(12,1); add(7,2); } add(11,3); add(12,3); if(d.kind==="win") add(5,3); }
+  return L.sort((a,b)=>a.p-b.p).slice(0,5).map(x=>x.i); }
+async function mwRetry(){ MW.retry=1; MW.msg=""; mwRender(); try{ if(window.__nativeMidi){ if(!midiAcc) await enableMidi(true); await window.__nativeMidi.listInputs(); } else if(!midiAcc || midiDenied) await enableMidi(); else if(midiAcc.onstatechange) midiAcc.onstatechange(); }catch(e){}
+  setTimeout(()=>{ if(!MW.on) return; MW.retry=0; if(midiReady){ MW.solved=true; MW.found=midiNames[0]; mwRender(); clearTimeout(MW.go); MW.go=setTimeout(()=>{ if(MW.on&&MW.step==="trouble") mwGo("test"); },1000); } else { MW.msg=t("mdStillNo"); mwRender(); } },1200); }
+function mwMail(){ const d=mwDev(), ua=(navigator.userAgent||"").slice(0,160); return "mailto:"+MW_SUPPORT+"?subject="+encodeURIComponent(t("mdMailS"))+"&body="+encodeURIComponent(t("mdMailB")(mwDevLbl(d), d.nat?"app":ua, midiNames.join(", ")||"—")); }
+// ---- calibration: a key on each click of a metronome (80 bpm, 8 clicks) ----
+function mwLatGo(){ const c=audio(), per=750, lead=700, out=c ? ((c.outputLatency||c.baseLatency||0)*1000) : 0, L=MW.lat; clearTimeout(L.tm);
+  for(let i=0;i<8;i++) tone(i%4===0?96:91,(lead+i*per)/1000,.05,.32);
+  L.t0=performance.now()+lead+out; L.per=per; L.beats=Array.from({length:8},(_,i)=>L.t0+i*per); L.hits=[]; L.got={}; L.run=true; L.res=undefined; mwRender();
+  L.tm=setTimeout(mwLatEnd, lead+8*per+350); }
+function mwLatHit(ts){ const L=MW.lat; if(!L||!L.run) return; let k=0; L.beats.forEach((b,i)=>{ if(Math.abs(ts-b)<Math.abs(ts-L.beats[k])) k=i; }); const dlt=ts-L.beats[k];
+  if(Math.abs(dlt)>300 || L.got[k]) return; L.got[k]=1; L.hits.push(dlt); const dot=$("mwBody").querySelector('.mw-ldots [data-k="'+k+'"]'); if(dot) dot.classList.add("on"); }
+function mwLatEnd(){ const L=MW.lat; if(!L) return; L.run=false; if(L.hits.length>=4){ const v=Math.max(-50,Math.min(150,Math.round(L.hits.reduce((a,b)=>a+b,0)/L.hits.length))); mdS().lat=v; L.res=v; save(); } else L.res=null; if(MW.on && MW.step==="lat") mwRender(); try{ mkRender(); }catch(e){} }
+// ---- rendering ----
+const mwB=(a,txt,cls,ic,dis)=>'<button type="button" class="btn'+(cls?' '+cls:'')+'" data-a="'+a+'"'+(dis?' disabled':'')+'>'+(ic?'<span class="mw-bi" aria-hidden="true">'+MW_ICON[ic]+'</span>':'')+'<span>'+esc(txt)+'</span></button>';
+function mwFoot(primary, opt){ opt=opt||{}; let h=''; if(opt.back!==false && MW.hist.length) h+=mwB("prev",t("mdPrev"),"ghost mw-back");
+  if(opt.fb!==false) h+='<span class="mw-fb">'+esc(t("mdNoKb"))+'</span>'+mwB("mic",t("mdUseMic"),"ghost","mic")+mwB("screen",t("mdUseScreen"),"ghost","screen");
+  if(opt.extra) h+=opt.extra; h+='<span class="mw-sp"></span>'; if(primary) h+=primary; return h; }
+function mwRender(){ if(!MW.on) return; const st=MW.step, d=mwDev(), body=$("mwBody"), foot=$("mwFoot"); let h='', f='', ic=MW_ICON.kb, ti=t("mdWizT"), dot=0;
+  const found = midiNames.length ? '<div class="mw-found" role="status"><span class="mw-ok">'+MW_ICON.check+'</span><b>'+esc(t("mdFound")(mdTrunc(midiNames[0])))+'</b><span class="mw-sp"></span>'+mwB("totest",t("mdTestNow"),"primary")+'</div>' : '';
+  if(st==="hw"){ dot=1;
+    h='<h2 id="mwH">'+esc(t("mdWhat"))+'</h2><p class="mw-sub">'+esc(t("mdWhatS")(mwDevLbl(d)))+'</p>'+found
+      +'<div class="mw-opts n4">'+["midi","digital","acoustic","none"].map((k,i)=>'<button type="button" class="mw-opt" data-a="hw:'+k+'"><span class="mw-art">'+MWA[k]()+'</span><b>'+esc(t("mdHw")[i])+'</b><small>'+esc(t("mdHwS")[i])+'</small><span class="mw-go">'+esc(t("mdHwGo")[i])+'</span></button>').join("")+'</div>'
+      +(midiNames.length?'':'<div class="mw-row"><span class="mw-radio'+(MW.detecting?' on':'')+'"></span><span class="mw-rt"><b>'+esc(t("mdAlready"))+'</b><small>'+esc(MW.detecting?t("mdLooking"):MW.msg||t("mdAlreadyS"))+'</small></span>'+(MW.msg?mwB("trouble",t("mdTrouble"),"ghost"):'')+mwB("detect",t("mdDetect"),"","search",MW.detecting)+'</div>');
+    f=mwFoot("",{back:false}); }
+  else if(st==="how"){ dot=2; const C=t("mdConn"), P=t("mdPorts"), needPort=d.ios && MW.conn && MW.conn!=="bt", ready=MW.conn && (!needPort || MW.port);
+    h='<h2 id="mwH">'+esc(t("mdHow"))+'</h2><div class="mw-opts n3 mw-conn">'+[["usb",MWA.usbb()+MWA.usbc()],["bt",MWA.waves()],["din",MWA.din()+MWA.din()]].map(([k,a],i)=>'<button type="button" class="mw-opt" data-a="conn:'+k+'" aria-pressed="'+(MW.conn===k)+'"><span class="mw-art mw-plugs">'+a+'</span><b>'+esc(C[i][0])+'</b><small>'+esc(C[i][1])+'</small></button>').join("")+'</div>'
+      +'<p class="mw-tip"><button type="button" class="mw-link" data-a="dunno">'+esc(t("mdDunno"))+'</button> <span'+(MW.dunno?'':' hidden')+'>'+esc(t("mdDunnoS"))+'</span></p>'
+      +(needPort?'<p class="mw-q"><b>'+esc(t("mdPort")(t("mdDevL")[d.kind]))+'</b> <small>'+esc(t("mdPortS"))+'</small></p><div class="mw-opts n2 mw-port">'+[["usbc",MWA.usbc()],["light",MWA.light()]].map(([k,a],i)=>'<button type="button" class="mw-opt mw-h" data-a="port:'+k+'" aria-pressed="'+(MW.port===k)+'"><span class="mw-art mw-plugs">'+a+'</span><span class="mw-rt"><b>'+esc(P[i][0])+'</b><small>'+esc(P[i][1])+'</small></span></button>').join("")+'</div>':'')
+      +(d.kind==="win" && MW.conn==="bt" && !d.nat ? '<p class="mw-warn" role="note">'+esc(t("mdWinBt"))+'</p>':'');
+    f=mwFoot(mwB("next",t("mdNext"),"primary","",!ready)); }
+  else if(st==="cable"){ dot=3; const key=mwCableKey(), txt={usbc:"mdCableUsbc",light:"mdCableLight",mac:"mdCableMac",pc:"mdCablePc",android:"mdCableAndroid",din:"mdCableDin"}[key];
+    h='<h2 id="mwH">'+esc(t("mdCableT"))+'</h2><div class="mw-draw">'+mwCableArt()+'</div><p class="mw-txt">'+esc(t(txt))+(key!=="din"&&key!=="light"?' <small>'+esc(t("mdCableAlt"))+'</small>':'')+'</p>'
+      +'<div class="mw-two"><div class="mw-row mw-wait'+(MW.found?' ok':'')+'" role="status"><span class="mw-spin'+(MW.found?' ok':'')+'"></span><span class="mw-rt"><b>'+esc(MW.found?t("mdFound")(mdTrunc(MW.found)):t("mdLooking"))+'</b><small>'+esc(t("mdLookingS"))+'</small></span></div>'
+      +(MW.still?'<div class="mw-still"><b>'+esc(t("mdStill"))+'</b> <button type="button" class="mw-link" data-a="trouble">'+esc(t("mdMoreHelp"))+'</button><ul>'+t("mdStillL").map(x=>'<li>'+esc(x)+'</li>').join("")+'</ul></div>':'')+'</div>';
+    f=mwFoot(midiNames.length?mwB("totest",t("mdTestNow"),"primary"):mwB("trouble",t("mdTrouble"),"")); }
+  else if(st==="bt"){ dot=3; const steps = d.nat ? t("mdBtIos") : d.kind==="mac" ? t("mdBtMac") : null;
+    h='<h2 id="mwH">'+esc(t("mdBtT"))+'</h2>'+(steps?'<ol class="mw-steps">'+steps.map((x,i)=>'<li><span class="mw-n">'+(i+1)+'</span><span class="mw-rt"><b>'+esc(x[0])+'</b><small>'+esc(x[1])+'</small></span></li>').join("")+'</ol>':'<p class="mw-warn">'+esc(t("mdBtOther"))+'</p>')
+      +(MW.found?'<div class="mw-found" role="status"><span class="mw-ok">'+MW_ICON.check+'</span><b>'+esc(t("mdFound")(mdTrunc(MW.found)))+'</b></div>':d.nat?'<p class="mw-sub">'+esc(t("mdBtAfter"))+'</p>':'')
+      +(MW.btAsked && !MW.found?'<p class="mw-tip"><b>'+esc(t("mdBtNot"))+'</b> <button type="button" class="mw-link" data-a="trouble">'+esc(t("mdMoreHelp"))+'</button></p>':'');
+    f=mwFoot(d.nat ? mwB("bt",t("mdBtFind"),"primary","search") : d.kind==="mac" ? (midiNames.length?mwB("totest",t("mdTestNow"),"primary"):mwB("trouble",t("mdTrouble"),"")) : mwB("tocable",t("mdBtCable"),"primary")); }
+  else if(st==="test"){ dot=4; const T=MW.t||{vels:[],lo:48}, L=T.last, nc=L?"var(--note-"+(L.m%12)+")":"", r=mwTouch(), v=T.vels, many=midiNames.length>1 && !T.picked;
+    h='<h2 id="mwH">'+esc(t("mdPressAny"))+'</h2>'
+      +'<p class="mw-msg'+(L?' ok':'')+(T.silent?' bad':'')+'" role="status">'+(L?'<span class="mw-ok">'+MW_ICON.check+'</span>':'')+'<span><b>'+esc(L?t("mdTalks"):T.silent?t("mdSilent"):many?t("mdPickKb"):t("mdLooking"))+'</b><small>'+esc(L?t("mdFrom")(octName(L.m),L.name)+(T.picked&&midiNames.length>1?" · "+t("mdPicked")(T.picked):""):"")+'</small></span>'+(T.silent?mwB("trouble",t("mdTrouble"),"ghost"):'')+'</p>'
+      +'<div class="mt-row mw-trow"><div class="mt-note"'+(L?' style="--nc:'+nc+'"':'')+'><b>'+(L?esc((S.settings.notation==="fr"?PC_FR:PC_EN)[L.m%12]):"♪")+'</b><small>'+(L?esc(octName(L.m)+" · "+t("mdForceN")(L.v)):"")+'</small></div>'+mwKb2(T.lo,L?L.m:-1,nc)+'<div class="mt-vel" aria-hidden="true"><span>'+esc(t("mdForce"))+'</span><i><b style="height:'+(L?Math.round(L.v/127*100):0)+'%"></b></i><em>'+(L?L.v:"")+'</em></div></div>'
+      +'<div class="mw-tsteps"><div class="mt-step'+(r!=null?' done':'')+'"><b>'+esc(t("mdLoudSoft"))+'</b><small class="'+(r?'ok':'')+'">'+esc(r===true?t("mdTouchVals")(Math.max(...v),Math.min(...v))+" · "+t("mdTouchOk"):r===false?t("mdTouchNo"):v.length?t("mdForceN")(v[v.length-1]):"")+'</small></div>'
+      +'<div class="mt-step'+(T.twice?' done':'')+'"><b>'+esc(t("mdTwice"))+'</b><span class="mt-btns">'+[["yes","mdYes"],["no","mdNo"],["none","mdNone"]].map(([k,l])=>'<button class="btn" type="button" data-a="tw:'+k+'" aria-pressed="'+(T.twice===k)+'">'+esc(t(l))+'</button>').join("")+'</span><small>'+esc(T.twice==="yes"?t("mdTwiceYes"):T.twice==="none"?t("mdTwiceNone"):T.twice==="no"?t("mdTwiceNo"):"")+'</small></div>'
+      +'<div class="mt-step'+(T.ped||T.noPed?' done':'')+'"><b>'+esc(t("mdPedal"))+'</b><small class="'+(T.ped?'ok':'')+'">'+(T.ped?esc(t("mdPedalOk")):T.noPed?'—':'<button type="button" class="mw-link" data-a="noped">'+esc(t("mdNoPedal"))+'</button>')+'</small></div></div>'
+      +((MW.conn==="bt"||mwHw().conn==="bt")?'<p class="mw-tip"><button type="button" class="mw-link" data-a="lat">'+esc(t("mdLatAsk"))+'</button></p>':'');
+    f=mwFoot(mwB("range",t("mdNext"),"primary","",!L)); }
+  else if(st==="range"){ dot=4; const R=MW.r||{}, ok=R.lo!=null&&R.hi-R.lo>=11;
+    if(R.mode==="guess"){ h='<h2 id="mwH">'+esc(t("mdGuess")(S.settings.kbdSize))+'</h2><p class="mw-sub">'+esc(t("mdRangeS"))+'</p>'+mwStrip(...(KB_PRESETS[S.settings.kbdSize]||[null,null]));
+      f=mwFoot(mwB("rmeasure",t("mdMeasure"),"")+mwB("rguess",t("mdYes"),"primary"),{fb:false}); }
+    else { h='<h2 id="mwH" class="mw-range-h">'+esc(t("mdRangeT"))+'</h2><p class="mw-sub">'+esc(t("mdRangeS"))+'</p>'
+      +'<div class="mw-ends"><span class="'+(R.lo!=null?'ok':'')+'">← '+esc(t("mdLeft"))+(R.lo!=null?' · '+esc(octName(R.lo))+' ✓':'')+'</span><span class="'+(ok?'ok':'')+'">'+(ok?esc(octName(R.hi))+' ✓ · ':'')+esc(t("mdRight"))+' →</span></div>'
+      +mwStrip(R.lo,R.hi)+'<p class="mw-res" role="status">'+(ok?'<b>'+esc(t("mdKeys")(R.hi-R.lo+1,octName(R.lo),octName(R.hi)))+'</b>':R.err?'<span class="bad">'+esc(R.err)+'</span>':'')+'<small>'+esc(t("mdFull88"))+'</small></p>';
+      f=mwFoot(mwB("rredo",t("mdRedo"),"ghost","retry")+mwB("rskip",t("mdSkip"),"ghost")+mwB("rok",t("mdOkBtn"),"primary"),{fb:false}); } }
+  else if(st==="ready"){ dot=5; const hw=mwHw(), kt=mwKeysTxt(), vel=hw.vel, nm=hw.name||midiNames[0]||"";
+    h='<div class="mw-ready"><span class="mw-robj" aria-hidden="true">'+OBJ.midikbd()+'</span><h2 id="mwH">'+esc(t("mdReady"))+'</h2><p class="mw-sub">'+esc(t("mdReadyS"))+'</p>'
+      +'<div class="mw-fiche"><b class="mw-nm"><i></i>'+esc(nm)+(midiReady?'<span class="mw-tag">'+esc(t("mdConnected"))+'</span>':'')+'</b><span class="mw-chips">'+(kt?'<span>'+esc(kt)+'</span>':'')+(vel!=null?'<span'+(vel?' class="ok"':'')+'>'+esc(t(vel?"mdVelOk":"mdVelNo"))+'</span>':'')+(hw.ped?'<span class="ok">'+esc(t("mdPedOk"))+'</span>':'')+'<span>'+esc(t(S.settings.midiSound===false?"mdSndPiano":"mdSndApp"))+'</span>'+(S.midi&&S.midi.lat?'<span>'+esc(t("mdLatN")(midiLat()))+'</span>':'')+'</span></div>'
+      +'<ul class="mw-adv">'+[0,1,2].map(i=>'<li><span class="mw-ai a'+i+'" aria-hidden="true">'+["♪♫","Do","f p"][i].replace("Do",S.settings.notation==="fr"?"Do":"C")+'</span><span>'+esc(i===2&&vel===false?t("mdAdvNoVel"):t("mdAdv")[i])+'</span></li>').join("")+'</ul></div>';
+    f=mwFoot(mwB("retest",t("mdRetest"),"ghost")+((hw.conn==="bt"||MW.conn==="bt")?mwB("lat",t("mdLatB"),"ghost","clock"):'')+mwB("play",t(FN.on?"mdPlayC":"mdPlay"),"primary mw-big"),{fb:false,back:false}); }
+  else if(st==="trouble"){ ic=MW_ICON.fix; ti=t("mdTrouble"); const fx=mwFixes(), F=t("mdFix"), A=t("mdFixAct"), c=MW.conn||mwHw().conn, prev=MW.hist[MW.hist.length-1];
+    const chips=[mwDevLbl(d)].concat(c?[t("mdConnN")[c]+(d.ios&&MW.port&&c!=="bt"?" · "+(MW.port==="light"?"Lightning":"USB-C"):"")]:[]).concat(prev&&t("mdStepN")[prev]?[t("mdStepN")[prev]]:[]);
+    h='<h2 id="mwH" class="mw-dup">'+esc(t("mdTrouble"))+'</h2><div class="mw-chips2">'+chips.map(x=>'<span>'+esc(x)+'</span>').join("")+'</div>'
+      +(MW.solved?'<div class="mw-found" role="status"><span class="mw-ok">'+MW_ICON.check+'</span><b>'+esc(t("mdSolved"))+' '+esc(MW.found?t("mdFound")(mdTrunc(MW.found)):"")+'</b></div>':'')
+      +'<ul class="mw-fix">'+fx.map((i,k)=>{ const o=MW.open===i, x=F[i-1]; return '<li class="'+(o?'open':'')+'" data-fix="'+i+'"><button type="button" class="mw-fh" data-a="fix:'+i+'" aria-expanded="'+o+'"><span class="mw-rt"><b>'+esc(x[0])+'</b><small>'+esc(x[1])+'</small></span><span class="mw-chev">'+MW_ICON.chev+'</span></button>'
+        +(o?'<div class="mw-fb2">'+(i===2?'<span class="mw-fart">'+MWA.cablex()+'</span>':'')+'<p>'+esc(x[2])+'</p>'+(A[i]?mwB("fixact:"+i,A[i],"primary"):mwB("retry",t("mdRetry"),"primary","retry",MW.retry))+'</div>':'')+'</li>'; }).join("")+'</ul>'
+      +(MW.msg?'<p class="mw-warn" role="status">'+esc(MW.msg)+'</p>':'');
+    f=mwFoot('<a class="mw-link mw-mail" href="'+esc(mwMail()).replace(/"/g,"&quot;")+'">'+esc(t("mdSupport"))+'</a>',{fb:true}); }
+  else if(st==="safari"){ ic=MW_ICON.web; ti=t("mdWizT"); const saf=d.ios||d.br==="Safari", macSaf=!d.ios&&d.kind==="mac";
+    const app='<div class="mw-card2'+(d.ios?' best':'')+'"><span class="mw-art">'+MWA.appdev()+'</span><span class="mw-rt"><b>'+esc(t("mdAppT"))+'</b><small>'+esc(t("mdAppS"))+'</small></span><span class="mw-soon">'+esc(t("mdAppSoon"))+'</span></div>';
+    const chr='<div class="mw-card2'+(macSaf?' best':'')+'"><span class="mw-art">'+MWA.monitor()+'</span><span class="mw-rt"><b>'+esc(t(macSaf?"mdChromeHere":"mdChromeT"))+'</b><small>'+esc(t(macSaf?"mdChromeHereS":"mdChromeS"))+'</small></span>'+mwB("copy",t(MW.copied?"mdCopied":"mdCopy"),"","copy")+'</div>';
+    h='<h2 id="mwH">'+esc(t(saf?"mdSafari":"mdNoMidiT"))+'</h2><p class="mw-sub">'+esc(t(saf?"mdSafariS":"mdNoMidiS"))+'</p><p class="mw-k">'+esc(t("mdForKb"))+'</p>'+(macSaf?chr+app:app+chr);
+    f=mwFoot("",{back:false}).replace(esc(t("mdNoKb")),esc(t("mdMeanwhile"))); }
+  else if(st==="none"){ dot=1; h='<h2 id="mwH">'+esc(t("mdNoneT"))+'</h2><p class="mw-sub">'+esc(t("mdNoneS"))+'</p><div class="mw-opts n3 mw-buy">'+t("mdBuy").map((x,i)=>'<div class="mw-opt"><span class="mw-art">'+[MWA.midi(),MWA.digital(),MWA.digital()][i]+'</span><b>'+esc(x[0])+'</b><small>'+esc(x[1])+'</small></div>').join("")+'</div>';
+    f=mwFoot(mwB("screen",t("mdUseScreen"),"primary","screen"),{fb:false}); }
+  else if(st==="lat"){ ic=MW_ICON.clock; ti=t("mdMine"); const L=MW.lat||{};
+    h='<h2 id="mwH">'+esc(t("mdLatT"))+'</h2><p class="mw-sub">'+esc(t("mdLatS"))+'</p><div class="mw-lat" id="mwLat" data-t0="'+(L.t0||0)+'" data-per="'+(L.per||0)+'" data-run="'+(L.run?1:0)+'"><div class="mw-ldots">'+Array.from({length:8},(_,i)=>'<i data-k="'+i+'" class="'+(L.got&&L.got[i]?'on':'')+'" style="--d:'+(i*750+700)+'ms"></i>').join("")+'</div>'
+      +'<button type="button" class="mw-tap" id="mwTap"'+(L.run?'':' disabled')+'>'+esc(t("mdLatTap"))+'</button></div>'
+      +'<p class="mw-res" role="status">'+(L.res===undefined?'':L.res===null?'<span class="bad">'+esc(t("mdLatNone"))+'</span>':'<b>'+esc(t("mdLatRes")(L.res))+'</b><small>'+esc(t("mdLatHint"))+'</small>')+'</p>';
+    f=mwFoot((L.run?'':mwB("latgo",L.res===undefined?t("mdLatGo"):t("mdLatAgain"),L.res===undefined?"primary":"ghost","clock"))+(L.res!=null&&!L.run?mwB("prevok",t("mdOkBtn"),"primary"):''),{fb:false}); }
+  $("mwIc").innerHTML=ic; $("mwTi").textContent=ti; $("mwiz").dataset.step=st;
+  $("mwDots").innerHTML=dot?[1,2,3,4].map(i=>'<li class="'+(i<dot?'done':i===dot?'cur':'')+'">'+(i<dot?MW_ICON.check:i)+'</li>').join(""):''; $("mwDots").hidden=!dot;
+  body.innerHTML=h; foot.innerHTML=f;
+  const tap=$("mwTap"); if(tap) tap.addEventListener("pointerdown",e=>{ e.preventDefault(); mwLatHit(e.timeStamp||performance.now()); }); }
+// ---- actions ----
+$("mwiz").addEventListener("click",async e=>{ const b=e.target.closest("[data-a]"); if(!b || b.disabled) return; const [a,v]=b.dataset.a.split(":");
+  if(a==="hw"){ MW.hw=v; if(v==="acoustic"){ mwFallback("mic"); return; } if(v==="none"){ mwGo("none"); return; } mwGo("how"); return; }
+  if(a==="conn"){ MW.conn=v; mwRender(); return; } if(a==="port"){ MW.port=v; mwRender(); return; } if(a==="dunno"){ MW.dunno=!MW.dunno; mwRender(); return; }
+  if(a==="next"){ mwGo(MW.conn==="bt"?"bt":"cable"); return; } if(a==="prev"){ mwPrev(); return; }
+  if(a==="detect"){ MW.detecting=true; MW.msg=""; mwRender(); try{ if(!midiAcc || midiDenied) await enableMidi(); else if(window.__nativeMidi) await window.__nativeMidi.listInputs(); }catch(er){} setTimeout(()=>{ if(!MW.on) return; MW.detecting=false; if(midiReady) mwGo("test"); else { MW.msg=midiDenied?t("mdFix")[3][0]:t("mdNoneFound"); mwRender(); } },midiReady?50:1500); return; }
+  if(a==="totest"){ mwGo("test"); return; }
+  if(a==="mic"||a==="screen"){ mwFallback(a); return; }
+  if(a==="bt"){ try{ if(!midiAcc) await enableMidi(true); await window.__nativeMidi.showBluetooth(); }catch(er){} MW.btAsked=true; mwListen(); mwRender(); return; }
+  if(a==="tocable"){ MW.conn="usb"; mwGo("cable"); return; }
+  if(a==="trouble"){ mwGo("trouble"); return; }
+  if(a==="fix"){ MW.open = MW.open===+v ? -1 : +v; mwRender(); return; }
+  if(a==="retry"){ mwRetry(); return; }
+  if(a==="fixact"){ if(v==="10"){ S.settings.midiSound=false; save(); renderSettings(); MW.msg=t("mdTwiceYes"); mwRender(); } else mwGo(v==="11"?"range":"lat"); return; }
+  if(a==="tw"){ MW.t.twice=v; if(v==="yes") S.settings.midiSound=false; else if(v==="none") S.settings.midiSound=true; save(); renderSettings(); mwRender(); return; }
+  if(a==="noped"){ MW.t.noPed=true; mwHw().ped=false; save(); mwRender(); return; }
+  if(a==="range"){ mwGo("range"); return; } if(a==="rmeasure"){ MW.r.mode="measure"; mwRender(); return; } if(a==="rguess"){ mwRangeGuessOk(); return; }
+  if(a==="rredo"){ MW.r={lo:null,hi:null,mode:"measure",err:""}; mwRender(); return; } if(a==="rskip"){ mwGo("ready"); return; } if(a==="rok"){ mwRangeApply(); return; }
+  if(a==="play"){ mwPlay(); return; } if(a==="retest"){ mwGo("test"); return; }
+  if(a==="lat"){ mwGo("lat"); return; } if(a==="latgo"){ mwLatGo(); return; } if(a==="prevok"){ if(MW.hist.length) mwPrev(); else mwClose(); return; }
+  if(a==="copy"){ const u="https://pianochallenges.com/"; try{ await navigator.clipboard.writeText(u); }catch(er){} MW.copied=true; mwRender(); return; } });
+$("mwX").addEventListener("click",mwClose);
+document.addEventListener("keydown",e=>{ if(MW.on && e.key==="Escape"){ e.preventDefault(); e.stopImmediatePropagation(); mwClose(); } },true);
+// ---- hooks into the rest of the app (wrappers: the original code stays as it is) ----
+{ const _mp=mdPorts; mdPorts=function(names){ _mp.apply(this,arguments); try{ mwPorts(names); }catch(e){} try{ mkRender(); }catch(e){} }; }
+// M3: the first screen gets one link « Connect my keyboard » next to « You play with » (fnRender itself is untouched)
+{ const _fr=fnRender; fnRender=function(){ _fr.apply(this,arguments); try{ mwFnLink(); }catch(e){} }; }
+function mwFnLink(){ const g=$("gate"); if(!g||!FN.on||fnMidiName()) return; const l=g.querySelector(".fn-play .fn-lbl"), top=g.querySelector(".fn-play .fn-top");
+  // one entry, two places: next to « You play with », or in the top row on small screens where that label is hidden (CSS)
+  [[l,"fnMw"],[top,"fnMw2"]].forEach(([host,id])=>{ if(!host||host.querySelector(".fn-mw")) return; const b=document.createElement("button"); b.type="button"; b.className="fn-mw"; b.id=id; b.textContent=t("mdPlug")+" ›"; b.onclick=()=>mwOpen();
+    if(id==="fnMw2") host.insertBefore(b, host.querySelector(".fn-skip")); else host.appendChild(b); }); }
+// the choice of input, without MIDI here: « See how » opens M12
+{ const _oc=openInputChooser; openInputChooser=function(){ _oc.apply(this,arguments); const n=$("inOpts")&&$("inOpts").querySelector(".inp-note"); if(n && !n.hidden && !n.querySelector(".mw-link")){ const b=document.createElement("button"); b.type="button"; b.className="mw-link"; b.textContent=" "+t("mdHubHow")+" ›"; b.onclick=()=>{ closeMod("inputModal"); mwOpen(); }; n.appendChild(b); } }; }
+$("mdWizB").addEventListener("click",()=>{ closeMidi(); mwOpen(); });
+// ---- Settings › Interaction › « My keyboard » ----
+function mkRender(){ const f=$("mkField"), c=$("mkCard"); if(!f||!c) return; f.hidden=false; const poss=midiPossible(), h=(S.midi&&S.midi.hw)||{}, on=midiReady, kt=mwKeysTxt(), lat=S.midi&&S.midi.lat!=null&&S.midi.lat!==0;
+  const facts=[kt, h.vel===true?t("mdVelOk"):h.vel===false?t("mdVelNo"):"", h.ped?t("mdPedOk"):"", lat?t("mdLatN")(midiLat()):""].filter(Boolean);
+  const nm = on ? (h.name&&midiNames.includes(h.name)?h.name:midiNames[0]) : (h.name||"");
+  c.className="mk-card"+(on?" on":"");
+  c.innerHTML='<span class="mk-dot" aria-hidden="true"></span><span class="mk-t"><b></b><small></small></span><span class="mk-acts">'+(!poss?mwB("safari",t("mdHubHow"),""):mwB("wiz",t("mdWizard"),on?"":"primary")+(on?mwB("test",t("mdTest"),"")+mwB("range",t("mdRangeB"),"")+mwB("lat",t("mdLatB"),""):"")+mwB("trouble",t("mdTrouble"),"ghost"))+'</span>';
+  c.querySelector("b").textContent = nm || t("mdMineNone"); c.querySelector("b").title=nm; c.querySelector("small").textContent = facts.join(" · ") || (!poss ? t("mdHubNo") : on ? t("mdConnected") : ""); }
+$("mkCard").addEventListener("click",e=>{ const b=e.target.closest("[data-a]"); if(!b) return; const a=b.dataset.a; if(a==="test"){ openMidi(); return; } mwOpen(a==="wiz"||a==="safari"?"hw":a); });
+{ const _rs=renderSettings; renderSettings=function(){ _rs.apply(this,arguments); try{ mkRender(); }catch(e){} }; }
+/* ==== fin MIDI lots 2-3 ==== */
 
 // ---------- Boot ----------
 

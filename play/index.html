@@ -725,6 +725,8 @@ GAME.runner={lives:true,timed:false,tools:['names','hint'],
     drawFx(dt);ctx.restore()}};
 
 /* --- 2. Rythme Pulse --- */
+// latency measured by the host (Settings › My keyboard › Sync timing, MIDI lots 2-3): widens the hit windows by that much
+const hostLat=()=>{try{const f=parent!==window&&parent.midiLat;return f?Math.min(.15,Math.abs(+f()||0)/1000):0}catch(e){return 0}};
 GAME.pulse={lives:false,timed:true,tools:['names','speed'],
   reset(){gs={running:false,score:0,time:60,bpm:80,beat:0,hits:0,streak:0,miss:0,flash:0,fl:'',need:null,judged:false,last:0};fx.length=0;pops.length=0;ghud()},
   begin(){GAME.pulse.reset();ov.hidden=true;gs.running=true;gs.t0=performance.now()/1000},
@@ -732,8 +734,9 @@ GAME.pulse={lives:false,timed:true,tools:['names','speed'],
   press(m){if(!gs.running)return;const per=60/(gs.bpm*speed),now=performance.now()/1000-gs.t0,ph=now/per,k=Math.round(ph),off=Math.abs(ph-k)*per;
     if(gs.judged===k)return;gs.judged=k;
     const okNote=!gs.need||pc(m)===gs.need;
-    if(off<.07&&okNote){gs.hits++;gs.streak++;gs.score+=Math.round(100*Math.min(3,1+gs.streak/8));gs.fl=tr('perfect');gs.flc='good';blip(880,.08,'triangle',.07)}
-    else if(off<.14&&okNote){gs.hits++;gs.streak++;gs.score+=50;gs.fl=tr('good');gs.flc='warn';blip(660,.08,'triangle',.06)}
+    const lw=hostLat();
+    if(off<.07+lw/2&&okNote){gs.hits++;gs.streak++;gs.score+=Math.round(100*Math.min(3,1+gs.streak/8));gs.fl=tr('perfect');gs.flc='good';blip(880,.08,'triangle',.07)}
+    else if(off<.14+lw&&okNote){gs.hits++;gs.streak++;gs.score+=50;gs.fl=tr('good');gs.flc='warn';blip(660,.08,'triangle',.06)}
     else{gs.streak=0;gs.miss++;gs.fl=okNote?(ph-k<0?tr('tooEarly'):tr('tooLate')):tr('wrongNote');gs.flc='bad';blip(140,.15,'sawtooth',.06)}
     gs.flash=1;if(gs.hits>=8&&gs.hits%4===0)gs.bpm=Math.min(140,gs.bpm+6);
     if(gs.hits>=8){gs.need=[0,2,4,5,7,9,11][Math.floor(Math.random()*7)];setTargets(hint?[{m:60+gs.need}]:[])}ghud()},
