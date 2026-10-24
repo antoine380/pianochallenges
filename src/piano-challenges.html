@@ -2510,6 +2510,9 @@ body.pc-kb[data-page="free"] .kbd{height:clamp(150px,44vh,380px)!important}
 @media (max-width:640px){ .gr-keys{grid-template-columns:repeat(6,minmax(0,1fr))} .gr-info{grid-template-columns:1fr} .gr-top{flex-direction:column;padding-right:36px} .gr-side{flex-direction:row;align-items:center;align-self:stretch;justify-content:space-between} .gr-struct small{display:none} }
 @media (max-height:500px) and (orientation:landscape){ .gr{grid-template-columns:120px minmax(0,1fr);grid-template-rows:none} .gr-list{flex-direction:column;overflow:auto} .gr-list button{flex:1 1 0;padding:3px 8px;min-height:0} .gr-list small{display:none} .gr-list b{font-size:.74rem}
   .gr-card{padding:8px 10px;gap:4px} .gr-degs b{font-size:1.6rem} .gr-degs.many b{font-size:1.05rem} .gr-degs small{font-size:.72rem} .gr-play{padding:7px 14px;font-size:.85rem} .gr-lvl{display:none} .gr-keys button{padding:3px 0;font-size:.66rem} .gr-struct small{display:none} .gr-struct b{font-size:.75rem} .gr-h{font-size:.58rem;margin-bottom:2px} .gr-why p,.gr-none{font-size:.72rem;line-height:1.3} .gr-info section{padding:6px 8px} .gr-song{padding:3px 8px;font-size:.68rem} }
+/* locked song (paywall on): a small gold lock in the record line, visible on compact tiles too */
+.pc-lk{position:absolute;right:10px;bottom:10px;display:grid;place-items:center;width:20px;height:20px;border-radius:999px;background:#ffc94a;color:#3b2600;box-shadow:0 2px 6px rgba(0,0,0,.25)}
+.pc-lk svg{width:11px;height:11px;fill:none;stroke:currentColor;stroke-width:2.6;stroke-linecap:round}
 /* ==== fin Morceaux ==== */
 /* ==== Accompagnement (L7, étape 4) ==== */
 /* right hand = coral (the chord), left hand = blue (1 · 5 · 8); the text versions keep ≥ 4.5:1 on the page background */
@@ -8504,7 +8507,7 @@ function pcTile(d,best){ const P=window.PC_SONG, A=P.arrs(d), a=(PC.lv&&A.find(x
   const el=tile({color:d.k,obj:d.o,kick:pcBy(d),title:pcTitle(d),desc:pcBy(d)+" · "+d.d,rec:pcStarTxt(st),btn:lk?t("lockT"):t("rnPlay"),onOpen:()=>openPlayWith("#song="+d.id+"&arr="+a.lv)});
   el.dataset.song=d.id; el.querySelector(".rec").insertAdjacentHTML("afterbegin",'<span class="pc-dots" aria-hidden="true">'+A.map(x=>'<i style="--dc:'+PC_LVCOL[x.lv]+'"'+(x.lv===a.lv?' class="on"':'')+'></i>').join("")+'</span>');
   el.setAttribute("aria-label",pcTitle(d)+" · "+pcBy(d)+" · "+A.map(x=>t("pcLv")[x.lv]).join(", ")+" · "+st+"/3");
-  if(lk){ el.classList.add("pw-lk"); el.querySelector(".go").insertAdjacentHTML("afterbegin",pwI("lock")); } return el; }
+  if(lk){ el.classList.add("pw-lk"); el.querySelector(".go").insertAdjacentHTML("afterbegin",pwI("lock")); el.querySelector(".rec").insertAdjacentHTML("beforeend",'<span class="pc-lk" aria-hidden="true">'+pwI("lock")+'</span>'); el.setAttribute("aria-label",el.getAttribute("aria-label")+" · "+t("lockT")); } return el; }
 const grDegs = (g,list) => { const pr=PROG[g.pid], k=pr.scale==="major"?"C":"A"; return list.map(d=>hChord(pr.scale,k,d,pr.sev).roman); };
 const grName = g => g.nm ? t(g.nm) : grDegs(g,g.core).join(" – ");
 function grTile(g){ const n=g.songs.length;

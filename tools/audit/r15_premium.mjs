@@ -43,6 +43,7 @@ await ev(() => document.querySelector('.mode-item[data-mode="play"]').click()); 
 const LK = NSONGS - NFREE;
 const pl = await ev(() => { const all = [...document.querySelectorAll('#playSongs .ptile[data-song]')]; return { all: [...new Set(all.map(e => e.dataset.song))], lk: [...new Set(all.filter(e => e.classList.contains('pw-lk')).map(e => e.dataset.song))] }; });
 check('PLAY : les ' + NFREE + ' premiers morceaux du catalogue gratuits, ' + LK + ' verrouillés sur ' + NSONGS, NSONGS >= 30 && pl.all.length === NSONGS && pl.lk.length === LK && !FREE.some(id => pl.lk.includes(id)), { n: pl.all.length, lk: pl.lk.length, free: FREE });
+check('morceau verrouillé : petit cadenas doré visible même sur les tuiles compactes', await ev(() => [...document.querySelectorAll('#playSongs .ptile.pw-lk')].every(t => { const l = t.querySelector('.rec .pc-lk'); return l && l.getBoundingClientRect().width > 10; }) && !document.querySelector('#playSongs .ptile:not(.pw-lk) .pc-lk')));
 if (LK) { await ev(() => document.querySelector('#playSongs .ptile.pw-lk').click()); await wait(page, 300);
   check('morceau verrouillé → paywall (pas de lecteur)', await vis('pw') && await ev(() => document.body.dataset.page !== 'play'));
   check('paywall : titre neutre et « ' + NFREE + ' morceaux » dans la formule gratuite', await ev(n => document.getElementById('pwH').textContent === 'Tout le piano, sans limite' && document.querySelector('.pw-free').textContent.includes(n + ' morceaux'), NFREE));
