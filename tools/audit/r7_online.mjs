@@ -108,11 +108,11 @@ await A.close(); await W(B, 700);
 check('l’hôte part : l’invité est prévenu', (await view(B)) === 'qzSetup' && /hôte/.test(await B.evaluate(() => document.getElementById('qzNetMsg').textContent)), await B.evaluate(() => document.getElementById('qzNetMsg').textContent));
 await B.close();
 
-// 2) random player: two people searching are paired and the game starts by itself
+// 2) random player: two people searching are paired and the game starts by itself (up to 20 s: the pairing sometimes took more than 6 s, about 1 run in 4)
 const C = await open('Chloé'), D = await open('David');
 await C.evaluate(() => document.getElementById('qzSearchBtn').click()); await W(C, 300);
 check('hasard : recherche en cours', await C.evaluate(() => !document.getElementById('qzSearching').hidden));
-await D.evaluate(() => document.getElementById('qzSearchBtn').click()); for (let i = 0; i < 30 && !((await view(C)) === 'qzPlay' && (await view(D)) === 'qzPlay'); i++) await W(D, 200);
+await D.evaluate(() => document.getElementById('qzSearchBtn').click()); for (let i = 0; i < 100 && !((await view(C)) === 'qzPlay' && (await view(D)) === 'qzPlay'); i++) await W(D, 200);
 check('hasard : les deux joueurs sont associés et jouent', (await view(C)) === 'qzPlay' && (await view(D)) === 'qzPlay', [await view(C), await view(D)]);
 const names = await D.evaluate(() => [...document.querySelectorAll('#qzRace .qz-tg b')].map(b => b.textContent));
 check('hasard : chacun voit l’autre', names.some(n => /Chloé/.test(n)) && names.some(n => /David/.test(n)), names);
