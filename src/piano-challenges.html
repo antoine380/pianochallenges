@@ -8021,8 +8021,8 @@ document.addEventListener("keydown",e=>{ if(page!=="pp" || anyModal() || documen
 // A GAMES race through the 12 major triads, minor triads, dominant 7ths or major scales (in notes). 12 cells in a circle (two rows
 // of six on small screens), the clock in the middle, the target in big; chords in any inversion (pitch classes), scales note by note
 // going up (tonic to tonic). A wrong note adds 2 s. The ghost of the record runs alongside (gap in green / red). Bronze < 3 min,
-// silver < 2 min, gold < 90 s (scales: x2). Record: S.gameBest["douze-<cont>"] (ms, lower is better: mergeState keeps the smaller)
-// and S.dzRec[cont]={ms,sp:[ms after each cell],at} for the ghost. XP at the end (none in a duel). Settings: S.settings.dzCont
+// silver < 2 min, gold < 90 s (scales: x2). Best medal: S.gameBest["douze-<cont>"] = 1 bronze | 2 silver | 3 gold (merged as the max,
+// read by the achievements); best time and its ghost: S.dzRec[cont]={ms,sp:[ms after each cell],at} (mergeState keeps the smaller ms). XP at the end (none in a duel). Settings: S.settings.dzCont
 // (maj|min|dom7|scale), dzOrder (chrom = chromatic down from B | fifths | rand), dzHint (light the keys). Duels go through DU like
 // the other games (same random order from the shared seed); a duel score is the number of cells, then 40000 + (59999 - centiseconds).
 const DZ_CONTS=["maj","min","dom7","scale"], DZ_ORDERS=["chrom","fifths","rand"], DZ_TIERS=[180000,120000,90000];
@@ -8039,9 +8039,10 @@ function dzScMs(v){ return (59999-(v-40000))*10; }
 function dzScTxt(v){ v=+v||0; return v>=40000 ? dzFmt(dzScMs(v)) : Math.min(12,v)+"/12"; }
 function duScTxt(v){ return DU.game==="douze" ? dzScTxt(v) : fmtN(v); }
 const dzSec = ms => (Math.round(Math.abs(ms)/100)/10).toLocaleString(S.settings.lang==="fr"?"fr-FR":"en-GB",{minimumFractionDigits:1});
-function dzRecOf(c){ const r=(S.dzRec||{})[c], b=(S.gameBest||{})["douze-"+c]; return r && Array.isArray(r.sp) && r.sp.length===12 && (!b || r.ms<=b) ? r : null; }
-function dzBestTxt(c){ const b=(S.gameBest||{})["douze-"+(c||dzCont())]; return b ? dzFmt(b) : "—"; }
-function dzRecRows(title){ const rows=[]; DZ_CONTS.forEach(c=>{ const b=(S.gameBest||{})["douze-"+c]; if(!b) return; const tr=dzTiers(c), m=b<tr[2]?2:b<tr[1]?1:b<tr[0]?0:-1;
+function dzRecOf(c){ const r=(S.dzRec||{})[c]; return r && Number.isFinite(+r.ms) && r.ms>0 && Array.isArray(r.sp) && r.sp.length===12 ? r : null; }
+function dzBestMs(c){ const r=dzRecOf(c); return r ? +r.ms : 0; }
+function dzBestTxt(c){ const b=dzBestMs(c||dzCont()); return b ? dzFmt(b) : "—"; }
+function dzRecRows(title){ const rows=[]; DZ_CONTS.forEach(c=>{ const b=dzBestMs(c); if(!b) return; const tr=dzTiers(c), m=b<tr[2]?2:b<tr[1]?1:b<tr[0]?0:-1;
     rows.push([title+" · "+t("dzConts")[c], dzFmt(b), m>=0?t("dzMeds")[m]:""]); }); return rows.length ? rows : [[title,"—"]]; }
 // the 12 items of a content in an order: {name, pcs} for a chord, {name, seq:[8 pitch classes]} for a scale
 function dzItems(c, ord, rnd){
@@ -8092,8 +8093,9 @@ function dzXP(c,medal){ return (c==="scale"?24:12)+(medal>=0?[3,6,10][medal]:0);
 function dzFinish(){ cancelAnimationFrame(DZ.raf); DZ.state="over"; clearKeys(); DZ.final=dzTotal(); DZ.doneAt=performance.now();
   if(DU.mode){ if(DU.view==="play"||DU.view==="wait") duMe(dzScore(DZ.final), true); dzRender(); return; }
   const tr=dzTiers(DZ.cont), ms=DZ.final, key="douze-"+DZ.cont; DZ.medal = ms<tr[2]?2 : ms<tr[1]?1 : ms<tr[0]?0 : -1;
-  DZ.prev=(S.gameBest||{})[key]||0; DZ.newBest=!DZ.prev || ms<DZ.prev;
-  if(DZ.newBest){ S.gameBest={...(S.gameBest||{}),[key]:ms}; S.dzRec={...(S.dzRec||{}),[DZ.cont]:{ms,sp:DZ.sp.slice(),at:Date.now()}}; }
+  DZ.prev=dzBestMs(DZ.cont); DZ.newBest=!DZ.prev || ms<DZ.prev;
+  if(DZ.newBest) S.dzRec={...(S.dzRec||{}),[DZ.cont]:{ms,sp:DZ.sp.slice(),at:Date.now()}};
+  if(DZ.medal>=0 && DZ.medal+1>(+(S.gameBest||{})[key]||0)) S.gameBest={...(S.gameBest||{}),[key]:DZ.medal+1};
   DZ.xp=dzXP(DZ.cont,DZ.medal); addXP(DZ.xp); renderStatus(); save();
   if(DZ.newBest||DZ.medal>=0){ tone(84,0,.2,.12); tone(88,.12,.3,.12); } else tone(60,0,.3,.1);
   dzRender(); }
@@ -8162,13 +8164,11 @@ $("duCont").addEventListener("click",e=>{ if(DU.game!=="douze") return; const b=
 OBJ.douze=()=>{ const o=O3(), C=["#ff5a6e","#ff7a4f","#ff9a3c","#ffb83d","#ffd23f","#9ad85a","#3ddc84","#3cc8f0","#4c9cff","#5b7cff","#8a6bff","#b26bff"];
   o.ball(60,62,26,"#fbfbff").raw('<path d="M60 62V46" stroke="#2b2560" stroke-width="5" stroke-linecap="round"/><path d="M60 62l10 7" stroke="#ff5a6e" stroke-width="4" stroke-linecap="round"/><circle cx="60" cy="62" r="4" fill="#2b2560"/>');
   C.forEach((c,k)=>{ const a=(k*30-90)*Math.PI/180; o.ball(+(60+44*Math.cos(a)).toFixed(1), +(62+44*Math.sin(a)).toFixed(1), 9.5, c); }); return o.svg(); };
-// records: the smaller time wins between devices, the ghost goes with its record
+// best times: the smaller wins between devices, the ghost goes with its record (the medals in gameBest are merged as the max)
 { const _ms=mergeState; mergeState=function(local, cloud){ const r=_ms.apply(this,arguments); const isO=x=>x&&typeof x==="object"&&!Array.isArray(x), c=isO(cloud)?cloud:{};
-    const la=isO(local.gameBest)?local.gameBest:{}, ca=isO(c.gameBest)?c.gameBest:{}, gb=isO(r.merged.gameBest)?{...r.merged.gameBest}:{};
     const ra=isO(local.dzRec)?local.dzRec:{}, rc=isO(c.dzRec)?c.dzRec:{}, rec={};
-    DZ_CONTS.forEach(k=>{ const key="douze-"+k, v=[la[key],ca[key]].map(Number).filter(x=>Number.isFinite(x)&&x>0); if(v.length) gb[key]=Math.min(...v); else delete gb[key];
-      const g=[ra[k],rc[k]].filter(x=>isO(x)&&Number.isFinite(+x.ms)&&Array.isArray(x.sp)).sort((x,y)=>x.ms-y.ms)[0]; if(g) rec[k]=g; });
-    r.merged.gameBest=gb; if(Object.keys(rec).length) r.merged.dzRec=rec; else delete r.merged.dzRec;
+    DZ_CONTS.forEach(k=>{ const g=[ra[k],rc[k]].filter(x=>isO(x)&&Number.isFinite(+x.ms)&&Array.isArray(x.sp)).sort((x,y)=>x.ms-y.ms)[0]; if(g) rec[k]=g; });
+    if(Object.keys(rec).length) r.merged.dzRec=rec; else delete r.merged.dzRec;
     r.changed=JSON.stringify(r.merged)!==JSON.stringify(local); return r; }; }
 /* ==== fin Les Douze ==== */
 

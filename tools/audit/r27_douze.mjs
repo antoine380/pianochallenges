@@ -88,8 +88,8 @@ check('fausse note : +2 s et pastille « Fausse note +2 s ×1 »', d.pen === 200
 check('cible en grand : nom + « majeur », 2 sur 12', await ev(A, () => document.getElementById('dzName').textContent === 'Si♭' && document.getElementById('dzQual').textContent === 'majeur' && /Accord 2 sur 12/i.test(document.getElementById('dzKick').textContent)));
 for (let k = 0; k < 11; k++) await playCell(A);
 d = await DZ(A); const s1 = await st(A);
-check('fin : 12 cases, temps ≥ 2 s (pénalité comprise)', d.state === 'over' && d.i === 12 && s1.gameBest && s1.gameBest['douze-maj'] >= 2000, { d, gb: s1.gameBest });
-check('record : S.gameBest["douze-maj"] et fantôme S.dzRec.maj (12 temps)', s1.dzRec && s1.dzRec.maj && s1.dzRec.maj.sp.length === 12 && s1.dzRec.maj.ms === s1.gameBest['douze-maj']);
+check('fin : 12 cases, temps ≥ 2 s (pénalité comprise)', d.state === 'over' && d.i === 12 && s1.dzRec && s1.dzRec.maj && s1.dzRec.maj.ms >= 2000, { d, rec: s1.dzRec });
+check('record : médaille S.gameBest["douze-maj"] = 3 (or) et temps + fantôme S.dzRec.maj (12 temps)', s1.gameBest && s1.gameBest['douze-maj'] === 3 && s1.dzRec.maj.sp.length === 12 && s1.dzRec.maj.sp[11] === s1.dzRec.maj.ms, { gb: s1.gameBest, rec: s1.dzRec });
 check('médaille d’or (moins de 90 s) et XP gagnés', d.medal === 2 && /Médaille d'or/.test(await ev(A, () => document.getElementById('dzQual').textContent)) && s1.xp >= xp0 + 22, { medal: d.medal, xp: [xp0, s1.xp] });
 check('record affiché en tête du jeu', await ev(A, () => /^Record \d:\d\d,\d$/.test(document.getElementById('rnBest').textContent)));
 // ---- 4. Deuxième partie : le fantôme et l’écart ----
@@ -124,11 +124,11 @@ await games(A);
 check('tuile : record en temps', await ev(A, () => /Record \d:\d\d,\d · ELO/.test(document.querySelectorAll('#gameCards .ptile')[3].textContent)));
 // ---- 8. Fusion entre appareils : le plus petit temps gagne, le fantôme suit son record ----
 const mg = await ev(A, () => { const M = window.__dz.mergeState, sp = n => Array.from({ length: 12 }, (_, i) => (i + 1) * n);
-  const r1 = M({ gameBest: { speed: 3, 'douze-maj': 100000 }, dzRec: { maj: { ms: 100000, sp: sp(8000), at: 1 } }, settings: {} }, { gameBest: { speed: 5, 'douze-maj': 90000 }, dzRec: { maj: { ms: 90000, sp: sp(7500), at: 2 } } }).merged;
-  const r2 = M({ gameBest: { 'douze-min': 70000 }, dzRec: { min: { ms: 70000, sp: sp(5000), at: 1 } }, settings: {} }, { gameBest: { 'douze-min': 80000 } }).merged;
+  const r1 = M({ gameBest: { speed: 3, 'douze-maj': 2 }, dzRec: { maj: { ms: 100000, sp: sp(8000), at: 1 } }, settings: {} }, { gameBest: { speed: 5, 'douze-maj': 3 }, dzRec: { maj: { ms: 85000, sp: sp(7000), at: 2 } } }).merged;
+  const r2 = M({ gameBest: { 'douze-min': 3 }, dzRec: { min: { ms: 70000, sp: sp(5000), at: 1 } }, settings: {} }, { gameBest: { 'douze-min': 1 }, dzRec: { min: { ms: 150000, sp: sp(12000), at: 3 } } }).merged;
   const r3 = M({ gameBest: { speed: 2 }, settings: {} }, { gameBest: { speed: 1 } }).merged;
-  return { a: r1.gameBest['douze-maj'], ag: r1.dzRec.maj.ms, sp: r1.gameBest.speed, b: r2.gameBest['douze-min'], bg: r2.dzRec.min.ms, c: 'dzRec' in r3, cg: Object.keys(r3.gameBest).join() }; });
-check('fusion : temps le plus petit, son fantôme, les autres records au max, pas de clé vide', mg.a === 90000 && mg.ag === 90000 && mg.sp === 5 && mg.b === 70000 && mg.bg === 70000 && !mg.c && mg.cg === 'speed', mg);
+  return { a: r1.gameBest['douze-maj'], ag: r1.dzRec.maj.ms, gs: r1.dzRec.maj.sp[0], sp: r1.gameBest.speed, b: r2.gameBest['douze-min'], bg: r2.dzRec.min.ms, c: 'dzRec' in r3 }; });
+check('fusion : meilleure médaille (max), plus petit temps avec son fantôme, pas de clé vide', mg.a === 3 && mg.ag === 85000 && mg.gs === 7000 && mg.sp === 5 && mg.b === 3 && mg.bg === 70000 && !mg.c, mg);
 check('aucune erreur (solo)', !A.errs.length, A.errs);
 await A.ctx.close();
 
