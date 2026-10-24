@@ -2475,7 +2475,7 @@ body.gate-on .top-auth{visibility:hidden}
     <div class="seg rank-per" id="rankPer"></div>
     <div class="card rank-card">
       <ol class="rank-list" id="rankList"></ol>
-      <div class="rank-cta"><p data-i="rankCta"></p><button class="btn primary" id="rankLogin" type="button" data-i="loginBtn"></button></div>
+      <div class="rank-cta"><p data-i="rankCta"></p><button class="btn primary" id="rankLogin" type="button" data-i="authUp"></button></div>
     </div>
   </section>
 
@@ -6249,10 +6249,10 @@ function renderLock(){
   $("lockTitle").textContent=t("lockTitle")(lockFor);
   const ul=$("lockList"); ul.innerHTML=""; t("perks").forEach(x=>{ const li=document.createElement("li"); li.textContent=x; ul.appendChild(li); });
 }
-$("lockGo").addEventListener("click",()=>openPage("account"));
+$("lockGo").addEventListener("click",()=>authOpen("signup"));
 $("lockGuest").addEventListener("click",()=>{ guestPass=true; document.body.classList.remove("guest"); openPage(lockFor||"games"); });
 function renderWelcome(){ const ul=$("wcList"); ul.innerHTML=""; t("perks").forEach(x=>{ const li=document.createElement("li"); li.textContent=x; ul.appendChild(li); }); }
-$("wcSignup").addEventListener("click",()=>{ closeMod("welcomeModal"); openPage("account"); });
+$("wcSignup").addEventListener("click",()=>{ closeMod("welcomeModal"); authOpen("signup"); });
 function renderRankPer(){ const box=$("rankPer"), P=t("periods"), cur=S.settings.rankPer||"week"; box.innerHTML="";
   Object.keys(P).forEach(k=>{ const b=document.createElement("button"); b.type="button"; b.textContent=P[k]; b.setAttribute("aria-pressed",k===cur); b.onclick=()=>{ S.settings.rankPer=k; save(); renderRank(); }; box.appendChild(b); }); }
 let rankTok=0;
@@ -6411,7 +6411,7 @@ function autoIntro(k){ if(!(S.introSeen||{})[k]) setTimeout(()=>showIntro(k),250
 document.querySelectorAll("[data-intro]").forEach(b=>b.addEventListener("click",()=>showIntro(b.dataset.intro)));
 $("rankBtn").addEventListener("click",()=>{ closeDrawer(); guardLeave(()=>openPage("rank")); });
 $("accountBtn").addEventListener("click",()=>{ closeDrawer(); guardLeave(()=>openPage("account")); });
-$("rankLogin").addEventListener("click",()=>openPage("account"));
+$("rankLogin").addEventListener("click",()=>authOpen("signup")); // guests: the sign-in screen (the Profile page is hidden for them)
 function goHome(){
   page="practice"; closeDrawer();
   // back to the start screen: no game running, first tab, top of the page

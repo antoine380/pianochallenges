@@ -65,6 +65,15 @@ for (const [w, h] of [[844, 390], [667, 375]]) { const p = await open(w, h, 'en'
   check(`${w}×${h} connexion : titre, 3 boutons sur une rangée, tout tient`, r.title && r.row && r.fits, r);
   await p.context().close(); }
 
+// ---- 5. Classement (invité) : « S'inscrire » ouvre l'écran de connexion, plus l'ancienne page Profil ----
+{ const p = await open(1024, 768);
+  await p.evaluate(() => document.getElementById('rankBtn').click()); await W(p, 800);
+  const lbl = await p.evaluate(() => document.getElementById('rankLogin').textContent);
+  await p.evaluate(() => document.getElementById('rankLogin').click()); await W(p, 800);
+  const r = await p.evaluate(() => ({ gate: !!document.getElementById('gate') && !document.getElementById('gate').hidden, page: document.body.dataset.page, h: document.querySelector('#gate .gt-h')?.textContent }));
+  check('Classement : « S’inscrire » ouvre l’écran de connexion (Créer un compte)', lbl === 'S\'inscrire' && r.gate && r.page !== 'account' && /Crée/.test(r.h || ''), { lbl, ...r });
+  await p.context().close(); }
+
 await b.close();
 console.log(fails.length ? `\n${fails.length} échec(s)` : '\nTout est bon');
 process.exit(fails.length ? 1 : 0);
