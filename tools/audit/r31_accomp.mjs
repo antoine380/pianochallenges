@@ -46,7 +46,8 @@ const untilBeat = (p, beat) => ev(p, beat => new Promise(r => { const P = docume
   const kf = keys(fr), ke = keys(en), miss = [...kf].filter(k => !ke.has(k)).concat([...ke].filter(k => !kf.has(k)));
   const used = new Set([...src.matchAll(/t\("(acc[A-Z]\w*)"\)/g)].map(m => m[1]));
   check('clés acc* en FR et en EN (' + kf.size + ')', kf.size > 30 && !miss.length, miss);
-  check('chaque clé acc* utilisée existe', [...used].every(k => kf.has(k)), [...used].filter(k => !kf.has(k)));
+  const kAll = keys(src); // + the keys other blocks add with Object.assign(TXT.fr/en, …) (lot 4 : accT, accG… of the account offer)
+  check('chaque clé acc* utilisée existe', [...used].every(k => kf.has(k) || kAll.has(k)), [...used].filter(k => !kf.has(k) && !kAll.has(k)));
   check('tuile « Accompagnement » en FR et en EN', /\["accomp","Accompagnement"/.test(fr) && /\["accomp","Accompaniment"/.test(en)); }
 
 // ---- tuile LEARN et écran de départ ----
