@@ -1909,10 +1909,13 @@ body.setup #setupPanel{flex:1 1 auto;min-height:0}
 #qzSetup .qz-theme b{font-size:clamp(.92rem,min(17cqh,9cqw),1.45rem);max-width:calc(100% - 30px)}
 #qzSetup .qz-theme small{font-size:clamp(.7rem,min(10cqh,6cqw),.9rem)}
 #qzSetup .qz-ti{width:clamp(34px,min(52cqh,34cqw),96px);height:clamp(34px,min(52cqh,34cqw),96px)}
+/* short iPad / laptop landscape: the theme rows get less than 56px; the tiles shrink with them instead of overlapping (and the « n questions » line goes) */
+@media (max-height:820px) and (min-height:600px) and (min-width:1001px){ #qzSetup .qz-theme{min-height:0;padding-block:5px} }
+@container qt (max-height:56px){ #qzSetup .qz-theme small{display:none} #qzSetup .qz-theme b{font-size:.86rem;line-height:1.05} }
 #qzSetup .qz-diff{padding:clamp(8px,1.4vh,16px) 14px}
 #qzSetup .qz-wrap>.su-side{min-height:0}
-#qzLocalBox:not([hidden]),#qzOnlineBox:not([hidden]){flex:1 1 auto}
-#qzLocalBox>.su-box{flex:0 1 auto}
+#qzLocalBox:not([hidden]),#qzOnlineBox:not([hidden]){flex:1 1 auto;min-height:0}
+#qzLocalBox>.su-box{flex:0 1 auto;min-height:0;overflow-y:auto;overscroll-behavior:contain} /* 4 players, zones: the card scrolls, « Start » stays on screen */
 #qzLocalBox .qz-go{margin-top:auto}
 #qzPlay:not([hidden]){flex:1 1 auto;min-height:0;gap:var(--gap)}
 #qzPlay .qz-kb{flex:1 1 auto;height:auto;min-height:110px;max-height:clamp(150px,44vh,460px)}
