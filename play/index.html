@@ -114,7 +114,13 @@ button:focus-visible{outline:2px solid var(--coral);outline-offset:3px}
 .key.target .lbl,.key.down .lbl{color:#15131c}
 .key.down{background:color-mix(in srgb,var(--kc) 70%,#fff);box-shadow:0 0 30px var(--kc),inset 0 4px 8px #0005;border-color:transparent}
 .key.wrong{background:var(--bad)!important;box-shadow:0 0 20px var(--bad)!important}
-.key.down,.key.wrong{transition:none} /* a key lights at once; only the release fades */
+.key.down,.key.wrong{transition:none}
+/* lesson mode (Premiers pas, P08): one phrase, wait mode, no tools; pale labels (aid 1), the right key blinks after a wrong note */
+body.lesson .bar .back,body.lesson .tools,body.lesson #stStreak,body.lesson .stat{display:none!important}
+body.lesson.lbl-pale .key .lbl{opacity:.35}
+.key.blink{animation:lsBlink .3s ease-in-out 3 alternate}
+@keyframes lsBlink{to{background:var(--kc);box-shadow:0 0 26px var(--kc)}}
+@media (prefers-reduced-motion:reduce){.key.blink{animation:none;background:var(--kc)}} /* a key lights at once; only the release fades */
 
 .overlay{position:absolute;inset:0;display:grid;place-items:center;background:#15122eb8;backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);z-index:5;padding:16px;overflow:auto}
 .ocard{background:var(--stage-2);border-radius:26px;padding:26px 30px;max-width:470px;width:100%;display:flex;flex-direction:column;gap:12px;text-align:center}
@@ -234,7 +240,7 @@ fr:{midiScreen:"Clavier à l'écran",midiConnect:"Connecter un clavier MIDI",mid
  tooEarly:"Trop tôt",tooLate:"Trop tard",wrongNote:"Mauvaise note",hits:(h,m)=>`${h} frappes réussies, ${m} ratées`,destroyed:n=>`${n} astéroïdes détruits`,
  up:"Et on remonte !",down:"Redescends",slip:"Glissade",floors:(f,l)=>`${f} étages, ${l} allers-retours`,finger:"  doigt ",floor:" · étage ",
  earListen:"Écoute…",earYou:n=>'À toi : rejoue '+(n>1?'les '+n+' notes':'la note'),earMiss:"Raté, c'était ",bravo:"Bravo !",question:"Question",earReplay:"Rejouer = réécouter",earRes:n=>`${n} bonnes réponses sur 10`,read:n=>`${n} notes lues`,
- scales:['Do majeur','Sol majeur','Fa majeur','La mineur'],
+ phrase:'phrase 1',sameOct:'Même note, autre octave : c’est bon',scales:['Do majeur','Sol majeur','Fa majeur','La mineur'],
  games:{runner:['Note Runner','Saute les obstacles en jouant la note écrite dessus.','Repérer les notes','Un obstacle arrive avec un nom de note. Joue cette note pour sauter par-dessus. Tu commences avec Do, Ré, Mi ; d’autres notes s’ajoutent quand tu progresses. N’importe quelle octave compte.'],
   pulse:['Rythme Pulse','Frappe au moment exact où le cercle touche la cible.','Tenir le tempo','Un cercle se contracte sur la cible à chaque temps. Frappe une touche pile quand il la touche. À partir de 8 réussites, il faudra jouer la note demandée. 60 secondes.'],
   blaster:['Accord Blaster','Joue l’accord affiché pour détruire l’astéroïde.','Accords','Des astéroïdes descendent avec un nom d’accord (C, Dm, Em, F, G, Am). Joue les trois notes de l’accord en même temps, dans n’importe quelle octave, pour tirer. Trois astéroïdes qui passent et c’est fini.'],
@@ -257,7 +263,7 @@ en:{midiScreen:"On-screen keyboard",midiConnect:"Connect a MIDI keyboard",midiHo
  tooEarly:"Too early",tooLate:"Too late",wrongNote:"Wrong note",hits:(h,m)=>`${h} hits, ${m} misses`,destroyed:n=>`${n} asteroids destroyed`,
  up:"Back up!",down:"Back down",slip:"Slip",floors:(f,l)=>`${f} floors, ${l} round trips`,finger:"  finger ",floor:" · floor ",
  earListen:"Listen…",earYou:n=>'Your turn: play back '+(n>1?'the '+n+' notes':'the note'),earMiss:"Missed, it was ",bravo:"Well done!",question:"Question",earReplay:"Replay = listen again",earRes:n=>`${n} correct answers out of 10`,read:n=>`${n} notes read`,
- scales:['C major','G major','F major','A minor'],
+ phrase:'phrase 1',sameOct:'Same note, other octave: that’s fine',scales:['C major','G major','F major','A minor'],
  games:{runner:['Note Runner','Jump over obstacles by playing the note written on them.','Finding notes','An obstacle arrives with a note name. Play that note to jump over it. You start with C, D, E; more notes join as you progress. Any octave counts.'],
   pulse:['Rhythm Pulse','Hit a key exactly when the ring reaches the target.','Keeping the beat','A ring shrinks onto the target on every beat. Hit a key right when it touches it. From 8 hits on, you will have to play the requested note. 60 seconds.'],
   blaster:['Chord Blaster','Play the chord shown to blast the asteroid.','Chords','Asteroids fall with a chord name (C, Dm, Em, F, G, Am). Play the three notes of the chord together, in any octave, to shoot. Three asteroids through and it is over.'],
@@ -293,6 +299,11 @@ const SONGS=[
   seq:'E5:.5 D#5:.5 E5:.5 D#5:.5 E5:.5 B4:.5 D5:.5 C5:.5 A4:1.5 C4:.5 E4:.5 A4:.5 B4:1.5 E4:.5 G#4:.5 B4:.5 C5:1.5 E4:.5 E5:.5 D#5:.5 E5:.5 D#5:.5 E5:.5 B4:.5 D5:.5 C5:.5 A4:1.5 C4:.5 E4:.5 A4:.5 B4:1.5 E4:.5 C5:.5 B4:.5 A4:1.5'},
 ];
 SONGS.forEach(s=>{s.notes=parse(s.seq,s.fing);s.end=Math.max(...s.notes.map(n=>n.s+n.d));s.by=T[LANG][s.composer]||s.composer});
+// Lesson mode (Premiers pas P08, D14): #song=lune&lesson=1&aid=0|1|2[&listen=1]. Only the first phrase (11 notes), wait mode, fingers shown;
+// aid 1 = pale names, aid 2 = no names, no fingers, the next key lights only after 3 s; another octave counts. Reports to the host page.
+const LS=HASH.includes('lesson=1')?{aid:+((HASH.find(x=>x.startsWith('aid='))||'aid=0').slice(4))||0,listen:HASH.includes('listen=1'),err:0,errAt:null,since:0,quiet:false}:null;
+const lsPost=o=>{try{window.parent.postMessage({source:'clavio',type:'lesson',...o},location.origin==='null'?'*':location.origin)}catch(e){}};
+if(LS){document.body.classList.add('lesson');if(LS.aid>=1)document.body.classList.add('lbl-pale');const s=SONGS.find(x=>x.id==='lune');s.notes=s.notes.slice(0,11);s.end=Math.max(...s.notes.map(n=>n.s+n.d))}
 const LEVEL=tr('levels');
 const TONE={coral:'#f26a5e',cyan:'#3ab8c8',sun:'#d9b23a',mint:'#3fae7c',violet:'#7a5cf5'};
 
@@ -318,7 +329,9 @@ function audio(){
     const comp=AC.createDynamicsCompressor();master.connect(comp);comp.connect(AC.destination)}catch(e){return null}}
   if(AC.state==='suspended')AC.resume();return AC}
 const voices=new Map();
+const lsTone=(m,sec)=>{try{if(LS&&window.parent!==window&&window.parent.__ppTone){window.parent.__ppTone(m,sec);return true}}catch(e){}return false};
 function soundOn(m,vel=.8){
+  if(LS){if(LS.quiet)return;if(lsTone(m,.7))return}
   const ac=audio();if(!ac)return;soundOff(m,true);
   const f=440*2**((m-69)/12),t=ac.currentTime,g=ac.createGain(),lp=ac.createBiquadFilter();
   lp.type='lowpass';lp.frequency.setValueAtTime(Math.min(f*9,10000),t);lp.frequency.exponentialRampToValueAtTime(Math.max(f*2.2,700),t+1.4);
@@ -363,7 +376,7 @@ function setTargets(list){ // [{m,f}]
 
 /* ================= Input ================= */
 const held=new Set();
-function noteOn(m,vel=.8){if(held.has(m))return;held.add(m);soundOn(m,vel);keyEls.get(m)?.classList.add('down');
+function noteOn(m,vel=.8){if(held.has(m))return;held.add(m);soundOn(m,vel);if(LS)lsPost({ev:'press',m});keyEls.get(m)?.classList.add('down');
   if(screen==='play'&&ov.hidden){if(mode==='song')songPress(m);else GAME[mode]?.press?.(m)}}
 function noteOff(m){if(!held.has(m))return;held.delete(m);soundOff(m);keyEls.get(m)?.classList.remove('down')}
 const ptr=new Map();
@@ -392,7 +405,7 @@ document.getElementById('secGames').hidden=onlySongs;document.getElementById('se
 if(onlySongs){document.getElementById('heroT').textContent=tr('heroSongsT');document.getElementById('heroP').textContent=tr('heroSongsP')}
 if(onlyGames){document.getElementById('heroT').textContent=tr('heroGamesT');document.getElementById('heroP').textContent=tr('heroGamesP')}
 addEventListener('message',e=>{if(location.origin!=='null'&&e.origin!==location.origin)return;const d=e.data;if(!d||d.source!=='piano-challenges')return;
-  if(d.type==='noteon')noteOn(d.m,d.vel??.8);else if(d.type==='noteoff')noteOff(d.m);else if(d.type==='midi')setMidi(!!d.on,d.text||'')});
+  if(d.type==='noteon'){if(LS)LS.quiet=!!d.quiet;noteOn(d.m,d.vel??.8);if(LS)LS.quiet=false}else if(d.type==='noteoff')noteOff(d.m);else if(d.type==='midi')setMidi(!!d.on,d.text||'')});
 midiBtn.addEventListener('click',async()=>{audio();
   if(!navigator.requestMIDIAccess){setMidi(false,tr('midiNone'));return}
   try{const acc=await navigator.requestMIDIAccess();
@@ -419,7 +432,8 @@ document.querySelectorAll('[data-home]').forEach(b=>b.addEventListener('click',(
 // Inside Piano Challenges: a song or a game in progress asks the host before leaving (its "Leave the game?" window); the host holds us still meanwhile
 let HOLD=false,lvPass=false;
 window.clavioBusy=()=>screen==='play'&&(mode==='song'?P.playing&&!P.listen&&(P.c.p+P.c.b+P.c.w+P.c.m)>0:!!(gs&&gs.running));
-window.clavioHold=on=>{HOLD=!!on};window.clavioHeld=()=>HOLD;
+window.clavioHold=on=>{HOLD=!!on};window.clavioWaiting=()=>{const f=P.playing&&P.frozen&&front();return !!f&&Math.abs(P.t-f.s)<1e-6}; // lesson mode: the song waits for a note (tests, host)
+window.clavioHeld=()=>HOLD;
 window.clavioLeave=()=>{HOLD=false;const b=[...document.querySelectorAll('[data-home]')].find(x=>x.offsetParent);lvPass=true;try{b?b.click():go('home')}finally{lvPass=false}};
 if(embedded)document.querySelectorAll('[data-home]').forEach(b=>b.addEventListener('click',e=>{if(lvPass||!window.clavioBusy())return;e.stopImmediatePropagation();try{window.parent.postMessage({source:'clavio',type:'askLeave'},location.origin==='null'?'*':location.origin)}catch(er){}},true));
 function overlay(html){ovCard.innerHTML=html;ov.hidden=false;ovCard.querySelector('[data-h]')?.addEventListener('click',()=>{if(mode!=='song')GAME[mode].stop?.();go('home')})}
@@ -497,7 +511,7 @@ function openSong(s){mode='song';P.song=s;go('play');applySheet();
   overlay(`<span class="lvl">${tr('level')} ${s.level} · ${LEVEL[s.level]}</span><h2>${s.title}</h2>
     <p>${tr('songIntro')(s,s.by)}</p>
     <div class="row"><button class="btn" id="go">${tr('play')}</button></div><span class="hint">${tr('listenHint')}</span>`);
-  $('go').onclick=()=>{audio();startSong()}}
+  $('go').onclick=()=>{audio();startSong()};if(LS)lsOpen(s)}
 function resetSong(){P.notes=P.song.notes.map(n=>({...n,st:0}));P.t=-2;P.score=0;P.streak=0;P.maxStreak=0;P.c={p:0,b:0,m:0,w:0};P.frozen=false;P.lastBeat=-9;fx.length=0;pops.length=0;P.playing=false;hud()}
 function startSong(){if(!P.song)return;resetSong();ov.hidden=true;P.playing=true}
 const bps=()=>P.song.bpm/60*speed;
@@ -513,15 +527,25 @@ function updateSong(dt){
   P.t=nt;
   if(P.t>P.song.end+1.2)finishSong();
   let set=[];const f2=front();
-  if(f2&&f2.s-P.t<1.2&&!P.listen)set=P.notes.filter(n=>n.st===0&&Math.abs(n.s-f2.s)<1e-6).map(n=>({m:n.m,f:n.f}));
+  if(f2&&f2.s-P.t<1.2&&(!P.listen||LS))set=P.notes.filter(n=>n.st===0&&Math.abs(n.s-f2.s)<1e-6).map(n=>({m:n.m,f:n.f}));
+  if(LS&&LS.aid>=2&&!P.listen){const now=performance.now();if(f2!==LS.sn){LS.sn=f2;LS.since=now}if(now-LS.since<3000&&!(LS.force&&now-LS.force<1600))set=[]}
   setTargets(set);hud();
 }
+// lesson: a wrong note makes the right key blink; 3 on the same note = the app plays it and lights it (no window)
+function lsWrong(){const f=front();if(!f)return;if(LS.errAt!==f){LS.errAt=f;LS.err=0}LS.err++;lsPost({ev:'wrong',n:LS.err});
+  const k=keyEls.get(f.m);if(k){k.classList.remove('blink');void k.offsetWidth;k.classList.add('blink')}
+  if(LS.err>=3){LS.err=0;LS.force=performance.now();lastTargets='x';setTimeout(()=>playNote(f.m,.6),250)}}
+function lsOpen(s){ov.hidden=true;$('sTitle').textContent=s.title+' · '+tr('phrase');$('sSub').textContent=s.by;
+  if(LS.aid>=2){showNames=false;showFing=false;labelKeys()}if(LS.listen){P.listen=true;speed=.8}
+  setTimeout(()=>{startSong();lsPost({ev:'start'})},LS.listen?500:200)}
 function songPress(m){
   if(!P.playing||P.listen)return;
   const win=.16*bps(),perf=.07*bps();let bst=null,bd=1e9;
   for(const n of P.notes){if(n.st!==0||n.m!==m)continue;const d=Math.abs(n.s-P.t);if(n.s-P.t<=win&&d<bd){bd=d;bst=n}if(n.s-P.t>win)break}
   if(bst&&P.wait){const f=front();if(f&&bst.s-f.s>1e-6)bst=null}
-  if(!bst){P.c.w++;P.streak=0;const k=keyEls.get(m);if(k){k.classList.add('wrong');setTimeout(()=>k.classList.remove('wrong'),180)}return}
+  if(!bst&&LS&&P.wait){const f=front();if(f&&pc(f.m)===pc(m)&&f.s-P.t<=win){bst=f;lsPost({ev:'oct'})}} // lesson: the same note in another octave counts
+  if(!bst){P.c.w++;P.streak=0;const k=keyEls.get(m);if(k){k.classList.add('wrong');setTimeout(()=>k.classList.remove('wrong'),180)}if(LS)lsWrong();return}
+  if(LS){LS.err=0;lsPost({ev:'note',i:P.notes.filter(n=>n.st===1).length+1,n:P.notes.length});setTimeout(()=>{if(P.playing&&!front())finishSong()},700)} // lesson: the phrase ends with its last note
   bst.st=1;const perfect=bd<=perf;if(perfect)P.c.p++;else P.c.b++;
   P.streak++;P.maxStreak=Math.max(P.maxStreak,P.streak);
   P.score+=Math.round((perfect?100:60)*Math.min(3,1+P.streak/10));
@@ -529,6 +553,7 @@ function songPress(m){
 }
 function finishSong(){
   P.playing=false;held.forEach(noteOff);setTargets([]);
+  if(LS){lsPost({ev:P.listen?'listened':'done',w:P.c.w});return}
   const total=P.notes.length;
   if(P.listen){overlay(`<h2>${tr('listenedT')}</h2><p>${tr('listenedP')}</p><div class="row"><button class="btn" id="again">${tr('play')}</button><button class="btn light" data-h>${tr('library')}</button></div>`);
     $('again').onclick=()=>{$('tListen').setAttribute('aria-pressed','false');P.listen=false;startSong()};return}
