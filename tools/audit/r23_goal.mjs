@@ -90,6 +90,7 @@ await X('closeSet()'); await p.waitForTimeout(200);
 // 6) proposé une fois après une partie réussie
 await X('S.goal=undefined; save(); GL.offer=true; endOpen=true; closeEnd()'); await p.waitForTimeout(600);
 check('fin de partie réussie : la fenêtre « Ton objectif du jour » s\'ouvre, 10 min présélectionné', await p.evaluate(() => !document.getElementById('goalModal').hidden && document.querySelectorAll('#glOpts .gl-opt').length === 5 && document.querySelector('#glOpts [aria-pressed=true]').dataset.v === 'min:10'));
+check('Finitions : après une partie, l\'en-tête reste « Bravo pour cette partie »', await p.evaluate(() => document.querySelector('#goalModal .gl-k').textContent) === 'Bravo pour cette partie');
 await p.click('#glOpts [data-v="min:20"]'); await p.click('#glOk'); await p.waitForTimeout(200);
 check('« C\'est noté » : 20 min enregistré, fenêtre fermée', await X('S.goal.kind==="min" && S.goal.v===20 && S.goal.asked===1') && await p.evaluate(() => document.getElementById('goalModal').hidden));
 check('la partie suivante ne la repropose pas', await X('(()=>{ GL.offer=false; return !!(S.goal&&S.goal.asked); })()'));

@@ -134,6 +134,7 @@ p = await open({ width: 1024, height: 768 }, { ...BASE, pp: { v: 1, on: true, st
 const finish = async id => { await p.X(`ppStart("${id}",0,0)`); await T(p, 200); await p.X('ppFinish()'); await T(p, 1700); };
 await finish('p03');
 check('CA-20 fin de P03 (1re fois) : D21 « Combien de temps par jour ? » d\'abord', await vis(p, '#goalModal') && !await vis(p, '#accModal'));
+check('Finitions : après une leçon, en-tête « Bravo pour cette leçon »', await p.evaluate(() => document.querySelector('#goalModal .gl-k').textContent) === 'Bravo pour cette leçon', await p.evaluate(() => document.querySelector('#goalModal .gl-k').textContent));
 await p.click('#goalModal .linkbtn[data-close=goalModal]').catch(async () => { await p.X('closeMod("goalModal")'); }); await T(p, 900);
 check('CA-20 puis D23 « Garde tes progrès »', await vis(p, '#accModal') && await p.evaluate(() => document.getElementById('accT').textContent) === 'Garde tes progrès');
 check('D23 : 3 leçons, étoiles, série ; Google, code par e-mail, « Gratuit. Pas de carte bancaire. », « Plus tard »', await p.evaluate(() => { const m = document.getElementById('accModal'); return /3 leçons/.test(m.textContent) && /étoiles/.test(m.textContent) && /Continuer avec Google/.test(m.textContent) && /Recevoir un code par e-mail/.test(m.textContent) && /Gratuit\. Pas de carte bancaire\./.test(m.textContent) && /Plus tard/.test(m.textContent); }));
