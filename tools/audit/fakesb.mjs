@@ -55,8 +55,16 @@ export const FAKE_ADMIN = `(()=>{ const A=window.__ADM=Object.assign({aal:null, 
     admin_feedback_set:a=>(A.log.push('feedback.set'),{ok:true}),
     admin_system:()=>({versions:[{ver:'2026-10-25T10:00Z',plat:'web',n:300,last:new Date().toISOString()},{ver:'2026-10-24T14:39Z',plat:'ios',n:120,last:new Date().toISOString()}],errors:[{msg:'TypeError: x is null',src:'/index.html',line:120,n:12,devices:5,last:new Date().toISOString(),ver:'2026-10-25'}],errors_24h:12,events_total:123456,stats_day:day(1)}),
     admin_log_list:()=>A.log.map((a,i)=>({at:new Date().toISOString(),who:'antoine@example.com',action:a,target:'x',detail:{}})),
+    admin_pay:()=>A.noPay?null:({by_product:{solo_month:12,solo_year:31,family_year:7,pc_solo_year:5},by_plan:{solo:48,family:7},by_store:{stripe:50,apple:5},active:46,trials:9,past_due:2,canceling:3,churn_30:4,new_30:17,
+      mrr_cents:12*1799+Math.round(36*14900/12)+Math.round(7*19900/12),currency:'eur',families:{n:7,active:7,members:15,seats:28},grants:3,
+      recent:[{user_id:users[1].id,name:'Léa',store:'stripe',product:'family_year',plan:'family',status:'active',period_end:new Date(Date.now()+300*864e5).toISOString(),cancel:false,amount_cents:19900,billing:'year',updated_at:new Date().toISOString()},
+        {user_id:users[3].id,name:'Sam',store:'apple',product:'pc_solo_year',plan:'solo',status:'trialing',period_end:new Date(Date.now()+5*864e5).toISOString(),cancel:false,amount_cents:14900,billing:'year',updated_at:new Date().toISOString()},
+        {user_id:users[4].id,name:'Noor',store:'stripe',product:'solo_month',plan:'solo',status:'past_due',period_end:new Date(Date.now()+2*864e5).toISOString(),cancel:true,amount_cents:1799,billing:'month',updated_at:new Date().toISOString()}]}),
+    admin_family:a=>({family:{id:'f1',seats:4,created_at:new Date().toISOString(),until:new Date(Date.now()+300*864e5).toISOString(),owner:{user_id:users[1].id,name:'Léa'},members:[{user_id:users[2].id,name:'Max',joined_at:new Date().toISOString()},{user_id:a.p_user,name:'Toi',joined_at:new Date().toISOString()}],invites:1},
+      subs:[{product:'family_year',store:'stripe',status:'active',period_end:new Date(Date.now()+300*864e5).toISOString()}]}),
+    admin_family_remove:a=>(A.log.push('family.remove'),{ok:true}),
   };
-  const RANK={owner:3,support:2,lecture:1}, NEED={admin_user_reset:'owner',admin_config_set:'owner',admin_league_action:'owner',admin_user_rename:'support',admin_user_premium:'support',admin_user_export:'support',admin_feedback:'support',admin_feedback_set:'support',admin_log_list:'support',admin_notify_count:'support'};
+  const RANK={owner:3,support:2,lecture:1}, NEED={admin_user_reset:'owner',admin_config_set:'owner',admin_league_action:'owner',admin_user_rename:'support',admin_user_premium:'support',admin_user_export:'support',admin_feedback:'support',admin_feedback_set:'support',admin_log_list:'support',admin_notify_count:'support',admin_family_remove:'support'};
   const listeners=[]; const sess=()=>A.aal?{access_token:'tok-'+A.aal, user:{id:'adm', email:'antoine@example.com'}}:null;
   const client={
     auth:{

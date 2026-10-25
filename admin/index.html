@@ -232,7 +232,7 @@ const IC={dash:"M4 13h6V4H4zM14 20h6v-9h-6zM14 4v4h6V4zM4 20h6v-4H4z", stats:"M4
   leagues:"M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0zM17 6h3v2a3 3 0 0 1-3 3M7 6H4v2a3 3 0 0 0 3 3", support:"M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12zM9 10h6M9 14h4",
   system:"M4 5h16v10H4zM8 19h8M12 15v4", pay:"M3 7h18v10H3zM3 11h18M7 15h3", warn:"M12 3l9.5 17h-19zM12 10v4M12 17.5v.01", ok:"M5 12.5l4.5 4.5L19 7"};
 const icon=k=>'<svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="'+IC[k]+'"/></svg>';
-const PAGES=[["dash","Tableau de bord"],["stats","Statistiques"],["users","Joueurs"],["content","Contenu et réglages"],["notifs","Notifications"],["leagues","Ligues et duels"],["support","Support"],["system","Système"],["pay","Paiements",1]];
+const PAGES=[["dash","Tableau de bord"],["stats","Statistiques"],["users","Joueurs"],["content","Contenu et réglages"],["notifs","Notifications"],["leagues","Ligues et duels"],["support","Support"],["system","Système"],["pay","Paiements"]];
 
 // ---------- thème ----------
 function themeApply(){ let v=null; try{ v=localStorage.getItem("pc-admin-theme"); }catch(e){} if(v==="light"||v==="dark") document.documentElement.dataset.theme=v; else delete document.documentElement.dataset.theme;
@@ -409,8 +409,9 @@ async function userOpen(id){ $("paneScrim").hidden=false; $("userPane").hidden=f
     +'<dt>Premiers pas</dt><dd>'+(g.pp?Object.keys(g.pp).length+" leçon(s)":"—")+'</dd><dt>Premium offert</dt><dd>'+(prem?"jusqu'au "+fmtD(u.prem_until):"non")+'</dd>'
     +'<dt>État</dt><dd>'+(banned?'<span class="chip bad">suspendu</span>':'<span class="chip good">actif</span>')+(u.admin_role?' <span class="role">'+esc(u.admin_role)+'</span>':'')+'</dd>'
     +'<dt>Sauvegarde</dt><dd>'+(g.size?fmtN(g.size)+" octets · "+fmtDT(g.updated_at):"aucune")+'</dd></dl>'
-    +'<div class="row">'+B("uaRename","Renommer","support")+B("uaPrem","Offrir 1 mois Premium","support")+(prem?B("uaPremOff","Retirer le Premium","support"):"")+B("uaBan",banned?"Réactiver":"Suspendre","support")+B("uaExport","Export RGPD (JSON)","support")+'</div>'
+    +'<div class="row">'+B("uaRename","Renommer","support")+B("uaPrem","Offrir 1 mois Premium","support")+(prem?B("uaPremOff","Retirer le Premium","support"):"")+B("uaBan",banned?"Réactiver":"Suspendre","support")+B("uaExport","Export RGPD (JSON)","support")+'<button class="btn sm" type="button" id="uaFam">Famille et abonnements</button></div>'
     +'<div class="row">'+B("uaReset","Réinitialiser la progression","owner","danger")+B("uaDel","Supprimer le compte","owner","danger")+'</div>'
+    +'<div id="upFam"></div>'
     +card("XP des 30 derniers jours", lineChart(xp,{h:140,label:"XP"}))
     +card("Derniers événements", ev?'<div class="tw"><table><tbody>'+ev+'</tbody></table></div>':'<div class="empty">Aucun.</div>')
     +((u.feedback||[]).length?card("Messages au support", (u.feedback||[]).map(f=>'<div class="fb"><small class="muted">'+fmtDT(f.at)+' · '+esc(FBK[f.kind]||f.kind)+' · '+esc(FBS[f.status]||f.status)+'</small><p>'+esc(f.msg)+'</p></div>').join("")):"");
@@ -420,6 +421,7 @@ async function userOpen(id){ $("paneScrim").hidden=false; $("userPane").hidden=f
   on("uaPrem", async()=>{ if(!await ask("Offrir un mois Premium ?","30 jours de Premium pour "+(p.name||"ce joueur")+". L'app le lit à la prochaine connexion.",{ok:"Offrir"})) return; if(await act(()=>rpc("admin_user_premium",{p_id:id,p_days:30}),"Mois Premium offert.")) userOpen(id); });
   on("uaPremOff", async()=>{ if(!await ask("Retirer le Premium offert ?","",{ok:"Retirer",danger:true})) return; if(await act(()=>rpc("admin_user_premium",{p_id:id,p_days:0}),"Premium retiré.")) userOpen(id); });
   on("uaBan", async()=>{ if(!await ask(banned?"Réactiver le compte ?":"Suspendre le compte ?", banned?"Le joueur pourra se reconnecter.":"Le joueur ne pourra plus se connecter (sa progression est gardée).",{ok:banned?"Réactiver":"Suspendre",danger:!banned})) return; if(await act(()=>edge({action:"suspend",id,on:!banned}),banned?"Compte réactivé.":"Compte suspendu.")) userOpen(id); });
+  on("uaFam", ()=>userFam(id));
   on("uaExport", async()=>{ const d=await act(()=>rpc("admin_user_export",{p_id:id}),"Export prêt."); if(d) download("rgpd-"+id+".json", JSON.stringify(d,null,2), "application/json"); });
   on("uaReset", async()=>{ if(await ask("Réinitialiser la progression ?","XP, niveau, série et sauvegarde de "+(p.name||"ce joueur")+" seront effacés. C'est irréversible.",{ok:"Réinitialiser",danger:true,type:"EFFACER"})==null) return; if(await act(()=>rpc("admin_user_reset",{p_id:id}),"Progression réinitialisée.")) userOpen(id); });
   on("uaDel", async()=>{ if(await ask("Supprimer le compte ?","Le compte et toutes ses données seront supprimés définitivement.",{ok:"Supprimer",danger:true,type:"SUPPRIMER"})==null) return; if(await act(()=>edge({action:"delete_user",id}),"Compte supprimé.")){ userClose(); go("users"); } });
@@ -533,7 +535,33 @@ VIEWS.system=async()=>{ const [s, ver, log]=await Promise.all([rpc("admin_system
     +(lg!=null?card("Journal du back office", lg?'<div class="tw" style="max-height:300px"><table><thead><tr><th>Quand</th><th>Qui</th><th>Action</th><th>Cible</th><th>Détail</th></tr></thead><tbody>'+lg+'</tbody></table></div>':'<div class="empty">Vide.</div>',"span4"):"")+'</div>'; };
 
 // ---------- 9. paiements ----------
-VIEWS.pay=async()=>'<section class="card soonbox"><h3>'+icon("pay")+' Paiements : bientôt</h3><p style="margin:0">Cet écran suivra les abonnements quand le paiement sera branché : Stripe Checkout sur le site, achat intégré Apple dans l\'app iOS, état de l\'abonnement dans Supabase.</p><p class="muted small" style="margin:0">En attendant, un mois Premium peut être offert depuis la fiche d\'un joueur (Joueurs › Offrir 1 mois Premium).</p></section>';
+// ---------- Paiements (migration 2026-10-26_family.sql : abonnements Stripe / Apple, familles) ----------
+const PROD={solo_month:"Solo mensuel",solo_year:"Solo annuel",family_year:"Famille annuel",pc_solo_month:"Solo mensuel (Apple)",pc_solo_year:"Solo annuel (Apple)",pc_family_year:"Famille annuel (Apple)"};
+const SUBST={trialing:"essai",active:"actif",past_due:"paiement en retard",canceled:"résilié",expired:"expiré",refunded:"remboursé"}, STORE={stripe:"Stripe (site)",apple:"Apple (app)",manual:"Manuel (test)"};
+const money=(c,cur)=>new Intl.NumberFormat("fr-FR",{style:"currency",currency:(cur||"eur").toUpperCase(),maximumFractionDigits:c%100?2:0}).format((+c||0)/100);
+VIEWS.pay=async()=>{ let d; try{ d=await rpc("admin_pay"); }catch(e){ if(e instanceof Denied) throw e; if(/could not find|does not exist|schema cache/i.test(e.message||"")) return '<section class="card soonbox"><h3>'+icon("pay")+' Paiements : migration à lancer</h3><p style="margin:0">Lance <b>supabase/migrations/2026-10-26_family.sql</b> dans le SQL Editor de Supabase : cet écran suivra alors les abonnements (Stripe sur le site, Apple dans l\'app) et les familles.</p><p class="muted small" style="margin:0">Procédure complète : docs/PAIEMENT.md.</p></section>'; throw e; }
+  const f=d.families||{}, cur=d.currency||"eur", bp=d.by_product||{}, st=d.by_store||{};
+  const rows=(d.recent||[]).map(r=>'<tr data-id="'+esc(r.user_id)+'"><td>'+esc(r.name||"—")+'</td><td>'+esc(PROD[r.product]||r.product)+'</td><td>'+esc(STORE[r.store]||r.store)+'</td><td><span class="chip '+(["active","trialing"].includes(r.status)?"good":["past_due"].includes(r.status)?"warn":"bad")+'">'+esc(SUBST[r.status]||r.status)+'</span>'+(r.cancel?' <small class="muted">résiliation demandée</small>':'')+'</td><td>'+fmtD(r.period_end)+'</td><td class="num">'+(r.amount_cents!=null?esc(money(r.amount_cents,cur))+(r.billing==="month"?"/mois":r.billing==="year"?"/an":""):"—")+'</td></tr>').join("");
+  return '<div class="grid g4">'
+    +kpi("Abonnés payants", fmtN(d.active), fmtN(d.past_due)+" en retard de paiement")
+    +kpi("Essais en cours", fmtN(d.trials), "Solo annuel, 7 jours")
+    +kpi("Revenus mensuels estimés", money(d.mrr_cents,cur), "mensuels + annuels ÷ 12, hors essais (TTC, avant commission)")
+    +kpi("Résiliations 30 jours", fmtN(d.churn_30), fmtN(d.canceling)+" résiliation(s) demandée(s) · "+fmtN(d.new_30)+" nouveaux")
+    +card("Par formule", bars(Object.keys(PROD).filter(k=>bp[k]).map(k=>({l:PROD[k], v:bp[k]})), {empty:"Aucun abonnement en cours."}))
+    +card("Familles", '<dl class="kv"><dt>Familles</dt><dd>'+fmtN(f.n)+' · '+fmtN(f.active)+' actives</dd><dt>Membres invités</dt><dd>'+fmtN(f.members)+'</dd><dt>Places</dt><dd>'+fmtN((f.members|0)+(f.n|0))+' / '+fmtN(f.seats)+' occupées</dd><dt>Premium offerts</dt><dd>'+fmtN(d.grants)+' en cours</dd></dl>')
+    +card("Par magasin", bars(Object.keys(STORE).filter(k=>st[k]).map(k=>({l:STORE[k], v:st[k]})), {empty:"Aucun abonnement en cours."}))
+    +card("Prix et réglages", '<p class="small" style="margin:0">Les prix affichés dans l\'app viennent de <b>PREM_OFFER</b> (ou de la clé <b>prem_offer</b> de Contenu et réglages). Ceux qui sont facturés viennent des prix Stripe et des produits App Store : garde-les identiques. Paiement ouvert aux joueurs : interrupteur <b>payLive</b> des flags.</p>')
+    +card("Derniers abonnements (clic = fiche du joueur)", rows?'<div class="tw"><table><thead><tr><th>Joueur</th><th>Formule</th><th>Magasin</th><th>Statut</th><th>Fin de période</th><th class="num">Montant</th></tr></thead><tbody>'+rows+'</tbody></table></div>':'<div class="empty">Aucun abonnement pour l\'instant.</div>', "span4")
+    +'</div>'; };
+WIRE.pay=m=>{ m.querySelectorAll("tr[data-id]").forEach(tr=>tr.onclick=()=>userOpen(tr.dataset.id)); };
+// fiche d'un joueur : sa famille et ses abonnements
+async function userFam(id){ const box=$("upFam"); if(!box) return; box.innerHTML='<div class="empty">Chargement…</div>';
+  let d; try{ d=await rpc("admin_family",{p_user:id}); }catch(e){ box.innerHTML='<div class="msg info">'+esc(/could not find|schema cache/i.test(e.message||"")?"Migration 2026-10-26_family.sql pas encore lancée.":e.message)+'</div>'; return; }
+  const F=d.family, subs=(d.subs||[]).map(s=>'<li>'+esc(PROD[s.product]||s.product)+' · '+esc(STORE[s.store]||s.store)+' · '+esc(SUBST[s.status]||s.status)+' · fin '+fmtD(s.period_end)+'</li>').join("");
+  box.innerHTML=(F?'<dl class="kv"><dt>Titulaire</dt><dd>'+esc((F.owner||{}).name||"—")+'</dd><dt>Membres</dt><dd>'+((F.members||[]).map(m=>esc(m.name||"—")+' <small class="muted">'+fmtD(m.joined_at)+'</small>').join(", ")||"aucun")+'</dd><dt>Places</dt><dd>'+fmtN((F.members||[]).length+1)+' / '+fmtN(F.seats)+'</dd><dt>Abonnement Famille</dt><dd>'+(F.until?"actif jusqu'au "+fmtD(F.until):'<span class="chip bad">inactif</span>')+'</dd><dt>Liens en cours</dt><dd>'+fmtN(F.invites)+'</dd></dl>':'<p class="muted small" style="margin:0">Pas de famille.</p>')
+    +(subs?'<ul class="small">'+subs+'</ul>':'<p class="muted small" style="margin:0">Aucun abonnement.</p>')
+    +(F && (F.members||[]).some(m=>m.user_id===id)?'<div class="row"><button class="btn sm danger" type="button" id="uaFamRm"'+(can("support")?"":" disabled")+'>Retirer de la famille</button></div>':'');
+  const b=$("uaFamRm"); if(b && !b.disabled) b.onclick=async()=>{ if(!await ask("Retirer de la famille ?","Le joueur perd le Premium partagé. Le titulaire pourra l'inviter à nouveau.",{ok:"Retirer",danger:true})) return; if(await act(()=>rpc("admin_family_remove",{p_user:id}),"Retiré de la famille.")) userFam(id); }; }
 
 // ---------- session, double authentification, inactivité ----------
 function showLogin(step){ $("shell").hidden=true; $("login").hidden=false; userClose(); $("dlg").hidden=true;
