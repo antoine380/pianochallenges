@@ -8294,12 +8294,15 @@ async function enableMidi(quiet){
 }
 
 // ---------- Microphone pitch detection ----------
-let micOn=false;
+let micOn=false, micAsking=false;
 $("micBtn").addEventListener("click", async ()=>{
   if(micOn){ micStop(); renderInputUI(); return; } // toggle: a second click stops the microphone
+  if(micAsking) return; // the permission prompt is still open: a second tap would open a second stream and a timer nobody stops
   const c=audio(); if(!c) return;
   try{
-    const stream=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:false,noiseSuppression:false,autoGainControl:false}});
+    micAsking=true; let stream; try{ stream=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:false,noiseSuppression:false,autoGainControl:false}}); }finally{ micAsking=false; }
+    if(micOn){ stream.getTracks().forEach(tr=>tr.stop()); return; } // started meanwhile by another path
+    clearInterval(micTimer);
     const src=c.createMediaStreamSource(stream), an=c.createAnalyser(); an.fftSize=1024; src.connect(an); // 1024 samples: enough down to ~100 Hz, autocorrelation 4× cheaper
     const buf=new Float32Array(an.fftSize); let cand=null, count=0, lastEmit=null;
     micStream=stream; micOn=true; $("micBtn").classList.add("on"); $("micBtn").classList.remove("err"); $("micTxt").textContent=t("micOn"); notice("");
