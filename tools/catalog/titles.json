@@ -1,0 +1,710 @@
+{
+ "_doc": "Titres FR/EN, mise en avant (famous = mélodie connue, passe devant), skip (écarter à la main). Clé = identifiant du rapport (l<n° OpenScore> ou m<n° Mutopia>-<empreinte>).",
+ "l30321236": {
+  "fr": "Heidenröslein (La petite rose sauvage)",
+  "en": "Heidenröslein (Little Heath Rose)",
+  "famous": 1,
+  "slug": "heidenroslein"
+ },
+ "l6180725": {
+  "fr": "An die Musik (À la musique)",
+  "en": "An die Musik (To Music)",
+  "famous": 1
+ },
+ "l6900961": {
+  "fr": "La Truite (Die Forelle)",
+  "en": "The Trout (Die Forelle)",
+  "famous": 1,
+  "slug": "truite"
+ },
+ "l4978382": {
+  "fr": "Ich grolle nicht (Je ne t'en veux pas)",
+  "en": "Ich grolle nicht (I Bear No Grudge)",
+  "famous": 1
+ },
+ "l6486443": {
+  "fr": "Wandrers Nachtlied (Chant de nuit du voyageur)",
+  "en": "Wandrers Nachtlied (Wanderer's Night Song)",
+  "famous": 1
+ },
+ "l5023662": {
+  "fr": "Einsamkeit (Solitude)",
+  "en": "Einsamkeit (Solitude)"
+ },
+ "l29244491": {
+  "fr": "Meeres Stille (Calme de la mer)",
+  "en": "Meeres Stille (Calm Sea)"
+ },
+ "l4985927": {
+  "fr": "Der Jäger (Le chasseur)",
+  "en": "Der Jäger (The Hunter)"
+ },
+ "l4985932": {
+  "fr": "Des Müllers Blumen (Les fleurs du meunier)",
+  "en": "Des Müllers Blumen (The Miller's Flowers)"
+ },
+ "l4978488": {
+  "fr": "Du Ring an meinem Finger (Ô toi, l'anneau à mon doigt)",
+  "en": "Du Ring an meinem Finger (You Ring upon My Finger)",
+  "famous": 1
+ },
+ "l29026391": {
+  "fr": "Élégie",
+  "en": "Elegy (Élégie)",
+  "famous": 1
+ },
+ "l6486038": {
+  "fr": "Home, Sweet Home",
+  "en": "Home, Sweet Home",
+  "famous": 1
+ },
+ "l6205441": {
+  "fr": "The Lost Chord (L'accord perdu)",
+  "en": "The Lost Chord",
+  "famous": 1
+ },
+ "l29748596": {
+  "fr": "Mandoline",
+  "en": "Mandoline",
+  "famous": 1
+ },
+ "l5079378": {
+  "fr": "Aubade",
+  "en": "Aubade"
+ },
+ "l30888260": {
+  "fr": "Wiosna (Le printemps)",
+  "en": "Wiosna (Spring)",
+  "famous": 1
+ },
+ "l5667843": {
+  "fr": "Liebestreu (Fidélité)",
+  "en": "Liebestreu (True Love)"
+ },
+ "l5649214": {
+  "fr": "Treue Liebe (Amour fidèle)",
+  "en": "Treue Liebe (Faithful Love)"
+ },
+ "l5058657": {
+  "fr": "Dein blaues Auge (Tes yeux bleus)",
+  "en": "Dein blaues Auge (Your Blue Eyes)"
+ },
+ "l4976849": {
+  "fr": "Die Rose, die Lilie (La rose, le lys)",
+  "en": "Die Rose, die Lilie (The Rose, the Lily)"
+ },
+ "l6994116": {
+  "fr": "Air du rat (Ludions)",
+  "en": "Air du rat (Ludions)"
+ },
+ "l6994174": {
+  "fr": "Air du poète (Ludions)",
+  "en": "Air du poète (Ludions)"
+ },
+ "m1054-48cd89": {
+  "fr": "Ave Maria",
+  "en": "Ave Maria",
+  "famous": 1,
+  "bpm": 60
+ },
+ "m28-57eab3": {
+  "fr": "À Sylvia (An Sylvia)",
+  "en": "Who Is Sylvia? (An Sylvia)",
+  "famous": 1
+ },
+ "m1040-c35d66": {
+  "fr": "Berceuse (Wiegenlied, D. 498)",
+  "en": "Lullaby (Wiegenlied, D. 498)",
+  "famous": 1,
+  "slug": "berceuse"
+ },
+ "m1053-c9f626": {
+  "fr": "Du bist die Ruh (Tu es le repos)",
+  "en": "Du bist die Ruh (You Are Rest)",
+  "famous": 1,
+  "bpm": 56
+ },
+ "m1052-552acd": {
+  "fr": "Auf dem Wasser zu singen (À chanter sur l'eau)",
+  "en": "Auf dem Wasser zu singen (To Be Sung on the Water)",
+  "famous": 1
+ },
+ "m1544-f3d466": {
+  "fr": "La Jeune Fille et la Mort",
+  "en": "Death and the Maiden",
+  "famous": 1,
+  "slug": "jeunefille"
+ },
+ "m1558-595e0f": {
+  "fr": "Der Musensohn (Le fils des Muses)",
+  "en": "Der Musensohn (The Son of the Muses)"
+ },
+ "m1548-7d1521": {
+  "fr": "Nacht und Träume (Nuit et rêves)",
+  "en": "Nacht und Träume (Night and Dreams)",
+  "bpm": 56
+ },
+ "m1582-fea384": {
+  "fr": "Frühlingsglaube (Foi printanière)",
+  "en": "Frühlingsglaube (Faith in Spring)"
+ },
+ "m1813-f16f5d": {
+  "fr": "Du bist wie eine Blume (Tu es comme une fleur)",
+  "en": "Du bist wie eine Blume (You Are Like a Flower)",
+  "famous": 1
+ },
+ "m438-cab688": {
+  "fr": "La Lorelei",
+  "en": "The Loreley",
+  "famous": 1
+ },
+ "m584-4f4b8f": {
+  "fr": "Chansons que ma mère m'a apprises",
+  "en": "Songs My Mother Taught Me",
+  "famous": 1,
+  "slug": "mother",
+  "bpm": 72
+ },
+ "m586-9f83e0": {
+  "fr": "Je t'aime (Ich liebe dich)",
+  "en": "I Love You (Ich liebe dich)",
+  "famous": 1
+ },
+ "m108-5a6dd2": {
+  "fr": "Marche turque (Rondo alla turca)",
+  "en": "Turkish March (Rondo alla turca)",
+  "famous": 1,
+  "slug": "turca"
+ },
+ "m614-bdac81": {
+  "fr": "Sonate K. 331 : thème",
+  "en": "Sonata K. 331: theme",
+  "famous": 1
+ },
+ "m615-a84f7e": {
+  "fr": "Sonate K. 331 : variation 1",
+  "en": "Sonata K. 331: variation 1"
+ },
+ "m616-2e38c3": {
+  "fr": "Sonate K. 331 : variation 2",
+  "en": "Sonata K. 331: variation 2"
+ },
+ "m617-2c3fe6": {
+  "fr": "Sonate K. 331 : variation 3",
+  "en": "Sonata K. 331: variation 3"
+ },
+ "m619-bd9065": {
+  "fr": "Sonate K. 331 : variation 5",
+  "en": "Sonata K. 331: variation 5"
+ },
+ "m620-3f1fa9": {
+  "fr": "Sonate K. 331 : variation 6",
+  "en": "Sonata K. 331: variation 6"
+ },
+ "m613-2e42f4": {
+  "fr": "Sonate K. 331 : menuet",
+  "en": "Sonata K. 331: minuet"
+ },
+ "m358-2cf234": {
+  "fr": "Sonate K. 457 : finale",
+  "en": "Sonata K. 457: finale"
+ },
+ "m2244-c155b3": {
+  "fr": "Notte e giorno (Don Giovanni)",
+  "en": "Notte e giorno (Don Giovanni)"
+ },
+ "m468-684000": {
+  "fr": "Prélude op. 28 n° 4",
+  "en": "Prelude Op. 28 No. 4",
+  "famous": 1
+ },
+ "m511-a8b401": {
+  "fr": "Valse op. 69 n° 2",
+  "en": "Waltz Op. 69 No. 2",
+  "famous": 1
+ },
+ "m1682-32fb60": {
+  "fr": "Mazurka op. 33 n° 1",
+  "en": "Mazurka Op. 33 No. 1"
+ },
+ "m777-7f931a": {
+  "fr": "Sonate op. 49 n° 2 : menuet",
+  "en": "Sonata Op. 49 No. 2: minuet",
+  "famous": 1
+ },
+ "m912-f6cfd7": {
+  "fr": "Sonate op. 49 n° 1 : andante",
+  "en": "Sonata Op. 49 No. 1: andante"
+ },
+ "m913-96cd78": {
+  "fr": "Sonate op. 49 n° 1 : rondo",
+  "en": "Sonata Op. 49 No. 1: rondo"
+ },
+ "m1276-fb8150": {
+  "fr": "Sonate op. 2 n° 1 : menuet",
+  "en": "Sonata Op. 2 No. 1: minuet"
+ },
+ "m1277-72dfb0": {
+  "fr": "Sonate op. 2 n° 1 : finale",
+  "en": "Sonata Op. 2 No. 1: finale"
+ },
+ "m934-1c7df6": {
+  "fr": "Six variations op. 76",
+  "en": "Six Variations Op. 76"
+ },
+ "m1161-89a815": {
+  "fr": "Sonate op. 78 : allegro vivace",
+  "en": "Sonata Op. 78: allegro vivace"
+ },
+ "m1024-e93d19": {
+  "fr": "Sept variations sur God Save the King (WoO 78)",
+  "en": "Seven Variations on God Save the King (WoO 78)",
+  "famous": 1
+ },
+ "m904-5950b8": {
+  "fr": "Menuet (WoO 82)",
+  "en": "Minuet (WoO 82)"
+ },
+ "m37-f42b73": {
+  "fr": "Gymnopédie n° 1",
+  "en": "Gymnopédie No. 1",
+  "famous": 1,
+  "bpm": 66
+ },
+ "m39-6b1481": {
+  "fr": "Gymnopédie n° 3",
+  "en": "Gymnopédie No. 3",
+  "famous": 1,
+  "bpm": 66
+ },
+ "m504-a9a127": {
+  "fr": "Rêverie (Träumerei)",
+  "en": "Träumerei (Dreaming)",
+  "famous": 1,
+  "slug": "traumerei",
+  "bpm": 66
+ },
+ "m372-458380": {
+  "fr": "Scènes d'enfants : Bonheur parfait",
+  "en": "Scenes from Childhood: Happy Enough"
+ },
+ "m1171-bf1ce3": {
+  "fr": "Les Saisons : janvier",
+  "en": "The Seasons: January"
+ },
+ "m1806-0b628f": {
+  "fr": "Marche des soldats de bois",
+  "en": "March of the Wooden Soldiers",
+  "famous": 1
+ },
+ "m2080-628841": {
+  "fr": "Vieille chanson française",
+  "en": "Old French Song",
+  "famous": 1
+ },
+ "m341-92c864": {
+  "fr": "Doumka",
+  "en": "Dumka"
+ },
+ "m896-28ded6": {
+  "fr": "Le Lac des cygnes : danse napolitaine",
+  "en": "Swan Lake: Neapolitan Dance",
+  "famous": 1
+ },
+ "m1778-e7cf65": {
+  "fr": "Clair de lune",
+  "en": "Clair de lune",
+  "famous": 1,
+  "bpm": 60
+ },
+ "m1741-47e634": {
+  "fr": "Chant du gondolier vénitien (op. 30 n° 6)",
+  "en": "Venetian Boat Song (Op. 30 No. 6)",
+  "famous": 1
+ },
+ "m1679-f6acfd": {
+  "fr": "Chant du gondolier vénitien (op. 19 n° 6)",
+  "en": "Venetian Boat Song (Op. 19 No. 6)"
+ },
+ "m592-3edc76": {
+  "fr": "Romance sans paroles : chant populaire (op. 53 n° 5)",
+  "en": "Song without Words: Folk Song (Op. 53 No. 5)"
+ },
+ "m589-aecf1e": {
+  "fr": "Romance sans paroles (op. 102 n° 3)",
+  "en": "Song without Words (Op. 102 No. 3)"
+ },
+ "m1744-6be4d7": {
+  "fr": "Romance sans paroles (op. 85 n° 1)",
+  "en": "Song without Words (Op. 85 No. 1)"
+ },
+ "m1654-dc23d1": {
+  "fr": "Consolation n° 1",
+  "en": "Consolation No. 1",
+  "bpm": 66
+ },
+ "m1647-7ae2c1": {
+  "fr": "Consolation n° 3",
+  "en": "Consolation No. 3",
+  "famous": 1,
+  "bpm": 66
+ },
+ "m202-acbe25": {
+  "fr": "La Candeur",
+  "en": "Candour (La Candeur)",
+  "famous": 1
+ },
+ "m203-3c21be": {
+  "fr": "L'Arabesque",
+  "en": "Arabesque (L'Arabesque)",
+  "famous": 1
+ },
+ "m218-c86f48": {
+  "fr": "La Pastorale",
+  "en": "Pastoral (La Pastorale)",
+  "famous": 1
+ },
+ "m214-78e07f": {
+  "fr": "Innocence",
+  "en": "Innocence"
+ },
+ "m215-d0a8ff": {
+  "fr": "Progrès",
+  "en": "Progress (Progrès)"
+ },
+ "m224-cae733": {
+  "fr": "Consolation",
+  "en": "Consolation"
+ },
+ "m225-5f7901": {
+  "fr": "La Styrienne",
+  "en": "The Styrian Dance (La Styrienne)"
+ },
+ "m228-214c02": {
+  "fr": "Douce Plainte",
+  "en": "Tender Grief (Douce Plainte)"
+ },
+ "m229-edf317": {
+  "fr": "La Babillarde",
+  "en": "The Chatterbox (La Babillarde)",
+  "famous": 1
+ },
+ "m230-ce404b": {
+  "fr": "Inquiétude",
+  "en": "Restlessness (Inquiétude)"
+ },
+ "m2177-d65af4": {
+  "fr": "Étude mélodique op. 840 n° 10",
+  "en": "Melodic Study Op. 840 No. 10"
+ },
+ "m2148-3cbdf5": {
+  "fr": "Étude mélodique op. 840 n° 3",
+  "en": "Melodic Study Op. 840 No. 3"
+ },
+ "m2149-6b5233": {
+  "fr": "Étude mélodique op. 840 n° 4",
+  "en": "Melodic Study Op. 840 No. 4"
+ },
+ "m2150-5c02ea": {
+  "fr": "Étude mélodique op. 840 n° 5",
+  "en": "Melodic Study Op. 840 No. 5"
+ },
+ "m2151-42c75d": {
+  "fr": "Étude mélodique op. 840 n° 6",
+  "en": "Melodic Study Op. 840 No. 6"
+ },
+ "m2152-0667e5": {
+  "fr": "Étude mélodique op. 840 n° 7",
+  "en": "Melodic Study Op. 840 No. 7"
+ },
+ "m2068-a9c67a": {
+  "fr": "Exercice en 8 mesures op. 821 n° 7",
+  "en": "Eight-Bar Exercise Op. 821 No. 7"
+ },
+ "m2069-a6fc3b": {
+  "fr": "Exercice en 8 mesures op. 821 n° 8",
+  "en": "Eight-Bar Exercise Op. 821 No. 8"
+ },
+ "m2083-f4a026": {
+  "fr": "Exercice en 8 mesures op. 821 n° 17",
+  "en": "Eight-Bar Exercise Op. 821 No. 17"
+ },
+ "m232-458e90": {
+  "fr": "Sonatine op. 20 n° 1 : allegro",
+  "en": "Sonatina Op. 20 No. 1: allegro",
+  "famous": 1
+ },
+ "m233-0c5818": {
+  "fr": "Sonatine op. 20 n° 1 : andante",
+  "en": "Sonatina Op. 20 No. 1: andante"
+ },
+ "m234-1c478b": {
+  "fr": "Sonatine op. 20 n° 1 : rondo",
+  "en": "Sonatina Op. 20 No. 1: rondo"
+ },
+ "m76-78d64d": {
+  "fr": "Menuet en sol mineur (BWV Anh. 115)",
+  "en": "Minuet in G minor (BWV Anh. 115)",
+  "famous": 1
+ },
+ "m1014-f46f53": {
+  "fr": "Menuet (BWV Anh. 118)",
+  "en": "Minuet (BWV Anh. 118)",
+  "famous": 1
+ },
+ "m1613-75563b": {
+  "fr": "Menuet (BWV Anh. 121)",
+  "en": "Minuet (BWV Anh. 121)"
+ },
+ "m79-a04286": {
+  "fr": "Musette (BWV Anh. 126)",
+  "en": "Musette (BWV Anh. 126)",
+  "famous": 1
+ },
+ "m1016-1c530d": {
+  "fr": "Polonaise (BWV Anh. 119)",
+  "en": "Polonaise (BWV Anh. 119)"
+ },
+ "m1015-20baa0": {
+  "fr": "Polonaise (BWV Anh. 117b)",
+  "en": "Polonaise (BWV Anh. 117b)"
+ },
+ "m1013-c4f38b": {
+  "fr": "Polonaise (BWV Anh. 117a)",
+  "en": "Polonaise (BWV Anh. 117a)"
+ },
+ "m1615-a6fc01": {
+  "fr": "Polonaise (BWV Anh. 128)",
+  "en": "Polonaise (BWV Anh. 128)"
+ },
+ "m78-f3294f": {
+  "fr": "Aria (BWV 515)",
+  "en": "Aria (BWV 515)"
+ },
+ "m1622-555e39": {
+  "fr": "Aria « Warum betrübst du dich » (BWV 516)",
+  "en": "Aria “Warum betrübst du dich” (BWV 516)"
+ },
+ "m1006-d26867": {
+  "fr": "Gib dich zufrieden (BWV 510)",
+  "en": "Gib dich zufrieden (BWV 510)"
+ },
+ "m1009-e6dc63": {
+  "fr": "Gib dich zufrieden (BWV 511)",
+  "en": "Gib dich zufrieden (BWV 511)"
+ },
+ "m1010-1e4945": {
+  "fr": "Gib dich zufrieden (BWV 512)",
+  "en": "Gib dich zufrieden (BWV 512)"
+ },
+ "m85-0f6e66": {
+  "fr": "Suite anglaise n° 1 : bourrée I",
+  "en": "English Suite No. 1: Bourrée I"
+ },
+ "m86-556b21": {
+  "fr": "Suite anglaise n° 1 : bourrée II",
+  "en": "English Suite No. 1: Bourrée II"
+ },
+ "m82-bb5fc1": {
+  "fr": "Suite anglaise n° 2 : bourrée I",
+  "en": "English Suite No. 2: Bourrée I",
+  "famous": 1
+ },
+ "m83-201146": {
+  "fr": "Suite anglaise n° 2 : bourrée II",
+  "en": "English Suite No. 2: Bourrée II"
+ },
+ "m84-493c15": {
+  "fr": "Suite anglaise n° 2 : gigue",
+  "en": "English Suite No. 2: Gigue"
+ },
+ "m1935-f42ba5": {
+  "fr": "Suite française n° 6 : polonaise",
+  "en": "French Suite No. 6: Polonaise"
+ },
+ "m1616-a90a15": {
+  "fr": "Wer nur den lieben Gott läßt walten (BWV 691)",
+  "en": "Wer nur den lieben Gott läßt walten (BWV 691)"
+ },
+ "m149-4e25af": {
+  "fr": "Ouverture (pièces d'Aylesford)",
+  "en": "Overture (Aylesford Pieces)"
+ },
+ "m150-7c0ecf": {
+  "fr": "Entrée (pièces d'Aylesford)",
+  "en": "Entrée (Aylesford Pieces)"
+ },
+ "m151-530d9b": {
+  "fr": "Gavotte (pièces d'Aylesford)",
+  "en": "Gavotte (Aylesford Pieces)"
+ },
+ "m157-999260": {
+  "fr": "Menuet I (pièces d'Aylesford)",
+  "en": "Minuet I (Aylesford Pieces)"
+ },
+ "m158-820496": {
+  "fr": "Menuet II, trio (pièces d'Aylesford)",
+  "en": "Minuet II, trio (Aylesford Pieces)"
+ },
+ "m160-0502a9": {
+  "fr": "Allegro (pièces d'Aylesford)",
+  "en": "Allegro (Aylesford Pieces)"
+ },
+ "m161-910354": {
+  "fr": "Menuet (pièces d'Aylesford)",
+  "en": "Minuet (Aylesford Pieces)"
+ },
+ "m162-4d1993": {
+  "fr": "Air (pièces d'Aylesford)",
+  "en": "Air (Aylesford Pieces)"
+ },
+ "m164-652595": {
+  "fr": "Menuet II (pièces d'Aylesford, n° 15)",
+  "en": "Minuet II (Aylesford Pieces, No. 15)"
+ },
+ "m165-465dd9": {
+  "fr": "Air et variations (pièces d'Aylesford)",
+  "en": "Air with Variations (Aylesford Pieces)"
+ },
+ "m169-a1867c": {
+  "fr": "Sonatine (pièces d'Aylesford)",
+  "en": "Sonatina (Aylesford Pieces)"
+ },
+ "m1864-b87804": {
+  "fr": "La Réjouissance (Musique pour les feux d'artifice royaux)",
+  "en": "La Réjouissance (Music for the Royal Fireworks)",
+  "famous": 1
+ },
+ "m98-4ede90": {
+  "fr": "Sonatine en si bémol (HWV 585)",
+  "en": "Sonatina (HWV 585)"
+ },
+ "m2242-8c4652": {
+  "fr": "Signor, lasciate far a me (Serse)",
+  "en": "Signor, lasciate far a me (Serse)"
+ },
+ "m212-3533ba": {
+  "fr": "Sonate Hob. XVI:28 : presto",
+  "en": "Sonata Hob. XVI:28: presto"
+ },
+ "m1541-90d8e2": {
+  "fr": "Something Doing (rag)",
+  "en": "Something Doing (rag)"
+ },
+ "m1542-90fc2f": {
+  "fr": "The Strenuous Life (rag)",
+  "en": "The Strenuous Life (rag)"
+ },
+ "m335-6380c1": {
+  "fr": "Peacherine Rag",
+  "en": "Peacherine Rag"
+ },
+ "m208-c0c971": {
+  "fr": "Sicilienne",
+  "en": "Siciliano"
+ },
+ "m191-5de8a9": {
+  "fr": "Menuet",
+  "en": "Minuet"
+ },
+ "m192-cd7497": {
+  "fr": "Rondo (op. 42)",
+  "en": "Rondo (Op. 42)"
+ },
+ "m414-940dcd": {
+  "fr": "Les Tendres Plaintes",
+  "en": "Les Tendres Plaintes",
+  "famous": 1,
+  "bpm": 72
+ },
+ "m407-822702": {
+  "fr": "Les Sauvages",
+  "en": "Les Sauvages",
+  "famous": 1
+ },
+ "m487-230bca": {
+  "fr": "Tambourin",
+  "en": "Tambourin",
+  "famous": 1
+ },
+ "m669-226cf4": {
+  "fr": "Les Djinns",
+  "en": "Les Djinns"
+ },
+ "m648-f2f9b1": {
+  "fr": "Les Matelots",
+  "en": "Les Matelots"
+ },
+ "m371-94d68a": {
+  "fr": "Hard Times Come Again No More",
+  "en": "Hard Times Come Again No More",
+  "famous": 1
+ },
+ "m370-4f19cb": {
+  "fr": "Slumber My Darling",
+  "en": "Slumber My Darling"
+ },
+ "m679-7fef9d": {
+  "fr": "Quadrille des lanciers : La Native",
+  "en": "The Lancers' Quadrille: La Native"
+ },
+ "m680-eb77df": {
+  "fr": "Quadrille des lanciers : Les Grâces",
+  "en": "The Lancers' Quadrille: Les Grâces"
+ },
+ "m1020-d498f5": {
+  "fr": "Aamulla varhain (air finlandais)",
+  "en": "Aamulla varhain (Finnish tune)",
+  "from": "fi"
+ },
+ "m1019-68d2ce": {
+  "fr": "Le ciel est bleu et blanc (air finlandais)",
+  "en": "The Sky Is Blue and White (Finnish tune)",
+  "from": "fi"
+ },
+ "m789-5eee21": {
+  "fr": "Sing Ivy",
+  "en": "Sing Ivy",
+  "from": "gb"
+ },
+ "m376-a576b3": {
+  "fr": "Flee As a Bird",
+  "en": "Flee As a Bird",
+  "from": "us"
+ },
+ "m814-bc0060": {
+  "fr": "John Barleycorn",
+  "en": "John Barleycorn",
+  "from": "gb"
+ },
+ "m888-22da4e": {
+  "fr": "Oats and Beans",
+  "en": "Oats and Beans",
+  "from": "gb"
+ },
+ "m1135-4fe3b7": {
+  "skip": 1
+ },
+ "m503-1f8a5c": {
+  "fr": "Marguerite au rouet (Gretchen am Spinnrade)",
+  "en": "Gretchen am Spinnrade (Gretchen at the Spinning Wheel)"
+ },
+ "m580-899f7c": {
+  "fr": "Sapphische Ode (Ode saphique)",
+  "en": "Sapphische Ode (Sapphic Ode)",
+  "famous": 1,
+  "bpm": 66
+ },
+ "m2046-8cdf7b": {
+  "fr": "Freisinn (Liberté d'esprit)",
+  "en": "Freisinn (Free Spirit)"
+ },
+ "m1827-1c22b3": {
+  "fr": "Ich will meine Seele tauchen",
+  "en": "Ich will meine Seele tauchen"
+ },
+ "m2243-6dd595": {
+  "fr": "What Power Art Thou (King Arthur)",
+  "en": "What Power Art Thou (King Arthur)"
+ }
+}
