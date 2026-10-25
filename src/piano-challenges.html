@@ -11870,6 +11870,14 @@ document.addEventListener("visibilitychange",()=>{ try{
   if(a.k==="learn"||a.k==="daily"){ resumeRound(); return; }
   if(HOLD && !LV.on && !(typeof MD!=="undefined"&&MD.hold)){ const keep=LV.a; LV.a=a; lvHold(false); LV.a=keep; }
 }catch(e){} });
+// Two tabs (or the app and a browser window) share localStorage: each tab kept its own S and its next save() erased what
+// the other had just won (XP, records, lessons). A write from another tab is now merged in memory like a cloud pull
+// (mergeState: maxima, unions), never written back here (no ping-pong); this tab's next save() keeps both.
+addEventListener("storage",e=>{ try{ if(e.key!==STORE || !e.newValue || e.storageArea!==localStorage) return;
+  const other=JSON.parse(e.newValue); if(!other || typeof other!=="object" || Array.isArray(other)) return;
+  const {merged,changed}=mergeState(S,other); if(!changed) return; S=merged;
+  try{ renderSettings(); render(); renderDaily(); if(page==="learn") renderLearn(); if(page==="games") renderGames(); ntfBadge(); renderStatus(); }catch(x){}
+}catch(err){} });
 // ---------- Boot ----------
 
 applyStatic(); applySide(); buildKeyboard(); renderSettings(); render(); renderDaily(); openPage("hub");

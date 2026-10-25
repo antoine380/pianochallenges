@@ -89,6 +89,19 @@ async function open(state, { mode = 'ok', gum = 'none', tz, clock, viewport = { 
   check('arrière-plan : aucune erreur', !p.errs.length, p.errs);
   await p.context().close(); }
 
+// 7) two tabs: what one tab wins is not erased by the other tab's next save
+{ const A = await open(BASE({ xp: 500 }));
+  const B = await A.context().newPage(); B.errs = []; B.on('pageerror', e => B.errs.push(e.message));
+  await B.goto(URL); await W(B, 900); B.ev = s => B.evaluate(s => window.__ev(s), s);
+  await A.ev('addXP(120); save()'); await W(A, 400);
+  const sets0 = await B.evaluate(() => { window.__sets = 0; const si = Storage.prototype.setItem; Storage.prototype.setItem = function (k, v) { if (k === 'memo-gammes-v1') window.__sets++; return si.call(this, k, v); }; return 0; });
+  await B.ev('save()'); await W(B, 1500);
+  const xp = await A.evaluate(() => JSON.parse(localStorage.getItem('memo-gammes-v1')).xp);
+  check('deux onglets : l’XP gagnée dans l’un reste après une sauvegarde de l’autre', xp >= 620, { xp, b: await B.ev('S.xp') });
+  check('deux onglets : pas d’écritures en boucle', await B.evaluate(() => window.__sets) <= 2, await B.evaluate(() => window.__sets));
+  check('deux onglets : aucune erreur', !A.errs.length && !B.errs.length, [A.errs, B.errs]);
+  await A.context().close(); }
+
 await browser.close();
 console.log(fails.length ? `\n${fails.length} échec(s)` : '\nTous les tests r43 passent.');
 process.exit(fails.length ? 1 : 0);
