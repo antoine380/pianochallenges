@@ -112,11 +112,11 @@ async function open(state, { mode = 'ok', gum = 'none', tz, clock, viewport = { 
   await p.context().close(); }
 
 // 9) a saved state with a field of the wrong type (old version, failed merge): introSeen, settings.su / quiz must be objects
-{ const st = BASE({ introSeen: 'x' }); st.settings.su = 7; st.settings.quiz = 'x';
+{ const st = BASE({ introSeen: 'x' }); st.settings.su = 7; st.settings.quiz = 'x'; st.settings.lang = 'de'; st.settings.input = 42;
   const p = await open(st);
   for (const js of ['document.querySelector("#modeNav [data-mode=learn]").click()', 'document.querySelectorAll("#learnTiles .ptile")[0].click()', 'document.querySelector("#modeNav [data-mode=quiz]").click()', 'document.querySelector("#modeNav [data-mode=games]").click()']) { await p.evaluate(js); await W(p, 400); }
-  check('état abîmé : aucune erreur (introSeen, settings.su, settings.quiz)', !p.errs.length, p.errs);
-  check('état abîmé : les champs redeviennent des objets', await p.ev('typeof S.introSeen==="object" && typeof S.settings.su==="object" && typeof S.settings.quiz==="object"'));
+  check('état abîmé : aucune erreur (introSeen, settings.su, settings.quiz, lang « de », input 42)', !p.errs.length, p.errs);
+  check('état abîmé : les champs redeviennent des objets', await p.ev('typeof S.introSeen==="object" && typeof S.settings.su==="object" && typeof S.settings.quiz==="object" && ["fr","en"].includes(S.settings.lang)'));
   await p.context().close(); }
 
 await browser.close();

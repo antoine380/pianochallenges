@@ -5022,7 +5022,7 @@ function load(){
     const s={...clone(DEFAULTS), ...d, stats:{...DEFAULTS.stats,...(isObj(d.stats)?d.stats:{})}, settings:{...DEFAULTS.settings,...(isObj(d.settings)?d.settings:{})}, mastery:{}};
     ["streak","stats","secStats","srs","daily","xpDays","xpPushed"].forEach(k=>{ if(!isObj(s[k])) s[k]=clone(DEFAULTS[k]||{}); });
     s.streak={days:num(s.streak.days,0), last:typeof s.streak.last==="string"?s.streak.last:""};
-    if("introSeen" in s && !isObj(s.introSeen)) s.introSeen={}; ["su","quiz","acc","ntf"].forEach(k=>{ if(k in s.settings && !isObj(s.settings[k])) delete s.settings[k]; }); // objects written into later (showIntro, suState, qzCfg…)
+    if("introSeen" in s && !isObj(s.introSeen)) s.introSeen={}; ["su","quiz","acc","ntf"].forEach(k=>{ if(k in s.settings && !isObj(s.settings[k])) delete s.settings[k]; }); if(!["fr","en"].includes(s.settings.lang)) s.settings.lang=DEFAULTS.settings.lang; if(!["fr","en"].includes(s.settings.notation)) s.settings.notation=s.settings.lang; if("input" in s.settings && !["midi","mic","screen"].includes(s.settings.input)) delete s.settings.input; // t() and renderInputUI index tables with them // objects written into later (showIntro, suState, qzCfg…)
     if(!isObj(s.dailyPlan)) delete s.dailyPlan; if(!isObj(s.dailyRun)) delete s.dailyRun;
     s.xp=Math.max(0,num(s.xp,0)); Object.keys(s.xpDays).forEach(k=>{ s.xpDays[k]=num(s.xpDays[k],0); });
     Object.keys(s.stats).forEach(k=>{ s.stats[k]=num(s.stats[k],0); });
