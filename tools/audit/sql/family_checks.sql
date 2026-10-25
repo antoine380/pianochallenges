@@ -143,3 +143,74 @@ reset role;
 select pg_temp.as_admin('00000000-0000-0000-0000-00000000000b'); set role authenticated;
 select pg_temp.ok(pg_temp.err($$select public.admin_family_remove('00000000-0000-0000-0000-0000000000f2')$$) like '%forbidden%', 'admin_family_remove : rôle support requis');
 reset role;
+
+-- 9. relecture paiement : transfert Apple, ordre des événements RevenueCat, ancien titulaire, family_of
+insert into auth.users (id, email) values ('00000000-0000-0000-0000-0000000000f7', 'papa@fam.test'), ('00000000-0000-0000-0000-0000000000f8', 'new@fam.test');
+insert into public.profiles (id, name, avatar) values ('00000000-0000-0000-0000-0000000000f7', 'Papa', 5);
+set role service_role;
+-- Apple : un user_id fourni réattribue la ligne ; Stripe : jamais
+select public.sub_apply(jsonb_build_object('user_id', '00000000-0000-0000-0000-0000000000f8', 'store', 'apple', 'store_id', '1000000123', 'product', 'pc_solo_year', 'plan', 'solo', 'status', 'active', 'period_end', now() + interval '300 days'));
+select pg_temp.ok((select user_id from public.subscriptions where store = 'apple' and store_id = '1000000123') = '00000000-0000-0000-0000-0000000000f8', 'Apple : achat restauré sur un autre compte → ligne réattribuée');
+select public.sub_apply(jsonb_build_object('user_id', '00000000-0000-0000-0000-0000000000f6', 'store', 'stripe', 'store_id', 'sub_M', 'plan', 'solo', 'status', 'active'));
+select pg_temp.ok((select user_id from public.subscriptions where store = 'stripe' and store_id = 'sub_M') = '00000000-0000-0000-0000-0000000000f5', 'Stripe : user_id jamais changé par une mise à jour');
+-- TRANSFER RevenueCat (sub_transfer) : les lignes Apple de f8 passent à f6
+create temp table trf as select public.sub_transfer(jsonb_build_object('to', '00000000-0000-0000-0000-0000000000f6', 'from', jsonb_build_array('$RCAnonymousID:x', '00000000-0000-0000-0000-0000000000f8'))) j;
+select pg_temp.ok((select (j ->> 'moved')::int from trf) = 1
+  and (select user_id from public.subscriptions where store_id = '1000000123') = '00000000-0000-0000-0000-0000000000f6'
+  and (select status from public.subscriptions where store_id = '1000000123') = 'active', 'TRANSFER Apple vers un autre compte : abonnement réattribué, statut gardé');
+select pg_temp.ok(pg_temp.err($$select public.sub_transfer('{"to":"00000000-0000-0000-0000-00000000dead","from":[]}'::jsonb)$$) = 'unknown user', 'TRANSFER vers un compte inconnu refusé');
+-- ordre des événements : RENEWAL à T, puis EXPIRATION en retard (T - 1 h) → ignorée
+select public.sub_apply(jsonb_build_object('user_id', '00000000-0000-0000-0000-0000000000f6', 'store', 'apple', 'store_id', '1000000123', 'product', 'pc_solo_year', 'plan', 'solo', 'status', 'active',
+  'period_end', now() + interval '365 days', 'event_at', '2026-10-26T10:00:00Z'));
+select pg_temp.ok(public.sub_apply(jsonb_build_object('user_id', '00000000-0000-0000-0000-0000000000f6', 'store', 'apple', 'store_id', '1000000123', 'product', 'pc_solo_year', 'plan', 'solo', 'status', 'expired',
+  'event_at', '2026-10-26T09:00:00Z')) ->> 'status' = 'ignored', 'EXPIRATION en retard après un RENEWAL : ignorée');
+select pg_temp.ok((select status from public.subscriptions where store_id = '1000000123') = 'active' and (select last_event_at from public.subscriptions where store_id = '1000000123') = '2026-10-26T10:00:00Z', 'statut gardé (active), dernier horodatage gardé');
+create temp table e3 as select public.sub_apply(jsonb_build_object('user_id', '00000000-0000-0000-0000-0000000000f6', 'store', 'apple', 'store_id', '1000000123', 'plan', 'solo', 'status', 'expired',
+  'event_at', '2026-10-26T11:00:00Z')) j;
+select pg_temp.ok((select j ->> 'status' from e3) is null and (select status from public.subscriptions where store_id = '1000000123') = 'expired', 'événement plus récent : appliqué');
+create temp table e4 as select public.sub_apply(jsonb_build_object('store', 'apple', 'store_id', '1000000123', 'plan', 'solo', 'status', 'active', 'period_end', now() + interval '10 days')) j;
+select pg_temp.ok((select j ->> 'status' from e4) is null
+  and (select status from public.subscriptions where store_id = '1000000123') = 'active' and (select last_event_at from public.subscriptions where store_id = '1000000123') = '2026-10-26T11:00:00Z', 'événement sans date (chemin Stripe) : toujours appliqué');
+create temp table e5 as select public.sub_apply(jsonb_build_object('user_id', '00000000-0000-0000-0000-0000000000f8', 'store', 'apple', 'store_id', '1000000123', 'plan', 'solo', 'status', 'active', 'event_at', '2026-10-26T08:00:00Z')) j;
+select pg_temp.ok((select j ->> 'status' from e5) = 'ignored'
+  and (select user_id from public.subscriptions where store_id = '1000000123') = '00000000-0000-0000-0000-0000000000f6', 'événement ancien ignoré : pas de réattribution non plus');
+-- Papa prend un abonnement Famille Apple
+select public.sub_apply(jsonb_build_object('user_id', '00000000-0000-0000-0000-0000000000f7', 'store', 'apple', 'store_id', '3000000777', 'product', 'pc_family_year', 'plan', 'family', 'status', 'active', 'period_end', now() + interval '365 days'));
+reset role;
+create or replace function pg_temp.inv_for(uid text) returns text language plpgsql as $$ declare c text; begin
+  perform set_config('request.jwt.claims', json_build_object('sub', uid, 'role', 'authenticated')::text, false);
+  c := public.family_invite() ->> 'code'; return c; end $$;
+grant execute on function pg_temp.inv_for(text) to authenticated;
+set role authenticated;
+create temp table cp1 as select pg_temp.inv_for('00000000-0000-0000-0000-0000000000f7') c;
+-- Maman (ancienne titulaire, abonnement résilié en 7.) peut rejoindre la famille de Papa
+select pg_temp.as_user('00000000-0000-0000-0000-0000000000f1');
+select pg_temp.ok((public.family_invite_info((select c from cp1)) ->> 'ok')::boolean and public.family_invite_info((select c from cp1)) ->> 'owner' = 'Papa', 'ancienne titulaire inactive : invite_info ok (pas already_member)');
+select pg_temp.ok((public.family_join((select c from cp1)) ->> 'ok')::boolean, 'ancienne titulaire inactive : rejoint une autre famille');
+select pg_temp.ok(public.my_entitlement() ->> 'source' = 'family' and public.my_entitlement() ->> 'family_owner' = 'Papa', 'ancienne titulaire : Premium par la famille de Papa');
+select pg_temp.ok(public.family_status() ->> 'role' = 'member', 'ancienne titulaire : family_status montre la famille où elle est membre');
+-- Léo, membre de la famille inactive de Maman, peut aussi rejoindre
+create temp table cp2 as select pg_temp.inv_for('00000000-0000-0000-0000-0000000000f7') c;
+select pg_temp.as_user('00000000-0000-0000-0000-0000000000f2');
+create temp table j2 as select public.family_join((select c from cp2)) j;
+select pg_temp.ok((select (j ->> 'used')::int from j2) = 3 and public.family_status() ->> 'family_id' = (select j ->> 'family_id' from j2), 'membre d''une famille inactive : rejoint une famille active (ancienne adhésion retirée)');
+-- une famille active compte toujours
+create temp table cp3 as select pg_temp.inv_for('00000000-0000-0000-0000-0000000000f7') c;
+select pg_temp.as_user('00000000-0000-0000-0000-0000000000f2');
+reset role;
+set role service_role;
+select public.sub_apply(jsonb_build_object('user_id', '00000000-0000-0000-0000-0000000000f8', 'store', 'manual', 'store_id', 'fam-f8', 'plan', 'family', 'status', 'active', 'period_end', now() + interval '30 days'));
+reset role;
+select pg_temp.as_user('00000000-0000-0000-0000-0000000000f8'); set role authenticated;
+select pg_temp.ok(public.family_invite_info((select c from cp3)) ->> 'error' = 'already_member' and pg_temp.err(format('select public.family_join(%L)', (select c from cp3))) = 'already_member', 'titulaire d''une famille active : already_member');
+-- family_of : seulement pour soi
+select pg_temp.as_user('00000000-0000-0000-0000-0000000000f2');
+select pg_temp.ok(public.family_of('00000000-0000-0000-0000-0000000000f2'::uuid) is not null, 'family_of(soi) : ok');
+select pg_temp.ok(pg_temp.err($$select public.family_of('00000000-0000-0000-0000-0000000000f7'::uuid)$$) = 'forbidden', 'family_of d''un autre : refusée');
+select pg_temp.ok(pg_temp.err($$select public.family_of_user('00000000-0000-0000-0000-0000000000f7'::uuid)$$) like '%permission%', 'family_of_user : interdite à l''app');
+select pg_temp.ok((select count(*) from public.family_members) = 2, 'RLS family_members toujours lisible pour sa famille (Maman + Léo)');
+select pg_temp.ok(pg_temp.err($$select public.sub_transfer('{}'::jsonb)$$) like '%permission%', 'sub_transfer refusé à un joueur');
+reset role;
+select pg_temp.as_admin('00000000-0000-0000-0000-00000000000a'); set role authenticated;
+select pg_temp.ok(public.admin_family('00000000-0000-0000-0000-0000000000f1') -> 'family' -> 'owner' ->> 'name' = 'Maman', 'admin_family passe toujours (family_of_user)');
+reset role;

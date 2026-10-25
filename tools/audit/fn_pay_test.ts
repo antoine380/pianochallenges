@@ -4,7 +4,7 @@
 // Vérifie : signature Stripe (bonne, mauvaise, trop vieille), webhook → sub_apply avec la bonne ligne (formule, statut,
 // fin de période sur l'élément ou l'abonnement), checkout (prix, essai seulement pour solo_year, une fois, sans carte,
 // client_reference_id, URL de retour), déjà abonné = 409, portail, RevenueCat (autorisation, essai, résiliation,
-// remboursement, expiration, sandbox ignoré, achat anonyme ignoré).
+// remboursement, expiration, sandbox ignoré, achat anonyme ignoré, horodatage event_at, TRANSFER → sub_transfer).
 const fails: string[] = [];
 const check = (n: string, ok: boolean, d?: unknown) => { console.log((ok ? "OK   " : "FAIL ") + n + (!ok && d !== undefined ? " — " + JSON.stringify(d).slice(0, 400) : "")); if (!ok) fails.push(n); };
 const E: Record<string, string> = { SUPABASE_URL: "http://127.0.0.1:9", SUPABASE_SERVICE_ROLE_KEY: "service-test", STRIPE_SECRET_KEY: "sk_test_FAKE", STRIPE_WEBHOOK_SECRET: "whsec_test",
@@ -24,6 +24,7 @@ const calls: { url: string; method: string; body: string }[] = []; let SUBS: any
   const J = (o: unknown, s = 200) => new Response(JSON.stringify(o), { status: s, headers: { "Content-Type": "application/json" } });
   if (url.includes("/auth/v1/user")) return J({ id: U1, email: "maman@example.com", aud: "authenticated" });
   if (url.includes("/rest/v1/rpc/sub_apply")) return J({ ok: true, id: 1 });
+  if (url.includes("/rest/v1/rpc/sub_transfer")) return J({ ok: true, moved: 1 });
   if (url.includes("/rest/v1/rpc/sub_customer")) return J(CUS);
   if (url.includes("/rest/v1/subscriptions")) return J(SUBS);
   if (url.startsWith("https://api.stripe.com/v1/subscriptions/")) return J(STRIPE_SUB);
@@ -130,6 +131,26 @@ check("RevenueCat : sandbox, achat anonyme et produit inconnu ignorés", calls.f
 Deno.env.set("REVENUECAT_SANDBOX", "1"); n0 = calls.filter((c) => c.url.includes("sub_apply")).length;
 await rc({ ...base, type: "INITIAL_PURCHASE", environment: "SANDBOX" });
 check("RevenueCat : REVENUECAT_SANDBOX=1 enregistre les achats de test", calls.filter((c) => c.url.includes("sub_apply")).length === n0 + 1);
+// horodatage transmis à sub_apply (ordre des événements) ; Stripe n'en envoie pas (toujours appliqué)
+const TS = Date.UTC(2026, 9, 26, 10, 0, 0);
+await rc({ ...base, type: "RENEWAL", period_type: "NORMAL", event_timestamp_ms: TS }); row = lastRpc();
+check("RevenueCat : event_timestamp_ms transmis en event_at", row.event_at === new Date(TS).toISOString(), row);
+await rc({ ...base, type: "RENEWAL", period_type: "NORMAL" }); row = lastRpc();
+check("RevenueCat : sans horodatage, event_at null", row.event_at === null, row);
+check("Stripe : pas d'event_at (l'abonnement est relu, toujours appliqué)", !calls.filter((c) => c.url.includes("/rpc/sub_apply") && JSON.parse(c.body).p.store === "stripe").some((c) => JSON.parse(c.body).p.event_at));
+// TRANSFER : réattribué au premier id Supabase de transferred_to
+const lastTr = () => { const c = calls.filter((c) => c.url.includes("/rpc/sub_transfer")).pop(); return c ? JSON.parse(c.body).p : null; };
+const U2 = "33333333-3333-4333-8333-333333333333";
+n0 = calls.filter((c) => c.url.includes("sub_apply")).length;
+r = await rc({ type: "TRANSFER", environment: "PRODUCTION", store: "APP_STORE", transferred_from: [U1, "$RCAnonymousID:x"], transferred_to: ["$RCAnonymousID:y", U2], event_timestamp_ms: TS + 1000 });
+let tr = lastTr();
+check("RevenueCat TRANSFER → sub_transfer vers le premier uuid, depuis les uuid, horodaté", r.status === 200 && tr && tr.to === U2 && JSON.stringify(tr.from) === JSON.stringify([U1]) && tr.store_id === null && tr.event_at === new Date(TS + 1000).toISOString()
+  && calls.filter((c) => c.url.includes("sub_apply")).length === n0, tr);
+await rc({ type: "TRANSFER", environment: "PRODUCTION", transferred_from: [U1], transferred_to: [U2], original_transaction_id: "2000000111" });
+check("RevenueCat TRANSFER avec transaction : limité à cette ligne", lastTr().store_id === "2000000111", lastTr());
+const nT = calls.filter((c) => c.url.includes("sub_transfer")).length;
+r = await rc({ type: "TRANSFER", environment: "PRODUCTION", transferred_from: [U1], transferred_to: ["$RCAnonymousID:z"] });
+check("RevenueCat TRANSFER vers un compte anonyme : ignoré", r.status === 200 && (await r.json()).ignored === "transfer" && calls.filter((c) => c.url.includes("sub_transfer")).length === nT);
 check("revenuecat exporte la table des produits Apple (3 produits, pas d'offre à vie)", Object.keys(rcMod.APPLE).length === 3 && !Object.keys(rcMod.APPLE).some((k) => /life/.test(k)));
 
 console.log(fails.length ? `\nfn_pay FAIL ${fails.length}` : "\nfn_pay OK");
