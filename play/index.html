@@ -127,6 +127,7 @@ body.lesson.lbl-pale .key .lbl{opacity:.35}
 .ocard .lvl{font-family:var(--f-mono);font-size:11px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--glass-muted)}
 .ocard h2{font-family:var(--f);font-weight:800;font-size:28px;margin:0;letter-spacing:-.025em;text-wrap:balance}
 .ocard p{margin:0;color:var(--glass-muted);line-height:1.5}
+.ocard .src{font-size:12px;line-height:1.45;opacity:.9}.ocard .src a{color:inherit}
 .ocard .row{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:8px}
 .ocard .btn{background:var(--glass);color:var(--stage)}
 .ocard .btn.light{background:transparent;color:var(--glass);border:1px solid #3a3944}
@@ -235,8 +236,8 @@ fr:{midiScreen:"Clavier à l'écran",midiConnect:"Connecter un clavier MIDI",mid
  back:"Retour",kbd:"Clavier",lives:"Vies",time:"Temps",streak:"Série",score:"Score",speed:"Vitesse",names:"Notes",fing:"Doigts",wait:"Attente",listen:"Écouter",metro:"Métro",hint:"Indice",replay:"Rejouer",sheet:"Partition",cascade:"Cascade",
  level:"Niveau",levels:['','Facile','Moyen','Avancé'],trad:"Traditionnel",tradMozart:"Traditionnel (var. Mozart)",notes:"notes",record:"Record",play:"Jouer",library:"Bibliothèque",game:"Jeu",
  songIntro:(s,c)=>`${c} · ${s.notes.length} notes. Le morceau s'arrête jusqu'à ce que tu joues la <span style="color:${s.col}">bonne note</span>. ${s.hands>1?'Main droite en haut, main gauche en bas (Do3 à Si3).':'Les chiffres indiquent le doigt à utiliser (1 = pouce).'}`,
- arrH:"Version",oneHand:"une main",twoHands:"deux mains",byFrom:{fr:'Trad. français',gb:'Trad. anglais',us:'Trad. américain',de:'Trad. allemand',qc:'Trad. québécois',ru:'Trad. russe',sc:'Trad. écossais',wa:'Trad. gallois',fi:'Trad. finlandais'},
- listenHint:"« Écouter » joue d'abord le morceau pour toi.",listenedT:"Tu as écouté le morceau",listenedP:"À toi de jouer maintenant.",
+ arrH:"Version",oneHand:"une main",twoHands:"deux mains",byFrom:{fr:'Trad. français',gb:'Trad. anglais',us:'Trad. américain',de:'Trad. allemand',qc:'Trad. québécois',ru:'Trad. russe',sc:'Trad. écossais',wa:'Trad. gallois',fi:'Trad. finlandais',se:'Trad. suédois'},
+ listenHint:"« Écouter » joue d'abord le morceau pour toi.",srcL:"Source",licL:"Licence",extract:"Extrait",typed:"saisie",listenedT:"Tu as écouté le morceau",listenedP:"À toi de jouer maintenant.",
  waitNote:"Le morceau attend la bonne note",perfect:"Parfait",good:"Bien",missed:"Raté",verdicts:['On recommence ?','Bien joué','Très bien','Parfait !'],
  acc:(a,sc,st)=>`Précision ${a} % · Score ${sc} · Meilleure série ${st}`,resPerfect:"Parfait",resGood:"Bien",resMissed:"Ratées",resWrong:"Fausses",tooFast:"Trop rapide ? Passe la vitesse à 75 %.",
  newRecord:"Nouveau record !",gameOver:"Partie terminée",scoreRec:(s,b)=>`Score ${s} · record ${b}`,combo:"Combo ×",notThat:n=>'Pas '+n+' !',cleared:n=>`${n} obstacles franchis`,
@@ -260,8 +261,8 @@ en:{midiScreen:"On-screen keyboard",midiConnect:"Connect a MIDI keyboard",midiHo
  back:"Back",kbd:"Keyboard",lives:"Lives",time:"Time",streak:"Streak",score:"Score",speed:"Speed",names:"Names",fing:"Fingers",wait:"Wait",listen:"Listen",metro:"Metro",hint:"Hint",replay:"Replay",sheet:"Sheet",cascade:"Cascade",
  level:"Level",levels:['','Easy','Medium','Advanced'],trad:"Traditional",tradMozart:"Traditional (Mozart var.)",notes:"notes",record:"Best",play:"Play",library:"Library",game:"Game",
  songIntro:(s,c)=>`${c} · ${s.notes.length} notes. The song stops until you play the <span style="color:${s.col}">right note</span>. ${s.hands>1?'Right hand at the top, left hand below (C3 to B3).':'The numbers show which finger to use (1 = thumb).'}`,
- arrH:"Version",oneHand:"one hand",twoHands:"two hands",byFrom:{fr:'French trad.',gb:'English trad.',us:'American trad.',de:'German trad.',qc:'Québécois trad.',ru:'Russian trad.',sc:'Scottish trad.',wa:'Welsh trad.',fi:'Finnish trad.'},
- listenHint:"“Listen” plays the song for you first.",listenedT:"You listened to the song",listenedP:"Now it's your turn.",
+ arrH:"Version",oneHand:"one hand",twoHands:"two hands",byFrom:{fr:'French trad.',gb:'English trad.',us:'American trad.',de:'German trad.',qc:'Québécois trad.',ru:'Russian trad.',sc:'Scottish trad.',wa:'Welsh trad.',fi:'Finnish trad.',se:'Swedish trad.'},
+ listenHint:"“Listen” plays the song for you first.",srcL:"Source",licL:"Licence",extract:"Excerpt",typed:"typeset by",listenedT:"You listened to the song",listenedP:"Now it's your turn.",
  waitNote:"The song is waiting for the right note",perfect:"Perfect",good:"Good",missed:"Missed",verdicts:['Try again?','Well played','Very good','Perfect!'],
  acc:(a,sc,st)=>`Accuracy ${a}% · Score ${sc} · Best streak ${st}`,resPerfect:"Perfect",resGood:"Good",resMissed:"Missed",resWrong:"Wrong",tooFast:"Too fast? Set the speed to 75%.",
  newRecord:"New record!",gameOver:"Game over",scoreRec:(s,b)=>`Score ${s} · best ${b}`,combo:"Combo ×",notThat:n=>'Not '+n+'!',cleared:n=>`${n} obstacles cleared`,
@@ -520,10 +521,14 @@ function openSong(s0,lv){const s=variant(s0.base||s0,lv||(s0.base?s0.level:s0.ar
   setBar({title:s.title,sub:`${s.by} · ${LEVEL[s.level]}`,lives:false,time:false,streak:true,prog:true,tools:['song','speed','fing','names']});
   resetSong();
   overlay(`<span class="lvl">${LEVEL[s.level]} · ${tr(s.hands>1?'twoHands':'oneHand')}</span><h2>${s.title}</h2>
-    <p>${tr('songIntro')(s,s.by)}</p>${s.arrs.length>1?`<div class="row arr" role="group" aria-label="${tr('arrH')}">${s.arrs.map(a=>`<button class="btn ${a.lv===s.level?'':'light'}" data-lv="${a.lv}" aria-pressed="${a.lv===s.level}">${LEVEL[a.lv]} · ${tr(a.hands>1?'twoHands':'oneHand')}</button>`).join('')}</div>`:''}
+    <p>${tr('songIntro')(s,s.by)}</p>${srcLine(s)}${s.arrs.length>1?`<div class="row arr" role="group" aria-label="${tr('arrH')}">${s.arrs.map(a=>`<button class="btn ${a.lv===s.level?'':'light'}" data-lv="${a.lv}" aria-pressed="${a.lv===s.level}">${LEVEL[a.lv]} · ${tr(a.hands>1?'twoHands':'oneHand')}</button>`).join('')}</div>`:''}
     <div class="row"><button class="btn" id="go">${tr('play')}</button></div><span class="hint">${tr('listenHint')}</span>`);
   ovCard.querySelectorAll('[data-lv]').forEach(b=>b.onclick=()=>openSong(s.base,+b.dataset.lv));
   $('go').onclick=()=>{audio();startSong()};if(LS)lsOpen(s)}
+// catalogue libre: « Source : OpenScore Lieder · Licence CC0 1.0 » (+ n° Mutopia, saisie, extrait), from the song's src
+function srcLine(s){const d=s.data||{},x=d.src;if(!x)return'';const e=t=>String(t).replace(/[<>&"]/g,c=>({'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;'}[c]));
+  const ed=x.ed+(x.no?' n° '+x.no:'')+(x.who?' ('+tr('typed')+' : '+x.who+')':'');
+  return `<p class="src">${d.x?tr('extract')+' · ':''}${tr('srcL')} : <a href="${e(x.url)}" target="_blank" rel="noopener">${e(ed)}</a> · ${tr('licL')} ${e(x.lic)}<br>${e(x.t)}</p>`}
 function resetSong(){P.notes=P.song.notes.map(n=>({...n,st:0}));P.t=-2;P.score=0;P.streak=0;P.maxStreak=0;P.c={p:0,b:0,m:0,w:0};P.frozen=false;P.lastBeat=-9;fx.length=0;pops.length=0;P.playing=false;hud()}
 function startSong(){if(!P.song)return;resetSong();ov.hidden=true;P.playing=true}
 const bps=()=>P.song.bpm/60*speed;
@@ -894,7 +899,12 @@ async function openImported(id,lv){mode='song';go('play');overlay(`<p>${tr('impL
   const b=impBase(rec);if(!b.conv.notes.length){overlay(`<p>${tr('impGone')}</p><div class="row"><button class="btn light" data-h>${tr('library')}</button></div>`);return}
   b.v0=impVariant(b,1);openSong(b,b.arrs.some(a=>a.lv===lv)?lv:1)}
 if(VIEW.startsWith('song=imp:')){const ar=+((HASH.find(x=>x.startsWith('arr='))||'arr=0').slice(4));openImported(VIEW.slice(9),ar||1)}
-else if(VIEW.startsWith('song=')){const s=SONGS.find(x=>x.id===VIEW.slice(5)),ar=+((HASH.find(x=>x.startsWith('arr='))||'arr=0').slice(4));if(s)openSong(s,ar||0)}
+else if(VIEW.startsWith('song=')){const id=VIEW.slice(5),ar=+((HASH.find(x=>x.startsWith('arr='))||'arr=0').slice(4)),s=SONGS.find(x=>x.id===id);
+  if(s)openSong(s,ar||0);
+  else if(/^[a-z]+$/.test(id)&&!window.PC_FREE){const sc=document.createElement('script');sc.src='../assets/js/songs-free.js';
+    sc.onload=()=>{(window.PC_FREE||[]).forEach(d=>{if(SONGS.some(x=>x.id===d.id))return;const s={id:d.id,data:d,title:d.t[LANG==='fr'?0:1],bpm:d.bpm,meter:d.m,pickup:d.p,col:d.k,arrs:PS.arrs(d)};
+      s.by=d.by==='trad'?(tr('byFrom')[d.from]||tr('trad')):d.by;s.v0=variant(s,s.arrs[0].lv);SONGS.push(s)});const f=SONGS.find(x=>x.id===id);if(f)openSong(f,ar||0)};
+    document.head.appendChild(sc)}}
 })();
 </script>
 
