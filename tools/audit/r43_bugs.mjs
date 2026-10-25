@@ -102,6 +102,15 @@ async function open(state, { mode = 'ok', gum = 'none', tz, clock, viewport = { 
   check('deux onglets : aucune erreur', !A.errs.length && !B.errs.length, [A.errs, B.errs]);
   await A.context().close(); }
 
+// 8) storage full: one message, the app keeps working
+{ const p = await open(BASE(), { init: `(()=>{ const si=Storage.prototype.setItem; Storage.prototype.setItem=function(k,v){ if(k==='memo-gammes-v1' && window.__full) throw new DOMException('full','QuotaExceededError'); return si.call(this,k,v); }; })();` });
+  await p.evaluate(() => { window.__full = true; }); await p.ev('save(); save(); save()'); await W(p, 300);
+  const txt = await p.evaluate(() => document.body.innerText);
+  check('stockage plein : un message prévient le joueur', /Mémoire de l.appareil pleine/.test(txt));
+  await p.evaluate(() => document.querySelector('#modeNav [data-mode=learn]').click()); await W(p, 300);
+  check('stockage plein : l’app continue (aucune erreur)', await p.ev('page') === 'learn' && !p.errs.length, p.errs);
+  await p.context().close(); }
+
 await browser.close();
 console.log(fails.length ? `\n${fails.length} échec(s)` : '\nTous les tests r43 passent.');
 process.exit(fails.length ? 1 : 0);

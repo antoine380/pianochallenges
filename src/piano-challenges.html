@@ -5053,7 +5053,7 @@ function load(){
   firstVisit=true;
   return clone(DEFAULTS);
 }
-function save(){ try{ localStorage.setItem(STORE, JSON.stringify(S)); }catch(e){} try{ cloudPush(); }catch(e){} } // cloudPush can run before « let sb » at boot (S.duPend): never abort the script
+function save(){ try{ localStorage.setItem(STORE, JSON.stringify(S)); }catch(e){ if(!save.warned && e && (e.name==="QuotaExceededError"||e.code===22)){ save.warned=true; setTimeout(()=>{ try{ toast(t("saveFull")); }catch(x){} },0); } } try{ cloudPush(); }catch(e){} } // cloudPush can run before « let sb » at boot (S.duPend): never abort the script
 let S=load();
 // day / night: S.settings.theme = "light" | "dark", absent = follow the system
 const darkMQ=matchMedia("(prefers-color-scheme: dark)");
@@ -11859,6 +11859,8 @@ Object.assign(TXT.en,{qzZoneSmall:n=>"Your keyboard is too small for "+n+" zones
 // The app goes to the background (another tab, the iPad home button, a call): a running solo activity waits, like behind
 // the « Leave the game? » window (a timed LEARN round, Contre la montre, the quiz timer, memory, a duel against a bot),
 // and starts again where it was on return. Online games keep going (the others still play).
+Object.assign(TXT.fr,{saveFull:"Mémoire de l'appareil pleine : ta progression n'est plus enregistrée ici. Libère de la place ou crée un compte pour la garder."});
+Object.assign(TXT.en,{saveFull:"Your device storage is full: your progress is no longer saved here. Free some space or create an account to keep it."});
 const BG={a:null};
 document.addEventListener("visibilitychange",()=>{ try{
   if(document.hidden){ if(BG.a || LV.on || HOLD) return; const pg=lvBase();
