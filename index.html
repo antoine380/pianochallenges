@@ -3513,6 +3513,10 @@ body.imp-drag[data-page="free"] #freePanel::after{content:"";position:absolute;i
 :is(.pc-chip,.hs-more,.gamebar .gend,.imp-tip-x,#pfPrev,#pfNext,.hs-dots button,#qzBots button,#suHow,.how-btn){position:relative}
 :is(.pc-chip,.hs-more,.gamebar .gend,.imp-tip-x,#pfPrev,#pfNext,#qzBots button,#suHow,.how-btn)::after{content:"";position:absolute;inset:-7px -3px;border-radius:inherit}
 .hs-dots button::after{content:"";position:absolute;inset:-14px -3px}
+/* relecture : la zone de « Comment ça marche ? » (écran de départ) débordait de 7 px sur la 1re rangée des aides (case « Allumer les touches » en téléphone) → elle s'agrandit vers le haut seulement ;
+   les chiffres 0-3 des robots du quiz sont collés : pas de débord sur les côtés (chaque chiffre prenait 3 px au voisin) */
+html #suHow::after{inset:-12px -3px 0} /* « html » : même spécificité que le :is() ci-dessus (qui compte #qzBots button), placé après */
+#qzBots button::after{inset:-7px 0}
 .hs-dots{gap:8px}
 /* carte « Invite tes amis » de l'accueil étirée (iPad portrait) : titre et sous-titre restent ensemble, au centre */
 .hs-inv{align-content:center;justify-items:start;text-align:left;row-gap:2px}
@@ -9840,7 +9844,7 @@ addEventListener("resize",()=>{ if(page==="acc" && ACC.view==="play" && ACC.run)
 // (fetch keepalive vers la fonction SQL track_events), sans le SDK Supabase. Hors ligne, la file attend. Une table ou une
 // fonction absente (migration pas encore lancée) coupe l'envoi sans erreur. En développement (localhost), rien ne part sur
 // le réseau, sauf si localStorage « pc-trk-test » = "1" (tests). Interrupteur : S.settings.analytics (absent = activé).
-const APP_BUILD="2026-10-25T14:53Z"; // remplacé par tools/build.py par la date de construction (version.txt)
+const APP_BUILD="2026-10-25T16:09Z"; // remplacé par tools/build.py par la date de construction (version.txt)
 const TRK={q:[], t:0, off:false, anon:null, sent:0, errs:[], errT:0, errSeen:new Set(), errOn:null, ports:new Set(), first:false};
 const RC={flags:{}, daily:{}, at:0};
 const TRK_NAMES=new Set(["song_import","app_open","first_note","input_mode","midi_connected","pp_lesson_done","learn_end","game_end","quiz_end","duel_end","goal_reached","badge","signup","login","play","feedback","acc_end","song_open","route_step","route_stage"]);
