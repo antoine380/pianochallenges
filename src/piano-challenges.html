@@ -3463,6 +3463,16 @@ body.imp-drag[data-page="free"] #freePanel::after{content:"";position:absolute;i
 .inv-top .obj{right:58px} .inv-top h2,.inv-top p{max-width:calc(100% - 150px)}
 @media (max-width:640px){ .inv-top .obj{right:54px;top:12px} .inv-top h2,.inv-top p{max-width:calc(100% - 120px)} }
 #mdGoScreen{display:inline-flex;align-items:center;justify-content:center;gap:8px} #mdGoScreen svg{width:20px;height:20px;flex:none;fill:none;stroke:currentColor;stroke-width:2}
+/* états vides : une icône, une phrase, une action */
+.ntf-eart svg{width:46px;height:46px;fill:none;stroke:var(--brand);stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;padding:12px;box-sizing:content-box;border-radius:50%;background:var(--surface-2);margin-bottom:var(--sp-2,8px)}
+.ntf-empty{gap:var(--sp-2,8px)} .ntf-empty #ntfEmptyGo{margin-top:var(--sp-3,12px)}
+.du-hist li.du-hempty{flex-direction:column;align-items:flex-start;gap:var(--sp-3,12px)} .du-hempty p b{display:block;color:var(--ink);font-weight:800;margin-bottom:4px} .du-hempty .btn{min-height:40px}
+.ru-ach-help{margin:0;padding:0 16px 6px;font-size:.82rem;color:rgba(255,255,255,.75);flex:none}
+.ru-free-tip{display:none;margin:0;color:var(--muted);font-weight:700;font-size:.9rem} body.pc-kb[data-page="free"] .ru-free-tip{display:block}
+.ru-gm-desc{display:none;color:var(--muted);font-size:.86rem;font-weight:600;flex:1 1 240px;min-width:0} body.du-lob .ru-gm-desc{display:block}
+.set-prem .ru-prem{flex:1 1 100%;display:flex;flex-direction:column;gap:4px;padding:var(--card-pad,16px);border-radius:var(--r-lg,18px);background:var(--surface-2)} .ru-prem b{font-family:var(--f-display);font-size:1.1rem} .ru-prem span{color:var(--muted);font-weight:600}
+/* piano libre : le clavier prend la place libre (la moitié de l'écran restait vide sur iPad) */
+@media (min-height:700px){ body.pc-kb[data-page="free"] .kbd{height:clamp(150px,calc(100dvh - 380px),480px)!important} }
 /* ==== fin Revue UI ==== */
 </style>
 
@@ -6736,7 +6746,7 @@ function duRenderLobby(){ duArt();
   $("duRateK").textContent=t("duYourElo")(duGameName()); $("duRec").textContent=(e.n ? t("duRecord")(e.w,e.d,e.l) : t("duNew"))+(isPremium()?"":" · "+t("duFreeLeft")(duFreeLeft()));
   document.querySelectorAll("#duCont button").forEach(b=>b.setAttribute("aria-pressed",b.dataset.v===DU.cont)); $("duCont").hidden = DU.view!=="lobby";
   const hl=$("duHist"); hl.innerHTML=""; const H=(e.h||[]).slice(-6).reverse();
-  if(!H.length){ const li=document.createElement("li"); li.innerHTML="<p></p>"; li.firstChild.textContent=t("duHistNone"); hl.appendChild(li); }
+  if(!H.length){ const li=document.createElement("li"); li.className="du-hempty"; li.innerHTML="<p><b></b><span></span></p><button type='button' class='btn sm'></button>"; li.querySelector("b").textContent=t("duHistNone"); li.querySelector("span").textContent=t("ruHistX"); const bb=li.querySelector("button"); bb.textContent=t("ruHistGo"); bb.onclick=()=>{ const m=document.querySelector('#duModes [data-m=bots]'); if(m) m.click(); }; hl.appendChild(li); }
   H.forEach(x=>{ const li=document.createElement("li"); li.innerHTML='<span class="r"></span><span class="du-av"></span><b></b><i></i>'; const r=li.querySelector(".r"); r.className="r "+(x.res===1?"w":x.res===0?"l":"d"); r.textContent=x.res===1?t("duW1"):x.res===0?t("duL1"):t("duD1");
     li.querySelector(".du-av").innerHTML=duAv(x.av); nmPut(li.querySelector("b"),x.nm," ("+x.o+")"); const i=li.querySelector("i"); if(x.dd!=null){ i.textContent=(x.dd>=0?"+":"")+x.dd; i.className=x.dd>=0?"up":"down"; } hl.appendChild(li); });
   const sub = DU.view!=="lobby"; $("duModes").hidden=sub; $("duPanel").hidden=!sub;
@@ -7129,7 +7139,8 @@ function renderFiche(){
   const rows=[]; t("games").forEach(([title,,id])=>{ if(id==="douze") rows.push(...dzRecRows(title)); else if(id) rows.push([title,fmtN((S.gameBest||{})[id]||(id==="runner"?S.runnerBest:0)||0)]); });
   Object.entries(S.elo||{}).filter(([,e])=>e&&e.n).forEach(([k,e])=>{ const [g,c]=k.split("-"); if(DU_GAMES.includes(g)) rows.push([t("pfEloL")(duGameName(g),duContName(g,c)), "ELO "+fmtN(e.r)+(eloProv(e)?"?":""), t("duRecord")(fmtN(e.w),fmtN(e.d),fmtN(e.l))]); });
   t("playGames").forEach(([title,,id])=>rows.push([title,fmtN(cg[id]|0)])); pcRecRows(cb).forEach(r=>rows.push(r));
-  rows.forEach(([a,b,c])=>{ const li2=document.createElement("li"); li2.innerHTML="<span></span><b></b>"+(c?"<small></small>":""); li2.firstChild.textContent=a; li2.children[1].textContent=b; if(c) li2.children[2].textContent=c; ru.appendChild(li2); });
+  if(rows.every(r=>r[1]==="0"||r[1]==="—")) $("pfRecsSub").textContent=t("ruRecNone"); // empty state: no record yet (Revue UI)
+  rows.forEach(([a,b,c])=>{ const li2=document.createElement("li"); li2.innerHTML="<span></span><b></b>"+(c?"<small></small>":""); li2.firstChild.textContent=a; li2.children[1].textContent=b==="0"?"—":b; if(c) li2.children[2].textContent=c; ru.appendChild(li2); });
   pfDotsInit();
 }
 // phone: the 4 cards are a swipeable row, with a fade on the edge and one dot per card
@@ -11896,6 +11907,22 @@ Object.assign(TXT.en,{qzZoneSmall:n=>"Your keyboard is too small for "+n+" zones
     r.changed=!syncSame(M,local); return r; }; }
 // en-tête des jeux : « Salon » et « Quitter » restent ensemble quand la ligne passe à la ligne (Saute-notes les séparait sur deux rangées)
 { const q=$("rnQuit"), l=$("duToLobby"); if(q&&l&&q.parentNode){ const g=document.createElement("span"); g.className="rn-acts"; q.parentNode.insertBefore(g,l); g.appendChild(l); g.appendChild(q); } }
+// états vides et petites explications (textes ru* en FR et EN)
+Object.assign(TXT.fr,{ruRecNone:"Pas encore de record : joue une partie dans GAMES ou un morceau dans PLAY pour inscrire le premier.", ruHistX:"Joue en ligne ou contre un bot : ton ELO se fixe après 5 parties classées.", ruHistGo:"Jouer contre un bot",
+  ruNtfGo:"Choisir mes notifications", ruAchHelp:"Touche un badge pour savoir comment l'obtenir.", ruPremFree:"Tout est gratuit pour l'instant", ruPremFreeD:"Toutes les matières, tous les morceaux et les duels sont ouverts, sans limite. Rien à payer, rien à activer.",
+  ruFreeTip:"Joue ce que tu veux : rien n'est noté, chaque note s'allume dans sa couleur."});
+Object.assign(TXT.en,{ruRecNone:"No record yet: play a game in GAMES or a song in PLAY to set your first one.", ruHistX:"Play online or against a bot: your ELO settles after 5 rated games.", ruHistGo:"Play a bot",
+  ruNtfGo:"Choose my notifications", ruAchHelp:"Tap a badge to see how to earn it.", ruPremFree:"Everything is free for now", ruPremFreeD:"Every topic, every song and duels are open, with no limit. Nothing to pay, nothing to turn on.",
+  ruFreeTip:"Play anything you like: nothing is scored, each note lights up in its colour."});
+TXT.fr.rankErr=TXT.fr.hsRankErr="Classement injoignable pour l'instant (pas de connexion ?). Ta progression reste gardée sur cet appareil.";
+TXT.en.rankErr=TXT.en.hsRankErr="Can't reach the leaderboard right now (offline?). Your progress stays saved on this device.";
+{ const e=$("ntfEmpty"); if(e){ const art=e.querySelector(".ntf-eart"); if(art) art.innerHTML='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 16V11a6 6 0 0 1 12 0v5l1.5 2h-15z"/><path d="M10 20a2 2 0 0 0 4 0"/></svg>';
+    const b=document.createElement("button"); b.type="button"; b.className="btn"; b.id="ntfEmptyGo"; b.dataset.i="ruNtfGo"; b.onclick=()=>{ openPage("settings"); try{ setTab("ntf"); }catch(x){} }; e.appendChild(b); } }
+{ const h=document.querySelector("#achBox .ach-h"); if(h){ const p=document.createElement("p"); p.className="ru-ach-help"; p.dataset.i="ruAchHelp"; h.after(p); } }
+{ const bar=$("pcBar"); if(bar){ const p=document.createElement("p"); p.className="ru-free-tip"; p.dataset.i="ruFreeTip"; bar.after(p); } }
+{ const b=$("rnBest"); if(b){ const d=document.createElement("span"); d.className="ru-gm-desc"; d.id="ruGmDesc"; b.after(d); } }
+{ const _rl=duRenderLobby; duRenderLobby=function(){ const r=_rl.apply(this,arguments); try{ const g=(t("games")||[]).find(x=>x[2]===DU.game); $("ruGmDesc").textContent=g?g[1]:""; }catch(e){} return r; }; }
+{ const _sp=renderSetPrem; renderSetPrem=function(){ const r=_sp.apply(this,arguments), box=$("setPremBox"); if(box && box.classList.contains("off") && !box.querySelector(".ru-prem")){ const d=document.createElement("div"); d.className="ru-prem"; d.innerHTML='<b></b><span></span>'; d.firstChild.textContent=t("ruPremFree"); d.lastChild.textContent=t("ruPremFreeD"); box.prepend(d); } return r; }; }
 /* ==== fin Revue UI ==== */
 
 // ---------- Boot ----------
