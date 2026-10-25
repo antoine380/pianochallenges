@@ -3494,6 +3494,41 @@ body.imp-drag[data-page="free"] #freePanel::after{content:"";position:absolute;i
 /* podium du quiz en téléphone paysage : les boutons « Rejouer » passaient sous le bord de l'écran */
 @media (max-height:520px) and (orientation:landscape){ .qz-end{gap:6px} .qz-endt{font-size:1.25rem} .qz-pod,.qz-pod.r1{padding:6px 12px;gap:0;flex-direction:row;gap:10px;width:auto} .qz-rk{width:28px;height:28px;font-size:.95rem} .qz-sc{font-size:1.1rem} .qz-pod small{display:none} }
 /* ==== fin Revue UI ==== */
+/* ==== UI points restants (25/10) ==== */
+/* Entraînement du jour : un résumé en tête + des cartes compactes sur 2 rangées (10 grandes cartes presque vides avant) */
+.up-dsum{display:none;flex-wrap:wrap;align-items:center;gap:var(--sp-2,8px) var(--sp-4,16px);padding:var(--sp-3,12px) var(--card-pad,16px);background:var(--surface);border-radius:var(--r-lg);box-shadow:var(--shadow-card);flex:none}
+body[data-page="daily"]:not(.playing) .up-dsum{display:flex}
+.up-dk{display:flex;align-items:baseline;gap:6px;white-space:nowrap} .up-dk b{font:700 clamp(1.3rem,2.6vh,1.7rem)/1 var(--f-display);color:var(--ink)} .up-dk span{font-weight:700;color:var(--muted);font-size:.9rem}
+.up-dsecs{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:6px;flex:1 1 100%}
+.up-dsecs li{display:inline-flex;align-items:center;gap:6px;padding:5px 10px 5px 6px;border-radius:999px;background:var(--surface-2);font-weight:800;font-size:.82rem;white-space:nowrap}
+.up-dsecs svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;color:var(--brand)} .up-dsecs i{font-style:normal;color:var(--muted);font-weight:700}
+body[data-page="daily"]:not(.playing) .dtl-wrap{flex:none;display:block}
+body[data-page="daily"]:not(.playing) .dtl{--dd:clamp(36px,7vh,64px);flex:none;grid-template-columns:repeat(6,minmax(0,1fr));grid-auto-rows:auto;align-content:start}
+body[data-page="daily"]:not(.playing) .dtl li{padding:clamp(22px,4.4vh,40px) 6px clamp(10px,3vh,28px);min-width:0}
+body[data-page="daily"]:not(.playing) .dtl .st-l{font-size:clamp(.74rem,min(1.6vh,1.35vw),1rem)}
+@media (max-width:900px) and (orientation:portrait){ body[data-page="daily"]:not(.playing) .dtl{grid-template-columns:repeat(6,minmax(0,1fr));--dd:clamp(34px,5vh,50px)} }
+@media (max-width:640px){ body[data-page="daily"]:not(.playing) .dtl{grid-template-columns:repeat(4,minmax(0,1fr));--dd:34px;gap:8px} body[data-page="daily"]:not(.playing) .dtl li{padding:22px 3px 8px} body[data-page="daily"]:not(.playing) .dtl .st-l{font-size:.7rem}
+  .up-dsum{gap:6px 12px;padding:10px 12px} .up-dsecs li{font-size:.74rem;padding:3px 8px 3px 4px} .up-dsecs svg{width:15px;height:15px} }
+@media (max-height:520px) and (orientation:landscape){ body[data-page="daily"]:not(.playing) .dtl{--dd:28px;gap:8px} body[data-page="daily"]:not(.playing) .dtl li{padding:18px 4px 6px} body[data-page="daily"]:not(.playing) .dtl .st-l{font-size:.72rem}
+  .up-dsum{padding:6px 12px;gap:4px 12px} .up-dk b{font-size:1.1rem} .up-dk span{font-size:.8rem} .up-dsecs li{padding:2px 8px 2px 4px;font-size:.72rem} .up-dsecs svg{width:14px;height:14px} }
+/* Classement de la semaine pour un invité : une invitation (les ligues + « S'inscrire ») au lieu d'une grande carte vide */
+.hs-rank.up-inv .hs-more{display:none}
+.hs-rank.up-inv .hs-list{height:calc(100% - 30px)}
+.hs-list li.up-rinv{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:var(--sp-2,8px);background:transparent;padding:var(--sp-2,8px) 4px;flex:1 1 auto;font-size:inherit}
+.up-hexes{display:flex;align-items:flex-end;gap:6px} .up-hexes .lg-hex{width:clamp(18px,2.2vw,26px);background:linear-gradient(160deg,color-mix(in srgb,var(--lg-c) 55%,#fff),var(--lg-c))} .up-hexes .lg-hex:last-child{width:clamp(26px,3.2vw,38px)}
+.up-rinv b{font:700 1.15rem/1.2 var(--f-display);white-space:normal;overflow:visible} .up-rinv p{margin:0;color:var(--muted);font-size:.86rem;line-height:1.4;max-width:30ch}
+.up-rinv .btn{margin-top:var(--sp-1,4px);min-height:44px;padding-inline:22px}
+@media (max-height:820px){ .up-rinv b{font-size:1rem} .up-rinv p{font-size:.8rem} .up-rinv .btn{min-height:40px} }
+/* tuto d'import en téléphone paysage : les cartes gardent le titre et la phrase principale (le reste était coupé en bas) */
+@media (max-height:500px) and (orientation:landscape){ .imp-help .imp-steps .imp-sx p:not(:first-child){display:none} .imp-help .imp-ill{height:34px} .imp-help .imp-steps li{padding:8px 10px 10px} }
+/* nom du bot en entier sur téléphone (« Hecto… » à côté du bouton) : le nom passe sur 2 lignes et le bouton dessous */
+@media (max-width:640px){ .du-bcard{flex-wrap:wrap} .du-bcard b{white-space:normal;overflow:visible;text-overflow:clip} .du-bcard .du-go{flex:1 1 100%}
+  .du-nm b{white-space:normal;overflow-wrap:anywhere;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;line-height:1.1} }
+@media (max-height:420px){ .du-bcard b{white-space:normal;overflow:visible;text-overflow:clip} }
+/* commandes segmentées (Réglages, Progression, quiz, chrono) : 40 px de haut, 44 px sur téléphone */
+:is(.set-sec .seg,.set-nav,.set-tabs,#quizPanel .seg,#suTimer) button{min-height:40px}
+@media (max-width:640px), (max-height:500px) and (orientation:landscape){ :is(.set-sec .seg,.set-nav,.set-tabs,#quizPanel .seg,#suTimer) button{min-height:44px} }
+/* ==== fin UI points restants ==== */
 </style>
 
 <script>if(window.Capacitor&&window.webkit&&window.webkit.messageHandlers&&window.webkit.messageHandlers.bridge)document.documentElement.classList.add("native");</script>
@@ -4471,9 +4506,9 @@ const TXT = {
       noNotes:"Ce fichier ne contient aucune note à jouer.", full:"Tu as déjà 50 morceaux sur cet appareil. Supprimes-en un dans « Mes morceaux » pour en importer un nouveau.", load:"Pas moyen de charger l'outil d'import. Vérifie ta connexion et réessaie."},
     impGm:["Piano","Percussions mélodiques","Orgue","Guitare","Basse","Cordes","Ensemble","Cuivres","Anches","Flûtes","Synthé (mélodie)","Synthé (nappe)","Effets synthé","Instruments du monde","Percussions","Effets sonores","Batterie"],
     impHelp:{title:"Comment importer un morceau ?", s1t:"Trouve un fichier", s2t:"Enregistre-le", s3t:"Importe-le", s4t:"Choisis les mains et joue",
-      s1:["Un fichier MIDI (.mid) contient les notes d'un morceau, sans le son : c'est ce qu'un clavier enregistre. Un fichier MusicXML (.musicxml ou .mxl) est une partition écrite que les logiciels de musique savent lire.",
-        "On en trouve sur les sites de partitions et de fichiers MIDI (cherche « titre du morceau midi »). Le logiciel MuseScore exporte toute partition en MusicXML (Fichier › Exporter).",
-        "Choisis des fichiers que tu as le droit d'utiliser (domaine public, libres ou achetés), pour ton usage personnel."],
+      s1:["Un fichier MIDI (.mid) ou MusicXML (.musicxml, .mxl) contient les notes d'un morceau.",
+        "On en trouve sur les sites de partitions (cherche « titre midi »). MuseScore exporte toute partition en MusicXML.",
+        "Prends des fichiers que tu as le droit d'utiliser : domaine public, libres ou achetés."],
       s4:["L'app trouve les pistes : la plus aiguë va à la main droite, la plus grave à la main gauche, la batterie est ignorée. Change si besoin.","Puis « Jouer », ou un Do seul sur ton clavier. Le morceau reste dans « Mes morceaux »."],
       dev:{iosApp:{name:"Sur ton iPad ou iPhone (app)", save:["Dans Safari, touche le lien du fichier puis « Télécharger » : il arrive dans l'app Fichiers, dossier Téléchargements.","Depuis Mail ou Messages : touche le fichier, puis Partager › Enregistrer dans Fichiers."], imp:["Touche « Importer un morceau », puis « Parcourir » dans le petit menu : l'app Fichiers s'ouvre.","Va dans Récents ou Téléchargements et touche ton fichier."]},
         iosWeb:{name:"Sur ton iPad ou iPhone (Safari)", save:["Touche le lien du fichier puis « Télécharger » : il arrive dans l'app Fichiers, dossier Téléchargements.","Depuis Mail ou Messages : touche le fichier, puis Partager › Enregistrer dans Fichiers."], imp:["Touche « Importer un morceau », puis « Parcourir » : l'app Fichiers s'ouvre.","Va dans Récents ou Téléchargements et touche ton fichier."]},
@@ -4791,9 +4826,9 @@ const TXT = {
       noNotes:"This file has no notes to play.", full:"You already have 50 songs on this device. Delete one in “My songs” to import a new one.", load:"The import tool couldn't load. Check your connection and try again."},
     impGm:["Piano","Chromatic percussion","Organ","Guitar","Bass","Strings","Ensemble","Brass","Reed","Pipe","Synth lead","Synth pad","Synth effects","World instruments","Percussion","Sound effects","Drums"],
     impHelp:{title:"How to import a song?", s1t:"Find a file", s2t:"Save it", s3t:"Import it", s4t:"Pick the hands and play",
-      s1:["A MIDI file (.mid) holds the notes of a song, without the sound: it is what a keyboard records. A MusicXML file (.musicxml or .mxl) is a written score that music programs can read.",
-        "You'll find them on sheet-music and MIDI-file websites (search for “song title midi”). The MuseScore program exports any score to MusicXML (File › Export).",
-        "Use files you have the right to use (public domain, free or bought), for your personal use."],
+      s1:["A MIDI (.mid) or MusicXML (.musicxml, .mxl) file holds the notes of a song.",
+        "You'll find them on sheet-music websites (search for “title midi”). MuseScore exports any score to MusicXML.",
+        "Use files you have the right to use: public domain, free or bought."],
       s4:["The app finds the tracks: the highest goes to the right hand, the lowest to the left hand, drums are ignored. Change it if needed.","Then “Play”, or a lone C on your keyboard. The song stays in “My songs”."],
       dev:{iosApp:{name:"On your iPad or iPhone (app)", save:["In Safari, tap the file's link then “Download”: it goes to the Files app, Downloads folder.","From Mail or Messages: tap the file, then Share › Save to Files."], imp:["Tap “Import a song”, then “Browse” in the small menu: the Files app opens.","Go to Recents or Downloads and tap your file."]},
         iosWeb:{name:"On your iPad or iPhone (Safari)", save:["Tap the file's link then “Download”: it goes to the Files app, Downloads folder.","From Mail or Messages: tap the file, then Share › Save to Files."], imp:["Tap “Import a song”, then “Browse”: the Files app opens.","Go to Recents or Downloads and tap your file."]},
@@ -11944,6 +11979,35 @@ TXT.en.rankErr=TXT.en.hsRankErr="Can't reach the leaderboard right now (offline?
 { const _rl=duRenderLobby; duRenderLobby=function(){ const r=_rl.apply(this,arguments); try{ const g=(t("games")||[]).find(x=>x[2]===DU.game); $("ruGmDesc").textContent=g?g[1]:""; }catch(e){} return r; }; }
 { const _sp=renderSetPrem; renderSetPrem=function(){ const r=_sp.apply(this,arguments), box=$("setPremBox"); if(box && box.classList.contains("off") && !box.querySelector(".ru-prem")){ const d=document.createElement("div"); d.className="ru-prem"; d.innerHTML='<b></b><span></span>'; d.firstChild.textContent=t("ruPremFree"); d.lastChild.textContent=t("ruPremFreeD"); box.prepend(d); } return r; }; }
 /* ==== fin Revue UI ==== */
+/* ==== UI points restants (25/10) ==== */
+Object.assign(TXT.fr,{upDSub:(d,due)=>d+(due?" · "+due+" à revoir":""), upDEx:n=>n>1?"exercices":"exercice", upDMin:"min", upDSecs:n=>n>1?"matières":"matière",
+  upRinvT:"Grimpe dans les ligues", upRinvX:"Chaque semaine, ton XP te classe dans un groupe de 20 joueurs : les meilleurs montent de Bronze à Diamant."});
+Object.assign(TXT.en,{upDSub:(d,due)=>d+(due?" · "+due+" to review":""), upDEx:n=>n>1?"exercises":"exercise", upDMin:"min", upDSecs:n=>n>1?"topics":"topic",
+  upRinvT:"Climb the leagues", upRinvX:"Every week, your XP ranks you in a group of 20 players: the best move up from Bronze to Diamond."});
+// Entraînement du jour : résumé (nombre d'exercices, durée ≈ 30 s par exercice, matières) au-dessus des cartes
+{ const head=document.querySelector("#dailyPanel .pane-head"); if(head){ const d=document.createElement("div"); d.className="up-dsum"; d.id="upDSum"; head.after(d); }
+  const _rd=renderDailyPanel; renderDailyPanel=function(){ const r=_rd.apply(this,arguments); try{
+    const box=$("upDSum"); if(!box) return r; const plan=dailyPlan(), run=game&&game.daily, done=S.daily&&S.daily.date===dayStr();
+    const items=(!run && done && S.daily.items ? S.daily.items : plan.items)||[], n=items.length, cnt={};
+    items.forEach(it=>{ cnt[it.sec]=(cnt[it.sec]||0)+1; });
+    const secs=SECS.filter(k=>cnt[k]), NM={scales:"secScales",chords:"secChords",harmony:"secHarmony",prog:"secProg",ear:"secEar"};
+    box.innerHTML='<span class="up-dk"><b></b><span></span></span><span class="up-dk"><b></b><span></span></span><span class="up-dk"><b></b><span></span></span><ul class="up-dsecs"></ul>';
+    const ks=box.querySelectorAll(".up-dk");
+    ks[0].firstChild.textContent=n; ks[0].lastChild.textContent=t("upDEx")(n);
+    ks[1].firstChild.textContent="≈ "+Math.max(1,Math.round(n/2)); ks[1].lastChild.textContent=t("upDMin");
+    ks[2].firstChild.textContent=secs.length; ks[2].lastChild.textContent=t("upDSecs")(secs.length);
+    const ul=box.querySelector("ul"); secs.forEach(k=>{ const li=document.createElement("li"); li.innerHTML=SEC_ICON(k)+'<span></span><i></i>'; li.querySelector("span").textContent=t(NM[k]); li.querySelector("i").textContent="×"+cnt[k]; ul.appendChild(li); });
+    if(!run && !done){ const dt=new Date().toLocaleDateString(S.settings.lang==="fr"?"fr-FR":"en-GB",{weekday:"long",day:"numeric",month:"long"}); $("dpSub").textContent=t("upDSub")(dt.charAt(0).toUpperCase()+dt.slice(1), dueItems().length); }
+  }catch(e){} return r; }; }
+// Classement de la semaine (accueil) pour un invité : invitation aux ligues + « S'inscrire » (la carte restait vide hors connexion)
+{ const _hr=renderHubRank; renderHubRank=function(){ const ol=$("hsRank"), card=ol&&ol.closest(".hs-card"); if(!card) return _hr.apply(this,arguments);
+    if(!user && !hasSession()){ try{ lgHubOff(); }catch(e){} card.classList.add("up-inv"); ol.innerHTML="";
+      const li=document.createElement("li"); li.className="up-rinv"; li.innerHTML='<span class="up-hexes" aria-hidden="true"></span><b></b><p></p><button class="btn primary" type="button" id="upRankJoin"></button>';
+      LG_COL.forEach(c=>li.firstChild.appendChild(lgHex(c))); li.querySelector("b").textContent=t("upRinvT"); li.querySelector("p").textContent=t("upRinvX");
+      const b=li.querySelector("button"); b.textContent=t("authUp"); b.onclick=()=>authOpen("signup"); ol.appendChild(li); return Promise.resolve(); }
+    if(card.classList.contains("up-inv")){ card.classList.remove("up-inv"); ol.innerHTML=""; hsRankAt=0; }
+    return _hr.apply(this,arguments); }; }
+/* ==== fin UI points restants ==== */
 
 // ---------- Liens des e-mails (?go=daily|pp|progress|hub, boutons des e-mails de la fonction notify) ----------
 // lu une fois au démarrage puis retiré de l'adresse ; suivi seulement quand aucun écran de départ ne s'affiche (premier lancement, connexion, questionnaire, tutoriel)
