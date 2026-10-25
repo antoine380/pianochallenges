@@ -676,17 +676,20 @@ def surname(full):
     full = re.sub(r"\s*\(.*?\)", "", full).strip()
     if full in ("Anonyme", "Traditionnel"): return full
     if full.endswith(" II"): return full.split()[-2] + " II"
-    return full.split()[-1] if full else ""
+    p = full.split()
+    if len(p) > 2 and p[-2] in ("Le", "La", "Du", "De"): return p[-2] + " " + p[-1]
+    return p[-1] if p else ""
 
 def short_name(full):
     full = re.sub(r"\s*\(.*?\)", "", full).strip()
     if full in ("Anonyme", "Traditionnel") or not full: return full or "?"
     parts = full.split()
     if parts[-1] == "II": return " ".join(p[0] + "." for p in parts[:-2]) + " " + parts[-2] + " II"
+    if len(parts) > 2 and parts[-2] in ("Le", "La", "Du", "De"): parts = parts[:-2] + [parts[-2] + " " + parts[-1]]
     pre = []
     for p in parts[:-1]:
         if p in ("van", "von", "de", "d’", "da"): pre.append(p)
-        else: pre.append(p[0] + ".")
+        else: pre.append("-".join(x[0] + "." for x in p.split("-")))
     return " ".join(pre + [parts[-1]])
 
 def clean_title(t):
@@ -735,7 +738,7 @@ def select(rep, base_ids, target):
 COLORS = ["#2c56d6", "#6a3fd1", "#b4461a", "#1f7a52", "#a3306b", "#0e7490", "#c9463c", "#26805a", "#8a3fd1", "#b02a6b"]
 OBJS = {"lieder": ["heart", "moon", "star", "leaf", "sun", "bell"], "masters": ["staff", "crown", "palette", "planet", "globe", "heart"],
         "etudes": ["medal", "compass", "mountain", "staff", "star", "palette"], "dances": ["guitar", "fish", "sun", "castle", "compass", "apple"]}
-ETUDES = re.compile(r"Burgmuller|Czerny|BWVAnh|BWV9[23]\d|KuhlauF|ClementiM|MuellerAE|TchaikovskyPI/O39|SchumannR/O15|BWV994|HandelGF/Aylesford|KV2/|PleyelIJ|WanhalJ", re.I)
+ETUDES = re.compile(r"Burgmuller|Czerny|BWVAnh|BWV9[23]\d|KuhlauF|ClementiM|MuellerAE|TchaikovskyPI/O39|BWV994|HandelGF/Aylesford|KV2/|PleyelIJ|WanhalJ", re.I)
 DANCES = re.compile(r"^Traditional|FosterSC|JoplinS|SilcherF|StraussJJ|Anonymous", re.I)
 
 def collection(r):
@@ -859,9 +862,9 @@ if __name__ == "__main__":
     rep = run_all(args)
     base = set(re.findall(r'\bid:"([a-z]+)"', open(os.path.join(ROOT, "assets", "js", "songs-data.js"), encoding="utf-8").read()))
     picked = select(rep, base, args.target)
-    used = set(base); entries = [song_entry(r, used) for r in picked]
+    used = set(base); entries = [song_entry(r, used) for r in picked]   # picked is sorted by priority: the best-known first in each row
     order = {"masters": 0, "lieder": 1, "etudes": 2, "dances": 3}
-    entries.sort(key=lambda e: (order[e["c"]], surname(e["src"]["by"]), e["t"][0]))
+    entries.sort(key=lambda e: order[e["c"]])
     pk = {r["id"] for r in picked}
     slim = [{k: r[k] for k in ("id", "src", "path", "ok", "why", "dup", "capped") if k in r} | ({"picked": True} if r["id"] in pk else {}) for r in rep
             if not str(r.get("why", "")).startswith(("instrument", "pas de numéro"))]   # other instruments: not listed

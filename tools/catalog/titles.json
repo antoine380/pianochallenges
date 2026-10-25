@@ -589,15 +589,18 @@
  },
  "m1541-90d8e2": {
   "fr": "Something Doing (rag)",
-  "en": "Something Doing (rag)"
+  "en": "Something Doing (rag)",
+  "famous": 1
  },
  "m1542-90fc2f": {
   "fr": "The Strenuous Life (rag)",
-  "en": "The Strenuous Life (rag)"
+  "en": "The Strenuous Life (rag)",
+  "famous": 1
  },
  "m335-6380c1": {
   "fr": "Peacherine Rag",
-  "en": "Peacherine Rag"
+  "en": "Peacherine Rag",
+  "famous": 1
  },
  "m208-c0c971": {
   "fr": "Sicilienne",
@@ -642,11 +645,13 @@
  },
  "m370-4f19cb": {
   "fr": "Slumber My Darling",
-  "en": "Slumber My Darling"
+  "en": "Slumber My Darling",
+  "famous": 1
  },
  "m679-7fef9d": {
   "fr": "Quadrille des lanciers : La Native",
-  "en": "The Lancers' Quadrille: La Native"
+  "en": "The Lancers' Quadrille: La Native",
+  "famous": 1
  },
  "m680-eb77df": {
   "fr": "Quadrille des lanciers : Les Grâces",
@@ -670,7 +675,8 @@
  "m376-a576b3": {
   "fr": "Flee As a Bird",
   "en": "Flee As a Bird",
-  "from": "us"
+  "from": "us",
+  "famous": 1
  },
  "m814-bc0060": {
   "fr": "John Barleycorn",

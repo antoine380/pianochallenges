@@ -27,7 +27,6 @@ Nos versions sont des **adaptations** : mélodie (voix ou ligne supérieure de l
 | English Suite II: Bourree I · BWV 807 | Johann Sebastian Bach (1685–1750) | Mutopia Project n° 82 | Allen Garvin | Domaine public | https://www.mutopiaproject.org/cgibin/piece-info.cgi?id=82 |
 | English Suite II: Bourree II · BWV 807 | Johann Sebastian Bach (1685–1750) | Mutopia Project n° 83 | Allen Garvin | Domaine public | https://www.mutopiaproject.org/cgibin/piece-info.cgi?id=83 |
 | Chorale prelude “Wer nur den lieben Gott läßt walten” · BWV Anh. 691 (extrait) | Johann Sebastian Bach (1685–1750) | Mutopia Project n° 1616 | Steven McDougall | Domaine public | https://www.mutopiaproject.org/cgibin/piece-info.cgi?id=1616 |
-| Ein Gebet · 5 Lieder, Op.7 | Luise Adolpha Le Beau (1850–1927) | OpenScore Lieder | — | CC0 1.0 | https://github.com/OpenScore/Lieder/tree/main/scores/Le_Beau,_Luise_Adolpha/5_Lieder,_Op.7/2_Ein_Gebet |
 | Die Ehre Gottes aus der Natur · 6 Lieder, Op.48 | Ludwig van Beethoven (1770–1827) | OpenScore Lieder | — | CC0 1.0 | https://github.com/OpenScore/Lieder/tree/main/scores/Beethoven,_Ludwig_van/6_Lieder,_Op.48/4_Die_Ehre_Gottes_aus_der_Natur |
 | Gottes Macht und Vorsehung · 6 Lieder, Op.48 | Ludwig van Beethoven (1770–1827) | OpenScore Lieder | — | CC0 1.0 | https://github.com/OpenScore/Lieder/tree/main/scores/Beethoven,_Ludwig_van/6_Lieder,_Op.48/5_Gottes_Macht_und_Vorsehung |
 | Marmotte · 8 Lieder, Op.52 | Ludwig van Beethoven (1770–1827) | OpenScore Lieder | — | CC0 1.0 | https://github.com/OpenScore/Lieder/tree/main/scores/Beethoven,_Ludwig_van/8_Lieder,_Op.52/7_Marmotte |
@@ -39,7 +38,6 @@ Nos versions sont des **adaptations** : mélodie (voix ou ligne supérieure de l
 | Sonate Opus 49 No.2 - Part 2 · Op. 49, No. 2 (extrait) | Ludwig van Beethoven (1770–1827) | Mutopia Project n° 777 | Stelios Samelis | Domaine public | https://www.mutopiaproject.org/cgibin/piece-info.cgi?id=777 |
 | Home. Sweet Home · (from:) "Clari" or "The Maid of Milan" (extrait) | Henry Bishop (1787–1855) | OpenScore Lieder | — | CC0 1.0 | https://github.com/OpenScore/Lieder/tree/main/scores/Bishop,_Henry/_/Home,_Sweet_Home |
 | Adieux à Suzon · Feuilles d'album (extrait) | Georges Bizet (1838–1875) | OpenScore Lieder | — | CC0 1.0 | https://github.com/OpenScore/Lieder/tree/main/scores/Bizet,_Georges/Feuilles_d’album/2_Adieux_à_Suzon |
-| Douce mer · 20 Mélodies, Op.21 | Georges Bizet (1838–1875) | OpenScore Lieder | — | CC0 1.0 | https://github.com/OpenScore/Lieder/tree/main/scores/Bizet,_Georges/20_Mélodies,_Op.21/14_Douce_mer |
 | La chanson du fou · 20 Mélodies, Op.21 (extrait) | Georges Bizet (1838–1875) | OpenScore Lieder | — | CC0 1.0 | https://github.com/OpenScore/Lieder/tree/main/scores/Bizet,_Georges/20_Mélodies,_Op.21/12_La_chanson_du_fou |
 | Dein blaues Auge · 8 Lieder und Gesänge, Op.59 | Johannes Brahms (1833–1897) | OpenScore Lieder | — | CC0 1.0 | https://github.com/OpenScore/Lieder/tree/main/scores/Brahms,_Johannes/8_Lieder_und_Gesänge,_Op.59/8_Dein_blaues_Auge |
 | Der Schmied · 5 Poems, Op.19 | Johannes Brahms (1833–1897) | OpenScore Lieder | — | CC0 1.0 | https://github.com/OpenScore/Lieder/tree/main/scores/Brahms,_Johannes/5_Poems,_Op.19/4_Der_Schmied |
@@ -89,12 +87,14 @@ Nos versions sont des **adaptations** : mélodie (voix ou ligne supérieure de l
 | Menuet II (Trio) | Georg Friedrich Händel (1685–1759) | Mutopia Project n° 164 | Bas Wassink | Domaine public | https://www.mutopiaproject.org/cgibin/piece-info.cgi?id=164 |
 | Menuet II (Trio) | Georg Friedrich Händel (1685–1759) | Mutopia Project n° 158 | Bas Wassink | Domaine public | https://www.mutopiaproject.org/cgibin/piece-info.cgi?id=158 |
 | Sonatina in B-flat Major · HWV 585 | Georg Friedrich Händel (1685–1759) | Mutopia Project n° 98 | David Maddock | Domaine public | https://www.mutopiaproject.org/cgibin/piece-info.cgi?id=98 |
+| PEACHERINE RAG. (extrait) | Scott Joplin (1868–1917) | Mutopia Project n° 335 | Antonio Palamà | Domaine public | https://www.mutopiaproject.org/cgibin/piece-info.cgi?id=335 |
 | Something Doing. (extrait) | Scott Joplin (1868–1917) | Mutopia Project n° 1541 | Benjamin Bloomfield | Domaine public | https://www.mutopiaproject.org/cgibin/piece-info.cgi?id=1541 |
 | THE STRENUOUS LIFE, (extrait) | Scott Joplin (1868–1917) | Mutopia Project n° 1542 | Benjamin Bloomfield | Domaine public | https://www.mutopiaproject.org/cgibin/piece-info.cgi?id=1542 |
 | An Luna · 6 Lieder, Op. 6 | Johanna Kinkel (1810–1858) | OpenScore Lieder | — | CC0 1.0 | https://github.com/OpenScore/Lieder/tree/main/scores/Kinkel,_Johanna/6_Lieder,_Op.6/4_An_Luna |
 | Sonatine I · Op.20 no.1-1 (extrait) | Friedrich Kuhlau (1786–1832) | Mutopia Project n° 232 | Bas Wassink | Domaine public | https://www.mutopiaproject.org/cgibin/piece-info.cgi?id=232 |
 | Sonatine I · Op.20 no.1-2 | Friedrich Kuhlau (1786–1832) | Mutopia Project n° 233 | Bas Wassink | Domaine public | https://www.mutopiaproject.org/cgibin/piece-info.cgi?id=233 |
 | Namenlos · 6 Lieder, Op.13 | Josephine Lang (1815–1880) | OpenScore Lieder | — | CC0 1.0 | https://github.com/OpenScore/Lieder/tree/main/scores/Lang,_Josephine/6_Lieder,_Op.13/6_Namenlos |
+| Ein Gebet · 5 Lieder, Op.7 | Luise Adolpha Le Beau (1850–1927) | OpenScore Lieder | — | CC0 1.0 | https://github.com/OpenScore/Lieder/tree/main/scores/Le_Beau,_Luise_Adolpha/5_Lieder,_Op.7/2_Ein_Gebet |
 | Just a multitude of curls · 5 Little Love Songs | Liza Lehmann (1862–1918) | OpenScore Lieder | — | CC0 1.0 | https://github.com/OpenScore/Lieder/tree/main/scores/Lehmann,_Liza/5_Little_Love_Songs/3_Just_a_multitude_of_curls |
 | Consolation · S.172 No.1 | Franz Liszt (1811–1886) | Mutopia Project n° 1654 | Ryan Prince | CC BY 3.0 | https://www.mutopiaproject.org/cgibin/piece-info.cgi?id=1654 |
 | Consolation · S.172 No.3 (extrait) | Franz Liszt (1811–1886) | Mutopia Project n° 1647 | Ryan Prince | CC BY 3.0 | https://www.mutopiaproject.org/cgibin/piece-info.cgi?id=1647 |
@@ -164,7 +164,6 @@ Nos versions sont des **adaptations** : mélodie (voix ou ligne supérieure de l
 | Traditioner af Swenska Folk-Dansar | Traditionnel | Mutopia Project n° 861 | Erik Sjölund | CC BY 2.5 | https://www.mutopiaproject.org/cgibin/piece-info.cgi?id=861 |
 | Traditioner af Swenska Folk-Dansar | Traditionnel | Mutopia Project n° 821 | Erik Sjölund | CC BY 2.5 | https://www.mutopiaproject.org/cgibin/piece-info.cgi?id=821 |
 | Traditioner af Swenska Folk-Dansar | Traditionnel | Mutopia Project n° 862 | Erik Sjölund | CC BY 2.5 | https://www.mutopiaproject.org/cgibin/piece-info.cgi?id=862 |
-| Traditioner af Swenska Folk-Dansar | Traditionnel | Mutopia Project n° 863 | Erik Sjölund | CC BY 2.5 | https://www.mutopiaproject.org/cgibin/piece-info.cgi?id=863 |
 | Traditioner af Swenska Folk-Dansar | Traditionnel | Mutopia Project n° 864 | Erik Sjölund | CC BY 2.5 | https://www.mutopiaproject.org/cgibin/piece-info.cgi?id=864 |
 | Traditioner af Swenska Folk-Dansar | Traditionnel | Mutopia Project n° 823 | Erik Sjölund | CC BY 2.5 | https://www.mutopiaproject.org/cgibin/piece-info.cgi?id=823 |
 | Traditioner af Swenska Folk-Dansar | Traditionnel | Mutopia Project n° 865 | Erik Sjölund | CC BY 2.5 | https://www.mutopiaproject.org/cgibin/piece-info.cgi?id=865 |
@@ -174,6 +173,7 @@ Nos versions sont des **adaptations** : mélodie (voix ou ligne supérieure de l
 | Traditioner af Swenska Folk-Dansar | Traditionnel | Mutopia Project n° 870 | Erik Sjölund | CC BY 2.5 | https://www.mutopiaproject.org/cgibin/piece-info.cgi?id=870 |
 | Traditioner af Swenska Folk-Dansar | Traditionnel | Mutopia Project n° 871 | Erik Sjölund | CC BY 2.5 | https://www.mutopiaproject.org/cgibin/piece-info.cgi?id=871 |
 | Traditioner af Swenska Folk-Dansar | Traditionnel | Mutopia Project n° 873 | Erik Sjölund | CC BY 2.5 | https://www.mutopiaproject.org/cgibin/piece-info.cgi?id=873 |
+| Flee As A Bird (extrait) | Traditionnel | Mutopia Project n° 376 | Stan Sanderson | Domaine public | https://www.mutopiaproject.org/cgibin/piece-info.cgi?id=376 |
 | Rondo · Opus 42, No. 1 (extrait) | Johann Baptist Vanhal (1739–1813) | Mutopia Project n° 192 | Bas Wassink | Domaine public | https://www.mutopiaproject.org/cgibin/piece-info.cgi?id=192 |
 | Chanson mélancolique  (VWV 1108) · 6 Mélodies et une havanaise | Pauline Viardot (1821–1910) | OpenScore Lieder | — | CC0 1.0 | https://github.com/OpenScore/Lieder/tree/main/scores/Viardot,_Pauline/6_Mélodies_et_une_havanaise/6b_Chanson_mélancolique |
 | Les Attraits, VWV 1052 | Pauline Viardot (1821–1910) | OpenScore Lieder | — | CC0 1.0 | https://github.com/OpenScore/Lieder/tree/main/scores/Viardot,_Pauline/_/Les_Attraits,_VWV_1852 |

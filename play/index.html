@@ -127,7 +127,7 @@ body.lesson.lbl-pale .key .lbl{opacity:.35}
 .ocard .lvl{font-family:var(--f-mono);font-size:11px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--glass-muted)}
 .ocard h2{font-family:var(--f);font-weight:800;font-size:28px;margin:0;letter-spacing:-.025em;text-wrap:balance}
 .ocard p{margin:0;color:var(--glass-muted);line-height:1.5}
-.ocard .src{font-size:12px;line-height:1.45;opacity:.9}.ocard .src a{color:inherit}
+.ocard .src{font-size:12px;line-height:1.45;opacity:.9}.ocard .src a{color:inherit}@media (max-height:720px){.ocard .src .ot{display:none}}
 .ocard .row{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:8px}
 .ocard .btn{background:var(--glass);color:var(--stage)}
 .ocard .btn.light{background:transparent;color:var(--glass);border:1px solid #3a3944}
@@ -528,7 +528,7 @@ function openSong(s0,lv){const s=variant(s0.base||s0,lv||(s0.base?s0.level:s0.ar
 // catalogue libre: « Source : OpenScore Lieder · Licence CC0 1.0 » (+ n° Mutopia, saisie, extrait), from the song's src
 function srcLine(s){const d=s.data||{},x=d.src;if(!x)return'';const e=t=>String(t).replace(/[<>&"]/g,c=>({'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;'}[c]));
   const ed=x.ed+(x.no?' n° '+x.no:'')+(x.who?' ('+tr('typed')+' : '+x.who+')':'');
-  return `<p class="src">${d.x?tr('extract')+' · ':''}${tr('srcL')} : <a href="${e(x.url)}" target="_blank" rel="noopener">${e(ed)}</a> · ${tr('licL')} ${e(x.lic)}<br>${e(x.t)}</p>`}
+  return `<p class="src">${d.x?tr('extract')+' · ':''}${tr('srcL')} : <a href="${e(x.url)}" target="_blank" rel="noopener">${e(ed)}</a> · ${tr('licL')} ${e(x.lic)}<span class="ot"><br>${e(x.t)}</span></p>`}
 function resetSong(){P.notes=P.song.notes.map(n=>({...n,st:0}));P.t=-2;P.score=0;P.streak=0;P.maxStreak=0;P.c={p:0,b:0,m:0,w:0};P.frozen=false;P.lastBeat=-9;fx.length=0;pops.length=0;P.playing=false;hud()}
 function startSong(){if(!P.song)return;resetSong();ov.hidden=true;P.playing=true}
 const bps=()=>P.song.bpm/60*speed;
