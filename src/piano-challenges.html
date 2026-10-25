@@ -12008,7 +12008,9 @@ Object.assign(TXT.en,{upDSub:(d,due)=>d+(due?" · "+due+" to review":""), upDEx:
     if(!user && !hasSession()){ try{ lgHubOff(); }catch(e){} card.classList.add("up-inv"); ol.innerHTML="";
       const li=document.createElement("li"); li.className="up-rinv"; li.innerHTML='<span class="up-hexes" aria-hidden="true"></span><b></b><p></p><button class="btn primary" type="button" id="upRankJoin"></button>';
       LG_COL.forEach(c=>li.firstChild.appendChild(lgHex(c))); li.querySelector("b").textContent=t("upRinvT"); li.querySelector("p").textContent=t("upRinvX");
-      const b=li.querySelector("button"); b.textContent=t("authUp"); b.onclick=()=>authOpen("signup"); ol.appendChild(li); return Promise.resolve(); }
+      const b=li.querySelector("button"); b.textContent=t("authUp"); b.onclick=()=>authOpen("signup"); ol.appendChild(li);
+      if(!sb && !cloudPromise && !hsRankWait){ hsRankWait=true; setTimeout(()=>{ ensureCloud().then(()=>{ hsRankWait=false; hsRankAt=0; if(page==="hub") renderHubRank(); }).catch(()=>{ hsRankWait=false; }); },1200); } // comme avant : le SDK se charge et retrouve une session éventuelle
+      return Promise.resolve(); }
     if(card.classList.contains("up-inv")){ card.classList.remove("up-inv"); ol.innerHTML=""; hsRankAt=0; }
     return _hr.apply(this,arguments); }; }
 /* ==== fin UI points restants ==== */
