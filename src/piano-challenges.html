@@ -5053,7 +5053,7 @@ function load(){
   firstVisit=true;
   return clone(DEFAULTS);
 }
-function save(){ try{ localStorage.setItem(STORE, JSON.stringify(S)); }catch(e){} if(typeof cloudPush==="function") cloudPush(); }
+function save(){ try{ localStorage.setItem(STORE, JSON.stringify(S)); }catch(e){} try{ cloudPush(); }catch(e){} } // cloudPush can run before « let sb » at boot (S.duPend): never abort the script
 let S=load();
 // day / night: S.settings.theme = "light" | "dark", absent = follow the system
 const darkMQ=matchMedia("(prefers-color-scheme: dark)");
