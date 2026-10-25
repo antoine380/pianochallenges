@@ -3401,7 +3401,7 @@ body.imp-drag[data-page="free"] #freePanel::after{content:"";position:absolute;i
 .acc-chips{display:flex;flex-wrap:wrap;gap:8px} .acc-chips span{padding:5px 12px;border-radius:999px;font-weight:800;font-size:.86rem;background:var(--surface-2)}
 .acc-chips .ok{color:var(--good);background:var(--good-soft)} .acc-chips .st{color:#8a5a00;background:#ffe7a6} .acc-chips .fl{color:#9a3d12;background:#ffd9c2}
 .acc-g,.acc-m{display:flex;align-items:center;justify-content:center;gap:10px;min-height:52px;border-radius:999px;font:700 1.02rem var(--f-display);cursor:pointer}
-.acc-g{background:#fff;color:#15122e;border:1px solid var(--line);box-shadow:0 8px 20px -12px rgba(20,12,60,.5)} .acc-gi{width:26px;height:26px;border-radius:50%;border:1px solid #c9c6e0;display:grid;place-items:center;font:800 .82rem var(--f-body)}
+.acc-g{background:#fff;color:#15122e;border:1px solid var(--line);box-shadow:0 8px 20px -12px rgba(20,12,60,.5)} .acc-gi{width:26px;height:26px;display:grid;place-items:center}
 .acc-m{background:var(--surface-2);color:var(--ink);border:0} .acc-m svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 .acc-body .gl-foot small{color:var(--muted);font-weight:700}
 @media (max-height:520px){ .acc-body .pp-badge{display:none} .acc-g,.acc-m{min-height:42px} }
@@ -3528,6 +3528,41 @@ body.imp-drag[data-page="free"] #freePanel::after{content:"";position:absolute;i
 /* podium du quiz en téléphone paysage : les boutons « Rejouer » passaient sous le bord de l'écran */
 @media (max-height:520px) and (orientation:landscape){ .qz-end{gap:6px} .qz-endt{font-size:1.25rem} .qz-pod,.qz-pod.r1{padding:6px 12px;gap:0;flex-direction:row;gap:10px;width:auto} .qz-rk{width:28px;height:28px;font-size:.95rem} .qz-sc{font-size:1.1rem} .qz-pod small{display:none} }
 /* ==== fin Revue UI ==== */
+/* ==== UI points restants (25/10) ==== */
+/* Entraînement du jour : un résumé en tête + des cartes compactes sur 2 rangées (10 grandes cartes presque vides avant) */
+.up-dsum{display:none;flex-wrap:wrap;align-items:center;gap:var(--sp-2,8px) var(--sp-4,16px);padding:var(--sp-3,12px) var(--card-pad,16px);background:var(--surface);border-radius:var(--r-lg);box-shadow:var(--shadow-card);flex:none}
+body[data-page="daily"]:not(.playing) .up-dsum{display:flex}
+.up-dk{display:flex;align-items:baseline;gap:6px;white-space:nowrap} .up-dk b{font:700 clamp(1.3rem,2.6vh,1.7rem)/1 var(--f-display);color:var(--ink)} .up-dk span{font-weight:700;color:var(--muted);font-size:.9rem}
+.up-dsecs{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:6px;flex:1 1 100%}
+.up-dsecs li{display:inline-flex;align-items:center;gap:6px;padding:5px 10px 5px 6px;border-radius:999px;background:var(--surface-2);font-weight:800;font-size:.82rem;white-space:nowrap}
+.up-dsecs svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;color:var(--brand)} .up-dsecs i{font-style:normal;color:var(--muted);font-weight:700}
+body[data-page="daily"]:not(.playing) .dtl-wrap{flex:none;display:block}
+body[data-page="daily"]:not(.playing) .dtl{--dd:clamp(36px,7vh,64px);flex:none;grid-template-columns:repeat(6,minmax(0,1fr));grid-auto-rows:auto;align-content:start}
+body[data-page="daily"]:not(.playing) .dtl li{padding:clamp(22px,4.4vh,40px) 6px clamp(10px,3vh,28px);min-width:0}
+body[data-page="daily"]:not(.playing) .dtl .st-l{font-size:clamp(.74rem,min(1.6vh,1.35vw),1rem)}
+@media (max-width:900px) and (orientation:portrait){ body[data-page="daily"]:not(.playing) .dtl{grid-template-columns:repeat(6,minmax(0,1fr));--dd:clamp(34px,5vh,50px)} }
+@media (max-width:640px){ body[data-page="daily"]:not(.playing) .dtl{grid-template-columns:repeat(4,minmax(0,1fr));--dd:34px;gap:8px} body[data-page="daily"]:not(.playing) .dtl li{padding:22px 3px 8px} body[data-page="daily"]:not(.playing) .dtl .st-l{font-size:.7rem}
+  .up-dsum{gap:6px 12px;padding:10px 12px} .up-dsecs li{font-size:.74rem;padding:3px 8px 3px 4px} .up-dsecs svg{width:15px;height:15px} }
+@media (max-height:520px) and (orientation:landscape){ body[data-page="daily"]:not(.playing) .dtl{--dd:28px;gap:8px} body[data-page="daily"]:not(.playing) .dtl li{padding:18px 4px 6px} body[data-page="daily"]:not(.playing) .dtl .st-l{font-size:.72rem}
+  .up-dsum{padding:6px 12px;gap:4px 12px} .up-dk b{font-size:1.1rem} .up-dk span{font-size:.8rem} .up-dsecs li{padding:2px 8px 2px 4px;font-size:.72rem} .up-dsecs svg{width:14px;height:14px} }
+/* Classement de la semaine pour un invité : une invitation (les ligues + « S'inscrire ») au lieu d'une grande carte vide */
+.hs-rank.up-inv .hs-more{display:none}
+.hs-rank.up-inv .hs-list{height:calc(100% - 30px)}
+.hs-list li.up-rinv{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:var(--sp-2,8px);background:transparent;padding:var(--sp-2,8px) 4px;flex:1 1 auto;font-size:inherit}
+.up-hexes{display:flex;align-items:flex-end;gap:6px} .up-hexes .lg-hex{width:clamp(18px,2.2vw,26px);background:linear-gradient(160deg,color-mix(in srgb,var(--lg-c) 55%,#fff),var(--lg-c))} .up-hexes .lg-hex:last-child{width:clamp(26px,3.2vw,38px)}
+.up-rinv b{font:700 1.15rem/1.2 var(--f-display);white-space:normal;overflow:visible} .up-rinv p{margin:0;color:var(--muted);font-size:.86rem;line-height:1.4;max-width:30ch}
+.up-rinv .btn{margin-top:var(--sp-1,4px);min-height:44px;padding-inline:22px}
+@media (max-height:820px){ .up-rinv b{font-size:1rem} .up-rinv p{font-size:.8rem} .up-rinv .btn{min-height:40px} }
+/* tuto d'import en téléphone paysage : les cartes gardent le titre et la phrase principale (le reste était coupé en bas) */
+@media (max-height:500px) and (orientation:landscape){ .imp-help .imp-steps .imp-sx p:not(:first-child){display:none} .imp-help .imp-ill{height:34px} .imp-help .imp-steps li{padding:8px 10px 10px} }
+/* nom du bot en entier sur téléphone (« Hecto… » à côté du bouton) : le nom passe sur 2 lignes et le bouton dessous */
+@media (max-width:640px){ .du-bcard{flex-wrap:wrap} .du-bcard b{white-space:normal;overflow:visible;text-overflow:clip} .du-bcard .du-go{flex:1 1 100%}
+  .du-nm b{white-space:normal;overflow-wrap:anywhere;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;line-height:1.1} }
+@media (max-height:420px){ .du-bcard b{white-space:normal;overflow:visible;text-overflow:clip} }
+/* commandes segmentées (Réglages, Progression, quiz, chrono) : 40 px de haut, 44 px sur téléphone */
+:is(.set-sec .seg,.set-nav,.set-tabs,#quizPanel .seg,#suTimer) button{min-height:40px}
+@media (max-width:640px), (max-height:500px) and (orientation:landscape){ :is(.set-sec .seg,.set-nav,.set-tabs,#quizPanel .seg,#suTimer) button{min-height:44px} }
+/* ==== fin UI points restants ==== */
 </style>
 
 <script>if(window.Capacitor&&window.webkit&&window.webkit.messageHandlers&&window.webkit.messageHandlers.bridge)document.documentElement.classList.add("native");</script>
@@ -4505,9 +4540,9 @@ const TXT = {
       noNotes:"Ce fichier ne contient aucune note à jouer.", full:"Tu as déjà 50 morceaux sur cet appareil. Supprimes-en un dans « Mes morceaux » pour en importer un nouveau.", load:"Pas moyen de charger l'outil d'import. Vérifie ta connexion et réessaie."},
     impGm:["Piano","Percussions mélodiques","Orgue","Guitare","Basse","Cordes","Ensemble","Cuivres","Anches","Flûtes","Synthé (mélodie)","Synthé (nappe)","Effets synthé","Instruments du monde","Percussions","Effets sonores","Batterie"],
     impHelp:{title:"Comment importer un morceau ?", s1t:"Trouve un fichier", s2t:"Enregistre-le", s3t:"Importe-le", s4t:"Choisis les mains et joue",
-      s1:["Un fichier MIDI (.mid) contient les notes d'un morceau, sans le son : c'est ce qu'un clavier enregistre. Un fichier MusicXML (.musicxml ou .mxl) est une partition écrite que les logiciels de musique savent lire.",
-        "On en trouve sur les sites de partitions et de fichiers MIDI (cherche « titre du morceau midi »). Le logiciel MuseScore exporte toute partition en MusicXML (Fichier › Exporter).",
-        "Choisis des fichiers que tu as le droit d'utiliser (domaine public, libres ou achetés), pour ton usage personnel."],
+      s1:["Un fichier MIDI (.mid) ou MusicXML (.musicxml, .mxl) contient les notes d'un morceau.",
+        "On en trouve sur les sites de partitions (cherche « titre midi »). MuseScore exporte toute partition en MusicXML.",
+        "Prends des fichiers que tu as le droit d'utiliser : domaine public, libres ou achetés."],
       s4:["L'app trouve les pistes : la plus aiguë va à la main droite, la plus grave à la main gauche, la batterie est ignorée. Change si besoin.","Puis « Jouer », ou un Do seul sur ton clavier. Le morceau reste dans « Mes morceaux »."],
       dev:{iosApp:{name:"Sur ton iPad ou iPhone (app)", save:["Dans Safari, touche le lien du fichier puis « Télécharger » : il arrive dans l'app Fichiers, dossier Téléchargements.","Depuis Mail ou Messages : touche le fichier, puis Partager › Enregistrer dans Fichiers."], imp:["Touche « Importer un morceau », puis « Parcourir » dans le petit menu : l'app Fichiers s'ouvre.","Va dans Récents ou Téléchargements et touche ton fichier."]},
         iosWeb:{name:"Sur ton iPad ou iPhone (Safari)", save:["Touche le lien du fichier puis « Télécharger » : il arrive dans l'app Fichiers, dossier Téléchargements.","Depuis Mail ou Messages : touche le fichier, puis Partager › Enregistrer dans Fichiers."], imp:["Touche « Importer un morceau », puis « Parcourir » : l'app Fichiers s'ouvre.","Va dans Récents ou Téléchargements et touche ton fichier."]},
@@ -4825,9 +4860,9 @@ const TXT = {
       noNotes:"This file has no notes to play.", full:"You already have 50 songs on this device. Delete one in “My songs” to import a new one.", load:"The import tool couldn't load. Check your connection and try again."},
     impGm:["Piano","Chromatic percussion","Organ","Guitar","Bass","Strings","Ensemble","Brass","Reed","Pipe","Synth lead","Synth pad","Synth effects","World instruments","Percussion","Sound effects","Drums"],
     impHelp:{title:"How to import a song?", s1t:"Find a file", s2t:"Save it", s3t:"Import it", s4t:"Pick the hands and play",
-      s1:["A MIDI file (.mid) holds the notes of a song, without the sound: it is what a keyboard records. A MusicXML file (.musicxml or .mxl) is a written score that music programs can read.",
-        "You'll find them on sheet-music and MIDI-file websites (search for “song title midi”). The MuseScore program exports any score to MusicXML (File › Export).",
-        "Use files you have the right to use (public domain, free or bought), for your personal use."],
+      s1:["A MIDI (.mid) or MusicXML (.musicxml, .mxl) file holds the notes of a song.",
+        "You'll find them on sheet-music websites (search for “title midi”). MuseScore exports any score to MusicXML.",
+        "Use files you have the right to use: public domain, free or bought."],
       s4:["The app finds the tracks: the highest goes to the right hand, the lowest to the left hand, drums are ignored. Change it if needed.","Then “Play”, or a lone C on your keyboard. The song stays in “My songs”."],
       dev:{iosApp:{name:"On your iPad or iPhone (app)", save:["In Safari, tap the file's link then “Download”: it goes to the Files app, Downloads folder.","From Mail or Messages: tap the file, then Share › Save to Files."], imp:["Tap “Import a song”, then “Browse” in the small menu: the Files app opens.","Go to Recents or Downloads and tap your file."]},
         iosWeb:{name:"On your iPad or iPhone (Safari)", save:["Tap the file's link then “Download”: it goes to the Files app, Downloads folder.","From Mail or Messages: tap the file, then Share › Save to Files."], imp:["Tap “Import a song”, then “Browse”: the Files app opens.","Go to Recents or Downloads and tap your file."]},
@@ -5107,6 +5142,7 @@ function load(){
     const s={...clone(DEFAULTS), ...d, stats:{...DEFAULTS.stats,...(isObj(d.stats)?d.stats:{})}, settings:{...DEFAULTS.settings,...(isObj(d.settings)?d.settings:{})}, mastery:{}};
     ["streak","stats","secStats","srs","daily","xpDays","xpPushed"].forEach(k=>{ if(!isObj(s[k])) s[k]=clone(DEFAULTS[k]||{}); });
     s.streak={days:num(s.streak.days,0), last:typeof s.streak.last==="string"?s.streak.last:""};
+    if("introSeen" in s && !isObj(s.introSeen)) s.introSeen={}; ["su","quiz","acc","ntf"].forEach(k=>{ if(k in s.settings && !isObj(s.settings[k])) delete s.settings[k]; }); if(!["fr","en"].includes(s.settings.lang)) s.settings.lang=DEFAULTS.settings.lang; if(!["fr","en"].includes(s.settings.notation)) s.settings.notation=s.settings.lang; if("input" in s.settings && !["midi","mic","screen"].includes(s.settings.input)) delete s.settings.input; // t() and renderInputUI index tables with them // objects written into later (showIntro, suState, qzCfg…)
     if(!isObj(s.dailyPlan)) delete s.dailyPlan; if(!isObj(s.dailyRun)) delete s.dailyRun;
     s.xp=Math.max(0,num(s.xp,0)); Object.keys(s.xpDays).forEach(k=>{ s.xpDays[k]=num(s.xpDays[k],0); });
     Object.keys(s.stats).forEach(k=>{ s.stats[k]=num(s.stats[k],0); });
@@ -5138,7 +5174,7 @@ function load(){
   firstVisit=true;
   return clone(DEFAULTS);
 }
-function save(){ try{ localStorage.setItem(STORE, JSON.stringify(S)); }catch(e){} if(typeof cloudPush==="function") cloudPush(); }
+function save(){ try{ localStorage.setItem(STORE, JSON.stringify(S)); }catch(e){ if(!save.warned && e && (e.name==="QuotaExceededError"||e.code===22)){ save.warned=true; setTimeout(()=>{ try{ toast(t("saveFull")); }catch(x){} },0); } } try{ cloudPush(); }catch(e){} } // cloudPush can run before « let sb » at boot (S.duPend): never abort the script
 let S=load();
 // day / night: S.settings.theme = "light" | "dark", absent = follow the system
 const darkMQ=matchMedia("(prefers-color-scheme: dark)");
@@ -6980,7 +7016,7 @@ function duRematch(){ if(DU.mode==="bot"){ duStartBot(DU.opp.bot); return; } DU.
 function duFromHash(){ const m=/^#duel-([A-Z2-9]{5})$/.exec(location.hash||""); if(!m) return; history.replaceState(null,"",location.pathname+location.search);
   openPage("games"); gameOpen("runner"); duJoin(m[1],false,false); }
 setTimeout(duFromHash,0);
-if(S.duPend){ const pd=S.duPend; delete S.duPend; try{ eloApply(pd.key, pd.o, 0, pd.bot, pd.nm, pd.av); }catch(e){} save(); } // a rated duel left by closing the app
+setTimeout(()=>{ if(S.duPend){ const pd=S.duPend; delete S.duPend; try{ eloApply(pd.key, pd.o, 0, pd.bot, pd.nm, pd.av); }catch(e){} save(); } },0); // a rated duel left by closing the app (after the whole script: eloApply needs qzSafe, declared further down)
 // ---- lobby buttons ----
 $("duModes").addEventListener("click",e=>{ const b=e.target.closest("[data-m]"); if(!b) return; const m=b.dataset.m; DU.err="";
   if(m==="solo"){ DU.view="solo"; duRender(); gameOpen(DU.game,true); return; }
@@ -8388,12 +8424,15 @@ async function enableMidi(quiet){
 }
 
 // ---------- Microphone pitch detection ----------
-let micOn=false;
+let micOn=false, micAsking=false;
 $("micBtn").addEventListener("click", async ()=>{
   if(micOn){ micStop(); renderInputUI(); return; } // toggle: a second click stops the microphone
+  if(micAsking) return; // the permission prompt is still open: a second tap would open a second stream and a timer nobody stops
   const c=audio(); if(!c) return;
   try{
-    const stream=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:false,noiseSuppression:false,autoGainControl:false}});
+    micAsking=true; let stream; try{ stream=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:false,noiseSuppression:false,autoGainControl:false}}); }finally{ micAsking=false; }
+    if(micOn){ stream.getTracks().forEach(tr=>tr.stop()); return; } // started meanwhile by another path
+    clearInterval(micTimer);
     const src=c.createMediaStreamSource(stream), an=c.createAnalyser(); an.fftSize=1024; src.connect(an); // 1024 samples: enough down to ~100 Hz, autocorrelation 4× cheaper
     const buf=new Float32Array(an.fftSize); let cand=null, count=0, lastEmit=null;
     micStream=stream; micOn=true; $("micBtn").classList.add("on"); $("micBtn").classList.remove("err"); $("micTxt").textContent=t("micOn"); notice("");
@@ -9029,7 +9068,7 @@ function goalFiche(st){ const box=$("pfGoal"); if(!box) return; const g=goalCfg(
 // ---- choosing the goal: Settings (tab Partie) and, once, after a game played well ----
 $("segGoal").addEventListener("click",e=>{ const b=e.target.closest("button[data-v]"); if(!b) return; const [k,v]=b.dataset.v.split(":"); goalSet(k,+v); });
 let glPick="min:10";
-function goalOpen(){ const g=goalCfg(); glPick=g.kind+":"+g.v; const gk=$("goalModal").querySelector(".gl-k"); if(gk) gk.textContent=t(page==="pp"?"goalKickL":"goalKick"); // after a lesson of the first steps: « Bravo pour cette leçon » S.goal={...(S.goal&&typeof S.goal==="object"?S.goal:{kind:g.kind, v:g.v, at:0}), asked:1}; save();
+function goalOpen(){ const g=goalCfg(); glPick=g.kind+":"+g.v; const gk=$("goalModal").querySelector(".gl-k"); if(gk) gk.textContent=t(page==="pp"?"goalKickL":"goalKick"); /* after a lesson of the first steps: « Bravo pour cette leçon » */ S.goal={...(S.goal&&typeof S.goal==="object"?S.goal:{kind:g.kind, v:g.v, at:0}), asked:1}; save();
   const box=$("glOpts"); box.innerHTML=""; const tags=t("goalTags");
   GOALS.forEach(([k,v],i)=>{ const b=document.createElement("button"); b.type="button"; b.className="gl-opt"; b.dataset.v=k+":"+v; b.innerHTML="<b></b><small></small>"; b.firstChild.textContent=v+" "+(k==="xp"?"XP":"min"); b.lastChild.textContent=tags[i];
     b.setAttribute("aria-pressed", b.dataset.v===glPick); b.onclick=()=>{ glPick=b.dataset.v; box.querySelectorAll(".gl-opt").forEach(x=>x.setAttribute("aria-pressed",x.dataset.v===glPick)); }; box.appendChild(b); });
@@ -9370,7 +9409,7 @@ function ppRenderMap(){ const lp=$("learnPanel"); if(!lp) return; let el=$("ppMa
 // ---- hub: « Pick up » (D8), only once the path has started (or for a beginner)
 function ppRenderResume(){ const hm=document.querySelector("#hubPanel .hub-main"); if(!hm) return; let el=$("ppResume");
   if(!el){ el=document.createElement("button"); el.type="button"; el.id="ppResume"; el.className="pp-res"; hm.insertBefore(el,hm.querySelector(".hub-grid")); el.onclick=ppResumeGo; }
-  const r=ppResumeInfo(), show=!!r && (ppStarted() || (S.onb&&S.onb.level==="debut")) && !(ppAllDone() && !r.step); el.hidden=!show; // all 14 done (or placed past them): no « Lesson 14 » card, the general « Pick up » / Ma route card takes over document.body.classList.toggle("pp-hasres",show); if(!show) return;
+  const r=ppResumeInfo(), show=!!r && (ppStarted() || (S.onb&&S.onb.level==="debut")) && !(ppAllDone() && !r.step); el.hidden=!show; /* all 14 done (or placed past them): no « Lesson 14 » card, the general « Pick up » / Ma route card takes over */ document.body.classList.toggle("pp-hasres",show); if(!show) return;
   const k = r.step ? t("ppResume") : r.next ? t("ppNext") : t("ppName"), pct=Math.round(100*r.step/r.total);
   el.innerHTML='<span class="pp-rk">'+esc(k)+'</span><b class="pp-rt">'+esc(t("ppLesson")(r.n)+" · "+ppTitle(r.id))+'</b>'
     +'<span class="pp-rbar"><span class="pp-bar"><i style="width:'+pct+'%"></i></span><small>'+esc(t("ppStepOf")(r.step+1,r.total)+" · "+t("ppMin")(PP_MIN[r.n-1]))+'</small></span>'
@@ -9801,7 +9840,7 @@ addEventListener("resize",()=>{ if(page==="acc" && ACC.view==="play" && ACC.run)
 // (fetch keepalive vers la fonction SQL track_events), sans le SDK Supabase. Hors ligne, la file attend. Une table ou une
 // fonction absente (migration pas encore lancée) coupe l'envoi sans erreur. En développement (localhost), rien ne part sur
 // le réseau, sauf si localStorage « pc-trk-test » = "1" (tests). Interrupteur : S.settings.analytics (absent = activé).
-const APP_BUILD="2026-10-25T13:11Z"; // remplacé par tools/build.py par la date de construction (version.txt)
+const APP_BUILD="2026-10-25T13:43Z"; // remplacé par tools/build.py par la date de construction (version.txt)
 const TRK={q:[], t:0, off:false, anon:null, sent:0, errs:[], errT:0, errSeen:new Set(), errOn:null, ports:new Set(), first:false};
 const RC={flags:{}, daily:{}, at:0};
 const TRK_NAMES=new Set(["song_import","app_open","first_note","input_mode","midi_connected","pp_lesson_done","learn_end","game_end","quiz_end","duel_end","goal_reached","badge","signup","login","play","feedback","acc_end","song_open","route_step","route_stage"]);
@@ -11071,11 +11110,11 @@ function rsRender(){ const el=$("ppResume"); if(!el) return; el.onclick=rsGo;
   else el.style.removeProperty("--tc");
   document.body.classList.toggle("rs-on",!el.hidden); rsFor(); }
 function rsGo(){ const el=$("ppResume"), r=S.resume; if(!el || el.hidden) return; const rk=el.dataset.rk;
-  if(rk==="pp"){ ppResumeGo(); return; } if(rk==="route"){ rtGo(); return; }
+  if(rk==="pp"){ ppResumeGo(); return; } if(rk==="route"){ rtGo(); return; } if(!r || typeof r!=="object") return;
   if(r.kind==="learn"){ const p=r.route&&rtPill(r.route); if(p&&rtIsDone(p)){ rtGo(); return; }
     if(r.su && S.settings.su){ S.settings.su[r.sec]=JSON.parse(JSON.stringify(r.su)); } RT.cur=p&&!rtIsDone(p)?p:null;
     const tab=$("secTabs").querySelector('[data-v="'+r.sec+'"]'); if(tab) tab.click(); if(page!=="practice") return;
-    if(r.fin || Date.now()-(+r.at||0)>864e5){ renderSetup(); return; }
+    if(r.fin || Date.now()-(+r.at||0)>864e5 || !Array.isArray(r.q) || !r.q.length){ renderSetup(); return; }
     game=makeGame(r.q.map(it=>({...it}))); game.label=r.label; game.single=r.q.length===1; game.i=Math.max(0,r.i|0)-1; startRound(); return; }
   if(r.kind==="game"){ if(r.cont) S.settings.gmCont=r.cont; save(); if(page!=="games") openPage("games"); gameOpen(r.id); DU.view="solo"; duRender(); gameOpen(r.id,true); return; }
   if(r.kind==="song"){ openPlayWith("#song="+r.id); return; }
@@ -11707,7 +11746,7 @@ function acctBusy(){ return anyModal() || FN.on || !!actNow() || (page==="pp" &&
 function acctTry(){ clearTimeout(ACCT.t); if(!ACCT.pend) return; if(!acctGuest()){ ACCT.pend=null; return; } if(acctBusy()){ ACCT.t=setTimeout(acctTry,2000); return; } const w=ACCT.pend; ACCT.pend=null; acctOpen(w); }
 function acctEl(){ let m=$("accModal"); if(m) return m; m=document.createElement("div"); m.className="modal goal-modal acc-modal"; m.id="accModal"; m.hidden=true; m.setAttribute("role","dialog"); m.setAttribute("aria-modal","true"); m.setAttribute("aria-labelledby","accT");
   m.innerHTML='<div class="modal-bg" data-close="accModal"></div><div class="modal-card"><div class="modal-body gl-body acc-body"><span class="pp-badge big">'+PP_FOOT+'</span><h2 id="accT"></h2><p id="accX"></p><div class="acc-chips" id="accChips"></div>'
-    +'<button class="acc-g" type="button" id="accG"><span class="acc-gi" aria-hidden="true">G</span><span></span></button><button class="acc-m" type="button" id="accM"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5.5" width="18" height="13" rx="2"/><path d="M3.5 7l8.5 6 8.5-6"/></svg><span></span></button>'
+    +'<button class="acc-g" type="button" id="accG"><span class="acc-gi" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22"><path fill="#4285F4" d="M22.5 12.3c0-.8-.1-1.5-.2-2.2H12v4.2h5.9a5 5 0 0 1-2.2 3.3v2.7h3.6c2-1.9 3.2-4.7 3.2-8z"/><path fill="#34A853" d="M12 23c3 0 5.5-1 7.3-2.7l-3.6-2.7c-1 .7-2.2 1.1-3.7 1.1-2.9 0-5.3-1.9-6.2-4.5H2.1v2.8A11 11 0 0 0 12 23z"/><path fill="#FBBC05" d="M5.8 14.2a6.6 6.6 0 0 1 0-4.3V7.1H2.1a11 11 0 0 0 0 9.9z"/><path fill="#EA4335" d="M12 5.4c1.6 0 3 .6 4.2 1.6l3.1-3.1A11 11 0 0 0 2.1 7.1l3.7 2.8C6.7 7.3 9.1 5.4 12 5.4z"/></svg></span><span></span></button><button class="acc-m" type="button" id="accM"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5.5" width="18" height="13" rx="2"/><path d="M3.5 7l8.5 6 8.5-6"/></svg><span></span></button>'
     +'<div class="gl-foot"><small id="accFree"></small><button class="linkbtn" type="button" data-close="accModal" id="accLater"></button></div></div></div>';
   document.body.appendChild(m);
   $("accG").onclick=()=>{ closeMod("accModal"); authOpen("signup"); (async()=>{ for(let i=0;i<60 && !sb;i++) await new Promise(r=>setTimeout(r,100)); if(sb && typeof gateOAuth==="function") gateOAuth("google"); })(); };
@@ -11759,7 +11798,7 @@ const wkPrev = () => { const d=pDate(wkKey(new Date())); d.setDate(d.getDate()-7
 function wkDays(mon){ const d=pDate(mon); return Array.from({length:7},(_,i)=>{ const x=new Date(d); x.setDate(d.getDate()+i); return dayStr(x); }); }
 const PL_NOTES={p02:1,p03:2,p04:4};
 function wkData(mon){ const days=wkDays(mon), xd=S.xpDays||{}, ps=S.playSec||{}, played=days.filter(k=>(xd[k]|0)>0||(ps[k]|0)>=60), sec=days.reduce((a,k)=>a+(ps[k]|0),0), g=goalCfg();
-  const t0=pDate(days[0]).getTime(), t1=t0+7*864e5, done=(S.pp&&S.pp.done)||{}, les=PP_IDS.filter(id=>{ const x=done[id]; return x && !x.place && +x.at>=t0 && +x.at<t1; });
+  const t0=pDate(days[0]).getTime(), t1=(e=>(e.setDate(e.getDate()+1),e.getTime()))(pDate(days[6])) /* next Monday 00:00: a week with a DST change lasts 167 or 169 h */, done=(S.pp&&S.pp.done)||{}, les=PP_IDS.filter(id=>{ const x=done[id]; return x && !x.place && +x.at>=t0 && +x.at<t1; });
   const notes=les.reduce((a,id)=>a+(PL_NOTES[id]||0),0), goalOk=days.filter(k=>g.kind==="xp" ? (xd[k]|0)>=g.v : (ps[k]|0)>=g.v*60).length;
   let best=null; if(les.length){ const b=les.slice().sort((a,c)=>((+done[c].stars||0)-(+done[a].stars||0))||PP_IDS.indexOf(c)-PP_IDS.indexOf(a))[0]; best={k:"les", id:b, txt:b==="p08"?t("pp08Song")||ppTitle(b):t("ppLesson")(ppNum(b))+" · "+ppTitle(b), stars:+done[b].stars||0}; }
   else { const bd=days.slice().sort((a,c)=>(ps[c]|0)-(ps[a]|0))[0]; if((ps[bd]|0)>=60) best={k:"day", txt:t("wkBestDay")(pDate(bd).toLocaleDateString(S.settings.lang==="fr"?"fr-FR":"en-GB",{weekday:"long"}), Math.round((ps[bd]|0)/60))}; }
@@ -11978,12 +12017,67 @@ TXT.en.rankErr=TXT.en.hsRankErr="Can't reach the leaderboard right now (offline?
 { const _rl=duRenderLobby; duRenderLobby=function(){ const r=_rl.apply(this,arguments); try{ const g=(t("games")||[]).find(x=>x[2]===DU.game); $("ruGmDesc").textContent=g?g[1]:""; }catch(e){} return r; }; }
 { const _sp=renderSetPrem; renderSetPrem=function(){ const r=_sp.apply(this,arguments), box=$("setPremBox"); if(box && box.classList.contains("off") && !box.querySelector(".ru-prem")){ const d=document.createElement("div"); d.className="ru-prem"; d.innerHTML='<b></b><span></span>'; d.firstChild.textContent=t("ruPremFree"); d.lastChild.textContent=t("ruPremFreeD"); box.prepend(d); } return r; }; }
 /* ==== fin Revue UI ==== */
+/* ==== UI points restants (25/10) ==== */
+Object.assign(TXT.fr,{upDSub:(d,due)=>d+(due?" · "+due+" à revoir":""), upDEx:n=>n>1?"exercices":"exercice", upDMin:"min", upDSecs:n=>n>1?"matières":"matière",
+  upRinvT:"Grimpe dans les ligues", upRinvX:"Chaque semaine, ton XP te classe dans un groupe de 20 joueurs : les meilleurs montent de Bronze à Diamant."});
+Object.assign(TXT.en,{upDSub:(d,due)=>d+(due?" · "+due+" to review":""), upDEx:n=>n>1?"exercises":"exercise", upDMin:"min", upDSecs:n=>n>1?"topics":"topic",
+  upRinvT:"Climb the leagues", upRinvX:"Every week, your XP ranks you in a group of 20 players: the best move up from Bronze to Diamond."});
+// Entraînement du jour : résumé (nombre d'exercices, durée ≈ 30 s par exercice, matières) au-dessus des cartes
+{ const head=document.querySelector("#dailyPanel .pane-head"); if(head){ const d=document.createElement("div"); d.className="up-dsum"; d.id="upDSum"; head.after(d); }
+  const _rd=renderDailyPanel; renderDailyPanel=function(){ const r=_rd.apply(this,arguments); try{
+    const box=$("upDSum"); if(!box) return r; const plan=dailyPlan(), run=game&&game.daily, done=S.daily&&S.daily.date===dayStr();
+    const items=(!run && done && S.daily.items ? S.daily.items : plan.items)||[], n=items.length, cnt={};
+    items.forEach(it=>{ cnt[it.sec]=(cnt[it.sec]||0)+1; });
+    const secs=SECS.filter(k=>cnt[k]), NM={scales:"secScales",chords:"secChords",harmony:"secHarmony",prog:"secProg",ear:"secEar"};
+    box.innerHTML='<span class="up-dk"><b></b><span></span></span><span class="up-dk"><b></b><span></span></span><span class="up-dk"><b></b><span></span></span><ul class="up-dsecs"></ul>';
+    const ks=box.querySelectorAll(".up-dk");
+    ks[0].firstChild.textContent=n; ks[0].lastChild.textContent=t("upDEx")(n);
+    ks[1].firstChild.textContent="≈ "+Math.max(1,Math.round(n/2)); ks[1].lastChild.textContent=t("upDMin");
+    ks[2].firstChild.textContent=secs.length; ks[2].lastChild.textContent=t("upDSecs")(secs.length);
+    const ul=box.querySelector("ul"); secs.forEach(k=>{ const li=document.createElement("li"); li.innerHTML=SEC_ICON(k)+'<span></span><i></i>'; li.querySelector("span").textContent=t(NM[k]); li.querySelector("i").textContent="×"+cnt[k]; ul.appendChild(li); });
+    if(!run && !done){ const dt=new Date().toLocaleDateString(S.settings.lang==="fr"?"fr-FR":"en-GB",{weekday:"long",day:"numeric",month:"long"}); $("dpSub").textContent=t("upDSub")(dt.charAt(0).toUpperCase()+dt.slice(1), dueItems().length); }
+  }catch(e){} return r; }; }
+// Classement de la semaine (accueil) pour un invité : invitation aux ligues + « S'inscrire » (la carte restait vide hors connexion)
+{ const _hr=renderHubRank; renderHubRank=function(){ const ol=$("hsRank"), card=ol&&ol.closest(".hs-card"); if(!card) return _hr.apply(this,arguments);
+    if(!user && !hasSession()){ try{ lgHubOff(); }catch(e){} card.classList.add("up-inv"); ol.innerHTML="";
+      const li=document.createElement("li"); li.className="up-rinv"; li.innerHTML='<span class="up-hexes" aria-hidden="true"></span><b></b><p></p><button class="btn primary" type="button" id="upRankJoin"></button>';
+      LG_COL.forEach(c=>li.firstChild.appendChild(lgHex(c))); li.querySelector("b").textContent=t("upRinvT"); li.querySelector("p").textContent=t("upRinvX");
+      const b=li.querySelector("button"); b.textContent=t("authUp"); b.onclick=()=>authOpen("signup"); ol.appendChild(li); return Promise.resolve(); }
+    if(card.classList.contains("up-inv")){ card.classList.remove("up-inv"); ol.innerHTML=""; hsRankAt=0; }
+    return _hr.apply(this,arguments); }; }
+/* ==== fin UI points restants ==== */
 
 // ---------- Liens des e-mails (?go=daily|pp|progress|hub, boutons des e-mails de la fonction notify) ----------
 // lu une fois au démarrage puis retiré de l'adresse ; suivi seulement quand aucun écran de départ ne s'affiche (premier lancement, connexion, questionnaire, tutoriel)
 const MAIL_GO = (()=>{ try{ const q=new URLSearchParams(location.search), g=q.get("go"); if(!g) return null; q.delete("go"); q.delete("from"); const s=q.toString(); history.replaceState(null,"",location.pathname+(s?"?"+s:"")+location.hash); return ["daily","pp","progress","hub"].includes(g)?g:null; }catch(e){ return null; } })();
 function mailGo(){ if(!MAIL_GO || gateNeeded() || !(S.onb&&S.onb.done) || !S.tourDone) return; try{ ntfDo({k:MAIL_GO}); }catch(e){} }
 
+/* ==== Chasse aux bugs ==== */
+// The app goes to the background (another tab, the iPad home button, a call): a running solo activity waits, like behind
+// the « Leave the game? » window (a timed LEARN round, Contre la montre, the quiz timer, memory, a duel against a bot),
+// and starts again where it was on return. Online games keep going (the others still play).
+Object.assign(TXT.fr,{saveFull:"Mémoire de l'appareil pleine : ta progression n'est plus enregistrée ici. Libère de la place ou crée un compte pour la garder."});
+Object.assign(TXT.en,{saveFull:"Your device storage is full: your progress is no longer saved here. Free some space or create an account to keep it."});
+const BG={a:null};
+document.addEventListener("visibilitychange",()=>{ try{
+  if(document.hidden){ if(BG.a || LV.on || HOLD) return; const pg=lvBase();
+    if((pg==="practice"||pg==="daily") && game && phase==="listening"){ pauseRound(); BG.a={k:"learn"}; return; } // even before the first note: the chrono runs
+    const a=actNow(); if(!a || a.online) return;
+    if(a.k==="learn"||a.k==="daily"){ pauseRound(); BG.a=a; return; }
+    const keep=LV.a; LV.a=a; lvHold(true); LV.a=keep; BG.a=a; return; }
+  const a=BG.a; if(!a) return; BG.a=null;
+  if(a.k==="learn"||a.k==="daily"){ resumeRound(); return; }
+  if(typeof MD!=="undefined" && MD.paused){ if(HOLD && !MD.hold) MD.hold=true; return; } // the keyboard was unplugged meanwhile: its window keeps the game still and releases it
+  if(HOLD && !LV.on){ const keep=LV.a; LV.a=a; lvHold(false); LV.a=keep; }
+}catch(e){} });
+// Two tabs (or the app and a browser window) share localStorage: each tab kept its own S and its next save() erased what
+// the other had just won (XP, records, lessons). A write from another tab is now merged in memory like a cloud pull
+// (mergeState: maxima, unions), never written back here (no ping-pong); this tab's next save() keeps both.
+addEventListener("storage",e=>{ try{ if(e.key!==STORE || !e.newValue || e.storageArea!==localStorage) return;
+  const other=JSON.parse(e.newValue); if(!other || typeof other!=="object" || Array.isArray(other)) return;
+  const {merged,changed}=mergeState(S,other); if(!changed) return; S=merged;
+  try{ renderSettings(); render(); renderDaily(); if(page==="learn") renderLearn(); if(page==="games") renderGames(); ntfBadge(); renderStatus(); }catch(x){}
+}catch(err){} });
 // ---------- Boot ----------
 
 applyStatic(); applySide(); buildKeyboard(); renderSettings(); render(); renderDaily(); openPage("hub");
