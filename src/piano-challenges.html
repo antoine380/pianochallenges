@@ -3489,6 +3489,8 @@ body.imp-drag[data-page="free"] #freePanel::after{content:"";position:absolute;i
 /* thèmes du quiz sur téléphone : les noms sur 2 lignes débordaient de leur tuile de 30 px → une ligne, points de suspension */
 @media (max-width:640px){ #qzSetup .qz-theme b{font-size:.8rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:calc(100% - 4px)} }
 @media (max-height:520px) and (orientation:landscape){ #qzSetup .qz-theme b{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:calc(100% - 4px)} }
+/* Accompagnement en iPad portrait : la carte « Jeu » prend toute la largeur (elle laissait une moitié vide) */
+@media (max-width:900px){ #accPanel .su-side>.su-box{grid-column:1/-1} }
 /* ==== fin Revue UI ==== */
 </style>
 
