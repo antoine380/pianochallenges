@@ -10980,11 +10980,11 @@ function rsRender(){ const el=$("ppResume"); if(!el) return; el.onclick=rsGo;
   else el.style.removeProperty("--tc");
   document.body.classList.toggle("rs-on",!el.hidden); rsFor(); }
 function rsGo(){ const el=$("ppResume"), r=S.resume; if(!el || el.hidden) return; const rk=el.dataset.rk;
-  if(rk==="pp"){ ppResumeGo(); return; } if(rk==="route"){ rtGo(); return; }
+  if(rk==="pp"){ ppResumeGo(); return; } if(rk==="route"){ rtGo(); return; } if(!r || typeof r!=="object") return;
   if(r.kind==="learn"){ const p=r.route&&rtPill(r.route); if(p&&rtIsDone(p)){ rtGo(); return; }
     if(r.su && S.settings.su){ S.settings.su[r.sec]=JSON.parse(JSON.stringify(r.su)); } RT.cur=p&&!rtIsDone(p)?p:null;
     const tab=$("secTabs").querySelector('[data-v="'+r.sec+'"]'); if(tab) tab.click(); if(page!=="practice") return;
-    if(r.fin || Date.now()-(+r.at||0)>864e5){ renderSetup(); return; }
+    if(r.fin || Date.now()-(+r.at||0)>864e5 || !Array.isArray(r.q) || !r.q.length){ renderSetup(); return; }
     game=makeGame(r.q.map(it=>({...it}))); game.label=r.label; game.single=r.q.length===1; game.i=Math.max(0,r.i|0)-1; startRound(); return; }
   if(r.kind==="game"){ if(r.cont) S.settings.gmCont=r.cont; save(); if(page!=="games") openPage("games"); gameOpen(r.id); DU.view="solo"; duRender(); gameOpen(r.id,true); return; }
   if(r.kind==="song"){ openPlayWith("#song="+r.id); return; }
