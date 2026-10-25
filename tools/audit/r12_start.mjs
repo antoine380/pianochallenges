@@ -14,7 +14,11 @@ const ev = (f, a) => page.evaluate(f, a), vis = id => ev(id => { const e = docum
   check('mauvaise note : on dit laquelle et où est le Do', await e(() => /c'est un Ré/.test(document.querySelector('#fnPrompt').textContent) && /2 touches noires/.test(document.querySelector('#fnPrompt small').textContent)));
   await e(() => window.__midi.noteOn(60)); await p.waitForTimeout(300);
   check('un Do : « Tu viens de jouer un Do ! » (puis le niveau, D4)', await e(() => /Tu viens de jouer un Do/.test(document.getElementById('fnPrompt').textContent)));
-  await e(() => window.__midi.noteOn(72)); await p.waitForTimeout(1500);
+  await e(() => window.__midi.noteOn(72)); await p.waitForTimeout(600);
+  // chantier Onboarding (25/10) : 3 questions courtes puis « Ton programme » ; un Do seul passe chaque question puis commence
+  check('un 2e Do : les questions après la première note (objectif)', await e(() => document.querySelector('#gate .oq')?.dataset.q === 'why'));
+  for (let i = 0; i < 4; i++) { await e(() => window.__midi.noteOn(60)); await p.waitForTimeout(600); }
+  await p.waitForTimeout(900);
   const S0 = await e(() => JSON.parse(localStorage.getItem('memo-gammes-v1')));
   check('un 2e Do (niveau « Je débute ») : les Premiers pas s’ouvrent (r21 vérifie la suite), invité, sans tutoriel', await e(() => document.body.dataset.page === 'pp' && !!document.querySelector('#ppPanel .pp-path')) && S0.gate === 'guest' && S0.onb && S0.onb.done && S0.tourDone === 1 && S0.settings.input === 'midi', { gate: S0.gate, input: S0.settings.input });
   await p.reload(); await p.waitForTimeout(1200);
@@ -37,22 +41,22 @@ check('validation : message d’erreur', await ev(() => document.getElementById(
 await ev(() => document.getElementById('gtBack').click()); await wait(page, 100);
 check('« Autres options » : retour au choix', await ev(() => !!document.getElementById('gtEmailGo')));
 await ev(() => document.getElementById('gateGuest').click()); await wait(page, 400);
-check('invité : onboarding question 1', !(await vis('gate')) && await vis('onb') && await ev(() => /1/.test(document.querySelector('.onb-k').textContent)));
-const pick = i => ev(i => document.querySelectorAll('.onb-opt')[i].click(), i);
-await pick(1); await pick(2); await ev(() => document.getElementById('onbNext').click()); await wait(page, 200);
-await pick(0); await wait(page, 500);   // level: beginner (moves on by itself)
-check('question 3 : lire les notes sur une portée', await ev(() => document.querySelectorAll('.onb-opt').length === 3 && /portée/.test(document.querySelector('.onb-h').textContent)));
-await pick(0); await wait(page, 500);   // reads music: yes
-const how = await ev(() => [...document.querySelectorAll('.onb-opt b')].map(b => b.textContent));
-check('question 4 : les façons de jouer', how.length >= 2, how);
-await ev(() => [...document.querySelectorAll(".onb-opt")].pop().click()); await wait(page, 500);   // screen (last)
-await pick(1); await wait(page, 500);   // notes + chords
-check('question 6 : inviter des amis (lien)', await ev(() => /\?ref=p/.test(document.querySelector('.onb-link input').value)));
-await ev(() => document.getElementById('onbNext').click()); await wait(page, 200);
-check('résumé : programme prêt', await ev(() => document.querySelectorAll('.onb-li').length >= 3));
-await ev(() => document.getElementById('onbNext').click()); await wait(page, 800);
+// chantier Onboarding (25/10) : le questionnaire passe par le même moteur que le premier lancement (niveau, objectif, lecture, temps, entrée)
+check('invité : onboarding question 1', !(await vis('gate')) && await vis('onb') && await ev(() => /1 sur/.test(document.querySelector('#onb .oq-k').textContent)));
+const pickV = v => ev(v => document.querySelector(`#onb .oq-opt[data-v="${v}"]`).click(), v);
+await pickV('debut'); await wait(page, 500);   // level: beginner (moves on by itself)
+await pickV('theory'); await wait(page, 500);
+check('question 3 : lire les notes sur une portée', await ev(() => document.querySelectorAll('#onb .oq-opt').length === 3 && /portée/.test(document.querySelector('#onb h2').textContent)));
+await pickV('yes'); await wait(page, 500);   // reads music: yes
+check('question 4 : temps par jour', await ev(() => /temps/.test(document.querySelector('#onb h2').textContent)));
+await pickV('10'); await wait(page, 500);
+const how = await ev(() => [...document.querySelectorAll('#onb .oq-opt b')].map(b => b.textContent));
+check('question 5 : les façons de jouer', how.length >= 2, how);
+await ev(() => [...document.querySelectorAll("#onb .oq-opt")].pop().click()); await wait(page, 500);   // screen (last)
+check('résumé : programme prêt', await ev(() => document.querySelectorAll('#onb .oq-list li').length >= 3));
+await ev(() => document.getElementById('oqGo').click()); await wait(page, 800);
 const S1 = await ev(() => JSON.parse(localStorage.getItem('memo-gammes-v1')));
-check('réglages appliqués (débutant, écran, accords)', S1.onb.level === 'debut' && S1.settings.guideK === true && S1.settings.fing === true && S1.settings.gmCont === 'chords' && S1.eloStart === 600 && S1.settings.staff === true, { onb: S1.onb, input: S1.settings.input });
+check('réglages appliqués (débutant, portée, objectif du jour)', S1.onb.level === 'debut' && S1.settings.guideK === true && S1.settings.fing === true && S1.eloStart === 600 && S1.settings.staff === true && S1.goal && S1.goal.v === 10, { onb: S1.onb, input: S1.settings.input });
 check('tutoriel : bulle sur LEARN', await vis('tour') && await ev(() => document.getElementById('tourH').textContent === 'LEARN'));
 await ev(() => document.getElementById('tourNext').click()); await wait(page, 350);
 check('Suivant : bulle sur GAMES', await ev(() => document.getElementById('tourH').textContent === 'GAMES'));

@@ -64,7 +64,8 @@ check('premier lancement : D2 affiché', await vis(p, '#gate .fn-hwc'));
 await p.click('#gate .fn-hwc[data-v=screen]'); await T(p, 300);
 await p.locator('#fnKb [data-m="60"]').dispatchEvent('pointerdown'); await T(p, 1200);
 check('un Do → D4 (niveau)', await vis(p, '.fn-lv4 [data-v=notes]'));
-await p.click('.fn-lv4 [data-v=notes]'); await T(p, 600);
+await p.click('.fn-lv4 [data-v=notes]'); await T(p, 400);
+await p.click('#fnSkip'); await T(p, 200); await p.click('#oqGo'); await T(p, 600); // chantier Onboarding : questions passées
 check('« Je connais quelques notes » → test de placement (pas les 3 accords)', await p.X('page==="pp" && PP.view==="place" && PL.st==="intro" && !game'), await p.X('page+" "+PP.view'));
 check('placement : « Montre-moi ce que tu sais », 7 petites questions, bouton « C\'est parti »', await vis(p, '#plGo') && /Montre-moi ce que tu sais/.test(await p.evaluate(() => document.getElementById('ppPanel').textContent)) && /7 petites questions/.test(await p.evaluate(() => document.getElementById('ppPanel').textContent)));
 await shot(p, 'd5_intro_1024');

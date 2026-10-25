@@ -50,7 +50,10 @@ const { browser } = await launch({ mode: 'ok' }); // the shared browser (context
   check('premier lancement : « Joue un Do » d’abord, le niveau vient après (lot 2, D3)', await p.evaluate(() => !!document.querySelector('.fn-d3') && !document.querySelector('.fn-lv')));
   await note(p, 60); await W(p, 1000);
   check('après le Do (D4) : « Oui, je n’y connais rien » mène aux Premiers pas, ou un 2e Do', await p.evaluate(() => /je n'y connais rien/.test(document.getElementById('fnGo').textContent) && /Premiers pas/.test(document.querySelector('.fn-d4').textContent)));
-  await note(p, 72); await W(p, 1600);
+  await note(p, 72); await W(p, 600);
+  // chantier Onboarding (25/10) : 3 questions courtes puis « Ton programme » ; un Do seul passe chaque question puis commence
+  for (let i = 0; i < 4; i++) { await note(p, 60); await W(p, 600); }
+  await W(p, 1000);
   const s0 = await S(p);
   check('CA-03 débutant : présentation des Premiers pas (D6), aucune partie d’accords', await view(p) === 'path' && await p.evaluate(() => !document.body.classList.contains('playing') && !document.getElementById('endModal')?.offsetParent), await view(p));
   check('marques gardées : invité, tutoriel fait, introductions vues, parcours commencé', s0.gate === 'guest' && s0.tourDone === 1 && s0.introSeen && s0.introSeen.chords && s0.pp && s0.pp.start > 0 && s0.onb.level === 'debut');
@@ -116,7 +119,8 @@ const { browser } = await launch({ mode: 'ok' }); // the shared browser (context
 
 // ---------- other levels: unchanged (chords right away)
 { const p = await ctx(browser, { w: 1280, h: 800 }); await p.goto(URL); await W(p, 1500);
-  await note(p, 60); await W(p, 1000); await p.evaluate(() => document.querySelector('.fn-lv4 [data-v=notes]').click()); await W(p, 1600);
+  await note(p, 60); await W(p, 1000); await p.evaluate(() => document.querySelector('.fn-lv4 [data-v=notes]').click()); await W(p, 400);
+  await p.evaluate(() => { document.getElementById('fnSkip').click(); document.getElementById('oqGo').click(); }); await W(p, 1600); // questions passées (chantier Onboarding)
   check('CA-03 niveau « Je connais quelques notes » : test de placement D5 (lot 4), pas de partie', await p.evaluate(() => document.body.dataset.page === 'pp' && !!document.getElementById('plGo')));
   await p.context().close(); }
 

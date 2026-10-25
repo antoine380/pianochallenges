@@ -52,9 +52,10 @@ const { browser } = await launch({ mode: 'ok' });
   check('CA-02 clavier MIDI présent : D2 sauté, D3 affiche le nom du port', await p.evaluate(() => !document.querySelector('.fn-hwc') && !!document.querySelector('.fn-d3') && /Fake Keyboard 61/.test(document.querySelector('.fn-d3s').textContent)));
   await note(p, 60); await W(p, 1000);
   check('CA-02 une note 60 mène à D4, rappel « joue un 2e Do »', await p.evaluate(() => !!document.querySelector('.fn-d4') && /2e Do/.test(document.querySelector('.fn-d4').textContent)));
-  await click(p, '.fn-lv4 [data-v=adv]'); await W(p, 800);
+  await click(p, '.fn-lv4 [data-v=adv]'); await W(p, 400);
+  await click(p, '#fnSkip'); await W(p, 200); await click(p, '#oqGo'); await W(p, 800); // chantier Onboarding : questions passées, « Je joue déjà » → Ma route (LEARN)
   const s = await S(p);
-  check('CA-04 « Je joue déjà » : accueil, aucune carte des Premiers pas (la carte « Reprendre » générale de Ma route peut s’afficher)', await p.evaluate(() => document.body.dataset.page === 'hub' && (!document.getElementById('ppResume') || document.getElementById('ppResume').hidden || (document.getElementById('ppResume').dataset.rk !== 'pp' && document.getElementById('ppResume').classList.contains('rs-gen'))) && !document.querySelector('#hubSide .pp-map, #hubSide #ppMap')) && s.onb.level === 'adv');
+  check('CA-04 « Je joue déjà » : Ma route (LEARN), aucune carte des Premiers pas (la carte « Reprendre » générale de Ma route peut s’afficher)', await p.evaluate(() => document.body.dataset.page === 'learn' && (!document.getElementById('ppResume') || document.getElementById('ppResume').hidden || (document.getElementById('ppResume').dataset.rk !== 'pp' && document.getElementById('ppResume').classList.contains('rs-gen'))) && !document.querySelector('#hubSide .pp-map, #hubSide #ppMap')) && s.onb.level === 'adv');
   await click(p, '#modeNav [data-mode=learn]'); await W(p, 400);
   check('CA-04 LEARN : Premiers pas repliés en une ligne', await p.evaluate(() => document.getElementById('ppMap').classList.contains('fold')));
   await p.context().close(); }

@@ -12187,7 +12187,7 @@ onbRender=function(){ const o=$("onb"); if(!o) return; if(!OQ.on || OQ.ctx!=="on
 { const _rf=rsFor; rsFor=function(){ const r=_rf.apply(this,arguments); try{ const w=S.onb&&Array.isArray(S.onb.why)?S.onb.why[0]:null, row=$("rsFor")&&$("rsFor").querySelector(".rs-row");
   const first={songs:"song", fun:"duel"}[w]; if(row && first){ const c=row.querySelector('[data-f="'+first+'"]'); if(c && row.firstChild!==c) row.insertBefore(c,row.firstChild); } }catch(e){} return r; }; }
 
-Object.assign(TXT.fr,{ppLvlS:["14 leçons de 2 min","un test d'1 min","ma route, sans aide"], ppLvlMidi:n=>"Clavier reconnu · joue un "+n+" pour « Oui, je n'y connais rien ».",
+Object.assign(TXT.fr,{ppLvlS:["14 leçons de 2 min","un test d'1 min","ma route, sans aide"], ppLvlMidi:n=>"Clavier reconnu · un 2e "+n+" = « Oui, je n'y connais rien » : les Premiers pas.",
   oqSet:"On a réglé :", oqSumK:"Ton programme", oqSkipQ:"Passer cette question", oqSkipAll:"Passer", oqChange:"Tu peux tout changer dans Réglages.",
   oqMidiQ:n=>"Joue un "+n+" pour continuer", oqMidiGo:n=>"Joue un "+n+" pour commencer",
   oqQ:{level:["Tu débutes complètement ?","On règle les aides et ton point de départ."], why:["Qu'est-ce qui te donne envie de jouer ?","On met en avant ce qui te plaît."], staff:["Sais-tu lire les notes sur une portée ?","On affiche la portée, ou pas."], time:["Combien de temps par jour ?","Ce sera ton objectif du jour, l'anneau autour de ton avatar."], how:["Comment vas-tu jouer ?","Tu pourras changer à tout moment, en bas du menu."]},
@@ -12198,7 +12198,7 @@ Object.assign(TXT.fr,{ppLvlS:["14 leçons de 2 min","un test d'1 min","ma route,
   oqFxTime:n=>"objectif du jour de "+n+" min, l'anneau autour de ton avatar.",
   oqGoT:{pp:"Commencer la leçon 1", place:"Faire le test (1 min)", free:"Ouvrir mes morceaux", games:"Ouvrir les jeux", learn:"Voir ma route", hub:"C'est parti"},
   oqMidiOk:n=>n+" est prêt.", oqMicOk:"Ton micro est prêt.", oqMicPrep:"Préparer le micro"});
-Object.assign(TXT.en,{ppLvlS:["14 two-minute lessons","a 1-min test","my path, no help"], ppLvlMidi:n=>"Keyboard connected · play "+(n==="C"?"a C":n)+" for “Yes, I know nothing”.",
+Object.assign(TXT.en,{ppLvlS:["14 two-minute lessons","a 1-min test","my path, no help"], ppLvlMidi:n=>"Keyboard connected · a second "+n+" = “Yes, I know nothing”: your First steps.",
   oqSet:"We set:", oqSumK:"Your plan", oqSkipQ:"Skip this question", oqSkipAll:"Skip", oqChange:"You can change everything in Settings.",
   oqMidiQ:n=>"Play "+(n==="C"?"a C":n)+" to go on", oqMidiGo:n=>"Play "+(n==="C"?"a C":n)+" to start",
   oqQ:{level:["Are you a complete beginner?","We set the helps and your starting point."], why:["What makes you want to play?","We put forward what you like."], staff:["Can you read notes on a staff?","We show the staff, or not."], time:["How much time a day?","It becomes your daily goal, the ring around your avatar."], how:["How will you play?","You can change it any time, at the bottom of the menu."]},
