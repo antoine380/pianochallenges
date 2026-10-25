@@ -3480,6 +3480,12 @@ body.imp-drag[data-page="free"] #freePanel::after{content:"";position:absolute;i
 :is(.pc-chip,.hs-more,.gamebar .gend,.imp-tip-x,#pfPrev,#pfNext,#qzBots button,#suHow,.how-btn)::after{content:"";position:absolute;inset:-7px -3px;border-radius:inherit}
 .hs-dots button::after{content:"";position:absolute;inset:-14px -3px}
 .hs-dots{gap:8px}
+/* carte « Invite tes amis » de l'accueil étirée (iPad portrait) : titre et sous-titre restent ensemble, au centre */
+.hs-inv{align-content:center;justify-items:start;text-align:left;row-gap:2px}
+/* salon des jeux en iPad portrait : la liste des bots remplit la hauteur (la moitié basse restait vide) */
+@media (max-width:900px) and (min-width:641px) and (min-height:700px){ .du-lobby>.du-panel{flex:1 1 auto} #duPBody{flex:1 1 auto;display:flex;flex-direction:column;gap:12px;min-height:0} #duPBody>.du-bots{grid-auto-rows:minmax(110px,auto)} #duPBody .du-bot{flex-direction:column;justify-content:center;text-align:center;gap:6px} #duPBody .du-bot .du-av{width:56px;height:56px} #duPBody .du-bot small{display:block} }
+/* fenêtres : fond presque opaque (le verre à 62-72 % laissait les tuiles colorées derrière le texte : contraste trop faible) */
+.modal-card{background:color-mix(in srgb,var(--surface) 93%,transparent)}
 /* ==== fin Revue UI ==== */
 </style>
 
