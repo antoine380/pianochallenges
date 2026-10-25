@@ -3477,6 +3477,57 @@ body.imp-drag[data-page="free"] #freePanel::after{content:"";position:absolute;i
 @media (max-width:900px),(max-height:520px){ .gt-card:has(.gt-x) .gt-form>.gt-top{padding-right:50px} }
 @media (max-width:640px),(max-height:520px){ .gt-x{top:12px;right:12px;width:36px;height:36px} }
 /* ==== fin Finitions ==== */
+/* ==== Revue UI (25/10) ==== */
+/* écran de connexion : le grand titre se règle sur la largeur du panneau (il débordait sur la carte du formulaire en iPad paysage) */
+.gt-art{container-type:inline-size}
+.gt-big{padding:0 18px 0 48px}
+.gt-big b{font-size:clamp(2rem,10cqi,4.6rem);text-wrap:balance}
+@media (max-width:900px) and (min-height:700px) and (min-width:641px){ .gt-big{padding:0 18px} .gt-big b{font-size:clamp(1.8rem,6.2cqi,3rem)} .gt-o.o1,.gt-o.o2{display:none} }
+/* « Continuer sans compte » : même bouton en pointillés aux deux étapes (c'était un petit lien de 29 px à la première) */
+.gt-choose .gt-noacct{display:flex;align-items:center;justify-content:center;width:100%;min-height:44px;border:2px dashed var(--line);border-radius:999px;color:var(--ink);font-size:.9rem;padding:10px 16px}
+/* certificat des Premiers pas : « Et maintenant ? » en 2 × 2 (en 3 colonnes de 150 px les objets 3D couvraient les titres) */
+@media (min-width:761px) and (min-height:521px){ .pp-ctiles{grid-template-columns:repeat(2,minmax(0,1fr));max-height:min(440px,62vh)} .pp-cnext{justify-content:center} }
+@media (min-width:761px) and (max-width:900px) and (orientation:portrait){ .pp-cbody{grid-template-columns:1fr;align-content:start;gap:var(--sp-5,24px)} .pp-cleft{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:end;gap:12px 18px} .pp-cc{aspect-ratio:auto;max-height:none;min-height:240px;grid-row:span 2} .pp-cbtn{flex-direction:column} .pp-ctiles{max-height:none;grid-auto-rows:220px;row-gap:26px} }
+/* fenêtre MIDI : la liste « Automatique (3 octaves) » était coupée par le bouton voisin ; le bouton passe dessous quand la place manque */
+.midi-body .range-row{flex-wrap:wrap} .midi-body .range-row select{flex:1 1 210px;min-width:0;min-height:40px} .midi-body .range-row .btn{flex:1 1 auto;min-height:40px}
+/* commandes segmentées à 4 choix dans une colonne étroite : 2 × 2 au lieu de libellés écrasés sur 2 ou 3 lignes (Les Douze au salon, Étiquettes) */
+.du-cont[data-k=douze],#lblField .seg{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));border-radius:18px;gap:2px}
+.du-cont[data-k=douze] button,#lblField .seg button{white-space:nowrap;min-height:36px}
+.rn-acts{display:flex;gap:8px;margin-left:auto}
+/* « Invite tes amis » : le cadeau se pousse à gauche de la croix (elle le recouvrait) */
+.inv-top .obj{right:58px} .inv-top h2,.inv-top p{max-width:calc(100% - 150px)}
+@media (max-width:640px){ .inv-top .obj{right:54px;top:12px} .inv-top h2,.inv-top p{max-width:calc(100% - 120px)} }
+#mdGoScreen{display:inline-flex;align-items:center;justify-content:center;gap:8px} #mdGoScreen svg{width:20px;height:20px;flex:none;fill:none;stroke:currentColor;stroke-width:2}
+/* états vides : une icône, une phrase, une action */
+.ntf-eart svg{width:46px;height:46px;fill:none;stroke:var(--brand);stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;padding:12px;box-sizing:content-box;border-radius:50%;background:var(--surface-2);margin-bottom:var(--sp-2,8px)}
+.ntf-empty{gap:var(--sp-2,8px)} .ntf-empty #ntfEmptyGo{margin-top:var(--sp-3,12px)}
+.du-hist li.du-hempty{flex-direction:column;align-items:flex-start;gap:var(--sp-3,12px)} .du-hempty p b{display:block;color:var(--ink);font-weight:800;margin-bottom:4px} .du-hempty .btn{min-height:40px}
+.ru-ach-help{margin:0;padding:0 16px 6px;font-size:.82rem;color:rgba(255,255,255,.75);flex:none}
+.ru-free-tip{display:none;margin:0;color:var(--muted);font-weight:700;font-size:.9rem} body.pc-kb[data-page="free"] .ru-free-tip{display:block}
+.ru-gm-desc{display:none;color:var(--muted);font-size:.86rem;font-weight:600;flex:1 1 240px;min-width:0} body.du-lob .ru-gm-desc{display:block}
+.set-prem .ru-prem{flex:1 1 100%;display:flex;flex-direction:column;gap:4px;padding:var(--card-pad,16px);border-radius:var(--r-lg,18px);background:var(--surface-2)} .ru-prem b{font-family:var(--f-display);font-size:1.1rem} .ru-prem span{color:var(--muted);font-weight:600}
+/* piano libre : le clavier prend la place libre (la moitié de l'écran restait vide sur iPad) */
+@media (min-height:700px){ body.pc-kb[data-page="free"] .kbd{height:clamp(150px,calc(100dvh - 380px),480px)!important} }
+/* cibles tactiles : les petites commandes (pastilles de PLAY 28 px, flèches du calendrier, points des actualités, liens « Tout voir »,
+   « Terminer la partie », croix de la bulle d'import, chiffres du quiz) gagnent une zone de toucher invisible, sans changer la mise en page */
+:is(.pc-chip,.hs-more,.gamebar .gend,.imp-tip-x,#pfPrev,#pfNext,.hs-dots button,#qzBots button,#suHow,.how-btn){position:relative}
+:is(.pc-chip,.hs-more,.gamebar .gend,.imp-tip-x,#pfPrev,#pfNext,#qzBots button,#suHow,.how-btn)::after{content:"";position:absolute;inset:-7px -3px;border-radius:inherit}
+.hs-dots button::after{content:"";position:absolute;inset:-14px -3px}
+.hs-dots{gap:8px}
+/* carte « Invite tes amis » de l'accueil étirée (iPad portrait) : titre et sous-titre restent ensemble, au centre */
+.hs-inv{align-content:center;justify-items:start;text-align:left;row-gap:2px}
+/* salon des jeux en iPad portrait : la liste des bots remplit la hauteur (la moitié basse restait vide) */
+@media (max-width:900px) and (min-width:641px) and (min-height:700px){ .du-lobby>.du-panel{flex:1 1 auto} #duPBody{flex:1 1 auto;display:flex;flex-direction:column;gap:12px;min-height:0} #duPBody>.du-bots{grid-auto-rows:minmax(110px,auto)} #duPBody .du-bot{flex-direction:column;justify-content:center;text-align:center;gap:6px} #duPBody .du-bot .du-av{width:56px;height:56px} #duPBody .du-bot small{display:block} }
+/* fenêtres : fond presque opaque (le verre à 62-72 % laissait les tuiles colorées derrière le texte : contraste trop faible) */
+.modal-card{background:color-mix(in srgb,var(--surface) 93%,transparent)}
+/* thèmes du quiz sur téléphone : les noms sur 2 lignes débordaient de leur tuile de 30 px → une ligne, points de suspension */
+@media (max-width:640px){ #qzSetup .qz-theme b{font-size:.8rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:calc(100% - 4px)} }
+@media (max-height:520px) and (orientation:landscape){ #qzSetup .qz-theme b{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:calc(100% - 4px)} }
+/* Accompagnement en iPad portrait : la carte « Jeu » prend toute la largeur (elle laissait une moitié vide) */
+@media (max-width:900px){ #accPanel .su-side>.su-box{grid-column:1/-1} }
+/* podium du quiz en téléphone paysage : les boutons « Rejouer » passaient sous le bord de l'écran */
+@media (max-height:520px) and (orientation:landscape){ .qz-end{gap:6px} .qz-endt{font-size:1.25rem} .qz-pod,.qz-pod.r1{padding:6px 12px;gap:0;flex-direction:row;gap:10px;width:auto} .qz-rk{width:28px;height:28px;font-size:.95rem} .qz-sc{font-size:1.1rem} .qz-pod small{display:none} }
+/* ==== fin Revue UI ==== */
 </style>
 
 <script>if(window.Capacitor&&window.webkit&&window.webkit.messageHandlers&&window.webkit.messageHandlers.bridge)document.documentElement.classList.add("native");</script>
@@ -6506,7 +6557,7 @@ document.addEventListener("keydown",e=>{ if(RN.on && GM==="runner" && RN.state!=
 function rnReset(){ Object.assign(RN,{obs:[],held:[],dist:0,y:0,vy:0,jump:null,cleared:0,spawnIn:1.2,newBest:false,speed:0,bonus:0,flash:null,hintFor:null,blink:0}); clearKeys(); RN.pool=gmItems(); rnScore(); }
 // show the keys of the chord to play (the next note), in the "reveal" colour, while the hint is on
 function rnHint(o){ clearKeys(); if(!o || S.settings.rnHint===false) return; o.pcs.forEach(pc=>{ for(let m=LOW;m<=HIGH;m++){ if(m%12===pc && keyEls[m]){ keyEls[m].classList.add("k-rev"); break; } } }); }
-function rnScore(){ const sc=RN.cleared*10+(RN.bonus||0)+(DU.mode?0:Math.floor(RN.dist/40)); RN.score=sc; if(DU.mode && RN.state==="run") duMe(sc,false); $("rnScore").textContent=String(sc).padStart(5,"0"); $("rnBest").textContent=t("rnBestL")+" "+String(S.runnerBest||0).padStart(5,"0"); }
+function rnScore(){ const sc=RN.cleared*10+(RN.bonus||0)+(DU.mode?0:Math.floor(RN.dist/40)); RN.score=sc; if(DU.mode && RN.state==="run") duMe(sc,false); $("rnScore").textContent=String(sc).padStart(5,"0"); $("rnBest").textContent=t("rnBestL")+" "+(S.runnerBest?String(S.runnerBest).padStart(5,"0"):"—"); }
 function runnerNote(m){
   if(!RN.on) return;
   if(duNote(m)) return;
@@ -6687,7 +6738,7 @@ function gmBoard(){
 }
 function gmScore(){
   const sc = GM==="speed" ? SP.count : GM==="memory" ? MM.round : 0, best=((S.gameBest||{})[GM])||0;
-  $("rnScore").textContent=String(sc).padStart(3,"0"); $("rnBest").textContent=t("rnBestL")+" "+String(best).padStart(3,"0");
+  $("rnScore").textContent=String(sc).padStart(3,"0"); $("rnBest").textContent=t("rnBestL")+" "+(best?String(best).padStart(3,"0"):"—");
 }
 function rnHintPcs(pcs, force){ clearKeys(); if(!force && S.settings.rnHint===false) return; pcs.forEach(pc=>{ for(let m=LOW;m<=HIGH;m++){ if(m%12===pc && keyEls[m]){ keyEls[m].classList.add("k-rev"); break; } } }); }
 $("gmBoard").addEventListener("pointerdown",()=>{ if(GM==="speed" && SP.state!=="run") spGo(); else if(GM==="memory" && (MM.state==="ready"||MM.state==="over")) mmGo(); });
@@ -6749,7 +6800,7 @@ function duRenderLobby(){ duArt();
   $("duRateK").textContent=t("duYourElo")(duGameName()); $("duRec").textContent=(e.n ? t("duRecord")(e.w,e.d,e.l) : t("duNew"))+(isPremium()?"":" · "+t("duFreeLeft")(duFreeLeft()));
   document.querySelectorAll("#duCont button").forEach(b=>b.setAttribute("aria-pressed",b.dataset.v===DU.cont)); $("duCont").hidden = DU.view!=="lobby";
   const hl=$("duHist"); hl.innerHTML=""; const H=(e.h||[]).slice(-6).reverse();
-  if(!H.length){ const li=document.createElement("li"); li.innerHTML="<p></p>"; li.firstChild.textContent=t("duHistNone"); hl.appendChild(li); }
+  if(!H.length){ const li=document.createElement("li"); li.className="du-hempty"; li.innerHTML="<p><b></b><span></span></p><button type='button' class='btn sm'></button>"; li.querySelector("b").textContent=t("duHistNone"); li.querySelector("span").textContent=t("ruHistX"); const bb=li.querySelector("button"); bb.textContent=t("ruHistGo"); bb.onclick=()=>{ const m=document.querySelector('#duModes [data-m=bots]'); if(m) m.click(); }; hl.appendChild(li); }
   H.forEach(x=>{ const li=document.createElement("li"); li.innerHTML='<span class="r"></span><span class="du-av"></span><b></b><i></i>'; const r=li.querySelector(".r"); r.className="r "+(x.res===1?"w":x.res===0?"l":"d"); r.textContent=x.res===1?t("duW1"):x.res===0?t("duL1"):t("duD1");
     li.querySelector(".du-av").innerHTML=duAv(x.av); nmPut(li.querySelector("b"),x.nm," ("+x.o+")"); const i=li.querySelector("i"); if(x.dd!=null){ i.textContent=(x.dd>=0?"+":"")+x.dd; i.className=x.dd>=0?"up":"down"; } hl.appendChild(li); });
   const sub = DU.view!=="lobby"; $("duModes").hidden=sub; $("duPanel").hidden=!sub;
@@ -7142,7 +7193,8 @@ function renderFiche(){
   const rows=[]; t("games").forEach(([title,,id])=>{ if(id==="douze") rows.push(...dzRecRows(title)); else if(id) rows.push([title,fmtN((S.gameBest||{})[id]||(id==="runner"?S.runnerBest:0)||0)]); });
   Object.entries(S.elo||{}).filter(([,e])=>e&&e.n).forEach(([k,e])=>{ const [g,c]=k.split("-"); if(DU_GAMES.includes(g)) rows.push([t("pfEloL")(duGameName(g),duContName(g,c)), "ELO "+fmtN(e.r)+(eloProv(e)?"?":""), t("duRecord")(fmtN(e.w),fmtN(e.d),fmtN(e.l))]); });
   t("playGames").forEach(([title,,id])=>rows.push([title,fmtN(cg[id]|0)])); pcRecRows(cb).forEach(r=>rows.push(r));
-  rows.forEach(([a,b,c])=>{ const li2=document.createElement("li"); li2.innerHTML="<span></span><b></b>"+(c?"<small></small>":""); li2.firstChild.textContent=a; li2.children[1].textContent=b; if(c) li2.children[2].textContent=c; ru.appendChild(li2); });
+  if(rows.every(r=>r[1]==="0"||r[1]==="—")) $("pfRecsSub").textContent=t("ruRecNone"); // empty state: no record yet (Revue UI)
+  rows.forEach(([a,b,c])=>{ const li2=document.createElement("li"); li2.innerHTML="<span></span><b></b>"+(c?"<small></small>":""); li2.firstChild.textContent=a; li2.children[1].textContent=b==="0"?"—":b; if(c) li2.children[2].textContent=c; ru.appendChild(li2); });
   pfDotsInit();
 }
 // phone: the 4 cards are a swipeable row, with a fade on the edge and one dot per card
@@ -7753,7 +7805,7 @@ const TILE_COL={runner:"#1f7a52",speed:"#b4461a",memory:"#6a3fd1",douze:"#2c56d6
   p_runner:"#0e7490",p_pulse:"#b02a6b",p_blaster:"#2c56d6",p_climber:"#1f7a52",p_ear:"#8a3fd1",p_staff:"#b4461a"};
 function renderGames(){ const box=$("gameCards"), pbox=$("playCards"); box.innerHTML=""; pbox.innerHTML="";
   t("games").forEach(([title,desc,id],i)=>{ const best=id?((S.gameBest||{})[id]||(id==="runner"?S.runnerBest:0)||0):null;
-    box.appendChild(tile({color:TILE_COL[id||"soon"],obj:id||"soon",kick:t("secGames"),title,desc,rec:id?t("rnBestL")+" "+(id==="douze"?dzBestTxt():fmtN(best))+(DU_GAMES.includes(id)?(e=>" · ELO "+fmtN(e.r)+(eloProv(e)?"?":""))(eloGet(id+"-"+(id==="douze"?dzCont():S.settings.duCont==="notes"?"notes":"chords"))):""):null,soon:!id,onOpen:id?()=>gameOpen(id):null})); });
+    box.appendChild(tile({color:TILE_COL[id||"soon"],obj:id||"soon",kick:t("secGames"),title,desc,rec:id?t("rnBestL")+"\u00a0"+(id==="douze"?dzBestTxt():best?fmtN(best):"—")+(DU_GAMES.includes(id)?(e=>" · ELO\u00a0"+fmtN(e.r)+(eloProv(e)?"?":""))(eloGet(id+"-"+(id==="douze"?dzCont():S.settings.duCont==="notes"?"notes":"chords"))):""):null,soon:!id,onOpen:id?()=>gameOpen(id):null})); });
   const h=$("playHead"); h.firstChild.textContent=t("playGamesHead"); h.lastChild.textContent=t("playGamesSub");
   t("playGames").forEach(([title,desc,id],i)=>pbox.appendChild(tile({color:TILE_COL["p_"+id]||MODE_COL.play,obj:id,kick:"Play",title,desc,onOpen:()=>openPlayWith("#game="+id)}))); }
 function renderLearn(){ const box=$("learnTiles"); box.innerHTML="";
@@ -7878,6 +7930,7 @@ function mergeState(local, cloud){
   const maxMap=(a,b)=>{ const o={...(isObj(a)?a:{})}; Object.entries(isObj(b)?b:{}).forEach(([k,v])=>{ if(Number.isFinite(+v)) o[k]=Math.max(num(o[k]),num(v)); }); return o; };
   m.xp=Math.max(num(local.xp),num(c.xp));
   m.xpDays=maxMap(local.xpDays,c.xpDays); m.xpPushed=maxMap(local.xpPushed,c.xpPushed);
+  { const since=addDays(-7); Object.keys(m.xpPushed).forEach(d=>{ if(d<since) delete m.xpPushed[d]; }); } // same window as cloudPushRaw, which prunes older days: otherwise the cloud brought them back on every pull (changed forever)
   m.mastery=maxMap(local.mastery,c.mastery);
   m.stats=maxMap(local.stats,c.stats);
   m.secStats={...(isObj(local.secStats)?local.secStats:{})}; Object.entries(isObj(c.secStats)?c.secStats:{}).forEach(([sec,v])=>{ m.secStats[sec]=maxMap(m.secStats[sec],v); });
@@ -7901,6 +7954,13 @@ function mergeState(local, cloud){
   m.settings={...(isObj(local.settings)?local.settings:{})}; // this device's settings win
   return {merged:m, changed:JSON.stringify(m)!==JSON.stringify(local)};
 }
+// Revue UI 25/10 (synchro) : « changé » = une vraie différence de contenu, sans tenir compte de l'ordre des clés, des valeurs undefined
+// ni des objets / tableaux vides ajoutés par les fusions (pp.fail, route.st, lbl.gone…). Sinon un aller-retour avec le serveur
+// signalait encore des clés modifiées et la page se rechargeait.
+function syncCanon(x){ if(Array.isArray(x)) return x.map(v=>v===undefined?null:syncCanon(v));
+  if(x&&typeof x==="object"){ const o={}; Object.keys(x).sort().forEach(k=>{ const v=syncCanon(x[k]); if(v===undefined) return; if(v&&typeof v==="object"&&!Object.keys(v).length) return; o[k]=v; }); return o; }
+  return typeof x==="function"?undefined:x; }
+const syncSame=(a,b)=>JSON.stringify(syncCanon(a))===JSON.stringify(syncCanon(b));
 let lastPull=0;
 async function cloudPull(){
   if(!sb||!user) return;
@@ -7911,7 +7971,7 @@ async function cloudPull(){
   if(cloud){
     const {merged,changed}=mergeState(S,cloud);
     if(changed){
-      S=merged; let stored=false;
+      const local0=S; S=merged; let stored=false;
       try{ localStorage.setItem(STORE, JSON.stringify(S)); stored=true; }catch(e){}
       try{ await cloudPushNow(); }catch(e){}
       // reload only when the merged state could be written (#36) and no exercise is running; otherwise apply in memory
@@ -7919,7 +7979,7 @@ async function cloudPull(){
       let busy=false; try{ busy = !!actNow() || (lvBase()==="acc" && ACC.view!=="setup"); }catch(e){}
       // at most one reload every 5 min per tab: a field that differs on every pull (e.g. a key kept only on this device) must never loop
       let canReload=false; try{ const last=+sessionStorage.getItem("pc-pull-reload")||0; if(Date.now()-last>5*60e3){ sessionStorage.setItem("pc-pull-reload",String(Date.now())); canReload=true; } }catch(e){}
-      if(!canReload){ try{ const ks=Object.keys(merged).filter(k=>JSON.stringify(merged[k])!==JSON.stringify(cloud[k])); console.info("[sync] fusion appliquée sans rechargement ; clés différentes du serveur :", ks.slice(0,12)); }catch(e){} }
+      if(!canReload){ try{ const ks=Object.keys(merged).filter(k=>!syncSame(merged[k],local0[k])); console.info("[sync] fusion appliquée sans rechargement ; clés différentes du serveur :", ks.slice(0,12)); }catch(e){} }
       if(canReload && stored && phase==="idle" && !game && !busy && !startUI()){ location.reload(); return; }
       renderSettings(); render(); renderDaily(); if(page==="account") renderAccount(); try{ ntfBadge(); }catch(e){}
       return;
@@ -9741,7 +9801,7 @@ addEventListener("resize",()=>{ if(page==="acc" && ACC.view==="play" && ACC.run)
 // (fetch keepalive vers la fonction SQL track_events), sans le SDK Supabase. Hors ligne, la file attend. Une table ou une
 // fonction absente (migration pas encore lancée) coupe l'envoi sans erreur. En développement (localhost), rien ne part sur
 // le réseau, sauf si localStorage « pc-trk-test » = "1" (tests). Interrupteur : S.settings.analytics (absent = activé).
-const APP_BUILD="2026-10-25T10:34Z"; // remplacé par tools/build.py par la date de construction (version.txt)
+const APP_BUILD="2026-10-25T13:10Z"; // remplacé par tools/build.py par la date de construction (version.txt)
 const TRK={q:[], t:0, off:false, anon:null, sent:0, errs:[], errT:0, errSeen:new Set(), errOn:null, ports:new Set(), first:false};
 const RC={flags:{}, daily:{}, at:0};
 const TRK_NAMES=new Set(["song_import","app_open","first_note","input_mode","midi_connected","pp_lesson_done","learn_end","game_end","quiz_end","duel_end","goal_reached","badge","signup","login","play","feedback","acc_end","song_open","route_step","route_stage"]);
@@ -11885,6 +11945,39 @@ window.addEventListener("keydown",e=>{ if(e.key!=="Escape" || !GATE.closable || 
 Object.assign(TXT.fr,{qzZoneSmall:n=>"Ton clavier est trop petit pour "+n+" zones.", qzZoneFewer:n=>"Passer à "+n+" joueurs", goalKickL:"Bravo pour cette leçon"});
 Object.assign(TXT.en,{qzZoneSmall:n=>"Your keyboard is too small for "+n+" zones.", qzZoneFewer:n=>"Switch to "+n+" players", goalKickL:"Well done on this lesson"});
 /* ==== fin Finitions ==== */
+/* ==== Revue UI (25/10) ==== */
+// synchro : la fusion complète (avec tous ses enrobages) dit « changé » seulement pour une vraie différence de contenu (syncSame)
+// Les conflits « l'appareil local gagne » ne convergent pas entre deux appareils (chacun garde sa version, le serveur oscille) :
+// notifications créées des deux côtés avec la même clé (entraînement du jour, badges…) et dates « vu » (bulles, étiquettes) → la plus ancienne gagne, des deux côtés.
+{ const isO=x=>x&&typeof x==="object"&&!Array.isArray(x), num=x=>Number.isFinite(+x)?+x:0;
+  const minMap=(a,b)=>{ const o={}; [a,b].forEach(m=>{ if(isO(m)) Object.entries(m).forEach(([k,v])=>{ o[k]=(k in o)?(Number.isFinite(+v)&&Number.isFinite(+o[k])?Math.min(+o[k],+v):o[k]||v):v; }); }); return Object.fromEntries(Object.keys(o).sort().map(k=>[k,o[k]])); };
+  const _ms=mergeState; mergeState=function(local, cloud){ const r=_ms.apply(this,arguments), M=r.merged, c=isO(cloud)?cloud:{};
+    if(isO(M.notifs) && isO(c.notifs) && Array.isArray(c.notifs.list)){ const L=isO(local.notifs)&&Array.isArray(local.notifs.list)?local.notifs.list:[], by=new Map();
+      [...L,...c.notifs.list].forEach(n=>{ if(!isO(n)||!n.id) return; const o=by.get(n.id); if(!o){ by.set(n.id,{...n}); return; } const w=num(n.t)<num(o.t)?{...n}:o; if(o.read||n.read) w.read=true; else if("read" in o||"read" in n) w.read=false; by.set(n.id,w); });
+      M.notifs.list=[...by.values()].sort((a,b)=>num(b.t)-num(a.t)||String(a.id).localeCompare(String(b.id))).slice(0,60);
+      M.notifs.keys=minMap(isO(local.notifs)&&local.notifs.keys, c.notifs.keys); }
+    if(isO(M.hints) && isO(c.hints)) M.hints.seen=minMap(isO(local.hints)&&local.hints.seen, c.hints.seen);
+    if(isO(M.lbl) && isO(c.lbl)){ M.lbl.told=minMap(isO(local.lbl)&&local.lbl.told, c.lbl.told); M.lbl.gone=minMap(isO(local.lbl)&&local.lbl.gone, c.lbl.gone); }
+    r.changed=!syncSame(M,local); return r; }; }
+// en-tête des jeux : « Salon » et « Quitter » restent ensemble quand la ligne passe à la ligne (Saute-notes les séparait sur deux rangées)
+{ const q=$("rnQuit"), l=$("duToLobby"); if(q&&l&&q.parentNode){ const g=document.createElement("span"); g.className="rn-acts"; q.parentNode.insertBefore(g,l); g.appendChild(l); g.appendChild(q); } }
+// états vides et petites explications (textes ru* en FR et EN)
+Object.assign(TXT.fr,{ruRecNone:"Pas encore de record : joue une partie dans GAMES ou un morceau dans PLAY pour inscrire le premier.", ruHistX:"Joue en ligne ou contre un bot : ton ELO se fixe après 5 parties classées.", ruHistGo:"Jouer contre un bot",
+  ruNtfGo:"Choisir mes notifications", ruAchHelp:"Touche un badge pour savoir comment l'obtenir.", ruPremFree:"Tout est gratuit pour l'instant", ruPremFreeD:"Toutes les matières, tous les morceaux et les duels sont ouverts, sans limite. Rien à payer, rien à activer.",
+  ruFreeTip:"Joue ce que tu veux : rien n'est noté, chaque note s'allume dans sa couleur."});
+Object.assign(TXT.en,{ruRecNone:"No record yet: play a game in GAMES or a song in PLAY to set your first one.", ruHistX:"Play online or against a bot: your ELO settles after 5 rated games.", ruHistGo:"Play a bot",
+  ruNtfGo:"Choose my notifications", ruAchHelp:"Tap a badge to see how to earn it.", ruPremFree:"Everything is free for now", ruPremFreeD:"Every topic, every song and duels are open, with no limit. Nothing to pay, nothing to turn on.",
+  ruFreeTip:"Play anything you like: nothing is scored, each note lights up in its colour."});
+TXT.fr.rankErr=TXT.fr.hsRankErr="Classement injoignable pour l'instant (pas de connexion ?). Ta progression reste gardée sur cet appareil.";
+TXT.en.rankErr=TXT.en.hsRankErr="Can't reach the leaderboard right now (offline?). Your progress stays saved on this device.";
+{ const e=$("ntfEmpty"); if(e){ const art=e.querySelector(".ntf-eart"); if(art) art.innerHTML='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 16V11a6 6 0 0 1 12 0v5l1.5 2h-15z"/><path d="M10 20a2 2 0 0 0 4 0"/></svg>';
+    const b=document.createElement("button"); b.type="button"; b.className="btn"; b.id="ntfEmptyGo"; b.dataset.i="ruNtfGo"; b.onclick=()=>{ openPage("settings"); try{ setTab("ntf"); }catch(x){} }; e.appendChild(b); } }
+{ const h=document.querySelector("#achBox .ach-h"); if(h){ const p=document.createElement("p"); p.className="ru-ach-help"; p.dataset.i="ruAchHelp"; h.after(p); } }
+{ const bar=$("pcBar"); if(bar){ const p=document.createElement("p"); p.className="ru-free-tip"; p.dataset.i="ruFreeTip"; bar.after(p); } }
+{ const b=$("rnBest"); if(b){ const d=document.createElement("span"); d.className="ru-gm-desc"; d.id="ruGmDesc"; b.after(d); } }
+{ const _rl=duRenderLobby; duRenderLobby=function(){ const r=_rl.apply(this,arguments); try{ const g=(t("games")||[]).find(x=>x[2]===DU.game); $("ruGmDesc").textContent=g?g[1]:""; }catch(e){} return r; }; }
+{ const _sp=renderSetPrem; renderSetPrem=function(){ const r=_sp.apply(this,arguments), box=$("setPremBox"); if(box && box.classList.contains("off") && !box.querySelector(".ru-prem")){ const d=document.createElement("div"); d.className="ru-prem"; d.innerHTML='<b></b><span></span>'; d.firstChild.textContent=t("ruPremFree"); d.lastChild.textContent=t("ruPremFreeD"); box.prepend(d); } return r; }; }
+/* ==== fin Revue UI ==== */
 
 // ---------- Boot ----------
 
