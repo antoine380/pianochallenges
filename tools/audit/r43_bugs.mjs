@@ -67,6 +67,28 @@ async function open(state, { mode = 'ok', gum = 'none', tz, clock, viewport = { 
   check('micro : couper arrête la détection', !(await p.ev('micOn')) && !(await p.evaluate(tm => window.__cnt.intervals.has(tm), tm)));
   await p.context().close(); }
 
+// 6) the app in the background: a solo game waits (Contre la montre keeps its time), a timed LEARN round too
+{ const p = await open(BASE());
+  const hide = h => p.evaluate(h => { Object.defineProperty(document, 'visibilityState', { value: h ? 'hidden' : 'visible', configurable: true }); Object.defineProperty(document, 'hidden', { value: h, configurable: true }); document.dispatchEvent(new Event('visibilitychange')); }, h);
+  await p.ev('openPage("games"); gameOpen("speed")'); await W(p, 600);
+  await p.evaluate(() => document.querySelector('#duModes [data-m=solo]').click()); await W(p, 500);
+  await p.evaluate(() => { window.__midi.noteOn(60); setTimeout(() => window.__midi.noteOff(60), 50); }); await W(p, 1200);
+  const l0 = await p.ev('SP.state==="run" ? (SP.end-performance.now())/1000 : -1');
+  await hide(true); await W(p, 2500); await hide(false); await W(p, 100);
+  const l1 = await p.ev('(SP.end-performance.now())/1000');
+  check('arrière-plan : Contre la montre garde son temps', l0 > 0 && l0 - l1 < 0.8, { l0, l1 });
+  check('arrière-plan : la partie reprend (pas de pause restée)', !(await p.ev('HOLD')));
+  await p.ev('S.settings.delay=8; openPage("learn")'); await W(p, 400);
+  await p.evaluate(() => document.querySelector('#learnTiles .ptile').click()); await W(p, 500);
+  await p.ev('suState("chords").timer=true; try{ S.settings.su.chords.timed=true }catch(e){}'); await p.evaluate(() => document.getElementById('suGo').click()); await W(p, 900);
+  const d0 = await p.ev('deadline ? deadline-performance.now() : null');
+  if (d0 != null) { await hide(true); await W(p, 2500); await hide(false); await W(p, 150);
+    const d1 = await p.ev('deadline-performance.now()');
+    check('arrière-plan : le chrono LEARN attend', d0 - d1 < 900 && await p.ev('phase') === 'listening', { d0, d1 }); }
+  else console.log('     (chrono LEARN non activé dans cet état : vérification sautée)');
+  check('arrière-plan : aucune erreur', !p.errs.length, p.errs);
+  await p.context().close(); }
+
 await browser.close();
 console.log(fails.length ? `\n${fails.length} échec(s)` : '\nTous les tests r43 passent.');
 process.exit(fails.length ? 1 : 0);

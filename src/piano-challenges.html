@@ -11855,6 +11855,21 @@ Object.assign(TXT.fr,{qzZoneSmall:n=>"Ton clavier est trop petit pour "+n+" zone
 Object.assign(TXT.en,{qzZoneSmall:n=>"Your keyboard is too small for "+n+" zones.", qzZoneFewer:n=>"Switch to "+n+" players", goalKickL:"Well done on this lesson"});
 /* ==== fin Finitions ==== */
 
+/* ==== Chasse aux bugs ==== */
+// The app goes to the background (another tab, the iPad home button, a call): a running solo activity waits, like behind
+// the « Leave the game? » window (a timed LEARN round, Contre la montre, the quiz timer, memory, a duel against a bot),
+// and starts again where it was on return. Online games keep going (the others still play).
+const BG={a:null};
+document.addEventListener("visibilitychange",()=>{ try{
+  if(document.hidden){ if(BG.a || LV.on || HOLD) return; const pg=lvBase();
+    if((pg==="practice"||pg==="daily") && game && phase==="listening"){ pauseRound(); BG.a={k:"learn"}; return; } // even before the first note: the chrono runs
+    const a=actNow(); if(!a || a.online) return;
+    if(a.k==="learn"||a.k==="daily"){ pauseRound(); BG.a=a; return; }
+    const keep=LV.a; LV.a=a; lvHold(true); LV.a=keep; BG.a=a; return; }
+  const a=BG.a; if(!a) return; BG.a=null;
+  if(a.k==="learn"||a.k==="daily"){ resumeRound(); return; }
+  if(HOLD && !LV.on && !(typeof MD!=="undefined"&&MD.hold)){ const keep=LV.a; LV.a=a; lvHold(false); LV.a=keep; }
+}catch(e){} });
 // ---------- Boot ----------
 
 applyStatic(); applySide(); buildKeyboard(); renderSettings(); render(); renderDaily(); openPage("hub");
