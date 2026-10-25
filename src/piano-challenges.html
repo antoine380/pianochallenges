@@ -7883,7 +7883,10 @@ async function cloudPull(){
       // reload only when the merged state could be written (#36) and no exercise is running; otherwise apply in memory
       // ... nor any other activity (song, Play game, quiz, duel, Accompaniment, which keeps its own state outside phase/game)
       let busy=false; try{ busy = !!actNow() || (lvBase()==="acc" && ACC.view!=="setup"); }catch(e){}
-      if(stored && phase==="idle" && !game && !busy && !startUI()){ location.reload(); return; }
+      // at most one reload every 5 min per tab: a field that differs on every pull (e.g. a key kept only on this device) must never loop
+      let canReload=false; try{ const last=+sessionStorage.getItem("pc-pull-reload")||0; if(Date.now()-last>5*60e3){ sessionStorage.setItem("pc-pull-reload",String(Date.now())); canReload=true; } }catch(e){}
+      if(!canReload){ try{ const ks=Object.keys(merged).filter(k=>JSON.stringify(merged[k])!==JSON.stringify(cloud[k])); console.info("[sync] fusion appliquée sans rechargement ; clés différentes du serveur :", ks.slice(0,12)); }catch(e){} }
+      if(canReload && stored && phase==="idle" && !game && !busy && !startUI()){ location.reload(); return; }
       renderSettings(); render(); renderDaily(); if(page==="account") renderAccount(); try{ ntfBadge(); }catch(e){}
       return;
     }

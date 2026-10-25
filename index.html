@@ -7917,7 +7917,10 @@ async function cloudPull(){
       // reload only when the merged state could be written (#36) and no exercise is running; otherwise apply in memory
       // ... nor any other activity (song, Play game, quiz, duel, Accompaniment, which keeps its own state outside phase/game)
       let busy=false; try{ busy = !!actNow() || (lvBase()==="acc" && ACC.view!=="setup"); }catch(e){}
-      if(stored && phase==="idle" && !game && !busy && !startUI()){ location.reload(); return; }
+      // at most one reload every 5 min per tab: a field that differs on every pull (e.g. a key kept only on this device) must never loop
+      let canReload=false; try{ const last=+sessionStorage.getItem("pc-pull-reload")||0; if(Date.now()-last>5*60e3){ sessionStorage.setItem("pc-pull-reload",String(Date.now())); canReload=true; } }catch(e){}
+      if(!canReload){ try{ const ks=Object.keys(merged).filter(k=>JSON.stringify(merged[k])!==JSON.stringify(cloud[k])); console.info("[sync] fusion appliquée sans rechargement ; clés différentes du serveur :", ks.slice(0,12)); }catch(e){} }
+      if(canReload && stored && phase==="idle" && !game && !busy && !startUI()){ location.reload(); return; }
       renderSettings(); render(); renderDaily(); if(page==="account") renderAccount(); try{ ntfBadge(); }catch(e){}
       return;
     }
@@ -9738,7 +9741,7 @@ addEventListener("resize",()=>{ if(page==="acc" && ACC.view==="play" && ACC.run)
 // (fetch keepalive vers la fonction SQL track_events), sans le SDK Supabase. Hors ligne, la file attend. Une table ou une
 // fonction absente (migration pas encore lancée) coupe l'envoi sans erreur. En développement (localhost), rien ne part sur
 // le réseau, sauf si localStorage « pc-trk-test » = "1" (tests). Interrupteur : S.settings.analytics (absent = activé).
-const APP_BUILD="2026-10-25T01:21Z"; // remplacé par tools/build.py par la date de construction (version.txt)
+const APP_BUILD="2026-10-25T10:34Z"; // remplacé par tools/build.py par la date de construction (version.txt)
 const TRK={q:[], t:0, off:false, anon:null, sent:0, errs:[], errT:0, errSeen:new Set(), errOn:null, ports:new Set(), first:false};
 const RC={flags:{}, daily:{}, at:0};
 const TRK_NAMES=new Set(["song_import","app_open","first_note","input_mode","midi_connected","pp_lesson_done","learn_end","game_end","quiz_end","duel_end","goal_reached","badge","signup","login","play","feedback","acc_end","song_open","route_step","route_stage"]);
