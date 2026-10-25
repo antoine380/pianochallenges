@@ -6895,7 +6895,7 @@ function duRematch(){ if(DU.mode==="bot"){ duStartBot(DU.opp.bot); return; } DU.
 function duFromHash(){ const m=/^#duel-([A-Z2-9]{5})$/.exec(location.hash||""); if(!m) return; history.replaceState(null,"",location.pathname+location.search);
   openPage("games"); gameOpen("runner"); duJoin(m[1],false,false); }
 setTimeout(duFromHash,0);
-if(S.duPend){ const pd=S.duPend; delete S.duPend; try{ eloApply(pd.key, pd.o, 0, pd.bot, pd.nm, pd.av); }catch(e){} save(); } // a rated duel left by closing the app
+setTimeout(()=>{ if(S.duPend){ const pd=S.duPend; delete S.duPend; try{ eloApply(pd.key, pd.o, 0, pd.bot, pd.nm, pd.av); }catch(e){} save(); } },0); // a rated duel left by closing the app (after the whole script: eloApply needs qzSafe, declared further down)
 // ---- lobby buttons ----
 $("duModes").addEventListener("click",e=>{ const b=e.target.closest("[data-m]"); if(!b) return; const m=b.dataset.m; DU.err="";
   if(m==="solo"){ DU.view="solo"; duRender(); gameOpen(DU.game,true); return; }
