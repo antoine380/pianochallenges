@@ -233,7 +233,7 @@ const IC={dash:"M4 13h6V4H4zM14 20h6v-9h-6zM14 4v4h6V4zM4 20h6v-4H4z", stats:"M4
   leagues:"M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0zM17 6h3v2a3 3 0 0 1-3 3M7 6H4v2a3 3 0 0 0 3 3", support:"M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12zM9 10h6M9 14h4",
   system:"M4 5h16v10H4zM8 19h8M12 15v4", pay:"M3 7h18v10H3zM3 11h18M7 15h3", warn:"M12 3l9.5 17h-19zM12 10v4M12 17.5v.01", ok:"M5 12.5l4.5 4.5L19 7"};
 const icon=k=>'<svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="'+IC[k]+'"/></svg>';
-const PAGES=[["dash","Tableau de bord"],["stats","Statistiques"],["users","Joueurs"],["content","Contenu et réglages"],["notifs","Notifications"],["leagues","Ligues et duels"],["support","Support"],["system","Système"],["pay","Paiements",1]];
+const PAGES=[["dash","Tableau de bord"],["stats","Statistiques"],["users","Joueurs"],["content","Contenu et réglages"],["notifs","Notifications"],["leagues","Ligues et duels"],["support","Support"],["system","Système"],["pay","Paiements"]];
 
 // ---------- thème ----------
 function themeApply(){ let v=null; try{ v=localStorage.getItem("pc-admin-theme"); }catch(e){} if(v==="light"||v==="dark") document.documentElement.dataset.theme=v; else delete document.documentElement.dataset.theme;
@@ -440,9 +440,10 @@ async function userOpen(id){ $("paneScrim").hidden=false; $("userPane").hidden=f
     +'<dt>Premiers pas</dt><dd>'+(g.pp?Object.keys(g.pp).length+" leçon(s)":"—")+'</dd><dt>Premium offert</dt><dd>'+(prem?"jusqu'au "+fmtD(u.prem_until):"non")+'</dd>'
     +'<dt>État</dt><dd>'+(banned?'<span class="chip bad">suspendu</span>':'<span class="chip good">actif</span>')+(u.admin_role?' <span class="role">'+esc(u.admin_role)+'</span>':'')+'</dd>'
     +'<dt>Sauvegarde</dt><dd>'+(g.size?fmtN(g.size)+" octets · "+fmtDT(g.updated_at):"aucune")+'</dd></dl>'
-    +'<div class="row">'+B("uaRename","Renommer","support")+B("uaPrem","Offrir 1 mois Premium","support")+(prem?B("uaPremOff","Retirer le Premium","support"):"")+B("uaBan",banned?"Réactiver":"Suspendre","support")+B("uaExport","Export RGPD (JSON)","support")+'</div>'
+    +'<div class="row">'+B("uaRename","Renommer","support")+B("uaPrem","Offrir 1 mois Premium","support")+(prem?B("uaPremOff","Retirer le Premium","support"):"")+B("uaBan",banned?"Réactiver":"Suspendre","support")+B("uaExport","Export RGPD (JSON)","support")+'<button class="btn sm" type="button" id="uaFam">Famille et abonnements</button></div>'
     +'<div class="row">'+B("uaReset","Réinitialiser la progression","owner","danger")+B("uaDel","Supprimer le compte","owner","danger")+'</div>'
     +onbUser(uo)
+    +'<div id="upFam"></div>'
     +card("XP des 30 derniers jours", lineChart(xp,{h:140,label:"XP"}))
     +card("Derniers événements", ev?'<div class="tw"><table><tbody>'+ev+'</tbody></table></div>':'<div class="empty">Aucun.</div>')
     +((u.feedback||[]).length?card("Messages au support", (u.feedback||[]).map(f=>'<div class="fb"><small class="muted">'+fmtDT(f.at)+' · '+esc(FBK[f.kind]||f.kind)+' · '+esc(FBS[f.status]||f.status)+'</small><p>'+esc(f.msg)+'</p></div>').join("")):"");
@@ -452,6 +453,7 @@ async function userOpen(id){ $("paneScrim").hidden=false; $("userPane").hidden=f
   on("uaPrem", async()=>{ if(!await ask("Offrir un mois Premium ?","30 jours de Premium pour "+(p.name||"ce joueur")+". L'app le lit à la prochaine connexion.",{ok:"Offrir"})) return; if(await act(()=>rpc("admin_user_premium",{p_id:id,p_days:30}),"Mois Premium offert.")) userOpen(id); });
   on("uaPremOff", async()=>{ if(!await ask("Retirer le Premium offert ?","",{ok:"Retirer",danger:true})) return; if(await act(()=>rpc("admin_user_premium",{p_id:id,p_days:0}),"Premium retiré.")) userOpen(id); });
   on("uaBan", async()=>{ if(!await ask(banned?"Réactiver le compte ?":"Suspendre le compte ?", banned?"Le joueur pourra se reconnecter.":"Le joueur ne pourra plus se connecter (sa progression est gardée).",{ok:banned?"Réactiver":"Suspendre",danger:!banned})) return; if(await act(()=>edge({action:"suspend",id,on:!banned}),banned?"Compte réactivé.":"Compte suspendu.")) userOpen(id); });
+  on("uaFam", ()=>userFam(id));
   on("uaExport", async()=>{ const d=await act(()=>rpc("admin_user_export",{p_id:id}),"Export prêt."); if(d) download("rgpd-"+id+".json", JSON.stringify(d,null,2), "application/json"); });
   on("uaReset", async()=>{ if(await ask("Réinitialiser la progression ?","XP, niveau, série et sauvegarde de "+(p.name||"ce joueur")+" seront effacés. C'est irréversible.",{ok:"Réinitialiser",danger:true,type:"EFFACER"})==null) return; if(await act(()=>rpc("admin_user_reset",{p_id:id}),"Progression réinitialisée.")) userOpen(id); });
   on("uaDel", async()=>{ if(await ask("Supprimer le compte ?","Le compte et toutes ses données seront supprimés définitivement.",{ok:"Supprimer",danger:true,type:"SUPPRIMER"})==null) return; if(await act(()=>edge({action:"delete_user",id}),"Compte supprimé.")){ userClose(); go("users"); } });
@@ -469,21 +471,27 @@ function newsRow(L,n){ n=n||["","","#6a4bf0",NEWS_IC[0][1]]; const o=(arr,v)=>ar
 VIEWS.content=async()=>{ const list=await rpc("admin_config_list"); CFG={}; (list||[]).forEach(r=>CFG[r.key]=r);
   const ro=!can("owner"), dis=ro?" disabled":"", fl=(CFG.flags||{}).value||{}, nw=(CFG.news||{}).value||{}, dy=(CFG.daily||{}).value||{}, po=(CFG.prem_offer||{}).value;
   const upd=k=>CFG[k]?'<small class="muted">modifié le '+fmtDT(CFG[k].updated_at)+'</small>':'<small class="muted">valeur intégrée à l\'app</small>';
-  const others=Object.keys(CFG).filter(k=>!["flags","news","daily","prem_offer"].includes(k));
+  const others=Object.keys(CFG).filter(k=>!["flags","news","daily","prem_offer","pay"].includes(k));
   return (ro?'<div class="msg info" style="margin-bottom:12px">Lecture seule : seul un owner peut modifier les réglages.</div>':'')+'<div class="grid g2">'
     +card("Interrupteurs (flags)", '<label class="row"><input type="checkbox" id="cPay"'+(fl.paywall===true?" checked":"")+dis+'> Offre Premium visible pour tous (aperçu, le paiement n\'est pas branché)</label>'
+      +'<label class="row"><input type="checkbox" id="cPayLive"'+(fl.payLive===true?" checked":"")+dis+'> Paiement ouvert (payLive) : les formules lancent Stripe sur le site et l\'achat Apple dans l\'app. À cocher seulement après docs/PAIEMENT.md, avec l\'offre visible.</label>'
       +'<label class="row"><input type="checkbox" id="cAna"'+(fl.analytics!==false?" checked":"")+dis+'> Mesure d\'usage active (coupe l\'envoi pour tout le monde si décoché)</label>'
       +'<label class="f">Part des sessions qui remontent leurs erreurs JS (0 à 1)<input id="cErr" type="number" min="0" max="1" step="0.05" value="'+(Number.isFinite(fl.errSample)?fl.errSample:0.25)+'"'+dis+'></label>'
       +'<div class="row"><button class="btn primary" type="button" id="cFlagsSave"'+dis+'>Enregistrer</button>'+upd("flags")+'</div>')
     +card("Entraînement du jour", '<label class="f">Nombre d\'exercices par défaut (3 à 20, vide = 10)<input id="cDaily" type="number" min="3" max="20" value="'+esc(dy.len||"")+'"'+dis+'></label><small class="muted">Un joueur qui a choisi sa longueur dans l\'app garde la sienne.</small><div class="row"><button class="btn primary" type="button" id="cDailySave"'+dis+'>Enregistrer</button>'+upd("daily")+'</div>')
     +card("Actualités de l'accueil", ["fr","en"].map(L=>'<b>'+(L==="fr"?"Français":"Anglais")+'</b><div class="bars" id="cNews_'+L+'">'+((nw[L]||[]).map(n=>newsRow(L,n)).join("")||"")+'</div><button class="btn sm" type="button" data-add="'+L+'"'+dis+'>Ajouter une actualité</button>').join("")
       +'<small class="muted">Vide = les actualités intégrées à l\'app. 8 au plus par langue. Les nouvelles créent aussi une notification « Nouveautés ».</small><div class="row"><button class="btn primary" type="button" id="cNewsSave"'+dis+'>Publier</button><button class="btn" type="button" id="cNewsReset"'+dis+'>Revenir aux actualités intégrées</button>'+upd("news")+'</div>', "span2")
-    +card("Offre Premium (prem_offer)", '<textarea id="cPrem" rows="5" spellcheck="false"'+dis+' placeholder=\'{"year":139,"month":17.99,"trialDays":7}\'>'+esc(po?JSON.stringify(po,null,2):"")+'</textarea><small class="muted">Objet JSON, lu par l\'app si le module de l\'offre (PREM_OFFER) est présent. Vide = supprimer.</small><div class="row"><button class="btn primary" type="button" id="cPremSave"'+dis+'>Enregistrer</button>'+upd("prem_offer")+'</div>')
+    +card("Offre Premium (prem_offer)", '<textarea id="cPrem" rows="5" spellcheck="false"'+dis+' placeholder=\'{"month":17.99,"year":149,"family":199,"familySeats":4,"trialDays":7}\'>'+esc(po?JSON.stringify(po,null,2):"")+'</textarea><small class="muted">Objet JSON, lu par l\'app si le module de l\'offre (PREM_OFFER) est présent. Vide = supprimer.</small><div class="row"><button class="btn primary" type="button" id="cPremSave"'+dis+'>Enregistrer</button>'+upd("prem_offer")+'</div>')
+    +card("Paiement : clés publiques (pay)", '<label class="f">Clé publique Stripe (pk_test_… puis pk_live_…)<input id="cStripePk" class="mono" value="'+esc(((CFG.pay||{}).value||{}).stripe_pk||"")+'"'+dis+' autocomplete="off" spellcheck="false"></label><label class="f">Clé publique RevenueCat iOS (appl_…)<input id="cRcIos" class="mono" value="'+esc(((CFG.pay||{}).value||{}).rc_ios||"")+'"'+dis+' autocomplete="off" spellcheck="false"></label><small class="muted">Clés PUBLIQUES seulement : les clés secrètes (sk_…, whsec_…) vont dans les secrets des fonctions Supabase, jamais ici.</small><div class="row"><button class="btn primary" type="button" id="cPayKeysSave"'+dis+'>Enregistrer</button>'+upd("pay")+'</div>')
     +card("Autres clés", others.length?'<table><tbody>'+others.map(k=>'<tr><td><b>'+esc(k)+'</b></td><td class="small"><code>'+esc(JSON.stringify(CFG[k].value).slice(0,120))+'</code></td></tr>').join("")+'</tbody></table>':'<div class="empty">Aucune.</div>')
     +'</div>'; };
 async function cfgSet(k, v){ const r=await act(()=>rpc("admin_config_set",{p_key:k,p_value:v}),"Enregistré. Les joueurs le reçoivent à leur prochain lancement."); if(r) go("content"); }
 WIRE.content=m=>{ if(!can("owner")) return;
-  m.querySelector("#cFlagsSave").onclick=()=>{ const e=+m.querySelector("#cErr").value; cfgSet("flags",{paywall:m.querySelector("#cPay").checked, analytics:m.querySelector("#cAna").checked, errSample:Number.isFinite(e)?Math.max(0,Math.min(1,e)):0.25}); };
+  m.querySelector("#cFlagsSave").onclick=()=>{ const e=+m.querySelector("#cErr").value; cfgSet("flags",{...((CFG.flags||{}).value||{}), paywall:m.querySelector("#cPay").checked, payLive:m.querySelector("#cPayLive").checked, analytics:m.querySelector("#cAna").checked, errSample:Number.isFinite(e)?Math.max(0,Math.min(1,e)):0.25}); };
+  m.querySelector("#cPayKeysSave").onclick=()=>{ const sp=m.querySelector("#cStripePk").value.trim(), rc=m.querySelector("#cRcIos").value.trim();
+    if(sp && !/^pk_(test|live)_[A-Za-z0-9]{10,200}$/.test(sp)){ toast("La clé Stripe publique commence par pk_test_ ou pk_live_ (jamais sk_ : celle-là est secrète)."); return; }
+    if(rc && !/^appl_[A-Za-z0-9]{10,100}$/.test(rc)){ toast("La clé publique RevenueCat iOS commence par appl_."); return; }
+    cfgSet("pay", sp||rc ? {stripe_pk:sp||undefined, rc_ios:rc||undefined} : null); };
   m.querySelector("#cDailySave").onclick=()=>{ const v=parseInt(m.querySelector("#cDaily").value,10); if(m.querySelector("#cDaily").value==="") return cfgSet("daily",null); if(!(v>=3&&v<=20)) return toast("Entre 3 et 20."); cfgSet("daily",{len:v}); };
   m.querySelectorAll("[data-add]").forEach(b=>b.onclick=()=>{ const box=m.querySelector("#cNews_"+b.dataset.add); if(box.children.length>=8) return toast("8 actualités au plus."); box.insertAdjacentHTML("beforeend",newsRow(b.dataset.add)); });
   m.addEventListener("click",e=>{ const r=e.target.closest("[data-rm]"); if(r) r.closest(".news-row").remove(); });
@@ -565,7 +573,33 @@ VIEWS.system=async()=>{ const [s, ver, log]=await Promise.all([rpc("admin_system
     +(lg!=null?card("Journal du back office", lg?'<div class="tw" style="max-height:300px"><table><thead><tr><th>Quand</th><th>Qui</th><th>Action</th><th>Cible</th><th>Détail</th></tr></thead><tbody>'+lg+'</tbody></table></div>':'<div class="empty">Vide.</div>',"span4"):"")+'</div>'; };
 
 // ---------- 9. paiements ----------
-VIEWS.pay=async()=>'<section class="card soonbox"><h3>'+icon("pay")+' Paiements : bientôt</h3><p style="margin:0">Cet écran suivra les abonnements quand le paiement sera branché : Stripe Checkout sur le site, achat intégré Apple dans l\'app iOS, état de l\'abonnement dans Supabase.</p><p class="muted small" style="margin:0">En attendant, un mois Premium peut être offert depuis la fiche d\'un joueur (Joueurs › Offrir 1 mois Premium).</p></section>';
+// ---------- Paiements (migration 2026-10-26_family.sql : abonnements Stripe / Apple, familles) ----------
+const PROD={solo_month:"Solo mensuel",solo_year:"Solo annuel",family_year:"Famille annuel",pc_solo_month:"Solo mensuel (Apple)",pc_solo_year:"Solo annuel (Apple)",pc_family_year:"Famille annuel (Apple)"};
+const SUBST={trialing:"essai",active:"actif",past_due:"paiement en retard",canceled:"résilié",expired:"expiré",refunded:"remboursé"}, STORE={stripe:"Stripe (site)",apple:"Apple (app)",manual:"Manuel (test)"};
+const money=(c,cur)=>new Intl.NumberFormat("fr-FR",{style:"currency",currency:(cur||"eur").toUpperCase(),maximumFractionDigits:c%100?2:0}).format((+c||0)/100);
+VIEWS.pay=async()=>{ let d; try{ d=await rpc("admin_pay"); }catch(e){ if(e instanceof Denied) throw e; if(/could not find|does not exist|schema cache/i.test(e.message||"")) return '<section class="card soonbox"><h3>'+icon("pay")+' Paiements : migration à lancer</h3><p style="margin:0">Lance <b>supabase/migrations/2026-10-26_family.sql</b> dans le SQL Editor de Supabase : cet écran suivra alors les abonnements (Stripe sur le site, Apple dans l\'app) et les familles.</p><p class="muted small" style="margin:0">Procédure complète : docs/PAIEMENT.md.</p></section>'; throw e; }
+  const f=d.families||{}, cur=d.currency||"eur", bp=d.by_product||{}, st=d.by_store||{};
+  const rows=(d.recent||[]).map(r=>'<tr data-id="'+esc(r.user_id)+'"><td>'+esc(r.name||"—")+'</td><td>'+esc(PROD[r.product]||r.product)+'</td><td>'+esc(STORE[r.store]||r.store)+'</td><td><span class="chip '+(["active","trialing"].includes(r.status)?"good":["past_due"].includes(r.status)?"warn":"bad")+'">'+esc(SUBST[r.status]||r.status)+'</span>'+(r.cancel?' <small class="muted">résiliation demandée</small>':'')+'</td><td>'+fmtD(r.period_end)+'</td><td class="num">'+(r.amount_cents!=null?esc(money(r.amount_cents,cur))+(r.billing==="month"?"/mois":r.billing==="year"?"/an":""):"—")+'</td></tr>').join("");
+  return '<div class="grid g4">'
+    +kpi("Abonnés payants", fmtN(d.active), fmtN(d.past_due)+" en retard de paiement")
+    +kpi("Essais en cours", fmtN(d.trials), "Solo annuel, 7 jours")
+    +kpi("Revenus mensuels estimés", money(d.mrr_cents,cur), "mensuels + annuels ÷ 12, hors essais (TTC, avant commission)")
+    +kpi("Résiliations 30 jours", fmtN(d.churn_30), fmtN(d.canceling)+" résiliation(s) demandée(s) · "+fmtN(d.new_30)+" nouveaux")
+    +card("Par formule", bars(Object.keys(PROD).filter(k=>bp[k]).map(k=>({l:PROD[k], v:bp[k]})), {empty:"Aucun abonnement en cours."}))
+    +card("Familles", '<dl class="kv"><dt>Familles</dt><dd>'+fmtN(f.n)+' · '+fmtN(f.active)+' actives</dd><dt>Membres invités</dt><dd>'+fmtN(f.members)+'</dd><dt>Places</dt><dd>'+fmtN((f.members|0)+(f.n|0))+' / '+fmtN(f.seats)+' occupées</dd><dt>Premium offerts</dt><dd>'+fmtN(d.grants)+' en cours</dd></dl>')
+    +card("Par magasin", bars(Object.keys(STORE).filter(k=>st[k]).map(k=>({l:STORE[k], v:st[k]})), {empty:"Aucun abonnement en cours."}))
+    +card("Prix et réglages", '<p class="small" style="margin:0">Les prix affichés dans l\'app viennent de <b>PREM_OFFER</b> (ou de la clé <b>prem_offer</b> de Contenu et réglages). Ceux qui sont facturés viennent des prix Stripe et des produits App Store : garde-les identiques. Paiement ouvert aux joueurs : interrupteur <b>payLive</b> des flags.</p>')
+    +card("Derniers abonnements (clic = fiche du joueur)", rows?'<div class="tw"><table><thead><tr><th>Joueur</th><th>Formule</th><th>Magasin</th><th>Statut</th><th>Fin de période</th><th class="num">Montant</th></tr></thead><tbody>'+rows+'</tbody></table></div>':'<div class="empty">Aucun abonnement pour l\'instant.</div>', "span4")
+    +'</div>'; };
+WIRE.pay=m=>{ m.querySelectorAll("tr[data-id]").forEach(tr=>tr.onclick=()=>userOpen(tr.dataset.id)); };
+// fiche d'un joueur : sa famille et ses abonnements
+async function userFam(id){ const box=$("upFam"); if(!box) return; box.innerHTML='<div class="empty">Chargement…</div>';
+  let d; try{ d=await rpc("admin_family",{p_user:id}); }catch(e){ box.innerHTML='<div class="msg info">'+esc(/could not find|schema cache/i.test(e.message||"")?"Migration 2026-10-26_family.sql pas encore lancée.":e.message)+'</div>'; return; }
+  const F=d.family, subs=(d.subs||[]).map(s=>'<li>'+esc(PROD[s.product]||s.product)+' · '+esc(STORE[s.store]||s.store)+' · '+esc(SUBST[s.status]||s.status)+' · fin '+fmtD(s.period_end)+'</li>').join("");
+  box.innerHTML=(F?'<dl class="kv"><dt>Titulaire</dt><dd>'+esc((F.owner||{}).name||"—")+'</dd><dt>Membres</dt><dd>'+((F.members||[]).map(m=>esc(m.name||"—")+' <small class="muted">'+fmtD(m.joined_at)+'</small>').join(", ")||"aucun")+'</dd><dt>Places</dt><dd>'+fmtN((F.members||[]).length+1)+' / '+fmtN(F.seats)+'</dd><dt>Abonnement Famille</dt><dd>'+(F.until?"actif jusqu'au "+fmtD(F.until):'<span class="chip bad">inactif</span>')+'</dd><dt>Liens en cours</dt><dd>'+fmtN(F.invites)+'</dd></dl>':'<p class="muted small" style="margin:0">Pas de famille.</p>')
+    +(subs?'<ul class="small">'+subs+'</ul>':'<p class="muted small" style="margin:0">Aucun abonnement.</p>')
+    +(F && (F.members||[]).some(m=>m.user_id===id)?'<div class="row"><button class="btn sm danger" type="button" id="uaFamRm"'+(can("support")?"":" disabled")+'>Retirer de la famille</button></div>':'');
+  const b=$("uaFamRm"); if(b && !b.disabled) b.onclick=async()=>{ if(!await ask("Retirer de la famille ?","Le joueur perd le Premium partagé. Le titulaire pourra l'inviter à nouveau.",{ok:"Retirer",danger:true})) return; if(await act(()=>rpc("admin_family_remove",{p_user:id}),"Retiré de la famille.")) userFam(id); }; }
 
 // ---------- session, double authentification, inactivité ----------
 function showLogin(step){ $("shell").hidden=true; $("login").hidden=false; userClose(); $("dlg").hidden=true;

@@ -118,6 +118,17 @@ check('notification envoyée par la fonction Edge', await p.evaluate(() => windo
 // ligues : former
 await goPage(p, 'leagues'); await p.click('#lgForm'); await p.waitForTimeout(150); await p.click('#dlgOk'); await p.waitForTimeout(500);
 check('ligues installées : « Former les groupes » écrit le journal', await p.evaluate(() => window.__ADM.log.includes('league.form')));
+// paiements (2026-10-26_family) : abonnés, essais, revenus estimés, familles ; clic = fiche + famille
+await goPage(p, 'pay');
+const pay = await p.textContent('#main');
+check('Paiements : plus « bientôt », abonnés / essais / revenus mensuels estimés / résiliations / familles', !(await p.evaluate(() => !!document.querySelector('#navList [data-p=pay] .soon'))) && /Abonnés payants46/.test(pay) && /Essais en cours9/.test(pay) && /Revenus mensuels estimés/.test(pay) && /Famille annuel/.test(pay) && /Membres invités15/.test(pay), pay.slice(0, 400));
+await p.screenshot({ path: `${CAP}/admin_pay_1280.png` }); await p.screenshot({ path: '/home/claude/captures-famille/admin_paiements_1280.png' });
+await p.click('#main tr[data-id]'); await p.waitForTimeout(400); await p.click('#uaFam'); await p.waitForTimeout(400);
+check('fiche du joueur : « Famille et abonnements » (titulaire, membres, places)', /Titulaire/.test(await p.textContent('#upFam')) && /3 \/ 4/.test(await p.textContent('#upFam')));
+await p.screenshot({ path: '/home/claude/captures-famille/admin_famille_joueur_1280.png' });
+await p.click('#uaFamRm'); await p.waitForTimeout(150); await p.click('#dlgOk'); await p.waitForTimeout(500);
+check('« Retirer de la famille » écrit le journal', await p.evaluate(() => window.__ADM.log.includes('family.remove')));
+await p.keyboard.press('Escape'); await p.waitForTimeout(200);
 await goPage(p, 'system');
 check('journal visible dans Système', /user\.premium/.test(await p.textContent('#main')));
 check('aucune erreur (owner, 1280×800)', !p.errs.length, p.errs);

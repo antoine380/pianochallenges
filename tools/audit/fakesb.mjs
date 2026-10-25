@@ -59,8 +59,16 @@ export const FAKE_ADMIN = `(()=>{ const A=window.__ADM=Object.assign({aal:null, 
       done:{n:320,sec_median:41,answers_avg:3.6,skipped_avg:0.3,dest:{pp:190,place:80,learn:40,free:10},ctx:{fn:300,onb:20}},by_dev:{phone:{start:200,done:120},tablet:{start:150,done:110},desktop:{start:150,done:90}}}),
     admin_user_onb:a=>({onb:{done:1,v:2,level:'debut',why:['songs'],staff:'learn',time:'10',ctx:'fn',sk:['staff'],sec:38},events:[]}),
     admin_log_list:()=>A.log.map((a,i)=>({at:new Date().toISOString(),who:'antoine@example.com',action:a,target:'x',detail:{}})),
+    admin_pay:()=>A.noPay?null:({by_product:{solo_month:12,solo_year:31,family_year:7,pc_solo_year:5},by_plan:{solo:48,family:7},by_store:{stripe:50,apple:5},active:46,trials:9,past_due:2,canceling:3,churn_30:4,new_30:17,
+      mrr_cents:12*1799+Math.round(36*14900/12)+Math.round(7*19900/12),currency:'eur',families:{n:7,active:7,members:15,seats:28},grants:3,
+      recent:[{user_id:users[1].id,name:'Léa',store:'stripe',product:'family_year',plan:'family',status:'active',period_end:new Date(Date.now()+300*864e5).toISOString(),cancel:false,amount_cents:19900,billing:'year',updated_at:new Date().toISOString()},
+        {user_id:users[3].id,name:'Sam',store:'apple',product:'pc_solo_year',plan:'solo',status:'trialing',period_end:new Date(Date.now()+5*864e5).toISOString(),cancel:false,amount_cents:14900,billing:'year',updated_at:new Date().toISOString()},
+        {user_id:users[4].id,name:'Noor',store:'stripe',product:'solo_month',plan:'solo',status:'past_due',period_end:new Date(Date.now()+2*864e5).toISOString(),cancel:true,amount_cents:1799,billing:'month',updated_at:new Date().toISOString()}]}),
+    admin_family:a=>({family:{id:'f1',seats:4,created_at:new Date().toISOString(),until:new Date(Date.now()+300*864e5).toISOString(),owner:{user_id:users[1].id,name:'Léa'},members:[{user_id:users[2].id,name:'Max',joined_at:new Date().toISOString()},{user_id:a.p_user,name:'Toi',joined_at:new Date().toISOString()}],invites:1},
+      subs:[{product:'family_year',store:'stripe',status:'active',period_end:new Date(Date.now()+300*864e5).toISOString()}]}),
+    admin_family_remove:a=>(A.log.push('family.remove'),{ok:true}),
   };
-  const RANK={owner:3,support:2,lecture:1}, NEED={admin_user_reset:'owner',admin_config_set:'owner',admin_league_action:'owner',admin_user_rename:'support',admin_user_premium:'support',admin_user_export:'support',admin_feedback:'support',admin_feedback_set:'support',admin_log_list:'support',admin_notify_count:'support'};
+  const RANK={owner:3,support:2,lecture:1}, NEED={admin_user_reset:'owner',admin_config_set:'owner',admin_league_action:'owner',admin_user_rename:'support',admin_user_premium:'support',admin_user_export:'support',admin_feedback:'support',admin_feedback_set:'support',admin_log_list:'support',admin_notify_count:'support',admin_family_remove:'support'};
   const listeners=[]; const sess=()=>A.aal?{access_token:'tok-'+A.aal, user:{id:'adm', email:'antoine@example.com'}}:null;
   const client={
     auth:{
@@ -103,4 +111,53 @@ export const FAKE_SDK = `(()=>{ const F=()=>window.__FAKE||{}; const log=n=>{ co
       if(n==='my_rank') return f.myRank===undefined?miss(n):{data:f.myRank,error:null};
       if(n==='my_league'){ if(f.league===undefined) return miss(n); if(f.league==='fail') return {data:null,error:{message:'TypeError: Failed to fetch'}}; return {data:f.user?f.league:[],error:null}; }
       return {data:null,error:null}; } };
+  window.supabase={ createClient:()=>client }; })();`;
+
+// faux SDK pour la Famille et le paiement (r45_famille.mjs) : mêmes règles que supabase/migrations/2026-10-26_family.sql,
+// en mémoire. window.__FAKE = {user:{id,…}, srv:{subs:{uid:{plan,status,until,store,product}}, fams:{fid:{owner,seats,members:[uid…]}},
+// invites:{CODE:{fam,exp,used}}, names:{uid:[name,avatar]}, grants:{uid:until}}, noEnt:true (my_entitlement absente)}.
+// L'état du « serveur » survit aux rechargements de la page (sessionStorage « fake-fam ») ; window.__FAKE.calls garde les appels.
+export const FAKE_FAM = `(()=>{ const F=()=>window.__FAKE||{}; const log=(n,a)=>{ const f=F(); (f.calls=f.calls||[]).push(a&&Object.keys(a).length?n+':'+JSON.stringify(a):n); };
+  let srv; try{ srv=JSON.parse(sessionStorage.getItem('fake-fam')||'null'); }catch(e){} if(!srv) srv=JSON.parse(JSON.stringify(F().srv||{})); ['subs','fams','invites','names','grants'].forEach(k=>srv[k]=srv[k]||{});
+  const put=()=>{ sessionStorage.setItem('fake-fam', JSON.stringify(srv)); window.__SRV=srv; }; put();
+  const me=()=>F().user&&F().user.id, now=()=>Date.now(), iso=x=>new Date(x).toISOString();
+  const live=s=>s && ['trialing','active','past_due'].includes(s.status) && s.until>now();
+  const famOf=u=>Object.keys(srv.fams).find(k=>srv.fams[k].owner===u) || Object.keys(srv.fams).find(k=>srv.fams[k].members.includes(u));
+  const ownFam=u=>{ let k=Object.keys(srv.fams).find(k=>srv.fams[k].owner===u); if(!k && live(srv.subs[u]) && srv.subs[u].plan==='family'){ k='f'+u; srv.fams[k]={owner:u,seats:4,members:[]}; put(); } return k; };
+  const famLive=k=>{ const f=srv.fams[k], s=f&&srv.subs[f.owner]; return live(s)&&s.plan==='family'?s.until:0; };
+  const nm=u=>(srv.names[u]||['Joueur',0]);
+  const E=m=>({data:null,error:{message:m,code:'P0001'}}), D=d=>({data:JSON.parse(JSON.stringify(d)),error:null});
+  const R={
+    my_premium:()=>D(srv.grants[me()]&&srv.grants[me()]>now()?iso(srv.grants[me()]):null),
+    my_entitlement:()=>{ if(F().noEnt) return {data:null,error:{code:'PGRST202',message:'Could not find the function public.my_entitlement without parameters in the schema cache'}};
+      const u=me(); let best={plan:null,status:null,until:null,source:null}, bu=0; const s=srv.subs[u];
+      if(live(s)){ bu=s.until; best={plan:s.plan,status:s.status,until:iso(s.until),source:'self',store:s.store,product:s.product}; }
+      const k=Object.keys(srv.fams).find(k=>srv.fams[k].members.includes(u)); if(k){ const fu=famLive(k); if(fu>bu){ bu=fu; best={plan:'family',status:'active',until:iso(fu),source:'family',family_owner:nm(srv.fams[k].owner)[0]}; } }
+      const g=srv.grants[u]; if(g&&g>bu) best={plan:'gift',status:'active',until:iso(g),source:'grant'}; return D(best); },
+    family_status:()=>{ const u=me(); let k=ownFam(u), role=k?'owner':null; if(!k){ k=famOf(u); if(k) role='member'; } if(!k) return D({role:null}); const f=srv.fams[k];
+      const mem=[{user_id:f.owner,name:nm(f.owner)[0],avatar:nm(f.owner)[1],owner:true,me:f.owner===u}].concat(f.members.map(m=>({user_id:m,name:nm(m)[0],avatar:nm(m)[1],owner:false,me:m===u})));
+      const inv=role==='owner'?Object.entries(srv.invites).filter(([c,i])=>i.fam===k&&!i.used&&i.exp>now()).map(([c,i])=>({code:c,expires_at:iso(i.exp)}))[0]||null:null;
+      return D({role,family_id:k,seats:f.seats,used:f.members.length+1,left:Math.max(0,f.seats-f.members.length-1),active:!!famLive(k),until:famLive(k)?iso(famLive(k)):null,members:mem,invite:inv}); },
+    family_invite:()=>{ const u=me(), k=ownFam(u); if(!k) return E(famOf(u)?'not_owner':'no_family'); const f=srv.fams[k]; if(!famLive(k)) return E('family_inactive'); if(f.members.length+1>=f.seats) return E('family_full');
+      Object.keys(srv.invites).forEach(c=>{ if(srv.invites[c].fam===k&&!srv.invites[c].used) delete srv.invites[c]; });
+      const A='ABCDEFGHJKLMNPQRSTUVWXYZ23456789'; let c=''; for(let i=0;i<8;i++) c+=A[Math.floor(Math.random()*32)]; srv.invites[c]={fam:k,exp:now()+7*864e5,used:null}; put();
+      return D({code:c,expires_at:iso(srv.invites[c].exp),url:'https://pianochallenges.com/?fam='+c,left:f.seats-f.members.length-1}); },
+    family_invite_info:a=>{ const u=me(), c=String(a.p_code||'').toUpperCase(), i=srv.invites[c]; if(!i) return D({ok:false,error:'invite_invalid'}); const f=srv.fams[i.fam], used=f.members.length+1;
+      const why=i.used&&i.used!==u?'invite_used':i.exp<=now()?'invite_expired':f.owner===u?'is_owner':famOf(u)?'already_member':!famLive(i.fam)?'family_inactive':used>=f.seats?'family_full':null;
+      return D({ok:!why,error:why,owner:nm(f.owner)[0],avatar:nm(f.owner)[1],seats:f.seats,used,mine:f.members.includes(u)}); },
+    family_join:a=>{ const u=me(), c=String(a.p_code||'').toUpperCase(), i=srv.invites[c]; if(!i) return E('invite_invalid'); const f=srv.fams[i.fam]; if(f.members.includes(u)) return D({ok:true,already:true});
+      if(i.used) return E('invite_used'); if(i.exp<=now()) return E('invite_expired'); if(f.owner===u) return E('is_owner'); if(famOf(u)) return E('already_member'); if(!famLive(i.fam)) return E('family_inactive'); if(f.members.length+1>=f.seats) return E('family_full');
+      f.members.push(u); i.used=u; put(); return D({ok:true,owner:nm(f.owner)[0],used:f.members.length+1,seats:f.seats}); },
+    family_leave:()=>{ const u=me(), k=Object.keys(srv.fams).find(k=>srv.fams[k].members.includes(u)); if(!k) return E(srv.fams['f'+u]||Object.values(srv.fams).some(f=>f.owner===u)?'is_owner':'not_member'); srv.fams[k].members=srv.fams[k].members.filter(m=>m!==u); put(); return D({ok:true}); },
+    family_remove:a=>{ const u=me(), k=Object.keys(srv.fams).find(k=>srv.fams[k].owner===u); if(!k) return E('not_owner'); const f=srv.fams[k]; if(!f.members.includes(a.p_user)) return E('not_member'); f.members=f.members.filter(m=>m!==a.p_user); put(); return D({ok:true}); },
+    leaderboard:()=>D([]), add_xp:()=>D(0), my_rank:()=>D(null), my_league:()=>D([]),
+  };
+  const qb=t=>{ const b={ select(){return b;}, eq(){return b;}, gte(){return b;}, order(){return b;}, limit(){return b;}, upsert(){return b;}, insert(){return b;}, update(){return b;},
+    maybeSingle:async()=>({data:null,error:null}), single:async()=>({data:null,error:null}), then(ok,ko){ return Promise.resolve({data:null,error:null}).then(ok,ko); } }; return b; };
+  const ch=()=>{ const c={ on(){return c;}, subscribe(cb){ setTimeout(()=>cb&&cb('SUBSCRIBED'),10); return c; }, track:async()=>'ok', untrack:async()=>'ok', send:async()=>'ok', presenceState(){ return {}; } }; return c; };
+  const listeners=[];
+  const client={ auth:{ getSession:async()=>({data:{session:F().user?{user:F().user,access_token:'tok-'+F().user.id}:null}}), onAuthStateChange(cb){ listeners.push(cb); return {data:{subscription:{unsubscribe(){}}}}; }, signOut:async()=>({error:null}) },
+    from:qb, channel:ch, removeChannel(){},
+    rpc:async(n,a)=>{ log(n,a); await new Promise(r=>setTimeout(r,15)); if(!F().user && n.startsWith('family')) return E('not_signed_in'); return R[n]?R[n](a||{}):{data:null,error:null}; } };
+  window.__fakeLogin=u=>{ window.__FAKE.user=u; listeners.forEach(cb=>cb('SIGNED_IN',{user:u,access_token:'tok-'+u.id})); };
   window.supabase={ createClient:()=>client }; })();`;
