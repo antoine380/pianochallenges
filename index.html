@@ -3450,6 +3450,24 @@ body.imp-drag[data-page="free"] #freePanel::after{content:"";position:absolute;i
 @media (max-height:520px){ .mp-tips li{padding:6px;font-size:.8rem} .mp-tips svg{width:22px;height:22px} .mp-live{min-height:56px} .mp-vu{height:44px} .mp-note{font-size:2.2rem} }
 @media (prefers-reduced-motion:reduce){ .mp-vu i{transition:none} }
 /* ==== fin Premiers pas lot 4 ==== */
+/* ==== Catalogue libre (bibliothèque de morceaux libres de droits, crédits musicaux) ==== */
+.pc-lib .pc-n{font-style:normal;min-width:20px;height:20px;padding:0 6px;border-radius:999px;background:var(--m-play);color:#fff;font:800 .72rem/20px var(--f-body);text-align:center}
+.pc-lib[aria-pressed="true"] .pc-n{background:#fff;color:var(--m-play)}
+.pc-row>h3 .pc-cred{margin-left:auto;border:0;background:none;padding:2px 4px;color:var(--m-play);font:800 .78rem/1 var(--f-body);cursor:pointer;text-decoration:underline;text-underline-offset:3px}
+:root[data-theme="dark"] .pc-row>h3 .pc-cred{color:#b9a8ff}
+@media (prefers-color-scheme:dark){ :root:not([data-theme="light"]) .pc-row>h3 .pc-cred{color:#b9a8ff} }
+.pc-lib-wait{margin:auto;color:var(--muted);font-weight:700}
+.cred-modal .modal-card{width:min(700px,100%);max-height:min(88vh,780px);display:flex;flex-direction:column}
+.cred-body{display:flex;flex-direction:column;gap:10px;min-height:0;flex:1 1 auto;padding:0 22px 20px}
+.cred-sub{margin:0;color:var(--muted);font-size:.86rem;line-height:1.45}
+.cred-list{flex:1 1 auto;min-height:120px;overflow:auto;border-top:1px solid var(--line);padding:4px 4px 4px 0;overscroll-behavior:contain}
+.cred-list h3{font:800 .95rem/1.2 var(--f-display);margin:14px 0 2px}
+.cred-item{padding:7px 0;border-bottom:1px solid var(--line);font-size:.85rem;line-height:1.4}
+.cred-item b{font-weight:800} .cred-item small{display:block;color:var(--muted)} .cred-item a{color:inherit;text-decoration:underline;text-underline-offset:2px;word-break:break-all}
+.cred-x{display:inline-block;margin-left:6px;padding:1px 7px;border-radius:999px;background:var(--surface-2);box-shadow:inset 0 0 0 1px var(--line);font-size:.72rem;font-weight:800}
+@media (max-width:900px){ .pc-lib span,.pcat-bar .pc-free span{display:none} }
+@media (max-width:640px){ .pc-lib span,.pc-lib .pc-n{display:none} .pcat-bar .pc-chip[data-lv] i{display:none} .cred-body{padding:0 14px 14px} }
+/* ==== fin Catalogue libre ==== */
 </style>
 
 <script>if(window.Capacitor&&window.webkit&&window.webkit.messageHandlers&&window.webkit.messageHandlers.bridge)document.documentElement.classList.add("native");</script>
@@ -3895,6 +3913,16 @@ body.imp-drag[data-page="free"] #freePanel::after{content:"";position:absolute;i
     </div>
   </div>
 </div>
+<div class="modal cred-modal" id="credModal" role="dialog" aria-modal="true" aria-labelledby="credTitle" hidden>
+  <div class="modal-bg" data-close="credModal"></div>
+  <div class="modal-card">
+    <div class="modal-head"><h2 id="credTitle" data-i="credBtnT"></h2><button class="modal-close" type="button" data-close="credModal" aria-label="Close">×</button></div>
+    <div class="modal-body cred-body">
+      <p class="cred-sub" id="credSub"></p>
+      <div class="cred-list" id="credList" tabindex="0"></div>
+    </div>
+  </div>
+</div>
 <div class="modal fb-modal" id="fbModal" role="dialog" aria-modal="true" aria-labelledby="fbTitle" hidden>
   <div class="modal-bg" data-close="fbModal"></div>
   <div class="modal-card">
@@ -4048,7 +4076,7 @@ body.imp-drag[data-page="free"] #freePanel::after{content:"";position:absolute;i
       <section class="set-sec" data-tab="ntf"><h3><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 16V11a6 6 0 0 1 12 0v5l1.5 2h-15z"/><path d="M10 20.5a2.2 2.2 0 0 0 4 0"/></svg><span data-i="ntfTitle"></span></h3><div class="ntf-set" id="ntfSet"></div></section>
       <section class="set-sec set-app" data-tab="app"><h3><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="6" y="2.5" width="12" height="19" rx="3"/><path d="M10.5 18.5h3"/></svg><span data-i="setAppH"></span></h3>
       <div class="trk-set"><label class="check"><input type="checkbox" id="optAnalytics"> <span><b data-i="trkOpt"></b><small data-i="trkOptS"></small></span></label><button class="btn" id="fbBtn" type="button" data-i="fbBtnT"></button></div>
-      <p class="set-reset"><button class="btn" id="tourAgain" type="button" data-i="tourAgainT"></button> <button class="btn" id="onbAgain" type="button" data-i="onbAgainT"></button></p>
+      <p class="set-reset"><button class="btn" id="tourAgain" type="button" data-i="tourAgainT"></button> <button class="btn" id="onbAgain" type="button" data-i="onbAgainT"></button> <button class="btn" id="credBtn" type="button" data-i="credBtnT"></button></p>
       <p class="set-reset"><button class="danger" id="resetBtn" type="button"></button></p>
       <p class="legal-links set-legal"><a href="/mentions-legales.html" data-i="legalNotice"></a> · <a href="/confidentialite.html" data-i="privacy"></a><br>© 2026 Antoine Bernard · <span data-i="rights"></span></p></section>
     </div>
@@ -9700,7 +9728,7 @@ addEventListener("resize",()=>{ if(page==="acc" && ACC.view==="play" && ACC.run)
 // (fetch keepalive vers la fonction SQL track_events), sans le SDK Supabase. Hors ligne, la file attend. Une table ou une
 // fonction absente (migration pas encore lancée) coupe l'envoi sans erreur. En développement (localhost), rien ne part sur
 // le réseau, sauf si localStorage « pc-trk-test » = "1" (tests). Interrupteur : S.settings.analytics (absent = activé).
-const APP_BUILD="2026-10-24T23:22Z"; // remplacé par tools/build.py par la date de construction (version.txt)
+const APP_BUILD="2026-10-25T01:19Z"; // remplacé par tools/build.py par la date de construction (version.txt)
 const TRK={q:[], t:0, off:false, anon:null, sent:0, errs:[], errT:0, errSeen:new Set(), errOn:null, ports:new Set(), first:false};
 const RC={flags:{}, daily:{}, at:0};
 const TRK_NAMES=new Set(["song_import","app_open","first_note","input_mode","midi_connected","pp_lesson_done","learn_end","game_end","quiz_end","duel_end","goal_reached","badge","signup","login","play","feedback","acc_end","song_open","route_step","route_stage"]);
@@ -11751,6 +11779,75 @@ try{ renderSettings(); }catch(e){}
     const lw=L4isO(local.wkRev)?local.wkRev:null, cw=L4isO(c.wkRev)?c.wkRev:null; if(lw||cw) M.wkRev={last:[lw&&lw.last,cw&&cw.last].map(x=>String(x||"")).sort().pop()};
     r.changed=JSON.stringify(M)!==JSON.stringify(local); return r; }; }
 /* ==== fin Premiers pas lot 4 ==== */
+
+/* ==== Catalogue libre (≈ 200 morceaux : catalogue de base + bibliothèque libre de droits) ==== */
+// assets/js/songs-free.js (généré par tools/catalog/import_free.py) ajoute ~170 morceaux au catalogue de songs-data.js, avec leur source et leur
+// licence (src) : OpenScore Lieder (CC0) et Mutopia (domaine public / CC BY). Chargé à la demande avec le catalogue (pcLoad), jamais au démarrage.
+// PLAY : pastille « Bibliothèque » #pcLib dans #pcBar → vue PC.view="lib" (4 rangées : Grands compositeurs, Lieder et mélodies, Études faciles,
+// Danses et airs ; le filtre de niveau s'applique) ; la vue « Tous » garde ses 5 rangées. Crédits : Réglages › Application › « Crédits musicaux »
+// (#credBtn → #credModal, credOpen()), aussi par le lien « Crédits » de la bibliothèque. Lecteur : « Source : … · Licence … » dans la fenêtre d'accueil.
+Object.assign(TXT.fr,{pcLib:"Bibliothèque", pcLibT:n=>"Bibliothèque libre de droits : "+n+" morceaux", pcCMasters:"Grands compositeurs", pcCLieder:"Lieder et mélodies", pcCEtudes:"Études faciles", pcCDances:"Danses et airs",
+  pcLibWait:"Chargement de la bibliothèque…", pcCredL:"Crédits", credBtnT:"Crédits musicaux",
+  credSub:n=>"Tous les morceaux sont des œuvres du domaine public. Le catalogue de base est fait d'arrangements maison. Les "+n+" morceaux de la Bibliothèque sont adaptés (mélodie, main gauche simplifiée, transposition, extrait du début jusqu'à une cadence) d'éditions numériques libres : OpenScore Lieder (CC0) et Mutopia Project (domaine public ou Creative Commons Attribution). Merci à leurs bénévoles.",
+  credBase:"Catalogue de base", credBaseS:"Arrangements maison d'airs traditionnels et d'œuvres du domaine public", credLib:"Bibliothèque libre de droits",
+  credTyped:"saisie", credLic:"Licence", credExtract:"extrait", credLoad:"Chargement…", credFail:"Impossible de charger la liste. Vérifie ta connexion."});
+Object.assign(TXT.en,{pcLib:"Library", pcLibT:n=>"Public-domain library: "+n+" pieces", pcCMasters:"Great composers", pcCLieder:"Songs and lieder", pcCEtudes:"Easy studies", pcCDances:"Dances and tunes",
+  pcLibWait:"Loading the library…", pcCredL:"Credits", credBtnT:"Music credits",
+  credSub:n=>"Every piece is in the public domain. The base catalogue is made of our own arrangements. The "+n+" pieces of the Library are adapted (melody, simplified left hand, transposition, excerpt from the start to a cadence) from free digital editions: OpenScore Lieder (CC0) and the Mutopia Project (public domain or Creative Commons Attribution). Thanks to their volunteers.",
+  credBase:"Base catalogue", credBaseS:"Our own arrangements of traditional tunes and public-domain works", credLib:"Public-domain library",
+  credTyped:"typeset by", credLic:"Licence", credExtract:"excerpt", credLoad:"Loading…", credFail:"Could not load the list. Check your connection."});
+TXT.fr.pcFrom.se="Trad. suédois"; TXT.en.pcFrom.se="Swedish trad.";
+const PC_LIB=[["masters","pcCMasters"],["lieder","pcCLieder"],["etudes","pcCEtudes"],["dances","pcCDances"]];
+const LIB={loading:null};
+// the catalogue = songs-data.js then songs-free.js (premSong: the first PREM_OFFER.freeSongs of this order, i.e. still the 10 first songs)
+const _libLoad=pcLoad;
+pcLoad=function(){ if(window.PC_FREE && window.PC_SONG) return Promise.resolve();
+  if(!LIB.loading) LIB.loading=_libLoad().then(()=>window.PC_FREE?null:new Promise((res,rej)=>{ const sc=document.createElement("script"); sc.src="assets/js/songs-free.js"; sc.async=true;
+    sc.onload=()=>res(); sc.onerror=()=>{ LIB.loading=null; rej(); }; document.head.appendChild(sc); }));
+  return LIB.loading; };
+const libSongs = () => (window.PC_FREE||[]);
+const LIB_ICO='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4.5 5.5h4v13h-4zM10 5.5h4v13h-4z"/><path d="M15.6 6.2l3.6-1 3 12.6-3.6 1z"/></svg>';
+function libChip(){ const bar=$("pcBar"); if(!bar) return; const on=PC.view==="lib" && !PC.kb, n=libSongs().length;
+  const b=document.createElement("button"); b.type="button"; b.className="pc-chip pc-lib"; b.id="pcLib"; b.setAttribute("aria-pressed",on);
+  b.innerHTML=LIB_ICO+'<span></span>'+(n?'<em class="pc-n"></em>':''); b.querySelector("span").textContent=t("pcLib"); if(n) b.querySelector("em").textContent=n;
+  b.setAttribute("aria-label",n?t("pcLibT")(n):t("pcLib"));
+  b.onclick=()=>{ PC.kb=false; PC.view = PC.view==="lib" ? "cat" : "lib"; renderPlaySongs(); };
+  const mine=$("pcMine"), fr=$("pcFree"); bar.insertBefore(b, mine||fr||null);
+  // the level filter stays in the library view
+  bar.querySelectorAll(".pc-chip[data-lv]").forEach(c=>{ c.onclick=()=>{ PC.lv=+c.dataset.lv; PC.kb=false; if(PC.view!=="lib") PC.view="cat"; renderPlaySongs(); }; }); }
+const _libBar=pcBar; pcBar=function(){ _libBar(); libChip(); };
+const _libRPS=renderPlaySongs;
+renderPlaySongs=function(){ if(PC.view!=="lib" || PC.kb) return _libRPS();
+  const box=$("playSongs"); if(!box) return;
+  document.body.classList.remove("pc-kb"); const ip=$("impPanel"); if(ip) ip.hidden=true; $("grPanel").hidden=true; box.hidden=false;
+  if(!window.PC_FREE || !window.PC_SONG){ pcBar(); box.innerHTML='<p class="pc-lib-wait"></p>'; box.firstChild.textContent=t("pcLibWait");
+    pcLoad().then(()=>{ if(page==="free" && PC.view==="lib") renderPlaySongs(); }).catch(()=>{ PC.view="cat"; if(page==="free") renderPlaySongs(); }); return; }
+  pcBar(); const P=window.PC_SONG, best=pcBest(); box.innerHTML="";
+  PC_LIB.forEach(([c,k],i)=>{ const songs=P.list.filter(d=>d.c===c && (!PC.lv || P.arrs(d).some(a=>a.lv===PC.lv)));
+    const r=pcRow(t(k),t("pcCount")(songs.length)); r.el.dataset.coll=c; songs.forEach(d=>r.strip.appendChild(pcTile(d,best)));
+    if(!songs.length){ const e=document.createElement("p"); e.className="pc-empty"; e.textContent=t("pcEmpty"); r.strip.appendChild(e); }
+    if(!i){ const cb=document.createElement("button"); cb.type="button"; cb.className="pc-cred"; cb.id="pcCred"; cb.textContent=t("pcCredL"); cb.onclick=credOpen; r.el.querySelector("h3").appendChild(cb); }
+    box.appendChild(r.el); }); };
+// ---- music credits (Settings › App): the base catalogue in one line, then every piece of the library with its source and licence
+function credRender(){ const list=$("credList"), fr=S.settings.lang==="fr", L=libSongs(); list.innerHTML="";
+  $("credSub").textContent=t("credSub")(L.length);
+  const h=(txt,sub)=>{ const e=document.createElement("h3"); e.textContent=txt; list.appendChild(e); if(sub){ const p=document.createElement("p"); p.className="cred-item"; p.textContent=sub; list.appendChild(p); } };
+  h(t("credBase"), t("credBaseS")+" ("+((window.PC_SONG?window.PC_SONG.list.length:0)-L.length)+")");
+  h(t("credLib")+" ("+L.length+")");
+  const sn=x=>String(x.src.by).split(" ").filter(w=>!/^(II|van|von|de)$/.test(w)).pop()||"";
+  [...L].sort((a,b)=>sn(a).localeCompare(sn(b),"fr")||a.t[0].localeCompare(b.t[0],"fr")).forEach(d=>{ const s=d.src, it=document.createElement("div"); it.className="cred-item";
+    const b=document.createElement("b"); b.textContent=d.t[fr?0:1]; it.appendChild(b);
+    if(d.x){ const x=document.createElement("span"); x.className="cred-x"; x.textContent=t("credExtract"); it.appendChild(x); }
+    const s1=document.createElement("small"); s1.textContent=s.by+(s.dt?" ("+s.dt+")":"")+" · "+s.t; it.appendChild(s1);
+    const s2=document.createElement("small"); s2.textContent=s.ed+(s.no?" n° "+s.no:"")+(s.who?" · "+t("credTyped")+" : "+s.who:"")+" · "+t("credLic")+" "+s.lic+" · "; 
+    const a=document.createElement("a"); a.href=s.url; a.target="_blank"; a.rel="noopener"; a.textContent=s.url.replace(/^https?:\/\//,""); s2.appendChild(a); it.appendChild(s2);
+    list.appendChild(it); }); }
+function credOpen(){ const list=$("credList"); openMod("credModal");
+  if(window.PC_FREE && window.PC_SONG){ credRender(); list.scrollTop=0; return; }
+  list.textContent=t("credLoad"); $("credSub").textContent="";
+  pcLoad().then(()=>{ if(!$("credModal").hidden) credRender(); }).catch(()=>{ list.textContent=t("credFail"); }); }
+$("credBtn").addEventListener("click", credOpen);
+/* ==== fin Catalogue libre ==== */
 
 // ---------- Boot ----------
 
