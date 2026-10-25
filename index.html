@@ -9801,7 +9801,7 @@ addEventListener("resize",()=>{ if(page==="acc" && ACC.view==="play" && ACC.run)
 // (fetch keepalive vers la fonction SQL track_events), sans le SDK Supabase. Hors ligne, la file attend. Une table ou une
 // fonction absente (migration pas encore lancée) coupe l'envoi sans erreur. En développement (localhost), rien ne part sur
 // le réseau, sauf si localStorage « pc-trk-test » = "1" (tests). Interrupteur : S.settings.analytics (absent = activé).
-const APP_BUILD="2026-10-25T13:10Z"; // remplacé par tools/build.py par la date de construction (version.txt)
+const APP_BUILD="2026-10-25T13:11Z"; // remplacé par tools/build.py par la date de construction (version.txt)
 const TRK={q:[], t:0, off:false, anon:null, sent:0, errs:[], errT:0, errSeen:new Set(), errOn:null, ports:new Set(), first:false};
 const RC={flags:{}, daily:{}, at:0};
 const TRK_NAMES=new Set(["song_import","app_open","first_note","input_mode","midi_connected","pp_lesson_done","learn_end","game_end","quiz_end","duel_end","goal_reached","badge","signup","login","play","feedback","acc_end","song_open","route_step","route_stage"]);
@@ -11979,6 +11979,11 @@ TXT.en.rankErr=TXT.en.hsRankErr="Can't reach the leaderboard right now (offline?
 { const _sp=renderSetPrem; renderSetPrem=function(){ const r=_sp.apply(this,arguments), box=$("setPremBox"); if(box && box.classList.contains("off") && !box.querySelector(".ru-prem")){ const d=document.createElement("div"); d.className="ru-prem"; d.innerHTML='<b></b><span></span>'; d.firstChild.textContent=t("ruPremFree"); d.lastChild.textContent=t("ruPremFreeD"); box.prepend(d); } return r; }; }
 /* ==== fin Revue UI ==== */
 
+// ---------- Liens des e-mails (?go=daily|pp|progress|hub, boutons des e-mails de la fonction notify) ----------
+// lu une fois au démarrage puis retiré de l'adresse ; suivi seulement quand aucun écran de départ ne s'affiche (premier lancement, connexion, questionnaire, tutoriel)
+const MAIL_GO = (()=>{ try{ const q=new URLSearchParams(location.search), g=q.get("go"); if(!g) return null; q.delete("go"); q.delete("from"); const s=q.toString(); history.replaceState(null,"",location.pathname+(s?"?"+s:"")+location.hash); return ["daily","pp","progress","hub"].includes(g)?g:null; }catch(e){ return null; } })();
+function mailGo(){ if(!MAIL_GO || gateNeeded() || !(S.onb&&S.onb.done) || !S.tourDone) return; try{ ntfDo({k:MAIL_GO}); }catch(e){} }
+
 // ---------- Boot ----------
 
 applyStatic(); applySide(); buildKeyboard(); renderSettings(); render(); renderDaily(); openPage("hub");
@@ -11991,6 +11996,7 @@ restoreInput(); mdWatch();
   if(gateNeeded()){ save(); const op=(S.onb&&S.onb.legacy)?gateOpen:fnOpen; /* older players keep their settings: the sign-in screen once, not the first-note screen */ if(nat) setTimeout(op,wait); else op(); }
   else if(!(S.onb&&S.onb.done) || !S.tourDone){ save(); if(hasSession()) ensureCloud().finally(()=>setTimeout(startFlow,wait)); else setTimeout(startFlow,wait); }
   else maybeAskInput(); }
+setTimeout(mailGo, isApp()?1800:700); // un bouton d'e-mail ouvre directement l'écran (entraînement du jour, leçon, progression)
 
 })();
 </script>
