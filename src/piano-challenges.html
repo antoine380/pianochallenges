@@ -3491,6 +3491,8 @@ body.imp-drag[data-page="free"] #freePanel::after{content:"";position:absolute;i
 @media (max-height:520px) and (orientation:landscape){ #qzSetup .qz-theme b{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:calc(100% - 4px)} }
 /* Accompagnement en iPad portrait : la carte « Jeu » prend toute la largeur (elle laissait une moitié vide) */
 @media (max-width:900px){ #accPanel .su-side>.su-box{grid-column:1/-1} }
+/* podium du quiz en téléphone paysage : les boutons « Rejouer » passaient sous le bord de l'écran */
+@media (max-height:520px) and (orientation:landscape){ .qz-end{gap:6px} .qz-endt{font-size:1.25rem} .qz-pod,.qz-pod.r1{padding:6px 12px;gap:0;flex-direction:row;gap:10px;width:auto} .qz-rk{width:28px;height:28px;font-size:.95rem} .qz-sc{font-size:1.1rem} .qz-pod small{display:none} }
 /* ==== fin Revue UI ==== */
 </style>
 

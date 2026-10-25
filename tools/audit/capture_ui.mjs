@@ -192,5 +192,5 @@ if (!ONLY.length || ONLY.includes('admin')) for (const [w, h] of [[1440, 900], [
   }
   await c.close();
 }
-fs.writeFileSync(`${OUT}/report${ONLY.length ? '-' + ONLY.join('_') : ''}${process.env.THEME ? '-' + process.env.THEME : ''}${process.env.SIZES ? '-' + SIZES.map(s => s.join('x')).join('_') : ''}.json`, JSON.stringify(report, null, 1));
+fs.writeFileSync(`${OUT}/report${ONLY.length ? '-' + (ONLY.length > 4 ? ONLY.length + 'ecrans' : ONLY.join('_')) : ''}${process.env.THEME ? '-' + process.env.THEME : ''}${process.env.SIZES ? '-' + SIZES.map(s => s.join('x')).join('_') : ''}.json`, JSON.stringify(report, null, 1));
 await b.close(); console.log('DONE', report.length);
