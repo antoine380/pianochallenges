@@ -235,9 +235,10 @@ fr:{midiScreen:"Clavier à l'écran",midiConnect:"Connecter un clavier MIDI",mid
  foot:"Prototype. Le son est un synthé intégré ; l'app finale utilisera le piano échantillonné Salamander. Clavier d'ordinateur : Q S D F G H J K L pour les blanches, Z E T Y U O P pour les noires.",
  back:"Retour",kbd:"Clavier",lives:"Vies",time:"Temps",streak:"Série",score:"Score",speed:"Vitesse",names:"Notes",fing:"Doigts",wait:"Attente",listen:"Écouter",metro:"Métro",hint:"Indice",replay:"Rejouer",sheet:"Partition",cascade:"Cascade",
  level:"Niveau",levels:['','Facile','Moyen','Avancé'],trad:"Traditionnel",tradMozart:"Traditionnel (var. Mozart)",notes:"notes",record:"Record",play:"Jouer",library:"Bibliothèque",game:"Jeu",
- songIntro:(s,c)=>`${c} · ${s.notes.length} notes. Le morceau s'arrête jusqu'à ce que tu joues la <span style="color:${s.col}">bonne note</span>. ${s.hands>1?'Main droite en haut, main gauche en bas (Do3 à Si3).':'Les chiffres indiquent le doigt à utiliser (1 = pouce).'}`,
- arrH:"Version",oneHand:"une main",twoHands:"deux mains",byFrom:{fr:'Trad. français',gb:'Trad. anglais',us:'Trad. américain',de:'Trad. allemand',qc:'Trad. québécois',ru:'Trad. russe',sc:'Trad. écossais',wa:'Trad. gallois',fi:'Trad. finlandais',se:'Trad. suédois'},
  listenHint:"« Écouter » joue d'abord le morceau pour toi.",srcL:"Source",licL:"Licence",extract:"Extrait",typed:"saisie",listenedT:"Tu as écouté le morceau",listenedP:"À toi de jouer maintenant.",
+ songIntro:(s,c)=>`${c} · ${s.notes.length} notes. Le morceau s'arrête jusqu'à ce que tu joues la <span style="color:${s.col}">bonne note</span>. ${s.hands>1?'Main droite en haut, main gauche en bas (Do2 à Si2).':'Les chiffres indiquent le doigt à utiliser (1 = pouce).'}`,
+ arrH:"Version",oneHand:"une main",twoHands:"deux mains",byFrom:{fr:'Trad. français',gb:'Trad. anglais',us:'Trad. américain',de:'Trad. allemand',qc:'Trad. québécois',ru:'Trad. russe',sc:'Trad. écossais',wa:'Trad. gallois',fi:'Trad. finlandais',se:'Trad. suédois'},
+ listenHint:"« Écouter » joue d'abord le morceau pour toi.",listenedT:"Tu as écouté le morceau",listenedP:"À toi de jouer maintenant.",
  waitNote:"Le morceau attend la bonne note",perfect:"Parfait",good:"Bien",missed:"Raté",verdicts:['On recommence ?','Bien joué','Très bien','Parfait !'],
  acc:(a,sc,st)=>`Précision ${a} % · Score ${sc} · Meilleure série ${st}`,resPerfect:"Parfait",resGood:"Bien",resMissed:"Ratées",resWrong:"Fausses",tooFast:"Trop rapide ? Passe la vitesse à 75 %.",
  newRecord:"Nouveau record !",gameOver:"Partie terminée",scoreRec:(s,b)=>`Score ${s} · record ${b}`,combo:"Combo ×",notThat:n=>'Pas '+n+' !',cleared:n=>`${n} obstacles franchis`,
@@ -379,7 +380,7 @@ buildKeys();
 // a two-hand arrangement needs the octave below middle C: the keyboard widens to C3..B5, and back to C4..B5 for the rest
 function setRange(lo,hi){if(lo===LOW&&hi===HIGH)return;LOW=lo;HIGH=hi;buildKeys();labelKeys();lastTargets='x';SV.sig=''}
 const FLATS=LANG==='fr'?['','Ré♭','','Mi♭','','','Sol♭','','La♭','','Si♭','']:['','D♭','','E♭','','','G♭','','A♭','','B♭',''];
-function labelKeys(){keyEls.forEach((k,m)=>{k.firstChild.textContent=!showNames?(pc(m)===0?NAMES[0]+(Math.floor(m/12)-1):''):(isBlack(m)?FLATS[pc(m)]:NAMES[pc(m)])})}
+function labelKeys(){keyEls.forEach((k,m)=>{k.firstChild.textContent=!showNames?(pc(m)===0?NAMES[0]+(Math.floor(m/12)-(LANG==='fr'?2:1)):''):(isBlack(m)?FLATS[pc(m)]:NAMES[pc(m)])})}
 labelKeys();
 let lastTargets='';
 function setTargets(list){ // [{m,f}]
