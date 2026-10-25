@@ -3448,6 +3448,7 @@ body.imp-drag[data-page="free"] #freePanel::after{content:"";position:absolute;i
 .gt-art{container-type:inline-size}
 .gt-big{padding:0 18px 0 48px}
 .gt-big b{font-size:clamp(2rem,10cqi,4.6rem);text-wrap:balance}
+@media (max-width:900px) and (min-height:700px) and (min-width:641px){ .gt-big{padding:0 18px} .gt-big b{font-size:clamp(1.8rem,6.2cqi,3rem)} .gt-o.o1,.gt-o.o2{display:none} }
 /* « Continuer sans compte » : même bouton en pointillés aux deux étapes (c'était un petit lien de 29 px à la première) */
 .gt-choose .gt-noacct{display:flex;align-items:center;justify-content:center;width:100%;min-height:44px;border:2px dashed var(--line);border-radius:999px;color:var(--ink);font-size:.9rem;padding:10px 16px}
 /* certificat des Premiers pas : « Et maintenant ? » en 2 × 2 (en 3 colonnes de 150 px les objets 3D couvraient les titres) */
@@ -3473,6 +3474,12 @@ body.imp-drag[data-page="free"] #freePanel::after{content:"";position:absolute;i
 .set-prem .ru-prem{flex:1 1 100%;display:flex;flex-direction:column;gap:4px;padding:var(--card-pad,16px);border-radius:var(--r-lg,18px);background:var(--surface-2)} .ru-prem b{font-family:var(--f-display);font-size:1.1rem} .ru-prem span{color:var(--muted);font-weight:600}
 /* piano libre : le clavier prend la place libre (la moitié de l'écran restait vide sur iPad) */
 @media (min-height:700px){ body.pc-kb[data-page="free"] .kbd{height:clamp(150px,calc(100dvh - 380px),480px)!important} }
+/* cibles tactiles : les petites commandes (pastilles de PLAY 28 px, flèches du calendrier, points des actualités, liens « Tout voir »,
+   « Terminer la partie », croix de la bulle d'import, chiffres du quiz) gagnent une zone de toucher invisible, sans changer la mise en page */
+:is(.pc-chip,.hs-more,.gamebar .gend,.imp-tip-x,#pfPrev,#pfNext,.hs-dots button,#qzBots button,#suHow,.how-btn){position:relative}
+:is(.pc-chip,.hs-more,.gamebar .gend,.imp-tip-x,#pfPrev,#pfNext,#qzBots button,#suHow,.how-btn)::after{content:"";position:absolute;inset:-7px -3px;border-radius:inherit}
+.hs-dots button::after{content:"";position:absolute;inset:-14px -3px}
+.hs-dots{gap:8px}
 /* ==== fin Revue UI ==== */
 </style>
 
