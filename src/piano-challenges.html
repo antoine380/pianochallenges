@@ -8935,7 +8935,7 @@ function goalFiche(st){ const box=$("pfGoal"); if(!box) return; const g=goalCfg(
 // ---- choosing the goal: Settings (tab Partie) and, once, after a game played well ----
 $("segGoal").addEventListener("click",e=>{ const b=e.target.closest("button[data-v]"); if(!b) return; const [k,v]=b.dataset.v.split(":"); goalSet(k,+v); });
 let glPick="min:10";
-function goalOpen(){ const g=goalCfg(); glPick=g.kind+":"+g.v; const gk=$("goalModal").querySelector(".gl-k"); if(gk) gk.textContent=t(page==="pp"?"goalKickL":"goalKick"); // after a lesson of the first steps: « Bravo pour cette leçon » S.goal={...(S.goal&&typeof S.goal==="object"?S.goal:{kind:g.kind, v:g.v, at:0}), asked:1}; save();
+function goalOpen(){ const g=goalCfg(); glPick=g.kind+":"+g.v; const gk=$("goalModal").querySelector(".gl-k"); if(gk) gk.textContent=t(page==="pp"?"goalKickL":"goalKick"); /* after a lesson of the first steps: « Bravo pour cette leçon » */ S.goal={...(S.goal&&typeof S.goal==="object"?S.goal:{kind:g.kind, v:g.v, at:0}), asked:1}; save();
   const box=$("glOpts"); box.innerHTML=""; const tags=t("goalTags");
   GOALS.forEach(([k,v],i)=>{ const b=document.createElement("button"); b.type="button"; b.className="gl-opt"; b.dataset.v=k+":"+v; b.innerHTML="<b></b><small></small>"; b.firstChild.textContent=v+" "+(k==="xp"?"XP":"min"); b.lastChild.textContent=tags[i];
     b.setAttribute("aria-pressed", b.dataset.v===glPick); b.onclick=()=>{ glPick=b.dataset.v; box.querySelectorAll(".gl-opt").forEach(x=>x.setAttribute("aria-pressed",x.dataset.v===glPick)); }; box.appendChild(b); });
@@ -9276,7 +9276,7 @@ function ppRenderMap(){ const lp=$("learnPanel"); if(!lp) return; let el=$("ppMa
 // ---- hub: « Pick up » (D8), only once the path has started (or for a beginner)
 function ppRenderResume(){ const hm=document.querySelector("#hubPanel .hub-main"); if(!hm) return; let el=$("ppResume");
   if(!el){ el=document.createElement("button"); el.type="button"; el.id="ppResume"; el.className="pp-res"; hm.insertBefore(el,hm.querySelector(".hub-grid")); el.onclick=ppResumeGo; }
-  const r=ppResumeInfo(), show=!!r && (ppStarted() || (S.onb&&S.onb.level==="debut")) && !(ppAllDone() && !r.step); el.hidden=!show; // all 14 done (or placed past them): no « Lesson 14 » card, the general « Pick up » / Ma route card takes over document.body.classList.toggle("pp-hasres",show); if(!show) return;
+  const r=ppResumeInfo(), show=!!r && (ppStarted() || (S.onb&&S.onb.level==="debut")) && !(ppAllDone() && !r.step); el.hidden=!show; /* all 14 done (or placed past them): no « Lesson 14 » card, the general « Pick up » / Ma route card takes over */ document.body.classList.toggle("pp-hasres",show); if(!show) return;
   const k = r.step ? t("ppResume") : r.next ? t("ppNext") : t("ppName"), pct=Math.round(100*r.step/r.total);
   el.innerHTML='<span class="pp-rk">'+esc(k)+'</span><b class="pp-rt">'+esc(t("ppLesson")(r.n)+" · "+ppTitle(r.id))+'</b>'
     +'<span class="pp-rbar"><span class="pp-bar"><i style="width:'+pct+'%"></i></span><small>'+esc(t("ppStepOf")(r.step+1,r.total)+" · "+t("ppMin")(PP_MIN[r.n-1]))+'</small></span>'
