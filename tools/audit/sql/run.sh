@@ -1,7 +1,5 @@
 #!/bin/bash
-# Teste les migrations dans l'ordre (2026-10-24_leagues, 2026-10-25_admin, 2026-10-25_reminder, 2026-10-26_onboarding) dans un Postgres local jetable
-# (base pc_admin_test, recréée à chaque fois), puis les vérifications du back office (checks.sql) et du rappel de leçon (run_reminder.sh).
-# Teste les migrations dans l'ordre (2026-10-24_leagues, 2026-10-25_admin, 2026-10-25_reminder, 2026-10-26_family) dans un Postgres local jetable
+# Teste les migrations dans l'ordre (2026-10-24_leagues, 2026-10-25_admin, 2026-10-25_reminder, 2026-10-26_onboarding, 2026-10-26_family) dans un Postgres local jetable
 # (base pc_admin_test, recréée à chaque fois), puis les vérifications du back office (checks.sql), de la famille (family_checks.sql) et du rappel de leçon (run_reminder.sh).
 # Ligues : chargées si supabase/migrations/2026-10-24_leagues.sql existe (ou LEAGUES_SQL=<chemin>).
 # Usage (root, Postgres 16 local démarré : pg_ctlcluster 16 main start) : bash tools/audit/sql/run.sh
@@ -30,8 +28,8 @@ python3 -c "import sys; s=open('supabase/migrations/2026-10-25_reminder.sql').re
 cp tools/audit/sql/checks.sql $TMP/4.sql
 # onboarding (26/10) : après l'admin
 cp supabase/migrations/2026-10-26_onboarding.sql $TMP/6.sql; cp tools/audit/sql/checks_onb.sql $TMP/7.sql
-cp supabase/migrations/2026-10-26_family.sql $TMP/6.sql
-cp tools/audit/sql/family_checks.sql $TMP/7.sql
+cp supabase/migrations/2026-10-26_family.sql $TMP/8.sql
+cp tools/audit/sql/family_checks.sql $TMP/9.sql
 chmod 644 $TMP/*.sql
 run(){ $P "psql -X -q -t -v ON_ERROR_STOP=1 -d $DB -f $1" 2>&1 | { grep -E "NOTICE:  ok|ERROR|ÉCHEC" || true; } | sed -E "s/^psql:[^ ]+ (NOTICE:  )?/  /"; test ${PIPESTATUS[0]} -eq 0; }
 run $TMP/0.sql; run $TMP/1.sql
@@ -42,7 +40,7 @@ run $TMP/6.sql; run $TMP/6.sql; echo "  (onboarding installé, deux fois)"
 run $TMP/4.sql
 run $TMP/7.sql
 echo "SQL OK (leagues → admin → reminder → onboarding, back office)"
-run $TMP/6.sql; run $TMP/6.sql; echo "  (famille et paiement installés, deux fois)"
-run $TMP/7.sql
-echo "SQL OK (leagues → admin → reminder → family, back office, famille)"
+run $TMP/8.sql; run $TMP/8.sql; echo "  (famille et paiement installés, deux fois)"
+run $TMP/9.sql
+echo "SQL OK (… → family, famille)"
 bash tools/audit/sql/run_reminder.sh
