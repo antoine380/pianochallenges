@@ -12156,7 +12156,7 @@ async function payFetch(path, body){ const tok=await trkTok(); if(!tok) throw ne
   const j=await r.json().catch(()=>({})); if(!r.ok || !j.url) throw new Error(j.error||"http "+r.status); return j; }
 function payNeedAcct(){ if(user) return false; pwClose(); toast(t("paySignIn")); authOpen("signup"); return true; }
 async function payStripe(plan){ if(payNeedAcct()) return; try{ const j=await payFetch("/checkout", {plan:PAY_PLANS[plan], lang:S.settings.lang==="en"?"en":"fr"});
-    if(/^https:\/\/checkout\.stripe\.com\//.test(j.url)) location.href=j.url; else throw new Error("url"); }catch(e){ toast(t("payErr")); } }
+    if(/^https:\/\/checkout\.stripe\.com\//.test(j.url)) location.href=j.url; else throw new Error("url"); }catch(e){ if(e && e.message==="already_subscribed"){ pwClose(); payManage(premEnt()); return; } toast(t("payErr")); } }
 async function payManage(ent){ if(ent && ent.store==="apple"){ window.open("https://apps.apple.com/account/subscriptions","_blank","noopener"); return; }
   try{ const j=await payFetch("/portal", {}); if(/^https:\/\/billing\.stripe\.com\//.test(j.url)) location.href=j.url; else throw new Error("url"); }catch(e){ toast(t("payErr")); } }
 // ---- RevenueCat dans l'app (rien ne se passe tant que la clé est vide ; le plugin sera ajouté au projet Xcode avec Antoine) ----
