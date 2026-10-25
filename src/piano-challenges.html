@@ -12245,7 +12245,7 @@ function mkcClose(){ if(!MKC.on) return; MKC.on=false; closeMod("mkcModal"); try
 function mkcApply(x, src){ const s=mdS(), h=mwHw(); if(!x) return;
   Object.assign(h,{model:x.m, brand:x.b||"", keys:x.k||h.keys, bt:!!(x.c&&x.c.includes("bt")), src:src||"list"}); if(!x.k){ delete h.keys; }
   const r=MKC_RANGE[x.k]; if(r && !(h.lo>0 && h.hi-h.lo+1===x.k)){ h.lo=r[0]; h.hi=r[1]; }
-  const sz=S.settings.kbdSize||"auto"; if(x.k && KB_PRESETS[String(x.k)] && (sz==="auto" || /^\d+$/.test(sz)) && sz!==String(x.k)){ S.settings.kbdSize=String(x.k); save(); buildKeyboard(); renderSettings(); }
+  const sz=S.settings.kbdSize||"auto"; if(x.k && KB_PRESETS[String(x.k)] && (sz==="auto" || /^\d+$/.test(sz)) && sz!==String(x.k)){ S.settings.kbdSize=String(x.k); S.settings.kbdCat=h.name||""; save(); buildKeyboard(); renderSettings(); }
   s.hw=h; save(); try{ mdHub(); }catch(e){} try{ mkRender(); }catch(e){} }
 function mkcModelTxt(){ const h=(S.midi&&S.midi.hw)||{}; return h.model ? (h.brand?h.brand+" ":"")+h.model : ""; }
 $("mkcModal").addEventListener("click",e=>{ if(e.target.id==="mkcBg"||e.target.closest("#mkcX")){ mkcClose(); return; }
@@ -12279,6 +12279,12 @@ function mkcWiz(){ if(!MW.on) return; const st=MW.step, body=$("mwBody"); if(!bo
   else if(st==="none"){ const ft=$("mwFoot"); if(ft && !ft.querySelector("[data-mkc]")) ft.insertAdjacentHTML("afterbegin",'<button type="button" class="btn" data-mkc="guide"><span>'+esc(t("mkcSeeAll"))+'</span></button>'); } }
 $("mwiz").addEventListener("click",e=>{ const b=e.target.closest("[data-mkc]"); if(!b) return; const a=b.dataset.mkc;
   if(a==="pick") mkcOpen({mode:"pick"}); else if(a==="guide") mkcOpen({mode:"guide"}); else if(a==="yes"){ mwHw().src="list"; save(); mwRender(); } });
+// M9 : a model from the list gives its size (« We think your keyboard has 49 keys. Right? ») unless it was measured; a size that came from another
+// keyboard's model is not a guess for this one (measure)
+{ const _rs=mwRangeStart; mwRangeStart=function(){ _rs.apply(this,arguments); try{ const R=MW.r, h=mwHw(); if(!R) return;
+    if(h.model && h.keys && KB_PRESETS[String(h.keys)] && !h.measured){ if(S.settings.kbdSize!==String(h.keys)){ S.settings.kbdSize=String(h.keys); save(); buildKeyboard(); } R.mode="guess"; }
+    else if(!h.model && S.settings.kbdCat && S.settings.kbdCat!==h.name && R.mode==="guess") R.mode="measure"; }catch(e){} }; }
+{ const _ra=mwRangeApply; mwRangeApply=function(){ const R=MW.r, ok=R && R.lo!=null && R.hi-R.lo>=11; _ra.apply(this,arguments); if(ok){ try{ mwHw().measured=true; save(); }catch(e){} } }; }
 // while the list is open above the assistant, the keyboard's notes do not move the assistant along
 { const _mm=mwMsg; mwMsg=function(){ if(MKC.on) return true; return _mm.apply(this,arguments); }; }
 // ---- Réglages › Mon clavier : « Choisir mon modèle » + le modèle dans la fiche ----
