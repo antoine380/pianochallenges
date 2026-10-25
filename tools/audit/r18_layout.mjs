@@ -34,7 +34,8 @@ const SC = [
   ['chords', async p => { await subj(p, 0); await click(p, '#suGo'); await W(700); }],
   ['scales', async p => { await subj(p, 1); await click(p, '#suGo'); await W(700); }],
   ['ear', async p => { await subj(p, 4); await click(p, '#suGo'); await W(900); }],
-  ['daily', async p => { await click(p, '#dailyCard'); await W(600); }],
+  // Entraînement du jour : mise en page compacte voulue (UI points restants, 25/10) : résumé + 2 rangées de cartes, sans les étirer → seuil de remplissage 40 %
+  ['daily', async p => { await click(p, '#dailyCard'); await W(600); }, { min: 0.4 }],
   ['lobby', async p => { await game(p, 0, false); }],
   ['runner', async p => { await game(p, 0, true); }],
   ['speed', async p => { await game(p, 1, true); }],
@@ -101,7 +102,7 @@ for (const [w, h] of SIZES) {
     await fn(p); await W(250);
     const m = await p.evaluate(MEASURE);
     const noScroll = m.sh <= m.ch + 1 && m.dsh <= m.H + 1 && m.dsw <= m.W + 1;
-    ok(noScroll && m.fill >= MIN, `${w}×${h} ${name.padEnd(8)} fill ${(m.fill * 100).toFixed(0)}% (${m.who}) main ${m.sh}/${m.ch} doc ${m.dsh}/${m.H}${m.dsw > m.W + 1 ? ' width ' + m.dsw : ''}`);
+    ok(noScroll && m.fill >= (o.min ?? MIN), `${w}×${h} ${name.padEnd(8)} fill ${(m.fill * 100).toFixed(0)}% (${m.who}) main ${m.sh}/${m.ch} doc ${m.dsh}/${m.H}${m.dsw > m.W + 1 ? ' width ' + m.dsw : ''}`);
     if (SHOT) await p.screenshot({ path: `${SHOT}/${name}-${w}x${h}.png` });
   }
   for (const [name, fn] of SC2) {
