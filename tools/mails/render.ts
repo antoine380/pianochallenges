@@ -22,7 +22,8 @@ const name = lang === "fr" ? "Camille" : "Sam";
 const week = { xp: 640, days: 5, streak: 12, level: 7, toNext: 85, rank: 4, games: 3, elo: { label: lang === "fr" ? "Saute-notes · accords" : "Note Jumper · chords", r: 912, d: 38 },
   on: [true, true, false, true, true, false, true], prevXp: 520, need: 340 };
 // deno-lint-ignore no-explicit-any
-const one = (kind: string, m: any) => m.cta ? M.layout(lang, p, kind, m.subject, m.inner, m.cta, m.btn, m)
+// the path job (lesson reminders) uses the « streak » unsubscribe category (k=streak), like jobPath in the function
+const one = (kind: string, m: any) => m.cta ? M.layout(lang, p, kind === "path" ? "streak" : kind, m.subject, m.inner, m.cta, m.btn, m)
   : kind === "path" ? M.layout(lang, p, "streak", m.subject, m.inner, "https://pianochallenges.com/?from=remind", lang === "fr" ? "Reprendre" : "Pick up") // as the old job did
   : M.layout(lang, p, kind, m.subject, m.inner);
 const mails: [string, string, unknown][] = [
