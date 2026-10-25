@@ -51,7 +51,7 @@ for (const [w, h] of [[375, 667], [812, 375], [768, 1024], [1024, 768], [1280, 8
     return { n: ts.length, t: ts[3] && ts[3].querySelector('.h3').textContent, obj: !!(ts[3] && ts[3].querySelector('.obj svg')), rec: ts[3] && (ts[3].querySelector('.rec') || {}).textContent,
       scroll: m.scrollHeight - m.clientHeight, doc: document.documentElement.scrollHeight - innerHeight, x: document.documentElement.scrollWidth - innerWidth, inside: last.bottom <= gr.bottom + 2 && last.right <= gr.right + 2 }; });
   check(`GAMES ${w}×${h} : 5 tuiles, « Les Douze » 4e avec son objet 3D, aucun défilement`, r.n === 5 && r.t === 'Les Douze' && r.obj && r.scroll <= 1 && r.doc <= 1 && r.x <= 1 && r.inside, r);
-  if (w === 1280) check('tuile : record « — » et ELO du contenu choisi', /Record — · ELO 800\?/.test(r.rec || ''), r.rec);
+  if (w === 1280) check('tuile : record « — » et ELO du contenu choisi', /Record\s— · ELO\s800\?/.test(r.rec || ''), r.rec);
   check(`aucune erreur ${w}×${h}`, !p.errs.length, p.errs); await p.ctx.close(); }
 
 // ---- 2. Solo : salon, 12 cases, ordres, contenus ----
@@ -121,7 +121,7 @@ await setSel(A, 'dzCont', 'maj'); await W(A, 200);
 await click(A, '#rnQuit'); await W(A, 200); await click(A, '#lvlAv'); await W(A, 600);
 check('fiche Progression : « Les Douze · Accords majeurs » avec le temps et la médaille', await ev(A, () => [...document.querySelectorAll('#pfRecs li')].some(li => /Les Douze · Accords majeurs/.test(li.textContent) && /\d:\d\d,\d/.test(li.textContent) && /Or/.test(li.textContent))));
 await games(A);
-check('tuile : record en temps', await ev(A, () => /Record \d:\d\d,\d · ELO/.test(document.querySelectorAll('#gameCards .ptile')[3].textContent)));
+check('tuile : record en temps', await ev(A, () => /Record\s\d:\d\d,\d · ELO/.test(document.querySelectorAll('#gameCards .ptile')[3].textContent)));
 // ---- 8. Fusion entre appareils : le plus petit temps gagne, le fantôme suit son record ----
 const mg = await ev(A, () => { const M = window.__dz.mergeState, sp = n => Array.from({ length: 12 }, (_, i) => (i + 1) * n);
   const r1 = M({ gameBest: { speed: 3, 'douze-maj': 2 }, dzRec: { maj: { ms: 100000, sp: sp(8000), at: 1 } }, settings: {} }, { gameBest: { speed: 5, 'douze-maj': 3 }, dzRec: { maj: { ms: 85000, sp: sp(7000), at: 2 } } }).merged;

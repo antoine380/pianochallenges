@@ -105,7 +105,7 @@ p = await open({ width: 375, height: 667 }, {}, { ...STATE, settings: { ...STATE
 await p.X('openPage("games")'); await p.waitForTimeout(800);
 const tl = await p.evaluate(() => [...document.querySelectorAll('#gameCards .ptile,#playCards .ptile')].filter(t => { const h = t.querySelector('.h3'), o = t.querySelector('.obj').getBoundingClientRect(); const rg = document.createRange(); rg.selectNodeContents(h); return [...rg.getClientRects()].some(r => r.right > o.left + 4 && r.left < o.right && r.bottom > o.top + 4 && r.top < o.bottom - 4); }).map(t => t.querySelector('.h3').textContent));
 check('tuiles 375 EN : aucun titre sous l’objet 3D', !tl.length, tl);
-check('tuiles : « ELO 812? » provisoire, « 99,999 »', await p.evaluate(() => /ELO 812\?/.test(document.querySelector('#gameCards').textContent) && /99,999/.test(document.querySelector('#gameCards').textContent)));
+check('tuiles : « ELO 812? » provisoire, « 99,999 »', await p.evaluate(() => /ELO\s812\?/.test(document.querySelector('#gameCards').textContent) && /99,999/.test(document.querySelector('#gameCards').textContent)));
 check('pluriels EN : 0 mistakes, 1 mistake', await p.X('t("errors")(0)==="0 mistakes" && t("errors")(1)==="1 mistake"'));
 await p.X('S.settings.lang="fr"'); check('pluriel FR : « 1 réussi », « 2 réussis », « 1 ami inscrit »', await p.X('t("pcSolved")(1)==="1 réussi" && t("pcSolved")(2)==="2 réussis" && t("invStatF")(1)==="Ami inscrit"'));
 errs.push(...p.errs); await p.context().close();
