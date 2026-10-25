@@ -3486,6 +3486,9 @@ body.imp-drag[data-page="free"] #freePanel::after{content:"";position:absolute;i
 @media (max-width:900px) and (min-width:641px) and (min-height:700px){ .du-lobby>.du-panel{flex:1 1 auto} #duPBody{flex:1 1 auto;display:flex;flex-direction:column;gap:12px;min-height:0} #duPBody>.du-bots{grid-auto-rows:minmax(110px,auto)} #duPBody .du-bot{flex-direction:column;justify-content:center;text-align:center;gap:6px} #duPBody .du-bot .du-av{width:56px;height:56px} #duPBody .du-bot small{display:block} }
 /* fenêtres : fond presque opaque (le verre à 62-72 % laissait les tuiles colorées derrière le texte : contraste trop faible) */
 .modal-card{background:color-mix(in srgb,var(--surface) 93%,transparent)}
+/* thèmes du quiz sur téléphone : les noms sur 2 lignes débordaient de leur tuile de 30 px → une ligne, points de suspension */
+@media (max-width:640px){ #qzSetup .qz-theme b{font-size:.8rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:calc(100% - 4px)} }
+@media (max-height:520px) and (orientation:landscape){ #qzSetup .qz-theme b{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:calc(100% - 4px)} }
 /* ==== fin Revue UI ==== */
 </style>
 
@@ -7764,7 +7767,7 @@ const TILE_COL={runner:"#1f7a52",speed:"#b4461a",memory:"#6a3fd1",douze:"#2c56d6
   p_runner:"#0e7490",p_pulse:"#b02a6b",p_blaster:"#2c56d6",p_climber:"#1f7a52",p_ear:"#8a3fd1",p_staff:"#b4461a"};
 function renderGames(){ const box=$("gameCards"), pbox=$("playCards"); box.innerHTML=""; pbox.innerHTML="";
   t("games").forEach(([title,desc,id],i)=>{ const best=id?((S.gameBest||{})[id]||(id==="runner"?S.runnerBest:0)||0):null;
-    box.appendChild(tile({color:TILE_COL[id||"soon"],obj:id||"soon",kick:t("secGames"),title,desc,rec:id?t("rnBestL")+" "+(id==="douze"?dzBestTxt():fmtN(best))+(DU_GAMES.includes(id)?(e=>" · ELO "+fmtN(e.r)+(eloProv(e)?"?":""))(eloGet(id+"-"+(id==="douze"?dzCont():S.settings.duCont==="notes"?"notes":"chords"))):""):null,soon:!id,onOpen:id?()=>gameOpen(id):null})); });
+    box.appendChild(tile({color:TILE_COL[id||"soon"],obj:id||"soon",kick:t("secGames"),title,desc,rec:id?t("rnBestL")+"\u00a0"+(id==="douze"?dzBestTxt():best?fmtN(best):"—")+(DU_GAMES.includes(id)?(e=>" · ELO\u00a0"+fmtN(e.r)+(eloProv(e)?"?":""))(eloGet(id+"-"+(id==="douze"?dzCont():S.settings.duCont==="notes"?"notes":"chords"))):""):null,soon:!id,onOpen:id?()=>gameOpen(id):null})); });
   const h=$("playHead"); h.firstChild.textContent=t("playGamesHead"); h.lastChild.textContent=t("playGamesSub");
   t("playGames").forEach(([title,desc,id],i)=>pbox.appendChild(tile({color:TILE_COL["p_"+id]||MODE_COL.play,obj:id,kick:"Play",title,desc,onOpen:()=>openPlayWith("#game="+id)}))); }
 function renderLearn(){ const box=$("learnTiles"); box.innerHTML="";
