@@ -3443,6 +3443,17 @@ body.imp-drag[data-page="free"] #freePanel::after{content:"";position:absolute;i
 @media (max-width:900px),(max-height:520px){ .gt-card:has(.gt-x) .gt-form>.gt-top{padding-right:50px} }
 @media (max-width:640px),(max-height:520px){ .gt-x{top:12px;right:12px;width:36px;height:36px} }
 /* ==== fin Finitions ==== */
+/* ==== Revue UI (25/10) ==== */
+/* écran de connexion : le grand titre se règle sur la largeur du panneau (il débordait sur la carte du formulaire en iPad paysage) */
+.gt-art{container-type:inline-size}
+.gt-big{padding:0 18px 0 48px}
+.gt-big b{font-size:clamp(2rem,10cqi,4.6rem);text-wrap:balance}
+/* « Continuer sans compte » : même bouton en pointillés aux deux étapes (c'était un petit lien de 29 px à la première) */
+.gt-choose .gt-noacct{display:flex;align-items:center;justify-content:center;width:100%;min-height:44px;border:2px dashed var(--line);border-radius:999px;color:var(--ink);font-size:.9rem;padding:10px 16px}
+/* certificat des Premiers pas : « Et maintenant ? » en 2 × 2 (en 3 colonnes de 150 px les objets 3D couvraient les titres) */
+@media (min-width:761px) and (min-height:521px){ .pp-ctiles{grid-template-columns:repeat(2,minmax(0,1fr));max-height:min(440px,62vh)} .pp-cnext{justify-content:center} }
+@media (min-width:761px) and (max-width:900px) and (orientation:portrait){ .pp-cbody{grid-template-columns:1fr;align-content:start;gap:var(--sp-5,24px)} .pp-cleft{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:end;gap:12px 18px} .pp-cc{aspect-ratio:auto;max-height:none;min-height:240px;grid-row:span 2} .pp-cbtn{flex-direction:column} .pp-ctiles{max-height:none;grid-auto-rows:220px;row-gap:26px} }
+/* ==== fin Revue UI ==== */
 </style>
 
 <script>if(window.Capacitor&&window.webkit&&window.webkit.messageHandlers&&window.webkit.messageHandlers.bridge)document.documentElement.classList.add("native");</script>
