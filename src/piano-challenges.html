@@ -7844,6 +7844,7 @@ function mergeState(local, cloud){
   const maxMap=(a,b)=>{ const o={...(isObj(a)?a:{})}; Object.entries(isObj(b)?b:{}).forEach(([k,v])=>{ if(Number.isFinite(+v)) o[k]=Math.max(num(o[k]),num(v)); }); return o; };
   m.xp=Math.max(num(local.xp),num(c.xp));
   m.xpDays=maxMap(local.xpDays,c.xpDays); m.xpPushed=maxMap(local.xpPushed,c.xpPushed);
+  { const since=addDays(-7); Object.keys(m.xpPushed).forEach(d=>{ if(d<since) delete m.xpPushed[d]; }); } // same window as cloudPushRaw, which prunes older days: otherwise the cloud brought them back on every pull (changed forever)
   m.mastery=maxMap(local.mastery,c.mastery);
   m.stats=maxMap(local.stats,c.stats);
   m.secStats={...(isObj(local.secStats)?local.secStats:{})}; Object.entries(isObj(c.secStats)?c.secStats:{}).forEach(([sec,v])=>{ m.secStats[sec]=maxMap(m.secStats[sec],v); });
@@ -7867,6 +7868,13 @@ function mergeState(local, cloud){
   m.settings={...(isObj(local.settings)?local.settings:{})}; // this device's settings win
   return {merged:m, changed:JSON.stringify(m)!==JSON.stringify(local)};
 }
+// Revue UI 25/10 (synchro) : « changé » = une vraie différence de contenu, sans tenir compte de l'ordre des clés, des valeurs undefined
+// ni des objets / tableaux vides ajoutés par les fusions (pp.fail, route.st, lbl.gone…). Sinon un aller-retour avec le serveur
+// signalait encore des clés modifiées et la page se rechargeait.
+function syncCanon(x){ if(Array.isArray(x)) return x.map(v=>v===undefined?null:syncCanon(v));
+  if(x&&typeof x==="object"){ const o={}; Object.keys(x).sort().forEach(k=>{ const v=syncCanon(x[k]); if(v===undefined) return; if(v&&typeof v==="object"&&!Object.keys(v).length) return; o[k]=v; }); return o; }
+  return typeof x==="function"?undefined:x; }
+const syncSame=(a,b)=>JSON.stringify(syncCanon(a))===JSON.stringify(syncCanon(b));
 let lastPull=0;
 async function cloudPull(){
   if(!sb||!user) return;
@@ -7877,7 +7885,7 @@ async function cloudPull(){
   if(cloud){
     const {merged,changed}=mergeState(S,cloud);
     if(changed){
-      S=merged; let stored=false;
+      const local0=S; S=merged; let stored=false;
       try{ localStorage.setItem(STORE, JSON.stringify(S)); stored=true; }catch(e){}
       try{ await cloudPushNow(); }catch(e){}
       // reload only when the merged state could be written (#36) and no exercise is running; otherwise apply in memory
@@ -7885,7 +7893,7 @@ async function cloudPull(){
       let busy=false; try{ busy = !!actNow() || (lvBase()==="acc" && ACC.view!=="setup"); }catch(e){}
       // at most one reload every 5 min per tab: a field that differs on every pull (e.g. a key kept only on this device) must never loop
       let canReload=false; try{ const last=+sessionStorage.getItem("pc-pull-reload")||0; if(Date.now()-last>5*60e3){ sessionStorage.setItem("pc-pull-reload",String(Date.now())); canReload=true; } }catch(e){}
-      if(!canReload){ try{ const ks=Object.keys(merged).filter(k=>JSON.stringify(merged[k])!==JSON.stringify(cloud[k])); console.info("[sync] fusion appliquée sans rechargement ; clés différentes du serveur :", ks.slice(0,12)); }catch(e){} }
+      if(!canReload){ try{ const ks=Object.keys(merged).filter(k=>!syncSame(merged[k],local0[k])); console.info("[sync] fusion appliquée sans rechargement ; clés différentes du serveur :", ks.slice(0,12)); }catch(e){} }
       if(canReload && stored && phase==="idle" && !game && !busy && !startUI()){ location.reload(); return; }
       renderSettings(); render(); renderDaily(); if(page==="account") renderAccount(); try{ ntfBadge(); }catch(e){}
       return;
@@ -11851,6 +11859,21 @@ window.addEventListener("keydown",e=>{ if(e.key!=="Escape" || !GATE.closable || 
 Object.assign(TXT.fr,{qzZoneSmall:n=>"Ton clavier est trop petit pour "+n+" zones.", qzZoneFewer:n=>"Passer à "+n+" joueurs", goalKickL:"Bravo pour cette leçon"});
 Object.assign(TXT.en,{qzZoneSmall:n=>"Your keyboard is too small for "+n+" zones.", qzZoneFewer:n=>"Switch to "+n+" players", goalKickL:"Well done on this lesson"});
 /* ==== fin Finitions ==== */
+/* ==== Revue UI (25/10) ==== */
+// synchro : la fusion complète (avec tous ses enrobages) dit « changé » seulement pour une vraie différence de contenu (syncSame)
+// Les conflits « l'appareil local gagne » ne convergent pas entre deux appareils (chacun garde sa version, le serveur oscille) :
+// notifications créées des deux côtés avec la même clé (entraînement du jour, badges…) et dates « vu » (bulles, étiquettes) → la plus ancienne gagne, des deux côtés.
+{ const isO=x=>x&&typeof x==="object"&&!Array.isArray(x), num=x=>Number.isFinite(+x)?+x:0;
+  const minMap=(a,b)=>{ const o={}; [a,b].forEach(m=>{ if(isO(m)) Object.entries(m).forEach(([k,v])=>{ o[k]=(k in o)?(Number.isFinite(+v)&&Number.isFinite(+o[k])?Math.min(+o[k],+v):o[k]||v):v; }); }); return Object.fromEntries(Object.keys(o).sort().map(k=>[k,o[k]])); };
+  const _ms=mergeState; mergeState=function(local, cloud){ const r=_ms.apply(this,arguments), M=r.merged, c=isO(cloud)?cloud:{};
+    if(isO(M.notifs) && isO(c.notifs) && Array.isArray(c.notifs.list)){ const L=isO(local.notifs)&&Array.isArray(local.notifs.list)?local.notifs.list:[], by=new Map();
+      [...L,...c.notifs.list].forEach(n=>{ if(!isO(n)||!n.id) return; const o=by.get(n.id); if(!o){ by.set(n.id,{...n}); return; } const w=num(n.t)<num(o.t)?{...n}:o; if(o.read||n.read) w.read=true; else if("read" in o||"read" in n) w.read=false; by.set(n.id,w); });
+      M.notifs.list=[...by.values()].sort((a,b)=>num(b.t)-num(a.t)||String(a.id).localeCompare(String(b.id))).slice(0,60);
+      M.notifs.keys=minMap(isO(local.notifs)&&local.notifs.keys, c.notifs.keys); }
+    if(isO(M.hints) && isO(c.hints)) M.hints.seen=minMap(isO(local.hints)&&local.hints.seen, c.hints.seen);
+    if(isO(M.lbl) && isO(c.lbl)){ M.lbl.told=minMap(isO(local.lbl)&&local.lbl.told, c.lbl.told); M.lbl.gone=minMap(isO(local.lbl)&&local.lbl.gone, c.lbl.gone); }
+    r.changed=!syncSame(M,local); return r; }; }
+/* ==== fin Revue UI ==== */
 
 // ---------- Boot ----------
 

@@ -81,6 +81,32 @@ for(const noRpc of [false,true]) try{
   if(!e.err) bad.push('#35 lastPushErr'); else if(noRpc) console.log('#35 état affiché après échec réseau :', e.txt);
   await ctx.close();
 }catch(e){ bad.push('#12 exception : '+e.message.split('\n')[0]); }
+// Revue UI 25/10 : aller-retour réel avec le serveur (il renvoie exactement ce que l'app a poussé, sérialisé en JSON), puis second pull : rien ne doit avoir changé.
+// Avant : xpPushed (jours de plus de 7 j élagués au push mais rendus par la fusion), ordre des clés, objets vides ajoutés par les fusions → `changed` à chaque pull.
+try{
+  const d=n=>{const x=new Date(); x.setDate(x.getDate()-n); return x.toISOString().slice(0,10);};
+  const xpDays={}; for(let i=0;i<20;i++) xpDays[d(i)]=40+i;
+  const rich=(name,xp)=>({ xp, xpDays, xpPushed:{...xpDays}, mastery:{'major:C':3,'maj:G':2}, streak:{days:12,last:d(0)}, secStats:{chords:{ok:40,perfect:20,revealed:2,errors:5}},
+    gameBest:{speed:22,memory:9}, runnerBest:1500, elo:{'runner-chords':{r:950,n:12,w:7,d:1,l:4}}, notifs:{list:[{id:'b',t:5,ti:'y'},{id:'a',t:1,ti:'x'}],keys:{a:1,b:1}},
+    goal:{kind:'min',v:10,at:5,asked:1,done:d(1)}, freeze:{n:1,used:[d(30),d(10)],at:3}, seenTypes:['major'], profileName:name, introSeen:{scales:1,chords:1},
+    pp:{v:1,done:{p01:{at:1,stars:3}}}, route:{done:{'s1.1':1}}, cnt:{notes:500}, badges:{first:'2026-10-01'}, midi:{hw:{name:name+' kb'},seenAt:1} });
+  const A=await newPage(browser,{state:baseState({extra:rich('A',4200)})}), B=await newPage(browser,{state:baseState({extra:{...rich('B',5100), introSeen:{chords:1,ear:1}, notifs:{list:[{id:'c',t:9,ti:'z'}],keys:{c:1,b:1}}}})});
+  for(const P of [A,B]){ await closeModals(P.page); await P.page.waitForTimeout(1500); await reattach(P.page,'u1'); await P.page.evaluate(()=>{ sessionStorage.setItem('pc-pull-reload',String(Date.now())); }); }
+  const db=P=>P.page.evaluate(()=>JSON.parse(JSON.stringify(window.__db.progress.u1||null)));
+  const setDb=(P,row)=>P.page.evaluate(r=>{ window.__db.progress.u1=JSON.parse(JSON.stringify(r)); },row);
+  const pull=P=>P.page.evaluate(async()=>{ sessionStorage.setItem('pc-pull-reload',String(Date.now())); await window.__T.cloudPull(); });
+  const chk=P=>P.page.evaluate(()=>{ const c=JSON.parse(JSON.stringify(window.__db.progress.u1)); const r=window.__T.mergeState(window.__T.S,c); const keys=Object.keys(r.merged).filter(k=>!window.__T.syncSame(r.merged[k],window.__T.S[k])); return {changed:r.changed, keys}; });
+  // un appareil : push, pull (aller-retour), second pull
+  await A.page.evaluate(()=>window.__T.cloudPushNow()); await pull(A); const one=await chk(A);
+  console.log('aller-retour, second pull (un appareil) :', JSON.stringify(one)); if(one.changed) bad.push('second pull changed ('+one.keys.join(',')+')');
+  // deux appareils : B pousse, A fusionne et repousse, B fusionne et repousse, puis plus rien ne change ni d'un côté ni de l'autre
+  await B.page.evaluate(()=>window.__T.cloudPushNow()); await setDb(A, await db(B)); await pull(A); await setDb(B, await db(A)); await pull(B); await setDb(A, await db(B));
+  const a2=await chk(A), b2=await chk(B);
+  const ok2=await A.page.evaluate(()=>({xp:window.__T.S.xp, midi:window.__T.S.midi&&window.__T.S.midi.hw.name}));
+  console.log('deux appareils après échange :', JSON.stringify({A:a2,B:b2,...ok2})); if(a2.changed||b2.changed) bad.push('deux appareils : changed ('+a2.keys.concat(b2.keys).join(',')+')');
+  if(!(ok2.xp===5100 && ok2.midi==='A kb')) bad.push('deux appareils : fusion (xp '+ok2.xp+', midi '+ok2.midi+')');
+  await A.ctx.close(); await B.ctx.close();
+}catch(e){ bad.push('aller-retour exception : '+e.message.split('\n')[0]); }
 await browser.close();
 console.log(bad.length ? 'ECHEC : '+bad.join(' ; ') : 'OK test_sync');
 process.exit(bad.length?1:0);
