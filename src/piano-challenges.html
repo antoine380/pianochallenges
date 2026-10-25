@@ -3453,6 +3453,16 @@ body.imp-drag[data-page="free"] #freePanel::after{content:"";position:absolute;i
 /* certificat des Premiers pas : « Et maintenant ? » en 2 × 2 (en 3 colonnes de 150 px les objets 3D couvraient les titres) */
 @media (min-width:761px) and (min-height:521px){ .pp-ctiles{grid-template-columns:repeat(2,minmax(0,1fr));max-height:min(440px,62vh)} .pp-cnext{justify-content:center} }
 @media (min-width:761px) and (max-width:900px) and (orientation:portrait){ .pp-cbody{grid-template-columns:1fr;align-content:start;gap:var(--sp-5,24px)} .pp-cleft{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:end;gap:12px 18px} .pp-cc{aspect-ratio:auto;max-height:none;min-height:240px;grid-row:span 2} .pp-cbtn{flex-direction:column} .pp-ctiles{max-height:none;grid-auto-rows:220px;row-gap:26px} }
+/* fenêtre MIDI : la liste « Automatique (3 octaves) » était coupée par le bouton voisin ; le bouton passe dessous quand la place manque */
+.midi-body .range-row{flex-wrap:wrap} .midi-body .range-row select{flex:1 1 210px;min-width:0;min-height:40px} .midi-body .range-row .btn{flex:1 1 auto;min-height:40px}
+/* commandes segmentées à 4 choix dans une colonne étroite : 2 × 2 au lieu de libellés écrasés sur 2 ou 3 lignes (Les Douze au salon, Étiquettes) */
+.du-cont[data-k=douze],#lblField .seg{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));border-radius:18px;gap:2px}
+.du-cont[data-k=douze] button,#lblField .seg button{white-space:nowrap;min-height:36px}
+.rn-acts{display:flex;gap:8px;margin-left:auto}
+/* « Invite tes amis » : le cadeau se pousse à gauche de la croix (elle le recouvrait) */
+.inv-top .obj{right:58px} .inv-top h2,.inv-top p{max-width:calc(100% - 150px)}
+@media (max-width:640px){ .inv-top .obj{right:54px;top:12px} .inv-top h2,.inv-top p{max-width:calc(100% - 120px)} }
+#mdGoScreen{display:inline-flex;align-items:center;justify-content:center;gap:8px} #mdGoScreen svg{width:20px;height:20px;flex:none;fill:none;stroke:currentColor;stroke-width:2}
 /* ==== fin Revue UI ==== */
 </style>
 
@@ -6483,7 +6493,7 @@ document.addEventListener("keydown",e=>{ if(RN.on && GM==="runner" && RN.state!=
 function rnReset(){ Object.assign(RN,{obs:[],held:[],dist:0,y:0,vy:0,jump:null,cleared:0,spawnIn:1.2,newBest:false,speed:0,bonus:0,flash:null,hintFor:null,blink:0}); clearKeys(); RN.pool=gmItems(); rnScore(); }
 // show the keys of the chord to play (the next note), in the "reveal" colour, while the hint is on
 function rnHint(o){ clearKeys(); if(!o || S.settings.rnHint===false) return; o.pcs.forEach(pc=>{ for(let m=LOW;m<=HIGH;m++){ if(m%12===pc && keyEls[m]){ keyEls[m].classList.add("k-rev"); break; } } }); }
-function rnScore(){ const sc=RN.cleared*10+(RN.bonus||0)+(DU.mode?0:Math.floor(RN.dist/40)); RN.score=sc; if(DU.mode && RN.state==="run") duMe(sc,false); $("rnScore").textContent=String(sc).padStart(5,"0"); $("rnBest").textContent=t("rnBestL")+" "+String(S.runnerBest||0).padStart(5,"0"); }
+function rnScore(){ const sc=RN.cleared*10+(RN.bonus||0)+(DU.mode?0:Math.floor(RN.dist/40)); RN.score=sc; if(DU.mode && RN.state==="run") duMe(sc,false); $("rnScore").textContent=String(sc).padStart(5,"0"); $("rnBest").textContent=t("rnBestL")+" "+(S.runnerBest?String(S.runnerBest).padStart(5,"0"):"—"); }
 function runnerNote(m){
   if(!RN.on) return;
   if(duNote(m)) return;
@@ -6664,7 +6674,7 @@ function gmBoard(){
 }
 function gmScore(){
   const sc = GM==="speed" ? SP.count : GM==="memory" ? MM.round : 0, best=((S.gameBest||{})[GM])||0;
-  $("rnScore").textContent=String(sc).padStart(3,"0"); $("rnBest").textContent=t("rnBestL")+" "+String(best).padStart(3,"0");
+  $("rnScore").textContent=String(sc).padStart(3,"0"); $("rnBest").textContent=t("rnBestL")+" "+(best?String(best).padStart(3,"0"):"—");
 }
 function rnHintPcs(pcs, force){ clearKeys(); if(!force && S.settings.rnHint===false) return; pcs.forEach(pc=>{ for(let m=LOW;m<=HIGH;m++){ if(m%12===pc && keyEls[m]){ keyEls[m].classList.add("k-rev"); break; } } }); }
 $("gmBoard").addEventListener("pointerdown",()=>{ if(GM==="speed" && SP.state!=="run") spGo(); else if(GM==="memory" && (MM.state==="ready"||MM.state==="over")) mmGo(); });
@@ -11884,6 +11894,8 @@ Object.assign(TXT.en,{qzZoneSmall:n=>"Your keyboard is too small for "+n+" zones
     if(isO(M.hints) && isO(c.hints)) M.hints.seen=minMap(isO(local.hints)&&local.hints.seen, c.hints.seen);
     if(isO(M.lbl) && isO(c.lbl)){ M.lbl.told=minMap(isO(local.lbl)&&local.lbl.told, c.lbl.told); M.lbl.gone=minMap(isO(local.lbl)&&local.lbl.gone, c.lbl.gone); }
     r.changed=!syncSame(M,local); return r; }; }
+// en-tête des jeux : « Salon » et « Quitter » restent ensemble quand la ligne passe à la ligne (Saute-notes les séparait sur deux rangées)
+{ const q=$("rnQuit"), l=$("duToLobby"); if(q&&l&&q.parentNode){ const g=document.createElement("span"); g.className="rn-acts"; q.parentNode.insertBefore(g,l); g.appendChild(l); g.appendChild(q); } }
 /* ==== fin Revue UI ==== */
 
 // ---------- Boot ----------
