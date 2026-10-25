@@ -23,7 +23,7 @@ se calculent tout seuls. Les prix **facturés** viennent de Stripe et d'App Stor
 Ce qui existe déjà :
 
 - **SQL** `supabase/migrations/2026-10-26_family.sql` (recopié dans `schema.sql`) : tables `subscriptions`, `families`,
-  `family_members`, `family_invites`, fonctions `my_entitlement()`, `family_*`, `sub_apply` (écriture par les serveurs
+  `family_members`, `family_invites`, fonctions `my_entitlement()`, `family_*`, `sub_apply` / `sub_transfer` (écriture par les serveurs
   seulement), `admin_pay`, `admin_family`.
 - **Fonction Edge `stripe`** (`supabase/functions/stripe/index.ts`) : `/checkout`, `/portal`, `/webhook`.
 - **Fonction Edge `revenuecat`** (`supabase/functions/revenuecat/index.ts`) : webhook des achats Apple.
@@ -132,6 +132,14 @@ RevenueCat relie l'achat Apple à Supabase : l'app lui donne l'id du compte Pian
      tape exactement la même dans le secret Supabase `REVENUECAT_WEBHOOK_AUTH` ;
    - environnement : *Sandbox and Production* pendant les tests ; tous les événements.
    RevenueCat attend une réponse 200 et réessaie 5 fois (sur environ 80 minutes) en cas d'échec.
+   Événements gérés par la fonction `revenuecat` : `INITIAL_PURCHASE`, `RENEWAL`, `UNCANCELLATION`, `PRODUCT_CHANGE`,
+   `SUBSCRIPTION_EXTENDED`, `TEMPORARY_ENTITLEMENT_GRANT`, `REFUND_REVERSED` (actif ou essai), `CANCELLATION` (résiliation
+   notée, ou remboursement si `CUSTOMER_SUPPORT`), `BILLING_ISSUE` (retard de paiement), `EXPIRATION` et
+   `SUBSCRIPTION_PAUSED` (expiré), `TRANSFER` (achats passés sur un autre compte : l'abonnement Apple est réattribué au premier
+   id Supabase de `transferred_to`, par `sub_transfer`), `TEST` (réponse 200). Les autres sont ignorés (200).
+   L'ordre d'arrivée n'est pas garanti : chaque ligne garde l'horodatage du dernier événement appliqué
+   (`event_timestamp_ms` → `subscriptions.last_event_at`) et `sub_apply` ignore un événement plus ancien (réponse
+   `status: "ignored"`). Stripe n'envoie pas d'horodatage (la fonction relit l'abonnement) : toujours appliqué.
    Sources : [RevenueCat — Webhooks](https://www.revenuecat.com/docs/integrations/webhooks),
    [RevenueCat — Event types and fields](https://www.revenuecat.com/docs/integrations/webhooks/event-types-and-fields).
 8. Pendant les tests Apple uniquement : secret Supabase `REVENUECAT_SANDBOX` = `1` (sinon les achats Sandbox sont ignorés).

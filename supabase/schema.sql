@@ -1386,6 +1386,8 @@ create table if not exists public.subscriptions (
   updated_at timestamptz not null default now(),
   unique (store, store_id)
 );
+-- horodatage du dernier événement magasin appliqué (RevenueCat event_timestamp_ms) : un événement plus ancien est ignoré
+alter table public.subscriptions add column if not exists last_event_at timestamptz;
 create index if not exists subscriptions_user_idx on public.subscriptions (user_id);
 alter table public.subscriptions enable row level security;
 revoke all on public.subscriptions from anon, authenticated;
@@ -1397,7 +1399,7 @@ grant usage on sequence public.subscriptions_id_seq to service_role;
 
 -- un abonnement compte tant qu'il est en essai, actif ou en retard de paiement (Stripe relance) et que la période court
 create or replace function public.sub_live(s public.subscriptions)
-returns boolean language sql immutable as $$
+returns boolean language sql stable as $$   -- stable (pas immutable) : dépend de now()
   select s.status in ('trialing','active','past_due') and coalesce(s.period_end, 'infinity'::timestamptz) > now()
 $$;
 
@@ -1430,12 +1432,21 @@ alter table public.family_invites enable row level security;
 revoke all on public.families, public.family_members, public.family_invites from anon, authenticated;
 grant select, insert, update, delete on public.families, public.family_members, public.family_invites to service_role;
 
--- la famille de l'appelant (titulaire ou membre) ; security definer pour que les règles RLS ne se rappellent pas elles-mêmes
-create or replace function public.family_of(p_user uuid)
+-- la famille d'un joueur (titulaire ou membre) : usage interne (admin_family), aucun droit pour l'app
+create or replace function public.family_of_user(p_user uuid)
 returns uuid language sql stable security definer set search_path = public as $$
   select coalesce((select f.id from public.families f where f.owner_id = p_user),
                   (select m.family_id from public.family_members m where m.user_id = p_user))
 $$;
+revoke all on function public.family_of_user(uuid) from public, anon, authenticated;
+-- la famille de l'appelant (titulaire ou membre), pour les règles RLS ; security definer pour que les règles ne se rappellent
+-- pas elles-mêmes. Seulement pour soi : demander la famille d'un autre est refusé (forbidden).
+create or replace function public.family_of(p_user uuid)
+returns uuid language plpgsql stable security definer set search_path = public as $$
+begin
+  if p_user is null or p_user is distinct from auth.uid() then raise exception 'forbidden'; end if;
+  return public.family_of_user(p_user);
+end $$;
 revoke all on function public.family_of(uuid) from public, anon;
 grant execute on function public.family_of(uuid) to authenticated;
 grant select on public.families, public.family_members to authenticated;
@@ -1521,6 +1532,8 @@ declare me uuid := auth.uid(); fid uuid; f public.families; role text; fu timest
 begin
   if me is null then raise exception 'not_signed_in'; end if;
   fid := public.family_ensure(me);
+  -- ancien titulaire (famille inactive) devenu membre d'une autre famille : on montre celle où il est membre
+  if fid is not null and public.family_until(fid) is null and exists (select 1 from public.family_members where user_id = me) then fid := null; end if;
   if fid is not null then role := 'owner';
   else select m.family_id into fid from public.family_members m where m.user_id = me; if fid is not null then role := 'member'; end if;
   end if;
@@ -1587,7 +1600,8 @@ begin
               when i.expires_at <= now() then 'invite_expired'
               when f.owner_id = me then 'is_owner'
               when exists (select 1 from public.family_members where user_id = me and family_id = f.id) then 'already_member'
-              when exists (select 1 from public.family_members where user_id = me) or exists (select 1 from public.families where owner_id = me) then 'already_member'
+              when exists (select 1 from public.family_members m where m.user_id = me and public.family_until(m.family_id) is not null)
+                or exists (select 1 from public.families o where o.owner_id = me and public.family_until(o.id) is not null) then 'already_member'  -- une famille inactive ne compte pas
               when public.family_until(f.id) is null then 'family_inactive'
               when used >= f.seats then 'family_full' end;
   return jsonb_build_object('ok', why is null, 'error', why, 'owner', oname, 'avatar', coalesce(oav, 0), 'seats', f.seats, 'used', used,
@@ -1597,23 +1611,29 @@ end $$;
 -- rejoindre avec un code
 create or replace function public.family_join(p_code text)
 returns jsonb language plpgsql security definer set search_path = public as $$
-declare me uuid := auth.uid(); c text := upper(btrim(coalesce(p_code, ''))); i public.family_invites; f public.families; used int; oname text;
+declare me uuid := auth.uid(); c text := upper(btrim(coalesce(p_code, ''))); i public.family_invites; f public.families; used int; oname text; ifam uuid;
 begin
   if me is null then raise exception 'not_signed_in'; end if;
   if c !~ '^[A-HJ-NP-Z2-9]{8}$' then raise exception 'invite_invalid'; end if;
-  select * into i from public.family_invites where code = c for update;
+  -- verrous dans le même ordre que family_invite : la famille d'abord, puis l'invitation
+  select family_id into ifam from public.family_invites where code = c;
   if not found then raise exception 'invite_invalid'; end if;
-  select * into f from public.families where id = i.family_id for update;   -- une seule inscription à la fois par famille
+  select * into f from public.families where id = ifam for update;   -- une seule inscription à la fois par famille
+  select * into i from public.family_invites where code = c and family_id = ifam for update;
+  if not found then raise exception 'invite_invalid'; end if;          -- remplacée entre-temps par un nouveau lien
   if exists (select 1 from public.family_members where user_id = me and family_id = f.id) then
     return jsonb_build_object('ok', true, 'already', true, 'family_id', f.id);
   end if;
   if i.used_by is not null then raise exception 'invite_used'; end if;
   if i.expires_at <= now() then raise exception 'invite_expired'; end if;
   if f.owner_id = me then raise exception 'is_owner'; end if;
-  if exists (select 1 from public.family_members where user_id = me) or exists (select 1 from public.families where owner_id = me) then raise exception 'already_member'; end if;
+  -- une famille inactive (abonnement du titulaire terminé) ne compte pas
+  if exists (select 1 from public.family_members m where m.user_id = me and public.family_until(m.family_id) is not null)
+     or exists (select 1 from public.families o where o.owner_id = me and public.family_until(o.id) is not null) then raise exception 'already_member'; end if;
   if public.family_until(f.id) is null then raise exception 'family_inactive'; end if;
   select count(*) + 1 into used from public.family_members where family_id = f.id;
   if used >= f.seats then raise exception 'family_full'; end if;
+  delete from public.family_members where user_id = me;   -- l'ancienne famille inactive (une seule famille par personne)
   insert into public.family_members (family_id, user_id) values (f.id, me);
   update public.family_invites set used_by = me, used_at = now() where code = c;
   select p.name into oname from public.profiles p where p.id = f.owner_id;
@@ -1653,28 +1673,39 @@ do $g$ declare f text; begin
 end $g$;
 
 -- ---------- 5. écriture des abonnements (fonctions Edge stripe et revenuecat, clé service seulement) ----------
--- p : {user_id?, store, store_id, product, plan, status, period_end?, trial_end?, customer_id?, cancel_at_period_end?, amount_cents?, currency?, billing?}
+-- p : {user_id?, store, store_id, product, plan, status, period_end?, trial_end?, customer_id?, cancel_at_period_end?, amount_cents?, currency?, billing?, event_at?}
 -- user_id peut manquer pour une mise à jour (on retrouve la ligne par store + store_id). Crée la famille pour un abonnement Famille.
+-- Apple : un user_id fourni réattribue la ligne (achats restaurés / transférés sur un autre compte).
+-- event_at (RevenueCat event_timestamp_ms) : un événement plus ancien que le dernier appliqué est ignoré ({status:'ignored'}) ;
+-- sans event_at (Stripe, qui relit l'abonnement à chaque fois) : toujours appliqué.
 create or replace function public.sub_apply(p jsonb)
 returns jsonb language plpgsql security definer set search_path = public as $$
-declare uid uuid; sid bigint; pl text := p ->> 'plan'; st text := p ->> 'status'; fid uuid;
+declare uid uuid; sid bigint; pl text := p ->> 'plan'; st text := p ->> 'status'; fid uuid; ev timestamptz := nullif(p ->> 'event_at', '')::timestamptz;
 begin
   if coalesce(p ->> 'store', '') not in ('stripe','apple','manual') or coalesce(p ->> 'store_id', '') = '' then raise exception 'bad store'; end if;
   uid := nullif(p ->> 'user_id', '')::uuid;
   if uid is null then select user_id into uid from public.subscriptions where store = p ->> 'store' and store_id = p ->> 'store_id'; end if;
   if uid is null then raise exception 'unknown user'; end if;
   if not exists (select 1 from auth.users where id = uid) then raise exception 'unknown user'; end if;
-  insert into public.subscriptions as s (user_id, store, product, plan, status, period_end, trial_end, store_id, customer_id, cancel_at_period_end, amount_cents, currency, billing)
+  insert into public.subscriptions as s (user_id, store, product, plan, status, period_end, trial_end, store_id, customer_id, cancel_at_period_end, amount_cents, currency, billing, last_event_at)
   values (uid, p ->> 'store', coalesce(p ->> 'product', pl), pl, st, nullif(p ->> 'period_end', '')::timestamptz, nullif(p ->> 'trial_end', '')::timestamptz,
           p ->> 'store_id', nullif(p ->> 'customer_id', ''), coalesce((p ->> 'cancel_at_period_end')::boolean, false),
-          nullif(p ->> 'amount_cents', '')::integer, nullif(lower(p ->> 'currency'), ''), nullif(p ->> 'billing', ''))
+          nullif(p ->> 'amount_cents', '')::integer, nullif(lower(p ->> 'currency'), ''), nullif(p ->> 'billing', ''), ev)
   on conflict (store, store_id) do update set
+    user_id = case when s.store = 'apple' then coalesce(nullif(p ->> 'user_id', '')::uuid, s.user_id) else s.user_id end,
+    last_event_at = coalesce(excluded.last_event_at, s.last_event_at),
     product = coalesce(excluded.product, s.product), plan = coalesce(excluded.plan, s.plan), status = coalesce(excluded.status, s.status),
     period_end = coalesce(excluded.period_end, s.period_end), trial_end = coalesce(excluded.trial_end, s.trial_end),
     customer_id = coalesce(excluded.customer_id, s.customer_id), cancel_at_period_end = excluded.cancel_at_period_end,
     amount_cents = coalesce(excluded.amount_cents, s.amount_cents), currency = coalesce(excluded.currency, s.currency),
     billing = coalesce(excluded.billing, s.billing), updated_at = now()
-  returning id, plan into sid, pl;
+  where excluded.last_event_at is null or s.last_event_at is null or excluded.last_event_at >= s.last_event_at
+  returning id, plan, user_id into sid, pl, uid;
+  if sid is null then  -- événement plus ancien que le dernier appliqué (RevenueCat ne garantit pas l'ordre)
+    return jsonb_build_object('ok', true, 'status', 'ignored', 'reason', 'stale');
+  end if;
+  -- abonnement réattribué à un autre compte : l'ancienne famille n'est plus portée par cette ligne
+  update public.families set sub_id = null where sub_id = sid and owner_id <> uid;
   if pl = 'family' then
     insert into public.families (owner_id, sub_id) values (uid, sid) on conflict (owner_id) do update set sub_id = excluded.sub_id returning id into fid;
     -- le titulaire était membre d'une autre famille : il la quitte (une seule famille par personne)
@@ -1684,6 +1715,27 @@ begin
 end $$;
 revoke all on function public.sub_apply(jsonb) from public, anon, authenticated;
 grant execute on function public.sub_apply(jsonb) to service_role;
+
+-- RevenueCat TRANSFER : les achats Apple passent d'un compte à un autre (même identifiant Apple sur un autre compte).
+-- p : {to (uuid), from: [uuid…], store_id?, event_at?} ; store_id donné = cette transaction seulement, sinon toutes les lignes
+-- Apple des comptes « from ». Chaque ligne passe par sub_apply (même règle d'ordre des événements, familles).
+create or replace function public.sub_transfer(p jsonb)
+returns jsonb language plpgsql security definer set search_path = public as $$
+declare dst uuid := nullif(p ->> 'to', '')::uuid; src uuid[]; sid text := nullif(p ->> 'store_id', ''); r public.subscriptions; n int := 0; o jsonb;
+begin
+  if dst is null or not exists (select 1 from auth.users where id = dst) then raise exception 'unknown user'; end if;
+  select coalesce(array_agg(x::uuid), '{}') into src from jsonb_array_elements_text(coalesce(p -> 'from', '[]'::jsonb)) x
+    where x ~* '^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$';
+  for r in select * from public.subscriptions s where s.store = 'apple' and s.user_id <> dst
+             and ((sid is not null and s.store_id = sid) or (sid is null and s.user_id = any(src))) order by s.id loop
+    o := public.sub_apply(jsonb_build_object('user_id', dst, 'store', 'apple', 'store_id', r.store_id, 'product', r.product, 'plan', r.plan,
+           'status', r.status, 'cancel_at_period_end', r.cancel_at_period_end, 'event_at', p ->> 'event_at'));
+    if o ->> 'status' is distinct from 'ignored' then n := n + 1; end if;
+  end loop;
+  return jsonb_build_object('ok', true, 'moved', n, 'to', dst);
+end $$;
+revoke all on function public.sub_transfer(jsonb) from public, anon, authenticated;
+grant execute on function public.sub_transfer(jsonb) to service_role;
 
 -- client Stripe d'un joueur (portail « Gérer mon abonnement »)
 create or replace function public.sub_customer(p_user uuid)
@@ -1727,7 +1779,7 @@ returns jsonb language plpgsql stable security definer set search_path = public 
 declare fid uuid; f public.families;
 begin
   perform public.admin_guard('lecture');
-  fid := public.family_of(p_user);
+  fid := public.family_of_user(p_user);
   if fid is null then return jsonb_build_object('family', null,
     'subs', (select coalesce(jsonb_agg(to_jsonb(s) - 'customer_id' order by s.updated_at desc), '[]'::jsonb) from public.subscriptions s where s.user_id = p_user)); end if;
   select * into f from public.families where id = fid;

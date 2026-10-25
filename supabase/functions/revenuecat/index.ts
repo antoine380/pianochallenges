@@ -52,7 +52,25 @@ export function rcRow(e: any) {
     amount_cents: Number.isFinite(price) && !e.is_family_share ? Math.round(price * 100) : null,
     currency: /^[A-Za-z]{3}$/.test(String(e.currency || "")) ? String(e.currency).toLowerCase() : null,
     billing: def.billing,
+    event_at: evAt(e), // sub_apply ignore un événement plus ancien que le dernier appliqué (l'ordre n'est pas garanti)
   };
+}
+
+// horodatage de l'événement RevenueCat (event_timestamp_ms) en ISO, ou null
+// deno-lint-ignore no-explicit-any
+export function evAt(e: any): string | null {
+  const t = Number(e?.event_timestamp_ms);
+  return Number.isFinite(t) && t > 0 ? new Date(t).toISOString() : null;
+}
+
+// TRANSFER : les achats passent des comptes transferred_from au premier compte de transferred_to qui est un id Supabase
+// deno-lint-ignore no-explicit-any
+export function rcTransfer(e: any) {
+  const list = (v: unknown) => (Array.isArray(v) ? v : []).map(String).filter((x) => UUID.test(x));
+  const to = list(e?.transferred_to)[0];
+  if (!to) return null; // vers un compte anonyme : rien à réattribuer côté Supabase
+  const orig = String(e?.original_transaction_id || "");
+  return { to, from: list(e?.transferred_from), store_id: orig || null, event_at: evAt(e) };
 }
 
 Deno.serve(async (req) => {
@@ -65,10 +83,16 @@ Deno.serve(async (req) => {
   const e = body?.event || {};
   if (e.type === "TEST") return ok({ ok: true, test: true });
   if (e.environment === "SANDBOX" && env("REVENUECAT_SANDBOX") !== "1") return ok({ ok: true, ignored: "sandbox" });
-  if (e.type === "TRANSFER") return ok({ ok: true, ignored: "transfer" }); // l'achat suivra avec le bon compte
+  const db = createClient(env("SUPABASE_URL"), env("SUPABASE_SERVICE_ROLE_KEY"), { auth: { persistSession: false } });
+  if (e.type === "TRANSFER") {
+    const tr = rcTransfer(e);
+    if (!tr) return ok({ ok: true, ignored: "transfer" });
+    const { data, error } = await db.rpc("sub_transfer", { p: tr });
+    if (error) { console.error(error); return new Response("sub_transfer", { status: 500 }); } // RevenueCat réessaiera
+    return ok({ ok: true, out: data });
+  }
   const row = rcRow(e);
   if (!row) return ok({ ok: true, ignored: e.type || "unknown" });
-  const db = createClient(env("SUPABASE_URL"), env("SUPABASE_SERVICE_ROLE_KEY"), { auth: { persistSession: false } });
   const { data, error } = await db.rpc("sub_apply", { p: row });
   if (error) { console.error(error); return new Response("sub_apply", { status: 500 }); } // RevenueCat réessaiera
   return ok({ ok: true, out: data });
