@@ -3479,6 +3479,10 @@ body.imp-drag[data-page="free"] #freePanel::after{content:"";position:absolute;i
 :is(.pc-chip,.hs-more,.gamebar .gend,.imp-tip-x,#pfPrev,#pfNext,.hs-dots button,#qzBots button,#suHow,.how-btn){position:relative}
 :is(.pc-chip,.hs-more,.gamebar .gend,.imp-tip-x,#pfPrev,#pfNext,#qzBots button,#suHow,.how-btn)::after{content:"";position:absolute;inset:-7px -3px;border-radius:inherit}
 .hs-dots button::after{content:"";position:absolute;inset:-14px -3px}
+/* relecture : la zone de « Comment ça marche ? » (écran de départ) débordait de 7 px sur la 1re rangée des aides (case « Allumer les touches » en téléphone) → elle s'agrandit vers le haut seulement ;
+   les chiffres 0-3 des robots du quiz sont collés : pas de débord sur les côtés (chaque chiffre prenait 3 px au voisin) */
+#suHow::after{inset:-12px -3px 0}
+#qzBots button::after{inset:-7px 0}
 .hs-dots{gap:8px}
 /* carte « Invite tes amis » de l'accueil étirée (iPad portrait) : titre et sous-titre restent ensemble, au centre */
 .hs-inv{align-content:center;justify-items:start;text-align:left;row-gap:2px}
