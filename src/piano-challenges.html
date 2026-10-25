@@ -12108,7 +12108,7 @@ Object.assign(TXT.fr,{pwUpTo:n=>"jusqu'à "+n+" personnes", pwGrpSolo:"Solo · 1
   pwOkPF:n=>"Tout est débloqué. Invite jusqu'à "+(n-1)+" personnes dans Réglages › Abonnement : chacun garde son compte et sa progression.",
   pwCmpFree:"Gratuit", pwCmpPrem:"Premium", pwCmpRows:(ty,so,du,all)=>[["Tonalités","Simples","Toutes"],["Types par matière",String(ty),"Tous"],["Morceaux",String(so),all?"Tous ("+all+")":"Tous"],["Duels",du+" par jour","Illimités"],["Quiz en local","Illimité","Illimité"]],
   paySoon:"Le paiement arrive bientôt.", paySignIn:"Crée ton compte (ou connecte-toi) pour t'abonner : ton Premium suivra ton compte sur tous tes appareils.", payErr:"Le paiement n'a pas pu démarrer. Réessaie dans un instant.",
-  payWait:"Paiement reçu : on active ton Premium…", payCancel:"Paiement annulé : rien n'a été débité.", payRestored:"Achats restaurés.", setPremGift:"Premium offert",
+  payWait:"Paiement reçu : on active ton Premium…", payCancel:"Paiement annulé : rien n'a été débité.", payRestored:"Achats restaurés.", payWebManage:"Ton abonnement se gère sur pianochallenges.com, dans Réglages › Abonnement.", setPremGift:"Premium offert",
   famVia:x=>"Premium avec la famille de "+x+".", famH:"Ma famille", famSubO:n=>"Jusqu'à "+n+" personnes, chacun son compte et sa progression.", famSubM:x=>"Tu fais partie de la famille de "+x+".",
   famOwner:"Titulaire", famYou:"toi", famRm:"Retirer", famSure:"Confirmer ?", famInv:"Inviter", famFull:"Famille complète", famLeft:n=>n+(n>1?" places restantes":" place restante"),
   famInvT:"Lien d'invitation", famInvD:d=>"Pour une personne · valable jusqu'au "+d, famCopy:"Copier", famShare:"Partager", famNew:"Nouveau lien",
@@ -12124,7 +12124,7 @@ Object.assign(TXT.en,{pwUpTo:n=>"up to "+n+" people", pwGrpSolo:"Solo · 1 perso
   pwOkPF:n=>"Everything is unlocked. Invite up to "+(n-1)+" people in Settings › Subscription: everyone keeps their own account and progress.",
   pwCmpFree:"Free", pwCmpPrem:"Premium", pwCmpRows:(ty,so,du,all)=>[["Keys","Simple","All"],["Types per topic",String(ty),"All"],["Songs",String(so),all?"All ("+all+")":"All"],["Duels",du+" a day","Unlimited"],["Local quiz","Unlimited","Unlimited"]],
   paySoon:"Payment is coming soon.", paySignIn:"Create your account (or sign in) to subscribe: your Premium follows your account on all your devices.", payErr:"Payment couldn't start. Try again in a moment.",
-  payWait:"Payment received: turning on your Premium…", payCancel:"Payment cancelled: nothing was charged.", payRestored:"Purchases restored.", setPremGift:"Gifted Premium",
+  payWait:"Payment received: turning on your Premium…", payCancel:"Payment cancelled: nothing was charged.", payRestored:"Purchases restored.", payWebManage:"Your subscription is managed on pianochallenges.com, in Settings › Subscription.", setPremGift:"Gifted Premium",
   famVia:x=>"Premium through "+x+"'s family.", famH:"My family", famSubO:n=>"Up to "+n+" people, each with their own account and progress.", famSubM:x=>"You're part of "+x+"'s family.",
   famOwner:"Owner", famYou:"you", famRm:"Remove", famSure:"Confirm?", famInv:"Invite", famFull:"Family full", famLeft:n=>n+(n!==1?" spots left":" spot left"),
   famInvT:"Invitation link", famInvD:d=>"For one person · valid until "+d, famCopy:"Copy", famShare:"Share", famNew:"New link",
@@ -12157,7 +12157,8 @@ async function payFetch(path, body){ const tok=await trkTok(); if(!tok) throw ne
 function payNeedAcct(){ if(user) return false; pwClose(); toast(t("paySignIn")); authOpen("signup"); return true; }
 async function payStripe(plan){ if(payNeedAcct()) return; try{ const j=await payFetch("/checkout", {plan:PAY_PLANS[plan], lang:S.settings.lang==="en"?"en":"fr"});
     if(/^https:\/\/checkout\.stripe\.com\//.test(j.url)) location.href=j.url; else throw new Error("url"); }catch(e){ if(e && e.message==="already_subscribed"){ pwClose(); payManage(premEnt()); return; } toast(t("payErr")); } }
-async function payManage(ent){ if(ent && ent.store==="apple"){ window.open("https://apps.apple.com/account/subscriptions","_blank","noopener"); return; }
+async function payManage(ent){ if(isApp() && ent && ent.store==="stripe"){ toast(t("payWebManage")); return; } // dans l'app : pas de lien vers un paiement hors App Store
+  if(ent && ent.store==="apple"){ window.open("https://apps.apple.com/account/subscriptions","_blank","noopener"); return; }
   try{ const j=await payFetch("/portal", {}); if(/^https:\/\/billing\.stripe\.com\//.test(j.url)) location.href=j.url; else throw new Error("url"); }catch(e){ toast(t("payErr")); } }
 // ---- RevenueCat dans l'app (rien ne se passe tant que la clé est vide ; le plugin sera ajouté au projet Xcode avec Antoine) ----
 const PAYRC={ok:false, uid:null};
