@@ -114,6 +114,7 @@ td.num,th.num{text-align:right;font-variant-numeric:tabular-nums}
 .chip{display:inline-block;border-radius:999px;padding:1px 8px;font-size:.72rem;font-weight:800;background:var(--surface-2);white-space:nowrap}
 .chip.good{background:var(--good-soft);color:var(--good)} .chip.bad{background:var(--bad-soft);color:var(--bad)} .chip.gold{background:color-mix(in srgb,var(--gold) 25%,transparent)} .chip.warn{background:var(--warn-soft);color:var(--warn)}
 .filters{display:flex;flex-wrap:wrap;gap:8px;align-items:flex-end;margin-bottom:var(--gap)}
+.onb-qs{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px 18px} .onb-q > b{font-size:.92rem}
 .seg{display:inline-flex;background:var(--surface-2);border-radius:999px;padding:2px}
 .seg button{border:0;background:transparent;border-radius:999px;padding:6px 12px;font-weight:800;font-size:.82rem}
 .seg button[aria-pressed="true"]{background:var(--surface);box-shadow:0 1px 4px rgba(0,0,0,.12)}
@@ -338,7 +339,26 @@ function filtersHtml(){ const f=A.f, sel=(id,v,opts)=>'<select id="'+id+'">'+opt
     +'<label class="f">Appareil'+sel("fDev",f.dev,[["","Tous"],["phone","Téléphone"],["tablet","Tablette"],["desktop","Ordinateur"]])+'</label>'
     +'<label class="f">Entrée'+sel("fInp",f.inp,[["","Toutes"],["midi","MIDI"],["mic","Micro"],["screen","Écran"]])+'</label>'
     +'<button class="btn" type="button" id="fCsv">Exporter en CSV</button></div>'; }
-VIEWS.stats=async()=>{ const f=A.f, s=await rpc("admin_stats",{p_from:f.from,p_to:f.to,p_lang:f.lang,p_dev:f.dev,p_inp:f.inp}); A.last=s;
+// ---------- onboarding (migration 2026-10-26_onboarding.sql) : entonnoir écran par écran, réponses, sauts ----------
+const ONB_STEP={hw:"D2 · Avec quoi tu joues",c:"D3 · « Joue un Do »",first_note:"Première note jouée",level:"Q1 · Niveau",why:"Q2 · Objectif",staff:"Q3 · Lecture des notes",time:"Q4 · Temps par jour",how:"Entrée (questionnaire)",recap:"Ton programme",done:"Programme validé"};
+const ONB_Q={level:"Niveau",why:"Objectif",staff:"Lecture des notes",time:"Temps par jour",how:"Façon de jouer"};
+const ONB_A={debut:"Je débute",notes:"Quelques notes",adv:"Je joue déjà",songs:"Jouer des morceaux",theory:"Comprendre la musique",fun:"Pour le plaisir",school:"Pour mes cours",yes:"Oui, je lis",learn:"Un peu, j'apprends",no:"Non, sans portée","5":"5 min","10":"10 min","20":"20 min",midi:"Clavier MIDI",mic:"Micro",screen:"Écran"};
+const ONB_DEST={pp:"Premiers pas",place:"Test de placement",learn:"Ma route (LEARN)",free:"PLAY",games:"GAMES",hub:"Accueil"};
+async function onbLoad(f){ try{ return await rpc("admin_onboarding",{p_from:f.from,p_to:f.to,p_lang:f.lang,p_dev:f.dev,p_inp:f.inp,p_ctx:f.ctx||""}); }catch(e){ if(e instanceof Denied) throw e; return {err:e.message||String(e)}; } }
+function onbCards(ob){ const ctx=A.f.ctx||"", seg='<span class="seg" id="obCtx">'+[["","Tous"],["fn","Premier lancement"],["onb","Questionnaire"]].map(([k,l])=>'<button type="button" data-c="'+k+'" aria-pressed="'+(ctx===k)+'">'+l+'</button>').join("")+'</span>';
+  if(!ob || ob.err) return card("Onboarding", '<div class="empty" data-onb-missing="1">Les fonctions de l\'onboarding ne sont pas installées : lance supabase/migrations/2026-10-26_onboarding.sql.</div>', "span4");
+  const F=(ob.funnel||[]).filter(x=>x.k!=="how"||x.n>0), top=Math.max(1,...F.map(x=>+x.n||0)), first=(F[0]&&+F[0].n)||0;
+  const funnel=bars(F.map((x,i)=>({l:ONB_STEP[x.k]||x.k, v:x.n, x:i?pct(x.n,first||top):""})),{max:top});
+  const asked=ob.asked||{}, sk=ob.skips||{};
+  const qs=Object.keys(ONB_Q).filter(q=>(ob.answers||{})[q]||sk[q]).map(q=>{ const a=(ob.answers||{})[q]||{}, tot=Object.values(a).reduce((x,y)=>x+y,0);
+    return '<div class="onb-q"><b>'+esc(ONB_Q[q])+'</b> <small class="muted">'+fmtN(tot)+' réponses · sautée '+pct(sk[q]||0, asked[q]||((sk[q]||0)+tot))+'</small>'+bars(Object.entries(a).sort((x,y)=>y[1]-x[1]).map(([k,v])=>({l:ONB_A[k]||k, v, x:pct(v,tot)})))+'</div>'; }).join("") || '<div class="empty">Pas encore de réponse sur la période.</div>';
+  const d=ob.done||{}, dest=Object.entries(d.dest||{}).sort((x,y)=>y[1]-x[1]).map(([k,v])=>esc(ONB_DEST[k]||k)+' '+fmtN(v)).join(" · ")||"—";
+  const dev=Object.entries(ob.by_dev||{}).map(([k,v])=>({l:(k==="phone"?"Téléphone":k==="tablet"?"Tablette":k==="desktop"?"Ordinateur":k)+" · validé", v:v.done, x:pct(v.done,v.start)+" de "+fmtN(v.start)}));
+  const kv='<dl class="kv"><dt>Programmes validés</dt><dd>'+fmtN(d.n)+'</dd><dt>Durée médiane</dt><dd>'+(d.sec_median!=null?Math.round(d.sec_median)+" s":"—")+'</dd><dt>Réponses par joueur</dt><dd>'+(d.answers_avg??"—")+' · sautées '+(d.skipped_avg??"—")+'</dd><dt>« Passer » tout</dt><dd>'+fmtN(sk.all||0)+' · le reste '+fmtN(sk.rest||0)+'</dd><dt>Ensuite</dt><dd>'+dest+'</dd></dl>';
+  return card("Onboarding : entonnoir écran par écran", funnel+'<small class="muted">Appareils qui ont vu chaque écran. % du premier écran.</small>', "span2 onb-card", seg)
+    +card("Onboarding : bilan", kv+bars(dev,{empty:"—"}), "onb-card")
+    +card("Onboarding : réponses par question", '<div class="onb-qs">'+qs+'</div>', "span4 onb-card"); }
+VIEWS.stats=async()=>{ const f=A.f, [s,ob]=await Promise.all([rpc("admin_stats",{p_from:f.from,p_to:f.to,p_lang:f.lang,p_dev:f.dev,p_inp:f.inp}), onbLoad(f)]); A.last=s; A.lastOnb=ob;
   const F=s.funnel||[0,0,0,0,0], FL=["Premier lancement","Première note","Leçon 1 terminée","Leçon 3 terminée","Compte créé"];
   const funnel=bars(F.map((v,i)=>({l:FL[i], v, x:i?pct(v,F[0]):""})),{max:Math.max(1,F[0])});
   const pp=bars((s.pp||[]).map(x=>({l:"Leçon "+String(x.id).slice(1), v:x.n, x:x.stars?("★ "+x.stars):""})));
@@ -357,6 +377,7 @@ VIEWS.stats=async()=>{ const f=A.f, s=await rpc("admin_stats",{p_from:f.from,p_t
   return filtersHtml()+'<div class="grid g3">'
     +card("Actifs par jour", lineChart(ser,{label:"actifs",h:150}), "span4", '<small class="muted">'+fmtN(s.actors)+' actifs · '+fmtN(s.events)+' événements</small>')
     +card("Entonnoir du premier lancement", funnel+'<small class="muted">Par appareil, sur la période. % du premier lancement.</small>')
+    +onbCards(ob)
     +card("Premiers pas, leçon par leçon", pp)
     +card("Façon de jouer", inputs)
     +card("Claviers MIDI", kb)
@@ -378,11 +399,15 @@ function statsCsv(){ const s=A.last||{}, L=[], q=v=>{ const num=typeof v==="numb
   row(); row("clavier","appareils"); (s.keyboards||[]).forEach(x=>row(x.name,x.n));
   row(); row("activité","type","fois","joueurs"); (s.activities||[]).forEach(x=>row(x.name,x.what,x.n,x.actors));
   row(); row("badge","joueurs"); (s.badges||[]).forEach(x=>row(x.id,x.n));
+  const ob=A.lastOnb; if(ob && !ob.err){ row(); row("onboarding : écran","appareils"); (ob.funnel||[]).forEach(x=>row(ONB_STEP[x.k]||x.k,x.n));
+    row(); row("onboarding : question","réponse","appareils"); Object.entries(ob.answers||{}).forEach(([q,a])=>Object.entries(a).forEach(([v,n])=>row(q,v,n)));
+    row(); row("onboarding : sautée","appareils"); Object.entries(ob.skips||{}).forEach(([q,n])=>row(q,n)); }
   return "﻿"+L.join("\n"); }
 WIRE.stats=m=>{ const f=A.f;
   m.querySelector("#fPer").onclick=e=>{ const b=e.target.closest("[data-n]"); if(!b) return; f.per=+b.dataset.n; f.from=addD(-(f.per-1)); f.to=addD(0); go("stats"); };
   ["fFrom","fTo"].forEach(id=>m.querySelector("#"+id).onchange=e=>{ if(!e.target.value) return; f[id==="fFrom"?"from":"to"]=e.target.value; f.per=0; go("stats"); });
   [["fLang","lang"],["fDev","dev"],["fInp","inp"]].forEach(([id,k])=>m.querySelector("#"+id).onchange=e=>{ f[k]=e.target.value; go("stats"); });
+  const oc=m.querySelector("#obCtx"); if(oc) oc.onclick=e=>{ const b=e.target.closest("[data-c]"); if(!b) return; f.ctx=b.dataset.c; go("stats"); };
   m.querySelector("#fCsv").onclick=()=>download("piano-challenges-stats-"+f.from+"-"+f.to+".csv", statsCsv(), "text/csv;charset=utf-8"); };
 
 // ---------- 3. joueurs ----------
@@ -396,8 +421,14 @@ WIRE.users=m=>{ const q=m.querySelector("#uQ"), run=()=>{ A.users.q=q.value.trim
   m.querySelector("#uGo").onclick=run; q.onkeydown=e=>{ if(e.key==="Enter") run(); };
   m.querySelector("#uPrev").onclick=()=>{ A.users.off=Math.max(0,A.users.off-50); go("users"); }; m.querySelector("#uNext").onclick=()=>{ A.users.off+=50; go("users"); };
   m.querySelectorAll("tr[data-id]").forEach(tr=>{ tr.onclick=()=>userOpen(tr.dataset.id); tr.onkeydown=e=>{ if(e.key==="Enter") userOpen(tr.dataset.id); }; }); };
+// réponses d'onboarding du joueur (S.onb synchronisé) ; rien si la migration n'est pas lancée ou s'il n'a pas répondu
+function onbUser(uo){ const o=uo&&uo.onb; if(!o || typeof o!=="object") return "";
+  const val=(q,v)=>Array.isArray(v)?v.map(x=>ONB_A[x]||x).join(", "):(ONB_A[v]||v);
+  const rows=Object.keys(ONB_Q).filter(q=>o[q]!=null&&!(Array.isArray(o[q])&&!o[q].length)).map(q=>'<dt>'+esc(ONB_Q[q])+'</dt><dd>'+esc(val(q,o[q]))+'</dd>').join("");
+  const meta=[o.skipped?"a tout passé":"", o.ctx==="fn"?"premier lancement":o.ctx==="onb"?"questionnaire":"", o.sec?o.sec+" s":"", (o.sk||[]).length?"sautées : "+o.sk.map(q=>ONB_Q[q]||q).join(", "):"", o.place?"placé en "+o.place:""].filter(Boolean).join(" · ");
+  return card("Réponses d'onboarding", (rows?'<dl class="kv" id="upOnb">'+rows+'</dl>':'<div class="empty">Aucune réponse.</div>')+(meta?'<small class="muted">'+esc(meta)+'</small>':'')); }
 async function userOpen(id){ $("paneScrim").hidden=false; $("userPane").hidden=false; $("upTitle").textContent="Chargement…"; $("upBody").innerHTML="";
-  let u; try{ u=await rpc("admin_user",{p_id:id}); }catch(e){ $("upBody").innerHTML='<div class="msg err">'+esc(e.message)+'</div>'; return; }
+  let u, uo=null; try{ [u, uo]=await Promise.all([rpc("admin_user",{p_id:id}), rpc("admin_user_onb",{p_id:id}).catch(()=>null)]); }catch(e){ $("upBody").innerHTML='<div class="msg err">'+esc(e.message)+'</div>'; return; }
   const p=u.profile||{}, g=u.progress||{}, prem=u.prem_until&&new Date(u.prem_until)>new Date(), banned=u.banned_until&&new Date(u.banned_until)>new Date();
   $("upTitle").textContent=p.name||"Sans pseudo";
   const xp=(u.xp_days||[]).slice().reverse().map(x=>({k:x.day, v:x.xp}));
@@ -411,6 +442,7 @@ async function userOpen(id){ $("paneScrim").hidden=false; $("userPane").hidden=f
     +'<dt>Sauvegarde</dt><dd>'+(g.size?fmtN(g.size)+" octets · "+fmtDT(g.updated_at):"aucune")+'</dd></dl>'
     +'<div class="row">'+B("uaRename","Renommer","support")+B("uaPrem","Offrir 1 mois Premium","support")+(prem?B("uaPremOff","Retirer le Premium","support"):"")+B("uaBan",banned?"Réactiver":"Suspendre","support")+B("uaExport","Export RGPD (JSON)","support")+'</div>'
     +'<div class="row">'+B("uaReset","Réinitialiser la progression","owner","danger")+B("uaDel","Supprimer le compte","owner","danger")+'</div>'
+    +onbUser(uo)
     +card("XP des 30 derniers jours", lineChart(xp,{h:140,label:"XP"}))
     +card("Derniers événements", ev?'<div class="tw"><table><tbody>'+ev+'</tbody></table></div>':'<div class="empty">Aucun.</div>')
     +((u.feedback||[]).length?card("Messages au support", (u.feedback||[]).map(f=>'<div class="fb"><small class="muted">'+fmtDT(f.at)+' · '+esc(FBK[f.kind]||f.kind)+' · '+esc(FBS[f.status]||f.status)+'</small><p>'+esc(f.msg)+'</p></div>').join("")):"");

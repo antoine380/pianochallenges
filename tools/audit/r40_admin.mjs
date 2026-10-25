@@ -80,12 +80,21 @@ const [dl] = await Promise.all([p.waitForEvent('download', { timeout: 3000 }).ca
 check('export CSV téléchargé', !!dl && /\.csv$/.test(dl.suggestedFilename()), dl && dl.suggestedFilename());
 if (dl) { const csv = readFileSync(await dl.path(), 'utf8'); // a cell starting with = + - @ is neutralised (apostrophe), numbers stay numbers
   check('export CSV : formules neutralisées (« \'= »), chiffres intacts', /"'=HYPERLINK\(""http:\/\/x""\)",1/.test(csv) && !/^=|,=/m.test(csv) && /Roland FP-30X,40/.test(csv), csv.split('\n').filter(l => /HYPER|Roland/.test(l))); }
+// onboarding (chantier Onboarding, migration 2026-10-26) : entonnoir écran par écran, réponses, sauts, filtre de parcours
+await p.selectOption('#fLang', ''); await p.waitForTimeout(400);
+check('Statistiques › Onboarding : entonnoir de 9 écrans (sans « Entrée » vide) et réponses par question', await p.evaluate(() => { const c = [...document.querySelectorAll('#main .onb-card')]; return c.length === 3 && c[0].querySelectorAll('.bar').length === 9 && document.querySelectorAll('#main .onb-q').length === 4 && /sautée/.test(c[2].textContent) && /Premiers pas 190/.test(c[1].textContent); }));
+check('onboarding : mêmes filtres que les statistiques (période, appareil…)', await p.evaluate(() => window.__ADM.onbArgs && 'p_dev' in window.__ADM.onbArgs && 'p_from' in window.__ADM.onbArgs));
+await p.click('#obCtx [data-c=onb]'); await p.waitForTimeout(500);
+check('onboarding : filtre « Questionnaire » (p_ctx)', await p.evaluate(() => window.__ADM.onbArgs.p_ctx === 'onb' && document.querySelector('#obCtx [data-c=onb]').getAttribute('aria-pressed') === 'true'));
+await p.click('#obCtx [data-c=""]'); await p.waitForTimeout(500);
+await p.screenshot({ path: `${CAP}/admin_onboarding_1280.png` });
 // joueurs : fiche + action → journal
 await goPage(p, 'users');
 await p.fill('#uQ', 'léa'); await p.click('#uGo'); await p.waitForTimeout(400);
 check('recherche de joueur', (await p.locator('#main tr[data-id]').count()) === 1);
 await p.click('#main tr[data-id]'); await p.waitForTimeout(400);
 check('fiche du joueur ouverte', await p.isVisible('#userPane') && /Identifiant/.test(await p.textContent('#upBody')));
+check('fiche : réponses d’onboarding (niveau, objectif, temps, sautées)', await p.evaluate(() => { const t = (document.getElementById('upOnb') || {}).textContent || ''; return /Je débute/.test(t) && /Jouer des morceaux/.test(t) && /10 min/.test(t) && /sautées : Lecture des notes/.test(document.getElementById('upBody').textContent); }));
 await p.screenshot({ path: `${CAP}/admin_user_1280.png` });
 await p.click('#uaPrem'); await p.waitForTimeout(150); await p.click('#dlgOk'); await p.waitForTimeout(500);
 check('« Offrir 1 mois Premium » : écrit le journal', await p.evaluate(() => window.__ADM.log.includes('user.premium')));
@@ -127,6 +136,14 @@ check('lecture : pas d’e-mail dans la liste ni la fiche', !/@example\.com/.tes
 await p.click('#upClose'); await goPage(p, 'content');
 check('lecture : réglages en lecture seule', await p.isDisabled('#cFlagsSave') && /Lecture seule/.test(await p.textContent('#main')));
 check('aucune erreur (lecture)', !p.errs.length, p.errs);
+await p.context().close();
+
+// 3 bis) migration de l'onboarding pas encore lancée : message clair, le reste des statistiques s'affiche
+p = await open({ adm: { enrolled: true, noOnb: true } });
+await login(p); await goPage(p, 'stats');
+check('sans la migration 2026-10-26 : bloc Onboarding « à lancer », statistiques chargées', await p.evaluate(() => !!document.querySelector('[data-onb-missing]') && !document.querySelector('#main [data-err]') && /Entonnoir du premier lancement/.test(document.getElementById('main').textContent)));
+await goPage(p, 'users'); await p.click('#main tr[data-id]'); await p.waitForTimeout(400);
+check('sans la migration : fiche joueur sans bloc d’onboarding, sans erreur', await p.isVisible('#userPane') && !(await p.evaluate(() => !!document.getElementById('upOnb'))) && !p.errs.length, p.errs);
 await p.context().close();
 
 // 4) téléphone 375×667, thème sombre

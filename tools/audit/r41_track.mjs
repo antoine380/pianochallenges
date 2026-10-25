@@ -58,6 +58,12 @@ const sent = p.log.track[0] || { p_evts: [] };
 const e0 = sent.p_evts.find(e => e.n === 'app_open') || {};
 check('lot : identifiant anonyme + événements app_open, input_mode, learn_end', /^[A-Za-z0-9_-]{8,40}$/.test(sent.p_anon || '') && ['app_open', 'input_mode', 'learn_end'].every(n => evNames(p.log).includes(n)), evNames(p.log));
 check('contexte joint : langue, appareil, plateforme, entrée, version', e0.l === 'fr' && e0.d === 'desktop' && e0.s === 'web' && ['screen', 'mic', 'midi', 'none'].includes(e0.i) && typeof e0.v === 'string' && e0.v.length > 0, e0);
+// chantier Onboarding (26/10) : les 4 événements de l'onboarding sont acceptés et partent avec leurs propriétés (sans donnée personnelle)
+await p.X('track("onb_view",{s:"why",ctx:"fn"}); track("onb_answer",{q:"why",a:"songs",ctx:"fn"}); track("onb_skip",{q:"staff",ctx:"fn"}); track("onb_done",{ctx:"fn",sec:42,n:3,sk:1,level:"debut",dest:"pp"})');
+await p.X('trkFlush()'); await p.waitForTimeout(600);
+{ const all = p.log.track.flatMap(x => x.p_evts); const g = n => all.find(e => e.n === n) || {};
+  check('onboarding : onb_view, onb_answer, onb_skip, onb_done envoyés', ['onb_view', 'onb_answer', 'onb_skip', 'onb_done'].every(n => all.some(e => e.n === n)), all.map(e => e.n));
+  check('onboarding : propriétés en texte (q, a, ctx ; durée et destination)', g('onb_answer').p.q === 'why' && g('onb_answer').p.a === 'songs' && g('onb_done').p.sec === '42' && g('onb_done').p.dest === 'pp', [g('onb_answer').p, g('onb_done').p]); }
 const le = sent.p_evts.find(e => e.n === 'learn_end') || { p: {} };
 check('propriétés : textes courts, objets imbriqués écartés', le.p.what === 'chords' && le.p.n === '3' && le.p.complete === '1' && !('secret' in le.p), le.p);
 check('premier lancement repéré (first=1)', e0.p && e0.p.first === '1', e0.p);

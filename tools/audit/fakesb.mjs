@@ -54,6 +54,10 @@ export const FAKE_ADMIN = `(()=>{ const A=window.__ADM=Object.assign({aal:null, 
     admin_feedback:a=>[{id:1,at:new Date().toISOString(),kind:'bug',msg:'Le son craque sur iPad quand je joue vite.',contact:'lea@example.com',ctx:{ver:'2026-10-25',dev:'tablet',plat:'ios',inp:'midi'},status:'new',note:null,user_id:users[1].id,name:'Léa'},{id:2,at:new Date().toISOString(),kind:'idea',msg:'Un mode duo ?',contact:null,ctx:{},status:'new',note:null,user_id:null,name:null}].filter(f=>!a.p_status||f.status===a.p_status),
     admin_feedback_set:a=>(A.log.push('feedback.set'),{ok:true}),
     admin_system:()=>({versions:[{ver:'2026-10-25T10:00Z',plat:'web',n:300,last:new Date().toISOString()},{ver:'2026-10-24T14:39Z',plat:'ios',n:120,last:new Date().toISOString()}],errors:[{msg:'TypeError: x is null',src:'/index.html',line:120,n:12,devices:5,last:new Date().toISOString(),ver:'2026-10-25'}],errors_24h:12,events_total:123456,stats_day:day(1)}),
+    admin_onboarding:a=>(A.onbArgs=a, {funnel:[['hw',500],['c',470],['first_note',430],['level',410],['why',380],['staff',360],['time',350],['how',0],['recap',340],['done',320]].map(([k,n])=>({k,n:a.p_ctx==='onb'?Math.round(n/10):n})),
+      answers:{level:{debut:200,notes:120,adv:90},why:{songs:150,theory:90,fun:100,school:30},staff:{yes:60,learn:180,no:110},time:{'5':120,'10':170,'20':50}},asked:{level:410,why:380,staff:360,time:350},skips:{staff:10,time:12,all:25,rest:6},
+      done:{n:320,sec_median:41,answers_avg:3.6,skipped_avg:0.3,dest:{pp:190,place:80,learn:40,free:10},ctx:{fn:300,onb:20}},by_dev:{phone:{start:200,done:120},tablet:{start:150,done:110},desktop:{start:150,done:90}}}),
+    admin_user_onb:a=>({onb:{done:1,v:2,level:'debut',why:['songs'],staff:'learn',time:'10',ctx:'fn',sk:['staff'],sec:38},events:[]}),
     admin_log_list:()=>A.log.map((a,i)=>({at:new Date().toISOString(),who:'antoine@example.com',action:a,target:'x',detail:{}})),
   };
   const RANK={owner:3,support:2,lecture:1}, NEED={admin_user_reset:'owner',admin_config_set:'owner',admin_league_action:'owner',admin_user_rename:'support',admin_user_premium:'support',admin_user_export:'support',admin_feedback:'support',admin_feedback_set:'support',admin_log_list:'support',admin_notify_count:'support'};
@@ -76,6 +80,7 @@ export const FAKE_ADMIN = `(()=>{ const A=window.__ADM=Object.assign({aal:null, 
     rpc:async(name,args)=>{ A.calls.push(name); await new Promise(r=>setTimeout(r,20));
       if(A.aal!=='aal2' || A.notAdmin) return {data:null,error:{code:'42501',message:'forbidden'}};
       if(NEED[name] && RANK[A.role]<RANK[NEED[name]]) return {data:null,error:{code:'42501',message:'forbidden'}};
+      if(A.noOnb && /onb/.test(name)) return {data:null,error:{code:'PGRST202',message:'Could not find the function public.'+name}};
       if(!D[name]) return {data:null,error:{code:'PGRST202',message:'Could not find the function public.'+name}};
       return {data:JSON.parse(JSON.stringify(D[name](args||{}))),error:null}; },
     functions:{ invoke:async(fn,{body})=>{ if(A.aal!=='aal2') return {data:null,error:{message:'aal2 required'}}; A.log.push('edge.'+body.action); return {data:{ok:true,sent:233},error:null}; } },
