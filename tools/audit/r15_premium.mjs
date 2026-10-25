@@ -1,6 +1,6 @@
 // Premium (Oct 2026, preview until payments are live): off = nothing locked; on = locks on keys, types, songs, duels -> paywall;
-// C18 grid read from the PREM_OFFER constant of the source: Monthly / Yearly (most chosen, trial) / Family, lifetime link, J0/J5/J7 timeline,
-// launch price, generous free plan (freeDuels a day, the first freeSongs songs of the catalogue assets/js/songs-data.js); prices formatted per language (FR « 59,99 € », EN « €59.99 »);
+// offer read from the PREM_OFFER constant of the source: Solo monthly / Solo yearly (most chosen, trial) / Family (up to familySeats people), no lifetime offer, J0/J5/J7 timeline,
+// Free / Premium table, generous free plan (freeDuels a day, the first freeSongs songs of the catalogue assets/js/songs-data.js); prices formatted per language (FR « 59,99 € », EN « €59.99 »);
 // simulated trial unlocks everything; Settings › Subscription shows the grid; invitations (?ref= link, share sheet), a friend's link is remembered.
 import { launch, closeOnboarding, URL } from './lib.mjs';
 import fs from 'fs';
@@ -29,14 +29,14 @@ await learn('scales');
 check('écran de départ : Toutes / Au choix verrouillés', await ev(() => document.querySelectorAll('#suKeyMode .su-km.pw-lk').length === 2));
 await ev(() => document.querySelectorAll('#suKeyMode .su-km')[1].click()); await wait(page, 300);
 check('verrou → paywall avec la raison', await vis('pw') && await ev(() => /♯/.test(document.querySelector('.pw-why').textContent)));
-const grid = await ev(() => { const c = k => document.querySelector('.pw-col[data-p=' + k + ']'); return { n: document.querySelectorAll('.pw-col').length, m: c('month')?.textContent, y: c('year')?.textContent, f: c('family')?.textContent, best: !!c('year')?.classList.contains('best') && !!c('year').querySelector('.pw-badge'), go: c('year')?.querySelector('#pwGo')?.textContent, tl: [...document.querySelectorAll('.pw-tl li b')].map(b => b.textContent), life: document.getElementById('pwLife')?.textContent || '', launch: document.querySelector('.pw-launch')?.textContent || '', free: document.querySelector('.pw-free')?.textContent || '' }; });
-for (const k of ['m', 'y', 'f', 'life', 'launch', 'free']) grid[k] = norm(grid[k] || '');
-check('3 formules : Mensuel / Annuel / Famille aux prix de PREM_OFFER (FR)', grid.n === 3 && grid.m.includes(norm(money(O.month, 1))) && grid.y.includes(norm(money(O.year, 1))) && grid.f.includes(norm(money(O.family, 1))), grid);
+const grid = await ev(() => { const c = k => document.querySelector('.pw-col[data-p=' + k + ']'); return { n: document.querySelectorAll('.pw-col').length, m: c('month')?.textContent, y: c('year')?.textContent, f: c('family')?.textContent, best: !!c('year')?.classList.contains('best') && !!c('year').querySelector('.pw-badge'), go: c('year')?.querySelector('#pwGo')?.textContent, tl: [...document.querySelectorAll('.pw-tl li b')].map(b => b.textContent), life: !!document.getElementById('pwLife'), all: document.querySelector('.pw-card').textContent, launch: document.querySelector('.pw-launch')?.textContent || '', free: document.querySelector('.pw-free')?.textContent || '' }; });
+for (const k of ['m', 'y', 'f', 'all', 'launch', 'free']) grid[k] = norm(grid[k] || '');
+check('3 formules : Solo mensuel / Solo annuel / Famille aux prix de PREM_OFFER (FR)', grid.n === 3 && grid.m.includes(norm(money(O.month, 1))) && grid.y.includes(norm(money(O.year, 1))) && grid.f.includes(norm(money(O.family, 1))), grid);
 check('annuel « Le plus choisi », prix par mois et essai ' + O.trialDays + ' jours', grid.best && grid.y.includes(norm(money(O.year / 12, 1)) + '/mois') && new RegExp(O.trialDays + ' jours').test(grid.go), grid);
-check('Famille : ' + O.familyProfiles + ' profils', grid.f.includes(O.familyProfiles + ' profils'), grid.f);
+check('Famille : jusqu’à ' + O.familySeats + ' personnes, chacun son compte', grid.f.includes('Jusqu\'à ' + O.familySeats + ' personnes, chacun son compte et sa progression'), grid.f);
 check('frise J0 / J' + O.trialRemind + ' / J' + O.trialDays, JSON.stringify(grid.tl) === JSON.stringify(['J0', 'J' + O.trialRemind, 'J' + O.trialDays]), grid.tl);
-check('lien « À vie » et prix de lancement garanti', (!O.life || grid.life.includes(norm(money(O.life, 1)))) && (!O.launchSeats || /garanti/.test(grid.launch)), [grid.life, grid.launch]);
-check('gratuit généreux : ' + O.freeDuels + ' duels par jour, quiz illimité', grid.free.includes(O.freeDuels + ' duels par jour') && /quiz illimité/.test(grid.free), grid.free);
+check('aucune offre à vie ; prix de lancement seulement si launchSeats', !grid.life && !/à vie/i.test(grid.all) && (O.launchSeats ? /lancement/.test(grid.launch) : !grid.launch), [grid.life, grid.launch]);
+check('tableau Gratuit / Premium : ' + O.freeDuels + ' duels par jour, quiz illimité', grid.free.includes(O.freeDuels + ' par jour') && /Quiz en localIllimitéIllimité/.test(grid.free), grid.free);
 await page.keyboard.press('Escape'); await wait(page, 200);
 check('Échap ferme le paywall', !(await vis('pw')));
 await ev(() => document.querySelector('.mode-item[data-mode="play"]').click()); await wait(page, 1200); // catalogue (C6) loaded on demand
@@ -46,7 +46,7 @@ check('PLAY : les ' + NFREE + ' premiers morceaux du catalogue gratuits, ' + LK 
 check('morceau verrouillé : petit cadenas doré visible même sur les tuiles compactes', await ev(() => [...document.querySelectorAll('#playSongs .ptile.pw-lk')].every(t => { const l = t.querySelector('.rec .pc-lk'); return l && l.getBoundingClientRect().width > 10; }) && !document.querySelector('#playSongs .ptile:not(.pw-lk) .pc-lk')));
 if (LK) { await ev(() => document.querySelector('#playSongs .ptile.pw-lk').click()); await wait(page, 300);
   check('morceau verrouillé → paywall (pas de lecteur)', await vis('pw') && await ev(() => document.body.dataset.page !== 'play'));
-  check('paywall : titre neutre et « ' + NFREE + ' morceaux » dans la formule gratuite', await ev(n => document.getElementById('pwH').textContent === 'Tout le piano, sans limite' && document.querySelector('.pw-free').textContent.includes(n + ' morceaux'), NFREE));
+  check('paywall : titre neutre et « Morceaux ' + NFREE + ' » dans le tableau Gratuit / Premium', await ev(n => document.getElementById('pwH').textContent === 'Tout le piano, sans limite' && new RegExp('Morceaux\\s*' + n + '\\s*Tous').test(document.querySelector('.pw-free').textContent), NFREE));
   await ev(() => document.getElementById('pwX').click()); await wait(page, 200); }
 await ev(id => document.querySelector('#playSongs .ptile[data-song="' + id + '"]').click(), FREE[NFREE - 1]); await wait(page, 600);
 check('morceau gratuit (' + FREE[NFREE - 1] + ') → lecteur, pas de paywall', !(await vis('pw')) && await ev(() => document.body.dataset.page === 'play'));
@@ -54,7 +54,7 @@ await ev(() => document.getElementById('homeLink').click()); await wait(page, 40
 // Settings › Subscription: free plan text and the grid
 await ev(() => document.getElementById('setBtn').click()); await wait(page, 300); await ev(() => document.querySelector('#setNav [data-v="prem"]')?.click()); await wait(page, 200);
 const sp = norm(await ev(() => document.getElementById('setPremBox').textContent));
-check('Réglages › Abonnement : formule gratuite et grille (mensuel, annuel, famille, à vie)', sp.includes(O.freeDuels + ' duels par jour') && sp.includes(NFREE + ' morceaux') && [O.month, O.year, O.family].every(v => sp.includes(norm(money(v, 1)))), sp);
+check('Réglages › Abonnement : formule gratuite et grille (Solo mensuel, Solo annuel, Famille), pas d’« À vie »', sp.includes(O.freeDuels + ' duels par jour') && sp.includes(NFREE + ' morceaux') && [O.month, O.year, O.family].every(v => sp.includes(norm(money(v, 1)))) && !/vie/i.test(sp), sp);
 // English: prices formatted « €59.99 »
 await setS(() => { const S = JSON.parse(localStorage.getItem('memo-gammes-v1')); S.settings.lang = 'en'; localStorage.setItem('memo-gammes-v1', JSON.stringify(S)); });
 await page.reload(); await wait(page, 1000); await closeOnboarding(page, 'screen');
@@ -79,13 +79,6 @@ await ev(() => document.querySelector('#duModes [data-m=bots]').click()); await 
 check('Premium : les duels repartent', !(await vis('pw')));
 await learn('scales');
 check('Premium : plus aucun verrou', await ev(() => !document.querySelector('.pw-chip')));
-// lifetime link (simulated)
-if (O.life) { await setS(() => { const S = JSON.parse(localStorage.getItem('memo-gammes-v1')); S.prem = {}; localStorage.setItem('memo-gammes-v1', JSON.stringify(S)); });
-  await page.reload(); await wait(page, 1000); await closeOnboarding(page, 'screen');
-  await ev(() => document.getElementById('premBtn').click()); await wait(page, 300); await ev(() => document.getElementById('pwLife').click()); await wait(page, 400);
-  const L = await ev(() => JSON.parse(localStorage.getItem('memo-gammes-v1')).prem);
-  check('« À vie » : accès simulé sans fin', L && L.plan === 'life' && L.until - Date.now() > 50 * 365 * 864e5, L);
-  await ev(() => document.getElementById('pwOkGo').click()); await wait(page, 300); }
 // invitations
 await ev(() => document.getElementById('homeLink').click()); await wait(page, 400);
 await ev(() => document.getElementById('hsInv').click()); await wait(page, 300);
