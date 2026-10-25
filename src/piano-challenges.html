@@ -11870,7 +11870,8 @@ document.addEventListener("visibilitychange",()=>{ try{
     const keep=LV.a; LV.a=a; lvHold(true); LV.a=keep; BG.a=a; return; }
   const a=BG.a; if(!a) return; BG.a=null;
   if(a.k==="learn"||a.k==="daily"){ resumeRound(); return; }
-  if(HOLD && !LV.on && !(typeof MD!=="undefined"&&MD.hold)){ const keep=LV.a; LV.a=a; lvHold(false); LV.a=keep; }
+  if(typeof MD!=="undefined" && MD.paused){ if(HOLD && !MD.hold) MD.hold=true; return; } // the keyboard was unplugged meanwhile: its window keeps the game still and releases it
+  if(HOLD && !LV.on){ const keep=LV.a; LV.a=a; lvHold(false); LV.a=keep; }
 }catch(e){} });
 // Two tabs (or the app and a browser window) share localStorage: each tab kept its own S and its next save() erased what
 // the other had just won (XP, records, lessons). A write from another tab is now merged in memory like a cloud pull
