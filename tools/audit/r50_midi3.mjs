@@ -146,7 +146,9 @@ await ev(p, () => document.getElementById('gameEnd')?.click()); await W(p, 300);
 await p.X('closeEnd&&endOpen&&closeEnd(); openPage("sc1")'); await W(p, 400);
 const pg0 = await p.X('page');
 await nat(p, [0x90, 72, 90], '8', 500); await nat(p, [0x80, 72, 0], '8', 100);
-check('… et le Do du haut joué seul est un « Do » (liste Gammes une à une → la gamme se lance)', pg0 === 'sc1' && await p.X('page') === 'practice', { pg0, pg: await p.X('page') });
+const pk72 = await p.X('!$("sc1Pick").hidden && page==="sc1"'); // chantier sc1-pop : Do seul sur la liste ouvre d'abord la fenêtre du choix
+await nat(p, [0x90, 72, 90], '8', 500); await nat(p, [0x80, 72, 0], '8', 100);
+check('… et le Do du haut joué seul est un « Do » (liste Gammes une à une → fenêtre du choix, puis Do = la gamme se lance en Entraînement)', pg0 === 'sc1' && pk72 && await p.X('page') === 'practice' && await p.X('!!(game&&game.sc1&&game.sc1.train)'), { pg0, pk72, pg: await p.X('page') });
 // PIANO mode: the top C
 await ev(p, () => document.querySelector('#homeLink')?.click()); await W(p, 300);
 if (await p.isVisible('#leaveModal')) { await p.click('#lvGo'); await W(p, 400); }

@@ -13585,7 +13585,9 @@ function sc1Voice(steps){ if(!steps.length || !steps[0].notes) return steps; con
 const OSH={key:"", d:0, busy:false};
 const oshKey = () => cur ? [cur.sec,cur.tid,cur.k,cur.ch?1:0,cur.pid||"",cur.root||""].join("|") : "";
 const oshOn = () => OSH.key && OSH.key===oshKey();
-function oshShow(lo,hi){ if(OSH.busy || (lo>=LOW && hi<=HIGH) || hi-lo>HIGH-LOW) return; OSH.busy=true;
+// only when something is shown there (guided keys, a reveal or the demo): otherwise the keyboard stays as MIDI left it (midiWiden, followMidi)
+const oshVis = () => phase==="revealed" || (phase==="listening" && guideKeysOn());
+function oshShow(lo,hi){ if(OSH.busy || !oshVis() || (lo>=LOW && hi<=HIGH) || hi-lo>HIGH-LOW) return; OSH.busy=true;
   try{ if(hi>HIGH) followMidi(hi); if(lo<LOW) followMidi(lo); } finally{ OSH.busy=false; } }
 { const o=revealMidis; revealMidis=function(){ if(!cur || cur.sec==="ear" || chSeq() || !seq.length) return o.apply(this,arguments);
     const ms=seqMidis(); let d=null;

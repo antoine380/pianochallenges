@@ -158,9 +158,11 @@ const ac = await p.X('!!ctx');
 await ev(p, () => { window.__midi.noteOn(62, 90); }); await W(p, 150); await ev(p, () => window.__midi.noteOff(62));
 const g1 = await p.X('({page, tc:window.__tc})');
 check('Gammes une à une : le son est prêt dès l’ouverture de la liste (geste), une note MIDI y sonne sans rien lancer', ac && g1.page === 'sc1' && g1.tc >= 1, { ac, ...g1 });
+await ev(p, () => { window.__midi.noteOn(60, 90); }); await W(p, 150); await ev(p, () => window.__midi.noteOff(60)); await W(p, 250);
+const pk = await p.X('!$("sc1Pick").hidden && page==="sc1"'); // chantier sc1-pop : Do seul ouvre d'abord la fenêtre du choix
 await ev(p, () => { window.__midi.noteOn(60, 90); }); await W(p, 400);
 const g2 = await p.X('({page, k:cur&&cur.k, midiC:S.settings.midiC})');
-check('Gammes une à une : un Do seul lance la prochaine gamme (S.settings.midiC absent)', g2.page === 'practice' && !!g2.k && g2.midiC === undefined, g2);
+check('Gammes une à une : un Do seul ouvre la fenêtre du choix, puis Do lance la prochaine gamme (S.settings.midiC absent)', pk && g2.page === 'practice' && !!g2.k && g2.midiC === undefined, { pk, ...g2 });
 check('aucune erreur JS (Gammes une à une)', !p.errs.length, p.errs);
 await p.context().close();
 
