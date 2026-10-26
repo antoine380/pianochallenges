@@ -12,6 +12,10 @@
 // C. (chantier sc1-pop) Chaque lancement depuis la liste ouvre la fenêtre #sc1Pick (Entraînement / Évaluation expliqués, choix conseillé mis en
 //    avant) : case, Do sur la liste (pont natif), « Suivante » ; Do = Entraînement, Mi = Évaluation, Si / Échap / croix / clic à côté = fermer
 //    sans lancer ; clavier d'ordinateur (Entrée = conseillé, A = Do, D = Mi) ; fin d'entraînement : Mi = passer à l'évaluation.
+//    Entraînement : toutes les cases écrites dès le début de la démo (puis jouées une à une) ; accords : renversements les plus pratiques
+//    à la suite (sc1Voice : Do, Sol majeur, La mineur), indiqués sur la case, doigtés d'après le renversement, évaluation : tout renversement accepté.
+// D. Aides qui suivent l'octave jouée (gamme, accords, exercice LEARN classique), « Jouer en accords » en fin de partie à 3 étoiles,
+//    Révision (#sc1RvB, fenêtre #sc1Rv, partie à plusieurs gammes, chrono prêté, étoiles inchangées, « Retravailler les erreurs »).
 // Usage : PORT=8925 NODE_PATH=… PW_CHROMIUM=… node tools/audit/r49_sc1train.mjs   (CAP=dossier pour des captures)
 import { createRequire } from 'module';
 import fs from 'fs';
@@ -241,7 +245,12 @@ await quit(p);
 await ev(p, () => document.querySelector('#sc1Seg [data-v=chords]').click()); await W(p, 300);
 await ev(p, () => document.querySelector('.sc1-c[data-tid=major][data-k=D]').click()); await W(p, 300);
 check('accords : la fenêtre explique l’entraînement en accords', await ev(p, () => /Accords/.test(document.getElementById('sc1PkT').textContent) && /accords de la gamme/.test(document.querySelector('#sc1PkTrain p').textContent)));
-await pick(p, 'train'); await W(p, 1600);
+await pick(p, 'train');
+const v0 = await p.X(`({inv:seq.map(s=>s.inv).join(""), v:seq.map(s=>s.voicing.join("-")).join(" "), lab:[...document.querySelectorAll("#slots .chordslot")].map(d=>d.querySelector(".sc1-inv:not(.none) .lg")?.textContent||"").join("|"),
+  nn:[...document.querySelectorAll("#slots .chordslot .nn")].map(x=>x.textContent), op:[...document.querySelectorAll("#slots .chordslot")].map(x=>+getComputedStyle(x).opacity), seen:document.querySelectorAll("#slots .sc1-seen").length})`);
+check('accords, Ré majeur : renversements les plus pratiques à la suite (fond., fond., 2e, 2e, 1er, 1er, fond., fond.), indiqués sur les cases', v0.inv === '00221100' && v0.lab === '||2e renv.|2e renv.|1er renv.|1er renv.||', v0);
+check('entraînement : dès le début de la démo, toutes les cases sont écrites (noms des accords) et lisibles, rien encore joué', v0.seen === 0 && v0.nn.length === 8 && v0.nn.every(x => x.length > 0) && v0.op.every(o => o === 1), v0);
+await W(p, 1300);
 const cd = await p.X('({ch:chSeq(), rev:[...document.querySelectorAll("#kbd .k-rev")].length, demo:SC1.demo, sub:$("promptSub").textContent})');
 check('accords : démonstration accord par accord (3 touches allumées)', cd.ch && cd.demo && cd.rev === 3 && /accords/.test(cd.sub), cd);
 await ev(p, () => document.getElementById('sc1Your').click()); await W(p, 200);
@@ -249,6 +258,11 @@ const tri = await p.X('seq.map(s=>s.notes.map(n=>n.pc))');
 for (const c of tri) { for (const pc of c) { await p.X(`noteIn(${60 + pc})`); await W(p, 20); } await W(p, 300); }
 await W(p, 300);
 check('accords en entraînement : « Bien joué », aucune étoile', (await G(p)).phase === 'success' && await p.X('sc1Get("chords","major","D")') === 0);
+const vc = await p.X(`(()=>{ const f=(tid,k)=>sc1Voice(scaleChordSteps(tid,k,false,"up")); const nm=v=>v.map(m=>PC_FR[m%12]).join("-");
+  return { C:f("major","C").map(s=>nm(s.voicing)).join(" "), G:f("major","G").map(s=>s.inv).join(""), Am:f("minor","A").map(s=>nm(s.voicing)).join(" "), fg:[2,3,4].map(i=>chordFingers(f("major","C")[i].voicing).join("")).join(" ") }; })()`);
+check('renversements : Do majeur = Do-Mi-Sol Ré-Fa-La Si-Mi-Sol Do-Fa-La Si-Ré-Sol Do-Mi-La Si-Ré-Fa Do-Mi-Sol ; Sol majeur idem ; La mineur = La-Do-Mi Si-Ré-Fa Sol-Do-Mi La-Ré-Fa Sol-Si-Mi La-Do-Fa Sol-Si-Ré La-Do-Mi',
+  vc.C === 'Do-Mi-Sol Ré-Fa-La Si-Mi-Sol Do-Fa-La Si-Ré-Sol Do-Mi-La Si-Ré-Fa Do-Mi-Sol' && vc.G === '00221100' && vc.Am === 'La-Do-Mi Si-Ré-Fa Sol-Do-Mi La-Ré-Fa Sol-Si-Mi La-Do-Fa Sol-Si-Ré La-Do-Mi', vc);
+check('doigtés d’après le renversement montré (Si-Mi-Sol 1-3-5, Do-Fa-La 1-3-5, Si-Ré-Sol 1-2-5)', vc.fg === '135 135 125', vc);
 // mergeState: the chosen mode is a setting of this device; an old state without the key = Evaluation for starred scales
 const ms = await p.X('(()=>{ const r=mergeState({settings:{sc1Train:"train"}},{settings:{}}), r2=mergeState({settings:{}},{settings:{sc1Train:"train"}}); return [r.merged.settings.sc1Train, r2.merged.settings.sc1Train===undefined]; })()');
 check('mergeState : S.settings.sc1Train gardé (réglage de l’appareil), état ancien sans la clé accepté', ms[0] === 'train' && ms[1] === true, ms);
@@ -282,6 +296,100 @@ for (const [w, h] of [[375, 667], [812, 375], [768, 1024], [1024, 768], [1280, 8
   if (CAP) await p.screenshot({ path: `${CAP}/r49_fin_${w}x${h}_${scheme}.png` });
   const txt = await ev(p, () => document.querySelector('#sc1Tm button').textContent);
   check(`${w}×${h} ${scheme} ${lang} : démo, à toi et fin sans défilement, pastilles et boutons visibles`, a && b1 && c1 && vis && txt === (lang === 'fr' ? 'Entraînement' : 'Practice'), { a, b1, c1, vis, txt });
+  if (p.errs.length) check(`${w}×${h} : aucune erreur JS`, false, p.errs);
+  await p.context().close();
+}
+
+// ================= D. (chantier sc1-pop) octave suivie, « Jouer en accords », Révision =================
+p = await open({ vp: { width: 768, height: 1024 } });
+await p.X('openPage("sc1"); sc1Play("major","C","notes","train")'); await W(p, 300); await p.X('sc1Turn()'); await W(p, 200);
+const gk = () => p.X('({lo:LOW, hi:HIGH, g:[...document.querySelectorAll("#kbd .k-guide")].map(k=>+k.dataset.m), fg:[...fgMap()].map(x=>x[0])})');
+const o0 = await gk();
+await p.X('followMidi(72); noteIn(72)'); await W(p, 150);
+let o1 = await gk();
+check('octave : la gamme commencée une octave plus haut (Do 72) → la touche guidée suit (Ré 74), clavier décalé pour la montrer', o0.g.length === 1 && o1.g.join() === '74' && o1.lo <= 74 && o1.hi >= 84, { o0, o1 });
+await p.X('noteIn(74)'); await W(p, 100);
+check('… et continue dans cette octave (Mi 76)', (await gk()).g.join() === '76');
+await p.X('sc1Demo()'); await W(p, 900);
+check('« Revoir la gamme » se joue dans l’octave jouée', (await p.X('[...document.querySelectorAll("#kbd .k-rev")].map(k=>+k.dataset.m)'))[0] === 72);
+await p.X('sc1Turn()'); await W(p, 200);
+check('« À toi » après la démo : les aides restent dans cette octave', (await gk()).g.join() === '72');
+await p.X('openPage("sc1"); sc1Play("major","D","chords","train")'); await W(p, 300); await p.X('sc1Turn()'); await W(p, 200);
+const v1 = await p.X('seq[0].voicing.slice()');
+await p.X(`followMidi(${v1[0] + 12}); noteIn(${v1[0] + 12})`); await W(p, 150);
+o1 = await gk();
+check('accords : une note juste une octave plus haut → tout l’accord guidé et ses doigtés suivent', o1.g.join() === v1.map(m => m + 12).join() && o1.fg.slice().sort().join() === v1.map(m => m + 12).sort().join(), { v1, o1 });
+// classic LEARN (tile Gammes): same behaviour
+await p.X('game=null; openPage("learn")'); await W(p, 200);
+await p.X('S.settings.guideK=true; openPage("practice"); S.section="scales"; game=makeGame([{sec:"scales",tid:"major",k:"G"}]); game.i=-1; startRound()'); await W(p, 300);
+const r0 = await p.X('revealMidis()'); await p.X(`followMidi(${r0[0] + 12}); noteIn(${r0[0] + 12})`); await W(p, 150);
+o1 = await gk();
+check('exercice LEARN classique (Sol majeur) commencé une octave plus haut : la touche guidée suit', o1.g.join() === String(r0[1] + 12), { r0, o1 });
+await p.X('S.settings.guideK=false; game=null; openPage("sc1")'); await W(p, 200);
+check('D1 : aucune erreur JS', p.errs.length === 0, p.errs);
+await p.context().close();
+
+// « Jouer en accords » at the end of a 3-star NOTES test
+p = await open();
+await p.X('openPage("sc1"); sc1Play("major","C","notes","eval")'); await W(p, 300);
+for (const m of C_MAJ) { await p.X(`noteIn(${m})`); await W(p, 30); } await W(p, 2400);
+let ef = await ev(p, () => [...document.querySelectorAll('#endFoot .btn')].map(b => b.id + ':' + b.classList.contains('primary') + ':' + (b.querySelector('kbd')?.textContent || '')).join());
+check('fin à 3 étoiles en notes : « Jouer en accords » mis en avant (Do), « Suivante » en secondaire (Mi), Recommencer (Si)', ef === 'sc1Back:false:,sc1Again:false:Si,sc1Next:false:Mi,sc1ToCh:true:Do' && await ev(p, () => document.activeElement?.id === 'sc1ToCh'), ef);
+if (CAP) await p.screenshot({ path: `${CAP}/r49_fin_accords.png` });
+await p.X('midiStart(60)'); await W(p, 400);
+check('Do = « Jouer en accords » : fenêtre du choix pour Do Majeur en ACCORDS, liste basculée sur ACCORDS', await pickOpen(p) && /Accords/.test(await ev(p, () => document.getElementById('sc1PkT').textContent)) && await p.X('S.settings.sc1Mode') === 'chords' && await ev(p, () => document.querySelector('#sc1Seg [data-v=chords]').getAttribute('aria-pressed') === 'true'));
+await pick(p, 'eval');
+check('… Évaluation : Do majeur en accords', await p.X('page==="practice" && !!cur.ch && cur.k==="C" && !game.sc1.train'));
+await p.context().close();
+p = await open({ st: STATE({ stars: { chords: { 'C-major': 3 } } }) });
+await p.X('openPage("sc1"); sc1Play("major","C","notes","eval")'); await W(p, 300);
+for (const m of C_MAJ) { await p.X(`noteIn(${m})`); await W(p, 30); } await W(p, 2400);
+ef = await ev(p, () => [...document.querySelectorAll('#endFoot .btn')].map(b => b.id + ':' + b.classList.contains('primary') + ':' + (b.querySelector('kbd')?.textContent || '')).join());
+check('… déjà 3 étoiles en accords : « Suivante » reste principal (Do), « Jouer en accords » secondaire (Mi)', ef === 'sc1Back:false:,sc1Again:false:Si,sc1ToCh:false:Mi,sc1Next:true:Do', ef);
+await p.X('midiStart(64)'); await W(p, 400);
+check('… Mi = « Jouer en accords »', await pickOpen(p) && /Accords/.test(await ev(p, () => document.getElementById('sc1PkT').textContent)));
+await p.context().close();
+
+// Révision
+p = await open({ st: STATE({ stars: { notes: { 'C-major': 3, 'G-major': 3, 'A-minor': 3, 'D-major': 2 } }, set: { delay: 0 } }) });
+await toList(p);
+let rb = await ev(p, () => { const b = document.getElementById('sc1RvB'); return { t: b.querySelector('.lg')?.textContent, dis: b.getAttribute('aria-disabled') }; });
+check('liste : bouton « Révision · tes 3 gammes » à côté de NOTES | ACCORDS', rb.t === 'Révision · tes 3 gammes' && !rb.dis, rb);
+await ev(p, () => document.querySelector('#sc1Seg [data-v=chords]').click()); await W(p, 300);
+rb = await ev(p, () => { const b = document.getElementById('sc1RvB'); return { t: b.textContent, dis: b.getAttribute('aria-disabled'), title: b.title }; });
+await ev(p, () => document.getElementById('sc1RvB').click()); await W(p, 300);
+check('ACCORDS sans gamme à 3 étoiles : bouton désactivé avec explication, rien ne s’ouvre', rb.dis === 'true' && /3 étoiles/.test(rb.title) && await ev(p, () => document.getElementById('sc1Rv').hidden), rb);
+await ev(p, () => document.querySelector('#sc1Seg [data-v=notes]').click()); await W(p, 300);
+await ev(p, () => document.getElementById('sc1RvB').click()); await W(p, 300);
+const rw = await ev(p, () => ({ open: !document.getElementById('sc1Rv').hidden, ti: document.getElementById('sc1RvTi').textContent, s: document.getElementById('sc1RvS').textContent, tx: document.getElementById('sc1RvTx').textContent, tm: [...document.querySelectorAll('#sc1RvTm button')].map(b => b.textContent + ':' + b.getAttribute('aria-pressed')).join(), mix: document.getElementById('sc1RvMix').checked, go: document.getElementById('sc1RvGo').textContent }));
+check('fenêtre Révision : « Révision de tes 3 gammes », explication, chrono (Sans chrono / 30 s / 20 s / 10 s), « Mélanger l’ordre » coché, « Lancer la révision » (Do)', rw.open && rw.ti === 'Révision de tes 3 gammes' && /3 gammes/.test(rw.s) && /sans faute \(3 étoiles\)/.test(rw.tx) && rw.tm === 'Sans chrono:true,30 s:false,20 s:false,10 s:false' && rw.mix && /Lancer la révision/.test(rw.go) && /Do$/.test(rw.go), rw);
+if (CAP) await p.screenshot({ path: `${CAP}/r49_revision.png` });
+await ev(p, () => document.querySelector('#sc1RvTm [data-v="10"]').click()); await ev(p, () => document.getElementById('sc1RvMix').click()); await W(p, 200);
+check('réglages de la révision mémorisés (S.settings.sc1RvT=10, sc1RvMix=false)', (await stored(p)).settings.sc1RvT === 10 && (await stored(p)).settings.sc1RvMix === false);
+await p.X('midiStart(71)'); await W(p, 300);
+check('Si = fermer la fenêtre Révision', await ev(p, () => document.getElementById('sc1Rv').hidden) && await p.X('page') === 'sc1');
+await ev(p, () => document.getElementById('sc1RvB').click()); await W(p, 300); await p.X('midiStart(60)'); await W(p, 500);
+const rg = await p.X('({page, n:game&&game.total, q:game&&game.queue.map(i=>i.k+"-"+i.tid).join(), rv:game&&game.queue.every(i=>i.sc1rv), dl:Math.round((deadline-startT)/1000), lbl:game&&game.label, dir:cur&&cur.dir, delay:S.settings.delay})');
+check('Do = lancer : partie de 3 gammes (ordre de la liste, mélange décoché), en évaluation, chrono de 10 s par gamme', rg.page === 'practice' && rg.n === 3 && rg.q === 'C-major,G-major,A-minor' && rg.rv && rg.dl === 10 && /Révision/.test(rg.lbl) && rg.dir === 'up' && rg.delay === 0, rg);
+check('le chrono prêté n’est jamais sauvegardé (delay du joueur = 0)', (await stored(p)).settings.delay === 0);
+const playCur = async (bad) => { await p.waitForFunction(() => window.__X('phase=="listening"')); const ms = await p.X('revealMidis()'); if (bad) { await p.X('noteIn(61)'); await W(p, 30); } for (const m of ms) { await p.X(`noteIn(${m})`); await W(p, 30); } await W(p, 1500); };
+await playCur(false); await playCur(true); await playCur(false); await W(p, 1200);
+const re = await ev(p, () => ({ end: !document.getElementById('endModal').hidden, t: document.getElementById('endTitle').textContent, rework: !!document.getElementById('endRework'), sc1: !!document.getElementById('sc1Next') }));
+check('fin de la révision : écran de fin habituel des parties (pas celui d’une gamme), « Retravailler les erreurs »', re.end && !re.sc1 && re.rework, re);
+check('étoiles inchangées (une faute en révision ne fait rien perdre)', await p.X('sc1Get("notes","major","C")===3 && sc1Get("notes","major","G")===3 && sc1Get("notes","minor","A")===3 && sc1Get("notes","major","D")===2'));
+await ev(p, () => document.getElementById('endRework').click()); await W(p, 400);
+check('« Retravailler les erreurs » : la gamme ratée, toujours en révision (montée, chrono 10 s)', await p.X('page==="practice" && game.total===1 && game.queue[0].sc1rv===1 && cur.k==="G" && Math.round((deadline-startT)/1000)===10'));
+check('D : aucune erreur JS', p.errs.length === 0, p.errs);
+await p.context().close();
+for (const [w, h] of [[375, 667], [812, 375], [768, 1024], [1024, 768], [1280, 800]]) for (const scheme of ['light', 'dark']) {
+  p = await open({ vp: { width: w, height: h }, scheme, st: STATE({ lang: scheme === 'dark' ? 'en' : 'fr', stars: { notes: { 'C-major': 3, 'G-major': 3 } } }) });
+  await p.X('openPage("sc1")'); await W(p, 300);
+  const lb = await ev(p, () => { const b = document.getElementById('sc1RvB').getBoundingClientRect(); return b.width > 0 && b.right <= innerWidth + 1 && b.bottom <= innerHeight + 1; });
+  const ln = await noScroll(p);
+  await ev(p, () => document.getElementById('sc1RvB').click()); await W(p, 300);
+  const rf = await ev(p, () => { const c = document.querySelector('#sc1Rv .modal-card').getBoundingClientRect(), bd = document.querySelector('#sc1Rv .modal-body'); return c.top >= -1 && c.bottom <= innerHeight + 1 && c.right <= innerWidth + 1 && bd.scrollHeight - bd.clientHeight <= 1; });
+  if (CAP) await p.screenshot({ path: `${CAP}/r49_revision_${w}x${h}_${scheme}.png` });
+  check(`${w}×${h} ${scheme} : bouton Révision visible, liste et fenêtre Révision sans défilement`, lb && ln && rf && await noScroll(p), { lb, ln, rf });
   if (p.errs.length) check(`${w}×${h} : aucune erreur JS`, false, p.errs);
   await p.context().close();
 }

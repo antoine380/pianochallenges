@@ -71,9 +71,10 @@ check('après la partie : sc7=true et dir="down" toujours là (mémoire et sauve
 if (CAP) await p.screenshot({ path: `${CAP}/r46_fin_3.png` });
 
 // 3) Do (MIDI) = gamme suivante : Ré♭ majeur ; une faute → 2 étoiles
-await ev(p, () => window.__midi.noteOn(60)); await W(p, 500); await toEval(p);
+// chantier sc1-pop : à 3 étoiles en notes, Do = « Jouer en accords » (principal) et Mi = « Suivante »
+await ev(p, () => window.__midi.noteOn(64)); await W(p, 500); await toEval(p);
 const g2 = await p.X('({tid:cur&&cur.tid, k:cur&&cur.k, page})');
-check('Do seul (MIDI) sur la fin = gamme suivante (même type, ligne suivante : Ré majeur)', g2.tid === 'major' && g2.k === 'D' && g2.page === 'practice', g2);
+check('Mi seul (MIDI) sur la fin à 3 étoiles = gamme suivante (même type, ligne suivante : Ré majeur)', g2.tid === 'major' && g2.k === 'D' && g2.page === 'practice', g2);
 await notes(p, [62, 61, 64, 66, 67, 69, 71, 73, 74]); await W(p, 2400); // 61 = faute
 check('une faute : 2 étoiles, message court « Gamme finie ! » sans règle', await stars(p, 'notes', 'D-major') === 2 && await endStars(p) === 2 && await ev(p, () => document.querySelector('.sc1-msg').textContent === 'Gamme finie !'));
 // Si = recommencer la même ; sans faute cette fois → 3 (meilleur score monte)
