@@ -3831,6 +3831,16 @@ body.sc1tr #feedback{visibility:hidden}
 @media (max-width:640px){ .sc1-well{display:none} }
 @media (prefers-reduced-motion:reduce){ #slots.sc1-dm>*{transition:none} }
 /* ==== fin Gammes une à une : entraînement ==== */
+/* ==== Jeux 3 (chantier JEUX 3) ==== */
+.rn-goal{font-size:.85rem;font-weight:700;color:var(--good);background:color-mix(in srgb,var(--good) 14%,transparent);padding:3px 10px;border-radius:999px}
+#rnStage,#gmBoard{position:relative}
+.j3-win{position:absolute;inset:0;margin:auto;width:min(92%,380px);height:max-content;max-height:96%;display:flex;flex-direction:column;align-items:center;gap:6px;padding:var(--sp-3,14px) var(--sp-4,18px);text-align:center;background:var(--surface);border-radius:16px;box-shadow:0 10px 30px rgba(20,16,50,.22);cursor:default;z-index:2}
+.j3-wk{font-family:var(--f-display);font-size:1.25rem;color:var(--good)}
+.j3-win p{margin:0;color:var(--muted);font-size:.9rem}
+.j3-wb{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-top:4px}
+@media (max-height:520px){ .j3-win{padding:8px 12px;gap:2px} .j3-wk{font-size:1.05rem} .j3-win p{font-size:.8rem} }
+@media (prefers-reduced-motion:no-preference){ .j3-win{animation:j3In .25s cubic-bezier(.23,1,.32,1)} @keyframes j3In{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}} }
+/* ==== fin Jeux 3 ==== */
 </style>
 
 <script>if(window.Capacitor&&window.webkit&&window.webkit.messageHandlers&&window.webkit.messageHandlers.bridge)document.documentElement.classList.add("native");</script>
@@ -4501,7 +4511,9 @@ body.sc1tr #feedback{visibility:hidden}
   navigator.requestMIDIAccess=()=>access ? Promise.resolve(access) : asking || (asking=open().finally(()=>{ asking=null; }));
   const open=async()=>{
     const acc={inputs:new Map(), onstatechange:null};
-    const sync=list=>{ const old=acc.inputs, m=new Map(); (list||[]).forEach(d=>{ const k=String(d.id); m.set(k, old.get(k)||{id:k,name:d.name,onmidimessage:null}); }); acc.inputs=m; };
+    // MIDI 3 : same source id, new name (a Bluetooth keyboard publishes its full name a moment after connecting): the name follows,
+    // otherwise the chosen keyboard, its size guess and its model were matched against a stale name
+    const sync=list=>{ const old=acc.inputs, m=new Map(); (list||[]).forEach(d=>{ const k=String(d.id), o=old.get(k); if(o) o.name=d.name; m.set(k, o||{id:k,name:d.name,onmidimessage:null}); }); acc.inputs=m; };
     on("midi", ev=>{ const inp=acc.inputs.get(String(ev.id)); if(inp && inp.onmidimessage) inp.onmidimessage({data:new Uint8Array(ev.data||[])}); });
     on("statechange", ev=>{ sync(ev.inputs); if(acc.onstatechange) acc.onstatechange(); });
     const r=await call("start"); sync(r && r.inputs);
@@ -5926,17 +5938,24 @@ function calibApply(){
 // virtual ports are not keyboards (macOS / iOS network sessions « Session réseau », IAC buses): never listed, counted nor listened to.
 // Case and accents do not matter (iOS may send decomposed accents).
 const midiVirtual = n => /network|session|reseau|\biac\b|\bbus\b/.test(String(n||"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase());
+// the size a keyboard's name says (null: the name does not tell)
+const kbdSzOf = name => { const n=String(name||""), m=n.match(/(^|\D)(24|25|32|37|49|61|76|88)(\D|$)/);
+  return m ? m[2] : /lumi|piano ?m\b|keys block/i.test(n) ? "24" : /mpk ?mini(?! ?plus)|launchkey mini|minilab|nanokey|flkey mini|microlab|xkey/i.test(n) ? "25" : /keystep|oxygen pro mini/i.test(n) ? "32" : /seaboard block|songmaker/i.test(n) ? "24" : /rise ?2?/i.test(n) ? "49" : null; };
 function guessKbdSize(name){
   if(!name || S.settings.kbdGuessFor===name) return;
-  const n=String(name), m=n.match(/(^|\D)(24|25|32|37|49|61|76|88)(\D|$)/);
-  let size = m ? m[2] : /lumi|piano ?m\b|keys block/i.test(n) ? "24" : /seaboard block|songmaker/i.test(n) ? "24" : /rise ?2?/i.test(n) ? "49" : null;
+  const sz=S.settings.kbdSize||"auto", old=S.settings.kbdGuessFor, size=kbdSzOf(name);
+  // MIDI 3 : une taille que l'app a mise pour UN AUTRE clavier (les 24 touches d'un LUMI, ou le modèle choisi dans la liste) ne reste pas collée
+  // au clavier suivant (un 25 touches : son Do du haut faisait sauter l'écran d'une octave) : nouvelle devinette, ou automatique
+  const mine = /^\d+$/.test(sz) && ((old && kbdSzOf(old)===sz) || (S.settings.kbdCat && S.settings.kbdCat!==name));
   S.settings.kbdGuessFor=name;
-  if(size && (S.settings.kbdSize||"auto")==="auto"){ S.settings.kbdSize=size; save(); buildKeyboard(); renderSettings(); }
+  if(mine && size!==sz){ S.settings.kbdSize=size||"auto"; save(); buildKeyboard(); renderSettings(); return; }
+  if(size && sz==="auto"){ S.settings.kbdSize=size; save(); buildKeyboard(); renderSettings(); }
   else save();
 }
 // keep the on-screen keyboard on the same keys as the MIDI keyboard: if a played note is outside, shift by octaves
 function followMidi(n){
   if(n>=LOW && n<=HIGH) return;
+  if(midiWiden(n)) return; // MIDI 3 : un clavier plus grand que l'écran (le Do du haut d'un 25 touches) élargit l'écran au lieu de le décaler
   const shift = n<LOW ? -Math.ceil((LOW-n)/12)*12 : Math.ceil((n-HIGH)/12)*12; let lo=LOW+shift, hi=HIGH+shift;
   const hw=(S.midi&&S.midi.hw)||{}; if(hw.lo>=21 && hw.hi>hw.lo && hw.hi-hw.lo<=HIGH-LOW && n>=hw.lo && n<=hw.hi){ hi=hw.lo+(HIGH-LOW); lo=hw.lo; } // the measured keyboard (M9) fits: show it whole, in one move
   if(lo<21 || hi>108) return;
@@ -6930,7 +6949,7 @@ function rnLoop(now){
       if(!o.passed && o.x+o.w < px){ o.passed=true; RN.cleared++; if(!DU.mode) RN.xp+=2; tone(84,0,.12,.08); }
       const hit = o.x < px+pw-6*u && o.x+o.w > px+6*u && RN.y < o.h-6*u;
       if(hit && RN.state==="run"){ RN.state="over"; clearKeys(); RN.crashAt=performance.now(); tone(40,0,.4,.2); if(DU.mode) duMe(RN.score,true);
-        if(!DU.mode && RN.score>(S.runnerBest||0)){ S.runnerBest=RN.score; RN.newBest=true; } trkGame("runner", RN.score); if(RN.xp){ addXP(RN.xp); RN.xp=0; } try{ achEnd(); }catch(e){} save(); renderStatus(); }
+        if(!DU.mode && RN.score>(S.runnerBest||0)){ RN.newBest=recNew(S.runnerBest,RN.score,"runner"); S.runnerBest=RN.score; } trkGame("runner", RN.score); if(RN.xp){ addXP(RN.xp); RN.xp=0; } try{ achEnd(); }catch(e){} save(); renderStatus(); }
     });
     RN.obs=RN.obs.filter(o=>o.x+o.w>-40);
     rnScore();
@@ -6969,7 +6988,7 @@ function rnDraw(g,W,H,u,ground,px,pw,ph){
     }
   });
   // the piano character: an upright piano with big eyes (they look at the next note, and blink)
-  const y=ground-ph-RN.y, run=RN.state==="run"&&RN.y===0, step=Math.floor(RN.dist/(14*u))%2, crashed=RN.state==="over";
+  const y=ground-ph-RN.y, run=RN.state==="run"&&RN.y===0, step=Math.floor(RN.dist/(14*u))%2, crashed=RN.state==="over"&&!RN.won;
   g.fillStyle=ink; [0,1].forEach(i=>{ const lx=px+(i?pw-14*u:8*u), lift=run&&(step===i)?4*u:0; g.fillRect(lx,y+ph-8*u-lift-(RN.y>0?3*u:0),6*u,8*u); });
   rr(g,px,y-6*u,pw,ph,8*u); g.fill();                              // body
   g.fillStyle=surf; rr(g,px+4*u,y+ph*0.52,pw-8*u,ph*0.3,3*u); g.fill(); // keyboard
@@ -6989,7 +7008,7 @@ function rnDraw(g,W,H,u,ground,px,pw,ph){
     g.fillStyle=ink; g.textAlign="center"; g.textBaseline="middle";
     g.font="800 "+Math.round(20*u)+"px "+C("--f-display");
     const startTxt = midiMode() ? t("rnStart") : t("rnTap");
-    g.fillText(RN.state==="over"?(RN.newBest?t("rnNew"):t("rnOverShort")):startTxt, W/2, H*0.42);
+    g.fillText(RN.state==="over"?(RN.won?t("j3Won"):RN.newBest?t("rnNew"):t("rnOverShort")):startTxt, W/2, H*0.42);
     g.font="400 "+Math.round(12*u)+"px "+C("--f-body"); g.fillStyle=muted;
     g.fillText(RN.state==="over"?(midiMode()?t("rnStart"):t("rnTap")):t("rnHow"), W/2, H*0.42+22*u);
   }
@@ -7006,7 +7025,7 @@ function spTick(now){
   if(HOLD){ SP.raf=requestAnimationFrame(spTick); return; } // the leave window is open: the clock waits (SP.end moves on resume)
   let left=(SP.end-now)/1000;
   // progressive: each answer gives back a little time, less and less
-  if(left<=0){ SP.state="over"; clearKeys(); if(DU.mode) duMe(SP.count,true); trkGame("speed", SP.count); const best=(S.gameBest||{}).speed||0; SP.newBest=false; if(!DU.mode){ if(SP.count>best){ S.gameBest={...(S.gameBest||{}),speed:SP.count}; SP.newBest=true; } if(SP.count){ addXP(SP.count); renderStatus(); } } try{ achEnd(); }catch(e){} save(); tone(48,0,.4,.15); gmBoard(); gmScore(); return; }
+  if(left<=0){ SP.state="over"; clearKeys(); if(DU.mode) duMe(SP.count,true); trkGame("speed", SP.count); const best=(S.gameBest||{}).speed||0; SP.newBest=false; if(!DU.mode){ if(SP.count>best){ S.gameBest={...(S.gameBest||{}),speed:SP.count}; SP.newBest=recNew(best,SP.count,"speed"); } if(SP.count){ addXP(SP.count); renderStatus(); } } try{ achEnd(); }catch(e){} save(); tone(48,0,.4,.15); gmBoard(); gmScore(); return; }
   $("gmBar").style.transform="scaleX("+Math.max(0,left/SP.dur)+")"; $("gmBar").classList.toggle("low",left<10);
   SP.raf=requestAnimationFrame(spTick);
 }
@@ -7036,7 +7055,7 @@ function mmNote(m){
   if(MM.state==="ready"||MM.state==="over"){ if(pc===0 && midiMode()) mmGo(); return; }
   if(MM.state!=="input") return;
   const it=MM.seq[MM.step], now=performance.now();
-  if(!it.pcs.includes(pc)){ MM.state="over"; tone(40,0,.4,.2); if(DU.mode) duMe(MM.round,true); trkGame("memory", MM.round); clearTimeout(MM.inT); const best=(S.gameBest||{}).memory||0; MM.newBest=!DU.mode && MM.round>best; if(MM.newBest) S.gameBest={...(S.gameBest||{}),memory:MM.round}; if(MM.round && !DU.mode){ addXP(MM.round*2); renderStatus(); } try{ achEnd(); }catch(e){} save(); gmBoard(); gmScore(); return; }
+  if(!it.pcs.includes(pc)){ MM.state="over"; tone(40,0,.4,.2); if(DU.mode) duMe(MM.round,true); trkGame("memory", MM.round); clearTimeout(MM.inT); const best=(S.gameBest||{}).memory||0; const mmRec=!DU.mode && MM.round>best; MM.newBest=mmRec && recNew(best,MM.round,"memory"); if(mmRec) S.gameBest={...(S.gameBest||{}),memory:MM.round}; if(MM.round && !DU.mode){ addXP(MM.round*2); renderStatus(); } try{ achEnd(); }catch(e){} save(); gmBoard(); gmScore(); return; }
   MM.held=MM.held.filter(h=>now-h.t<1500); MM.held.push({pc,t:now});
   const have=new Set(MM.held.map(h=>h.pc));
   if(it.pcs.every(p=>have.has(p))){ try{ achHit(it.pcs.length); }catch(e){} MM.step++; MM.held=[]; mmIdle(); $("gmBig").textContent=MM.step+" / "+MM.seq.length;
@@ -8139,9 +8158,9 @@ const INFO_PAGES=["settings","progress"];
 let returnPage=null, guestPass=false;
 // Page Play: the Clavio prototype (play/index.html) runs in a frame; notes played here are forwarded to it.
 const SAME_ORIGIN = location.origin && location.origin!=="null" ? location.origin : "*"; // file:// has no origin
-function playSend(type,m,vel){ const f=$("playFrame"); if(f && f.contentWindow) f.contentWindow.postMessage({source:"piano-challenges",type,m,vel},SAME_ORIGIN); }
+function playSend(type,m,vel,hw){ const f=$("playFrame"); if(f && f.contentWindow) f.contentWindow.postMessage(hw?{source:"piano-challenges",type,m,vel,hw}:{source:"piano-challenges",type,m,vel},SAME_ORIGIN); }
 let playHash="#songs"; // #songs = song library, #games = Play games, #game=<id> = that game
-function playOpen(){ const f=$("playFrame"); const src="play/index.html"+playHash+"&lang="+(S.settings.lang==="fr"?"fr":"en")+(staffOn()?"&staff=1&clef="+staffClef():""); const old=f.getAttribute("src");
+function playOpen(){ const f=$("playFrame"); const src="play/index.html"+playHash+"&lang="+(S.settings.lang==="fr"?"fr":"en")+(staffOn()?"&staff=1&clef="+staffClef():"")+(S.settings.fing===true?"&fing=1":S.settings.fing===false?"&fing=0":""); const old=f.getAttribute("src");
   if(old!==src){ f.onload=()=>{ if(page==="play" && !anyWin()) f.focus(); }; f.src=src; if(old){ try{ f.contentWindow.location.reload(); }catch(e){} } } // a hash-only change would not reload the page: force it
   $("playPanel").hidden=false; }
 addEventListener("message",e=>{ if(SAME_ORIGIN!=="*" && e.origin!==SAME_ORIGIN) return; const d=e.data; if(d && d.source==="clavio" && d.type==="free") openPage("free"); if(d && d.source==="clavio" && d.type==="home" && page==="play") openPage(playHash.startsWith("#game")?"games":"free");
@@ -8711,16 +8730,17 @@ async function enableMidi(quiet){
         if(MW.on && mwMsg(st,note,vel,inp)) return; // the « Connect my keyboard » assistant (MIDI lots 2-3) gets every message while it is open
         if(midiOpen && !calib && (st&0xf0)===0x90 && vel>0){ pressKey(note); mtNote(note,vel,inp.name); return; } // the MIDI window: the « play a note » test (M8)
         if(page==="quiz"){ if((st&0xf0)===0x90 && vel>0){ if(S.settings.midiSound) tone(note,0,.9,.1+.26*vel/127); if(!anyModal()) quizIn(String(inp.id||inp.name),note); } return; } // every keyboard counts: one per player
-        if(S.settings.midiInput && inp.name!==S.settings.midiInput && midiNames.includes(S.settings.midiInput)) return; // the chosen keyboard only, while it is here (a name saved earlier, USB vs Bluetooth, no longer mutes the keyboard in use)
+        if(S.settings.midiInput && inp.name!==S.settings.midiInput && midiNames.includes(S.settings.midiInput) && !midiTakeOver(st,vel,inp)) return; // the chosen keyboard only, while it is played (MIDI 3 : un autre clavier joué quand le choisi se tait depuis 3 s prend la main)
         if((st&0xf0)===0x90 && vel>0 && midiDup(note,inp)) return; // the same keyboard on a second port
+        if((st&0xf0)===0x90 && vel>0) midiSeen(note,inp); // MIDI 3 : les notes vraiment jouées sur ce clavier (sa plage)
         if(page==="piano"){ pnMidi(st,note,vel); return; } // the PIANO mode: an instrument (its own sound, the sustain pedal)
-        if(page==="play"){ if((st&0xf0)===0x90 && vel>0) playSend("noteon",note,vel/127); else if((st&0xf0)===0x80 || ((st&0xf0)===0x90 && vel===0)) playSend("noteoff",note); return; }
+        if(page==="play"){ if((st&0xf0)===0x90 && vel>0) playSend("noteon",note,vel/127,midiSpan(inp)); else if((st&0xf0)===0x80 || ((st&0xf0)===0x90 && vel===0)) playSend("noteoff",note); return; } // MIDI 3 : la plage du clavier part avec la note (le lecteur place ses touches comme celles du clavier)
         if((st&0xf0)===0x80 || ((st&0xf0)===0x90 && vel===0)){ keyDown(note,false); return; }
         if((st&0xf0)===0x90 && vel>0){
-          pressKey(note); keyDown(note,true); // light the key at once, before the 35 ms grouping
           if(S.settings.midiSound) tone(note,0,.9,.1+.26*vel/127);
+          if(!calib) followMidi(note); // MIDI 3 : le clavier à l'écran suit AVANT d'allumer la touche (le Do du haut allumait le Do du milieu, replié, puis l'écran sautait)
+          pressKey(note); keyDown(note,true); // light the key at once, before the 35 ms grouping
           if(calib){ calibNote(note); return; }
-          followMidi(note);
           midiIn(note,true); } }); });
       $("midiBtn").classList.toggle("on",names.length>0); $("midiBtn").classList.remove("err");
       const shown = S.settings.midiInput && names.includes(S.settings.midiInput) ? S.settings.midiInput : names[0];
@@ -9485,10 +9505,10 @@ function mtTouch(){ const v=MT.vels; if(v.length<2) return null; const mx=Math.m
 function mtNote(m, v, port){ MT.vels.push(v); MT.last={m,v,port};
   if(S.settings.midiSound) tone(m,0,.9,.1+.26*v/127);
   const s=mdS(); s.tested=Date.now(); s.hw={...(s.hw&&s.hw.name===port?s.hw:{}), name:port}; const r=mtTouch(); if(r!=null) s.hw.vel=r; save();
-  if(m<MT.lo || m>=MT.lo+24) MT.lo=Math.max(0,Math.min(103,12*Math.floor(m/12)));
+  if(m<MT.lo || m>MT.lo+24) MT.lo=Math.max(0,Math.min(103,12*Math.floor(m/12))); // MIDI 3 : 25 touches, le Do du haut est sur la bande
   mtRender(); }
 function mtKb(){ const kb=$("mtKb"); if(!kb) return; if(kb.dataset.lo==String(MT.lo)) return; kb.dataset.lo=MT.lo; kb.innerHTML="";
-  const whites=[], WH=[0,2,4,5,7,9,11]; for(let m=MT.lo;m<MT.lo+24;m++) if(WH.includes(m%12)) whites.push(m);
+  const whites=[], WH=[0,2,4,5,7,9,11]; for(let m=MT.lo;m<=MT.lo+24;m++) if(WH.includes(m%12)) whites.push(m);
   whites.forEach(m=>{ const w=document.createElement("span"); w.className="w"; w.dataset.m=m; if(m%12===0){ const l=document.createElement("small"); l.textContent=octName(m); w.appendChild(l); } kb.appendChild(w); });
   const ww=100/whites.length; for(let m=MT.lo;m<MT.lo+24;m++) if(!WH.includes(m%12)){ const i=whites.indexOf(m-1); const b=document.createElement("span"); b.className="b"; b.dataset.m=m; b.style.left="calc("+((i+1)*ww)+"% - "+(ww*.3)+"%)"; b.style.width=(ww*.6)+"%"; kb.appendChild(b); } }
 function mtRender(){ const box=$("mdTest"); if(!box) return; box.hidden=!midiReady; if(!midiReady) return; mtKb();
@@ -10005,7 +10025,7 @@ function accFinish(){ const R=ACC.run; if(!R) return; cancelAnimationFrame(R.raf
   const o=accS(), prev=o.best[R.id], xp=Math.min(40,5+5*stars+Math.floor(s.ok/8)), rec=!prev || stars>(prev.st|0) || (R.mode==="rhythm"&&sJ&&R.maxBpm>(prev.bpm|0));
   o.best[R.id]={st:Math.max(stars,prev?prev.st|0:0), bpm:Math.max(prev?prev.bpm|0:0, R.mode==="rhythm"&&sJ?R.maxBpm:0), pct:Math.max(prev?prev.pct|0:0,Math.round(s.just*100)), n:(prev?prev.n|0:0)+1, at:prev&&prev.at||Date.now()};
   const xp0=S.xp|0; addXP(xp); save();
-  ACC.res={id:R.id, s, stars, sJ, sR, sT, xp, xp0, rec:rec&&stars>0, mode:R.mode, bpm:R.maxBpm, tg:R.pat.tg, full};
+  ACC.res={id:R.id, s, stars, sJ, sR, sT, xp, xp0, rec:rec&&stars>0&&!!prev&&(recNew(prev.st|0,stars,"stars")||(R.mode==="rhythm"&&sJ&&recNew(prev.bpm|0,R.maxBpm,1))), mode:R.mode, bpm:R.maxBpm, tg:R.pat.tg, full};
   accStopRun(); ACC.view="end"; accRender();
   if(stars) [0,4,7].forEach((d,i)=>tone(72+d,i*.09,.5,.16)); }
 const accPassed = r => r.stars>=3 || (r.mode==="wait" && r.stars>=2); // wait mode has no tempo star
@@ -10157,7 +10177,7 @@ addEventListener("resize",()=>{ if(page==="acc" && ACC.view==="play" && ACC.run)
 // (fetch keepalive vers la fonction SQL track_events), sans le SDK Supabase. Hors ligne, la file attend. Une table ou une
 // fonction absente (migration pas encore lancée) coupe l'envoi sans erreur. En développement (localhost), rien ne part sur
 // le réseau, sauf si localStorage « pc-trk-test » = "1" (tests). Interrupteur : S.settings.analytics (absent = activé).
-const APP_BUILD="2026-10-26T20:21Z"; // remplacé par tools/build.py par la date de construction (version.txt)
+const APP_BUILD="2026-10-26T22:29Z"; // remplacé par tools/build.py par la date de construction (version.txt)
 const TRK={q:[], t:0, off:false, anon:null, sent:0, errs:[], errT:0, errSeen:new Set(), errOn:null, ports:new Set(), first:false};
 const RC={flags:{}, daily:{}, at:0};
 const TRK_NAMES=new Set(["song_import","app_open","first_note","input_mode","midi_connected","pp_lesson_done","learn_end","game_end","quiz_end","duel_end","goal_reached","badge","signup","login","play","feedback","acc_end","song_open","route_step","route_stage"]);
@@ -11062,9 +11082,9 @@ function mwMsg(st, note, vel, inp){ if(!MW.on) return false; const ty=st&0xf0, n
 function mwTestNote(m, v, name){ const T=MW.t; if(!T) return; T.n++; T.vels.push(v); T.last={m,v,name}; T.silent=false;
   if(midiNames.length>1 && !T.picked && name){ T.picked=name; S.settings.midiInput=name; }
   const s=mdS(), h=mwHw(); s.tested=Date.now(); if(name && h.name!==name){ s.hw={name}; } const r=mwTouch(); if(r!=null) mwHw().vel=r; save();
-  if(m<T.lo || m>=T.lo+24) T.lo=Math.max(0,Math.min(103,12*Math.floor(m/12))); mwRender(); }
+  if(m<T.lo || m>T.lo+24) T.lo=Math.max(0,Math.min(103,12*Math.floor(m/12))); mwRender(); }
 function mwTouch(){ const v=MW.t?MW.t.vels:[]; if(v.length<2) return null; const mx=Math.max(...v), mn=Math.min(...v); if(mx-mn>=30) return true; if(mx===mn) return false; return null; }
-function mwKb2(lo, on, nc){ const WH=[0,2,4,5,7,9,11], wh=[]; for(let m=lo;m<lo+24;m++) if(WH.includes(m%12)) wh.push(m); const ww=100/wh.length;
+function mwKb2(lo, on, nc){ const WH=[0,2,4,5,7,9,11], wh=[]; for(let m=lo;m<=lo+24;m++) if(WH.includes(m%12)) wh.push(m); const ww=100/wh.length;
   let h=wh.map(m=>'<span class="w'+(m===on?' on':'')+'"'+(m===on?' style="--nc:'+nc+'"':'')+'>'+(m%12===0?'<small>'+esc(octName(m))+'</small>':'')+'</span>').join("");
   for(let m=lo;m<lo+24;m++) if(!WH.includes(m%12)){ const i=wh.indexOf(m-1); h+='<span class="b'+(m===on?' on':'')+'" style="left:calc('+((i+1)*ww)+'% - '+(ww*.3)+'%);width:'+(ww*.6)+'%'+(m===on?';--nc:'+nc:'')+'"></span>'; }
   return '<div class="mt-kb mw-kb" aria-hidden="true">'+h+'</div>'; }
@@ -12969,7 +12989,7 @@ function sc1End(g){ if(page!=="sc1") openPage("sc1"); const pc=keyPc(g.sc1.k), c
     +'<p class="pp-stars sc1-stars" role="img" aria-label="'+escA(t("sc1StarsA")(n))+'">'+[0,1,2].map(i=>'<span'+(i<n?' class="on"':'')+' style="--d:'+(i*220)+'ms">★</span>').join("")+'</p>'
     +(cupNew?'<p class="sc1-cupwon"><span class="sc1-cup on" aria-hidden="true">'+SC1_TROPHY+'</span><b>'+esc(t("sc1CupWon")(sc1RowName(pc)))+'</b></p>':'')
     +'<p class="sc1-msg">'+esc(t("sc1R")(n,ch))+'</p>'
-    +(best>n?'<p class="sc1-best">'+esc(t("sc1Best"))+' <span role="img" aria-label="'+escA(t("sc1StarsA")(best))+'">'+"★".repeat(best)+"☆".repeat(3-best)+'</span></p>':n>s.best0?'<p class="sc1-best new">'+esc(t("sc1New"))+'</p>':'')
+    +(best>n?'<p class="sc1-best">'+esc(t("sc1Best"))+' <span role="img" aria-label="'+escA(t("sc1StarsA")(best))+'">'+"★".repeat(best)+"☆".repeat(3-best)+'</span></p>':recNew(s.best0,n,"stars")?'<p class="sc1-best new">'+esc(t("sc1New"))+'</p>':'')
     +'<p class="sc1-tot"><span aria-hidden="true">★ </span>'+esc(t("sc1SumA")(sc1Total(s.mode),SC1_MAX))+' · '+esc(t("sc1Cups")(sc1Cups(s.mode),12))+'</p></div>';
   { const li=levelInfo(S.xp), nxe=document.createElement("div"); nxe.className="end-next"; nxe.id="endNext";
     nxe.innerHTML='<div class="en-row"><b></b><span class="en-bar"><i></i></span></div><p></p>'; nxe.querySelector("b").textContent="+"+fmtN(Math.max(0,S.xp-g.xp0))+" XP · "+t("endNext")(fmtN(li.need-li.into), fmtN(li.L+1));
@@ -13168,7 +13188,7 @@ function pnSusSet(on,ped){ if(ped) PN.ped=on; else PN.sus=on; const b=$("pnSus")
 function pnAllOff(){ PN.all.forEach(x=>pnRel(x,true)); PN.all=[]; PN.on.clear(); PN.held.forEach(m=>keyDown(m,false)); PN.held.clear(); PN.ptr.clear(); PN.sus=false; PN.ped=false; }
 // MIDI (called from the onmidimessage of enableMidi while page==="piano")
 function pnMidi(st,note,vel){ const ty=st&0xf0;
-  if(ty===0x90 && vel>0){ pnOn(note,Math.pow(vel/127,.8),"midi"); followMidi(note); return; }
+  if(ty===0x90 && vel>0){ followMidi(note); pnOn(note,Math.pow(vel/127,.8),"midi"); return; } // MIDI 3 : l'écran suit d'abord, la touche allumée est la bonne
   if(ty===0x80 || ty===0x90){ pnOff(note); return; }
   if(ty===0xB0 && note===64) pnSusSet(vel>=64,true);
   if(ty===0xB0 && (note===120||note===123)) pnAllOff(); }
@@ -13294,6 +13314,95 @@ document.addEventListener("keydown",e=>{ if(page!=="piano") return; const p=$("p
 try{ new MutationObserver(()=>{ if(page==="piano") vzCols(); }).observe(document.documentElement,{attributes:true,attributeFilter:["data-theme"]}); }catch(e){}
 document.addEventListener("visibilitychange",()=>{ if(document.hidden && page==="piano") pnAllOff(); });
 /* ==== fin Mode PIANO ==== */
+/* ==== Sons du piano (chantier sons) ==== */
+// Piano à queue = vrais échantillons « Salamander Grand Piano » (Alexander Holm, CC BY 3.0, MP3 repris sans modification de
+// github.com/Tonejs/audio) : 30 fichiers dans assets/audio/piano/ (La0 → Do8, une note toutes les tierces mineures, ~2 Mo), chargés à la
+// demande (pnSmpLoad : à l'ouverture du mode PIANO quand le piano à queue est choisi, ou au choix de l'instrument), décodés une seule fois
+// (début silencieux du MP3 retiré, notes coupées à 6 s (grave), 5 s (médium), 4 s (aigu) avec une fin en fondu : ~55 Mo décodés en stéréo) ; tant que ce n'est pas prêt (ou si le chargement
+// échoue), la synthèse d'avant joue. Lecture pnGrandSmp : AudioBufferSourceNode de l'échantillon le plus proche (≤ 1,5 demi-ton,
+// playbackRate), force → volume et filtre passe-bas, relâche = étouffoir (plus long dans le grave, aucun étouffoir au-dessus de Fa6).
+// Synthé doux refait (pad : deux dents de scie désaccordées et écartées en stéréo, filtre qui s'ouvre lentement et ondule, attaque 0,3 s,
+// relâche 1,8 s ; plus de sous-octave sinus qui faisait orgue). Anti-claquements : fondu de 5 ms avant la fin naturelle d'une voix,
+// arrêt des sources après une relâche complète, note rejouée = relâche courte (80 ms au piano), sortie : compresseur puis écrêtage doux
+// (WaveShaper, sans suréchantillonnage = aucune latence). PN.off = contexte hors ligne des tests (r48_piano : rendu, claquements, spectres).
+const PN_SMP={st:0, buf:{}, p:null, base:"assets/audio/piano/", list:[]};
+["C","Ds","Fs","A"].forEach((n,i)=>{ for(let o=0;o<=8;o++){ const m=12*(o+1)+i*3; if(m>=21 && m<=108) PN_SMP.list.push({n:n+o,m}); } });
+PN_SMP.list.sort((a,b)=>a.m-b.m);
+const PN_QREL={grand:.08, pad:.12};
+function pnSmpDecode(c,ab){ return new Promise((res,rej)=>{ try{ const p=c.decodeAudioData(ab,res,rej); if(p && p.then) p.then(res,rej); }catch(e){ rej(e); } }); }
+function pnSmpTrim(c,b,m){ const sr=b.sampleRate, nc=Math.min(2,b.numberOfChannels), L=b.getChannelData(0), R=nc>1?b.getChannelData(1):L, thr=.0015;
+  let pk=0; for(let i=0, z=Math.min(L.length,Math.round(sr*.25));i<z;i++) pk=Math.max(pk,Math.abs(L[i]),Math.abs(R[i]));
+  const th=Math.max(thr,pk*.04); let s=0; while(s<L.length && Math.abs(L[s])<th && Math.abs(R[s])<th) s++;
+  s=Math.max(0,s-Math.round(sr*.0015)); // the MP3 starts with silence and a quiet pre-echo: start 1.5 ms before the hammer (no added latency)
+  const cap=m<45?6:m<69?5:4, n=Math.max(1,Math.min(b.length-s, Math.round(cap*sr))), fade=Math.round(Math.min(.8,n/sr*.25)*sr), o=c.createBuffer(nc,n,sr);
+  for(let k=0;k<nc;k++){ const d=o.getChannelData(k); d.set(b.getChannelData(k).subarray(s,s+n)); for(let i=0;i<fade;i++) d[n-fade+i]*=.5+.5*Math.cos(Math.PI*i/fade); d[n-1]=0; }
+  return o; }
+function pnSmpLoad(){ if(PN_SMP.st===1 || PN_SMP.st===2) return PN_SMP.p; const c=audio(); if(!c || !window.fetch) return null;
+  PN_SMP.st=1; const order=[...PN_SMP.list].sort((a,b)=>Math.abs(a.m-62)-Math.abs(b.m-62)); let i=0;
+  const worker=async()=>{ while(i<order.length){ const s=order[i++]; const r=await fetch(PN_SMP.base+s.n+".mp3"); if(!r.ok) throw new Error("smp "+r.status);
+    PN_SMP.buf[s.m]=pnSmpTrim(c, await pnSmpDecode(c, await r.arrayBuffer()), s.m); } };
+  PN_SMP.p=Promise.all([worker(),worker(),worker()]).then(()=>{ PN_SMP.st=2; }, ()=>{ PN_SMP.st=3; PN_SMP.p=null; }); // 3 = failed: the synthesis keeps playing, retried next time
+  return PN_SMP.p; }
+function pnSmpNear(m){ let best=null, d=99; for(const s of PN_SMP.list){ const x=Math.abs(s.m-m); if(x<d && PN_SMP.buf[s.m]){ d=x; best=s.m; } } return d<=6?best:null; }
+function pnGrandSmp(c,t,m,f,v,out){ const near=pnSmpNear(m); if(near==null) return null; const b=PN_SMP.buf[near], rate=Math.pow(2,(m-near)/12);
+  const s=c.createBufferSource(); s.buffer=b; s.playbackRate.value=rate;
+  const lp=c.createBiquadFilter(); lp.type="lowpass"; lp.Q.value=.5; lp.frequency.value=Math.min(20000, 700*Math.pow(2,4.8*v)+f*3);
+  const g=c.createGain(), a=(.16+.84*Math.pow(v,1.5))*2.6; g.gain.setValueAtTime(0,t); g.gain.linearRampToValueAtTime(a,t+.0015);
+  s.connect(lp); lp.connect(g); g.connect(out); s.start(t);
+  return {src:[s], hold:true, rel:m>=90?2.4:m<48?.5:m<72?.36:.26, life:b.duration/rate}; }
+{ const syn=PN_SYN.grand; PN_SYN.grand=function(c,t,m,f,v,out){ if(PN_SMP.st===2){ const r=pnGrandSmp(c,t,m,f,v,out); if(r) return r; } return syn.apply(this,arguments); }; }
+// the electric piano's chords were much louder than the others: −3 dB
+{ const o=PN_SYN.epiano; PN_SYN.epiano=function(c,t,m,f,v,out){ const g=c.createGain(); g.gain.value=.7; g.connect(out); return o.call(this,c,t,m,f,v,g); }; }
+// soft pad (was too close to the organ): two detuned saws spread left/right + a quiet triangle, a low-pass that opens slowly and breathes
+PN_SYN.pad=function(c,t,m,f,v,out){ const a=.26+.18*v, f1=Math.min(6500,f*2.2+600+v*1500);
+  const lp=c.createBiquadFilter(); lp.type="lowpass"; lp.Q.value=2.4; lp.frequency.setValueAtTime(Math.max(160,f*.8),t); lp.frequency.setTargetAtTime(f1,t+.04,.75);
+  const fl=pnOsc(c,"sine",.17+Math.random()*.08,t), fg=c.createGain(); fg.gain.value=f1*.22; fl.connect(fg); fg.connect(lp.frequency);
+  const amp=c.createGain(); amp.gain.setValueAtTime(0,t); amp.gain.linearRampToValueAtTime(a,t+.3); amp.gain.setTargetAtTime(a*.8,t+.35,1.4); lp.connect(amp); amp.connect(out);
+  const src=[fl], mk=(type,cents,pan,lvl)=>{ const o=pnOsc(c,type,f,t); o.detune.value=cents; const g=c.createGain(); g.gain.value=lvl; o.connect(g);
+    if(c.createStereoPanner){ const p=c.createStereoPanner(); p.pan.value=pan; g.connect(p); p.connect(lp); } else g.connect(lp); src.push(o); return o; };
+  const o1=mk("sawtooth",-11,-.65,.5), o2=mk("sawtooth",11,.65,.5); mk("triangle",0,0,.45);
+  const dr=pnOsc(c,"sine",.31,t), dg=c.createGain(); dg.gain.value=5; dr.connect(dg); dg.connect(o1.detune); src.push(dr); // slow drift, the pad "moves"
+  return {src, hold:true, rel:1.8, life:0}; };
+// output: compressor, then a soft clipper (no oversampling: no added latency); PN.off = offline context (tests)
+function pnSoftCurve(){ const n=4096, cv=new Float32Array(n); for(let i=0;i<n;i++){ const u=(i/(n-1)*2-1)*2, a=Math.abs(u); cv[i]=Math.sign(u)*(a<.8?a:.8+.2*Math.tanh((a-.8)/.2)); } return cv; }
+pnAudio=function(){ const c=PN.off||audio(); if(!c) return null; if(PN.A && PN.A.c===c) return PN.A;
+  // no DynamicsCompressor (its 6 ms look-ahead delayed every note): the level follows the number of voices (pnLevel) and a soft clipper catches the rest
+  const out=c.createGain(), pre=c.createGain(); pre.gain.value=.5; const ws=c.createWaveShaper(); ws.curve=pnSoftCurve(); ws.oversample="none";
+  out.connect(pre); pre.connect(ws); ws.connect(c.destination);
+  const bus=c.createGain(); bus.connect(out);
+  const conv=c.createConvolver(); conv.buffer=pnImpulse(c,2.6); const rv=c.createGain(); bus.connect(rv); rv.connect(conv); conv.connect(out);
+  const dl=c.createDelay(1.5); dl.delayTime.value=.34; const fb=c.createGain(); fb.gain.value=.36; const dlf=c.createBiquadFilter(); dlf.type="lowpass"; dlf.frequency.value=2400; const ds=c.createGain();
+  bus.connect(ds); ds.connect(dl); dl.connect(dlf); dlf.connect(fb); fb.connect(dl); dlf.connect(out);
+  const ch=c.createDelay(.06); ch.delayTime.value=.016; const lfo=c.createOscillator(); lfo.frequency.value=.8; const lg=c.createGain(); lg.gain.value=.004; lfo.connect(lg); lg.connect(ch.delayTime); lfo.start();
+  const cs=c.createGain(); bus.connect(ch); ch.connect(cs); cs.connect(out);
+  const nb=c.createBuffer(1,Math.floor(c.sampleRate*.06),c.sampleRate), nd=nb.getChannelData(0); for(let i=0;i<nd.length;i++) nd[i]=Math.random()*2-1; PN.noise=nb;
+  PN.A={c,out,bus,rv,ds,cs,ws}; PN.wave={}; pnFx(true); return PN.A; };
+// without the compressor's make-up gain the output is ~3 dB quieter: volume curve 1.25·vol² (was 1.1·vol²)
+pnFx=function(now){ const A=PN.A; if(!A) return; const k=pnCfg(), t=A.c.currentTime, set=(p,v)=>{ if(now) p.value=v; else p.setTargetAtTime(v,t,.03); };
+  set(A.out.gain,1.25*k.vol*k.vol); set(A.rv.gain,k.rev*1.2); set(A.ds.gain,k.dly*.6); set(A.cs.gain,k.cho*.95); };
+// many voices at once: the bus goes down smoothly (fast when a chord starts, slow when notes end), like a gentle compressor without delay
+function pnLevel(){ const A=PN.A; if(!A) return; const t=A.c.currentTime, n=PN.all.filter(x=>!x.done && (!x.end || x.end>t)).length, g=Math.min(1,1.7/Math.sqrt(Math.max(1,n)));
+  const p=A.bus.gain; if(Math.abs((A.lv||1)-g)<.01) return; const up=g>(A.lv||1); A.lv=g; p.cancelScheduledValues(t); p.setTargetAtTime(g,t,up?.25:.012); }
+// no clicks: sources stop only once the release is inaudible; the scheduled disconnect never runs on an offline (test) context
+// (disconnect on the source's "ended", not on a timer: on iOS the audio clock stops while the context is interrupted, a timer then cut notes)
+pnStop=function(vc,t){ vc.src.forEach(s=>{ try{ s.stop(t); }catch(e){} }); const s0=vc.src[0]; if(s0 && !vc.unhook){ vc.unhook=1; s0.onended=()=>{ try{ vc.g.disconnect(); }catch(e){} }; } };
+pnRel=function(vc,quick){ if(vc.done) return; vc.done=true; const c=vc.c, t=c.currentTime, r=quick?(vc.qrel||.03):vc.rel, p=vc.g.gain;
+  try{ if(p.cancelAndHoldAtTime) p.cancelAndHoldAtTime(t); else { const x=p.value; p.cancelScheduledValues(t); p.setValueAtTime(x,t); } }catch(e){}
+  p.setTargetAtTime(0,t,r/4); pnStop(vc,t+r*2.4+.05); if(vc.c===(PN.A&&PN.A.c)) pnLevel(); };
+// a voice that ends by itself (struck notes, the end of a sample) fades out over the last few ms instead of being cut
+{ const o=pnVoice; pnVoice=function(m,v){ const vc=o.apply(this,arguments); if(!vc) return vc; vc.qrel=PN_QREL[pnCfg().ins]||0;
+    if(vc.end){ const p=vc.g.gain, e=vc.end; try{ p.setValueAtTime(1,Math.max(vc.c.currentTime,e-.03)); p.linearRampToValueAtTime(0,e-.004); }catch(x){} } pnLevel(); return vc; }; }
+// load the samples when the PIANO page shows the grand piano (page opened, instrument chosen)
+{ const o=pnRender; pnRender=function(){ const r=o.apply(this,arguments); if(page==="piano" && pnCfg().ins==="grand") try{ pnSmpLoad(); }catch(e){} return r; }; }
+// credits (Settings › App › Credits): the piano sound first
+Object.assign(TXT.fr,{snCredH:"Sons", snCredT:"Piano à queue : « Salamander Grand Piano » d'Alexander Holm", snCredS:"Échantillons repris sans modification · Licence CC BY 3.0 · "});
+Object.assign(TXT.en,{snCredH:"Sounds", snCredT:"Grand piano: “Salamander Grand Piano” by Alexander Holm", snCredS:"Samples used unchanged · Licence CC BY 3.0 · "});
+{ const o=credRender; credRender=function(){ const r=o.apply(this,arguments), list=$("credList"); if(!list) return r;
+    const box=document.createElement("div"), h=document.createElement("h3"), it=document.createElement("div"), b=document.createElement("b"), s=document.createElement("small"), a=document.createElement("a");
+    box.id="snCred"; h.textContent=t("snCredH"); it.className="cred-item"; b.textContent=t("snCredT"); s.textContent=t("snCredS");
+    a.href="https://creativecommons.org/licenses/by/3.0/"; a.target="_blank"; a.rel="noopener"; a.textContent="creativecommons.org/licenses/by/3.0"; s.appendChild(a); it.append(b,s); box.append(h,it);
+    list.insertBefore(box,list.firstChild); return r; }; }
+/* ==== fin Sons du piano ==== */
 /* ==== Gammes une à une : entraînement (chantier sc1-train) ==== */
 // Au lancement d'une gamme (case de la liste sc1), deux modes, pastilles #sc1Tm dans la barre du jeu : ENTRAÎNEMENT (game.sc1.train) et
 // ÉVALUATION (l'actuel, étoiles). Entraînement = d'abord une démonstration (sc1Demo : la gamme jouée et allumée note par note, à un tempo calme,
@@ -13378,6 +13487,123 @@ function sc1Bar(){ const on=page==="practice" && sc1On(), tr=sc1Tr(); document.b
 { const o=render; render=function(){ sc1TrGuide(); const r=o.apply(this,arguments); try{ sc1Bar(); }catch(e){ console.warn(e); } return r; }; }
 { const o=openPage; openPage=function(){ const r=o.apply(this,arguments); if(page!=="practice"){ if(SC1.demo){ SC1.demo=false; clearPlayTimers(); } sc1TrGuide(); try{ sc1Bar(); }catch(e){} } return r; }; }
 /* ==== fin Gammes une à une : entraînement ==== */
+/* ==== Jeux 3 (chantier JEUX 3) : objectif des jeux de Ma route, « Nouveau record » plus rare, portée de Saute-notes ==== */
+// « Nouveau record » : une règle pour tous les jeux et exercices. Annoncé une fois, à la fin, seulement si un record
+// précédent existait, d'au moins `min` (5 réussites : 50 points au Saute-notes, 5 réponses, 5 tours ; 1 étoile), et qu'il est battu.
+const REC_MIN={runner:50, speed:5, memory:5, stars:1};
+function recNew(prev, now, k){ const p=+prev||0, n=+now||0, min=typeof k==="number"?k:(REC_MIN[k]!=null?REC_MIN[k]:5); return p>0 && p>=min && n>p; }
+Object.assign(TXT.fr,{j3Goal:(n,g)=>"Objectif "+n+" / "+g, j3Won:"Objectif atteint !", j3WinS:(n,g)=>n+" / "+g+" · étape de ta route validée", j3Next:"Ma route : suivant", j3Again:"Rejouer"});
+Object.assign(TXT.en,{j3Goal:(n,g)=>"Goal "+n+" / "+g, j3Won:"Goal reached!", j3WinS:(n,g)=>n+" / "+g+" · a step of your path is done", j3Next:"My path: next", j3Again:"Play again"});
+// ---- a game launched from Ma route: goal shown during the game, the game stops once it is reached (Saute-notes and Mémoire never ended)
+const J3={card:null};
+function j3Route(){ const p=(typeof RT!=="undefined")&&RT.cur; return p && p.s && p.s.g && p.s.g===GM && RN.on && !DU.mode && DU.view==="solo" ? p : null; }
+const j3Count = () => GM==="runner"?RN.cleared:GM==="speed"?SP.count:GM==="memory"?MM.round:0;
+function j3Hud(){ let el=$("rnGoal"); if(!el){ const b=$("rnBest"); if(!b) return; el=document.createElement("span"); el.id="rnGoal"; el.className="rn-goal mono"; b.after(el); }
+  const p=j3Route(), txt=p?t("j3Goal")(Math.min(j3Count(),p.s.goal),p.s.goal):""; el.hidden=!p; if(el.textContent!==txt) el.textContent=txt; }
+function j3Hide(){ const c=$("j3Win"); if(c) c.remove(); J3.card=null; }
+function j3Show(p){ if(J3.card) return; const host=GM==="runner"?$("rnStage"):$("gmBoard"); if(!host) return;
+  const c=document.createElement("div"); c.className="j3-win"; c.id="j3Win"; c.setAttribute("role","status");
+  c.innerHTML='<b class="j3-wk">★ '+esc(t("j3Won"))+'</b><p>'+esc(t("j3WinS")(p.s.goal,p.s.goal))+'</p><div class="j3-wb"></div>';
+  const row=c.querySelector(".j3-wb"), mk=(id,txt,cls,key)=>{ const b=document.createElement("button"); b.type="button"; b.id=id; b.className="btn"+(cls?" "+cls:""); b.textContent=txt; duKbd(b,key); row.appendChild(b); return b; };
+  const nx=mk("j3Next",t("j3Next"),"primary",CNAME()); mk("j3Again",t("j3Again"),"",(S.settings.notation==="fr"?PC_FR:PC_EN)[11]);
+  c.addEventListener("pointerdown",e=>e.stopPropagation()); // the board/canvas behind would start a new game
+  host.appendChild(c); J3.card=p; setTimeout(()=>{ if(nx.isConnected) nx.focus({preventScroll:true}); },30); }
+function j3Next(){ j3Hide(); runnerClose(); if(RT.win!=null){ if($("rtWin") && $("rtWin").hidden && !anyWin()) rtWinOpen(RT.win); return; } setTimeout(rtGo,60); }
+function j3Again(){ j3Hide(); if(GM==="runner") rnGo(); else if(GM==="speed") spGo(); else if(GM==="memory") mmGo(); }
+document.addEventListener("click",e=>{ const b=e.target.closest&&e.target.closest("#j3Next,#j3Again"); if(!b) return; if(b.id==="j3Next") j3Next(); else j3Again(); });
+// after a goal check: the success card (rtGameCheck has already marked the step done)
+function j3After(p){ if(!p || J3.card) return; const over = GM==="runner"?RN.state==="over":GM==="speed"?SP.state==="over":MM.state==="over";
+  if(over && j3Count()>=p.s.goal) j3Show(p); }
+function j3WinRunner(){ RN.state="over"; RN.won=true; clearKeys(); RN.crashAt=performance.now(); RN.jump=null; RN.y=0;
+  tone(72,0,.14,.1); tone(76,.12,.14,.1); tone(79,.24,.3,.12);
+  if(RN.score>(S.runnerBest||0)){ RN.newBest=recNew(S.runnerBest,RN.score,"runner"); S.runnerBest=RN.score; }
+  trkGame("runner", RN.score); if(RN.xp){ addXP(RN.xp); RN.xp=0; } try{ achEnd(); }catch(e){} save(); renderStatus(); }
+function j3WinMemory(){ MM.timers.forEach(clearTimeout); MM.timers=[]; clearTimeout(MM.inT); MM.state="over"; clearKeys(); tone(72,0,.14,.1); tone(76,.12,.14,.1); tone(79,.24,.3,.12);
+  trkGame("memory", MM.round); const best=(S.gameBest||{}).memory||0, rec=MM.round>best; MM.newBest=rec && recNew(best,MM.round,"memory"); if(rec) S.gameBest={...(S.gameBest||{}),memory:MM.round};
+  if(MM.round){ addXP(MM.round*2); renderStatus(); } try{ achEnd(); }catch(e){} save(); gmBoard(); }
+{ const o=rnScore; rnScore=function(){ const p=j3Route(); if(p && GM==="runner" && RN.state==="run" && RN.cleared>=p.s.goal) j3WinRunner();
+    const r=o.apply(this,arguments); try{ j3Hud(); j3After(p); }catch(e){ console.warn(e); } return r; }; }
+{ const o=gmScore; gmScore=function(){ const p=j3Route(); const r=o.apply(this,arguments); try{ j3Hud(); j3After(p); }catch(e){ console.warn(e); } return r; }; }
+{ const o=mmNote; mmNote=function(m){ const p=j3Route(); const r=o.apply(this,arguments); if(p && MM.state==="listen" && MM.round>=p.s.goal){ j3WinMemory(); gmScore(); } return r; }; }
+{ const o=rnReset; rnReset=function(){ j3Hide(); const r=o.apply(this,arguments); RN.won=false; return r; }; }
+{ const o=spGo; spGo=function(){ if(J3.card) j3Hide(); return o.apply(this,arguments); }; }
+{ const o=mmGo; mmGo=function(){ if(J3.card) j3Hide(); return o.apply(this,arguments); }; }
+{ const o=spReset; spReset=function(){ j3Hide(); return o.apply(this,arguments); }; }
+{ const o=mmReset; mmReset=function(){ j3Hide(); return o.apply(this,arguments); }; }
+{ const o=runnerClose; runnerClose=function(){ j3Hide(); const r=o.apply(this,arguments); try{ j3Hud(); }catch(e){} return r; }; }
+{ const o=gameOpen; gameOpen=function(){ const r=o.apply(this,arguments); try{ j3Hud(); }catch(e){} return r; }; }
+// on the success card: C alone = next step of the path, B alone = play again
+{ const o=runnerNote; runnerNote=function(m){ if(J3.card && RN.on){ const pc=((m%12)+12)%12; if(pc===0) j3Next(); else if(pc===11) j3Again(); return; } return o.apply(this,arguments); }; }
+// ---- the target written on a staff (Saute-notes canvas, Contre la montre, Mémoire): right spelling, right octave, right clef
+// The note names come from the label (« Do m » → C E♭ G, not C D♯ G) and the chord type from its intervals; the octave keeps the
+// notes on the staff (E4–F5 in treble, G2–A3 in bass), heads placed with Staff.diat exactly like Staff.render.
+const J3_LET={Do:"C",Ré:"D",Re:"D",Mi:"E",Fa:"F",Sol:"G",La:"A",Si:"B"};
+function j3Spell(pcs, label){
+  const mt=/^(Do|Ré|Re|Mi|Fa|Sol|La|Si|[A-G])\s?([♯#♭b]?)/.exec(String(label||"").trim()); if(!mt||!pcs||!pcs.length) return null;
+  const L=J3_LET[mt[1]]||mt[1], acc=/[♯#]/.test(mt[2])?1:/[♭b]/.test(mt[2])?-1:0, tpc=(NAT[LETTERS.indexOf(L)]+acc+12)%12; if(tpc!==pcs[0]) return null;
+  if(pcs.length===1) return [{l:L,a:acc,pc:tpc}];
+  const iv=pcs.map(p=>((p-tpc)%12+12)%12), ty=CTYPES.find(x=>x.iv.length===iv.length && x.iv.every((v,i)=>v===iv[i])); if(!ty) return null;
+  return spellIvL(L+(acc>0?"#":acc<0?"b":""), ty.iv, ty.ls); }
+const j3Clef = () => staffClef()==="bass"?"bass":"treble";
+function j3Notes(pcs, label, clef){ if(!pcs||!pcs.length) return [];
+  const flat=/♭|b(?![a-z])/.test(label||""), sp=j3Spell(pcs,label)||pcs.map(pc=>{ const x=Staff.spell(60+pc,flat); return {l:x.l,a:x.a,pc}; });
+  const R=clef==="bass"?[18,26]:[30,38], mid=(R[0]+R[1])/2;
+  const build=base=>{ let prev=-1; return sp.map(n=>{ let m=base+n.pc; while(m<=prev) m+=12; prev=m; return {m,l:n.l,a:n.a}; }); };
+  let best=null; [24,36,48,60,72].forEach(b=>{ const ns=build(b), ds=ns.map(n=>Staff.diat(n)), out=ds.reduce((s,d)=>s+Math.max(0,R[0]-d,d-R[1]),0), avg=ds.reduce((s,d)=>s+d,0)/ds.length, sc=out*10+Math.abs(avg-mid);
+    if(!best||sc<best.sc) best={sc,ns}; });
+  return best.ns; }
+pcsToNotes=function(pcs, label){ return j3Notes(pcs, label, staffClef()==="bass"?"bass":"treble"); };
+// canvas staff of Saute-notes: same positions as Staff.render (bottom line = E4 in treble, G2 in bass), ledger lines, accidentals
+function j3StaffLayout(ns, clef, yb, sp){ const BOT=clef==="bass"?18:30, y=d=>yb-(d-BOT)*sp/2; let prevD=-99, off=0;
+  return ns.map(n=>{ const d=Staff.diat(n); off = d-prevD===1 && !off ? sp*1.18 : 0; prevD=d; const led=[];
+    for(let L=BOT-2; L>=d; L-=2) led.push(y(L)); for(let L=BOT+10; L<=d; L+=2) led.push(y(L)); return {n, d, y:y(d), off, led}; }); }
+rnStaff=function(g, it, cx, top, u, ink){ if(!bravuraReady){ bravura(); return false; }
+  const GL=Staff.GL, clef=j3Clef(), BOT=clef==="bass"?18:30, sp=6*u, fs=sp*4, ns=it.st||pcsToNotes(it.pcs,it.label), x0=cx-sp*5, x1=cx+sp*5, yb=top+sp*6.2;
+  const L=j3StaffLayout(ns, clef, yb, sp), ys=L.map(h=>h.y), bt=Math.min(top, Math.min(...ys)-sp*1.4), bb=Math.max(top+sp*8.6, Math.max(...ys)+sp*1.4);
+  g.save(); g.fillStyle="rgba(255,255,255,.96)"; rr(g,x0-sp,bt,x1-x0+sp*2,bb-bt,sp*1.4); g.fill(); g.strokeStyle="rgba(27,24,56,.14)"; g.lineWidth=Math.max(1,u); g.stroke();
+  g.strokeStyle=ink; g.lineWidth=Math.max(1,sp*.13); for(let i=0;i<5;i++){ g.beginPath(); g.moveTo(x0,yb-i*sp); g.lineTo(x1,yb-i*sp); g.stroke(); }
+  g.fillStyle=ink; g.font=fs+"px Bravura"; g.textAlign="left"; g.textBaseline="alphabetic";
+  g.fillText(clef==="bass"?GL.fClef:GL.gClef, x0+sp*.2, yb-(clef==="bass"?24-BOT:32-BOT)*sp/2);
+  L.forEach(h=>{ const hx=cx+h.off-sp*0.3; h.led.forEach(ly=>{ g.beginPath(); g.moveTo(hx-sp*.4,ly); g.lineTo(hx+sp*1.6,ly); g.stroke(); });
+    const a=h.n.a|0; if(a) g.fillText(a===1?GL.sharp:a===-1?GL.flat:a===2?GL.dsharp:GL.dflat, hx-sp*1.35, h.y); g.fillText(GL.black, hx, h.y); });
+  g.restore(); return true; };
+// with the staff, the hint lights the written keys (same octave as on the staff) when the keyboard shows them
+{ const o=rnHint; rnHint=function(ob){ if(ob && staffOn() && S.settings.rnHint!==false){ const ms=(ob.st||pcsToNotes(ob.pcs,ob.label)).map(n=>n.m);
+      if(ms.every(m=>keyEls[m])){ clearKeys(); ms.forEach(m=>keyEls[m].classList.add("k-rev")); return; } } return o.apply(this,arguments); }; }
+/* ==== fin Jeux 3 ==== */
+
+/* ==== MIDI 3 (chantier fix-midi3, 26/10/2026) ==== */
+// Les notes vraiment jouées sur le clavier MIDI en cours (cette session) : MS.name, MS.lo / MS.hi, et l'heure de la dernière note de chaque port.
+const MS={name:"", lo:null, hi:null, last:new Map()};
+function midiSeen(note, inp){ const nm=String(inp&&inp.name||""); MS.last.set(nm, performance.now());
+  if(nm!==MS.name){ MS.name=nm; MS.lo=MS.hi=null; }
+  MS.lo = MS.lo==null ? note : Math.min(MS.lo,note); MS.hi = MS.hi==null ? note : Math.max(MS.hi,note); }
+// a note outside the screen keyboard: when the notes played on this keyboard span more keys than the screen shows (a 25-key keyboard
+// on a 24-key screen: its top C), the screen grows to those keys instead of jumping an octave (up to 37 keys; bigger ones say their size)
+function midiWiden(n){ if(MS.lo==null || n<MS.lo || n>MS.hi || (S.settings.kbdSize||"auto")==="auto") return false;
+  let lo=MS.lo, hi=MS.hi; if(hi-lo<=HIGH-LOW || hi-lo>36) return false;
+  const white=m=>[0,2,4,5,7,9,11].includes(((m%12)+12)%12); while(!white(lo)) lo--; while(!white(hi)) hi++;
+  if(lo<21 || hi>108) return false;
+  Object.assign(S.settings,{kbdSize:"custom",kbdLow:lo,kbdHigh:hi}); save(); buildKeyboard(); renderSettings();
+  if(cur && typeof markPlayed==="function") markPlayed(); return true; }
+// the chosen keyboard (S.settings.midiInput) mutes the other ports only while it is played: another keyboard played when the chosen one has
+// been silent for 3 s takes over (it becomes the chosen one). Before, a LUMI picked in the assistant silently muted a 25-key keyboard plugged next.
+function midiTakeOver(st, vel, inp){ if((st&0xf0)!==0x90 || !vel || !inp || !inp.name || midiVirtual(inp.name)) return false;
+  const t0=MS.last.get(S.settings.midiInput); if(t0!=null && performance.now()-t0<3000) return false;
+  S.settings.midiInput=inp.name; save();
+  try{ $("midiTxt").textContent=t("midiDev")+inp.name; guessKbdSize(inp.name); mdPorts(midiNames.slice()); mdPill(); if(midiOpen) renderMidiModal(); }catch(e){}
+  return true; }
+// the keys of the MIDI keyboard, for the Play player: {lo, hi, sure} (sure = measured in the assistant; otherwise a size, placed by the notes played)
+function midiSpan(inp){ const h=(S.midi&&S.midi.hw)||{}, nm=inp&&inp.name, sz=S.settings.kbdSize||"auto"; let r=null;
+  if(h.lo>=21 && h.hi>h.lo && (!h.name || h.name===nm)) r={lo:+h.lo, hi:+h.hi, sure:!!h.measured};
+  else if(KB_PRESETS[sz]) r={lo:KB_PRESETS[sz][0], hi:KB_PRESETS[sz][1], sure:false};
+  else if(sz==="custom" && +S.settings.kbdHigh>+S.settings.kbdLow) r={lo:+S.settings.kbdLow, hi:+S.settings.kbdHigh, sure:false};
+  if(r && MS.name===nm && MS.lo!=null){ r.slo=MS.lo; r.shi=MS.hi; } // the notes already played on it (LEARN, the games…): the player places it at once
+  return r; }
+// the app: a Bluetooth keyboard that comes back (same source, back online) is reported by the plugin only when it re-reads its sources;
+// it did so every 2 s only while the MIDI window or the assistant was open. Now every 5 s while the app is in front (cheap, no prompt).
+if(document.documentElement.classList.contains("native")) setInterval(()=>{ try{ if(document.hidden || !midiAcc || !window.__nativeMidi) return; window.__nativeMidi.listInputs().catch(()=>{}); }catch(e){} },5000);
+/* ==== fin MIDI 3 ==== */
 
 // ---------- Boot ----------
 
