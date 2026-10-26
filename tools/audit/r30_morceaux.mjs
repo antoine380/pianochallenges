@@ -71,7 +71,7 @@ for (const [w, h] of [[1024, 768], [768, 1024], [1280, 800], [812, 375], [375, 6
   check(tag + ' : fiche de grille sans défilement (12 tonalités, Joue-la visible)', await noScroll(p) && await ev(p, () => { const b = document.getElementById('grPlay').getBoundingClientRect(); return document.querySelectorAll('#grKeys button').length === 12 && b.bottom <= innerHeight && b.height > 0; }));
   await ev(p, () => document.getElementById('grClose').click()); await W(p, 200);
   await ev(p, () => document.getElementById('pcFree').click()); await W(p, 300);
-  check(tag + ' : piano libre (clavier visible, catalogue caché), sans défilement', await noScroll(p) && await ev(p, () => !!document.getElementById('stage').offsetParent && !document.getElementById('playSongs').offsetParent));
+  check(tag + ' : « Piano libre » ouvre le mode PIANO (clavier visible, catalogue caché), sans défilement', await noScroll(p) && await ev(p, () => document.body.dataset.page === 'piano' && !!document.getElementById('stage').offsetParent && !document.getElementById('playSongs').offsetParent));
   await p.context().close(); }
 
 // ---------- filter, grid sheet, Play it
