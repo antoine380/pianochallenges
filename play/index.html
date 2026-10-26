@@ -418,7 +418,7 @@ document.getElementById('secGames').hidden=onlySongs;document.getElementById('se
 if(onlySongs){document.getElementById('heroT').textContent=tr('heroSongsT');document.getElementById('heroP').textContent=tr('heroSongsP')}
 if(onlyGames){document.getElementById('heroT').textContent=tr('heroGamesT');document.getElementById('heroP').textContent=tr('heroGamesP')}
 addEventListener('message',e=>{if(location.origin!=='null'&&e.origin!==location.origin)return;const d=e.data;if(!d||d.source!=='piano-challenges')return;
-  if(d.type==='noteon'){if(LS)LS.quiet=!!d.quiet;noteOn(d.m,d.vel??.8);if(LS)LS.quiet=false}else if(d.type==='noteoff')noteOff(d.m);else if(d.type==='midi')setMidi(!!d.on,d.text||'')});
+  if(d.type==='noteon'){if(LS)LS.quiet=!!d.quiet;noteOn(hwIn(d.m,d.hw),d.vel??.8);if(LS)LS.quiet=false}else if(d.type==='noteoff')noteOff(hwOut(d.m));else if(d.type==='midi')setMidi(!!d.on,d.text||'')});
 midiBtn.addEventListener('click',async()=>{audio();
   if(!navigator.requestMIDIAccess){setMidi(false,tr('midiNone'));return}
   try{const acc=await navigator.requestMIDIAccess();
@@ -426,7 +426,27 @@ midiBtn.addEventListener('click',async()=>{audio();
       setMidi(ins.length>0,ins.length?(tr('midiLbl')+ins[0].name):tr('midiNo'))};
     bind();acc.onstatechange=bind}catch(err){setMidi(false,tr('midiDenied'))}});
 function onMidi(ev){const[st,d1,d2]=ev.data;const c=st&0xf0;
-  if(c===0x90&&d2>0)noteOn(d1,d2/127);else if(c===0x80||(c===0x90&&d2===0))noteOff(d1)}
+  if(c===0x90&&d2>0)noteOn(hwIn(d1),d2/127);else if(c===0x80||(c===0x90&&d2===0))noteOff(hwOut(d1))}
+/* ==== MIDI 3 (chantier fix-midi3, 26/10/2026) : les touches du clavier MIDI → les touches du lecteur ====
+   Le lecteur montre Do4–Si5 (Do3–Si5 à deux mains). Avant, une note MIDI allumait la touche de même hauteur ou rien : sur un LUMI 24 touches
+   (Do3–Si4), la moitié gauche du clavier n'allumait rien et sa moitié droite allumait la moitié gauche de l'écran (« inversion »).
+   Maintenant la note est placée comme la touche du clavier : l'hôte envoie sa plage hw={lo,hi,sure,slo,shi} (sure = mesurée ; sinon une
+   taille, placée par les notes jouées slo..shi) ; décalage d'octaves qui recouvre le mieux l'écran (à égalité, le plus petit), le Do du haut
+   d'un 25 touches ajoute sa touche à droite, et une note encore hors de l'écran est repliée dessus (même nom de note). Sans plage connue
+   (clavier inconnu, micro, écran) : repliée seulement. Le relâchement suit la même touche (HWN). */
+const HW={sig:'',A:null,seen:null},HWN=new Map();
+function hwFold(x){while(x<LOW)x+=12;while(x>HIGH)x-=12;return x}
+function hwBest(lo,hi){let best=0,bo=-1;for(let o=-48;o<=48;o+=12){const ov=Math.min(hi+o,HIGH)-Math.max(lo+o,LOW);if(ov>bo||(ov===bo&&Math.abs(o)<Math.abs(best))){bo=ov;best=o}}return best}
+function hwIn(m,hw){let x=m;
+  if(hw&&hw.hi>hw.lo){const sig=hw.lo+'-'+hw.hi+(hw.sure?'s':'');if(sig!==HW.sig){HW.sig=sig;HW.A=hw.sure?{lo:hw.lo,hi:hw.hi}:null;HW.seen=null}
+    const sv=HW.seen||[m,m];sv[0]=Math.min(sv[0],m,hw.slo??m);sv[1]=Math.max(sv[1],m,hw.shi??m);HW.seen=sv;
+    const N=hw.hi-hw.lo,A=HW.A,out=A?(sv[0]<A.lo||sv[1]>A.hi):(sv[0]<LOW||sv[1]>HIGH);
+    if(out){if(sv[1]-sv[0]>=N)HW.A={lo:sv[0],hi:sv[1]};
+      else{let lo=sv[0]-((((sv[0]-hw.lo)%12)+12)%12);HW.A={lo:Math.min(lo,sv[0]),hi:Math.max(lo+N,sv[1])}}}
+    if(HW.A){const off=hwBest(HW.A.lo,HW.A.hi);x=m+off;const top=HW.A.hi+off;if(top===HIGH+1&&!isBlack(top)&&x===top)setRange(LOW,top)}}
+  x=hwFold(x);HWN.set(m,x);return x}
+function hwOut(m){const x=HWN.get(m);HWN.delete(m);return x??hwFold(m)}
+/* ==== fin MIDI 3 ==== */
 
 /* ================= Screens ================= */
 let screen='home',mode='song';
