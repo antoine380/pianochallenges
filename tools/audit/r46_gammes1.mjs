@@ -1,7 +1,7 @@
 // Chantier GAMMES UNE PAR UNE : tuile LEARN « Gammes une à une » (Bêta) → page "sc1" (#sc1Panel) : NOTES | ACCORDS, 12 toniques × 4 types
 // (majeure, mineure naturelle, harmonique, mélodique), 0 à 3 étoiles par case (S.scStars). Vérifie : étoiles 0/1/2/3 selon les fautes
 // (notes et accords), meilleur score gardé, réglages sc7/dir du joueur intacts, fin de partie au-dessus de la liste, Do = gamme suivante,
-// Si = recommencer, retour à la liste, Do sur la liste, fusion mergeState (max par case, état ancien sans la clé), cadenas du paywall,
+// Si = recommencer, retour à la liste, ordre des lignes (naturelles puis altérées), coupe par tonique (4 gammes à 3 étoiles), Do sur la liste, fusion mergeState (max par case, état ancien sans la clé), cadenas du paywall,
 // pas de défilement aux 5 tailles (liste et LEARN), aucune erreur JS.
 // Usage : PORT=8910 NODE_PATH=… PW_CHROMIUM=… node tools/audit/r46_gammes1.mjs   (CAP=dossier pour des captures)
 import { createRequire } from 'module';
@@ -46,8 +46,10 @@ const tl = await ev(p, () => { const T = [...document.querySelectorAll('#learnTi
 check('LEARN : tuile « Gammes une à une » (Bêta), juste après « Gammes » à l’écran, dernière dans la page (index des autres tuiles inchangés)', tl.n === 8 && tl.title === 'Gammes une à une' && tl.beta === 'Bêta' && tl.after && tl.last, tl);
 await toList(p);
 const L = await ev(p, () => ({ page: document.body.dataset.page, cells: document.querySelectorAll('#sc1Grid .sc1-c').length, th: [...document.querySelectorAll('.sc1-th .lg')].map(x => x.textContent),
-  rows: [...document.querySelectorAll('.sc1-rh b')].map(x => x.textContent), seg: [...document.querySelectorAll('#sc1Seg button')].map(x => x.textContent + ':' + x.getAttribute('aria-pressed')), sum: document.querySelector('.sc1-big b').textContent }));
-check('page sc1 : 48 cases, 4 types, 12 toniques Do → Si, NOTES sélectionné, total 0', L.page === 'sc1' && L.cells === 48 && L.th.join('|') === 'Majeure|Mineure naturelle|Mineure harmonique|Mineure mélodique' && L.rows[0] === 'Do' && L.rows[11] === 'Si' && L.rows.length === 12 && L.seg[0] === 'Notes:true' && L.sum === '0', L);
+  rows: [...document.querySelectorAll('.sc1-rh b')].map(x => x.textContent), sep: !!document.querySelector('#sc1Grid .sc1-sep'), cups: document.querySelectorAll('#sc1Grid .sc1-cup').length, cupsOn: document.querySelectorAll('#sc1Grid .sc1-cup.on').length, legend: /★|justes|faute/.test(document.querySelector('.sc1-sum small')?.textContent || ''), cupSum: document.querySelector('.sc1-cups b')?.textContent, seg: [...document.querySelectorAll('#sc1Seg button')].map(x => x.textContent + ':' + x.getAttribute('aria-pressed')), sum: document.querySelector('.sc1-big b').textContent }));
+check('page sc1 : 48 cases, 4 types, NOTES sélectionné, total 0, pas de légende des étoiles', L.page === 'sc1' && L.cells === 48 && L.th.join('|') === 'Majeure|Mineure naturelle|Mineure harmonique|Mineure mélodique' && L.seg[0] === 'Notes:true' && L.sum === '0' && !L.legend, L);
+check('ordre des lignes : Do Ré Mi Fa Sol La Si, séparation, puis Ré♭ Mi♭ Fa♯ La♭ Si♭', L.rows.join(' ') === 'Do Ré Mi Fa Sol La Si Ré♭ Mi♭ Fa♯ La♭ Si♭' && L.sep, L.rows);
+check('une coupe par tonique (12), toutes éteintes, résumé « 0 / 12 »', L.cups === 12 && L.cupsOn === 0 && L.cupSum === '0', L);
 check('mergeState / état ancien : aucune clé scStars tant qu’on n’a rien joué, total lisible', await p.X('sc1Total("notes")===0 && sc1Total("chords")===0'));
 
 // 2) notes, sans faute → 3 étoiles ; la fin s'ouvre au-dessus de la liste ; sc7 / dir du joueur intacts
@@ -58,7 +60,7 @@ const st1 = await stored(p);
 check('pendant la partie, la sauvegarde garde sc7 et dir du joueur', st1.settings.sc7 === true && st1.settings.dir === 'down', st1.settings);
 await notes(p, C_MAJ); await W(p, 2400);
 const e1 = await ev(p, () => ({ end: !document.getElementById('endModal').hidden, page: document.body.dataset.page, t: document.getElementById('endTitle').textContent, next: document.getElementById('sc1Next')?.textContent, back: !!document.getElementById('sc1Back'), again: !!document.getElementById('sc1Again') }));
-check('sans faute : 3 étoiles (S.scStars.notes["C-major"]=3), fin au-dessus de la liste (« Suivante : Ré♭ Majeur »)', await stars(p, 'notes', 'C-major') === 3 && await endStars(p) === 3 && e1.end && e1.page === 'sc1' && e1.back && e1.again && /Suivante : Ré♭ Majeur/.test(e1.next || ''), e1);
+check('sans faute : 3 étoiles (S.scStars.notes["C-major"]=3), fin au-dessus de la liste (« Suivante : Ré Majeur »), message court « Sans faute ! »', await stars(p, 'notes', 'C-major') === 3 && await endStars(p) === 3 && e1.end && e1.page === 'sc1' && e1.back && e1.again && /Suivante : Ré Majeur/.test(e1.next || '') && await ev(p, () => document.querySelector('.sc1-msg').textContent === 'Sans faute !'), e1);
 check('XP habituel gagné', await p.X('S.xp>900'));
 const st2 = await stored(p);
 check('après la partie : sc7=true et dir="down" toujours là (mémoire et sauvegarde)', await p.X('S.settings.sc7===true && S.settings.dir==="down"') && st2.settings.sc7 === true && st2.settings.dir === 'down');
@@ -67,30 +69,30 @@ if (CAP) await p.screenshot({ path: `${CAP}/r46_fin_3.png` });
 // 3) Do (MIDI) = gamme suivante : Ré♭ majeur ; une faute → 2 étoiles
 await ev(p, () => window.__midi.noteOn(60)); await W(p, 500);
 const g2 = await p.X('({tid:cur&&cur.tid, k:cur&&cur.k, page})');
-check('Do seul (MIDI) sur la fin = gamme suivante (même type, tonique suivante : Ré♭ majeur)', g2.tid === 'major' && g2.k === 'Db' && g2.page === 'practice', g2);
-await notes(p, [61, 60, 63, 65, 66, 68, 70, 72, 73]); await W(p, 2400); // 60 = faute
-check('une faute : 2 étoiles', await stars(p, 'notes', 'Db-major') === 2 && await endStars(p) === 2 && /1 faute/.test(await ev(p, () => document.querySelector('.sc1-msg').textContent)));
+check('Do seul (MIDI) sur la fin = gamme suivante (même type, ligne suivante : Ré majeur)', g2.tid === 'major' && g2.k === 'D' && g2.page === 'practice', g2);
+await notes(p, [62, 61, 64, 66, 67, 69, 71, 73, 74]); await W(p, 2400); // 61 = faute
+check('une faute : 2 étoiles, message court « Gamme finie ! » sans règle', await stars(p, 'notes', 'D-major') === 2 && await endStars(p) === 2 && await ev(p, () => document.querySelector('.sc1-msg').textContent === 'Gamme finie !'));
 // Si = recommencer la même ; sans faute cette fois → 3 (meilleur score monte)
 await ev(p, () => window.__midi.noteOn(71)); await W(p, 500);
-check('Si seul (MIDI) sur la fin = recommencer la même gamme', await p.X('cur&&cur.k==="Db"&&cur.tid==="major"&&page==="practice"'));
+check('Si seul (MIDI) sur la fin = recommencer la même gamme', await p.X('cur&&cur.k==="D"&&cur.tid==="major"&&page==="practice"'));
 // 3 notes justes puis on quitte : 1 étoile pour cette partie, le meilleur (2) reste
-await notes(p, [61, 63, 65]); await W(p, 200);
-check('3 notes justes : 1re étoile tout de suite (le meilleur reste 2)', await stars(p, 'notes', 'Db-major') === 2 && await p.X('game&&game.sc1&&game.sc1.got===1'));
+await notes(p, [62, 64, 66]); await W(p, 200);
+check('3 notes justes : 1re étoile tout de suite (le meilleur reste 2)', await stars(p, 'notes', 'D-major') === 2 && await p.X('game&&game.sc1&&game.sc1.got===1'));
 await quit(p);
 const e3 = await ev(p, () => ({ end: !document.getElementById('endModal').hidden, best: document.querySelector('.sc1-best')?.textContent || '', page: document.body.dataset.page }));
 check('quitter après 3 notes : fin avec 1 étoile et « Ton meilleur » (2)', e3.end && await endStars(p) === 1 && /Ton meilleur/.test(e3.best) && e3.page === 'sc1', e3);
 // « Toutes les gammes » = la liste, mise à jour
 await ev(p, () => document.getElementById('sc1Back').click()); await W(p, 400);
-const L2 = await ev(p, () => ({ page: document.body.dataset.page, end: !document.getElementById('endModal').hidden, s: document.querySelector('.sc1-c[data-tid=major][data-k=Db]').className, sum: document.querySelector('.sc1-big b').textContent }));
-check('« Toutes les gammes » : retour à la liste, case Ré♭ majeur à 2 étoiles, total 5', L2.page === 'sc1' && !L2.end && /\bs2\b/.test(L2.s) && L2.sum === '5', L2);
+const L2 = await ev(p, () => ({ page: document.body.dataset.page, end: !document.getElementById('endModal').hidden, s: document.querySelector('.sc1-c[data-tid=major][data-k=D]').className, sum: document.querySelector('.sc1-big b').textContent }));
+check('« Toutes les gammes » : retour à la liste, case Ré majeur à 2 étoiles, total 5', L2.page === 'sc1' && !L2.end && /\bs2\b/.test(L2.s) && L2.sum === '5', L2);
 
-// 4) 1 étoile sur une case neuve (Ré majeur : 3 notes puis quitter) ; 0 étoile (Mi majeur : 2 notes puis quitter → liste)
-await cell(p, 'major', 'D'); await W(p, 400); await notes(p, [62, 64, 66]); await quit(p);
-check('Ré majeur, 3 notes justes puis quitter : 1 étoile', await stars(p, 'notes', 'D-major') === 1 && await endStars(p) === 1);
+// 4) 1 étoile sur une case neuve (Mi majeur : 3 notes puis quitter) ; 0 étoile (Fa majeur : 2 notes puis quitter → liste)
+await cell(p, 'major', 'E'); await W(p, 400); await notes(p, [64, 66, 68]); await quit(p);
+check('Mi majeur, 3 notes justes puis quitter : 1 étoile', await stars(p, 'notes', 'E-major') === 1 && await endStars(p) === 1);
 await ev(p, () => document.getElementById('endX').click()); await W(p, 400);
 check('× sur la fin : la liste', await ev(p, () => document.body.dataset.page === 'sc1' && document.getElementById('endModal').hidden));
-await cell(p, 'major', 'E'); await W(p, 400); await notes(p, [64, 66]); await quit(p);
-check('Mi majeur, 2 notes puis quitter : 0 étoile, retour direct à la liste', await stars(p, 'notes', 'E-major') === 0 && await ev(p, () => document.body.dataset.page === 'sc1' && document.getElementById('endModal').hidden));
+await cell(p, 'major', 'F'); await W(p, 400); await notes(p, [65, 67]); await quit(p);
+check('Fa majeur, 2 notes puis quitter : 0 étoile, retour direct à la liste', await stars(p, 'notes', 'F-major') === 0 && await ev(p, () => document.body.dataset.page === 'sc1' && document.getElementById('endModal').hidden));
 // « Montre-moi » puis réussite = 2 au plus
 await cell(p, 'minor', 'A'); await W(p, 400); await p.X('reveal(false)'); await W(p, 300); await p.X('grade(false)'); await W(p, 300);
 await notes(p, [69, 71, 72, 74, 76, 77, 79, 81]); await W(p, 2400);
@@ -107,8 +109,8 @@ const TRI = [[60, 64, 67], [62, 65, 69], [64, 67, 71], [65, 69, 72], [67, 71, 74
 for (const c of TRI.slice(0, g5.n)) { await notes(p, c); await W(p, 320); }
 await W(p, 2400);
 check('accords sans faute : 3 étoiles en accords, la case notes de Do majeur reste à 3', await stars(p, 'chords', 'C-major') === 3 && await stars(p, 'notes', 'C-major') === 3 && await endStars(p) === 3);
-await ev(p, () => document.getElementById('sc1Next').click()); await W(p, 500); // Ré♭ majeur en accords
-check('« Suivante » en accords : Ré♭ majeur en accords', await p.X('cur.k==="Db" && !!cur.ch'));
+await ev(p, () => document.getElementById('sc1Next').click()); await W(p, 500); // Ré majeur en accords
+check('« Suivante » en accords : Ré majeur en accords', await p.X('cur.k==="D" && !!cur.ch'));
 await quit(p); await W(p, 200);
 await cell(p, 'minor', 'A'); await W(p, 400);
 const TRIm = [[69, 72, 76], [71, 74, 77], [72, 76, 79], [74, 77, 81], [76, 79, 83], [77, 81, 84], [79, 83, 86], [81, 84, 88]];
@@ -118,11 +120,29 @@ for (const c of TRIm.slice(0, nA)) { await notes(p, c); await W(p, 320); }
 await W(p, 2400);
 check('accords avec une faute : 2 étoiles', await stars(p, 'chords', 'A-minor') === 2, await stars(p, 'chords', 'A-minor'));
 await ev(p, () => document.getElementById('sc1Back').click()); await W(p, 300);
-// Do seul sur la liste = la prochaine gamme à travailler (accords : Ré♭ majeur, la 1re sans 3 étoiles)
+// Do seul sur la liste = la prochaine gamme à travailler (accords : Ré majeur, la 1re sans 3 étoiles)
 await ev(p, () => window.__midi.noteOn(60)); await W(p, 500);
-check('Do seul sur la liste : prochaine gamme à travailler (Ré♭ majeur en accords)', await p.X('page==="practice" && cur && cur.k==="Db" && cur.tid==="major" && !!cur.ch'));
+check('Do seul sur la liste : prochaine gamme à travailler (Ré majeur en accords)', await p.X('page==="practice" && cur && cur.k==="D" && cur.tid==="major" && !!cur.ch'));
 await quit(p);
 check('aucune erreur JS (parties)', !p.errs.length, p.errs);
+await p.context().close();
+
+// 5b) la coupe : Sol mineure, harmonique et mélodique déjà à 3 étoiles ; Sol majeur sans faute → coupe de Sol gagnée (notes seulement)
+p = await open({ st: STATE({ stars: { notes: { 'G-minor': 3, 'G-harm': 3, 'G-mel': 3 }, chords: { 'G-minor': 3, 'G-harm': 3, 'G-mel': 3 } } }) });
+await toList(p);
+const cupOff = await ev(p, () => [...document.querySelectorAll('#sc1Grid .sc1-cup')].map(x => x.classList.contains('on')));
+check('coupe de Sol éteinte tant que Sol majeur n’a pas 3 étoiles', cupOff.every(x => !x), cupOff);
+await cell(p, 'major', 'G'); await W(p, 400); await notes(p, [67, 69, 71, 72, 74, 76, 78, 79]); await W(p, 2400);
+const cw = await ev(p, () => ({ won: document.querySelector('.sc1-cupwon')?.textContent || '', on: [...document.querySelectorAll('#sc1Grid .sc1-cup.on')].map(x => x.getAttribute('aria-label')), sum: document.querySelector('.sc1-cups b')?.textContent }));
+check('fin de partie : « Coupe de Sol gagnée ! », coupe de Sol allumée, résumé 1 / 12', /Coupe de Sol gagnée !/.test(cw.won) && cw.on.length === 1 && /Sol/.test(cw.on[0]) && cw.sum === '1', cw);
+if (CAP) await p.screenshot({ path: `${CAP}/r46_coupe_gagnee.png` });
+check('notification Progrès « Coupe de Sol gagnée ! » (une seule fois)', await p.X('S.notifs.list.filter(n=>/Coupe de Sol/.test(n.ti)).length===1 && !!S.notifs.keys["sc1cup-notes-7"]'));
+await ev(p, () => document.getElementById('sc1Again').click()); await W(p, 400); await notes(p, [67, 69, 71, 72, 74, 76, 78, 79]); await W(p, 2400);
+check('rejouer une ligne déjà gagnée : pas de nouvelle annonce de coupe', !(await ev(p, () => !!document.querySelector('.sc1-cupwon'))) && await p.X('S.notifs.list.filter(n=>/Coupe de Sol/.test(n.ti)).length===1'));
+await ev(p, () => document.getElementById('sc1Back').click()); await W(p, 300);
+await ev(p, () => document.querySelector('#sc1Seg [data-v=chords]').click()); await W(p, 300);
+check('coupes séparées par mode : accords 0 / 12 (Sol majeur en accords pas joué)', await ev(p, () => document.querySelector('.sc1-cups b').textContent === '0' && !document.querySelector('#sc1Grid .sc1-cup.on')));
+check('aucune erreur JS (coupes)', !p.errs.length, p.errs);
 await p.context().close();
 
 // 6) fusion entre appareils : le max par case ; état ancien sans la clé

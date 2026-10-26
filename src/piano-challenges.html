@@ -3674,8 +3674,14 @@ body[data-page="sc1"] #sc1Panel{display:flex;flex:1 1 auto;min-height:0;flex-dir
 .sc1-seg button[aria-pressed="true"]{background:var(--sc1c);box-shadow:0 6px 14px -8px var(--sc1c)}
 .sc1-sum{margin:0 0 0 auto;display:flex;align-items:center;gap:4px 12px;flex-wrap:wrap;justify-content:flex-end;color:var(--muted);font-weight:700;font-size:.8rem}
 .sc1-big{display:inline-flex;align-items:baseline;gap:4px;color:var(--muted);font-size:.95rem} .sc1-big i{font-style:normal;color:var(--sc1-star)} .sc1-big b{color:var(--ink);font-size:1.25rem;font-family:var(--f-display)}
-.sc1-grid{flex:1 1 0;min-height:0;display:grid;grid-template-columns:minmax(52px,max-content) repeat(4,minmax(0,1fr));grid-template-rows:auto repeat(12,minmax(0,1fr));gap:4px 6px}
-.sc1-grid.tr{grid-template-columns:max-content repeat(12,minmax(0,1fr));grid-template-rows:auto repeat(4,minmax(0,1fr))}
+.sc1-grid{flex:1 1 0;min-height:0;display:grid;grid-template-columns:minmax(52px,max-content) repeat(4,minmax(0,1fr)) clamp(22px,4vw,34px);grid-template-rows:auto repeat(7,minmax(0,1fr)) 3px repeat(5,minmax(0,1fr));gap:4px 6px}
+.sc1-grid.tr{grid-template-columns:max-content repeat(7,minmax(0,1fr)) 3px repeat(5,minmax(0,1fr));grid-template-rows:auto repeat(4,minmax(0,1fr)) clamp(18px,7vh,30px)}
+.sc1-sep{background:var(--line);border-radius:2px;margin:0 2px;align-self:center;height:2px} .sc1-grid.tr .sc1-sep{height:auto;width:2px;margin:2px 0;justify-self:center;align-self:stretch}
+.sc1-cup{display:grid;place-items:center;min-width:0;min-height:0;color:var(--sc1-off)} .sc1-cup svg{width:min(100%,26px);height:min(100%,26px);fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.sc1-cup.on{color:var(--sc1-star)} .sc1-cup.on svg{fill:color-mix(in srgb,var(--sc1-star) 30%,transparent)}
+.sc1-cups svg{width:1.1em;height:1.1em;align-self:center;fill:color-mix(in srgb,var(--sc1-star) 30%,transparent);stroke:var(--sc1-star);stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.sc1-cupwon{margin:0;display:inline-flex;align-items:center;gap:8px;padding:4px 14px 4px 8px;border-radius:999px;background:color-mix(in srgb,var(--gold) 22%,var(--surface));font-family:var(--f-display);font-size:1.05rem}
+.sc1-cupwon .sc1-cup svg{width:24px;height:24px}
 .sc1-th{display:flex;align-items:flex-end;justify-content:center;text-align:center;font-size:.78rem;font-weight:800;color:var(--muted);line-height:1.15;padding:0 2px 2px;min-width:0}
 .sc1-th .sh{display:none}
 .sc1-grid.tr .sc1-th{align-items:center;justify-content:flex-start;text-align:left;padding:0 6px 0 0}
@@ -12745,17 +12751,17 @@ setTimeout(famBoot, isApp()?2000:900);
 // Sur la liste, un Do seul lance la prochaine gamme à travailler (sc1Todo). Test : tools/audit/r46_gammes1.mjs.
 Object.assign(TXT.fr,{sc1Name:"Gammes une à une", sc1Desc:"Toutes les gammes, une par une : vise les 3 étoiles.", sc1Beta:"Bêta", sc1Notes:"Notes", sc1Chords:"Accords",
   sc1Types:[["Majeure","Maj."],["Mineure naturelle","Min."],["Mineure harmonique","Harm."],["Mineure mélodique","Mél."]],
-  sc1SumA:(n,m)=>n+" étoiles sur "+m, sc1Cell:(nm,n)=>nm+" : "+(n?n+(n>1?" étoiles":" étoile")+" sur 3":"pas encore jouée"),
-  sc1Rule:"★ 3 justes · ★★ finie · ★★★ sans faute", sc1RuleC:"★ 3 accords justes · ★★ finie · ★★★ sans faute", sc1OrC:c=>"Joue "+c+" pour la prochaine gamme",
+  sc1SumA:(n,m)=>n+(n>1?" étoiles":" étoile")+" sur "+m, sc1Cell:(nm,n)=>nm+" : "+(n?n+(n>1?" étoiles":" étoile")+" sur 3":"pas encore jouée"),
+  sc1OrC:c=>"Joue "+c+" pour la prochaine gamme", sc1Cups:(n,m)=>n+(n>1?" coupes":" coupe")+" sur "+m, sc1CupA:(x,on)=>"Coupe de "+x+(on?" : gagnée":" : les 4 gammes à 3 étoiles"), sc1CupWon:x=>"Coupe de "+x+" gagnée !", sc1CupNtf:"Les 4 gammes de la ligne à 3 étoiles.",
   sc1StarsA:n=>n+(n>1?" étoiles":" étoile")+" sur 3",
-  sc1R:(n,ch,e)=>n>=3?"Sans aucune faute : bravo !":n===2?"Gamme finie, avec "+e+(e>1?" fautes":" faute")+". Sans faute, c'est 3 étoiles.":n===1?(ch?"3 accords justes : 1 étoile. Va jusqu'au bout pour la 2e.":"3 notes justes : 1 étoile. Va jusqu'au bout pour la 2e."):(ch?"Pas encore d'étoile : 3 accords justes donnent la 1re.":"Pas encore d'étoile : 3 notes justes donnent la 1re."),
+  sc1R:(n,ch)=>n>=3?"Sans faute !":n===2?"Gamme finie !":n===1?(ch?"3 accords justes, continue !":"3 notes justes, continue !"):"Prêt pour un nouvel essai ?",
   sc1Best:"Ton meilleur :", sc1New:"Nouveau record pour cette gamme !", sc1Back:"Toutes les gammes", sc1Again:"Recommencer", sc1NextB:x=>"Suivante : "+x});
 Object.assign(TXT.en,{sc1Name:"Scales one by one", sc1Desc:"Every scale, one at a time: aim for 3 stars.", sc1Beta:"Beta", sc1Notes:"Notes", sc1Chords:"Chords",
   sc1Types:[["Major","Major"],["Natural minor","Minor"],["Harmonic minor","Harm."],["Melodic minor","Mel."]],
-  sc1SumA:(n,m)=>n+" stars out of "+m, sc1Cell:(nm,n)=>nm+": "+(n?n+(n>1?" stars":" star")+" out of 3":"not played yet"),
-  sc1Rule:"★ 3 right · ★★ finished · ★★★ no mistake", sc1RuleC:"★ 3 right chords · ★★ finished · ★★★ no mistake", sc1OrC:c=>"Play "+c+" for the next scale",
+  sc1SumA:(n,m)=>n+(n===1?" star":" stars")+" out of "+m, sc1Cell:(nm,n)=>nm+": "+(n?n+(n>1?" stars":" star")+" out of 3":"not played yet"),
+  sc1OrC:c=>"Play "+c+" for the next scale", sc1Cups:(n,m)=>n+(n===1?" cup":" cups")+" out of "+m, sc1CupA:(x,on)=>x+" cup"+(on?": won":": all 4 scales at 3 stars"), sc1CupWon:x=>x+" cup won!", sc1CupNtf:"All 4 scales of the row at 3 stars.",
   sc1StarsA:n=>n+(n>1?" stars":" star")+" out of 3",
-  sc1R:(n,ch,e)=>n>=3?"No mistake at all: well done!":n===2?"Scale finished, with "+e+(e>1?" mistakes":" mistake")+". No mistake means 3 stars.":n===1?(ch?"3 right chords: 1 star. Go to the end for the 2nd.":"3 right notes: 1 star. Go to the end for the 2nd."):(ch?"No star yet: 3 right chords give you the 1st.":"No star yet: 3 right notes give you the 1st."),
+  sc1R:(n,ch)=>n>=3?"No mistake!":n===2?"Scale finished!":n===1?(ch?"3 right chords, keep going!":"3 right notes, keep going!"):"Ready for another go?",
   sc1Best:"Your best:", sc1New:"New best for this scale!", sc1Back:"All scales", sc1Again:"Start again", sc1NextB:x=>"Next: "+x});
 const SC1_T=["major","minor","harm","mel"], SC1_COL="#9a5410";
 const SC1={tr:null, tmp:0, keep:null};
@@ -12765,8 +12771,15 @@ const sc1Key = (tid,k) => k+"-"+tid;
 function sc1Get(mode,tid,k){ const v=Math.floor(+sc1S()[mode][sc1Key(tid,k)]||0); return Math.max(0,Math.min(3,v)); }
 function sc1Set(mode,tid,k,n){ if(n<=sc1Get(mode,tid,k)) return false; sc1S()[mode][sc1Key(tid,k)]=n; save(); return true; }
 const sc1K = (tid,pc) => TONICS[tid].find(k=>keyPc(k)===pc);
-// the order of the list for « next »: the same type, the next tonic (Do → Si), then the next type
-function sc1List(){ const L=[]; SC1_T.forEach(tid=>{ for(let pc=0;pc<12;pc++) L.push({tid, k:sc1K(tid,pc)}); }); return L; }
+// rows: the natural tonics first (Do Ré Mi Fa Sol La Si), then the altered ones (Ré♭ Mi♭ Fa♯ La♭ Si♭)
+const SC1_PC=[0,2,4,5,7,9,11,1,3,6,8,10];
+// the order of the list for « next »: the same type, the next row, then the next type
+function sc1List(){ const L=[]; SC1_T.forEach(tid=>SC1_PC.forEach(pc=>L.push({tid, k:sc1K(tid,pc)}))); return L; }
+// a cup per tonic and per mode: the 4 scales of the row at 3 stars
+const sc1Cup = (mode,pc) => SC1_T.every(tid=>sc1Get(mode,tid,sc1K(tid,pc))>=3);
+const sc1Cups = mode => SC1_PC.filter(pc=>sc1Cup(mode,pc)).length;
+const sc1RowName = pc => noteName(tonicNote(sc1K("major",pc)));
+const SC1_TROPHY='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 4h8v5a4 4 0 0 1-8 0zM8 6H4.5a3 3 0 0 0 3.5 4M16 6h3.5a3 3 0 0 1-3.5 4M12 13v4M8.5 20h7"/></svg>';
 const sc1Lock = (tid,k) => paywallOn() && !isPremium() && (premType("scales",tid) || !keySimple(k));
 const sc1Total = mode => sc1List().reduce((a,c)=>a+sc1Get(mode,c.tid,c.k),0);
 const SC1_MAX = SC1_T.length*12*3;
@@ -12776,19 +12789,21 @@ const sc1Item = (tid,k,mode) => mode==="chords" ? {sec:"scales",tid,k,ch:1} : {s
 const escA = x => esc(x).replace(/"/g,"&quot;");
 function sc1Render(){ const P=$("sc1Panel"); if(!P) return; const mode=sc1Mode(), tr=railMQ.matches; SC1.tr=tr; SC1.lang=S.settings.lang+S.settings.notation;
   const TY=t("sc1Types"), tot=sc1Total(mode);
-  const pos=(r,c)=>tr ? "grid-row:"+(c+1)+";grid-column:"+(r+1) : "grid-row:"+(r+1)+";grid-column:"+(c+1);
+  const R=i=>i<7?i+1:i+2, pos=(r,c)=>tr ? "grid-row:"+(c+1)+";grid-column:"+(r+1) : "grid-row:"+(r+1)+";grid-column:"+(c+1); // row 8 = the thin line between natural and altered tonics
   const star=n=>'<span class="sc1-st" aria-hidden="true">'+[0,1,2].map(i=>'<i'+(i<n?' class="on"':'')+'>★</i>').join("")+'</span>';
   let h='<span class="sc1-corner" style="'+pos(0,0)+'"></span>';
   SC1_T.forEach((tid,j)=>{ h+='<span class="sc1-th" style="'+pos(0,j+1)+'"><b class="lg">'+esc(TY[j][0])+'</b><b class="sh" aria-hidden="true">'+esc(TY[j][1])+'</b></span>'; });
-  for(let pc=0;pc<12;pc++){ const names=[...new Set(SC1_T.map(tid=>noteName(tonicNote(sc1K(tid,pc)))))];
-    h+='<span class="sc1-rh" style="'+pos(pc+1,0)+'"><b>'+esc(names[0])+'</b>'+(names[1]?'<small>'+esc(names[1])+'</small>':'')+'</span>';
+  h+='<span class="sc1-sep" style="'+(tr?"grid-row:1/-1;grid-column:9":"grid-column:1/-1;grid-row:9")+'" aria-hidden="true"></span>';
+  SC1_PC.forEach((pc,i)=>{ const names=[...new Set(SC1_T.map(tid=>noteName(tonicNote(sc1K(tid,pc)))))], r=R(i), cup=sc1Cup(mode,pc);
+    h+='<span class="sc1-rh" style="'+pos(r,0)+'"><b>'+esc(names[0])+'</b>'+(names[1]?'<small>'+esc(names[1])+'</small>':'')+'</span>';
+    h+='<span class="sc1-cup'+(cup?' on':'')+'" style="'+pos(r,SC1_T.length+1)+'" role="img" aria-label="'+escA(t("sc1CupA")(names[0],cup))+'" title="'+escA(t("sc1CupA")(names[0],cup))+'">'+SC1_TROPHY+'</span>';
     SC1_T.forEach((tid,j)=>{ const k=sc1K(tid,pc), n=sc1Get(mode,tid,k), lk=sc1Lock(tid,k), nm=itemName(sc1Item(tid,k,mode)), tn=noteName(tonicNote(k));
-      h+='<button type="button" class="sc1-c s'+n+(lk?' pw-lk':'')+'" style="'+pos(pc+1,j+1)+'" data-tid="'+tid+'" data-k="'+escA(k)+'" aria-label="'+escA(t("sc1Cell")(nm,n))+'" title="'+escA(nm)+'">'+star(n)
-        +(names[1]?'<small class="sc1-tn">'+esc(tn)+'</small>':'')+(lk?pwChip():'')+'</button>'; }); }
+      h+='<button type="button" class="sc1-c s'+n+(lk?' pw-lk':'')+'" style="'+pos(r,j+1)+'" data-tid="'+tid+'" data-k="'+escA(k)+'" aria-label="'+escA(t("sc1Cell")(nm,n))+'" title="'+escA(nm)+'">'+star(n)
+        +(names[1]?'<small class="sc1-tn">'+esc(tn)+'</small>':'')+(lk?pwChip():'')+'</button>'; }); });
   const midi=midiMode() && S.settings.midiC!==false, nx=sc1Todo(mode);
   P.innerHTML='<div class="sc1-top"><h2 class="sc1-h"><span class="mb-ic">'+SEC_ICON("scales")+'</span><span>'+esc(t("sc1Name"))+'</span><span class="sc1-beta">'+esc(t("sc1Beta"))+'</span></h2>'
     +'<div class="seg sc1-seg" id="sc1Seg" role="group" aria-label="'+escA(t("sc1Notes")+" / "+t("sc1Chords"))+'">'+[["notes","sc1Notes"],["chords","sc1Chords"]].map(([v,l])=>'<button type="button" data-v="'+v+'" aria-pressed="'+(mode===v)+'">'+esc(t(l))+'</button>').join("")+'</div>'
-    +'<p class="sc1-sum" id="sc1Sum"><span class="sc1-big" aria-label="'+escA(t("sc1SumA")(tot,SC1_MAX))+'"><i aria-hidden="true">★</i><b class="mono">'+tot+'</b><span aria-hidden="true"> / '+SC1_MAX+'</span></span><small>'+esc(midi?t("sc1OrC")(CNAME())+" · "+itemName(sc1Item(nx.tid,nx.k,mode)):t(mode==="chords"?"sc1RuleC":"sc1Rule"))+'</small></p></div>'
+    +'<p class="sc1-sum" id="sc1Sum"><span class="sc1-big" aria-label="'+escA(t("sc1SumA")(tot,SC1_MAX))+'"><i aria-hidden="true">★</i><b class="mono">'+tot+'</b><span aria-hidden="true"> / '+SC1_MAX+'</span></span><span class="sc1-big sc1-cups" aria-label="'+escA(t("sc1Cups")(sc1Cups(mode),12))+'">'+SC1_TROPHY+'<b class="mono">'+sc1Cups(mode)+'</b><span aria-hidden="true"> / 12</span></span>'+(midi?'<small>'+esc(t("sc1OrC")(CNAME())+" · "+itemName(sc1Item(nx.tid,nx.k,mode)))+'</small>':'')+'</p></div>'
     +'<div class="sc1-grid'+(tr?' tr':'')+'" id="sc1Grid">'+h+'</div>';
   P.querySelectorAll("#sc1Seg [data-v]").forEach(b=>b.onclick=()=>{ if(S.settings.sc1Mode===b.dataset.v) return; S.settings.sc1Mode=b.dataset.v; save(); sc1Render(); const f=$("sc1Seg").querySelector('[data-v="'+b.dataset.v+'"]'); if(f) f.focus({preventScroll:true}); });
   P.querySelectorAll(".sc1-c").forEach(b=>b.onclick=()=>sc1Play(b.dataset.tid,b.dataset.k)); }
@@ -12799,16 +12814,17 @@ function sc1Play(tid,k,mode){ mode=mode||sc1Mode(); if(!TONICS[tid] || !TONICS[t
   if(S.section!=="scales"){ S.section="scales"; save(); }
   openPage("practice");
   const it=sc1Item(tid,k,mode);
-  game=makeGame([it]); game.label=itemName(it); game.single=false; game.sc1={mode,tid,k,best0:sc1Get(mode,tid,k),got:0,res:0,rev:false,err:0}; game.i=-1; startRound(); }
+  game=makeGame([it]); game.label=itemName(it); game.single=false; game.sc1={mode,tid,k,best0:sc1Get(mode,tid,k),cup0:sc1Cup(mode,keyPc(k)),got:0,res:0,rev:false,err:0}; game.i=-1; startRound(); }
 // the end of a game: the stars won, Do = next scale, Si = again, back to the list
-function sc1End(g){ if(page!=="sc1") openPage("sc1"); // the summary opens over the list, with its new stars
+function sc1End(g){ if(page!=="sc1") openPage("sc1"); const pc=keyPc(g.sc1.k), cupNew=!g.sc1.cup0 && sc1Cup(g.sc1.mode,pc); // the summary opens over the list, with its new stars
   const s=g.sc1, n=s.stars|0, best=sc1Get(s.mode,s.tid,s.k), ch=s.mode==="chords", nx=sc1Next(s.tid,s.k);
   $("endTitle").textContent=itemName(sc1Item(s.tid,s.k,s.mode));
   const B=$("endBody"); B.innerHTML='<div class="sc1-end"><small class="pp-k">'+esc(t("sc1Name")+" · "+t(ch?"sc1Chords":"sc1Notes"))+'</small>'
     +'<p class="pp-stars sc1-stars" role="img" aria-label="'+escA(t("sc1StarsA")(n))+'">'+[0,1,2].map(i=>'<span'+(i<n?' class="on"':'')+' style="--d:'+(i*220)+'ms">★</span>').join("")+'</p>'
-    +'<p class="sc1-msg">'+esc(t("sc1R")(n,ch,s.err|0))+'</p>'
+    +(cupNew?'<p class="sc1-cupwon"><span class="sc1-cup on" aria-hidden="true">'+SC1_TROPHY+'</span><b>'+esc(t("sc1CupWon")(sc1RowName(pc)))+'</b></p>':'')
+    +'<p class="sc1-msg">'+esc(t("sc1R")(n,ch))+'</p>'
     +(best>n?'<p class="sc1-best">'+esc(t("sc1Best"))+' <span role="img" aria-label="'+escA(t("sc1StarsA")(best))+'">'+"★".repeat(best)+"☆".repeat(3-best)+'</span></p>':n>s.best0?'<p class="sc1-best new">'+esc(t("sc1New"))+'</p>':'')
-    +'<p class="sc1-tot"><span aria-hidden="true">★ </span>'+esc(t("sc1SumA")(sc1Total(s.mode),SC1_MAX))+'</p></div>';
+    +'<p class="sc1-tot"><span aria-hidden="true">★ </span>'+esc(t("sc1SumA")(sc1Total(s.mode),SC1_MAX))+' · '+esc(t("sc1Cups")(sc1Cups(s.mode),12))+'</p></div>';
   { const li=levelInfo(S.xp), nxe=document.createElement("div"); nxe.className="end-next"; nxe.id="endNext";
     nxe.innerHTML='<div class="en-row"><b></b><span class="en-bar"><i></i></span></div><p></p>'; nxe.querySelector("b").textContent="+"+fmtN(Math.max(0,S.xp-g.xp0))+" XP · "+t("endNext")(fmtN(li.need-li.into), fmtN(li.L+1));
     const sk=effStreak(); nxe.querySelector("p").textContent = sk ? t("endStreak")(sk) : ""; B.appendChild(nxe); try{ endNextMotion(nxe, g, li, sk); }catch(e){} }
@@ -12818,7 +12834,7 @@ function sc1End(g){ if(page!=="sc1") openPage("sc1"); // the summary opens over 
   btn(t("sc1Again"),"",()=>sc1Play(s.tid,s.k,s.mode),BNAME()).id="sc1Again";
   const go=nx ? btn(t("sc1NextB")(itemName(sc1Item(nx.tid,nx.k,s.mode))),"primary",()=>sc1Play(nx.tid,nx.k,s.mode),CNAME()) : null; if(go) go.id="sc1Next";
   $("endX").setAttribute("aria-label",t("closeLbl")); if(!endOpen) modalOpened(); endOpen=true; $("endModal").hidden=false;
-  (go||F.lastChild).focus({preventScroll:true}); if(n===3 && n>s.best0 && !lvlUp) setTimeout(()=>{ try{ confetti(); }catch(e){} },150); }
+  (go||F.lastChild).focus({preventScroll:true}); if((cupNew || (n===3 && n>s.best0)) && !lvlUp) setTimeout(()=>{ try{ confetti(); }catch(e){} },150); }
 // LEARN: the tile, shown next to « Gammes » (CSS order: it comes last in the page, so the other tiles keep their place for the tests)
 function sc1Tile(){ const b=$("learnTiles"); if(!b) return; const old=b.querySelector(".sc1-tile"); if(old) old.remove();
   const c=tile({color:SC1_COL,obj:"sc1",kick:"Learn",title:t("sc1Name"),desc:t("sc1Desc"),btn:t("rnPlay"),rec:"★ "+fmtN(sc1Total("notes")+sc1Total("chords"))+" / "+fmtN(2*SC1_MAX),onOpen:()=>openPage("sc1")});
@@ -12836,7 +12852,8 @@ function sc1Fix(fn){ return function(){ if(!sc1On()) return fn.apply(this,argume
 startRound=sc1Fix(startRound); render=sc1Fix(render);
 { const o=reveal; reveal=sc1Fix(function(){ if(sc1On() && phase==="listening") game.sc1.rev=true; return o.apply(this,arguments); }); }
 { const o=success; success=sc1Fix(function(){ const g=sc1On()?game.sc1:null, e=errors; const r=o.apply(this,arguments);
-    if(g){ const n=(e===0 && !g.rev) ? 3 : 2; g.err=Math.max(e,g.err|0); g.res=Math.max(g.res|0,n); sc1Set(g.mode,g.tid,g.k,n); } return r; }); }
+    if(g){ const n=(e===0 && !g.rev) ? 3 : 2; g.err=Math.max(e,g.err|0); g.res=Math.max(g.res|0,n); sc1Set(g.mode,g.tid,g.k,n);
+      const pc=keyPc(g.k); if(!g.cup0 && sc1Cup(g.mode,pc)) try{ ntfAdd({key:"sc1cup-"+g.mode+"-"+pc, cat:"progress", type:"unlock", ti:t("sc1CupWon")(sc1RowName(pc))+" · "+t(g.mode==="chords"?"sc1Chords":"sc1Notes"), tx:t("sc1CupNtf"), act:{k:"learn",l:"ntfPlay"}}); }catch(e){} } return r; }); }
 // 3 right notes (or chords) of the scale: the first star at once, even if the scale is not finished
 { const o=noteIn; noteIn=function(){ const r=o.apply(this,arguments); try{ const g=sc1On()?game.sc1:null; if(g && !g.got && cur && phase==="listening" && idx>=3){ g.got=1; sc1Set(g.mode,g.tid,g.k,1); } }catch(e){} return r; }; }
 { const o=finishGame; finishGame=function(){ const g=game; if(!(g && g.sc1)) return o.apply(this,arguments);
