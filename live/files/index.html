@@ -4501,7 +4501,9 @@ body.sc1tr #feedback{visibility:hidden}
   navigator.requestMIDIAccess=()=>access ? Promise.resolve(access) : asking || (asking=open().finally(()=>{ asking=null; }));
   const open=async()=>{
     const acc={inputs:new Map(), onstatechange:null};
-    const sync=list=>{ const old=acc.inputs, m=new Map(); (list||[]).forEach(d=>{ const k=String(d.id); m.set(k, old.get(k)||{id:k,name:d.name,onmidimessage:null}); }); acc.inputs=m; };
+    // MIDI 3 : same source id, new name (a Bluetooth keyboard publishes its full name a moment after connecting): the name follows,
+    // otherwise the chosen keyboard, its size guess and its model were matched against a stale name
+    const sync=list=>{ const old=acc.inputs, m=new Map(); (list||[]).forEach(d=>{ const k=String(d.id), o=old.get(k); if(o) o.name=d.name; m.set(k, o||{id:k,name:d.name,onmidimessage:null}); }); acc.inputs=m; };
     on("midi", ev=>{ const inp=acc.inputs.get(String(ev.id)); if(inp && inp.onmidimessage) inp.onmidimessage({data:new Uint8Array(ev.data||[])}); });
     on("statechange", ev=>{ sync(ev.inputs); if(acc.onstatechange) acc.onstatechange(); });
     const r=await call("start"); sync(r && r.inputs);
@@ -5926,17 +5928,24 @@ function calibApply(){
 // virtual ports are not keyboards (macOS / iOS network sessions « Session réseau », IAC buses): never listed, counted nor listened to.
 // Case and accents do not matter (iOS may send decomposed accents).
 const midiVirtual = n => /network|session|reseau|\biac\b|\bbus\b/.test(String(n||"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase());
+// the size a keyboard's name says (null: the name does not tell)
+const kbdSzOf = name => { const n=String(name||""), m=n.match(/(^|\D)(24|25|32|37|49|61|76|88)(\D|$)/);
+  return m ? m[2] : /lumi|piano ?m\b|keys block/i.test(n) ? "24" : /mpk ?mini(?! ?plus)|launchkey mini|minilab|nanokey|flkey mini|microlab|xkey/i.test(n) ? "25" : /keystep|oxygen pro mini/i.test(n) ? "32" : /seaboard block|songmaker/i.test(n) ? "24" : /rise ?2?/i.test(n) ? "49" : null; };
 function guessKbdSize(name){
   if(!name || S.settings.kbdGuessFor===name) return;
-  const n=String(name), m=n.match(/(^|\D)(24|25|32|37|49|61|76|88)(\D|$)/);
-  let size = m ? m[2] : /lumi|piano ?m\b|keys block/i.test(n) ? "24" : /seaboard block|songmaker/i.test(n) ? "24" : /rise ?2?/i.test(n) ? "49" : null;
+  const sz=S.settings.kbdSize||"auto", old=S.settings.kbdGuessFor, size=kbdSzOf(name);
+  // MIDI 3 : une taille que l'app a mise pour UN AUTRE clavier (les 24 touches d'un LUMI, ou le modèle choisi dans la liste) ne reste pas collée
+  // au clavier suivant (un 25 touches : son Do du haut faisait sauter l'écran d'une octave) : nouvelle devinette, ou automatique
+  const mine = /^\d+$/.test(sz) && ((old && kbdSzOf(old)===sz) || (S.settings.kbdCat && S.settings.kbdCat!==name));
   S.settings.kbdGuessFor=name;
-  if(size && (S.settings.kbdSize||"auto")==="auto"){ S.settings.kbdSize=size; save(); buildKeyboard(); renderSettings(); }
+  if(mine && size!==sz){ S.settings.kbdSize=size||"auto"; save(); buildKeyboard(); renderSettings(); return; }
+  if(size && sz==="auto"){ S.settings.kbdSize=size; save(); buildKeyboard(); renderSettings(); }
   else save();
 }
 // keep the on-screen keyboard on the same keys as the MIDI keyboard: if a played note is outside, shift by octaves
 function followMidi(n){
   if(n>=LOW && n<=HIGH) return;
+  if(midiWiden(n)) return; // MIDI 3 : un clavier plus grand que l'écran (le Do du haut d'un 25 touches) élargit l'écran au lieu de le décaler
   const shift = n<LOW ? -Math.ceil((LOW-n)/12)*12 : Math.ceil((n-HIGH)/12)*12; let lo=LOW+shift, hi=HIGH+shift;
   const hw=(S.midi&&S.midi.hw)||{}; if(hw.lo>=21 && hw.hi>hw.lo && hw.hi-hw.lo<=HIGH-LOW && n>=hw.lo && n<=hw.hi){ hi=hw.lo+(HIGH-LOW); lo=hw.lo; } // the measured keyboard (M9) fits: show it whole, in one move
   if(lo<21 || hi>108) return;
@@ -8139,7 +8148,7 @@ const INFO_PAGES=["settings","progress"];
 let returnPage=null, guestPass=false;
 // Page Play: the Clavio prototype (play/index.html) runs in a frame; notes played here are forwarded to it.
 const SAME_ORIGIN = location.origin && location.origin!=="null" ? location.origin : "*"; // file:// has no origin
-function playSend(type,m,vel){ const f=$("playFrame"); if(f && f.contentWindow) f.contentWindow.postMessage({source:"piano-challenges",type,m,vel},SAME_ORIGIN); }
+function playSend(type,m,vel,hw){ const f=$("playFrame"); if(f && f.contentWindow) f.contentWindow.postMessage(hw?{source:"piano-challenges",type,m,vel,hw}:{source:"piano-challenges",type,m,vel},SAME_ORIGIN); }
 let playHash="#songs"; // #songs = song library, #games = Play games, #game=<id> = that game
 function playOpen(){ const f=$("playFrame"); const src="play/index.html"+playHash+"&lang="+(S.settings.lang==="fr"?"fr":"en")+(staffOn()?"&staff=1&clef="+staffClef():""); const old=f.getAttribute("src");
   if(old!==src){ f.onload=()=>{ if(page==="play" && !anyWin()) f.focus(); }; f.src=src; if(old){ try{ f.contentWindow.location.reload(); }catch(e){} } } // a hash-only change would not reload the page: force it
@@ -8711,16 +8720,17 @@ async function enableMidi(quiet){
         if(MW.on && mwMsg(st,note,vel,inp)) return; // the « Connect my keyboard » assistant (MIDI lots 2-3) gets every message while it is open
         if(midiOpen && !calib && (st&0xf0)===0x90 && vel>0){ pressKey(note); mtNote(note,vel,inp.name); return; } // the MIDI window: the « play a note » test (M8)
         if(page==="quiz"){ if((st&0xf0)===0x90 && vel>0){ if(S.settings.midiSound) tone(note,0,.9,.1+.26*vel/127); if(!anyModal()) quizIn(String(inp.id||inp.name),note); } return; } // every keyboard counts: one per player
-        if(S.settings.midiInput && inp.name!==S.settings.midiInput && midiNames.includes(S.settings.midiInput)) return; // the chosen keyboard only, while it is here (a name saved earlier, USB vs Bluetooth, no longer mutes the keyboard in use)
+        if(S.settings.midiInput && inp.name!==S.settings.midiInput && midiNames.includes(S.settings.midiInput) && !midiTakeOver(st,vel,inp)) return; // the chosen keyboard only, while it is played (MIDI 3 : un autre clavier joué quand le choisi se tait depuis 3 s prend la main)
         if((st&0xf0)===0x90 && vel>0 && midiDup(note,inp)) return; // the same keyboard on a second port
+        if((st&0xf0)===0x90 && vel>0) midiSeen(note,inp); // MIDI 3 : les notes vraiment jouées sur ce clavier (sa plage)
         if(page==="piano"){ pnMidi(st,note,vel); return; } // the PIANO mode: an instrument (its own sound, the sustain pedal)
-        if(page==="play"){ if((st&0xf0)===0x90 && vel>0) playSend("noteon",note,vel/127); else if((st&0xf0)===0x80 || ((st&0xf0)===0x90 && vel===0)) playSend("noteoff",note); return; }
+        if(page==="play"){ if((st&0xf0)===0x90 && vel>0) playSend("noteon",note,vel/127,midiSpan(inp)); else if((st&0xf0)===0x80 || ((st&0xf0)===0x90 && vel===0)) playSend("noteoff",note); return; } // MIDI 3 : la plage du clavier part avec la note (le lecteur place ses touches comme celles du clavier)
         if((st&0xf0)===0x80 || ((st&0xf0)===0x90 && vel===0)){ keyDown(note,false); return; }
         if((st&0xf0)===0x90 && vel>0){
-          pressKey(note); keyDown(note,true); // light the key at once, before the 35 ms grouping
           if(S.settings.midiSound) tone(note,0,.9,.1+.26*vel/127);
+          if(!calib) followMidi(note); // MIDI 3 : le clavier à l'écran suit AVANT d'allumer la touche (le Do du haut allumait le Do du milieu, replié, puis l'écran sautait)
+          pressKey(note); keyDown(note,true); // light the key at once, before the 35 ms grouping
           if(calib){ calibNote(note); return; }
-          followMidi(note);
           midiIn(note,true); } }); });
       $("midiBtn").classList.toggle("on",names.length>0); $("midiBtn").classList.remove("err");
       const shown = S.settings.midiInput && names.includes(S.settings.midiInput) ? S.settings.midiInput : names[0];
@@ -9485,10 +9495,10 @@ function mtTouch(){ const v=MT.vels; if(v.length<2) return null; const mx=Math.m
 function mtNote(m, v, port){ MT.vels.push(v); MT.last={m,v,port};
   if(S.settings.midiSound) tone(m,0,.9,.1+.26*v/127);
   const s=mdS(); s.tested=Date.now(); s.hw={...(s.hw&&s.hw.name===port?s.hw:{}), name:port}; const r=mtTouch(); if(r!=null) s.hw.vel=r; save();
-  if(m<MT.lo || m>=MT.lo+24) MT.lo=Math.max(0,Math.min(103,12*Math.floor(m/12)));
+  if(m<MT.lo || m>MT.lo+24) MT.lo=Math.max(0,Math.min(103,12*Math.floor(m/12))); // MIDI 3 : 25 touches, le Do du haut est sur la bande
   mtRender(); }
 function mtKb(){ const kb=$("mtKb"); if(!kb) return; if(kb.dataset.lo==String(MT.lo)) return; kb.dataset.lo=MT.lo; kb.innerHTML="";
-  const whites=[], WH=[0,2,4,5,7,9,11]; for(let m=MT.lo;m<MT.lo+24;m++) if(WH.includes(m%12)) whites.push(m);
+  const whites=[], WH=[0,2,4,5,7,9,11]; for(let m=MT.lo;m<=MT.lo+24;m++) if(WH.includes(m%12)) whites.push(m);
   whites.forEach(m=>{ const w=document.createElement("span"); w.className="w"; w.dataset.m=m; if(m%12===0){ const l=document.createElement("small"); l.textContent=octName(m); w.appendChild(l); } kb.appendChild(w); });
   const ww=100/whites.length; for(let m=MT.lo;m<MT.lo+24;m++) if(!WH.includes(m%12)){ const i=whites.indexOf(m-1); const b=document.createElement("span"); b.className="b"; b.dataset.m=m; b.style.left="calc("+((i+1)*ww)+"% - "+(ww*.3)+"%)"; b.style.width=(ww*.6)+"%"; kb.appendChild(b); } }
 function mtRender(){ const box=$("mdTest"); if(!box) return; box.hidden=!midiReady; if(!midiReady) return; mtKb();
@@ -10157,7 +10167,7 @@ addEventListener("resize",()=>{ if(page==="acc" && ACC.view==="play" && ACC.run)
 // (fetch keepalive vers la fonction SQL track_events), sans le SDK Supabase. Hors ligne, la file attend. Une table ou une
 // fonction absente (migration pas encore lancée) coupe l'envoi sans erreur. En développement (localhost), rien ne part sur
 // le réseau, sauf si localStorage « pc-trk-test » = "1" (tests). Interrupteur : S.settings.analytics (absent = activé).
-const APP_BUILD="2026-10-26T22:00Z"; // remplacé par tools/build.py par la date de construction (version.txt)
+const APP_BUILD="2026-10-26T22:12Z"; // remplacé par tools/build.py par la date de construction (version.txt)
 const TRK={q:[], t:0, off:false, anon:null, sent:0, errs:[], errT:0, errSeen:new Set(), errOn:null, ports:new Set(), first:false};
 const RC={flags:{}, daily:{}, at:0};
 const TRK_NAMES=new Set(["song_import","app_open","first_note","input_mode","midi_connected","pp_lesson_done","learn_end","game_end","quiz_end","duel_end","goal_reached","badge","signup","login","play","feedback","acc_end","song_open","route_step","route_stage"]);
@@ -11062,9 +11072,9 @@ function mwMsg(st, note, vel, inp){ if(!MW.on) return false; const ty=st&0xf0, n
 function mwTestNote(m, v, name){ const T=MW.t; if(!T) return; T.n++; T.vels.push(v); T.last={m,v,name}; T.silent=false;
   if(midiNames.length>1 && !T.picked && name){ T.picked=name; S.settings.midiInput=name; }
   const s=mdS(), h=mwHw(); s.tested=Date.now(); if(name && h.name!==name){ s.hw={name}; } const r=mwTouch(); if(r!=null) mwHw().vel=r; save();
-  if(m<T.lo || m>=T.lo+24) T.lo=Math.max(0,Math.min(103,12*Math.floor(m/12))); mwRender(); }
+  if(m<T.lo || m>T.lo+24) T.lo=Math.max(0,Math.min(103,12*Math.floor(m/12))); mwRender(); }
 function mwTouch(){ const v=MW.t?MW.t.vels:[]; if(v.length<2) return null; const mx=Math.max(...v), mn=Math.min(...v); if(mx-mn>=30) return true; if(mx===mn) return false; return null; }
-function mwKb2(lo, on, nc){ const WH=[0,2,4,5,7,9,11], wh=[]; for(let m=lo;m<lo+24;m++) if(WH.includes(m%12)) wh.push(m); const ww=100/wh.length;
+function mwKb2(lo, on, nc){ const WH=[0,2,4,5,7,9,11], wh=[]; for(let m=lo;m<=lo+24;m++) if(WH.includes(m%12)) wh.push(m); const ww=100/wh.length;
   let h=wh.map(m=>'<span class="w'+(m===on?' on':'')+'"'+(m===on?' style="--nc:'+nc+'"':'')+'>'+(m%12===0?'<small>'+esc(octName(m))+'</small>':'')+'</span>').join("");
   for(let m=lo;m<lo+24;m++) if(!WH.includes(m%12)){ const i=wh.indexOf(m-1); h+='<span class="b'+(m===on?' on':'')+'" style="left:calc('+((i+1)*ww)+'% - '+(ww*.3)+'%);width:'+(ww*.6)+'%'+(m===on?';--nc:'+nc:'')+'"></span>'; }
   return '<div class="mt-kb mw-kb" aria-hidden="true">'+h+'</div>'; }
@@ -13168,7 +13178,7 @@ function pnSusSet(on,ped){ if(ped) PN.ped=on; else PN.sus=on; const b=$("pnSus")
 function pnAllOff(){ PN.all.forEach(x=>pnRel(x,true)); PN.all=[]; PN.on.clear(); PN.held.forEach(m=>keyDown(m,false)); PN.held.clear(); PN.ptr.clear(); PN.sus=false; PN.ped=false; }
 // MIDI (called from the onmidimessage of enableMidi while page==="piano")
 function pnMidi(st,note,vel){ const ty=st&0xf0;
-  if(ty===0x90 && vel>0){ pnOn(note,Math.pow(vel/127,.8),"midi"); followMidi(note); return; }
+  if(ty===0x90 && vel>0){ followMidi(note); pnOn(note,Math.pow(vel/127,.8),"midi"); return; } // MIDI 3 : l'écran suit d'abord, la touche allumée est la bonne
   if(ty===0x80 || ty===0x90){ pnOff(note); return; }
   if(ty===0xB0 && note===64) pnSusSet(vel>=64,true);
   if(ty===0xB0 && (note===120||note===123)) pnAllOff(); }
@@ -13467,6 +13477,39 @@ function sc1Bar(){ const on=page==="practice" && sc1On(), tr=sc1Tr(); document.b
 { const o=render; render=function(){ sc1TrGuide(); const r=o.apply(this,arguments); try{ sc1Bar(); }catch(e){ console.warn(e); } return r; }; }
 { const o=openPage; openPage=function(){ const r=o.apply(this,arguments); if(page!=="practice"){ if(SC1.demo){ SC1.demo=false; clearPlayTimers(); } sc1TrGuide(); try{ sc1Bar(); }catch(e){} } return r; }; }
 /* ==== fin Gammes une à une : entraînement ==== */
+
+/* ==== MIDI 3 (chantier fix-midi3, 26/10/2026) ==== */
+// Les notes vraiment jouées sur le clavier MIDI en cours (cette session) : MS.name, MS.lo / MS.hi, et l'heure de la dernière note de chaque port.
+const MS={name:"", lo:null, hi:null, last:new Map()};
+function midiSeen(note, inp){ const nm=String(inp&&inp.name||""); MS.last.set(nm, performance.now());
+  if(nm!==MS.name){ MS.name=nm; MS.lo=MS.hi=null; }
+  MS.lo = MS.lo==null ? note : Math.min(MS.lo,note); MS.hi = MS.hi==null ? note : Math.max(MS.hi,note); }
+// a note outside the screen keyboard: when the notes played on this keyboard span more keys than the screen shows (a 25-key keyboard
+// on a 24-key screen: its top C), the screen grows to those keys instead of jumping an octave (up to 37 keys; bigger ones say their size)
+function midiWiden(n){ if(MS.lo==null || n<MS.lo || n>MS.hi || (S.settings.kbdSize||"auto")==="auto") return false;
+  let lo=MS.lo, hi=MS.hi; if(hi-lo<=HIGH-LOW || hi-lo>36) return false;
+  const white=m=>[0,2,4,5,7,9,11].includes(((m%12)+12)%12); while(!white(lo)) lo--; while(!white(hi)) hi++;
+  if(lo<21 || hi>108) return false;
+  Object.assign(S.settings,{kbdSize:"custom",kbdLow:lo,kbdHigh:hi}); save(); buildKeyboard(); renderSettings();
+  if(cur && typeof markPlayed==="function") markPlayed(); return true; }
+// the chosen keyboard (S.settings.midiInput) mutes the other ports only while it is played: another keyboard played when the chosen one has
+// been silent for 3 s takes over (it becomes the chosen one). Before, a LUMI picked in the assistant silently muted a 25-key keyboard plugged next.
+function midiTakeOver(st, vel, inp){ if((st&0xf0)!==0x90 || !vel || !inp || !inp.name || midiVirtual(inp.name)) return false;
+  const t0=MS.last.get(S.settings.midiInput); if(t0!=null && performance.now()-t0<3000) return false;
+  S.settings.midiInput=inp.name; save();
+  try{ $("midiTxt").textContent=t("midiDev")+inp.name; guessKbdSize(inp.name); mdPorts(midiNames.slice()); mdPill(); if(midiOpen) renderMidiModal(); }catch(e){}
+  return true; }
+// the keys of the MIDI keyboard, for the Play player: {lo, hi, sure} (sure = measured in the assistant; otherwise a size, placed by the notes played)
+function midiSpan(inp){ const h=(S.midi&&S.midi.hw)||{}, nm=inp&&inp.name, sz=S.settings.kbdSize||"auto"; let r=null;
+  if(h.lo>=21 && h.hi>h.lo && (!h.name || h.name===nm)) r={lo:+h.lo, hi:+h.hi, sure:!!h.measured};
+  else if(KB_PRESETS[sz]) r={lo:KB_PRESETS[sz][0], hi:KB_PRESETS[sz][1], sure:false};
+  else if(sz==="custom" && +S.settings.kbdHigh>+S.settings.kbdLow) r={lo:+S.settings.kbdLow, hi:+S.settings.kbdHigh, sure:false};
+  if(r && MS.name===nm && MS.lo!=null){ r.slo=MS.lo; r.shi=MS.hi; } // the notes already played on it (LEARN, the games…): the player places it at once
+  return r; }
+// the app: a Bluetooth keyboard that comes back (same source, back online) is reported by the plugin only when it re-reads its sources;
+// it did so every 2 s only while the MIDI window or the assistant was open. Now every 5 s while the app is in front (cheap, no prompt).
+if(document.documentElement.classList.contains("native")) setInterval(()=>{ try{ if(document.hidden || !midiAcc || !window.__nativeMidi) return; window.__nativeMidi.listInputs().catch(()=>{}); }catch(e){} },5000);
+/* ==== fin MIDI 3 ==== */
 
 // ---------- Boot ----------
 
