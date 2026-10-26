@@ -165,5 +165,6 @@ async function run(files, opts) {
   const readme = page.children.find(c => c.name === 'Lisez-moi');
   const order = pcStackSections(page, readme ? readme.y + readme.height + 140 : 560);
   if (readme && opts.readme) { const t = readme.findAll(n => n.type === 'TEXT')[1]; if (t && t.fontName !== figma.mixed) { await figma.loadFontAsync(t.fontName); t.characters = opts.readme; } }
+  const tmp = page.children.find(c => c.name === '_transport (temporaire)'); if (tmp) tmp.remove(); // cadre d'essai laissé par la session MCP
   post({ type: 'done', index, order });
 }
