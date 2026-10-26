@@ -10045,7 +10045,7 @@ addEventListener("resize",()=>{ if(page==="acc" && ACC.view==="play" && ACC.run)
 // (fetch keepalive vers la fonction SQL track_events), sans le SDK Supabase. Hors ligne, la file attend. Une table ou une
 // fonction absente (migration pas encore lancée) coupe l'envoi sans erreur. En développement (localhost), rien ne part sur
 // le réseau, sauf si localStorage « pc-trk-test » = "1" (tests). Interrupteur : S.settings.analytics (absent = activé).
-const APP_BUILD="2026-10-26T17:50Z"; // remplacé par tools/build.py par la date de construction (version.txt)
+const APP_BUILD="2026-10-26T18:26Z"; // remplacé par tools/build.py par la date de construction (version.txt)
 const TRK={q:[], t:0, off:false, anon:null, sent:0, errs:[], errT:0, errSeen:new Set(), errOn:null, ports:new Set(), first:false};
 const RC={flags:{}, daily:{}, at:0};
 const TRK_NAMES=new Set(["song_import","app_open","first_note","input_mode","midi_connected","pp_lesson_done","learn_end","game_end","quiz_end","duel_end","goal_reached","badge","signup","login","play","feedback","acc_end","song_open","route_step","route_stage"]);
@@ -12835,9 +12835,9 @@ function sc1Render(){ const P=$("sc1Panel"); if(!P) return; const mode=sc1Mode()
       h+='<button type="button" class="sc1-c s'+n+(lk?' pw-lk':'')+'" style="'+pos(r,j+1)+'" data-tid="'+tid+'" data-k="'+escA(k)+'" aria-label="'+escA(t("sc1Cell")(nm,n))+'" title="'+escA(nm)+'">'+star(n)
         +(names[1]?'<small class="sc1-tn">'+esc(tn)+'</small>':'')+(lk?pwChip():'')+'</button>'; }); });
   const midi=midiMode() && S.settings.midiC!==false, nx=sc1Todo(mode);
-  P.innerHTML='<div class="sc1-top"><h2 class="sc1-h"><span class="mb-ic">'+SEC_ICON("scales")+'</span><span>'+esc(t("sc1Name"))+'</span><span class="sc1-beta">'+esc(t("sc1Beta"))+'</span></h2>'
+  P.innerHTML='<div class="sc1-top"><h2 class="sc1-h"><span class="mb-ic">'+SEC_ICON("scales")+'</span><span>'+esc(t("sc1Name"))+'</span></h2>'
     +'<div class="seg sc1-seg" id="sc1Seg" role="group" aria-label="'+escA(t("sc1Notes")+" / "+t("sc1Chords"))+'">'+[["notes","sc1Notes"],["chords","sc1Chords"]].map(([v,l])=>'<button type="button" data-v="'+v+'" aria-pressed="'+(mode===v)+'">'+esc(t(l))+'</button>').join("")+'</div>'
-    +'<p class="sc1-sum" id="sc1Sum"><span class="sc1-big" aria-label="'+escA(t("sc1SumA")(tot,SC1_MAX))+'"><i aria-hidden="true">★</i><b class="mono">'+tot+'</b><span aria-hidden="true"> / '+SC1_MAX+'</span></span><span class="sc1-big sc1-cups" aria-label="'+escA(t("sc1Cups")(sc1Cups(mode),12))+'">'+SC1_TROPHY+'<b class="mono">'+sc1Cups(mode)+'</b><span aria-hidden="true"> / 12</span></span>'+(midi?'<small>'+esc(t("sc1OrC")(CNAME())+" · "+itemName(sc1Item(nx.tid,nx.k,mode)))+'</small>':'')+'</p></div>'
+    +'<p class="sc1-sum" id="sc1Sum"><span class="sc1-big" aria-label="'+escA(t("sc1SumA")(tot,SC1_MAX))+'"><i aria-hidden="true">★</i><b class="mono">'+tot+'</b><span aria-hidden="true"> / '+SC1_MAX+'</span></span><span class="sc1-big sc1-cups" aria-label="'+escA(t("sc1Cups")(sc1Cups(mode),12))+'">'+SC1_TROPHY+'<b class="mono">'+sc1Cups(mode)+'</b><span aria-hidden="true"> / 12</span></span>'+'</p></div>'
     +'<div class="sc1-grid'+(tr?' tr':'')+'" id="sc1Grid">'+h+'</div>';
   P.querySelectorAll("#sc1Seg [data-v]").forEach(b=>b.onclick=()=>{ if(S.settings.sc1Mode===b.dataset.v) return; S.settings.sc1Mode=b.dataset.v; save(); sc1Render(); const f=$("sc1Seg").querySelector('[data-v="'+b.dataset.v+'"]'); if(f) f.focus({preventScroll:true}); });
   P.querySelectorAll(".sc1-c").forEach(b=>b.onclick=()=>sc1Play(b.dataset.tid,b.dataset.k)); }
@@ -12872,7 +12872,7 @@ function sc1End(g){ if(page!=="sc1") openPage("sc1"); const pc=keyPc(g.sc1.k), c
 // LEARN: the tile, shown next to « Gammes » (CSS order: it comes last in the page, so the other tiles keep their place for the tests)
 function sc1Tile(){ const b=$("learnTiles"); if(!b) return; const old=b.querySelector(".sc1-tile"); if(old) old.remove();
   const c=tile({color:SC1_COL,obj:"sc1",kick:"Learn",title:t("sc1Name"),desc:t("sc1Desc"),btn:t("rnPlay"),rec:"★ "+fmtN(sc1Total("notes")+sc1Total("chords"))+" / "+fmtN(2*SC1_MAX),onOpen:()=>openPage("sc1")});
-  c.classList.add("sc1-tile"); c.dataset.id="sc1"; c.insertAdjacentHTML("afterbegin",'<span class="sc1-new">'+esc(t("sc1Beta"))+'</span>'); b.appendChild(c); }
+  c.classList.add("sc1-tile"); c.dataset.id="sc1"; b.appendChild(c); }
 TILE_COL.sc1=SC1_COL;
 OBJ.sc1=()=>{ const o=O3(); [0,1,2].forEach(i=>o.block(10+i*30,80-i*20,28,32+i*20,NC[i+3],8)); return o.raw('<path d="M90 6l6.6 13.4 14.8 2.2-10.7 10.4 2.5 14.7L90 39.8 76.8 46.7l2.5-14.7L68.6 21.6l14.8-2.2z" fill="#ffc94a" stroke="#c98a00" stroke-width="2.4" stroke-linejoin="round"/>').svg(); };
 { const P=document.createElement("section"); P.className="mode-page sc1-page"; P.id="sc1Panel"; P.setAttribute("aria-label",t("sc1Name")); const lp=$("learnPanel"); lp.parentNode.insertBefore(P,lp.nextSibling); }
