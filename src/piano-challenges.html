@@ -4448,9 +4448,10 @@ body[data-page="piano"] .wk.k-down span{color:#15122e}
   const call=(m,o)=>cap.nativePromise("Midi",m,o||{});
   const on=(ev,fn)=>cap.nativeCallback("Midi","addListener",{eventName:ev},(d,err)=>{ if(!err && d) fn(d); });
   window.__nativeMidi={ start:()=>call("start"), listInputs:()=>call("listInputs"), showBluetooth:()=>call("showBluetooth") };
-  let access=null;
-  navigator.requestMIDIAccess=async()=>{
-    if(access) return access;
+  let access=null, asking=null;
+  // asked twice before the first answer (two paths at start-up): one access only, otherwise two "midi" listeners send every note twice
+  navigator.requestMIDIAccess=()=>access ? Promise.resolve(access) : asking || (asking=open().finally(()=>{ asking=null; }));
+  const open=async()=>{
     const acc={inputs:new Map(), onstatechange:null};
     const sync=list=>{ const old=acc.inputs, m=new Map(); (list||[]).forEach(d=>{ const k=String(d.id); m.set(k, old.get(k)||{id:k,name:d.name,onmidimessage:null}); }); acc.inputs=m; };
     on("midi", ev=>{ const inp=acc.inputs.get(String(ev.id)); if(inp && inp.onmidimessage) inp.onmidimessage({data:new Uint8Array(ev.data||[])}); });
@@ -5566,7 +5567,7 @@ function audio(){
   if(!ctx){ const AC=window.AudioContext||window.webkitAudioContext; if(!AC) return null;
     ctx=new AC(); const lp=ctx.createBiquadFilter(); lp.type="lowpass"; lp.frequency.value=3200;
     master=ctx.createGain(); master.gain.value=.55; master.connect(lp); lp.connect(ctx.destination); }
-  if(ctx.state==="suspended") ctx.resume();
+  if(ctx.state==="suspended" || ctx.state==="interrupted") try{ ctx.resume(); }catch(e){} // "interrupted": iOS (a call, another app, a Bluetooth route change)
   return ctx;
 }
 function tone(midi, when=0, dur=.6, vol=.28){
@@ -5680,7 +5681,7 @@ function guideKeys(){
   Object.values(keyEls).forEach(el=>el.classList.remove("k-guide"));
   if(!guideKeysOn() || phase!=="listening" || !cur || cur.sec==="ear" || page==="games" || page==="free" || !seq.length) return;
   let ms;
-  if(chSeq()) ms=seq[pStep].voicing.map(fold);
+  if(chSeq()){ if(!seq[pStep]) return; ms=seq[pStep].voicing.map(fold); } // the last chord just found: nothing next
   else if(chordLike(cur.sec)){ const rm=revealMidis(); ms=rm.filter((m,i)=>!found[i]); }
   else ms=[revealMidis()[idx]];
   ms.forEach(m=>keyEls[m]?.classList.add("k-guide"));
@@ -8628,6 +8629,26 @@ $("mInput").addEventListener("change",e=>{ S.settings.midiInput=e.target.value; 
 $("optMidiC").addEventListener("change",e=>{ S.settings.midiC=e.target.checked; save(); render(); });
 $("midiBtn").addEventListener("click", ()=>{ if(midiAcc) openMidi(); else enableMidi(); });
 let midiDenied=false; // the browser refused requestMIDIAccess
+// One MIDI event can carry several messages: a Bluetooth packet, the pressure / CC74 / pitch-bend burst an MPE keyboard (ROLI LUMI, Seaboard)
+// sends with each note, running status (the status byte left out). Every channel message is handed over as [status, data1, data2];
+// SysEx (F0…F7), system common (F1–F6) and real-time bytes (F8–FF, clock, active sensing) are skipped. The usual case (one message) is not copied.
+const midiLen = s => { const k=s&0xf0; return k===0xC0||k===0xD0 ? 2 : 3; };
+function midiEach(data, inp, fn){ const n=data ? data.length : 0; if(!n) return; const s0=data[0];
+  if(s0>=0x80 && s0<0xF0 && n===midiLen(s0) && !inp.__pm){ inp.__rs=s0; fn(data); return; }
+  let rs=inp.__rs||0, m=inp.__pm||null, need=m?midiLen(m[0]):0, sx=false; // __pm: a message cut between two packets
+  for(let i=0;i<n;i++){ const b=data[i];
+    if(b>=0xF8) continue;
+    if(b===0xF0){ sx=true; m=null; continue; } if(b===0xF7){ sx=false; continue; } if(sx) continue;
+    if(b&0x80){ m=null; if(b>0xF0){ rs=0; continue; } rs=b; m=[b]; need=midiLen(b); continue; }
+    if(!m){ if(!rs) continue; m=[rs]; need=midiLen(rs); }
+    m.push(b); if(m.length===need){ fn(need===2 ? [m[0],m[1],0] : m); m=null; } }
+  inp.__rs=rs; inp.__pm=m; }
+// the same keyboard seen on two ports (a LUMI charging on USB-C and paired in Bluetooth, a keyboard listed twice): each note came twice,
+// so a lone C was never alone (« Do » to start, Gammes une à une) and every note sounded twice. A note-on for the same note within 40 ms
+// on ANOTHER port is dropped (the quiz, where each keyboard is a player, is served before this).
+const MIDI_DUP=new Map();
+function midiDup(note, inp){ const now=performance.now(), k=String(inp.id||inp.name), o=MIDI_DUP.get(note);
+  if(o && o.k!==k && now-o.t<40) return true; MIDI_DUP.set(note,{t:now,k}); return false; }
 async function enableMidi(quiet){
   if(!quiet) audio(); // quiet: watching for a keyboard in the background (M13), no sound needed yet
   if(!navigator.requestMIDIAccess){ $("midiBtn").classList.add("err"); $("midiTxt").textContent=t("midiNo"); notice(t("midiUnsupported")); return; }
@@ -8636,13 +8657,14 @@ async function enableMidi(quiet){
     const bind=()=>{ if(midiVirtual(S.settings.midiInput)){ S.settings.midiInput=""; save(); } // a virtual port saved as « the » keyboard would mute the real ones
       document.querySelectorAll("#kbd .k-down").forEach(e=>e.classList.remove("k-down")); const names=[]; acc.inputs.forEach(inp=>{
         if((inp.state && inp.state!=="connected") || midiVirtual(inp.name)){ inp.onmidimessage=null; return; } // Chrome keeps unplugged ports in the map; virtual ports are not keyboards
-        names.push(inp.name); inp.onmidimessage=ev=>{
-        const [st,note,vel]=ev.data;
+        names.push(inp.name); inp.onmidimessage=ev=>midiEach(ev.data, inp, d=>{
+        const [st,note,vel]=d;
         if(LV.on){ if((st&0xf0)===0x90 && vel>0) lvNote(note); return; } // the leave window: C = keep playing, B = leave
         if(MW.on && mwMsg(st,note,vel,inp)) return; // the « Connect my keyboard » assistant (MIDI lots 2-3) gets every message while it is open
         if(midiOpen && !calib && (st&0xf0)===0x90 && vel>0){ pressKey(note); mtNote(note,vel,inp.name); return; } // the MIDI window: the « play a note » test (M8)
         if(page==="quiz"){ if((st&0xf0)===0x90 && vel>0){ if(S.settings.midiSound) tone(note,0,.9,.1+.26*vel/127); if(!anyModal()) quizIn(String(inp.id||inp.name),note); } return; } // every keyboard counts: one per player
-        if(S.settings.midiInput && inp.name!==S.settings.midiInput) return;
+        if(S.settings.midiInput && inp.name!==S.settings.midiInput && midiNames.includes(S.settings.midiInput)) return; // the chosen keyboard only, while it is here (a name saved earlier, USB vs Bluetooth, no longer mutes the keyboard in use)
+        if((st&0xf0)===0x90 && vel>0 && midiDup(note,inp)) return; // the same keyboard on a second port
         if(page==="piano"){ pnMidi(st,note,vel); return; } // the PIANO mode: an instrument (its own sound, the sustain pedal)
         if(page==="play"){ if((st&0xf0)===0x90 && vel>0) playSend("noteon",note,vel/127); else if((st&0xf0)===0x80 || ((st&0xf0)===0x90 && vel===0)) playSend("noteoff",note); return; }
         if((st&0xf0)===0x80 || ((st&0xf0)===0x90 && vel===0)){ keyDown(note,false); return; }
@@ -8651,7 +8673,7 @@ async function enableMidi(quiet){
           if(S.settings.midiSound) tone(note,0,.9,.1+.26*vel/127);
           if(calib){ calibNote(note); return; }
           followMidi(note);
-          midiIn(note,true); } }; });
+          midiIn(note,true); } }); });
       $("midiBtn").classList.toggle("on",names.length>0); $("midiBtn").classList.remove("err");
       const shown = S.settings.midiInput && names.includes(S.settings.midiInput) ? S.settings.midiInput : names[0];
       $("midiTxt").textContent=names.length ? t("midiDev")+shown : t("midiNone");
