@@ -54,3 +54,10 @@ out=head+body+"\n</body>\n</html>\n"
 (ROOT/"index.html").write_text(out,encoding="utf-8")
 (ROOT/"version.txt").write_text(STAMP+"\n")
 print("index.html", len(out))
+# Mise à jour à distance de l'app iOS : live/manifest.json (+ live/files/) = la version que l'app installée télécharge seule.
+# À publier avec index.html et version.txt (même commit). Sans Node, l'app garde simplement la version précédente.
+import subprocess, shutil
+if shutil.which("node"):
+    subprocess.run(["node", str(ROOT/"tools/live_manifest.mjs")], check=True)
+else:
+    print("ATTENTION : node introuvable, live/manifest.json n'est pas à jour (l'app iOS ne verra pas cette version)")

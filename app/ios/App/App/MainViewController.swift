@@ -1,12 +1,24 @@
 import UIKit
 import Capacitor
 
-/// Hosts the web app and registers the local MIDI plugin.
+/// Hosts the web app and registers the local plugins (MIDI, sign-in, remote web updates).
 class MainViewController: CAPBridgeViewController {
+    /// Serves the web version downloaded by LiveUpdatePlugin (Library/NoCloud/live/<version>) instead of the
+    /// embedded public/ folder when one is ready. Same capacitor://localhost origin: the player's data stays.
+    override func instanceDescriptor() -> InstanceDescriptor {
+        let descriptor = super.instanceDescriptor()
+        if let dir = LiveUpdateStore.bootLocation() {
+            descriptor.appLocation = dir
+            CAPLog.print("⚡️  Piano Challenges: web version \(LiveUpdateStore.running ?? "?") from \(dir.lastPathComponent)")
+        }
+        return descriptor
+    }
+
     override func capacitorDidLoad() {
         bridge?.registerPluginInstance(MidiPlugin())
         bridge?.registerPluginInstance(AuthPlugin())
-        CAPLog.print("⚡️  Piano Challenges: Midi and Auth plugins registered")
+        bridge?.registerPluginInstance(LiveUpdatePlugin())
+        CAPLog.print("⚡️  Piano Challenges: Midi, Auth and LiveUpdate plugins registered")
     }
 
     override func viewDidLoad() {
