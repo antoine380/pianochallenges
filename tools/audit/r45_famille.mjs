@@ -101,9 +101,11 @@ await p.ctx.close();
 p = await open({ fake: { srv: srvAfter }, query: '?fam=' + code.toLowerCase() });
 check('lien ?fam= retiré de l’adresse et gardé en attente', !/fam=/.test(await p.evaluate(() => location.search)) && await p.X('famPending()===' + JSON.stringify(code)));
 check('invité : fenêtre « On t’invite dans une famille » avec Créer un compte / Se connecter', await vis(p, 'famJoin') && /On t'invite dans une famille/.test(await ev(p, () => document.getElementById('famJoin').textContent)) && await vis(p, 'fjUp') && await vis(p, 'fjIn'));
+check('paiement coupé : pas de « Premium pour toi aussi » dans #famJoin', !/Premium/.test(await ev(p, () => document.getElementById('famJoin').textContent)));
+check('#famJoin ouverte : le menu et la page restent inertes même si pwInert() passe', await p.X('pwInert(), $("side").inert && $("shell").inert && anyWin()'));
 await p.screenshot({ path: `${CAP}/rejoindre_invite_375.png` }).catch(() => {});
 await ev(p, () => document.getElementById('fjUp').click()); await p.waitForTimeout(500);
-check('« Créer un compte » : écran de compte avec la mention de la famille', await ev(p, () => !document.getElementById('gate').hidden && !!document.querySelector('#gate .gt-fam')));
+check('« Créer un compte » : écran de compte, sans la mention .gt-fam tant que le paiement est coupé', await ev(p, () => !document.getElementById('gate').hidden && !document.querySelector('#gate .gt-fam')));
 // la connexion réussit (faux SDK) : setUser → la fenêtre « Rejoindre la famille de Maman »
 await p.X('(async()=>{ await ensureCloud(); window.__fakeLogin(' + JSON.stringify(U('u5')) + '); })()'); await p.waitForTimeout(2600);
 const ask = await ev(p, () => ({ v: !document.getElementById('famJoin')?.hidden, t: document.getElementById('famJoin')?.textContent || '' }));
@@ -160,7 +162,7 @@ await p.ctx.close();
 
 // 5) premier lancement avec un lien de famille : l'écran de compte (pas « Joue ta première note »), avec la mention
 p = await open({ st: null, query: '?fam=ABCDEFGH' });
-check('premier lancement + ?fam= : écran de compte « Crée ton compte » avec la mention de la famille', await ev(p, () => !document.getElementById('gate').hidden && !document.querySelector('.fn-card') && !!document.querySelector('#gate .gt-fam')));
+check('premier lancement + ?fam= : écran de compte « Crée ton compte » (sans .gt-fam, paiement coupé)', await ev(p, () => !document.getElementById('gate').hidden && !document.querySelector('.fn-card') && !document.querySelector('#gate .gt-fam')));
 await p.screenshot({ path: `${CAP}/premier_lancement_fam_768x1024.png` });
 await p.ctx.close();
 
@@ -192,6 +194,23 @@ p = await open({ fake: { rc: [{ key: 'flags', value: { payLive: true } }, { key:
 await ev(p, () => document.getElementById('premBtn').click()); await p.waitForTimeout(400);
 await ev(p, () => document.querySelector('.pw-col[data-p=month] .pw-pick').click()); await p.waitForTimeout(600);
 check('invité + paiement branché : écran de compte d’abord, aucun appel à Stripe', await ev(p, () => !document.getElementById('gate').hidden) && !p.ctx.net.some(u => /functions\/v1\/stripe/.test(u)));
+await p.ctx.close();
+
+// 9) paiement branché + ?fam= au premier lancement : la mention .gt-fam revient
+p = await open({ st: null, query: '?fam=ABCDEFGH', fake: { rc: [{ key: 'flags', value: { payLive: true } }] } });
+check('paiement branché + ?fam= : mention .gt-fam sur l’écran de compte', await ev(p, () => !document.getElementById('gate').hidden && !!document.querySelector('#gate .gt-fam')));
+await p.ctx.close();
+// 10) une seule fenêtre à la fois : #famJoin attend que le bilan de la semaine soit fermé, et le bilan n'ouvre pas par-dessus #famJoin
+p = await open({ fake: { user: U('u5'), srv: famSrv() } });
+await p.X('localStorage.setItem(FAMJ_KEY, JSON.stringify({c:"ABCDEFGH", at:Date.now()})); wkOpen(); famBoot();'); await p.waitForTimeout(400);
+check('bilan de la semaine ouvert : #famJoin ne s’ouvre pas par-dessus', await vis(p, 'wkModal') && !(await vis(p, 'famJoin')));
+await ev(p, () => document.getElementById('wkGo').click()); await p.waitForTimeout(2600);
+check('bilan fermé : #famJoin s’ouvre ensuite', await vis(p, 'famJoin') && !(await vis(p, 'wkModal')));
+await p.X('S.wkRev={}; wkCheck()'); await p.waitForTimeout(300);
+check('#famJoin ouverte : le bilan de la semaine attend (anyModal)', !(await vis(p, 'wkModal')) && await p.X('anyModal()'));
+await ev(p, () => document.getElementById('fjLater')?.click() || document.getElementById('fjOk')?.click()); await p.waitForTimeout(300);
+check('#famJoin fermée : menu de nouveau actif', await p.X('!$("side").inert && !$("shell").inert && !document.body.classList.contains("fj-on")'));
+check('aucune erreur (une fenêtre à la fois)', !p.errs.length, p.errs);
 await p.ctx.close();
 
 await b.close();

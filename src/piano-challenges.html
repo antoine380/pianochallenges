@@ -9014,7 +9014,7 @@ function duCount(){ if(isPremium()) return; const d=dayStr(); if(!S.duDay||S.duD
 function pwChip(){ return '<span class="pw-chip">'+pwI("lock")+'<span>'+esc(t("lockT"))+'</span></span>'; }
 function pwLayer(id,cls){ let o=$(id); if(!o){ o=document.createElement("div"); o.id=id; o.className=cls; o.setAttribute("role","dialog"); o.setAttribute("aria-modal","true"); o.hidden=true; document.body.appendChild(o);
     o.addEventListener("click",e=>{ if(e.target===o) (id==="pw"?pwClose:invClose)(); }); } return o; }
-function pwInert(){ const on=document.body.classList.contains("pw-on")||document.body.classList.contains("gate-on"); [$("side"),$("shell")].forEach(e=>{ if(e) e.inert=on; }); }
+function pwInert(){ const on=document.body.classList.contains("pw-on")||document.body.classList.contains("gate-on")||document.body.classList.contains("fj-on"); [$("side"),$("shell")].forEach(e=>{ if(e) e.inert=on; }); }
 function pwOpen(why){ PW.why=why||"menu"; PW.plan="year"; PW.done=false; const o=pwLayer("pw","pw"); o.hidden=false; document.body.classList.add("pw-on"); pwInert(); closeDrawer&&closeDrawer(); pwRender(); if(!window.PC_SONGS && typeof pcLoad==="function") pcLoad().then(()=>{ const o=$("pw"); if(o&&!o.hidden&&!PW.done) pwRender(); }).catch(()=>{}); setTimeout(()=>$("pwGo")&&$("pwGo").focus(),30); }
 function pwClose(){ const o=$("pw"); if(!o||o.hidden) return; o.hidden=true; document.body.classList.remove("pw-on"); pwInert(); premRefresh(); if(PW.after){ const f=PW.after; PW.after=null; f(); } }
 function pwRender(){ const o=$("pw"); if(!o) return; const app=isApp(), O=PREM_OFFER;
@@ -12569,7 +12569,7 @@ Object.assign(TXT.fr,{pwUpTo:n=>"jusqu'à "+n+" personnes", pwGrpSolo:"Solo · 1
   famOff:x=>"L'abonnement Famille de "+x+" n'est plus actif : le Premium partagé est en pause.",
   famJT:x=>"Rejoindre la famille de "+x, famJGuestT:"On t'invite dans une famille", famJGuest:"Crée ton compte ou connecte-toi pour la rejoindre : Premium pour toi aussi, avec ta propre progression.",
   famJD:x=>"Tu gardes ton compte et ta progression. Ton Premium dure tant que l'abonnement de "+x+" est actif.", famJSeats:(u,n)=>u+" / "+n+" personnes", famJGo:"Rejoindre", famJLater:"Plus tard",
-  famJOk:x=>"Bienvenue dans la famille de "+x+" !", famJOkD:"Tout est débloqué pour toi aussi.", famJClose:"Fermer", famGate:"Tu rejoins une famille : crée ton compte ou connecte-toi pour en profiter.",
+  famJOk:x=>"Bienvenue dans la famille de "+x+" !", famJOkD:"Tout est débloqué pour toi aussi.", famJClose:"Fermer", famGate:"Tu rejoins une famille : crée ton compte ou connecte-toi pour en profiter.", famJGuestNP:"Crée ton compte ou connecte-toi pour la rejoindre, avec ta propre progression.", famJDNP:"Tu gardes ton compte et ta progression.",
   famE:{not_signed_in:"Connecte-toi d'abord.", no_family:"Il faut un abonnement Famille pour inviter.", not_owner:"Seul le titulaire de l'abonnement peut faire ça.", family_full:"Cette famille est complète.",
     family_inactive:"L'abonnement de cette famille n'est plus actif.", invite_invalid:"Ce lien d'invitation n'existe pas.", invite_expired:"Ce lien a expiré : demande un nouveau lien.", invite_used:"Ce lien a déjà servi : demande un nouveau lien.",
     is_owner:"C'est ta propre famille.", already_member:"Tu fais déjà partie d'une famille.", not_member:"Cette personne ne fait plus partie de la famille.", too_many_invites:"Trop de liens aujourd'hui : réessaie demain.", other:"Ça n'a pas marché. Réessaie dans un instant."}});
@@ -12585,7 +12585,7 @@ Object.assign(TXT.en,{pwUpTo:n=>"up to "+n+" people", pwGrpSolo:"Solo · 1 perso
   famOff:x=>x+"'s Family subscription isn't active: shared Premium is paused.",
   famJT:x=>"Join "+x+"'s family", famJGuestT:"You're invited to a family", famJGuest:"Create your account or sign in to join: Premium for you too, with your own progress.",
   famJD:x=>"You keep your own account and progress. Your Premium lasts as long as "+x+"'s subscription is active.", famJSeats:(u,n)=>u+" / "+n+" people", famJGo:"Join", famJLater:"Not now",
-  famJOk:x=>"Welcome to "+x+"'s family!", famJOkD:"Everything is unlocked for you too.", famJClose:"Close", famGate:"You're joining a family: create your account or sign in to enjoy it.",
+  famJOk:x=>"Welcome to "+x+"'s family!", famJOkD:"Everything is unlocked for you too.", famJClose:"Close", famGate:"You're joining a family: create your account or sign in to enjoy it.", famJGuestNP:"Create your account or sign in to join, with your own progress.", famJDNP:"You keep your own account and progress.",
   famE:{not_signed_in:"Sign in first.", no_family:"You need a Family subscription to invite.", not_owner:"Only the subscription owner can do that.", family_full:"This family is full.",
     family_inactive:"This family's subscription isn't active anymore.", invite_invalid:"This invitation link doesn't exist.", invite_expired:"This link has expired: ask for a new one.", invite_used:"This link has already been used: ask for a new one.",
     is_owner:"This is your own family.", already_member:"You're already part of a family.", not_member:"This person is no longer in the family.", too_many_invites:"Too many links today: try again tomorrow.", other:"That didn't work. Try again in a moment."}});
@@ -12703,10 +12703,10 @@ function famJoinRender(){ const o=$("famJoin"); if(!o || o.hidden) return; const
   const h=o.querySelector("h2"), p=o.querySelector(".fj-p"), A=o.querySelector(".fj-acts"), fam=o.querySelector(".fj-fam");
   fam.innerHTML=famDots(PREM_OFFER.familySeats);
   const btn=(id,txt,cls,fn)=>{ const b=document.createElement("button"); b.type="button"; b.id=id; b.className=cls; b.textContent=txt; b.onclick=fn; A.appendChild(b); return b; };
-  if(FAMJ.st==="guest"){ h.textContent=t("famJGuestT"); p.textContent=t("famJGuest");
+  if(FAMJ.st==="guest"){ h.textContent=t("famJGuestT"); p.textContent=t(payLive()?"famJGuest":"famJGuestNP"); // paiement coupé : aucune promesse de Premium
     btn("fjUp",t("authUp"),"gt-go",()=>{ famJoinClose(); authOpen("signup"); }); btn("fjIn",t("authIn"),"btn",()=>{ famJoinClose(); authOpen("login"); }); btn("fjLater",t("famJLater"),"gt-link",()=>famJoinClose(true)); }
   else if(FAMJ.st==="load"){ h.textContent="…"; p.textContent=t("rankLoading"); }
-  else if(FAMJ.st==="ask"){ h.textContent=t("famJT")(who); p.textContent=t("famJD")(who);
+  else if(FAMJ.st==="ask"){ h.textContent=t("famJT")(who); p.textContent=payLive()?t("famJD")(who):t("famJDNP");
     const s=document.createElement("p"); s.className="fj-seats"; s.textContent=t("famJSeats")(I.used|0, I.seats|0||PREM_OFFER.familySeats); p.after(s);
     btn("fjGo",t("famJGo"),"gt-go",famJoinGo); btn("fjLater",t("famJLater"),"gt-link",()=>famJoinClose(true)); }
   else if(FAMJ.st==="ok"){ h.textContent=t("famJOk")(who); p.textContent=t("famJOkD"); btn("fjOk",t("pwOkGo"),"gt-go",()=>famJoinClose(true)); }
@@ -12719,16 +12719,18 @@ async function famJoinGo(){ const c=famPending(); if(!c) return; const b=$("fjGo
 document.addEventListener("keydown",e=>{ if(!document.body.classList.contains("fj-on")) return; if(e.key==="Escape"){ e.preventDefault(); famJoinClose(FAMJ.st!=="guest"&&FAMJ.st!=="ask"); } e.stopImmediatePropagation(); },true);
 // premier lancement avec un lien de famille : l'écran de compte d'abord (pas le « Joue ta première note »)
 { const o=fnOpen; fnOpen=function(){ if(famPending() && !hasSession()){ authOpen("signup"); return; } return o.apply(this, arguments); }; }
-{ const o=gateRender; gateRender=function(){ const r=o.apply(this, arguments); try{ const g=$("gate"); if(famPending() && g && !g.querySelector(".gt-fam")){ const at=g.querySelector("#gtEmailGo")||g.querySelector("#gtForm");
+{ const o=gateRender; gateRender=function(){ const r=o.apply(this, arguments); try{ const g=$("gate"); if(famPending() && payLive() && g && !g.querySelector(".gt-fam")){ const at=g.querySelector("#gtEmailGo")||g.querySelector("#gtForm");
     if(at){ const pp=document.createElement("p"); pp.className="gt-ref gt-fam"; pp.innerHTML=pwI("gift")+"<span></span>"; pp.lastChild.textContent=t("famGate"); at.before(pp); } } }catch(e){} return r; }; }
 // après connexion : la famille, les droits, et l'invitation en attente
 { const o=setUser; setUser=async function(u){ const was=user; const r=await o.apply(this, arguments);
   try{ if(!u){ FAM.st=null; FAM.at=0; famRender(); } else if(!was || was.id!==u.id){ FAM.at=0; if(page==="settings") famLoad(true); if(famPending()) setTimeout(famBoot, 600); } }catch(e){} return r; }; }
 function famBoot(){ if(!famPending() || FAMJ.shown && !user) return; const g=$("gate");
-  if(startUI() || (g && !g.hidden) || document.body.classList.contains("pw-on")){ setTimeout(famBoot, 1500); return; }
+  if(startUI() || (g && !g.hidden) || document.body.classList.contains("pw-on") || anyWin()){ setTimeout(famBoot, 1500); return; } // une seule fenêtre à la fois : on attend que l'autre se ferme
   if(!user && hasSession() && !cloudFail){ ensureCloud(); setTimeout(famBoot, 1500); return; } // la session se charge : on attend setUser
   famJoinOpen(); }
 setTimeout(famBoot, isApp()?2000:900);
+// #famJoin compte comme une fenêtre : les autres (bilan de la semaine, objectif…) attendent qu'elle se ferme, et les notes ne vont pas derrière
+{ const o=anyWin; anyWin=function(){ return o.apply(this,arguments) || document.body.classList.contains("fj-on"); }; }
 /* ==== fin Famille et paiement ==== */
 
 /* ==== Gammes une à une (chantier gammes1) ==== */
