@@ -302,7 +302,7 @@ const SONGS=PS.list.map(d=>{const s={id:d.id,data:d,title:d.t[LANG==='fr'?0:1],b
 function fingOf(d){if(d.f)return n=>d.f[n.name]||0;const mel=PS.parseSeq(d.mel).notes,W=[0,2,4,5,7,9,11],wi=m=>Math.floor(m/12)*7+W.indexOf(pc(m));
   if(mel.some(n=>isBlack(n.m)))return()=>0;const lo=Math.min(...mel.map(n=>wi(n.m))),hi=Math.max(...mel.map(n=>wi(n.m)));return hi-lo<=4?n=>wi(n.m)-lo+1:()=>0}
 function variant(s,lv){if(s.imp)return impVariant(s,lv);const a=s.arrs.find(x=>x.lv===lv)||s.arrs[0],fo=fingOf(s.data);
-  const notes=PS.build(s.data,a.lv).map(n=>({m:n.m,s:n.s,d:n.d,h:n.h,f:n.h===1?fo(n):0}));
+  const notes=PS.build(s.data,a.lv).map(n=>({m:n.m,s:n.s,d:n.d,h:n.h,f:n.h===1?fo(n):0}));j3Fing(notes); // JEUX 3: fingers for every note
   return {...s,id:a.key,level:a.lv,hands:a.hands,notes,end:Math.max(...notes.map(n=>n.s+n.d)),base:s}}
 SONGS.forEach(s=>{s.v0=variant(s,s.arrs[0].lv)});
 // Lesson mode (Premiers pas P08, D14): #song=lune&lesson=1&aid=0|1|2[&listen=1]. Only the first phrase (11 notes), wait mode, fingers shown;
@@ -704,8 +704,8 @@ function openGame(id){setRange(60,83);mode=id;const g=GAMES.find(x=>x.id===id);g
   $('go').onclick=()=>{audio();GAME[id].begin()}}
 let drawG=null;
 function ghud(){$('sScore').textContent=gs.score;if(gs.lives!=null)$('gLives').innerHTML='♥'.repeat(gs.lives)+`<span class="off">${'♥'.repeat(3-gs.lives)}</span>`;if(gs.time!=null)$('gTime').textContent=Math.ceil(gs.time)}
-function endGame(id,extra=''){gs.running=false;setTargets([]);const b=gbest[id]||0,rec=gs.score>b;if(rec){gbest[id]=gs.score;store.set('gbest',gbest);fanfare()}
-  overlay(`<h2>${rec?tr('newRecord'):tr('gameOver')}</h2><p class="mono">${tr('scoreRec')(gs.score,Math.max(b,gs.score))}</p>${extra}
+function endGame(id,extra=''){gs.running=false;setTargets([]);const b=gbest[id]||0,rec=gs.score>b,ann=rec&&b>=100;if(rec){gbest[id]=gs.score;store.set('gbest',gbest);if(ann)fanfare()} // JEUX 3: « Nouveau record » only when a real previous record (≥ 100) is beaten
+  overlay(`<h2>${ann?tr('newRecord'):tr('gameOver')}</h2><p class="mono">${tr('scoreRec')(gs.score,Math.max(b,gs.score))}</p>${extra}
     <div class="row"><button class="btn" id="again">${tr('replay')}</button><button class="btn light" data-h>${tr('library')}</button></div>`);
   $('again').onclick=()=>GAME[id].begin()}
 function tick(dt){if(gs.time!=null&&gs.running){gs.time-=dt;if(gs.time<=0){gs.time=0;return true}}return false}
@@ -889,7 +889,7 @@ if(VIEW.startsWith('game=')&&GAMES.some(g=>g.id===VIEW.slice(5)))openGame(VIEW.s
 /* ==== Import de morceaux ==== */
 // #song=imp:<id>&arr=<1|2>: a song imported by the player (PLAY › Mes morceaux), read from this device (IndexedDB "pc-import", or the host's memory)
 function impVariant(s,lv){const a=s.arrs.find(x=>x.lv===lv)||s.arrs[0];
-  const notes=s.conv.notes.filter(n=>a.hands>1||n.h===1).map(n=>({m:n.m,s:n.s,d:n.d,h:n.h,f:n.h===1?n.f||0:0}));
+  const notes=s.conv.notes.filter(n=>a.hands>1||n.h===1).map(n=>({m:n.m,s:n.s,d:n.d,h:n.h,f:n.h===1?n.f||0:0}));j3Fing(notes); // JEUX 3
   return {...s,id:a.key,level:a.lv,hands:a.hands,notes,end:Math.max(...notes.map(n=>n.s+n.d)),base:s}}
 function impBase(rec){const conv=PCImp.convert(rec.model,{...rec.opts}),k='imp:'+rec.id,hasL=conv.nL>0;
   return {id:k,imp:rec.id,title:String(rec.title||'').replace(/[<>&"]/g,''),by:tr('impBy'),bpm:conv.bpm,meter:conv.meter,pickup:conv.pickup||undefined,col:'#7a5bf5',conv,
@@ -906,6 +906,25 @@ else if(VIEW.startsWith('song=')){const id=VIEW.slice(5),ar=+((HASH.find(x=>x.st
     sc.onload=()=>{(window.PC_FREE||[]).forEach(d=>{if(SONGS.some(x=>x.id===d.id))return;const s={id:d.id,data:d,title:d.t[LANG==='fr'?0:1],bpm:d.bpm,meter:d.m,pickup:d.p,col:d.k,arrs:PS.arrs(d)};
       s.by=d.by==='trad'?(tr('byFrom')[d.from]||tr('trad')):d.by;s.v0=variant(s,s.arrs[0].lv);SONGS.push(s)});const f=SONGS.find(x=>x.id===id);if(f)openSong(f,ar||0)};
     document.head.appendChild(sc)}}
+/* ==== Jeux 3 (chantier JEUX 3) : doigtés sur tous les morceaux ==== */
+// Fingers for the notes the song does not finger itself: hand positions of five white keys (black key = half a step),
+// thumb (1) on the lowest note of a position in the right hand, little finger (5) in the left hand; a new position when
+// the next note is out of reach; a chord wider than the hand: 1 and 5 on its outer notes. Simple, not a teacher's fingering.
+function j3AutoFing(ns,lh){const W=[0,2,4,5,7,9,11],wi=m=>{const p=((m%12)+12)%12,o=Math.floor(m/12)*7,i=W.indexOf(p);return i>=0?o+i:o+W.indexOf(p-1)+.5};
+  const ev=[];ns.forEach(n=>{const e=ev[ev.length-1];if(e&&Math.abs(e.s-n.s)<1e-6)e.ns.push(n);else ev.push({s:n.s,ns:[n]})});
+  const out=new Map();let i=0;
+  while(i<ev.length){const w0=ev[i].ns.map(n=>wi(n.m));let lo=Math.min(...w0),hi=Math.max(...w0),j=i+1;
+    if(hi-lo>4){ev[i].ns.forEach(n=>{const r=Math.round(4*(wi(n.m)-lo)/(hi-lo));out.set(n,lh?5-r:1+r)});i++;continue}
+    while(j<ev.length){const w=ev[j].ns.map(n=>wi(n.m)),l2=Math.min(lo,...w),h2=Math.max(hi,...w);if(h2-l2>4)break;lo=l2;hi=h2;j++}
+    for(let k=i;k<j;k++)ev[k].ns.forEach(n=>{const d=Math.min(4,Math.round(wi(n.m)-lo));out.set(n,lh?5-d:d+1)});
+    i=j}
+  return out}
+function j3Fing(notes){[1,2].forEach(h=>{const ns=notes.filter(n=>n.h===h).sort((a,b)=>a.s-b.s||a.m-b.m);if(!ns.length||ns.every(n=>n.f))return;
+  const f=j3AutoFing(ns,h===2);ns.forEach(n=>{if(!n.f)n.f=f.get(n)||0})})}
+// the host's « Doigtés » option comes with the song (&fing=0|1); without it the fingers stay on, as before
+if(!LS&&HASH.includes('fing=0')){showFing=false;$('tFing').setAttribute('aria-pressed','false');lastTargets='x'}
+else if(HASH.includes('fing=1')){showFing=true;$('tFing').setAttribute('aria-pressed','true')}
+/* ==== fin Jeux 3 ==== */
 })();
 </script>
 
