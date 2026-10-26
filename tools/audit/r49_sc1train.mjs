@@ -96,8 +96,9 @@ await nat(p, [0x90, 60, 90], undefined, 500);
 check('un clavier choisi autrefois mais absent (« LUMI Keys BLOCK ») ne coupe plus le LUMI branché', (await G(p)).page === 'practice');
 await quit(p);
 await ev(p, () => window.__ports([{ id: '7', name: 'LUMI Keys BLOCK 3F1A' }, { id: '9', name: 'LUMI Keys BLOCK' }])); await W(p, 300);
+await nat(p, [0x90, 62, 90], '9', 100); await nat(p, [0x80, 62, 0], '9', 100); // MIDI 3 (r50) : le clavier choisi ne coupe les autres que pendant qu'il joue (3 s)
 await nat(p, [0x90, 62, 90], '7', 300);
-check('… mais quand le clavier choisi est là, les autres ports restent ignorés', await p.X('page') === 'sc1' && await p.X('window.__tc') === (await p.X('window.__tc')));
+check('… mais quand le clavier choisi est là et joue, les autres ports restent ignorés', await p.X('page') === 'sc1' && await p.X('window.__tc') === (await p.X('window.__tc')));
 const tcSel = await p.X('window.__tc'); await nat(p, [0x90, 64, 90], '7', 200);
 check('… (aucun son pour un port non choisi)', await p.X('window.__tc') === tcSel);
 await p.X('S.settings.midiInput=""; save()'); await ev(p, () => window.__ports([{ id: '7', name: 'LUMI Keys BLOCK 3F1A' }])); await W(p, 300);
