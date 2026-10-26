@@ -3,7 +3,8 @@
 // et renvoie les nodeId créés. JOB = { data, section, dx, y0, rowH, labeled: [ids déjà libellés], shots: ['id@1024x768', …] }
 const page = await figma.getNodeByIdAsync('0:1'); await figma.setCurrentPageAsync(page);
 const holder = await figma.getNodeByIdAsync(JOB.data), section = await figma.getNodeByIdAsync(JOB.section);
+if (JOB.reset) for (const c of [...section.children]) if (c.x >= JOB.dx - 100) c.remove(); // reprise : on retire ce qu'un essai précédent a posé
 const U = pcUnpack(pcFromDataPng(await figma.getImageByHash(holder.fills[0].imageHash).getBytesAsync()));
 await pcLoadFonts([U.PK]);
 const st = await pcBuildPack(U, { section, rows: U.PK.rows, dx: JOB.dx, y0: JOB.y0, rowH: JOB.rowH, labeled: new Set(JOB.labeled || []), shots: JOB.shots });
-return { sec: U.PK.secName, part: U.PK.part, err: st.err, made: st.made, svgFail: st.svgFail, fail: st.fail, screens: st.screens, shots: st.shots };
+return { sec: U.PK.secName, part: U.PK.part, err: st.err, made: st.made, svgFail: st.svgFail, bravura: st.bravura, fail: st.fail, screens: st.screens, shots: st.shots };

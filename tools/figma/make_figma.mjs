@@ -6,5 +6,5 @@ const R = f => fs.readFileSync(new globalThis.URL('./' + f, import.meta.url), 'u
 const strip = s => s.replace(/^\s*\/\/.*$/gm, '').replace(/\n{2,}/g, '\n');
 const mode = process.argv[2];
 if (mode === 'plugin') { fs.writeFileSync(new globalThis.URL('./plugin/code.js', import.meta.url), '// Généré par tools/figma/make_figma.mjs — ne pas éditer.\n' + R('figma_core.js') + '\n' + R('plugin_glue.js')); console.log('plugin/code.js écrit'); }
-else if (mode === 'mcp') process.stdout.write(`const JOB = ${process.argv[3]};\n` + strip(R('figma_core.js')) + '\n' + strip(R('mcp_glue.js')));
+else if (mode === 'mcp') process.stdout.write(`const JOB = ${process.argv[3]};\n` + strip(R('figma_core.js').split('// Retire d')[0]) + '\n' + strip(R('mcp_glue.js')));
 else console.log('usage : make_figma.mjs plugin | mcp <JOB>');

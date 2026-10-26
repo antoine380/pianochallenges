@@ -58,11 +58,20 @@ async function pcBuildPack(U, o) {
       node = figma.createFrame(); node.name = n.n || 'cadre'; node.resize(Math.max(n.w, 0.01), Math.max(n.h, 0.01));
       const fills = (n.bg || []).map(pt => pcPaint(pt, n.w, n.h)); const h = n.ref != null ? image(n.ref) : null; if (h) fills.push({ type: 'IMAGE', imageHash: h, scaleMode: 'FILL' });
       node.fills = fills; node.clipsContent = !!n.clip; pcRadius(node, n.rad);
+      // ombre intérieure sans flou ni décalage (anneau CSS « inset 0 0 0 2px ») = bordure intérieure
+      if (n.sh && !n.bd) { const ring = n.sh.find(x => x.t === 'in' && !x.x && !x.y && !x.b && x.s > 0); if (ring) { n.bd = { w: [ring.s, ring.s, ring.s, ring.s], c: ring.c }; n.sh = n.sh.filter(x => x !== ring); if (!n.sh.length) delete n.sh; } }
       if (n.bd) { node.strokes = [{ type: 'SOLID', color: pcRgb(n.bd.c), opacity: n.bd.c.a }]; const w = n.bd.w;
         if (n.bd.out) { node.strokeAlign = 'OUTSIDE'; node.strokeWeight = w[0]; }
         else { node.strokeAlign = 'INSIDE'; if (w[0] === w[1] && w[1] === w[2] && w[2] === w[3]) node.strokeWeight = w[0]; else { node.strokeTopWeight = w[0]; node.strokeRightWeight = w[1]; node.strokeBottomWeight = w[2]; node.strokeLeftWeight = w[3]; } }
         if (n.bd.dash) node.dashPattern = n.bd.dash === 1 ? [Math.max(3, w[0] * 3), Math.max(2, w[0] * 2)] : [Math.max(1, w[0]), Math.max(1, w[0])]; }
-      const ef = pcEffects(n); if (ef.length) node.effects = ef; if (n.op != null) node.opacity = n.op;
+      let ef = pcEffects(n);
+      // Figma n'applique l'étalement (spread) d'une ombre qu'aux cadres qui découpent : on découpe si rien ne dépasse, sinon l'ombre passe sur un rectangle de fond
+      if (!n.clip && (n.sh || []).some(x => x.s && x.t !== 'in')) {
+        const inside = (n.ch || []).every(c => c.x >= -1 && c.y >= -1 && c.x + c.w <= n.w + 1 && c.y + c.h <= n.h + 1 && !c.rt);
+        if (inside) node.clipsContent = true;
+        else { const r = figma.createRectangle(); r.name = 'fond + ombre'; r.resize(Math.max(n.w, 0.01), Math.max(n.h, 0.01)); pcRadius(r, n.rad); r.fills = node.fills; r.effects = ef.filter(e => /SHADOW/.test(e.type));
+          node.appendChild(r); r.x = 0; r.y = 0; node.fills = []; ef = ef.filter(e => !/SHADOW/.test(e.type)); } }
+      if (ef.length) node.effects = ef; if (n.op != null) node.opacity = n.op;
       parent.appendChild(node); node.x = n.x; node.y = n.y;
       for (const c of n.ch || []) { try { build(c, node); } catch (e) { st.fail++; if (!st.err) st.err = String(e && e.message || e).slice(0, 200); } }
     } else if (n.t === 'x') {
@@ -77,9 +86,10 @@ async function pcBuildPack(U, o) {
       else { node.textAutoResize = 'WIDTH_AND_HEIGHT'; const W2 = node.width; node.x = n.al === 'CENTER' ? n.x + n.w / 2 - W2 / 2 : (n.al === 'RIGHT' ? n.x + n.w - W2 : n.x); }
       node.y = n.y;
     } else if (n.t === 'v') {
-      try { node = figma.createNodeFromSvg(n.svg); node.name = n.n || 'svg'; parent.appendChild(node);
+      try { if (n.fb != null && /font-family="Bravura/i.test(n.svg)) throw new Error('Bravura'); // police absente de Figma : image
+        node = figma.createNodeFromSvg(n.svg); node.name = n.n || 'svg'; parent.appendChild(node);
         if (Math.abs(node.width - n.w) > 0.5 || Math.abs(node.height - n.h) > 0.5) node.resize(Math.max(n.w, 0.01), Math.max(n.h, 0.01)); node.clipsContent = false; }
-      catch (e) { st.svgFail++; if (node && !node.removed) node.remove(); node = mkImage(n, n.fb); node.name = (n.n || 'svg') + ' (image)'; parent.appendChild(node); }
+      catch (e) { if (!/Bravura/.test(e.message)) st.svgFail++; else st.bravura = (st.bravura || 0) + 1; if (node && !node.removed) node.remove(); node = mkImage(n, n.fb); node.name = (n.n || 'svg') + ' (image)'; parent.appendChild(node); }
       if (n.op != null) node.opacity = n.op; node.x = n.x; node.y = n.y;
     } else if (n.t === 'i') { node = mkImage(n, n.ref); parent.appendChild(node); node.x = n.x; node.y = n.y; }
     if (n.rt && node) { const [a, b, c, d, tx, ty] = n.rt, w = node.width, h = node.height, cx = n.x + n.w / 2 + tx, cy = n.y + n.h / 2 + ty;

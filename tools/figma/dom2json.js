@@ -345,9 +345,10 @@
           if (w == null && L != null && R != null) w = iw - L - R; if (h == null && T != null && B != null) h = ih - T - B;
           if (w != null && h != null && w > 0 && h > 0) { const x = L != null ? L : (R != null ? iw - R - w : 0), y = T != null ? T : (B != null ? ih - B - h : 0);
             if (!/matrix|rotate|scale/.test(ps.transform) || ps.transform === 'none') pr = { x: rect.x + bl + x, y: rect.y + bt + y, w, h };
-            else { const m = /matrix\(([^)]+)\)/.exec(ps.transform); if (m) { const v = m[1].split(',').map(Number); if (Math.abs(v[1]) < 1e-3 && Math.abs(v[2]) < 1e-3) { const nw = w * v[0], nh = h * v[3]; pr = { x: rect.x + bl + x + (w - nw) / 2 + v[4], y: rect.y + bt + y + (h - nh) / 2 + v[5], w: nw, h: nh }; } } } }
+            else { const m = /matrix\(([^)]+)\)/.exec(ps.transform); if (m) { const v = m[1].split(',').map(Number); if (Math.abs(v[1]) < 1e-3 && Math.abs(v[2]) < 1e-3) { const nw = w * v[0], nh = h * v[3]; pr = { x: rect.x + bl + x + (w - nw) / 2 + v[4], y: rect.y + bt + y + (h - nh) / 2 + v[5], w: nw, h: nh }; }
+              else { const sc = Math.hypot(v[0], v[1]); pr = { x: rect.x + bl + x, y: rect.y + bt + y, w, h, rt: [v[0] / sc, v[1] / sc, v[2] / sc, v[3] / sc, v[4], v[5]].map(q => Math.round(q * 10000) / 10000) }; } } } }
         }
-        if (pr) { const bs = boxStyle(el, ps, pr.w, pr.h); if (bs.vis) { const node = { t: 'f', n: pse, x: pr.x, y: pr.y, w: pr.w, h: pr.h, ch: [], ...bs.o }; if (parseFloat(ps.opacity) < 1) node.op = +ps.opacity; pushMe(me, node); count++; }
+        if (pr) { const bs = boxStyle(el, ps, pr.w, pr.h); if (bs.vis) { const node = { t: 'f', n: pse, x: pr.x, y: pr.y, w: pr.w, h: pr.h, ch: [], ...bs.o }; if (pr.rt) node.rt = pr.rt; if (parseFloat(ps.opacity) < 1) node.op = +ps.opacity; pushMe(me, node); count++; }
           if (txt.trim()) { const f = fontOf(ps); if (f.fam !== 'Bravura') { const lh = parseFloat(ps.lineHeight) || parseFloat(ps.fontSize) * 1.2; pushMe(me, { t: 'x', n: pse + ' ' + txt, x: pr.x, y: pr.y + (pr.h - lh) / 2, w: pr.w, h: lh, lines: 1, lh, al: 'CENTER', fixw: 1, seg: [{ s: tx(txt, ps), f: f.fam, wt: f.wt, it: 0, sz: parseFloat(ps.fontSize), c: col(ps.color) || { r: 0, g: 0, b: 0, a: 1 }, ls: 0, td: '' }] }); } } }
       }
 
@@ -396,7 +397,7 @@
     opts.root = root;
     const sx = window.scrollX, sy = window.scrollY;
     for (const c of document.body.children) walk(c, root, { x: 0, y: 0, w: VW, h: VH }, { x: 0, y: 0 }, 0, null);
-    const zsort = n => { if (n.ch) { n.ch.forEach(zsort); if (n !== root && !n._sc) { const m = Math.max(...n.ch.map(c => c._z || 0)); if (m > (n._z || 0)) n._z = m; } n.ch = n.ch.map((c, i) => [c, i]).sort((a, b) => (a[0]._z || 0) - (b[0]._z || 0) || a[1] - b[1]).map(a => a[0]); } }; zsort(root); const clean = n => { delete n._z; delete n._sc; (n.ch || []).forEach(clean); }; clean(root);
+    const zsort = n => { if (n.ch) { n.ch.forEach(zsort); if (n !== root && !n._sc) { /* sans contexte d'empilement : le cadre remonte au niveau de ses enfants positionnés (tous s'il est transparent, sinon ceux qui le couvrent à moitié) */ const opaque = n.bg || n.bd || n.sh; const m = Math.max(0, ...n.ch.filter(c => !opaque || c.w * c.h >= 0.5 * n.w * n.h).map(c => c._z || 0)); if (m > (n._z || 0)) n._z = m; } n.ch = n.ch.map((c, i) => [c, i]).sort((a, b) => (a[0]._z || 0) - (b[0]._z || 0) || a[1] - b[1]).map(a => a[0]); } }; zsort(root); const clean = n => { delete n._z; delete n._sc; (n.ch || []).forEach(clean); }; clean(root);
     // coordonnées relatives au parent, nettoyage
     const rel = (n, ox, oy) => { const ax = n.x, ay = n.y; n.x = r2(ax - ox); n.y = r2(ay - oy); n.w = r2(n.w); n.h = r2(n.h); if (n.ch) { n.ch.forEach(c => rel(c, ax, ay)); n.ch = n.ch.filter(c => !(c.t === 'f' && !(c.ch && c.ch.length) && !c.bg && !c.bd && !c.sh && !c.ref && !(c.n || '').startsWith('#'))); if (!n.ch.length) delete n.ch; } };
     rel(root, 0, 0); root.x = 0; root.y = 0;
