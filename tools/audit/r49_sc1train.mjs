@@ -9,6 +9,9 @@
 //    comptées, fin « Bien joué ! » (Rejouer / Passer à l'évaluation / Revoir la gamme ; Do = rejouer, Si = revoir), « Revoir la gamme »,
 //    bascule dans les deux sens (S.settings.sc1Train), évaluation inchangée (3 étoiles), aides du joueur jamais sauvegardées modifiées,
 //    accords, pas de défilement aux 5 tailles, aucune erreur JS.
+// C. (chantier sc1-pop) Chaque lancement depuis la liste ouvre la fenêtre #sc1Pick (Entraînement / Évaluation expliqués, choix conseillé mis en
+//    avant) : case, Do sur la liste (pont natif), « Suivante » ; Do = Entraînement, Mi = Évaluation, Si / Échap / croix / clic à côté = fermer
+//    sans lancer ; clavier d'ordinateur (Entrée = conseillé, A = Do, D = Mi) ; fin d'entraînement : Mi = passer à l'évaluation.
 // Usage : PORT=8925 NODE_PATH=… PW_CHROMIUM=… node tools/audit/r49_sc1train.mjs   (CAP=dossier pour des captures)
 import { createRequire } from 'module';
 import fs from 'fs';
@@ -43,7 +46,10 @@ const W = (p, ms) => p.waitForTimeout(ms);
 const ev = (p, f, a) => p.evaluate(f, a);
 const nat = async (p, data, id, ms = 120) => { await ev(p, ([d, i]) => window.__nat(d, i), [data, id]); await W(p, ms); };
 const toList = async p => { await ev(p, () => document.querySelector('#homeLink')?.click()); await W(p, 300); await ev(p, () => document.querySelector('#modeNav [data-mode=learn]').click()); await W(p, 400); await ev(p, () => document.querySelector('#learnTiles .sc1-tile').click()); await W(p, 400); };
-const quit = async p => { await ev(p, () => document.getElementById('gameEnd').click()); await W(p, 300); if (await p.isVisible('#leaveModal')) { await p.click('#lvGo'); await W(p, 500); } if (await p.isVisible('#endModal')) { await ev(p, () => document.getElementById('sc1Back')?.click()); await W(p, 300); } };
+const pickOpen = p => ev(p, () => !document.getElementById('sc1Pick').hidden);
+const launched = async p => await pickOpen(p) || await p.X('page') === 'practice';
+const pick = async (p, v) => { await ev(p, v => document.getElementById(v === 'eval' ? 'sc1PkEval' : 'sc1PkTrain').click(), v); await W(p, 300); };
+const quit = async p => { if (await pickOpen(p)) { await ev(p, () => document.getElementById('sc1PkX').click()); await W(p, 300); return; } await ev(p, () => document.getElementById('gameEnd').click()); await W(p, 300); if (await p.isVisible('#leaveModal')) { await p.click('#lvGo'); await W(p, 500); } if (await p.isVisible('#endModal')) { await ev(p, () => document.getElementById('sc1Back')?.click()); await W(p, 300); } };
 const G = p => p.X('({page, phase, tr:!!(game&&game.sc1&&game.sc1.train), k:cur&&cur.k, tid:cur&&cur.tid, demo:!!SC1.demo, errors, tc:window.__tc})');
 const stored = p => ev(p, () => JSON.parse(localStorage.getItem('memo-gammes-v1')));
 const noScroll = p => ev(p, () => { const d = document.scrollingElement, m = document.getElementById('main'); return d.scrollHeight - d.clientHeight <= 1 && d.scrollWidth - d.clientWidth <= 1 && m.scrollHeight - m.clientHeight <= 1; });
@@ -62,23 +68,37 @@ let t0 = await p.X('window.__tc');
 await nat(p, [0x90, 62, 90]); await nat(p, [0x80, 62, 0]);
 check('liste sc1 : un Ré (canal 1) sonne sans rien lancer', await p.X('window.__tc') === t0 + 1 && await p.X('page') === 'sc1');
 await nat(p, [0x90, 60, 90], undefined, 500);
+let pk = await ev(p, () => ({ open: !document.getElementById('sc1Pick').hidden, t: document.getElementById('sc1PkT').textContent, rec: document.querySelector('#sc1PkO .rec')?.dataset.v, kbd: [...document.querySelectorAll('#sc1PkO kbd')].map(k => k.textContent), page: document.body.dataset.page }));
+check('liste sc1 : Do (MIDI natif) ouvre la fenêtre du choix pour la prochaine gamme (Do Majeur · Notes), Entraînement conseillé (0 étoile), touches Do / Mi affichées', pk.open && /^Do Majeur · Notes$/i.test(pk.t) && pk.rec === 'train' && pk.kbd.join() === 'Do,Mi' && pk.page === 'sc1', pk);
+t0 = await p.X('window.__tc');
+await nat(p, [0x90, 62, 90], undefined, 300);
+check('fenêtre du choix : un Ré ne lance rien', await pickOpen(p) && await p.X('page') === 'sc1');
+await nat(p, [0x90, 60, 90], undefined, 500);
 let g = await G(p);
-check('liste sc1 : Do (MIDI natif) lance la prochaine gamme (Do majeur), en Entraînement car 0 étoile', g.page === 'practice' && g.k === 'C' && g.tid === 'major' && g.tr, g);
+check('fenêtre du choix : Do (MIDI natif) = Entraînement', !await pickOpen(p) && g.page === 'practice' && g.k === 'C' && g.tid === 'major' && g.tr, g);
+await quit(p);
+await nat(p, [0x90, 60, 90], undefined, 500); await nat(p, [0x90, 64, 90], undefined, 500);
+g = await G(p);
+check('fenêtre du choix : Mi (MIDI natif) = Évaluation', !await pickOpen(p) && g.page === 'practice' && g.k === 'C' && !g.tr && await p.X('S.settings.sc1Train') === 'eval', g);
+await quit(p);
+await nat(p, [0x90, 60, 90], undefined, 500); await nat(p, [0x90, 71, 90], undefined, 500);
+check('fenêtre du choix : Si (MIDI natif) = fermer sans rien lancer', !await pickOpen(p) && await p.X('page') === 'sc1' && await p.X('!game && openMods.length===0'));
+await p.X('S.settings.sc1Train=undefined; delete S.settings.sc1Train; save()');
 await quit(p); await W(p, 300);
 check('« Terminer la partie » pendant l’entraînement : retour direct à la liste', await p.X('page') === 'sc1' && await ev(p, () => document.getElementById('endModal').hidden));
 // LUMI MPE: channel 2, pitch bend + CC74 + pressure before the note, all in ONE packet
 await nat(p, [0xE1, 0, 64, 0xB1, 74, 64, 0xD1, 20, 0x91, 60, 70], undefined, 500);
-check('paquet BLE de plusieurs messages (pitch-bend, CC74, pression puis Do sur le canal MPE 2) : la gamme se lance', (await G(p)).page === 'practice');
+check('paquet BLE de plusieurs messages (pitch-bend, CC74, pression puis Do sur le canal MPE 2) : la gamme se lance (fenêtre du choix)', await launched(p));
 await quit(p);
 // running status + SysEx + clock in the same packet, and a note split across two events
 await nat(p, [0xF0, 0x00, 0x21, 0x10, 0x77, 0x37, 0xF7, 0xF8, 0xFE, 0x9F, 62, 40, 64, 0], undefined, 300);
 t0 = await p.X('window.__tc');
 await nat(p, [0x9F, 60]); await nat(p, [90], undefined, 500);
-check('SysEx / horloge ignorés, running status et note coupée en deux paquets : Do (canal 16) lance la gamme', (await G(p)).page === 'practice' && await p.X('window.__tc') >= t0 + 1);
+check('SysEx / horloge ignorés, running status et note coupée en deux paquets : Do (canal 16) lance la gamme', await launched(p) && await p.X('window.__tc') >= t0 + 1);
 await quit(p);
 // low velocity
 await nat(p, [0x90, 60, 3], undefined, 500);
-check('Do joué très doucement (vélocité 3) : compte quand même', (await G(p)).page === 'practice');
+check('Do joué très doucement (vélocité 3) : compte quand même', await launched(p));
 await quit(p);
 // the same LUMI on two ports (USB-C to charge + Bluetooth): every note twice
 await ev(p, () => window.__ports([{ id: '7', name: 'LUMI Keys BLOCK 3F1A' }, { id: '8', name: 'LUMI Keys BLOCK' }])); await W(p, 300);
@@ -87,13 +107,13 @@ await ev(p, () => { window.__nat([0x90, 62, 90], '7'); window.__nat([0x90, 62, 9
 const dupTc = await p.X('window.__tc');
 await ev(p, () => { window.__nat([0x90, 60, 90], '7'); window.__nat([0x90, 60, 90], '8'); }); await W(p, 500);
 g = await G(p);
-check('le même clavier sur deux ports (chaque note reçue deux fois) : un seul son, Do reste « seul » et lance la gamme', g.page === 'practice' && dupTc === t0 + 1, { ...g, t0, dupTc });
+check('le même clavier sur deux ports (chaque note reçue deux fois) : un seul son, Do reste « seul » et lance la gamme', await launched(p) && dupTc === t0 + 1, { ...g, t0, dupTc });
 await quit(p);
 await ev(p, () => window.__ports([{ id: '7', name: 'LUMI Keys BLOCK 3F1A' }])); await W(p, 300);
 // a keyboard name saved earlier (another device / USB) that is not connected: no longer mutes the LUMI
 await p.X('S.settings.midiInput="LUMI Keys BLOCK"; save()');
 await nat(p, [0x90, 60, 90], undefined, 500);
-check('un clavier choisi autrefois mais absent (« LUMI Keys BLOCK ») ne coupe plus le LUMI branché', (await G(p)).page === 'practice');
+check('un clavier choisi autrefois mais absent (« LUMI Keys BLOCK ») ne coupe plus le LUMI branché', await launched(p));
 await quit(p);
 await ev(p, () => window.__ports([{ id: '7', name: 'LUMI Keys BLOCK 3F1A' }, { id: '9', name: 'LUMI Keys BLOCK' }])); await W(p, 300);
 await nat(p, [0x90, 62, 90], '7', 300);
@@ -129,7 +149,18 @@ await p.context().close();
 // ================= B. Entraînement / Évaluation =================
 p = await open();
 await toList(p);
-await ev(p, () => document.querySelector('.sc1-c[data-tid=major][data-k=C]').click()); await W(p, 300);
+const cellC = async () => { await ev(p, () => document.querySelector('.sc1-c[data-tid=major][data-k=C]').click()); await W(p, 300); };
+await cellC();
+pk = await ev(p, () => ({ open: !document.getElementById('sc1Pick').hidden, t: document.getElementById('sc1PkT').textContent, sub: document.getElementById('sc1PkS').textContent, o: [...document.querySelectorAll('#sc1PkO .sc1pk-o')].map(b => b.dataset.v + ':' + b.querySelector('b').textContent + ':' + b.classList.contains('rec')), tr: document.querySelector('#sc1PkTrain p').textContent, ev: document.querySelector('#sc1PkEval p').textContent, focus: document.activeElement?.id, page: document.body.dataset.page }));
+check('clic sur une case (0 étoile) : fenêtre « Do Majeur · Notes », 0 étoile, deux choix expliqués, Entraînement conseillé et sélectionné (focus)', pk.open && /^Do Majeur · Notes$/i.test(pk.t) && /Pas encore jouée/.test(pk.sub) && pk.o.join() === 'train:Entraînement:true,eval:Évaluation:false' && /note par note/.test(pk.tr) && /3 étoiles/.test(pk.ev) && pk.focus === 'sc1PkTrain' && pk.page === 'sc1', pk);
+if (CAP) await p.screenshot({ path: `${CAP}/r49_choix.png` });
+await ev(p, () => document.querySelector('#sc1Pick .modal-bg').click()); await W(p, 300);
+check('clic à côté : la fenêtre se ferme, rien ne se lance', !await pickOpen(p) && await p.X('page') === 'sc1' && await p.X('!game'));
+await cellC(); await p.keyboard.press('Escape'); await W(p, 300);
+check('Échap : la fenêtre se ferme, rien ne se lance', !await pickOpen(p) && await p.X('page') === 'sc1' && await p.X('!game'));
+await cellC(); await ev(p, () => document.getElementById('sc1PkX').click()); await W(p, 300);
+check('la croix : la fenêtre se ferme, rien ne se lance, une seule fenêtre ouverte à la fois', !await pickOpen(p) && await p.X('page') === 'sc1' && await p.X('!game && openMods.length===0'));
+await cellC(); await pick(p, 'train');
 g = await G(p);
 const bar = await ev(p, () => ({ seg: [...document.querySelectorAll('#sc1Tm button')].map(b => b.textContent + ':' + b.getAttribute('aria-pressed')), lbl: getComputedStyle(document.getElementById('gameLbl')).display, see: !!document.getElementById('sc1See'), your: !!document.getElementById('sc1Your') }));
 check('case à 0 étoile : Entraînement par défaut, pastilles « Entraînement | Évaluation » en haut, démonstration en cours', g.tr && g.demo && g.phase === 'revealed' && bar.seg.join() === 'Entraînement:true,Évaluation:false' && bar.see && bar.your, { g, bar });
@@ -172,18 +203,23 @@ for (const m of C_MAJ) { await p.X(`noteIn(${m})`); await W(p, 40); } await W(p,
 await p.X('midiStart(60)'); await W(p, 300);
 g = await G(p);
 check('Do seul sur « Bien joué » = rejouer (à toi, sans démo)', g.phase === 'listening' && !g.demo && g.tr, g);
-// → Evaluation (the button) : unchanged, stars
+// → Evaluation (Mi on « Well played ») : unchanged, stars
 for (const m of C_MAJ) { await p.X(`noteIn(${m})`); await W(p, 40); } await W(p, 300);
-await ev(p, () => document.getElementById('sc1ToEval').click()); await W(p, 400);
+const kb = await ev(p, () => [...document.querySelectorAll('#actions button')].map(b => b.id + ':' + (b.querySelector('kbd')?.textContent || '')).join());
+check('fin d’entraînement : raccourcis affichés Revoir = Si, Passer à l’évaluation = Mi, Rejouer = Do', kb === 'sc1See:Si,sc1ToEval:Mi,sc1Replay:Do', kb);
+await p.X('midiStart(64)'); await W(p, 400);
 g = await G(p);
 const bar2 = await ev(p, () => [...document.querySelectorAll('#sc1Tm button')].map(b => b.getAttribute('aria-pressed')).join());
-check('« Passer à l’évaluation » : la même gamme, notée, mode retenu (S.settings.sc1Train="eval"), aides du joueur rendues', g.phase === 'listening' && !g.tr && g.k === 'C' && bar2 === 'false,true' && await p.X('S.settings.sc1Train') === 'eval' && await p.X('S.settings.guideK===false && S.settings.guideP===true'), { g, bar2 });
+check('Mi seul sur « Bien joué » = « Passer à l’évaluation » : la même gamme, notée, mode retenu (S.settings.sc1Train="eval"), aides du joueur rendues', g.phase === 'listening' && !g.tr && g.k === 'C' && bar2 === 'false,true' && await p.X('S.settings.sc1Train') === 'eval' && await p.X('S.settings.guideK===false && S.settings.guideP===true'), { g, bar2 });
 for (const m of C_MAJ) { await p.X(`noteIn(${m})`); await W(p, 40); } await W(p, 2400);
 check('évaluation inchangée : 3 étoiles, fin au-dessus de la liste', await p.X('sc1Get("notes","major","C")') === 3 && await ev(p, () => !document.getElementById('endModal').hidden && document.querySelectorAll('#endBody .sc1-stars span.on').length === 3) && await p.X('page') === 'sc1' && await p.X('S.xp') > xp0);
 await ev(p, () => document.getElementById('sc1Back').click()); await W(p, 300);
-// a scale with stars: the last chosen mode (eval)
-await ev(p, () => document.querySelector('.sc1-c[data-tid=major][data-k=C]').click()); await W(p, 300);
-check('gamme déjà étoilée : le dernier mode choisi (Évaluation)', !(await G(p)).tr);
+// a scale with stars: the last chosen mode (eval) is the recommended one; Enter takes it
+await cellC();
+pk = await ev(p, () => ({ rec: document.querySelector('#sc1PkO .rec')?.dataset.v, focus: document.activeElement?.id, sub: document.getElementById('sc1PkS').querySelectorAll('.sc1-st i.on').length }));
+check('gamme déjà étoilée : la fenêtre conseille le dernier mode choisi (Évaluation, focus), 3 étoiles affichées', pk.rec === 'eval' && pk.focus === 'sc1PkEval' && pk.sub === 3, pk);
+await p.keyboard.press('Enter'); await W(p, 400);
+check('Entrée = le choix conseillé (Évaluation)', !await pickOpen(p) && (await G(p)).page === 'practice' && !(await G(p)).tr);
 // eval half-way → training: no penalty
 for (const m of [60, 62, 64]) { await p.X(`noteIn(${m})`); await W(p, 40); }
 await ev(p, () => document.querySelector('#sc1Tm [data-v=train]').click()); await W(p, 400);
@@ -193,12 +229,19 @@ await ev(p, () => document.querySelector('#sc1Tm [data-v=eval]').click()); await
 check('… et retour à l’Évaluation par les pastilles', !(await G(p)).tr && await p.X('S.settings.sc1Train') === 'eval');
 await quit(p);
 await p.X('S.settings.sc1Train="train"; save()');
-await ev(p, () => document.querySelector('.sc1-c[data-tid=major][data-k=C]').click()); await W(p, 300);
-check('gamme étoilée, dernier mode choisi = Entraînement : Entraînement', (await G(p)).tr);
+await cellC();
+check('gamme étoilée, dernier mode choisi = Entraînement : Entraînement conseillé', await ev(p, () => document.querySelector('#sc1PkO .rec')?.dataset.v === 'train'));
+await p.keyboard.press('KeyD'); await W(p, 400);
+check('clavier d’ordinateur dans la fenêtre : D (touche du Mi) = Évaluation', !await pickOpen(p) && !(await G(p)).tr && await p.X('S.settings.sc1Train') === 'eval');
+await quit(p);
+await cellC(); await p.keyboard.press('KeyA'); await W(p, 400);
+check('clavier d’ordinateur dans la fenêtre : A (touche du Do) = Entraînement', !await pickOpen(p) && (await G(p)).tr);
 await quit(p);
 // chords: the demo lights chord after chord, then the chords are played without stars
 await ev(p, () => document.querySelector('#sc1Seg [data-v=chords]').click()); await W(p, 300);
-await ev(p, () => document.querySelector('.sc1-c[data-tid=major][data-k=D]').click()); await W(p, 1900);
+await ev(p, () => document.querySelector('.sc1-c[data-tid=major][data-k=D]').click()); await W(p, 300);
+check('accords : la fenêtre explique l’entraînement en accords', await ev(p, () => /Accords/.test(document.getElementById('sc1PkT').textContent) && /accords de la gamme/.test(document.querySelector('#sc1PkTrain p').textContent)));
+await pick(p, 'train'); await W(p, 1600);
 const cd = await p.X('({ch:chSeq(), rev:[...document.querySelectorAll("#kbd .k-rev")].length, demo:SC1.demo, sub:$("promptSub").textContent})');
 check('accords : démonstration accord par accord (3 touches allumées)', cd.ch && cd.demo && cd.rev === 3 && /accords/.test(cd.sub), cd);
 await ev(p, () => document.getElementById('sc1Your').click()); await W(p, 200);
@@ -222,7 +265,12 @@ for (const [w, h] of [[375, 667], [812, 375], [768, 1024], [1024, 768], [1280, 8
   const lang = scheme === 'dark' ? 'en' : 'fr';
   p = await open({ vp: { width: w, height: h }, scheme, st: STATE({ lang }) });
   await p.X('openPage("sc1")'); await W(p, 300);
-  await ev(p, () => document.querySelector('.sc1-c[data-tid=major][data-k=C]').click()); await W(p, 1200);
+  await ev(p, () => document.querySelector('.sc1-c[data-tid=major][data-k=C]').click()); await W(p, 400);
+  const pf = await ev(p, () => { const c = document.querySelector('#sc1Pick .modal-card').getBoundingClientRect(), bd = document.querySelector('#sc1Pick .modal-body'), o = [...document.querySelectorAll('#sc1PkO .sc1pk-o')].map(x => x.getBoundingClientRect());
+    return { fit: c.top >= -1 && c.bottom <= innerHeight + 1 && c.right <= innerWidth + 1 && bd.scrollHeight - bd.clientHeight <= 1, side: o[0].top === o[1].top, h: Math.round(c.height) }; });
+  if (CAP) await p.screenshot({ path: `${CAP}/r49_choix_${w}x${h}_${scheme}.png` });
+  check(`${w}×${h} ${scheme} : fenêtre du choix entière sans défilement, choix ${w <= 640 ? 'empilés' : 'côte à côte'}`, pf.fit && pf.side === (w > 640) && await noScroll(p), pf);
+  await pick(p, 'train'); await W(p, 900);
   const a = await noScroll(p);
   if (CAP) await p.screenshot({ path: `${CAP}/r49_demo_${w}x${h}_${scheme}.png` });
   await ev(p, () => document.getElementById('sc1Your').click()); await W(p, 300);

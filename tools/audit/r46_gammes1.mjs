@@ -29,8 +29,10 @@ const W = (p, ms) => p.waitForTimeout(ms);
 const ev = (p, f, a) => p.evaluate(f, a);
 const toList = async p => { await ev(p, () => document.querySelector('#modeNav [data-mode=learn]').click()); await W(p, 400); await ev(p, () => document.querySelector('#learnTiles .sc1-tile').click()); await W(p, 400); };
 const cell = (p, tid, k) => ev(p, ([tid, k]) => document.querySelector(`.sc1-c[data-tid="${tid}"][data-k="${k}"]`).click(), [tid, k]);
-// chantier sc1-train : une gamme à 0 étoile s'ouvre en Entraînement ; ce test vérifie l'Évaluation (inchangée), on y passe par les pastilles
-const toEval = async p => { if (await p.evaluate(() => !!document.querySelector('#sc1Tm [data-v=eval][aria-pressed=false]') && document.body.dataset.page === 'practice')) { await p.evaluate(() => document.querySelector('#sc1Tm [data-v=eval]').click()); await p.waitForTimeout(400); } };
+// chantier sc1-pop : chaque lancement (case, Do sur la liste, « Suivante ») ouvre d'abord la fenêtre #sc1Pick ; ce test vérifie l'Évaluation
+// (inchangée) : on la choisit dans la fenêtre (sinon, si une partie d'entraînement tourne, par les pastilles)
+const toEval = async p => { if (await p.evaluate(() => !document.getElementById('sc1Pick').hidden)) { await p.evaluate(() => document.getElementById('sc1PkEval').click()); await p.waitForTimeout(400); }
+  if (await p.evaluate(() => !!document.querySelector('#sc1Tm [data-v=eval][aria-pressed=false]') && document.body.dataset.page === 'practice')) { await p.evaluate(() => document.querySelector('#sc1Tm [data-v=eval]').click()); await p.waitForTimeout(400); } };
 const notes = async (p, ms) => { for (const m of ms) { await p.X(`noteIn(${m})`); await W(p, 30); } };
 const stars = (p, mode, key) => p.X(`(S.scStars&&S.scStars.${mode}&&S.scStars.${mode}[${JSON.stringify(key)}])|0`);
 const stored = p => ev(p, () => JSON.parse(localStorage.getItem('memo-gammes-v1')));
@@ -124,7 +126,9 @@ check('accords avec une faute : 2 étoiles', await stars(p, 'chords', 'A-minor')
 await ev(p, () => document.getElementById('sc1Back').click()); await W(p, 300);
 // Do seul sur la liste = la prochaine gamme à travailler (accords : Ré majeur, la 1re sans 3 étoiles)
 await ev(p, () => window.__midi.noteOn(60)); await W(p, 500);
-check('Do seul sur la liste : prochaine gamme à travailler (Ré majeur en accords)', await p.X('page==="practice" && cur && cur.k==="D" && cur.tid==="major" && !!cur.ch'));
+check('Do seul sur la liste : la fenêtre du choix pour la prochaine gamme (Ré majeur, Accords)', await ev(p, () => !document.getElementById('sc1Pick').hidden && /Ré Majeur.*Accords/i.test(document.getElementById('sc1PkT').textContent)), await ev(p, () => document.getElementById('sc1PkT').textContent));
+await ev(p, () => window.__midi.noteOn(64)); await W(p, 500);
+check('… Mi = Évaluation : prochaine gamme à travailler (Ré majeur en accords)', await p.X('page==="practice" && cur && cur.k==="D" && cur.tid==="major" && !!cur.ch && !game.sc1.train'));
 await quit(p);
 check('aucune erreur JS (parties)', !p.errs.length, p.errs);
 await p.context().close();
