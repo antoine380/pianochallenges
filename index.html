@@ -4501,7 +4501,9 @@ body.sc1tr #feedback{visibility:hidden}
   navigator.requestMIDIAccess=()=>access ? Promise.resolve(access) : asking || (asking=open().finally(()=>{ asking=null; }));
   const open=async()=>{
     const acc={inputs:new Map(), onstatechange:null};
-    const sync=list=>{ const old=acc.inputs, m=new Map(); (list||[]).forEach(d=>{ const k=String(d.id); m.set(k, old.get(k)||{id:k,name:d.name,onmidimessage:null}); }); acc.inputs=m; };
+    // MIDI 3 : same source id, new name (a Bluetooth keyboard publishes its full name a moment after connecting): the name follows,
+    // otherwise the chosen keyboard, its size guess and its model were matched against a stale name
+    const sync=list=>{ const old=acc.inputs, m=new Map(); (list||[]).forEach(d=>{ const k=String(d.id), o=old.get(k); if(o) o.name=d.name; m.set(k, o||{id:k,name:d.name,onmidimessage:null}); }); acc.inputs=m; };
     on("midi", ev=>{ const inp=acc.inputs.get(String(ev.id)); if(inp && inp.onmidimessage) inp.onmidimessage({data:new Uint8Array(ev.data||[])}); });
     on("statechange", ev=>{ sync(ev.inputs); if(acc.onstatechange) acc.onstatechange(); });
     const r=await call("start"); sync(r && r.inputs);
@@ -5926,17 +5928,24 @@ function calibApply(){
 // virtual ports are not keyboards (macOS / iOS network sessions « Session réseau », IAC buses): never listed, counted nor listened to.
 // Case and accents do not matter (iOS may send decomposed accents).
 const midiVirtual = n => /network|session|reseau|\biac\b|\bbus\b/.test(String(n||"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase());
+// the size a keyboard's name says (null: the name does not tell)
+const kbdSzOf = name => { const n=String(name||""), m=n.match(/(^|\D)(24|25|32|37|49|61|76|88)(\D|$)/);
+  return m ? m[2] : /lumi|piano ?m\b|keys block/i.test(n) ? "24" : /mpk ?mini(?! ?plus)|launchkey mini|minilab|nanokey|flkey mini|microlab|xkey/i.test(n) ? "25" : /keystep|oxygen pro mini/i.test(n) ? "32" : /seaboard block|songmaker/i.test(n) ? "24" : /rise ?2?/i.test(n) ? "49" : null; };
 function guessKbdSize(name){
   if(!name || S.settings.kbdGuessFor===name) return;
-  const n=String(name), m=n.match(/(^|\D)(24|25|32|37|49|61|76|88)(\D|$)/);
-  let size = m ? m[2] : /lumi|piano ?m\b|keys block/i.test(n) ? "24" : /seaboard block|songmaker/i.test(n) ? "24" : /rise ?2?/i.test(n) ? "49" : null;
+  const sz=S.settings.kbdSize||"auto", old=S.settings.kbdGuessFor, size=kbdSzOf(name);
+  // MIDI 3 : une taille que l'app a mise pour UN AUTRE clavier (les 24 touches d'un LUMI, ou le modèle choisi dans la liste) ne reste pas collée
+  // au clavier suivant (un 25 touches : son Do du haut faisait sauter l'écran d'une octave) : nouvelle devinette, ou automatique
+  const mine = /^\d+$/.test(sz) && ((old && kbdSzOf(old)===sz) || (S.settings.kbdCat && S.settings.kbdCat!==name));
   S.settings.kbdGuessFor=name;
-  if(size && (S.settings.kbdSize||"auto")==="auto"){ S.settings.kbdSize=size; save(); buildKeyboard(); renderSettings(); }
+  if(mine && size!==sz){ S.settings.kbdSize=size||"auto"; save(); buildKeyboard(); renderSettings(); return; }
+  if(size && sz==="auto"){ S.settings.kbdSize=size; save(); buildKeyboard(); renderSettings(); }
   else save();
 }
 // keep the on-screen keyboard on the same keys as the MIDI keyboard: if a played note is outside, shift by octaves
 function followMidi(n){
   if(n>=LOW && n<=HIGH) return;
+  if(midiWiden(n)) return; // MIDI 3 : un clavier plus grand que l'écran (le Do du haut d'un 25 touches) élargit l'écran au lieu de le décaler
   const shift = n<LOW ? -Math.ceil((LOW-n)/12)*12 : Math.ceil((n-HIGH)/12)*12; let lo=LOW+shift, hi=HIGH+shift;
   const hw=(S.midi&&S.midi.hw)||{}; if(hw.lo>=21 && hw.hi>hw.lo && hw.hi-hw.lo<=HIGH-LOW && n>=hw.lo && n<=hw.hi){ hi=hw.lo+(HIGH-LOW); lo=hw.lo; } // the measured keyboard (M9) fits: show it whole, in one move
   if(lo<21 || hi>108) return;
@@ -8139,7 +8148,7 @@ const INFO_PAGES=["settings","progress"];
 let returnPage=null, guestPass=false;
 // Page Play: the Clavio prototype (play/index.html) runs in a frame; notes played here are forwarded to it.
 const SAME_ORIGIN = location.origin && location.origin!=="null" ? location.origin : "*"; // file:// has no origin
-function playSend(type,m,vel){ const f=$("playFrame"); if(f && f.contentWindow) f.contentWindow.postMessage({source:"piano-challenges",type,m,vel},SAME_ORIGIN); }
+function playSend(type,m,vel,hw){ const f=$("playFrame"); if(f && f.contentWindow) f.contentWindow.postMessage(hw?{source:"piano-challenges",type,m,vel,hw}:{source:"piano-challenges",type,m,vel},SAME_ORIGIN); }
 let playHash="#songs"; // #songs = song library, #games = Play games, #game=<id> = that game
 function playOpen(){ const f=$("playFrame"); const src="play/index.html"+playHash+"&lang="+(S.settings.lang==="fr"?"fr":"en")+(staffOn()?"&staff=1&clef="+staffClef():""); const old=f.getAttribute("src");
   if(old!==src){ f.onload=()=>{ if(page==="play" && !anyWin()) f.focus(); }; f.src=src; if(old){ try{ f.contentWindow.location.reload(); }catch(e){} } } // a hash-only change would not reload the page: force it
@@ -8711,16 +8720,17 @@ async function enableMidi(quiet){
         if(MW.on && mwMsg(st,note,vel,inp)) return; // the « Connect my keyboard » assistant (MIDI lots 2-3) gets every message while it is open
         if(midiOpen && !calib && (st&0xf0)===0x90 && vel>0){ pressKey(note); mtNote(note,vel,inp.name); return; } // the MIDI window: the « play a note » test (M8)
         if(page==="quiz"){ if((st&0xf0)===0x90 && vel>0){ if(S.settings.midiSound) tone(note,0,.9,.1+.26*vel/127); if(!anyModal()) quizIn(String(inp.id||inp.name),note); } return; } // every keyboard counts: one per player
-        if(S.settings.midiInput && inp.name!==S.settings.midiInput && midiNames.includes(S.settings.midiInput)) return; // the chosen keyboard only, while it is here (a name saved earlier, USB vs Bluetooth, no longer mutes the keyboard in use)
+        if(S.settings.midiInput && inp.name!==S.settings.midiInput && midiNames.includes(S.settings.midiInput) && !midiTakeOver(st,vel,inp)) return; // the chosen keyboard only, while it is played (MIDI 3 : un autre clavier joué quand le choisi se tait depuis 3 s prend la main)
         if((st&0xf0)===0x90 && vel>0 && midiDup(note,inp)) return; // the same keyboard on a second port
+        if((st&0xf0)===0x90 && vel>0) midiSeen(note,inp); // MIDI 3 : les notes vraiment jouées sur ce clavier (sa plage)
         if(page==="piano"){ pnMidi(st,note,vel); return; } // the PIANO mode: an instrument (its own sound, the sustain pedal)
-        if(page==="play"){ if((st&0xf0)===0x90 && vel>0) playSend("noteon",note,vel/127); else if((st&0xf0)===0x80 || ((st&0xf0)===0x90 && vel===0)) playSend("noteoff",note); return; }
+        if(page==="play"){ if((st&0xf0)===0x90 && vel>0) playSend("noteon",note,vel/127,midiSpan(inp)); else if((st&0xf0)===0x80 || ((st&0xf0)===0x90 && vel===0)) playSend("noteoff",note); return; } // MIDI 3 : la plage du clavier part avec la note (le lecteur place ses touches comme celles du clavier)
         if((st&0xf0)===0x80 || ((st&0xf0)===0x90 && vel===0)){ keyDown(note,false); return; }
         if((st&0xf0)===0x90 && vel>0){
-          pressKey(note); keyDown(note,true); // light the key at once, before the 35 ms grouping
           if(S.settings.midiSound) tone(note,0,.9,.1+.26*vel/127);
+          if(!calib) followMidi(note); // MIDI 3 : le clavier à l'écran suit AVANT d'allumer la touche (le Do du haut allumait le Do du milieu, replié, puis l'écran sautait)
+          pressKey(note); keyDown(note,true); // light the key at once, before the 35 ms grouping
           if(calib){ calibNote(note); return; }
-          followMidi(note);
           midiIn(note,true); } }); });
       $("midiBtn").classList.toggle("on",names.length>0); $("midiBtn").classList.remove("err");
       const shown = S.settings.midiInput && names.includes(S.settings.midiInput) ? S.settings.midiInput : names[0];
@@ -9485,10 +9495,10 @@ function mtTouch(){ const v=MT.vels; if(v.length<2) return null; const mx=Math.m
 function mtNote(m, v, port){ MT.vels.push(v); MT.last={m,v,port};
   if(S.settings.midiSound) tone(m,0,.9,.1+.26*v/127);
   const s=mdS(); s.tested=Date.now(); s.hw={...(s.hw&&s.hw.name===port?s.hw:{}), name:port}; const r=mtTouch(); if(r!=null) s.hw.vel=r; save();
-  if(m<MT.lo || m>=MT.lo+24) MT.lo=Math.max(0,Math.min(103,12*Math.floor(m/12)));
+  if(m<MT.lo || m>MT.lo+24) MT.lo=Math.max(0,Math.min(103,12*Math.floor(m/12))); // MIDI 3 : 25 touches, le Do du haut est sur la bande
   mtRender(); }
 function mtKb(){ const kb=$("mtKb"); if(!kb) return; if(kb.dataset.lo==String(MT.lo)) return; kb.dataset.lo=MT.lo; kb.innerHTML="";
-  const whites=[], WH=[0,2,4,5,7,9,11]; for(let m=MT.lo;m<MT.lo+24;m++) if(WH.includes(m%12)) whites.push(m);
+  const whites=[], WH=[0,2,4,5,7,9,11]; for(let m=MT.lo;m<=MT.lo+24;m++) if(WH.includes(m%12)) whites.push(m);
   whites.forEach(m=>{ const w=document.createElement("span"); w.className="w"; w.dataset.m=m; if(m%12===0){ const l=document.createElement("small"); l.textContent=octName(m); w.appendChild(l); } kb.appendChild(w); });
   const ww=100/whites.length; for(let m=MT.lo;m<MT.lo+24;m++) if(!WH.includes(m%12)){ const i=whites.indexOf(m-1); const b=document.createElement("span"); b.className="b"; b.dataset.m=m; b.style.left="calc("+((i+1)*ww)+"% - "+(ww*.3)+"%)"; b.style.width=(ww*.6)+"%"; kb.appendChild(b); } }
 function mtRender(){ const box=$("mdTest"); if(!box) return; box.hidden=!midiReady; if(!midiReady) return; mtKb();
@@ -10157,7 +10167,7 @@ addEventListener("resize",()=>{ if(page==="acc" && ACC.view==="play" && ACC.run)
 // (fetch keepalive vers la fonction SQL track_events), sans le SDK Supabase. Hors ligne, la file attend. Une table ou une
 // fonction absente (migration pas encore lancée) coupe l'envoi sans erreur. En développement (localhost), rien ne part sur
 // le réseau, sauf si localStorage « pc-trk-test » = "1" (tests). Interrupteur : S.settings.analytics (absent = activé).
-const APP_BUILD="2026-10-26T20:21Z"; // remplacé par tools/build.py par la date de construction (version.txt)
+const APP_BUILD="2026-10-26T22:12Z"; // remplacé par tools/build.py par la date de construction (version.txt)
 const TRK={q:[], t:0, off:false, anon:null, sent:0, errs:[], errT:0, errSeen:new Set(), errOn:null, ports:new Set(), first:false};
 const RC={flags:{}, daily:{}, at:0};
 const TRK_NAMES=new Set(["song_import","app_open","first_note","input_mode","midi_connected","pp_lesson_done","learn_end","game_end","quiz_end","duel_end","goal_reached","badge","signup","login","play","feedback","acc_end","song_open","route_step","route_stage"]);
@@ -11062,9 +11072,9 @@ function mwMsg(st, note, vel, inp){ if(!MW.on) return false; const ty=st&0xf0, n
 function mwTestNote(m, v, name){ const T=MW.t; if(!T) return; T.n++; T.vels.push(v); T.last={m,v,name}; T.silent=false;
   if(midiNames.length>1 && !T.picked && name){ T.picked=name; S.settings.midiInput=name; }
   const s=mdS(), h=mwHw(); s.tested=Date.now(); if(name && h.name!==name){ s.hw={name}; } const r=mwTouch(); if(r!=null) mwHw().vel=r; save();
-  if(m<T.lo || m>=T.lo+24) T.lo=Math.max(0,Math.min(103,12*Math.floor(m/12))); mwRender(); }
+  if(m<T.lo || m>T.lo+24) T.lo=Math.max(0,Math.min(103,12*Math.floor(m/12))); mwRender(); }
 function mwTouch(){ const v=MW.t?MW.t.vels:[]; if(v.length<2) return null; const mx=Math.max(...v), mn=Math.min(...v); if(mx-mn>=30) return true; if(mx===mn) return false; return null; }
-function mwKb2(lo, on, nc){ const WH=[0,2,4,5,7,9,11], wh=[]; for(let m=lo;m<lo+24;m++) if(WH.includes(m%12)) wh.push(m); const ww=100/wh.length;
+function mwKb2(lo, on, nc){ const WH=[0,2,4,5,7,9,11], wh=[]; for(let m=lo;m<=lo+24;m++) if(WH.includes(m%12)) wh.push(m); const ww=100/wh.length;
   let h=wh.map(m=>'<span class="w'+(m===on?' on':'')+'"'+(m===on?' style="--nc:'+nc+'"':'')+'>'+(m%12===0?'<small>'+esc(octName(m))+'</small>':'')+'</span>').join("");
   for(let m=lo;m<lo+24;m++) if(!WH.includes(m%12)){ const i=wh.indexOf(m-1); h+='<span class="b'+(m===on?' on':'')+'" style="left:calc('+((i+1)*ww)+'% - '+(ww*.3)+'%);width:'+(ww*.6)+'%'+(m===on?';--nc:'+nc:'')+'"></span>'; }
   return '<div class="mt-kb mw-kb" aria-hidden="true">'+h+'</div>'; }
@@ -13168,7 +13178,7 @@ function pnSusSet(on,ped){ if(ped) PN.ped=on; else PN.sus=on; const b=$("pnSus")
 function pnAllOff(){ PN.all.forEach(x=>pnRel(x,true)); PN.all=[]; PN.on.clear(); PN.held.forEach(m=>keyDown(m,false)); PN.held.clear(); PN.ptr.clear(); PN.sus=false; PN.ped=false; }
 // MIDI (called from the onmidimessage of enableMidi while page==="piano")
 function pnMidi(st,note,vel){ const ty=st&0xf0;
-  if(ty===0x90 && vel>0){ pnOn(note,Math.pow(vel/127,.8),"midi"); followMidi(note); return; }
+  if(ty===0x90 && vel>0){ followMidi(note); pnOn(note,Math.pow(vel/127,.8),"midi"); return; } // MIDI 3 : l'écran suit d'abord, la touche allumée est la bonne
   if(ty===0x80 || ty===0x90){ pnOff(note); return; }
   if(ty===0xB0 && note===64) pnSusSet(vel>=64,true);
   if(ty===0xB0 && (note===120||note===123)) pnAllOff(); }
@@ -13294,6 +13304,95 @@ document.addEventListener("keydown",e=>{ if(page!=="piano") return; const p=$("p
 try{ new MutationObserver(()=>{ if(page==="piano") vzCols(); }).observe(document.documentElement,{attributes:true,attributeFilter:["data-theme"]}); }catch(e){}
 document.addEventListener("visibilitychange",()=>{ if(document.hidden && page==="piano") pnAllOff(); });
 /* ==== fin Mode PIANO ==== */
+/* ==== Sons du piano (chantier sons) ==== */
+// Piano à queue = vrais échantillons « Salamander Grand Piano » (Alexander Holm, CC BY 3.0, MP3 repris sans modification de
+// github.com/Tonejs/audio) : 30 fichiers dans assets/audio/piano/ (La0 → Do8, une note toutes les tierces mineures, ~2 Mo), chargés à la
+// demande (pnSmpLoad : à l'ouverture du mode PIANO quand le piano à queue est choisi, ou au choix de l'instrument), décodés une seule fois
+// (début silencieux du MP3 retiré, notes coupées à 6 s (grave), 5 s (médium), 4 s (aigu) avec une fin en fondu : ~55 Mo décodés en stéréo) ; tant que ce n'est pas prêt (ou si le chargement
+// échoue), la synthèse d'avant joue. Lecture pnGrandSmp : AudioBufferSourceNode de l'échantillon le plus proche (≤ 1,5 demi-ton,
+// playbackRate), force → volume et filtre passe-bas, relâche = étouffoir (plus long dans le grave, aucun étouffoir au-dessus de Fa6).
+// Synthé doux refait (pad : deux dents de scie désaccordées et écartées en stéréo, filtre qui s'ouvre lentement et ondule, attaque 0,3 s,
+// relâche 1,8 s ; plus de sous-octave sinus qui faisait orgue). Anti-claquements : fondu de 5 ms avant la fin naturelle d'une voix,
+// arrêt des sources après une relâche complète, note rejouée = relâche courte (80 ms au piano), sortie : compresseur puis écrêtage doux
+// (WaveShaper, sans suréchantillonnage = aucune latence). PN.off = contexte hors ligne des tests (r48_piano : rendu, claquements, spectres).
+const PN_SMP={st:0, buf:{}, p:null, base:"assets/audio/piano/", list:[]};
+["C","Ds","Fs","A"].forEach((n,i)=>{ for(let o=0;o<=8;o++){ const m=12*(o+1)+i*3; if(m>=21 && m<=108) PN_SMP.list.push({n:n+o,m}); } });
+PN_SMP.list.sort((a,b)=>a.m-b.m);
+const PN_QREL={grand:.08, pad:.12};
+function pnSmpDecode(c,ab){ return new Promise((res,rej)=>{ try{ const p=c.decodeAudioData(ab,res,rej); if(p && p.then) p.then(res,rej); }catch(e){ rej(e); } }); }
+function pnSmpTrim(c,b,m){ const sr=b.sampleRate, nc=Math.min(2,b.numberOfChannels), L=b.getChannelData(0), R=nc>1?b.getChannelData(1):L, thr=.0015;
+  let pk=0; for(let i=0, z=Math.min(L.length,Math.round(sr*.25));i<z;i++) pk=Math.max(pk,Math.abs(L[i]),Math.abs(R[i]));
+  const th=Math.max(thr,pk*.04); let s=0; while(s<L.length && Math.abs(L[s])<th && Math.abs(R[s])<th) s++;
+  s=Math.max(0,s-Math.round(sr*.0015)); // the MP3 starts with silence and a quiet pre-echo: start 1.5 ms before the hammer (no added latency)
+  const cap=m<45?6:m<69?5:4, n=Math.max(1,Math.min(b.length-s, Math.round(cap*sr))), fade=Math.round(Math.min(.8,n/sr*.25)*sr), o=c.createBuffer(nc,n,sr);
+  for(let k=0;k<nc;k++){ const d=o.getChannelData(k); d.set(b.getChannelData(k).subarray(s,s+n)); for(let i=0;i<fade;i++) d[n-fade+i]*=.5+.5*Math.cos(Math.PI*i/fade); d[n-1]=0; }
+  return o; }
+function pnSmpLoad(){ if(PN_SMP.st===1 || PN_SMP.st===2) return PN_SMP.p; const c=audio(); if(!c || !window.fetch) return null;
+  PN_SMP.st=1; const order=[...PN_SMP.list].sort((a,b)=>Math.abs(a.m-62)-Math.abs(b.m-62)); let i=0;
+  const worker=async()=>{ while(i<order.length){ const s=order[i++]; const r=await fetch(PN_SMP.base+s.n+".mp3"); if(!r.ok) throw new Error("smp "+r.status);
+    PN_SMP.buf[s.m]=pnSmpTrim(c, await pnSmpDecode(c, await r.arrayBuffer()), s.m); } };
+  PN_SMP.p=Promise.all([worker(),worker(),worker()]).then(()=>{ PN_SMP.st=2; }, ()=>{ PN_SMP.st=3; PN_SMP.p=null; }); // 3 = failed: the synthesis keeps playing, retried next time
+  return PN_SMP.p; }
+function pnSmpNear(m){ let best=null, d=99; for(const s of PN_SMP.list){ const x=Math.abs(s.m-m); if(x<d && PN_SMP.buf[s.m]){ d=x; best=s.m; } } return d<=6?best:null; }
+function pnGrandSmp(c,t,m,f,v,out){ const near=pnSmpNear(m); if(near==null) return null; const b=PN_SMP.buf[near], rate=Math.pow(2,(m-near)/12);
+  const s=c.createBufferSource(); s.buffer=b; s.playbackRate.value=rate;
+  const lp=c.createBiquadFilter(); lp.type="lowpass"; lp.Q.value=.5; lp.frequency.value=Math.min(20000, 700*Math.pow(2,4.8*v)+f*3);
+  const g=c.createGain(), a=(.16+.84*Math.pow(v,1.5))*2.6; g.gain.setValueAtTime(0,t); g.gain.linearRampToValueAtTime(a,t+.0015);
+  s.connect(lp); lp.connect(g); g.connect(out); s.start(t);
+  return {src:[s], hold:true, rel:m>=90?2.4:m<48?.5:m<72?.36:.26, life:b.duration/rate}; }
+{ const syn=PN_SYN.grand; PN_SYN.grand=function(c,t,m,f,v,out){ if(PN_SMP.st===2){ const r=pnGrandSmp(c,t,m,f,v,out); if(r) return r; } return syn.apply(this,arguments); }; }
+// the electric piano's chords were much louder than the others: −3 dB
+{ const o=PN_SYN.epiano; PN_SYN.epiano=function(c,t,m,f,v,out){ const g=c.createGain(); g.gain.value=.7; g.connect(out); return o.call(this,c,t,m,f,v,g); }; }
+// soft pad (was too close to the organ): two detuned saws spread left/right + a quiet triangle, a low-pass that opens slowly and breathes
+PN_SYN.pad=function(c,t,m,f,v,out){ const a=.26+.18*v, f1=Math.min(6500,f*2.2+600+v*1500);
+  const lp=c.createBiquadFilter(); lp.type="lowpass"; lp.Q.value=2.4; lp.frequency.setValueAtTime(Math.max(160,f*.8),t); lp.frequency.setTargetAtTime(f1,t+.04,.75);
+  const fl=pnOsc(c,"sine",.17+Math.random()*.08,t), fg=c.createGain(); fg.gain.value=f1*.22; fl.connect(fg); fg.connect(lp.frequency);
+  const amp=c.createGain(); amp.gain.setValueAtTime(0,t); amp.gain.linearRampToValueAtTime(a,t+.3); amp.gain.setTargetAtTime(a*.8,t+.35,1.4); lp.connect(amp); amp.connect(out);
+  const src=[fl], mk=(type,cents,pan,lvl)=>{ const o=pnOsc(c,type,f,t); o.detune.value=cents; const g=c.createGain(); g.gain.value=lvl; o.connect(g);
+    if(c.createStereoPanner){ const p=c.createStereoPanner(); p.pan.value=pan; g.connect(p); p.connect(lp); } else g.connect(lp); src.push(o); return o; };
+  const o1=mk("sawtooth",-11,-.65,.5), o2=mk("sawtooth",11,.65,.5); mk("triangle",0,0,.45);
+  const dr=pnOsc(c,"sine",.31,t), dg=c.createGain(); dg.gain.value=5; dr.connect(dg); dg.connect(o1.detune); src.push(dr); // slow drift, the pad "moves"
+  return {src, hold:true, rel:1.8, life:0}; };
+// output: compressor, then a soft clipper (no oversampling: no added latency); PN.off = offline context (tests)
+function pnSoftCurve(){ const n=4096, cv=new Float32Array(n); for(let i=0;i<n;i++){ const u=(i/(n-1)*2-1)*2, a=Math.abs(u); cv[i]=Math.sign(u)*(a<.8?a:.8+.2*Math.tanh((a-.8)/.2)); } return cv; }
+pnAudio=function(){ const c=PN.off||audio(); if(!c) return null; if(PN.A && PN.A.c===c) return PN.A;
+  // no DynamicsCompressor (its 6 ms look-ahead delayed every note): the level follows the number of voices (pnLevel) and a soft clipper catches the rest
+  const out=c.createGain(), pre=c.createGain(); pre.gain.value=.5; const ws=c.createWaveShaper(); ws.curve=pnSoftCurve(); ws.oversample="none";
+  out.connect(pre); pre.connect(ws); ws.connect(c.destination);
+  const bus=c.createGain(); bus.connect(out);
+  const conv=c.createConvolver(); conv.buffer=pnImpulse(c,2.6); const rv=c.createGain(); bus.connect(rv); rv.connect(conv); conv.connect(out);
+  const dl=c.createDelay(1.5); dl.delayTime.value=.34; const fb=c.createGain(); fb.gain.value=.36; const dlf=c.createBiquadFilter(); dlf.type="lowpass"; dlf.frequency.value=2400; const ds=c.createGain();
+  bus.connect(ds); ds.connect(dl); dl.connect(dlf); dlf.connect(fb); fb.connect(dl); dlf.connect(out);
+  const ch=c.createDelay(.06); ch.delayTime.value=.016; const lfo=c.createOscillator(); lfo.frequency.value=.8; const lg=c.createGain(); lg.gain.value=.004; lfo.connect(lg); lg.connect(ch.delayTime); lfo.start();
+  const cs=c.createGain(); bus.connect(ch); ch.connect(cs); cs.connect(out);
+  const nb=c.createBuffer(1,Math.floor(c.sampleRate*.06),c.sampleRate), nd=nb.getChannelData(0); for(let i=0;i<nd.length;i++) nd[i]=Math.random()*2-1; PN.noise=nb;
+  PN.A={c,out,bus,rv,ds,cs,ws}; PN.wave={}; pnFx(true); return PN.A; };
+// without the compressor's make-up gain the output is ~3 dB quieter: volume curve 1.25·vol² (was 1.1·vol²)
+pnFx=function(now){ const A=PN.A; if(!A) return; const k=pnCfg(), t=A.c.currentTime, set=(p,v)=>{ if(now) p.value=v; else p.setTargetAtTime(v,t,.03); };
+  set(A.out.gain,1.25*k.vol*k.vol); set(A.rv.gain,k.rev*1.2); set(A.ds.gain,k.dly*.6); set(A.cs.gain,k.cho*.95); };
+// many voices at once: the bus goes down smoothly (fast when a chord starts, slow when notes end), like a gentle compressor without delay
+function pnLevel(){ const A=PN.A; if(!A) return; const t=A.c.currentTime, n=PN.all.filter(x=>!x.done && (!x.end || x.end>t)).length, g=Math.min(1,1.7/Math.sqrt(Math.max(1,n)));
+  const p=A.bus.gain; if(Math.abs((A.lv||1)-g)<.01) return; const up=g>(A.lv||1); A.lv=g; p.cancelScheduledValues(t); p.setTargetAtTime(g,t,up?.25:.012); }
+// no clicks: sources stop only once the release is inaudible; the scheduled disconnect never runs on an offline (test) context
+// (disconnect on the source's "ended", not on a timer: on iOS the audio clock stops while the context is interrupted, a timer then cut notes)
+pnStop=function(vc,t){ vc.src.forEach(s=>{ try{ s.stop(t); }catch(e){} }); const s0=vc.src[0]; if(s0 && !vc.unhook){ vc.unhook=1; s0.onended=()=>{ try{ vc.g.disconnect(); }catch(e){} }; } };
+pnRel=function(vc,quick){ if(vc.done) return; vc.done=true; const c=vc.c, t=c.currentTime, r=quick?(vc.qrel||.03):vc.rel, p=vc.g.gain;
+  try{ if(p.cancelAndHoldAtTime) p.cancelAndHoldAtTime(t); else { const x=p.value; p.cancelScheduledValues(t); p.setValueAtTime(x,t); } }catch(e){}
+  p.setTargetAtTime(0,t,r/4); pnStop(vc,t+r*2.4+.05); if(vc.c===(PN.A&&PN.A.c)) pnLevel(); };
+// a voice that ends by itself (struck notes, the end of a sample) fades out over the last few ms instead of being cut
+{ const o=pnVoice; pnVoice=function(m,v){ const vc=o.apply(this,arguments); if(!vc) return vc; vc.qrel=PN_QREL[pnCfg().ins]||0;
+    if(vc.end){ const p=vc.g.gain, e=vc.end; try{ p.setValueAtTime(1,Math.max(vc.c.currentTime,e-.03)); p.linearRampToValueAtTime(0,e-.004); }catch(x){} } pnLevel(); return vc; }; }
+// load the samples when the PIANO page shows the grand piano (page opened, instrument chosen)
+{ const o=pnRender; pnRender=function(){ const r=o.apply(this,arguments); if(page==="piano" && pnCfg().ins==="grand") try{ pnSmpLoad(); }catch(e){} return r; }; }
+// credits (Settings › App › Credits): the piano sound first
+Object.assign(TXT.fr,{snCredH:"Sons", snCredT:"Piano à queue : « Salamander Grand Piano » d'Alexander Holm", snCredS:"Échantillons repris sans modification · Licence CC BY 3.0 · "});
+Object.assign(TXT.en,{snCredH:"Sounds", snCredT:"Grand piano: “Salamander Grand Piano” by Alexander Holm", snCredS:"Samples used unchanged · Licence CC BY 3.0 · "});
+{ const o=credRender; credRender=function(){ const r=o.apply(this,arguments), list=$("credList"); if(!list) return r;
+    const box=document.createElement("div"), h=document.createElement("h3"), it=document.createElement("div"), b=document.createElement("b"), s=document.createElement("small"), a=document.createElement("a");
+    box.id="snCred"; h.textContent=t("snCredH"); it.className="cred-item"; b.textContent=t("snCredT"); s.textContent=t("snCredS");
+    a.href="https://creativecommons.org/licenses/by/3.0/"; a.target="_blank"; a.rel="noopener"; a.textContent="creativecommons.org/licenses/by/3.0"; s.appendChild(a); it.append(b,s); box.append(h,it);
+    list.insertBefore(box,list.firstChild); return r; }; }
+/* ==== fin Sons du piano ==== */
 /* ==== Gammes une à une : entraînement (chantier sc1-train) ==== */
 // Au lancement d'une gamme (case de la liste sc1), deux modes, pastilles #sc1Tm dans la barre du jeu : ENTRAÎNEMENT (game.sc1.train) et
 // ÉVALUATION (l'actuel, étoiles). Entraînement = d'abord une démonstration (sc1Demo : la gamme jouée et allumée note par note, à un tempo calme,
@@ -13378,6 +13477,39 @@ function sc1Bar(){ const on=page==="practice" && sc1On(), tr=sc1Tr(); document.b
 { const o=render; render=function(){ sc1TrGuide(); const r=o.apply(this,arguments); try{ sc1Bar(); }catch(e){ console.warn(e); } return r; }; }
 { const o=openPage; openPage=function(){ const r=o.apply(this,arguments); if(page!=="practice"){ if(SC1.demo){ SC1.demo=false; clearPlayTimers(); } sc1TrGuide(); try{ sc1Bar(); }catch(e){} } return r; }; }
 /* ==== fin Gammes une à une : entraînement ==== */
+
+/* ==== MIDI 3 (chantier fix-midi3, 26/10/2026) ==== */
+// Les notes vraiment jouées sur le clavier MIDI en cours (cette session) : MS.name, MS.lo / MS.hi, et l'heure de la dernière note de chaque port.
+const MS={name:"", lo:null, hi:null, last:new Map()};
+function midiSeen(note, inp){ const nm=String(inp&&inp.name||""); MS.last.set(nm, performance.now());
+  if(nm!==MS.name){ MS.name=nm; MS.lo=MS.hi=null; }
+  MS.lo = MS.lo==null ? note : Math.min(MS.lo,note); MS.hi = MS.hi==null ? note : Math.max(MS.hi,note); }
+// a note outside the screen keyboard: when the notes played on this keyboard span more keys than the screen shows (a 25-key keyboard
+// on a 24-key screen: its top C), the screen grows to those keys instead of jumping an octave (up to 37 keys; bigger ones say their size)
+function midiWiden(n){ if(MS.lo==null || n<MS.lo || n>MS.hi || (S.settings.kbdSize||"auto")==="auto") return false;
+  let lo=MS.lo, hi=MS.hi; if(hi-lo<=HIGH-LOW || hi-lo>36) return false;
+  const white=m=>[0,2,4,5,7,9,11].includes(((m%12)+12)%12); while(!white(lo)) lo--; while(!white(hi)) hi++;
+  if(lo<21 || hi>108) return false;
+  Object.assign(S.settings,{kbdSize:"custom",kbdLow:lo,kbdHigh:hi}); save(); buildKeyboard(); renderSettings();
+  if(cur && typeof markPlayed==="function") markPlayed(); return true; }
+// the chosen keyboard (S.settings.midiInput) mutes the other ports only while it is played: another keyboard played when the chosen one has
+// been silent for 3 s takes over (it becomes the chosen one). Before, a LUMI picked in the assistant silently muted a 25-key keyboard plugged next.
+function midiTakeOver(st, vel, inp){ if((st&0xf0)!==0x90 || !vel || !inp || !inp.name || midiVirtual(inp.name)) return false;
+  const t0=MS.last.get(S.settings.midiInput); if(t0!=null && performance.now()-t0<3000) return false;
+  S.settings.midiInput=inp.name; save();
+  try{ $("midiTxt").textContent=t("midiDev")+inp.name; guessKbdSize(inp.name); mdPorts(midiNames.slice()); mdPill(); if(midiOpen) renderMidiModal(); }catch(e){}
+  return true; }
+// the keys of the MIDI keyboard, for the Play player: {lo, hi, sure} (sure = measured in the assistant; otherwise a size, placed by the notes played)
+function midiSpan(inp){ const h=(S.midi&&S.midi.hw)||{}, nm=inp&&inp.name, sz=S.settings.kbdSize||"auto"; let r=null;
+  if(h.lo>=21 && h.hi>h.lo && (!h.name || h.name===nm)) r={lo:+h.lo, hi:+h.hi, sure:!!h.measured};
+  else if(KB_PRESETS[sz]) r={lo:KB_PRESETS[sz][0], hi:KB_PRESETS[sz][1], sure:false};
+  else if(sz==="custom" && +S.settings.kbdHigh>+S.settings.kbdLow) r={lo:+S.settings.kbdLow, hi:+S.settings.kbdHigh, sure:false};
+  if(r && MS.name===nm && MS.lo!=null){ r.slo=MS.lo; r.shi=MS.hi; } // the notes already played on it (LEARN, the games…): the player places it at once
+  return r; }
+// the app: a Bluetooth keyboard that comes back (same source, back online) is reported by the plugin only when it re-reads its sources;
+// it did so every 2 s only while the MIDI window or the assistant was open. Now every 5 s while the app is in front (cheap, no prompt).
+if(document.documentElement.classList.contains("native")) setInterval(()=>{ try{ if(document.hidden || !midiAcc || !window.__nativeMidi) return; window.__nativeMidi.listInputs().catch(()=>{}); }catch(e){} },5000);
+/* ==== fin MIDI 3 ==== */
 
 // ---------- Boot ----------
 

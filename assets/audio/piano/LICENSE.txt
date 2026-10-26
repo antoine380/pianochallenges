@@ -1,0 +1,6 @@
+Salamander Grand Piano (Yamaha C5) — Alexander Holm
+Licence : Creative Commons Attribution 3.0 (CC BY 3.0) — https://creativecommons.org/licenses/by/3.0/
+Fichiers MP3 (un échantillon toutes les tierces mineures, de La0 à Do8, une couche de vélocité) repris sans modification
+du dépôt https://github.com/Tonejs/audio (dossier salamander/, commit efd8296360f9526e379bfbe5c1698ff54d6a1d34).
+Utilisés par le mode PIANO de Piano Challenges (instrument « Piano à queue ») : transposition à la note voisine,
+enveloppe, filtre selon la force de frappe et coupe de la fin des notes graves sont faits par l'application au moment de la lecture.
