@@ -1,0 +1,235 @@
+{
+ "version": "2026-10-26T18:43Z",
+ "native_min": 1,
+ "files": [
+  {
+   "path": "apple-touch-icon.png",
+   "sha256": "15989d9bd225d1a36cfac59596d30932f7a1fa8ca9bf6cc23fe30a24542d800b",
+   "size": 3416
+  },
+  {
+   "path": "assets/claviers/cts1.jpg",
+   "sha256": "70dbdfac387713679ccabeab5d58169da4557f2e52f68ac378e940cba64dc49d",
+   "size": 25694
+  },
+  {
+   "path": "assets/claviers/gopiano88.jpg",
+   "sha256": "921fe6823a0892e0001257a0f648b5f205789769410db40d61328717cf93cdc2",
+   "size": 39497
+  },
+  {
+   "path": "assets/claviers/lkmini37.jpg",
+   "sha256": "c99fccd497a24cc16c8f15751a016d0ebc6179d0322124f2915568360d152b07",
+   "size": 31943
+  },
+  {
+   "path": "assets/claviers/lpk25w.jpg",
+   "sha256": "751cc39370eca5699d7c329244fccb15e59c0dbf57bdad7ce7d56ead855b558b",
+   "size": 41632
+  },
+  {
+   "path": "assets/claviers/microkeyair.jpg",
+   "sha256": "1319f54c27fb9da1b004a3fb931ddb3cfc31c0cdbeaea30a2c93ee68f079a16b",
+   "size": 22562
+  },
+  {
+   "path": "assets/claviers/minilab3.jpg",
+   "sha256": "d9da8143d25710c3a0b843448a659117911d4271f3dec56458d36831bfbc60c1",
+   "size": 26563
+  },
+  {
+   "path": "assets/claviers/mpkmini4.jpg",
+   "sha256": "d8c31020b58876b6fcf73cac17688c7797118083af6f25f9fa71f8eaca853126",
+   "size": 32685
+  },
+  {
+   "path": "assets/claviers/mpkplay.jpg",
+   "sha256": "5b155bebb060c7a41ddbdc369923547f20137698b1c5162b672d7e994e9cd337",
+   "size": 54521
+  },
+  {
+   "path": "assets/claviers/p145.jpg",
+   "sha256": "d9abe5ff9caffab4d8a246264a001884a6c656c733a76138f0be53d95404139d",
+   "size": 28430
+  },
+  {
+   "path": "assets/claviers/psre383.jpg",
+   "sha256": "f2273b97de6877eb2ee23ff40da6b942a99d537a17447ed78289e34f4ff84718",
+   "size": 46279
+  },
+  {
+   "path": "assets/claviers/roli.jpg",
+   "sha256": "f56dbdc49e3a864f5ecad1a24dbc1dc1a0a7c06a19291c6e7da1a9a97ac05cc4",
+   "size": 24589
+  },
+  {
+   "path": "assets/claviers/smk25.jpg",
+   "sha256": "8d3b6ba847fe6d262792e1106dce053688670fee22af9ab01d3a612b02950180",
+   "size": 19467
+  },
+  {
+   "path": "assets/claviers/xkeyair.jpg",
+   "sha256": "dfc0043b0b777b8bf018ac1aeab4bd9446e16c1d5bc18dd05c5823b210870dd9",
+   "size": 27771
+  },
+  {
+   "path": "assets/fonts/Bravura-OFL.txt",
+   "sha256": "eaf7e8faffbe4e404fc19e625c89cef03992dc736051ae7e2fefe205cd6c93db",
+   "size": 4420
+  },
+  {
+   "path": "assets/fonts/atkinson-hyperlegible-latin-400-normal.woff2",
+   "sha256": "d64ba838ef5472bba248620ec4fd8b5aa7cf0db2908e0bb230600caf279ba7bc",
+   "size": 17208
+  },
+  {
+   "path": "assets/fonts/atkinson-hyperlegible-latin-700-normal.woff2",
+   "sha256": "140e2bd25a7315c8a062508391426b0d8c3297400c947b8d847be28f73a199f0",
+   "size": 17524
+  },
+  {
+   "path": "assets/fonts/bravura.woff2",
+   "sha256": "5c25278c208ca455dc7c3c0c95d833e134aca6d740a023767af50d0dfa06ef82",
+   "size": 247200
+  },
+  {
+   "path": "assets/fonts/bricolage-grotesque-latin-500-normal.woff2",
+   "sha256": "b62688707e0820a9cf2a98e9b0349fbb348fd17f76b70a05b53e7a668e3f406f",
+   "size": 22476
+  },
+  {
+   "path": "assets/fonts/bricolage-grotesque-latin-700-normal.woff2",
+   "sha256": "4c373ce3c1cca41c864eb3e27c059a59fc6310547ab9c9b6cd780d387ba24206",
+   "size": 22384
+  },
+  {
+   "path": "assets/fonts/bricolage-grotesque-latin-800-normal.woff2",
+   "sha256": "3e1b5f0a56ee995b7c1445bc54e6ec98c5dffb585ef5c4baf86731cf68e27c61",
+   "size": 21844
+  },
+  {
+   "path": "assets/fonts/dm-mono-latin-400-normal.woff2",
+   "sha256": "e1896b13b2b1bb112fac2f9571bd6c40e118746e77a4511edbf43fbb41bf3e1e",
+   "size": 14820
+  },
+  {
+   "path": "assets/fonts/dm-mono-latin-500-normal.woff2",
+   "sha256": "9964608a849396bd00c4bfd7034afe03486469dcf20b4f6b8cbdfdd310369951",
+   "size": 14988
+  },
+  {
+   "path": "assets/fonts/fredoka-latin-600-normal.woff2",
+   "sha256": "b62f2898de150f019961f4884a49f83dcd2ce74375be5e0992c594ebb8f30294",
+   "size": 16468
+  },
+  {
+   "path": "assets/fonts/fredoka-latin-700-normal.woff2",
+   "sha256": "ee61b48acab42fcfee4e1c398b03bbae7e09d1be8471779c440a97dc85118c16",
+   "size": 15900
+  },
+  {
+   "path": "assets/fonts/nunito-latin-500-normal.woff2",
+   "sha256": "23ae3083dbdaeabf3b9969a3947ddf5d5614683516e28ffa110ca4eb6192a9ff",
+   "size": 16428
+  },
+  {
+   "path": "assets/fonts/nunito-latin-600-normal.woff2",
+   "sha256": "45f437de32ff5973eb5616b43c1308bf9fe897442f3d78a603c4cd0a06d66573",
+   "size": 16556
+  },
+  {
+   "path": "assets/fonts/nunito-latin-700-normal.woff2",
+   "sha256": "fa89300b9bbb3bd0f60d6991aa055965d98e2ccca27bf8688fe0c39cdc796846",
+   "size": 16228
+  },
+  {
+   "path": "assets/fonts/nunito-latin-800-normal.woff2",
+   "sha256": "2363d3ed037283ebb961e8c4b4917e40a8bc8853cf9965cf1ea7b4daa1df630a",
+   "size": 16520
+  },
+  {
+   "path": "assets/js/midi-keyboards.js",
+   "sha256": "f44b9e8a4c5eceb45db3f7e37a1039301b43afd5de51b9a9f7b439fd02f26562",
+   "size": 15401
+  },
+  {
+   "path": "assets/js/quiz-data.js",
+   "sha256": "d4788d521ca3e3bec1c3e99fe911be35e361b24d28ce50f63a4d8a2416a7f90d",
+   "size": 238789
+  },
+  {
+   "path": "assets/js/song-import.js",
+   "sha256": "124fec2406ad4a59374b03275430871970d69eada61b853ff97a22a225cc92e8",
+   "size": 21298
+  },
+  {
+   "path": "assets/js/songs-data.js",
+   "sha256": "8c3d1c2a1f7dd1647f347b0f874b52719af82c02d1d8cfb4337bdd1a73f95879",
+   "size": 18697
+  },
+  {
+   "path": "assets/js/songs-free.js",
+   "sha256": "a42d61bf655cd1d09bf219286e8c97b9a826ad346f8d49edf5660cba8324507f",
+   "size": 188288
+  },
+  {
+   "path": "assets/js/staff.js",
+   "sha256": "122f9d3b59e753edbac710572c82ea2b1f66b62aef90b8dbb1300a839f6c16a1",
+   "size": 13329
+  },
+  {
+   "path": "assets/js/supabase-2.116.0.js",
+   "sha256": "84ee9bf45695c1dd3ba1595b6bcfb0f09672434631351ffc8ebe9140545d5ff6",
+   "size": 218318
+  },
+  {
+   "path": "confidentialite.html",
+   "sha256": "c07a6a0ca3ceb9ab9051d42efb0438513d8924963e7e516cc53b5bf7b22575e6",
+   "size": 7208,
+   "src": "live/files/confidentialite.html"
+  },
+  {
+   "path": "favicon-32.png",
+   "sha256": "c58ccbe7d532bb2821e2c9fb7e661c442d39cf6c2905adf37a3bf1bf176e57c2",
+   "size": 1355
+  },
+  {
+   "path": "favicon.svg",
+   "sha256": "6dbcc9f132a19a63a59f0c245418da90f9c1fda1cd4c065a299159f2df80c5db",
+   "size": 480
+  },
+  {
+   "path": "icon-192.png",
+   "sha256": "f7e013c6a283aba2d02718eaec8cb12048cfa512059e7f9676c0753458762c17",
+   "size": 7421
+  },
+  {
+   "path": "icon-512.png",
+   "sha256": "b699748b89e73e9924aa1ae6f013763fdc075c83b3630a2b7737aabfe7578f9f",
+   "size": 19974
+  },
+  {
+   "path": "index.html",
+   "sha256": "7514693633e3e695a1c08a80b00bf13524a064dbf0f298b48cd36aeaef9410a4",
+   "size": 1601591,
+   "src": "live/files/index.html"
+  },
+  {
+   "path": "manifest.webmanifest",
+   "sha256": "1ca31f635310f53abdf6808d9cec504befff352b295d4d6d3a5355b389d51c62",
+   "size": 543
+  },
+  {
+   "path": "mentions-legales.html",
+   "sha256": "aa19650f1608a47caacc290f439b6c8fbef76f0716e19f5e6540041df9f26d44",
+   "size": 4552,
+   "src": "live/files/mentions-legales.html"
+  },
+  {
+   "path": "play/index.html",
+   "sha256": "26fa706bdae841af9f3fcb79313ba26efd26862ed6a4d162b24e28fc19aadd19",
+   "size": 90599,
+   "src": "live/files/play/index.html"
+  }
+ ]
+}

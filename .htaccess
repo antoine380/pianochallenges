@@ -36,6 +36,13 @@ AddType image/svg+xml .svg
   ExpiresByType image/png "access plus 1 month"
   ExpiresByType image/jpeg "access plus 1 month"
   ExpiresByType image/svg+xml "access plus 1 month"
+  ExpiresByType application/json "access plus 0 seconds"
+</IfModule>
+# The iOS app checks live/manifest.json (and the back office version.txt) for a new web version: never cached
+<IfModule mod_headers.c>
+  <FilesMatch "^(manifest\.json|version\.txt)$">
+    Header set Cache-Control "no-cache, max-age=0"
+  </FilesMatch>
 </IfModule>
 
 # 6. Unknown URLs go back to the app

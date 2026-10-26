@@ -46,6 +46,9 @@ Après le premier lancement, tu peux débrancher le câble : l'app reste install
 
 ### Mettre à jour l'app après un changement du site
 
+Plus besoin, sauf pour le code natif : l'app installée récupère seule la dernière version publiée (voir « Mise à jour à distance » plus bas).
+Quand le code natif (Swift) change, ou pour embarquer la dernière version web dans l'app :
+
 ```bash
 cd pianochallenges
 git pull
@@ -68,7 +71,9 @@ Puis ▶︎ dans Xcode.
 | `capacitor.config.json` | Nom, identifiant et réglages de l'app (Capacitor 8) |
 | `scripts/copy-web.mjs` | Copie le site (dossier parent) dans `www/` |
 | `ios/App/App/MidiPlugin.swift` | MIDI natif CoreMIDI : USB, Bluetooth LE, réseau ; fenêtre d'appairage Bluetooth |
-| `ios/App/App/MainViewController.swift` | Charge le site, enregistre le plugin, garde l'écran allumé |
+| `ios/App/App/MainViewController.swift` | Charge le site (ou la version téléchargée), enregistre les plugins, garde l'écran allumé |
+| `ios/App/App/LiveUpdatePlugin.swift` | Mise à jour à distance de la partie web (voir plus bas) |
+| `scripts/web-files.mjs` | Liste des fichiers du site embarqués dans l'app et adaptations (pas de zoom…), `NATIVE_MIN` |
 | `ios/App/App/Info.plist` | Textes d'autorisation Bluetooth et micro ; iPhone en paysage, iPad dans toutes les orientations |
 | `resources/` | Icône 1024 px et écran de démarrage |
 
@@ -82,3 +87,21 @@ L'app iPad tourne telle quelle sur un Mac à puce Apple (« Designed for iPad »
 1. `cd ~/pianochallenges && git pull && cd app && npm run sync && npm run open`
 2. Dans Xcode, choisir la destination **My Mac (Designed for iPad)**, puis ▶︎. L'app s'installe et apparaît dans le Launchpad ; clic droit sur son icône dans le Dock > Options > Garder dans le Dock.
 3. Pour la distribuer : dans App Store Connect, laisser cochée la disponibilité « Mac (Apple Silicon) » de l'app iPad.
+
+
+## Mise à jour à distance (sans Xcode)
+
+L'app installée se met à jour seule depuis https://pianochallenges.com, sans service tiers, et reste utilisable hors connexion.
+
+**Comment ça marche**
+1. `python3 tools/build.py` écrit, en plus d'`index.html` et `version.txt`, le manifeste `live/manifest.json` (version, `native_min`, chaque fichier avec son SHA-256 et sa taille) et `live/files/` (les pages adaptées à l'app : sans zoom, pages légales qui défilent). **Publier `live/` dans le même commit qu'`index.html`.**
+2. Au lancement (après le démarrage de la page) et au retour dans l'app (au plus une fois par heure), l'app lit le manifeste. Si la version est plus récente que la sienne, elle copie les fichiers inchangés, télécharge les autres, vérifie chaque SHA-256, et range le tout dans `Library/NoCloud/live/<version>/`.
+3. La nouvelle version est **en attente** : elle sert au **lancement suivant** (jamais de rechargement en pleine partie). Réglages › Application affiche « Mise à jour prête au prochain lancement ». Pour la voir tout de suite : fermer l'app (balayer vers le haut) et la rouvrir.
+4. L'adresse de la page reste `capacitor://localhost` : la progression du joueur (localStorage), la session et les morceaux importés sont gardés.
+5. Sécurité : la page doit appeler `LiveUpdate.ready()` dans les 20 s ; sinon l'app revient à la version précédente (ou à celle embarquée) et n'essaie plus jamais cette version. Au plus 2 versions sur l'appareil.
+
+**Quand refaire Xcode ?** Seulement quand le code natif change (fichiers `.swift`, plugins, `Info.plist`, Capacitor). Si un changement web a besoin d'un nouveau code natif, augmenter **ensemble** `NATIVE_MIN` dans `scripts/web-files.mjs` et `nativeVersion` dans `LiveUpdatePlugin.swift` : les apps qui ont l'ancien code natif gardent alors l'ancienne version web jusqu'à la nouvelle installation.
+
+**Revenir à la version embarquée** : Réglages › Application, toucher 5 fois de suite la ligne « Version web … » puis confirmer (`LiveUpdate.reset()`). La version publiée actuelle est mise de côté ; seule une publication plus récente sera reprise. Supprimer et réinstaller l'app marche aussi (mais efface la progression d'un invité).
+
+Une nouvelle installation depuis Xcode (`npm run sync` puis ▶︎) embarque la dernière version : une version téléchargée plus ancienne est alors ignorée.

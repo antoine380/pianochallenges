@@ -981,6 +981,7 @@ body:not(.runner-on)[data-page="games"] .stage{display:none!important}
 .side.collapsed .theme-row{flex-direction:column;gap:6px}
 .side .legal-links{display:none}
 .set-legal{display:block!important;margin:4px 0 0;font-size:.78rem}
+.set-live{-webkit-user-select:none;user-select:none} .set-live .lu-pend{color:var(--text)}
 
 /* ===== v1.3: Play home, progress sheet ===== */
 .side #progBtn{display:none}
@@ -4407,7 +4408,7 @@ body[data-page="piano"] .wk.k-down span{color:#15122e}
       <div class="trk-set"><label class="check"><input type="checkbox" id="optAnalytics"> <span><b data-i="trkOpt"></b><small data-i="trkOptS"></small></span></label><button class="btn" id="fbBtn" type="button" data-i="fbBtnT"></button></div>
       <p class="set-reset"><button class="btn" id="tourAgain" type="button" data-i="tourAgainT"></button> <button class="btn" id="onbAgain" type="button" data-i="onbAgainT"></button> <button class="btn" id="credBtn" type="button" data-i="credBtnT"></button></p>
       <p class="set-reset"><button class="danger" id="resetBtn" type="button"></button></p>
-      <p class="legal-links set-legal"><a href="/mentions-legales.html" data-i="legalNotice"></a> · <a href="/confidentialite.html" data-i="privacy"></a><br>© 2026 Antoine Bernard · <span data-i="rights"></span></p></section>
+      <p class="legal-links set-legal"><a href="/mentions-legales.html" data-i="legalNotice"></a> · <a href="/confidentialite.html" data-i="privacy"></a><br>© 2026 Antoine Bernard · <span data-i="rights"></span><span class="set-live" id="setLive" hidden></span></p></section>
     </div>
     <div class="modal-body prog-body" id="progPane" data-tab="ov" hidden>
       <div class="seg set-nav pf-nav" id="pfNav" role="tablist"><button type="button" role="tab" data-v="ov" data-i="pfOverview"></button><button type="button" role="tab" data-v="det" data-i="pfDetail"></button><button type="button" role="tab" data-v="suc" data-i="achTab"></button></div>
@@ -13237,6 +13238,38 @@ restoreInput(); mdWatch();
   else if(!(S.onb&&S.onb.done) || !S.tourDone){ save(); if(hasSession()) ensureCloud().finally(()=>setTimeout(startFlow,wait)); else setTimeout(startFlow,wait); }
   else maybeAskInput(); }
 setTimeout(mailGo, isApp()?1800:700); // un bouton d'e-mail ouvre directement l'écran (entraînement du jour, leçon, progression)
+
+/* ==== LiveUpdate ==== */
+// App iOS seulement (rien ne change dans le navigateur) : la partie web se met à jour seule depuis pianochallenges.com
+// (app/ios/App/App/LiveUpdatePlugin.swift, live/manifest.json écrit par tools/build.py). Ici :
+// - ready() dit au natif que cette version a démarré sans erreur (sinon il revient à la précédente au bout de 20 s) ;
+// - Réglages › Application : version web active + « Mise à jour prête au prochain lancement » quand une version attend ;
+// - 5 touchers rapides sur cette ligne = revenir à la version d'origine de l'app (LiveUpdate.reset, après confirmation).
+const LU = { info:null, taps:0, t0:0, on:false };
+function luOn(){ const c=window.Capacitor; return isApp() && !!c && typeof c.nativePromise==="function"; }
+function luCall(m, o){ return luOn() ? window.Capacitor.nativePromise("LiveUpdate", m, o||{}) : Promise.reject(new Error("web")); }
+function luFmt(v){ v=String(v||""); return /^\d{4}-\d\d-\d\dT\d\d:\d\dZ$/.test(v) ? v.replace("T"," ").replace("Z"," UTC") : v; }
+function luRender(){ const el=$("setLive"); if(!el) return;
+  if(!luOn()){ el.hidden=true; el.textContent=""; return; }
+  const i=LU.info||{}, v=i.version||(APP_BUILD!=="dev"?APP_BUILD:"");
+  el.hidden=false;
+  el.innerHTML='<br>'+esc(t("luVer")(luFmt(v)))+(i.source==="live"?' · '+esc(t("luLive")):"")+(i.pending?'<br><b class="lu-pend">'+esc(t("luPending"))+'</b>':""); }
+function luInfo(){ return luCall("info").then(i=>{ if(i && typeof i==="object") LU.info=i; luRender(); }).catch(()=>{}); }
+function luTap(){ const now=Date.now(); LU.taps = now-LU.t0<3000 ? LU.taps+1 : 1; if(LU.taps===1) LU.t0=now;
+  if(LU.taps<5) return; LU.taps=0;
+  if(confirm(t("luResetQ"))) luCall("reset").catch(()=>{}); }
+Object.assign(TXT.fr,{luVer:v=>"Version web "+v, luLive:"mise à jour", luPending:"Mise à jour prête au prochain lancement", luResetQ:"Revenir à la version d'origine de l'app ? Ta progression est gardée."});
+Object.assign(TXT.en,{luVer:v=>"Web version "+v, luLive:"updated", luPending:"Update ready for next launch", luResetQ:"Go back to the app's original version? Your progress is kept."});
+if(luOn()){
+  LU.on=true;
+  { const el=$("setLive"); if(el) el.addEventListener("click", luTap); }
+  { const o=openPage; openPage=function(pg){ const r=o.apply(this,arguments); if(pg==="settings") luInfo(); return r; }; }
+  { const o=render; render=function(){ const r=o.apply(this,arguments); try{ luRender(); }catch(e){} return r; }; }
+  try{ window.Capacitor.nativeCallback("LiveUpdate","addListener",{eventName:"pending"},(d,err)=>{ if(!err && d && d.version){ LU.info=Object.assign({}, LU.info||{}, {pending:d.version}); luRender(); } }); }catch(e){}
+  // la page a démarré : on le dit au natif (dernière ligne du script, après le Boot)
+  luCall("ready").then(i=>{ if(i && typeof i==="object") LU.info=i; luRender(); }).catch(()=>{});
+}
+/* ==== fin LiveUpdate ==== */
 
 })();
 </script>
