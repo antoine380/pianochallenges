@@ -35,19 +35,21 @@ run1(){ # $1 = fichier ; renvoie le code de sortie du test
 for f in "$@"; do
   b=$(basename "$f"); b=${b%.*}
   echo; echo "::group::$b"
-  t0=$(date +%s); run1 "$f"; rc=$?
+  LOG=$(mktemp); t0=$(date +%s); run1 "$f" 2>&1 | tee "$LOG"; rc=${PIPESTATUS[0]}
   if [ $rc -ne 0 ] && [[ " ${RETRY:-} " == *" $b "* ]]; then
     echo "--- $b a échoué (code $rc) : test connu pour être instable, nouvel essai"
-    run1 "$f"; rc=$?; [ $rc -eq 0 ] && b="$b (2e essai)"
+    run1 "$f" 2>&1 | tee "$LOG"; rc=${PIPESTATUS[0]}; [ $rc -eq 0 ] && b="$b (2e essai)"
   fi
   dt=$(( $(date +%s) - t0 ))
   echo "::endgroup::"
   if [ $rc -eq 0 ]; then echo "ok    $b  ${dt}s"; ROWS+=("| $b | ok | ${dt} s |")
   else
     why="code $rc"; [ $rc -eq 124 ] || [ $rc -eq 137 ] && why="délai dépassé (${TO} s)"
-    echo "::error title=Test en échec::$b ($why) — voir le groupe « $b » du journal"
+    tailx=$(grep -vE "^OK|^ok " "$LOG" | tail -n 25 | cut -c1-300 | sed -e 's/%/%25/g' | awk 'BEGIN{ORS="%0A"}{print}')
+    echo "::error title=Test en échec : $b ($why)::$tailx"
     FAILED+=("$b"); ROWS+=("| $b | **ÉCHEC** ($why) | ${dt} s |")
   fi
+  rm -f "$LOG"
 done
 
 if [ -n "${GITHUB_STEP_SUMMARY:-}" ]; then
