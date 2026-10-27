@@ -14,10 +14,14 @@
     if (colCache.has(s)) return colCache.get(s);
     let out = null;
     const m = /^rgba?\(\s*([\d.]+)[ ,]+([\d.]+)[ ,]+([\d.]+)(?:\s*[,/]\s*([\d.]+%?))?\s*\)$/.exec(s);
+    const c2 = /^color\(srgb\s+([-\d.e]+)\s+([-\d.e]+)\s+([-\d.e]+)(?:\s*\/\s*([\d.]+%?))?\s*\)$/.exec(s);
     if (m) { let a = m[4] === undefined ? 1 : (m[4].endsWith('%') ? parseFloat(m[4]) / 100 : +m[4]); out = { r: +m[1] / 255, g: +m[2] / 255, b: +m[3] / 255, a }; }
+    // color(srgb r g b / a) (color-mix, relative colors) : lu tel quel, composantes 0-1
+    else if (c2) { const cl = v => Math.max(0, Math.min(1, +v)); out = { r: cl(c2[1]), g: cl(c2[2]), b: cl(c2[3]), a: c2[4] === undefined ? 1 : (c2[4].endsWith('%') ? parseFloat(c2[4]) / 100 : +c2[4]) }; }
     else {
+      // getImageData rend des valeurs non prémultipliées : ne pas rediviser par l'alpha (avant le 27/10 : couleurs translucides éclaircies jusqu'au blanc)
       cx.clearRect(0, 0, 1, 1); cx.fillStyle = '#000'; cx.fillStyle = s; cx.fillRect(0, 0, 1, 1); const d = cx.getImageData(0, 0, 1, 1).data;
-      out = d[3] ? { r: d[0] / 255 / (d[3] / 255), g: d[1] / 255 / (d[3] / 255), b: d[2] / 255 / (d[3] / 255), a: d[3] / 255 } : null;
+      out = d[3] ? { r: d[0] / 255, g: d[1] / 255, b: d[2] / 255, a: d[3] / 255 } : null;
       if (out) for (const k of ['r', 'g', 'b']) out[k] = Math.min(1, out[k]);
     }
     if (out && out.a <= 0.003) out = null;

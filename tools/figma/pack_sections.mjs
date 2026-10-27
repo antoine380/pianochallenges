@@ -1,17 +1,20 @@
 // Regroupe les JSON exportés (export_screens.mjs) par section dans des « PNG de données » (datapng.mjs) à envoyer dans Figma par upload_assets.
 // Conteneur binaire : 'PCJ2' | u32 longueur du JSON | JSON en ASCII (\uXXXX) | images PNG brutes à la suite ; le JSON donne [début, longueur] de chaque image.
 // Sortie : _figma/secNN-k.png (pour upload_assets + use_figma) et secNN-k.bin (même contenu, pour le greffon tools/figma/plugin).
-// Usage : node tools/figma/pack_sections.mjs [/home/claude/figma-baseline] [Mo max par paquet, 9]
+// Usage : node tools/figma/pack_sections.mjs [/home/claude/figma-baseline] [Mo max par paquet, 9] [écrans.json]
 import fs from 'fs';
 import path from 'path';
 import { encodeDataPng } from './datapng.mjs';
 const BASE = process.argv[2] || '/home/claude/figma-baseline', MAX = (+process.argv[3] || 9) * 1024 * 1024;
 const OUT = path.join(BASE, '_figma'); fs.mkdirSync(OUT, { recursive: true });
-const man = JSON.parse(fs.readFileSync(path.join(BASE, 'manifest.json'), 'utf8')).filter(m => m.json && !m.fail);
+const all = JSON.parse(fs.readFileSync(path.join(BASE, 'manifest.json'), 'utf8')).filter(m => m.json && !m.fail);
+// 3e argument facultatif : fichier JSON [« id@WxH », …] = seulement ces écrans (les lignes restent celles de toute la section)
+const KEEP = process.argv[4] ? new Set(JSON.parse(fs.readFileSync(process.argv[4], 'utf8'))) : null;
+const man = KEEP ? all.filter(m => KEEP.has(`${m.id}@${m.w}x${m.h}`)) : all;
 const ascii = s => s.replace(/[\u007f-\uffff]/g, c => '\\u' + c.charCodeAt(0).toString(16).padStart(4, '0'));
 const packs = []; let cur = null;
 const flush = () => { if (!cur || !cur.screens.length) return;
-  const rows = [...new Set(man.filter(m => m.sec === cur.sec).map(m => m.id))];
+  const rows = [...new Set(all.filter(m => m.sec === cur.sec).map(m => m.id))];
   const json = Buffer.from(ascii(JSON.stringify({ sec: cur.sec, secName: cur.secName, part: cur.part, rows, screens: cur.screens, imgs: cur.imgs })), 'latin1');
   const head = Buffer.alloc(8); head.write('PCJ2', 0); head.writeUInt32BE(json.length, 4);
   const blob = Buffer.concat([head, json, ...cur.bufs]);

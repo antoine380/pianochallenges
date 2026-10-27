@@ -45,7 +45,7 @@ async function pcLoadFonts(packs) {
   await Promise.all([...need.values()].map(f => figma.loadFontAsync(f)));
 }
 
-// Construit les écrans d'un paquet dans une section. o = { section, rows, dx, y0, rowH, labeled:Set, only, shots, onScreen }
+// Construit les écrans d'un paquet dans une section. o = { section, rows, dx, y0, rowH, labeled:Set, only, shots, onScreen, replace }
 async function pcBuildPack(U, o) {
   const { PK, blob, IMG0 } = U; const imgCache = {}; const st = { made: 0, svgFail: 0, fail: 0, screens: {}, shots: [] };
   const image = k => { if (k == null || !PK.imgs[k]) return null; if (!imgCache[k]) { const [a, l] = PK.imgs[k]; imgCache[k] = figma.createImage(blob.slice(IMG0 + a, IMG0 + a + l)).hash; } return imgCache[k]; };
@@ -102,7 +102,10 @@ async function pcBuildPack(U, o) {
     const ri = o.rows.indexOf(s.id); const y = o.y0 + Math.max(0, ri) * o.rowH; const key = s.w + 'x' + s.h; const [szName, x0] = PC_SZ[key] || [key, 720];
     if (!o.labeled.has(s.id)) { o.labeled.add(s.id); const a = tx(s.title, { family: 'Nunito', style: 'Bold' }, 30, ink, o.dx + 80, y, 'Titre · ' + s.id); a.textAutoResize = 'HEIGHT'; a.resize(560, a.height);
       const b = tx('id : ' + s.id, { family: 'Nunito', style: 'Regular' }, 20, mute, o.dx + 80, y + a.height + 14, 'id · ' + s.id); st.screens[s.id + ':label'] = [a.id, b.id]; }
-    const fr = figma.createFrame(); fr.name = `${s.id} · ${szName} ${s.w}×${s.h}`; o.section.appendChild(fr); fr.x = o.dx + x0; fr.y = y; fr.resize(s.w, s.h); fr.clipsContent = true;
+    // o.replace = { 'id@WxH': nodeId } : l'écran existant est vidé et reconstruit dans le même cadre (même nodeId, même place)
+    const old = o.replace && o.replace[s.id + '@' + key] ? await figma.getNodeByIdAsync(o.replace[s.id + '@' + key]) : null;
+    if (old) for (const c of [...old.children]) c.remove();
+    const fr = old || figma.createFrame(); fr.name = `${s.id} · ${szName} ${s.w}×${s.h}`; if (!old) { o.section.appendChild(fr); fr.x = o.dx + x0; fr.y = y; } fr.resize(s.w, s.h); fr.clipsContent = true;
     fr.fills = (s.root.bg || []).map(pt => pcPaint(pt, s.w, s.h));
     for (const c of s.root.ch || []) { try { build(c, fr); } catch (e) { st.fail++; if (!st.err) st.err = String(e && e.message || e).slice(0, 200); } }
     st.screens[s.id + '@' + key] = fr.id; if (o.onScreen) o.onScreen(s, fr);

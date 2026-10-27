@@ -1,4 +1,5 @@
-// Export des écrans pour la page Figma « Revue des écrans » en calques modifiables (26/10/2026).
+// Export des écrans pour la page Figma « Revue des écrans » en calques modifiables (26/10/2026 ; écrans du 27/10 ajoutés en fin de section :
+// Gammes une à une, mode PIANO, Ma route dans les jeux, série de 10 minutes).
 // Reprend les états et les actions de tools/audit/capture_figma.mjs (mêmes sections, identifiants et titres) + les écrans ajoutés depuis
 // (questionnaire « Onboarding 2 », catalogue de claviers #mkcModal, Ma famille #famBox, Rejoindre une famille #famJoin).
 // Pour chaque écran et chaque taille : une capture PNG (référence) + l'arbre des calques en JSON (dom2json.js), images découpées incluses.
@@ -50,7 +51,12 @@ const famSrv = (members = [], extra = {}) => ({ names: { u1: ['Maman', 3], u2: [
 const FAM_OWNER = { user: U('u1'), srv: famSrv(['u2', 'u3']) };
 const FAM_JOIN = { user: U('u5'), srv: famSrv(['u2'], { invites: { ABCD2345: { fam: 'fu1', exp: Date.now() + 6 * 864e5, used: null } } }) };
 const STATES = { onbcpt: t => ({ settings: { lang: 'fr', notation: 'fr', theme: t, uiSound: false }, langV2: true, gate: 'account' }), famille: t => rich(t, { gate: 'account', netId: 'pabcd1234', settings: { ...base(t).settings, paywall: true } }), neuf: t => base(t, { onb: { done: 1, level: 'simple' } }), avance: t => rich(t), debut,
-  compte: t => rich(t, { gate: 'account', netId: 'pabcd1234' }), midi: t => rich(t, { settings: { ...base(t).settings, input: 'midi' } }) };
+  compte: t => rich(t, { gate: 'account', netId: 'pabcd1234' }), midi: t => rich(t, { settings: { ...base(t).settings, input: 'midi' } }),
+  // 27/10 : Gammes une à une (tutoriel déjà vu, sauf sc1tuto), série à 5 min (fiche Progression), mode PIANO en cascade
+  sc1: t => rich(t, { settings: { ...base(t).settings, sc1Tour: 1, sc1Mode: 'notes' } }), sc1ch: t => rich(t, { settings: { ...base(t).settings, sc1Tour: 1, sc1Mode: 'chords' } }),
+  sc1tuto: t => rich(t, { settings: { ...base(t).settings, sc1Mode: 'notes' } }),
+  sr5: t => rich(t, { srFrom: d(20), playSec: Object.fromEntries([...Array(70).keys()].map(i => [d(i), i ? 900 : 300])), streak: { days: 23, last: d(1) } }),
+  piano: t => base(t, { settings: { ...base(t).settings, piano: { ins: 'grand', viz: { grand: 'cascade' }, rev: 0.3, dly: 0.15, cho: 0.2, vol: 0.8 } } }) };
 // ligue et classement (faux Supabase, comme r28_ligues.mjs)
 const NAMES = ['Lucie_M', 'Malo.piano', 'Nora88', 'Camille', 'Inès', 'Gabin', 'Yanis_keys', 'Chloé', 'Hugo.R', 'Lina', 'Sacha', 'Mathis', 'Jade', 'Raphaël', 'Zoé.do', 'Louis', 'Emma_B', 'Noé', 'Alice', 'Timéo'];
 const XP = [2480, 2310, 2150, 1960, 1890, 1720, 1600, 1510, 1420, 1380, 1260, 1190, 1100, 980, 920, 840, 610, 450, 300, 120];
@@ -91,10 +97,21 @@ const fnD3 = async p => { await p.evaluate(() => { const b = document.querySelec
 // Réglages : onglet, ou sur téléphone (pas d'onglets, tout à la suite) défilement jusqu'à la section
 const setT = async (p, v) => { await click(p, '#setBtn'); await W(500); await click(p, `#setNav [data-v=${v}]`); await W(300);
   await p.evaluate(v => { const n = document.getElementById('setNav'); if (n && getComputedStyle(n).display === 'none') { const s = document.querySelector(`.set-sec[data-tab=${v}]`); s && s.scrollIntoView({ block: 'start' }); } }, v); await W(400); };
+// Gammes une à une : étoiles posées (une coupe sur la ligne Do), puis la liste (LEARN › 8e tuile)
+const SC1_STARS = { notes: [[0, 'major', 3], [0, 'minor', 3], [0, 'harm', 3], [0, 'mel', 3], [2, 'major', 3], [2, 'minor', 2], [2, 'harm', 1], [4, 'major', 2], [5, 'major', 3], [5, 'minor', 1], [7, 'major', 3], [7, 'minor', 3], [7, 'harm', 2], [7, 'mel', 1], [9, 'minor', 3]],
+  chords: [[0, 'major', 3], [0, 'minor', 2], [7, 'major', 1]] };
+const sc1List = async p => { await ev(p, `S.scStars={notes:{},chords:{}}; Object.entries(${JSON.stringify(SC1_STARS)}).forEach(([m,L])=>L.forEach(([pc,tid,n])=>S.scStars[m][sc1Key(tid,sc1K(tid,pc))]=n)); save()`);
+  await mode(p, 'learn'); await W(400); await click(p, '#learnTiles .sc1-tile'); await W(900); };
+const sc1Go = async (p, md, k = 'C', tid = 'major') => { await sc1List(p); await ev(p, `sc1Play(${JSON.stringify(tid)},${JSON.stringify(k)},"notes",${JSON.stringify(md)})`); await W(700); };
+const notes = async (p, ms, w = 320) => { for (const m of ms) { await ev(p, `midiIn(${m})`); await W(w); } };
+const C_MAJ = [60, 62, 64, 65, 67, 69, 71, 72], E_MAJ = [64, 66, 68, 69, 71, 73, 75, 76];
+const rtRun = async (p, left) => { await ev(p, 'rtLaunch(RT_STAGES.flat().find(q=>q.s.g==="runner"))'); await W(700); await ev(p, 'rnGo()'); await W(400);
+  await ev(p, `RN.cleared=RT_STAGES.flat().find(q=>q.s.g==="runner").s.goal-${left}`); await W(left ? 700 : 1100); };
+const pnPlay = async p => { await mode(p, 'piano'); await W(1200); for (const m of [48, 55, 60, 64, 67, 72, 76, 79, 64, 67]) { await ev(p, `pnOn(${m},96,"screen")`); await W(110); } await W(450); };
 const hubRank = async p => { await click(p, '#homeLink'); await W(600); await ev(p, 'hsRankAt=0; renderHubRank()'); await W(1200); };
 
 // [section, id, titre, état, action, options] ; état fresh = premier lancement sans données
-// options : midi (faux Web MIDI : ok | none), empty (aucun clavier branché), ios (agent iPad), gum (micro simulé), q (paramètres d'URL), fake (faux Supabase avec compte), dark (aussi en sombre)
+// options : motion (animations réelles), midi (faux Web MIDI : ok | none), empty (aucun clavier branché), ios (agent iPad), gum (micro simulé), q (paramètres d'URL), fake (faux Supabase avec compte), dark (aussi en sombre)
 const SC = [
   [1, 'd2', 'D2 · Avec quoi vas-tu jouer ?', 'fresh', async p => {}],
   [1, 'd3', 'D3 · Joue un Do (écran)', 'fresh', fnD3],
@@ -133,6 +150,17 @@ const SC = [
   [3, 'acc', 'Accompagnement · départ', 'neuf', async p => { await tileL(p, 5); await W(300); }],
   [3, 'acc-play', 'Accompagnement · partie', 'neuf', async p => { await tileL(p, 5); await ev(p, 'accStart()'); await W(1400); }],
   [3, 'rt-win', 'Ma route · étape réussie', 'avance', async p => { await mode(p, 'learn'); await W(400); await ev(p, 'rtWinOpen(0)'); await W(800); }],
+  [3, 'sc1-list', 'Gammes une à une · liste en notes (étoiles, une coupe)', 'sc1', sc1List],
+  [3, 'sc1-chords', 'Gammes une à une · liste en accords', 'sc1ch', sc1List],
+  [3, 'sc1-tuto', 'Gammes une à une · tutoriel (1re bulle)', 'sc1tuto', async p => { await sc1List(p); await W(600); }],
+  [3, 'sc1-pick', 'Gammes une à une · choix Entraînement / Évaluation', 'sc1', async p => { await sc1List(p); await ev(p, 'sc1Ask("minor",sc1K("minor",2))'); await W(700); }],
+  [3, 'sc1-demo', 'Gammes une à une · entraînement, démonstration (doigtés)', 'sc1', async p => { await sc1Go(p, 'train'); await W(1500); }],
+  [3, 'sc1-turn', 'Gammes une à une · entraînement, « À toi » guidé', 'sc1', async p => { await sc1Go(p, 'train'); await ev(p, 'sc1Turn()'); await W(500); await notes(p, C_MAJ.slice(0, 3)); }],
+  [3, 'sc1-well', 'Gammes une à une · fin d’entraînement « Bien joué ! »', 'sc1', async p => { await sc1Go(p, 'train'); await ev(p, 'sc1Turn()'); await W(500); await notes(p, C_MAJ); await W(900); }],
+  [3, 'sc1-eval', 'Gammes une à une · évaluation en cours (sans aide)', 'sc1', async p => { await sc1Go(p, 'eval', 'E'); await notes(p, E_MAJ.slice(0, 3)); }],
+  [3, 'sc1-end3', 'Gammes une à une · fin à 3 étoiles, « Jouer en accords »', 'sc1', async p => { await sc1Go(p, 'eval', 'E'); await notes(p, E_MAJ); await W(1800); }],
+  [3, 'sc1-rv', 'Gammes une à une · fenêtre Révision', 'sc1', async p => { await sc1List(p); await ev(p, 'sc1RvOpen()'); await W(700); }],
+  [3, 'sc1-leave', 'Gammes une à une · « Terminer la partie ? »', 'sc1', async p => { await sc1Go(p, 'eval'); await notes(p, [60]); await click(p, '#gameEnd'); await W(700); }],
   [4, 'd6', 'D6 · Le parcours Premiers pas', 'debut', async p => { await ev(p, 'ppBegin()'); await W(900); }],
   [4, 'd9', 'D9 · Ouverture de la leçon', 'debut', async p => { await ev(p, 'ppOpen("p05")'); await W(900); }],
   [4, 'pp-watch', 'Leçon · Regarde', 'neuf', async p => { await ev(p, 'ppStart("p01",0)'); await W(1500); }],
@@ -154,6 +182,8 @@ const SC = [
   [5, 'douze', 'Les Douze · salon', 'avance', async p => { await gameT(p, 3); await W(300); }],
   [5, 'douze-play', 'Les Douze · partie', 'neuf', async p => { await gameT(p, 3); await solo(p); }],
   [5, 'du-res', 'Résultat de duel (contre un bot)', 'avance', async p => { await gameT(p, 0); await ev(p, 'duStartBot(3)'); await W(4500); await ev(p, 'DU.me.score=420; DU.opp.score=310; duFinish(1)'); await W(1200); }],
+  [5, 'rt-runner', 'Ma route · Saute-notes, « Objectif n / N »', 'avance', async p => { await rtRun(p, 3); }],
+  [5, 'rt-runner-win', 'Ma route · Saute-notes, « Objectif atteint ! »', 'avance', async p => { await rtRun(p, 0); }],
   [6, 'quiz', 'QUIZ · réglages', 'neuf', async p => { await mode(p, 'quiz'); await W(600); }, { set: { quiz: { bots: 2, botLvl: 2 } } }],
   [6, 'quiz-q', 'QUIZ · question', 'neuf', qzPlay, { set: { quiz: { bots: 2, botLvl: 2 } } }],
   [6, 'quiz-rev', 'QUIZ · révélation', 'neuf', async p => { await qzPlay(p); await ev(p, 'qzReveal()'); await W(900); }, { set: { quiz: { bots: 2, botLvl: 2 } } }],
@@ -169,6 +199,8 @@ const SC = [
   [7, 'cascade', 'Lecteur · cascade', 'neuf', songGo],
   [7, 'sheet', 'Lecteur · partition', 'neuf', songGo, { set: { staff: true }, sheet: 1 }],
   [7, 'free-kb', 'PLAY · piano libre', 'neuf', async p => { await mode(p, 'play'); await W(700); await click(p, '#pcFree'); await W(700); }],
+  [7, 'piano', 'Mode PIANO · ambiance Cascade (notes simulées)', 'piano', pnPlay, { motion: 1 }],
+  [7, 'piano-fx', 'Mode PIANO · Effets', 'piano', async p => { await pnPlay(p); await click(p, '#pnFxBtn'); await W(500); }, { motion: 1 }],
   [8, 'prog', 'Progression · vue d’ensemble', 'avance', async p => { await click(p, '#lvlAv'); await W(800); }],
   [8, 'prog-det', 'Progression · détail', 'avance', async p => { await click(p, '#lvlAv'); await W(500); await click(p, '#pfNav [data-v=det]'); await W(500); }],
   [8, 'prog-suc', 'Progression · Succès', 'avance', async p => { await click(p, '#lvlAv'); await W(500); await click(p, '#pfNav [data-v=suc]'); await W(600); }],
@@ -192,6 +224,8 @@ const SC = [
   [11, 'm-inv', 'Invite tes amis', 'avance', async p => { await ev(p, 'invOpen()'); await W(600); }],
   [11, 'm-famjoin', 'Rejoindre la famille (#famJoin)', 'famille', async p => { await W(1800); }, { famFake: FAM_JOIN, q: '?fam=abcd2345' }],
   [11, 'm-pw', 'Paywall (aperçu ?paywall=1)', 'neuf', async p => { await ev(p, 'pwOpen("menu")'); await W(1000); }, { q: '?paywall=1' }],
+  [11, 'sr-cel', 'Série validée (animation plein écran, fin)', 'avance', async p => { await click(p, '#homeLink'); await W(400); await ev(p, 'srShow()'); await W(1500); }],
+  [11, 'prog-sr', 'Fiche Progression · série à 5 min (#pfSr)', 'sr5', async p => { await click(p, '#lvlAv'); await W(900); await ev(p, `(()=>{ const c=document.querySelector('.pf-streak'); if(c && innerWidth<600) c.scrollIntoView({inline:'start',block:'nearest'}); })()`); await W(600); }],
 ];
 const EXPOSE = '\nwindow.__ev = function(c){ return eval(c); };\n';
 const SECNAMES = { 1: '1 Premier lancement et connexion', 2: '2 Accueil', 3: '3 LEARN', 4: '4 Premiers pas', 5: '5 GAMES', 6: '6 QUIZ', 7: '7 PLAY', 8: '8 Progression', 9: '9 Classement, ligues et notifications', 10: '10 Réglages', 11: '11 Fenêtres', 12: '12 Back office /admin' };
@@ -221,7 +255,7 @@ async function exportPage(p, sec, id, title, w, h, errs) {
 }
 async function shot(sec, id, title, st, fn, o, w, h, theme) {
   const touch = w < 1100 || h < 500;
-  const c = await b.newContext({ viewport: { width: w, height: h }, deviceScaleFactor: DPR, hasTouch: touch, locale: 'fr-FR', colorScheme: theme, reducedMotion: 'reduce',
+  const c = await b.newContext({ viewport: { width: w, height: h }, deviceScaleFactor: DPR, hasTouch: touch, locale: 'fr-FR', colorScheme: theme, reducedMotion: o.motion ? 'no-preference' : 'reduce',
     userAgent: o.ios ? 'Mozilla/5.0 (iPad; CPU OS 17_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148' : undefined, permissions: o.gum ? ['microphone'] : [] });
   await c.route(u => u.pathname === '/' || u.pathname.endsWith('/index.html') && !u.pathname.includes('/play/') && !u.pathname.includes('/admin/'), async route => { const res = await route.fetch(); let html = await res.text(); const end = html.lastIndexOf('})();\n</script>'); html = html.slice(0, end) + EXPOSE + html.slice(end); await route.fulfill({ response: res, body: html, headers: { ...res.headers(), 'content-type': 'text/html; charset=utf-8' } }); });
   await c.route('https://ijdxeasxmgevuchyuenn.supabase.co/**', r => r.abort());
