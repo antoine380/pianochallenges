@@ -3847,6 +3847,26 @@ body.sc1tr #feedback{visibility:hidden}
 @media (max-height:520px){ .j3-win{padding:8px 12px;gap:2px} .j3-wk{font-size:1.05rem} .j3-win p{font-size:.8rem} }
 @media (prefers-reduced-motion:no-preference){ .j3-win{animation:j3In .25s cubic-bezier(.23,1,.32,1)} @keyframes j3In{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}} }
 /* ==== fin Jeux 3 ==== */
+/* ==== Gammes une à une v3 (chantier sc1-v3) ==== */
+/* touches de notes : seulement avec un clavier MIDI branché */
+body:not(.midi-ok) kbd.kn{display:none!important}
+/* évaluation et révision : ni chrono ni aides dans la barre */
+body.sc1ev :is(#timerSel,.guide-dd,#timeline){display:none!important}
+/* « Terminer la partie » : un vrai bouton gris */
+body.sc1x .gamebar .gend{margin-left:auto;border:1px solid var(--line);background:var(--surface-2);color:var(--ink);text-decoration:none;border-radius:999px;padding:6px 14px;font-weight:800;font-size:.8rem;min-height:34px;cursor:pointer}
+@media (hover:hover) and (pointer:fine){ body.sc1x .gamebar .gend:hover{border-color:var(--muted)} }
+@media (max-width:640px),(max-height:520px) and (orientation:landscape){ body.sc1x .gamebar .gend{padding:4px 10px;min-height:30px;font-size:.74rem} }
+/* le bouton « ? » du tutoriel, les info-bulles */
+.sc1-help{flex:none;width:28px;height:28px;border-radius:50%;border:1px solid var(--line);background:var(--surface-2);color:var(--muted);font-family:var(--f-display);font-weight:700;font-size:.95rem;line-height:1;display:grid;place-items:center;padding:0;cursor:pointer;margin-left:-6px}
+@media (hover:hover) and (pointer:fine){ .sc1-help:hover{color:var(--ink);border-color:var(--sc1c)} }
+.sc1-help:focus-visible,.sc1-cup:focus-visible{outline:3px solid var(--accent);outline-offset:2px;border-radius:8px}
+.sc1-cup,#sc1RvB[data-tip]{-webkit-touch-callout:none;-webkit-user-select:none;user-select:none}
+.sc1-tip{position:fixed;z-index:9000;max-width:min(280px,calc(100vw - 16px));padding:8px 12px;border-radius:12px;background:var(--ink);color:var(--bg);font-size:.82rem;font-weight:700;line-height:1.35;box-shadow:0 12px 26px -12px rgba(10,6,30,.55);pointer-events:none}
+.sc1-tip[hidden]{display:none}
+.sc1-tip::after{content:"";position:absolute;left:calc(var(--ax,50%) - 6px);width:12px;height:12px;background:inherit;transform:rotate(45deg)}
+.sc1-tip[data-side="above"]::after{bottom:-5px} .sc1-tip[data-side="below"]::after{top:-5px}
+@media (prefers-reduced-motion:no-preference){ .sc1-tip{animation:sc1TipIn .14s ease-out} @keyframes sc1TipIn{from{opacity:0}to{opacity:1}} }
+/* ==== fin Gammes une à une v3 ==== */
 </style>
 
 <script>if(window.Capacitor&&window.webkit&&window.webkit.messageHandlers&&window.webkit.messageHandlers.bridge)document.documentElement.classList.add("native");</script>
@@ -5943,7 +5963,18 @@ function calibApply(){
 // a virtual MIDI port of the system (macOS / iOS "Network Session 1" / « Session réseau 1 », IAC driver) is not a keyboard: never listed nor listened to
 // virtual ports are not keyboards (macOS / iOS network sessions « Session réseau », IAC buses): never listed, counted nor listened to.
 // Case and accents do not matter (iOS may send decomposed accents).
-const midiVirtual = n => /network|session|reseau|\biac\b|\bbus\b/.test(String(n||"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase());
+// MIDI 4 (Antoine : « Logic Pro Virtual Out » pris pour un clavier) : les ports logiciels ne sont jamais des claviers. Liste courte, à compléter :
+const MIDI_VIRTUAL=[
+  "virtual","virtuel",                         // « Logic Pro Virtual Out/In », « Virtual MIDI », ports virtuels en français
+  "network","session","reseau",                // macOS / iOS : « Network Session 1 », « Session réseau 1 »
+  "\\biac\\b","\\bbus\\b",                   // macOS : « IAC Driver Bus 1 », « Gestionnaire IAC »
+  "logic pro","garageband","mainstage","ableton","fl studio","bitwig","cubase","reaper", // logiciels de musique (ports créés par l'application)
+  "loopmidi","loopbe","rtpmidi","virmidi","bome","vmpk", // Windows / Linux : câbles virtuels, MIDI réseau, traducteurs
+  "midi ?through","through port",              // Linux : « Midi Through Port-0 »
+  "wavetable"                                  // Windows : « Microsoft GS Wavetable Synth » (une sortie, pas un clavier)
+];
+const MIDI_VIRTUAL_RE=new RegExp(MIDI_VIRTUAL.join("|"));
+const midiVirtual = n => MIDI_VIRTUAL_RE.test(String(n||"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase());
 // the size a keyboard's name says (null: the name does not tell)
 const kbdSzOf = name => { const n=String(name||""), m=n.match(/(^|\D)(24|25|32|37|49|61|76|88)(\D|$)/);
   return m ? m[2] : /lumi|piano ?m\b|keys block/i.test(n) ? "24" : /mpk ?mini(?! ?plus)|launchkey mini|minilab|nanokey|flkey mini|microlab|xkey/i.test(n) ? "25" : /keystep|oxygen pro mini/i.test(n) ? "32" : /seaboard block|songmaker/i.test(n) ? "24" : /rise ?2?/i.test(n) ? "49" : null; };
@@ -6330,7 +6361,7 @@ function openEnd(g){
   }
   const foot=$("endFoot"); foot.innerHTML="";
   const btn=(lbl,cls,fn)=>{ const b=document.createElement("button"); b.type="button"; b.className="btn "+cls; b.textContent=lbl; b.onclick=fn; foot.appendChild(b); return b; };
-  const hint=(b,k)=>{ if(midiMode() && S.settings.midiC!==false){ const kb=document.createElement("kbd"); kb.textContent=k; b.appendChild(kb); } return b; };
+  const hint=(b,k)=>{ if(midiMode() && S.settings.midiC!==false){ const kb=kbdEl(); kb.textContent=k; b.appendChild(kb); } return b; };
   if(g.label){ // a game chosen on the start screen: change, start again (B), next key (C, one item) or play again (C, several)
     btn(t("suChange"),"",()=>{ closeEnd(); render(); });
     if(g.single) hint(btn(t("againB"),"",()=>endReplay(g)),BNAME());
@@ -6512,7 +6543,7 @@ function renderAnswers(){
 function renderActions(){
   const a=$("actions"); a.innerHTML="";
   const mk=(label,cls,fn,k)=>{ const b=document.createElement("button"); b.type="button"; b.className="btn "+cls; b.textContent=label;
-    if(k){ const kb=document.createElement("kbd"); kb.textContent=k; b.appendChild(kb); } b.onclick=fn; a.appendChild(b); };
+    if(k){ const kb=kbdEl(k); kb.textContent=k; b.appendChild(kb); } b.onclick=fn; a.appendChild(b); };
   const sp=()=>{ const s=document.createElement("span"); s.className="spacer"; a.appendChild(s); };
   const kb=hasKeyboard(), space=kb?(S.settings.lang==="fr"?"Espace":"Space"):null, enter=kb?(S.settings.lang==="fr"?"Entrée":"Enter"):null;
   const cKey = midiMode() && S.settings.midiC!==false ? CNAME() : null, bKey = midiMode() && S.settings.midiC!==false ? BNAME() : null;
@@ -7181,7 +7212,7 @@ function duRenderLobby(){ duArt();
     const c=w.querySelector(".du-row button"); c.textContent=t("qzCancelT"); c.onclick=()=>{ duStopSearch(); duSet("lobby"); };
     if(secs>=20){ const bi=duBotFor(me), b=document.createElement("button"); b.type="button"; b.className="btn primary"; b.id="duSearchBot"; b.textContent=t("duBotWait")(t("chars")[bi][0],DU_BOTS[bi]); duKbd(b,CNAME()); b.onclick=()=>{ duStopSearch(); duStartBot(bi); }; w.querySelector(".du-row").appendChild(b); }
     w.querySelector(".du-err").textContent=DU.err||""; body.appendChild(w); } }
-function duKbd(b,k){ if(midiMode() && S.settings.midiC!==false){ const kb=document.createElement("kbd"); kb.textContent=k; b.appendChild(kb); } return b; }
+function duKbd(b,k){ if(midiMode() && S.settings.midiC!==false){ const kb=kbdEl(); kb.textContent=k; b.appendChild(kb); } return b; }
 function duHud(){ const o=DU.opp||{}, me=DU.me;
   $("duMeAv").innerHTML=duAv(duMyAv()); nmPut($("duMeName"),duMyName()); $("duMeElo").textContent = DU.rated ? String(eloGet().r) : t("duFriendly");
   $("duOpAv").innerHTML=duAv(o.av); nmPut($("duOpName"),o.name,o.bot?" · "+t("duBotTag"):""); $("duOpElo").textContent = o.gone ? t("duGone") : o.done ? t("duOut") : (o.elo!=null?String(o.elo):"");
@@ -7975,7 +8006,7 @@ function renderQzPlay(){ if(!QZ.q) return; const q=QZ.q, fr=S.settings.lang==="f
   renderQzKb();
   renderQzRace(turnP);
   $("qzNext").hidden=!QZ.done || (QZ.mode==="online" && !NET.host); $("qzBar").parentElement.hidden=QZ.done;
-  $("qzNext").innerHTML='<span class="nx-l"></span><span class="nx-s"></span>'; $("qzNext").firstChild.textContent=t("qzNextT"); $("qzNext").lastChild.textContent=t("qzNextS"); if(midiReady && S.settings.midiC!==false){ const kb=document.createElement("kbd"); kb.textContent=CNAME(); $("qzNext").appendChild(kb); }
+  $("qzNext").innerHTML='<span class="nx-l"></span><span class="nx-s"></span>'; $("qzNext").firstChild.textContent=t("qzNextT"); $("qzNext").lastChild.textContent=t("qzNextS"); if(midiReady && S.settings.midiC!==false){ const kb=kbdEl(); kb.textContent=CNAME(); $("qzNext").appendChild(kb); }
 }
 function qzFinish(){ qzClearTimers(); QZ.view="end"; QZ.players.forEach(p=>p.shown=p.score); const me=QZ.players.filter(p=>!p.bot&&!p.remote);
   if(me.length===1 && me[0].ok) addXP(Math.min(60,me[0].ok*3)); save(); renderQuiz(); if(QZ.players.some(p=>p.ok) && uiSound()) setTimeout(()=>confetti(),200); }
@@ -7986,7 +8017,7 @@ function renderQzEnd(){ const P=QZ.players.map((p,i)=>({...p,i})).sort((a,b)=>b.
   P.forEach((p,r)=>{ const d=document.createElement("div"); d.className="qz-pod r"+(r+1); d.style.setProperty("--pc",p.col);
     d.innerHTML='<span class="qz-rk">'+(r+1)+'</span><b></b><span class="qz-sc"></span><small></small>'; nmPut(d.querySelector("b"),p.name); d.querySelector(".qz-sc").textContent=fmtN(p.score)+" pts"; d.querySelector("small").textContent=t("qzRight")(p.ok,QZ.list.length); box.appendChild(d); });
   renderQzRace(null);
-  $("qzAgain").hidden = QZ.mode==="online" && !NET.host; $("qzAgain").textContent=t("qzAgainT"); if(midiReady && S.settings.midiC!==false){ const kb=document.createElement("kbd"); kb.textContent=CNAME()+" / "+BNAME(); $("qzAgain").appendChild(kb); } }
+  $("qzAgain").hidden = QZ.mode==="online" && !NET.host; $("qzAgain").textContent=t("qzAgainT"); if(midiReady && S.settings.midiC!==false){ const kb=kbdEl(); kb.textContent=CNAME()+" / "+BNAME(); $("qzAgain").appendChild(kb); } }
 function qzQuit(){ qzClearTimers(); if(QZ.mode==="online") netLeave(); QZ.view="setup"; QZ.done=true; renderQuiz(); }
 $("qzGo").addEventListener("click",qzStart);
 $("qzNext").addEventListener("click",()=>{ if(QZ.done) qzNext(); });
@@ -9123,22 +9154,23 @@ const TOUR={i:0, steps:[]};
 function tourSteps(){ return [["#modeNav [data-mode=learn]","learn"],["#modeNav [data-mode=games]","games"],["#modeNav [data-mode=play]","play"],["#modeNav [data-mode=quiz]","quiz"],
   ["#hsDaily","daily"],["#lvlAv","level"],["#ntfBtn","ntf"],["#rankBtn","rank"],["#inChip","input"],["#setBtn","settings"]]; }
 const menuIsDrawer = () => !!($("menuBtn") && $("menuBtn").offsetParent);
-function tourStart(){ if(page!=="hub" && !(NET.ch||NET.lobby||DU.ch||DU.mode)) openPage("hub"); TOUR.steps=tourSteps(); TOUR.i=0; let o=$("tour"); if(!o){ o=document.createElement("div"); o.id="tour"; o.className="tour"; document.body.appendChild(o);
+function tourStart(){ if(!TOUR.custom && page!=="hub" && !(NET.ch||NET.lobby||DU.ch||DU.mode)) openPage("hub"); TOUR.steps=TOUR.custom ? TOUR.custom.slice() : tourSteps(); TOUR.i=0; let o=$("tour"); if(!o){ o=document.createElement("div"); o.id="tour"; o.className="tour"; document.body.appendChild(o);
     o.innerHTML='<div class="tour-hole" id="tourHole"></div><div class="tour-tip" id="tourTip" role="dialog" aria-live="polite"><button class="tour-x" type="button" id="tourX"></button><p class="tour-k" id="tourK"></p><h3 id="tourH"></h3><ul id="tourL"></ul><div class="tour-foot"><button class="gt-link" type="button" id="tourSkip"></button><button class="btn" type="button" id="tourPrev"></button><button class="btn primary" type="button" id="tourNext"></button></div></div>';
     $("tourX").innerHTML="×"; $("tourX").onclick=tourEnd; $("tourSkip").onclick=tourEnd; $("tourNext").onclick=()=>tourGo(1); $("tourPrev").onclick=()=>tourGo(-1);
     addEventListener("resize",()=>{ if(!$("tour").hidden) tourShow(); }); document.addEventListener("keydown",e=>{ if($("tour").hidden) return; const k=e.key;
       if(k==="Escape"||k==="ArrowRight"||k==="ArrowLeft"){ e.preventDefault(); if(k==="Escape") tourEnd(); else tourGo(k==="ArrowRight"?1:-1); }
       else if(!(e.target.closest && e.target.closest("#tour"))) e.preventDefault(); // nothing reaches the app behind the tour
       e.stopImmediatePropagation(); },true); }
-  o.hidden=false; const dr=menuIsDrawer(); if(dr) openDrawer(); setTimeout(tourShow,dr?340:0); }
+  o.hidden=false; const dr=!TOUR.custom && menuIsDrawer(); if(dr) openDrawer(); setTimeout(tourShow,dr?340:0); }
 function tourGo(d){ const n=TOUR.steps.length; TOUR.i+=d; if(TOUR.i>=n){ tourEnd(); return; } TOUR.i=Math.max(0,TOUR.i); tourShow(); }
-function tourEnd(){ $("tour").hidden=true; S.tourDone=1; save(); closeDrawer(); if(TOUR.after){ openPage(TOUR.after); TOUR.after=null; } onbInput(); }
+function tourEnd(){ if(TOUR.custom){ const f=TOUR.onEnd; TOUR.custom=null; TOUR.onEnd=null; TOUR.kf=null; $("tour").hidden=true; if(f) f(); return; } // a page tutorial (Gammes une à une)
+  $("tour").hidden=true; S.tourDone=1; save(); closeDrawer(); if(TOUR.after){ openPage(TOUR.after); TOUR.after=null; } onbInput(); }
 function tourShow(){ const st=TOUR.steps[TOUR.i]; if(!st) return tourEnd(); const el=document.querySelector(st[0]);
   if(!el || !el.getClientRects().length){ TOUR.steps.splice(TOUR.i,1); return tourShow(); }
   try{ el.scrollIntoView({block:"nearest",inline:"nearest"}); }catch(e){}
   const r=el.getBoundingClientRect(), pad=6, hole=$("tourHole"), tip=$("tourTip"), n=TOUR.steps.length;
   Object.assign(hole.style,{left:(r.left-pad)+"px",top:(r.top-pad)+"px",width:(r.width+pad*2)+"px",height:(r.height+pad*2)+"px"});
-  $("tourK").textContent=(TOUR.i+1)+" / "+n; const d=t("tourT")[st[1]]; $("tourH").textContent=d[0];
+  $("tourK").textContent=TOUR.kf ? TOUR.kf(TOUR.i+1,n) : (TOUR.i+1)+" / "+n; const d=st[2]||t("tourT")[st[1]]; $("tourH").textContent=d[0];
   const ul=$("tourL"); ul.innerHTML=""; d[1].forEach(x=>{ const li=document.createElement("li"); li.textContent=x; ul.appendChild(li); });
   $("tourNext").textContent = TOUR.i===n-1 ? t("tourDone") : t("onbNextT"); $("tourPrev").textContent=t("onbPrev"); $("tourPrev").hidden=!TOUR.i; $("tourSkip").textContent=t("tourSkipT"); $("tourX").setAttribute("aria-label",t("close"));
   // place the bubble next to the element: on the right of the menu, otherwise below / above
@@ -10407,7 +10439,7 @@ function impRender(){ const box=$("impPanel"); box.innerHTML=""; box.dataset.v=P
     +'<div class="imp-opt"><span></span><div class="imp-seg" id="impQ" role="group"></div></div>'
     +'<label class="imp-ck"><input type="checkbox" id="impMono"><span></span></label>'
     +'<p class="imp-key" id="impKeyL"></p></section></div>'
-    +'<div class="imp-foot"><p class="imp-priv"></p><button type="button" class="btn primary imp-go" id="impGo"><span></span><kbd>'+(S.settings.notation==="fr"?"Do":"C")+'</kbd></button></div>');
+    +'<div class="imp-foot"><p class="imp-priv"></p><button type="button" class="btn primary imp-go" id="impGo"><span></span><kbd class="kn">'+(S.settings.notation==="fr"?"Do":"C")+'</kbd></button></div>');
   card.querySelector(".imp-fi").textContent=ext; card.querySelector(".imp-k").textContent=IMP.editId?impT("editK"):impT("previewK");
   const ti=$("impTitle"); ti.value=d.title; ti.setAttribute("aria-label",impT("titleL")); ti.oninput=()=>{ d.title=ti.value.replace(/[<>&"]/g,""); };
   ti.onkeydown=e=>{ if(e.key==="Enter") ti.blur(); };
@@ -13001,7 +13033,7 @@ function sc1End(g){ if(page!=="sc1") openPage("sc1"); const pc=keyPc(g.sc1.k), c
     nxe.innerHTML='<div class="en-row"><b></b><span class="en-bar"><i></i></span></div><p></p>'; nxe.querySelector("b").textContent="+"+fmtN(Math.max(0,S.xp-g.xp0))+" XP · "+t("endNext")(fmtN(li.need-li.into), fmtN(li.L+1));
     const sk=effStreak(); nxe.querySelector("p").textContent = sk ? t("endStreak")(sk) : ""; B.appendChild(nxe); try{ endNextMotion(nxe, g, li, sk); }catch(e){} }
   const F=$("endFoot"); F.innerHTML="";
-  const btn=(lbl,cls,fn,k)=>{ const b=document.createElement("button"); b.type="button"; b.className="btn "+cls; b.textContent=lbl; b.onclick=fn; if(k && midiMode() && S.settings.midiC!==false){ const kb=document.createElement("kbd"); kb.textContent=k; b.appendChild(kb); } F.appendChild(b); return b; };
+  const btn=(lbl,cls,fn,k)=>{ const b=document.createElement("button"); b.type="button"; b.className="btn "+cls; b.textContent=lbl; b.onclick=fn; if(k){ const kb=kbdEl(); kb.textContent=k; b.appendChild(kb); } F.appendChild(b); return b; };
   btn(t("sc1Back"),"",()=>{ closeEnd(); if(page!=="sc1") openPage("sc1"); }).id="sc1Back";
   btn(t("sc1Again"),"",()=>sc1Play(s.tid,s.k,s.mode),BNAME()).id="sc1Again";
   const go=nx ? btn(t("sc1NextB")(itemName(sc1Item(nx.tid,nx.k,s.mode))),"primary",()=>sc1Play(nx.tid,nx.k,s.mode),CNAME()) : null; if(go) go.id="sc1Next";
@@ -13479,7 +13511,7 @@ function sc1Bar(){ const on=page==="practice" && sc1On(), tr=sc1Tr(); document.b
     const a=$("actions"); a.innerHTML=""; const kb=hasKeyboard(), space=kb?(S.settings.lang==="fr"?"Espace":"Space"):null, md=midiMode() && S.settings.midiC!==false;
     const mk=(label,cls,fn,k,id)=>{ const b=document.createElement("button"); b.type="button"; b.className="btn "+cls; if(id) b.id=id;
       if(Array.isArray(label)){ b.innerHTML='<span class="lg">'+esc(label[0])+'</span><span class="sh" aria-hidden="true">'+esc(label[1])+'</span>'; b.setAttribute("aria-label",label[0]); } else b.textContent=label;
-      if(k){ const x=document.createElement("kbd"); x.textContent=k; b.appendChild(x); } b.onclick=fn; a.appendChild(b); return b; };
+      if(k){ const x=kbdEl(k); x.textContent=k; b.appendChild(x); } b.onclick=fn; a.appendChild(b); return b; };
     const sp=()=>{ const s2=document.createElement("span"); s2.className="spacer"; a.appendChild(s2); };
     if(phase==="revealed"){ mk(t("sc1See"),"",sc1Demo,null,"sc1See"); sp(); mk(t("sc1Your"),"primary",sc1Turn,space,"sc1Your"); }
     else if(phase==="listening") mk(t("sc1See"),"",sc1Demo,space,"sc1See");
@@ -13529,7 +13561,7 @@ function sc1Ask(tid,k,mode){ mode=mode||sc1Mode(); if(!TONICS[tid] || !TONICS[ti
   const O=$("sc1PkO"); O.innerHTML="";
   [["train","sc1Train",ch?"sc1PkTrC":"sc1PkTr",CNAME()],["eval","sc1Eval",ch?"sc1PkEvC":"sc1PkEv",ENAME()]].forEach(([v,l,d,key])=>{
     const b=document.createElement("button"); b.type="button"; b.className="sc1pk-o"+(v===rec?" rec":""); b.dataset.v=v; b.id=v==="train"?"sc1PkTrain":"sc1PkEval";
-    b.innerHTML='<span class="sc1pk-ic">'+SC1_PK_IC[v]+'</span><b>'+esc(t(l))+'</b>'+(v===rec?'<span class="sc1pk-tag">'+esc(t("sc1PkRec"))+'</span>':'')+'<p>'+esc(t(d))+'</p>'+(md?'<kbd>'+esc(key)+'</kbd>':'');
+    b.innerHTML='<span class="sc1pk-ic">'+SC1_PK_IC[v]+'</span><b>'+esc(t(l))+'</b>'+'<p>'+esc(t(d))+'</p>'+'<kbd class="kn">'+esc(key)+'</kbd>'; // v3 : plus d'étiquette « Conseillé » ; la touche ne se montre qu'avec un clavier MIDI branché (body.midi-ok)
     b.onclick=()=>sc1Pick(v); O.appendChild(b); });
   openMod("sc1Pick"); const f=O.querySelector(".rec"); if(f) f.focus({preventScroll:true}); }
 // the choice: remembered (it becomes the recommended one next time), then the scale starts in that mode
@@ -13550,7 +13582,7 @@ const sc1PkOn = () => !$("sc1Pick").hidden && openMods[openMods.length-1]==="sc1
 document.addEventListener("keydown",e=>{ if(!sc1PkOn() || e.repeat || e.metaKey || e.ctrlKey || e.altKey) return; const m=CODE_MAP[e.code]; if(m==null) return; const pc=m%12;
   if(pc===0||pc===4||pc===11){ e.preventDefault(); e.stopImmediatePropagation(); if(pc===11) closeMod("sc1Pick"); else sc1Pick(pc===0?"train":"eval"); } },true);
 // the end of a training: « Take the test » shows its key (Mi)
-{ const o=renderActions; renderActions=function(){ const r=o.apply(this,arguments); try{ const b=$("sc1ToEval"); if(b && sc1Tr() && phase==="success" && midiMode() && S.settings.midiC!==false && !b.querySelector("kbd")){ const x=document.createElement("kbd"); x.textContent=ENAME(); b.appendChild(x); } }catch(e){} return r; }; }
+{ const o=renderActions; renderActions=function(){ const r=o.apply(this,arguments); try{ const b=$("sc1ToEval"); if(b && sc1Tr() && phase==="success" && midiMode() && S.settings.midiC!==false && !b.querySelector("kbd")){ const x=kbdEl(); x.textContent=ENAME(); b.appendChild(x); } }catch(e){} return r; }; }
 // Accords d'une gamme (Gammes une à une) : par défaut, chaque accord prend le renversement le plus pratique à la suite (sc1Voice) : parmi
 // fondamental / 1er / 2e renversement (et les octaves proches), le moindre déplacement des voix depuis l'accord précédent, la main gardée près
 // de l'accord de tonique (coût = mouvement des voix + 3 × écart du centre à celui de l'accord de tonique ; égalité = le moins renversé).
@@ -13614,9 +13646,9 @@ function sc1ToChords(tid,k){ S.settings.sc1Mode="chords"; save(); if(page==="sc1
 { const o=sc1End; sc1End=function(g){ const r=o.apply(this,arguments); try{ const s=g&&g.sc1; if(s && s.mode==="notes" && (s.stars|0)>=3){
       const F=$("endFoot"), nx=$("sc1Next"), md=midiMode() && S.settings.midiC!==false, main=sc1Get("chords",s.tid,s.k)<3 || !nx;
       const b=document.createElement("button"); b.type="button"; b.id="sc1ToCh"; b.className="btn"+(main?" primary":""); b.textContent=t("sc1ToCh"); b.onclick=()=>sc1ToChords(s.tid,s.k);
-      const kb=x=>{ if(!md) return; const e=document.createElement("kbd"); e.textContent=x; return e; };
+      const kb=x=>{ const e=kbdEl(); e.textContent=x; return e; };
       const sec=main?nx:b; if(main && nx){ nx.classList.remove("primary"); const e=nx.querySelector("kbd"); if(e) e.remove(); }
-      if(md){ b.appendChild(kb(main?CNAME():ENAME())); if(main && nx) nx.appendChild(kb(ENAME())); }
+      { b.appendChild(kb(main?CNAME():ENAME())); if(main && nx) nx.appendChild(kb(ENAME())); }
       if(sec) sec.dataset.mi="1";
       if(main){ F.appendChild(b); b.focus({preventScroll:true}); } else F.insertBefore(b, nx); } }catch(e){ console.warn(e); } return r; }; }
 // MIDI on that summary: Do = the main button, Mi = the other one (Si stays « Start again »)
@@ -13637,21 +13669,21 @@ Object.assign(TXT.en,{sc1Rv:"Review", sc1RvB:n=>"Review · "+(n>1?"your "+n+" sc
   sc1RvN:(n,m)=>n+(n>1?" scales":" scale")+" · "+m, sc1RvT:"Timer per scale", sc1RvMix:"Shuffle the order", sc1RvGo:"Start the review"});
 const SC1_RVT=[0,30,20,10];
 const sc1RvList = mode => sc1List().filter(c=>!sc1Lock(c.tid,c.k) && sc1Get(mode,c.tid,c.k)>=3);
-const sc1RvT = () => SC1_RVT.includes(+S.settings.sc1RvT) ? +S.settings.sc1RvT : 0;
+const sc1RvT = () => 0; // v3 (Antoine) : pas de chrono dans la révision ; S.settings.sc1RvT, s'il existe, est ignoré
 const sc1RvMix = () => S.settings.sc1RvMix!==false;
 { const m=document.createElement("div"); m.className="modal"; m.id="sc1Rv"; m.hidden=true; m.setAttribute("role","dialog"); m.setAttribute("aria-modal","true"); m.setAttribute("aria-labelledby","sc1RvTi");
   m.innerHTML='<div class="modal-bg" data-close="sc1Rv"></div><div class="modal-card small sc1-rv"><div class="modal-head"><div><h2 id="sc1RvTi"></h2><p class="modal-sub" id="sc1RvS"></p></div>'
     +'<button class="modal-close" id="sc1RvX" type="button" data-close="sc1Rv" aria-label="Close">×</button></div>'
-    +'<div class="modal-body"><p class="sc1rv-tx" id="sc1RvTx"></p><div class="sc1rv-row"><span class="su-lbl" id="sc1RvTl"></span><div class="seg su-seg" id="sc1RvTm" role="group"></div></div>'
+    +'<div class="modal-body"><p class="sc1rv-tx" id="sc1RvTx"></p>'
     +'<label class="sc1rv-mix"><input type="checkbox" id="sc1RvMix"> <span id="sc1RvMixL"></span></label></div>'
     +'<div class="modal-foot end-foot"><button class="btn primary" type="button" id="sc1RvGo"></button></div></div>';
   $("sc1Pick").after(m);
   $("sc1RvGo").onclick=()=>sc1RvStart(); $("sc1RvMix").onchange=e=>{ S.settings.sc1RvMix=!!e.target.checked; save(); }; }
 function sc1RvRender(){ const mode=sc1Mode(), n=sc1RvList(mode).length, md=midiMode() && S.settings.midiC!==false, T=sc1RvT();
   $("sc1RvTi").textContent=n?t("sc1RvTi")(n):t("sc1Rv"); $("sc1RvS").textContent=t("sc1RvN")(n,t(mode==="chords"?"sc1Chords":"sc1Notes")); $("sc1RvTx").textContent=t("sc1RvTx");
-  $("sc1RvTl").textContent=t("sc1RvT"); $("sc1RvTm").setAttribute("aria-label",t("sc1RvT")); $("sc1RvMixL").textContent=t("sc1RvMix"); $("sc1RvMix").checked=sc1RvMix(); $("sc1RvX").setAttribute("aria-label",t("closeLbl"));
-  const tm=$("sc1RvTm"); tm.innerHTML=""; SC1_RVT.forEach(v=>{ const b=document.createElement("button"); b.type="button"; b.dataset.v=v; b.textContent=v?v+" s":t("noTimer"); b.setAttribute("aria-pressed",T===v); b.onclick=()=>{ S.settings.sc1RvT=v; save(); sc1RvRender(); }; tm.appendChild(b); });
-  const go=$("sc1RvGo"); go.textContent=t("sc1RvGo"); if(md){ const k=document.createElement("kbd"); k.textContent=CNAME(); go.appendChild(k); } go.disabled=!n; }
+  $("sc1RvMixL").textContent=t("sc1RvMix"); $("sc1RvMix").checked=sc1RvMix(); $("sc1RvX").setAttribute("aria-label",t("closeLbl"));
+  // v3 : plus de chrono dans la révision (gardé pour les jeux et les duels)
+  const go=$("sc1RvGo"); go.textContent=t("sc1RvGo"); { const k=kbdEl(); k.textContent=CNAME(); go.appendChild(k); } go.disabled=!n; }
 function sc1RvOpen(){ if(!sc1RvList(sc1Mode()).length) return; if(endOpen) closeEnd(); openMods.slice().forEach(id=>{ if(id!=="sc1Rv") closeMod(id); }); sc1RvRender(); openMod("sc1Rv"); $("sc1RvGo").focus({preventScroll:true}); }
 function sc1RvStart(){ const mode=sc1Mode(), L=sc1RvList(mode); if(!L.length) return; if(!$("sc1Rv").hidden) closeMod("sc1Rv");
   const q=L.map(c=>({...sc1Item(c.tid,c.k,mode), sc1rv:1})); if(sc1RvMix()) for(let i=q.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [q[i],q[j]]=[q[j],q[i]]; }
@@ -13796,6 +13828,110 @@ function midiSpan(inp){ const h=(S.midi&&S.midi.hw)||{}, nm=inp&&inp.name, sz=S.
 if(document.documentElement.classList.contains("native")) setInterval(()=>{ try{ if(document.hidden || !midiAcc || !window.__nativeMidi) return; window.__nativeMidi.listInputs().catch(()=>{}); }catch(e){} },5000);
 /* ==== fin MIDI 3 ==== */
 
+/* ==== Gammes une à une v3 (chantier sc1-v3, 27/10/2026) ==== */
+// Retours d'Antoine : tutoriel à la première visite de la page sc1 (moteur du tutoriel guidé #tour : TOUR.custom / TOUR.kf / TOUR.onEnd,
+// mémorisé dans S.settings.sc1Tour, bouton « ? » #sc1Help pour le revoir, Do = Suivant au clavier MIDI) ; doigtés toujours montrés en
+// Entraînement ; info-bulles (#sc1Tip : survol, focus, tap) sur la Révision désactivée et sur chaque coupe ; plus d'étiquette « Conseillé » ;
+// touches de notes (kbd.kn) affichées seulement si un clavier MIDI est vraiment branché (body.midi-ok) ; fin d'entraînement : « Passer à
+// l'évaluation » principal à droite (Do), « Rejouer » gris à sa gauche (Si), « Revoir la gamme » à gauche (Mi) ; Évaluation et Révision
+// sans aucune aide ni chrono (réglages du joueur prêtés le temps de la partie, jamais sauvegardés : sc1Lend) ; « Terminer la partie » en
+// bouton gris + confirmation (#leaveModal). Test : tools/audit/r52_sc1v3.mjs.
+Object.assign(TXT.fr,{sc1RvNone:"Termine une gamme avec 3 étoiles pour débloquer la révision.", sc1CupOff:x=>"Termine les 4 gammes de "+x+" avec 3 étoiles pour gagner la coupe.",
+  sc1TuK:(i,n)=>"Étape "+i+" sur "+n, sc1TuAgain:"Revoir le tutoriel",
+  sc1Tu:{seg:["Notes ou accords",["NOTES : tu joues chaque gamme note par note.","ACCORDS : tu joues les accords de la gamme, un par un.","Chaque mode a ses propres étoiles."]],
+    cell:["Une case = une gamme",["Touche une case pour la jouer.","Entraînement : je te montre la gamme, puis tu la rejoues avec les touches allumées et les doigtés. Rien n'est noté.","Évaluation : tu la joues seul, sans aide, pour gagner des étoiles."]],
+    stars:["Les étoiles",["1 étoile : 3 notes justes.","2 étoiles : la gamme finie, avec une ou plusieurs fautes.","3 étoiles : la gamme finie sans faute."]],
+    cup:["La coupe",["Au bout de chaque ligne, une coupe.","Tu la gagnes quand les 4 gammes de la note ont 3 étoiles."]],
+    rv:["La révision",["Rejoue d'un coup toutes tes gammes à 3 étoiles, pour les garder en mémoire.","Elle s'ouvre dès ta première gamme à 3 étoiles."]]},
+  sc1EndS:"Ta progression sur cette gamme ne sera pas comptée.", sc1EndSR:"Ta progression dans cette révision ne sera pas comptée."});
+Object.assign(TXT.en,{sc1RvNone:"Finish a scale with 3 stars to unlock the review.", sc1CupOff:x=>"Finish the 4 "+x+" scales with 3 stars to win the cup.",
+  sc1TuK:(i,n)=>"Step "+i+" of "+n, sc1TuAgain:"See the tutorial again",
+  sc1Tu:{seg:["Notes or chords",["NOTES: you play each scale note by note.","CHORDS: you play the chords of the scale, one by one.","Each mode has its own stars."]],
+    cell:["One box = one scale",["Tap a box to play it.","Practice: I show you the scale, then you play it back with the keys lit and the fingering. Nothing is scored.","Test: you play it on your own, with no help, to win stars."]],
+    stars:["The stars",["1 star: 3 right notes.","2 stars: the scale finished, with one mistake or more.","3 stars: the scale finished with no mistake."]],
+    cup:["The cup",["At the end of each row, a cup.","You win it when the 4 scales of that note have 3 stars."]],
+    rv:["The review",["Play all your 3-star scales again in one go, to keep them in mind.","It opens with your first 3-star scale."]]},
+  sc1EndS:"Your progress on this scale won't count.", sc1EndSR:"Your progress in this review won't count."});
+// ---- touches de notes : seulement avec un clavier MIDI vraiment branché ----
+function kbdIsNote(k){ return String(k||"").split(" / ").every(p=>PC_FR.includes(p)||PC_EN.includes(p)); }
+function kbdEl(k){ const e=document.createElement("kbd"); if(k===undefined || kbdIsNote(k)) e.className="kn"; return e; }
+function midiOkSync(){ try{ document.body.classList.toggle("midi-ok", !!(midiMode() && S.settings.midiC!==false)); }catch(e){} }
+{ const o=render; render=function(){ midiOkSync(); return o.apply(this,arguments); }; }
+{ const o=renderInputUI; renderInputUI=function(){ const r=o.apply(this,arguments); midiOkSync(); return r; }; }
+setInterval(midiOkSync,1500); midiOkSync();
+// ---- Évaluation, Révision : aucune aide ni chrono ; Entraînement : touches, noms et doigtés (prêtés, jamais sauvegardés) ----
+const sc1Ev = () => page==="practice" && ((sc1On() && !game.sc1.train) || rvOn());
+function sc1Want(){ if(page!=="practice" || !game) return null;
+  if(sc1Tr()) return {guideK:true, guideN:true, guideP:false, fing:true};
+  if(sc1On()) return {guideK:false, guideN:false, guideP:false, staff:false, delay:0};
+  if(rvOn()) return {guideK:false, guideN:false, guideP:false, staff:false}; // le chrono de la révision : rvFix (sc1RvT = 0)
+  return null; }
+const SC1L={on:null, keep:null};
+const sc1Back = () => { const k=SC1L.keep, s=S.settings; Object.keys(k).forEach(x=>{ if(k[x]===undefined) delete s[x]; else s[x]=k[x]; }); };
+sc1TrGuide=function(){ const w=sc1Want(), sig=w?JSON.stringify(w):"", s=S.settings;
+  if(SC1L.on!==null && SC1L.on!==sig){ sc1Back(); SC1L.on=null; SC1L.keep=null; }
+  if(w){ if(SC1L.on===null){ SC1L.keep={}; Object.keys(w).forEach(x=>SC1L.keep[x]=s[x]); SC1L.on=sig; } Object.assign(s,w); }
+  try{ document.body.classList.toggle("sc1ev", sc1Ev()); document.body.classList.toggle("sc1x", page==="practice" && !!game && (sc1On()||rvOn())); }catch(e){} };
+{ const o=save; save=function(){ if(SC1L.on===null) return o.apply(this,arguments); const s=S.settings, now={}; Object.keys(SC1L.keep).forEach(x=>now[x]=s[x]); sc1Back();
+    try{ return o.apply(this,arguments); } finally{ Object.assign(s,now); } }; }
+{ const o=autoHelp; autoHelp=function(){ if(sc1Ev()) return; return o.apply(this,arguments); }; }
+{ const o=primaryAction; primaryAction=function(){ if(sc1Ev() && phase==="listening") return; // pas de « Je sèche » en évaluation : on bascule en Entraînement
+    if(sc1Tr() && phase==="success"){ sc1Switch("eval"); return; } return o.apply(this,arguments); }; }
+{ const o=reveal; reveal=function(){ if(sc1Ev() && phase==="listening") return; return o.apply(this,arguments); }; }
+{ const o=renderGameBar; renderGameBar=function(){ const r=o.apply(this,arguments); try{ sc1TrGuide(); }catch(e){} return r; }; }
+{ const o=renderActions; renderActions=function(){ const r=o.apply(this,arguments); try{
+    if(sc1Ev() && phase==="listening"){ $("actions").innerHTML=""; return r; }
+    // fin d'entraînement : Revoir (Mi) à gauche … Rejouer (gris, Si) puis « Passer à l'évaluation » (principal, Do) à droite
+    if(sc1Tr() && phase==="success"){ const a=$("actions"), see=$("sc1See"), ev=$("sc1ToEval"), rp=$("sc1Replay"); if(!(see&&ev&&rp)) return r;
+      const md=midiMode() && S.settings.midiC!==false, kb=hasKeyboard(), space=kb?(S.settings.lang==="fr"?"Espace":"Space"):null;
+      [see,ev,rp].forEach(b=>b.querySelectorAll("kbd").forEach(x=>x.remove()));
+      const add=(b,k)=>{ if(!k) return; const x=kbdEl(k); x.textContent=k; b.appendChild(x); };
+      rp.classList.remove("primary"); ev.classList.add("primary"); add(see,md?ENAME():null); add(rp,md?BNAME():null); add(ev,md?CNAME():space);
+      a.appendChild(rp); a.appendChild(ev); } }catch(e){ console.warn(e); } return r; }; }
+// ---- « Terminer la partie » : un bouton gris, et une confirmation ----
+addEventListener("click",e=>{ if(LV.pass || LV.on || !e.target.closest) return; const el=e.target.closest("#gameEnd"); if(!el || !(page==="practice" && game && (sc1On()||rvOn()))) return;
+  e.preventDefault(); e.stopImmediatePropagation();
+  lvOpen(actNow()||{k:"learn"},()=>{ LV.pass=true; try{ el.click(); }finally{ LV.pass=false; } },true); },true);
+{ const o=lvOpen; lvOpen=function(a,fn,end){ const r=o.apply(this,arguments); if(end && page==="practice" && game && (sc1On()||rvOn())){
+      $("lvTitle").textContent=t("lvEndT"); $("lvSub").textContent=t(rvOn()?"sc1EndSR":"sc1EndS"); } return r; }; }
+// ---- tutoriel de la page (première visite, puis le bouton « ? ») ----
+function sc1TourSteps(){ const T=t("sc1Tu"); return [["#sc1Seg","",T.seg],["#sc1Grid .sc1-c","",T.cell],["#sc1Grid .sc1-c .sc1-st","",T.stars],["#sc1Grid .sc1-cup","",T.cup],["#sc1RvB","",T.rv]]; }
+const sc1TourOn = () => !!(TOUR.custom && $("tour") && !$("tour").hidden);
+function sc1TourStart(){ if(page!=="sc1" || ($("tour") && !$("tour").hidden)) return; sc1TipHide();
+  TOUR.custom=sc1TourSteps(); TOUR.kf=t("sc1TuK"); TOUR.onEnd=()=>{ S.settings.sc1Tour=1; save(); const h=$("sc1Help"); if(h) h.focus({preventScroll:true}); }; tourStart(); }
+function sc1TourAuto(){ if(page!=="sc1" || S.settings.sc1Tour || startUI() || anyWin() || endOpen) return; sc1TourStart(); }
+{ const o=tourShow; tourShow=function(){ const r=o.apply(this,arguments); try{ if(TOUR.custom){ const n=$("tourNext"); if(n && !n.querySelector("kbd")){ const x=kbdEl(); x.textContent=CNAME(); n.appendChild(x); } } }catch(e){} return r; }; }
+{ const o=openPage; openPage=function(pg){ const r=o.apply(this,arguments); if(page==="sc1" && pg==="sc1") setTimeout(sc1TourAuto,300); else if(sc1TourOn() && page!=="sc1") tourEnd(); sc1TipHide(); return r; }; }
+// ---- info-bulles : la Révision désactivée, les coupes ----
+function sc1TipHide(){ const p=$("sc1Tip"); if(p) p.hidden=true; clearTimeout(SC1L.tt); }
+function sc1TipShow(el, auto){ const tx=el && el.dataset.tip; if(!tx) return; let p=$("sc1Tip");
+  if(!p){ p=document.createElement("div"); p.id="sc1Tip"; p.className="sc1-tip"; p.setAttribute("role","tooltip"); document.body.appendChild(p); }
+  p.textContent=tx; p.hidden=false; const r=el.getBoundingClientRect(), W=document.documentElement.clientWidth, w=p.offsetWidth, h=p.offsetHeight;
+  const x=Math.max(8,Math.min(W-w-8, r.left+r.width/2-w/2)), up=r.top-h-10>=8; p.dataset.side=up?"above":"below";
+  p.style.left=x+"px"; p.style.top=(up ? r.top-h-10 : r.bottom+10)+"px"; p.style.setProperty("--ax",Math.max(12,Math.min(w-12,r.left+r.width/2-x))+"px");
+  clearTimeout(SC1L.tt); if(auto) SC1L.tt=setTimeout(sc1TipHide,2800); }
+{ const P=$("sc1Panel");
+  P.addEventListener("pointerover",e=>{ if(e.pointerType!=="mouse") return; const el=e.target.closest("[data-tip]"); if(el) sc1TipShow(el); });
+  P.addEventListener("pointerout",e=>{ if(e.pointerType!=="mouse") return; const el=e.target.closest("[data-tip]"); if(el && !el.contains(e.relatedTarget)) sc1TipHide(); });
+  P.addEventListener("click",e=>{ const el=e.target.closest("[data-tip]"); if(el) sc1TipShow(el,true); });
+  P.addEventListener("focusin",e=>{ const el=e.target.closest("[data-tip]"); if(el && el.matches(":focus-visible")) sc1TipShow(el); });
+  P.addEventListener("focusout",()=>sc1TipHide());
+  P.addEventListener("contextmenu",e=>{ if(e.target.closest("[data-tip]")) e.preventDefault(); }); // appui long sur mobile : la bulle, pas le menu
+  addEventListener("scroll",sc1TipHide,true); addEventListener("resize",sc1TipHide); }
+{ const o=sc1Render; sc1Render=function(){ const r=o.apply(this,arguments); try{ const P=$("sc1Panel"), mode=sc1Mode();
+      P.querySelectorAll(".sc1-cup").forEach((c,i)=>{ const pc=SC1_PC[i], nm=sc1RowName(pc), tx=sc1Cup(mode,pc) ? t("sc1CupWon")(nm) : t("sc1CupOff")(nm);
+        c.removeAttribute("title"); c.dataset.tip=tx; c.setAttribute("aria-label",tx); c.tabIndex=0; });
+      const rb=$("sc1RvB"); if(rb && rb.getAttribute("aria-disabled")==="true"){ rb.removeAttribute("title"); rb.dataset.tip=t("sc1RvNone"); rb.setAttribute("aria-label",t("sc1Rv")+" : "+t("sc1RvNone")); }
+      const top=P.querySelector(".sc1-top"), hd=P.querySelector(".sc1-h"); if(top && hd){ const b=document.createElement("button"); b.type="button"; b.id="sc1Help"; b.className="sc1-help";
+        b.textContent="?"; b.setAttribute("aria-label",t("sc1TuAgain")); b.dataset.tip=t("sc1TuAgain"); b.onclick=e=>{ e.stopPropagation(); sc1TourStart(); }; hd.after(b); } }catch(e){ console.warn(e); } return r; }; }
+// ---- MIDI : le tutoriel (Do = Suivant), la fin d'entraînement (Do = évaluation, Si = rejouer, Mi = revoir) ----
+{ const o=midiStart; midiStart=function(note){ const pc=((note%12)+12)%12;
+    if(sc1TourOn()){ if(pc===0 && S.settings.midiC!==false) tourGo(1); return true; }
+    if(sc1Tr() && phase==="success" && (pc===0||pc===4||pc===11) && S.settings.midiC!==false && !anyModal() && !setOpen){ if(pc===0) sc1Switch("eval"); else if(pc===11) sc1Turn(); else sc1Demo(); return true; }
+    return o.apply(this,arguments); }; }
+{ const o=mergeState; mergeState=function(local, cloud){ const r=o.apply(this,arguments); try{ const a=local&&local.settings, b=cloud&&cloud.settings;
+      if(r.merged && r.merged.settings && !r.merged.settings.sc1Tour && ((a&&a.sc1Tour)||(b&&b.sc1Tour))) r.merged.settings.sc1Tour=1; }catch(e){} return r; }; }
+/* ==== fin Gammes une à une v3 ==== */
 // ---------- Boot ----------
 
 applyStatic(); applySide(); buildKeyboard(); renderSettings(); render(); renderDaily(); openPage("hub");

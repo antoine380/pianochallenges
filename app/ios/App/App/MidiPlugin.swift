@@ -133,7 +133,12 @@ public class MidiPlugin: CAPPlugin, CAPBridgedPlugin, UIAdaptivePresentationCont
     private static func isVirtual(_ source: MIDIEndpointRef) -> Bool {
         if source == MIDINetworkSession.default().sourceEndpoint() { return true }
         let n = name(of: source).folding(options: [.caseInsensitive, .diacriticInsensitive], locale: nil).lowercased()
-        return n.contains("network") || n.contains("session") || n.contains("reseau") || n.hasPrefix("iac")
+        if n.hasPrefix("iac") || n.contains(" iac") || n.hasPrefix("bus ") || n.contains(" bus ") || n.hasSuffix(" bus") { return true }
+        // the same short list as midiVirtual() in the web source: software ports are never keyboards
+        let words = ["virtual", "virtuel", "network", "session", "reseau", "logic pro", "garageband", "mainstage", "ableton",
+                     "fl studio", "bitwig", "cubase", "reaper", "loopmidi", "loopbe", "rtpmidi", "virmidi", "bome", "vmpk",
+                     "midi through", "midithrough", "through port", "wavetable"]
+        return words.contains { n.contains($0) }
     }
 
     private static func name(of object: MIDIObjectRef) -> String {
