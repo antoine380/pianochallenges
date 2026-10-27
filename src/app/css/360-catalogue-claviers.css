@@ -1,0 +1,62 @@
+/* ==== Catalogue de claviers MIDI (25/10/2026) : « Choisis ton clavier », vignettes SVG, guide d'achat ==== */
+.mkc{z-index:9200}
+.mkc .mkc-card{width:min(880px,100%);height:min(760px,100%);padding:16px 18px 12px;gap:10px;overflow:hidden;background:var(--surface)}
+.mkc-head{display:flex;align-items:center;gap:12px;flex:none}
+.mkc-head h2{margin:0;font:700 1.45rem/1.1 var(--f-display);min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.mkc-ic{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;flex:none;color:#fff;background:linear-gradient(150deg,#8b6cff,#5a3fd6);box-shadow:0 8px 16px -8px #5a3fd6}
+.mkc-ic svg,.mkc-q svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.mkc-n{margin-left:auto;color:var(--muted);font-weight:800;font-size:.85rem;white-space:nowrap}
+.mkc-tools{display:flex;gap:8px;flex:none;min-width:0}
+.mkc-tools select{flex:0 0 auto;width:min(40%,250px);text-overflow:ellipsis}
+.mkc-q{flex:1 1 auto;min-width:0;display:flex;align-items:center;gap:8px;padding:0 12px;border-radius:14px;background:var(--surface-2);box-shadow:inset 0 0 0 1px var(--line);min-height:46px;color:var(--muted)}
+.mkc-q:focus-within{box-shadow:inset 0 0 0 2px var(--brand)}
+.mkc-q input{flex:1;min-width:0;border:0;background:transparent;color:var(--ink);font:600 1rem var(--f-body);outline:none;height:44px}
+.mkc-tools select,.mkc-other select,.mkc-other input{min-height:46px;border-radius:14px;border:0;background:var(--surface-2);color:var(--ink);font:700 .95rem var(--f-body);padding:0 12px;box-shadow:inset 0 0 0 1px var(--line);max-width:46%}
+.mkc-chips{display:flex;gap:6px;flex-wrap:wrap;flex:none}
+.mkc-chips button{min-height:38px;padding:0 12px;border-radius:999px;border:0;background:var(--surface-2);color:var(--ink);font:800 .86rem var(--f-body);box-shadow:inset 0 0 0 1px var(--line);cursor:pointer;display:inline-flex;align-items:center;gap:6px}
+.mkc-chips button[aria-pressed="true"]{background:var(--brand);color:#fff;box-shadow:none}
+.mkc-chips .mkc-sep{width:1px;align-self:stretch;background:var(--line);margin:4px 2px}
+.mkc-chips svg{width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.mkc-hint{margin:0;color:var(--muted);font-size:.86rem;flex:none}
+.mkc-sug{flex:none;display:flex;flex-direction:column;gap:6px;padding:8px 10px;border-radius:14px;background:color-mix(in srgb,var(--good) 12%,var(--surface-2))}
+.mkc-sug>b{font-size:.86rem} .mkc-sug .mkc-row{display:flex;gap:6px;overflow-x:auto;padding-bottom:2px}
+.mkc-sug .mkc-it{flex:0 0 auto;width:auto;max-width:260px;background:var(--surface)}
+.mkc-list{list-style:none;margin:0;padding:0 4px 0 0;flex:1 1 auto;min-height:0;overflow-y:auto;overscroll-behavior:contain;display:flex;flex-direction:column;gap:6px;touch-action:pan-y}
+.mkc-gh{position:sticky;top:0;z-index:1;display:flex;align-items:baseline;gap:8px;padding:6px 4px 4px;background:var(--surface);font:700 1.02rem var(--f-display)}
+.mkc-gh i{font:800 .78rem var(--f-body);font-style:normal;color:var(--muted)}
+.mkc-it{width:100%;display:flex;align-items:center;gap:12px;padding:6px 10px 6px 6px;border-radius:14px;border:0;background:var(--surface-2);color:var(--ink);font:inherit;text-align:left;box-shadow:inset 0 0 0 1px var(--line);min-height:58px}
+button.mkc-it{cursor:pointer;transition:box-shadow 160ms var(--ease-out)}
+@media (hover:hover) and (pointer:fine){ button.mkc-it:hover{box-shadow:inset 0 0 0 2px var(--brand)} }
+.mkc-it[aria-current="true"]{box-shadow:inset 0 0 0 2px var(--good);background:color-mix(in srgb,var(--good) 10%,var(--surface-2))}
+.mkc-th{flex:none;width:92px;height:46px;border-radius:10px;background:color-mix(in srgb,var(--ink) 6%,var(--surface));display:grid;place-items:center}
+.mkc-th svg{width:100%;height:100%}
+.mkc-tx{display:flex;flex-direction:column;min-width:0;flex:1}
+.mkc-tx small{color:var(--muted);font-weight:800;font-size:.74rem;text-transform:uppercase;letter-spacing:.04em}
+.mkc-tx b{font:700 1.02rem/1.15 var(--f-display);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mkc-sp{display:flex;flex-wrap:wrap;gap:4px;margin-top:3px}
+.mkc-sp span{font-size:.74rem;font-weight:800;padding:1px 7px;border-radius:999px;background:var(--surface);box-shadow:inset 0 0 0 1px var(--line)}
+.mkc-sp .bt{color:#fff;background:#2f6fe0;box-shadow:none} .mkc-sp .unk{color:var(--muted);font-weight:700}
+.mkc-ck{flex:none;width:26px;height:26px;border-radius:50%;display:grid;place-items:center;background:var(--good);color:#fff;font-weight:900}
+.mkc-more,.mkc-empty{padding:10px;text-align:center;color:var(--muted);font-weight:700;font-size:.9rem}
+.mkc-foot{flex:none;display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding-top:2px}
+.mkc-link{border:0;background:transparent;color:var(--brand);font:800 .92rem var(--f-body);padding:8px 2px;cursor:pointer;text-decoration:underline;text-underline-offset:3px;min-height:40px}
+.mkc-note{color:var(--muted);font-size:.78rem;margin-left:auto}
+.mkc-other{flex:none;display:flex;gap:8px;align-items:flex-end;flex-wrap:wrap;padding:10px;border-radius:14px;background:var(--surface-2)}
+.mkc-other label{display:flex;flex-direction:column;gap:4px;font-weight:800;font-size:.8rem;color:var(--muted);flex:1 1 160px}
+.mkc-other input,.mkc-other select{max-width:none;background:var(--surface)} .mkc-other .btn{min-height:46px}
+/* vignettes : clavier vu de dessus (même famille que les dessins du guide M4 / M14) */
+svg.kbt .bd{fill:#2c2a3c} svg.kbt .bd.nord{fill:#c22a37} svg.kbt .k{fill:#fbfbff} svg.kbt .kl{stroke:#c9c6dc;stroke-width:.35} svg.kbt .kb{fill:#1c1a2a}
+svg.kbt .ac{fill:#7a5bf5} svg.kbt .ac2{fill:#c8bfff} svg.kbt .dk{fill:#111022} svg.kbt .sc{fill:#8fd3ff} svg.kbt .gr{fill:none;stroke:#6f6b88;stroke-width:.8;stroke-dasharray:.8 1.2} svg.kbt .wh{fill:#5b5776}
+svg.kbt .tx{fill:#fff;font:800 4.6px var(--f-body);letter-spacing:.2px;opacity:.85}
+/* « Est-ce bien ce modèle ? » dans l'assistant (M10), lien de M4, Réglages */
+.mkc-is{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:6px;font-size:.9rem}
+.mkc-is .btn{min-height:36px;padding:0 14px;font-size:.86rem} .mkc-is .btn:not(.primary){background:var(--surface);box-shadow:inset 0 0 0 1px var(--line)}
+.mkc-lk{border:0;background:transparent;color:var(--brand);font:800 inherit;padding:0;cursor:pointer;text-decoration:underline;text-underline-offset:3px}
+.mk-card .mkc-mb{margin-left:0}
+@media (max-width:640px){ .mkc .mkc-card{padding:12px 12px 8px;gap:8px;border-radius:18px} .mkc-head h2{font-size:1.15rem} .mkc-n{display:none}
+  .mkc-tools select{width:40%;font-size:.86rem;padding:0 6px} .mkc-th{width:72px;height:38px} .mkc-it{gap:8px;min-height:52px} .mkc-tx b{font-size:.95rem}
+  .mkc-chips{flex-wrap:nowrap;overflow-x:auto;padding-bottom:2px} .mkc-chips button{flex:none;min-height:36px;padding:0 10px} .mkc-note{display:none} }
+@media (max-height:520px) and (orientation:landscape){ .mkc .mkc-card{height:100%;padding:8px 12px;gap:6px} .mkc-head{min-height:40px} .mkc-head h2,.mkc-n{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)} .mkc-ic{width:32px;height:32px}
+  .mkc-tools{position:absolute;top:8px;left:52px;right:62px} .mkc-head .modal-close{margin-left:auto;width:40px;height:40px} .mkc-foot{padding-top:0} .mkc-link{min-height:32px;padding:4px 2px}
+  .mkc-q,.mkc-tools select{min-height:40px} .mkc-q input{height:38px} .mkc-chips{flex-wrap:nowrap;overflow-x:auto} .mkc-chips button{flex:none;min-height:34px} .mkc-th{width:68px;height:34px} .mkc-it{min-height:46px;padding:4px 8px 4px 4px} .mkc-note{display:none} .mkc-hint{display:none} }
+/* ==== fin Catalogue de claviers MIDI ==== */

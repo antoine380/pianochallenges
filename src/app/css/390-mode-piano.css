@@ -1,0 +1,72 @@
+/* ==== Mode PIANO (chantier piano) ==== */
+:root{--m-piano:#a15c00;--pn-night:#100c27}
+#pianoPanel,.pn-scene{display:none}
+body[data-page="piano"] #pianoPanel{display:flex;flex-direction:row;flex-wrap:wrap;align-items:center;gap:clamp(6px,1.2vh,12px) 10px;flex:none;min-height:0;min-width:0}
+[data-page="piano"] :is(.picker,.gamebar,.prompt-row,.timeline,.slots,.answers,.actions,.hint,.notice,.pane-head,.free-lbl,.inputs,.staff-box,.auto-help){display:none!important}
+body[data-page="piano"] #stage{display:flex!important;flex-direction:column;flex:1 1 auto!important;min-height:0!important;height:auto!important;max-height:none!important;padding:0!important;gap:0!important;margin-top:0;border:0;overflow:hidden;
+  background:radial-gradient(120% 85% at 50% 108%,#3a2a86 0%,#1d1650 38%,var(--pn-night) 78%);box-shadow:0 18px 40px -22px #1b1240,inset 0 1px 0 rgba(255,255,255,.06)}
+body[data-page="piano"] .pn-scene{display:block;position:relative;flex:1 1 auto;min-height:40px;overflow:hidden}
+body[data-page="piano"] .pn-scene::before{content:"";position:absolute;inset:0;pointer-events:none;opacity:.55;
+  background:radial-gradient(1.2px 1.2px at 12% 22%,#fff8 50%,transparent 51%),radial-gradient(1px 1px at 31% 64%,#fff6 50%,transparent 51%),radial-gradient(1.4px 1.4px at 57% 18%,#fff7 50%,transparent 51%),radial-gradient(1px 1px at 72% 48%,#fff5 50%,transparent 51%),radial-gradient(1.2px 1.2px at 88% 26%,#fff7 50%,transparent 51%),radial-gradient(1px 1px at 44% 38%,#fff4 50%,transparent 51%),radial-gradient(1px 1px at 93% 70%,#fff4 50%,transparent 51%),radial-gradient(1px 1px at 6% 72%,#fff4 50%,transparent 51%)}
+.pn-scene canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+.pn-cap{position:absolute;left:50%;top:46%;transform:translate(-50%,-50%) scale(.98);display:flex;flex-direction:column;align-items:center;gap:4px;text-align:center;pointer-events:none;opacity:0;transition:opacity .45s,transform .45s;color:#fff;width:max-content;max-width:92%}
+.pn-cap b{font-family:var(--f-display);font-weight:700;font-size:clamp(1.3rem,4.2vh,2.4rem);letter-spacing:.01em;text-shadow:0 4px 24px rgba(0,0,0,.4)}
+.pn-cap small{font-weight:700;font-size:clamp(.78rem,1.8vh,.98rem);color:#d9d3ff}
+.pn-cap.on{opacity:.92;transform:translate(-50%,-50%) scale(1)}
+body[data-page="piano"] #kbdWrap{flex:none;min-height:0;padding:0 clamp(8px,1.6vw,16px) clamp(8px,1.4vh,14px);position:relative;z-index:1}
+body[data-page="piano"] .kbd{height:clamp(110px,30vh,250px)!important}
+body[data-page="piano"] :is(.wk,.bk).k-down{background:var(--nc)!important;box-shadow:inset 0 -7px 0 rgba(0,0,0,.16),0 0 26px 2px var(--nc)!important}
+body[data-page="piano"] .bk.k-down{filter:saturate(.9) brightness(.85)}
+body[data-page="piano"] .wk.k-down span{color:#15122e}
+/* the title and the two rows of choices */
+.pn-h{flex:1 1 100%;min-width:0}
+.pn-h .mode-big .mb-ic{background:linear-gradient(150deg,color-mix(in srgb,var(--m-piano) 50%,#fff),var(--m-piano))}
+.pn-ins{flex:1 1 100%;min-width:0;display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:8px}
+.pn-i{--ic:var(--m-piano);position:relative;display:flex;align-items:center;gap:9px;min-width:0;padding:7px 10px 7px 7px;border:1.5px solid transparent;border-radius:16px;background:var(--surface);color:var(--ink);text-align:left;box-shadow:var(--shadow-card);transition:transform .12s,background .2s,box-shadow .2s}
+.pn-i .pi{width:36px;height:36px;flex:none;border-radius:11px;display:grid;place-items:center;color:#fff;background:linear-gradient(150deg,color-mix(in srgb,var(--ic) 52%,#fff),var(--ic));box-shadow:0 6px 12px -6px var(--ic),inset 0 1px 0 rgba(255,255,255,.35)}
+.pn-i svg,.pn-v svg,.pn-t svg{fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.pn-i svg{width:22px;height:22px}
+.pn-n{font-weight:800;font-size:.86rem;line-height:1.12;min-width:0;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.pn-i[aria-checked="true"]{background:linear-gradient(150deg,color-mix(in srgb,var(--ic) 82%,#fff),var(--ic));color:#fff;box-shadow:0 12px 22px -12px var(--ic),inset 0 1px 0 rgba(255,255,255,.3)}
+.pn-i[aria-checked="true"] .pi{background:#ffffff2e;box-shadow:none}
+.pn-i:active{transform:scale(.97)}
+@media (hover:hover) and (pointer:fine){ .pn-i:not([aria-checked="true"]):hover{border-color:var(--ic)} }
+.pn-i:focus-visible,.pn-v:focus-visible,.pn-t:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.pn-bar{flex:1 1 100%;min-width:0;display:flex;align-items:center;gap:8px 12px}
+.pn-vz{flex:1 1 auto;min-width:0;display:flex;align-items:center;gap:6px;overflow-x:auto;scrollbar-width:none;padding:2px}
+.pn-vz::-webkit-scrollbar{display:none}
+.pn-lbl{font-size:.72rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-right:2px;flex:none}
+.pn-v{flex:none;display:inline-flex;align-items:center;gap:6px;padding:6px 12px 6px 9px;border-radius:999px;border:1px solid transparent;background:var(--surface-2);color:var(--ink);font-weight:800;font-size:.8rem;white-space:nowrap}
+.pn-v svg{width:16px;height:16px}
+.pn-v[aria-checked="true"]{background:var(--m-piano);color:#fff;box-shadow:0 6px 14px -8px var(--m-piano)}
+@media (hover:hover) and (pointer:fine){ .pn-v:not([aria-checked="true"]):hover{border-color:var(--m-piano)} .pn-t:hover{border-color:var(--m-piano)} }
+.pn-tools{flex:none;display:flex;align-items:center;gap:6px;margin-left:auto}
+.pn-dd{position:relative}
+.pn-t{display:inline-flex;align-items:center;gap:6px;padding:6px 12px 6px 10px;border-radius:999px;border:1px solid transparent;background:var(--surface-2);color:var(--ink);font-weight:800;font-size:.8rem;white-space:nowrap;min-height:34px}
+.pn-t svg{width:18px;height:18px}
+.pn-t[aria-expanded="true"]{border-color:var(--ink)}
+#pnSus[aria-pressed="true"]{background:var(--m-piano);color:#fff}
+.pn-snd i{display:contents} .pn-snd .off{display:none}
+.pn-snd[aria-pressed="false"] .on{display:none} .pn-snd[aria-pressed="false"] .off{display:contents}
+.pn-snd[aria-pressed="false"]{color:var(--muted);text-decoration:line-through;text-decoration-thickness:1.5px}
+.pn-fx{position:absolute;top:calc(100% + 8px);right:0;z-index:30;width:min(290px,calc(100vw - 32px));display:flex;flex-direction:column;gap:10px;padding:14px 16px;border-radius:16px;background:var(--surface);box-shadow:0 18px 44px rgba(0,0,0,.24)}
+.pn-fx[hidden]{display:none}
+.pn-sl{display:grid;grid-template-columns:70px minmax(0,1fr) 30px;align-items:center;gap:10px;font-weight:800;font-size:.84rem}
+.pn-sl b{font-size:.8rem;color:var(--muted);text-align:right}
+.pn-sl input{width:100%;accent-color:var(--m-piano);height:24px;margin:0}
+/* tablets and small heights: no title, the instruments scroll sideways if they lack room */
+@media (max-height:820px),(max-width:900px){ .pn-h p{display:none} }
+@media (max-height:700px),(max-width:900px){ .pn-h{display:none} }
+@media (max-width:1180px){ .pn-lbl{display:none} }
+@media (min-width:901px) and (max-width:1180px){ .pn-i{flex-direction:column;justify-content:center;gap:5px;padding:8px 4px 7px;text-align:center} .pn-n{font-size:.78rem;-webkit-line-clamp:1;display:block;white-space:nowrap;text-overflow:ellipsis;max-width:100%} .pn-i .pi{width:32px;height:32px} }
+@media (max-width:999px){ .pn-t span{display:none} .pn-t{padding:6px 8px} }
+@media (max-width:900px){ .pn-ins{display:flex;overflow-x:auto;scrollbar-width:none;padding:2px 2px 6px;margin:-2px -2px -6px;scroll-snap-type:x proximity;-webkit-mask-image:linear-gradient(90deg,#000 88%,transparent);mask-image:linear-gradient(90deg,#000 88%,transparent)} .pn-ins::-webkit-scrollbar{display:none} .pn-i{flex:0 0 auto;min-width:132px;scroll-snap-align:start} .pn-n{white-space:nowrap} }
+.pn-vz{-webkit-mask-image:linear-gradient(90deg,#000 calc(100% - 18px),transparent);mask-image:linear-gradient(90deg,#000 calc(100% - 18px),transparent)}
+@media (max-width:640px){ .pn-i{min-width:0;padding:5px 11px 5px 5px;gap:7px;border-radius:14px} .pn-i .pi{width:30px;height:30px;border-radius:9px} .pn-i svg{width:19px;height:19px} .pn-n{font-size:.8rem}
+  .pn-lbl,.pn-t span{display:none} .pn-t{padding:6px 8px} .pn-v{padding:6px 10px 6px 8px} .pn-bar{gap:6px}
+  body[data-page="piano"] .kbd{height:150px!important} .pn-dd{position:static} .pn-tools{position:relative} }
+@media (max-height:520px) and (orientation:landscape){ body[data-page="piano"] #pianoPanel{flex-wrap:nowrap;gap:8px} .pn-ins{flex:1 1 52%} .pn-bar{flex:1 1 48%} .pn-lbl,.pn-t span{display:none} .pn-t{padding:6px 8px}
+  .pn-i{min-width:0;padding:4px 10px 4px 4px;gap:6px;border-radius:12px;box-shadow:none} .pn-i .pi{width:28px;height:28px;border-radius:9px} .pn-i svg{width:18px;height:18px} .pn-n{font-size:.78rem} .pn-v{padding:5px 9px 5px 7px}
+  body[data-page="piano"] .kbd{height:clamp(84px,27vh,120px)!important} .pn-cap b{font-size:1.2rem} }
+@media (min-height:900px) and (min-width:1100px){ body[data-page="piano"] .kbd{height:clamp(180px,28vh,300px)!important} }
+/* ==== fin Mode PIANO ==== */

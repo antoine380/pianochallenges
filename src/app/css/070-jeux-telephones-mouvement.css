@@ -1,0 +1,128 @@
+/* Games */
+.games{flex:none;display:flex;flex-direction:column;gap:12px}
+.free-lbl{display:none;margin:0;font-family:var(--f-display);font-weight:700;font-size:1.05rem}
+[data-page="games"] :is(.picker,.gamebar,.prompt-row,.timeline,.slots,.answers,.actions,.hint,.notice){display:none!important}
+[data-page="games"] .free-lbl{display:block}
+[data-page="play"] :is(.picker,.stage,.gamebar,.prompt-row,.timeline,.slots,.answers,.actions,.hint,.notice,.pane-head){display:none!important}
+.playpanel{flex:1;min-height:0;display:flex;border-radius:14px;overflow:hidden;background:#f6f2eb}
+.playpanel iframe{flex:1;width:100%;height:100%;border:0;display:block}
+
+/* Phones (portrait and landscape): the page slides right to reveal the menu */
+@media (max-width:640px), (max-height:520px) and (orientation:landscape){
+  .app{display:block;height:100vh;height:100dvh;padding-top:0;background:var(--surface)}
+  .side{position:fixed;top:0;bottom:0;left:0;z-index:1;--sw:min(280px,80vw);width:var(--sw);border-right:0;
+    padding:calc(14px + env(safe-area-inset-top, 0px)) 12px calc(12px + env(safe-area-inset-bottom, 0px)) max(12px, env(safe-area-inset-left, 0px))}
+  .side.collapsed{--sw:min(280px,80vw)}
+  .side-toggle{display:none!important}
+  .shell{position:relative;z-index:2;height:100vh;height:100dvh;transition:transform 320ms var(--ease-drawer),border-radius 320ms var(--ease-drawer);will-change:transform}
+  body.drawer .shell{transform:translateX(min(280px,80vw));border-radius:22px;overflow:hidden;box-shadow:-10px 0 40px rgba(0,0,0,.28)}
+  body.drawer .side-scrim{display:block;position:absolute;inset:0;z-index:30;background:transparent}
+  .mbar{display:flex;align-items:center;gap:12px;flex:none;padding:calc(8px + env(safe-area-inset-top, 0px)) max(14px, env(safe-area-inset-right, 0px)) 8px max(14px, env(safe-area-inset-left, 0px));background:var(--bg)}
+  .mbar-btn{border:0;background:var(--surface);box-shadow:0 1px 0 var(--line);border-radius:12px;width:44px;height:44px;display:grid;place-items:center;flex:none;color:var(--ink)}
+  .mbar-btn svg{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round}
+  .mbar-btn.ghost{background:none;box-shadow:none;width:40px} .mbar-btn.ghost svg{stroke-width:1.7;stroke-linejoin:round}
+  .mbar-title{flex:1;margin:0;font-family:var(--f-display);font-weight:800;font-size:1.35rem;letter-spacing:-.01em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .mbar-lvl{display:flex;align-items:center;gap:6px;border:1px solid transparent;background:var(--surface);border-radius:999px;padding:3px 10px 3px 3px;font-family:var(--f-display);font-weight:800;flex:none}
+  .mbar-lvl .av{width:32px;height:32px}
+  .pk-title{display:none}
+}
+@media (max-height:520px) and (orientation:landscape){
+  .mbar{padding-block:max(4px, env(safe-area-inset-top, 0px)) 2px}
+  .kbd-wrap{min-height:76px}
+  .main{padding-top:4px}
+  :is(.prompt-sub,.eyebrow,.session,.hint){display:none!important}
+  .picker{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none} .picker::-webkit-scrollbar{display:none}
+  body:not(.playing) :is(.slots,.answers){display:none!important}
+  .picker .check{white-space:nowrap;font-size:.82rem}
+  .pk-lbl{display:none}
+  .prompt{font-size:1.5rem}
+  .score-box{min-width:130px;padding:4px 10px} .sb-label{font-size:.6rem} .sb-val{font-size:1.1rem} .sb-detail{min-height:0}
+  .mbar-btn{width:38px;height:38px}
+  .mbar-title{font-size:1.1rem}
+  .mbar-lvl .av{width:28px;height:28px}
+}
+/* Phone, portrait */
+@media (max-width:640px){
+  /* the drawer must fit a 667 px screen: tighter menu, level card, daily card and legal links */
+  .side{gap:7px}
+  .mode-nav{gap:5px} .mode-item{min-height:46px;padding:5px 10px;border-radius:12px} .mode-item .mi{width:32px;height:32px;border-radius:10px} .mode-item .mt b{font-size:.88rem}
+  .side .lvl-card{padding:7px 8px;gap:4px 10px} .lvl-av{width:40px;height:40px} .side .xp-txt{display:none}
+  .lvl-stats{gap:6px} .lvl-stats .stat{gap:5px} .stat-txt small{font-size:.62rem}
+  .side-daily{padding:5px 8px} .side-daily .dicon{width:30px;height:30px}
+  .side-foot{padding-top:5px;gap:0} .side .nav-item{min-height:34px;padding-block:3px}
+  .side-tools{margin-top:2px} .legal-links{margin:2px 10px 0;font-size:.66rem}
+  .main{padding:12px 14px calc(96px + env(safe-area-inset-bottom, 0px))}
+  .wrap{height:100%;gap:10px}
+  .kbd-wrap{flex:0 1 230px;min-height:90px}
+  .prompt-sub{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+  .gamebar{gap:6px 10px}
+  .picker{gap:8px 12px;padding:8px 10px}
+  .pk-lbl{display:none}
+  .answers{grid-template-columns:1fr 1fr}
+  .modal{align-items:flex-end;padding-bottom:0}
+  .modal-card{border-radius:16px 16px 0 0;max-height:92%}
+  .modal-foot{padding-bottom:calc(12px + env(safe-area-inset-bottom, 0px))}
+  .tut-arrow.next{flex:1;max-width:200px}
+  .stage{padding:14px 12px;border-radius:12px;gap:12px}
+  .prompt-row{gap:8px 10px}
+  .score-col{align-items:stretch;width:auto;max-width:132px}
+  .score-box{min-width:0;grid-template-columns:1fr;padding:7px 10px;text-align:left}
+  .sb-label{font-size:.62rem}
+  .sb-val{font-size:1.3rem;text-align:left}
+  .sb-detail{font-size:.72rem}
+  .session{white-space:normal;font-size:.68rem}
+  .wk span{font-size:.7rem}
+  .slots{gap:4px}
+  .hint.keys{display:none}
+  .actions{position:fixed;left:0;right:0;bottom:0;z-index:20;background:var(--surface);border-top:1px solid var(--line);flex-wrap:nowrap;
+    padding:10px max(16px, env(safe-area-inset-right, 0px)) calc(10px + env(safe-area-inset-bottom, 0px)) max(16px, env(safe-area-inset-left, 0px))}
+  .actions .btn{flex:1;min-height:52px;font-size:1rem;padding:8px 10px}
+  .actions .btn kbd,.actions .spacer{display:none}
+  body.playing .picker{display:none}
+}
+/* Phones held sideways: icon rail, compact game, keyboard gets the room */
+@media (max-height:520px) and (orientation:landscape){
+  body{font-size:14px}
+  .main{padding:8px max(12px, env(safe-area-inset-right, 0px)) calc(8px + env(safe-area-inset-bottom, 0px)) max(12px, env(safe-area-inset-left, 0px))}
+  .wrap{gap:8px}
+  .picker{padding:6px 10px;gap:6px 12px}
+  .stage{padding:10px 14px;gap:8px;border-radius:12px}
+  .prompt{font-size:1.7rem}
+  .prompt-sub{margin-top:2px;font-size:.78rem}
+  .eyebrow{font-size:.66rem}
+  .score-box{padding:5px 10px;min-width:150px}
+  .sb-val{font-size:1.25rem}
+  .timeline{height:18px}
+  .slot{padding:3px 2px 4px} .slot .nn{font-size:.95rem;min-height:1.3em}
+  .actions .btn{min-height:40px;padding:6px 14px}
+  .inputs .pill{padding:3px 10px;font-size:.78rem}
+  .hint.keys{display:none}
+  .gamebar{gap:8px}
+  .answers{grid-template-columns:repeat(auto-fill,minmax(130px,1fr))}
+  .answers button{min-height:40px;padding:8px}
+  .modal-card{max-height:96%}
+  body.playing :is(.picker,.inputs,.eyebrow,.session){display:none}
+  body.playing .stage{gap:6px}
+}
+/* Short laptop / tablet screens: tighten before the keyboard shrinks too much */
+@media (min-height:521px) and (max-height:860px){
+  .side{gap:8px;padding-top:10px}
+  .side .nav-item{min-height:36px;padding-block:5px}
+  .side .lvl-card{padding:8px;gap:8px}
+  .side .xp-txt{display:none}
+  .side-daily{padding:6px}
+  .lvl-av{width:42px;height:42px}
+  .side-foot{padding-top:6px}
+  .side-foot .lang{margin-block:4px}
+  .stage{padding-block:16px;gap:12px}
+  .prompt{font-size:clamp(1.9rem,4.4vw,2.8rem)}
+  .hint.keys{display:none}
+}
+/* reduced motion = fewer and gentler, not zero: no movement (keyframes, transform/size/position transitions), fades of opacity and colour kept */
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none!important;transition-property:opacity,color,background-color,border-color,box-shadow!important}
+  .sp-k,.sp-b,.sp-wm{opacity:1!important;transform:none!important}
+  .modal-card,.dd-pop,.tut-text{animation:rmFade 150ms ease!important}
+}
+@keyframes rmFade{from{opacity:0}}
+

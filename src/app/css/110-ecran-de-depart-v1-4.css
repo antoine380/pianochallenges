@@ -1,0 +1,65 @@
+/* ===== v1.4: LEARN start screen, step-by-step card ===== */
+[data-page="practice"] .picker{display:none!important}
+body.setup :is(.stage,.gamebar){display:none!important}
+.su{gap:14px}
+.su-wrap{display:grid;grid-template-columns:minmax(0,1fr) minmax(260px,320px);gap:20px;align-items:start;min-height:0}
+.su-main{display:flex;flex-direction:column;gap:6px;min-width:0}
+.su-h{margin:6px 0 6px;font-family:var(--f-body);font-weight:800;font-size:.8rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.su-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
+.su-card{display:flex;flex-direction:column;align-items:flex-start;gap:2px;text-align:left;border:0;border-radius:var(--r-md);padding:12px 14px;background:var(--surface);color:var(--ink);box-shadow:var(--shadow-card);min-height:62px;transition:transform .15s,box-shadow .15s}
+.su-card b{font-family:var(--f-display);font-weight:600;font-size:1rem;line-height:1.15}
+.su-card small{color:var(--muted);font-size:.74rem;font-weight:700}
+@media (hover:hover) and (pointer:fine){.su-card:not(:disabled):hover{transform:translateY(-2px)}}
+.su-card[aria-pressed="true"]{color:#fff;background:linear-gradient(150deg,color-mix(in srgb,var(--mc) 60%,#fff),var(--mc));box-shadow:0 12px 22px -12px var(--mc)}
+.su-card[aria-pressed="true"] small{color:#fff;opacity:.9}
+.su-card:disabled{opacity:.55;cursor:default}
+.su-keys{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:8px}
+.su-key{display:flex;flex-direction:column;align-items:center;gap:4px;border:0;border-radius:14px;padding:10px 2px 8px;background:var(--surface);color:var(--ink);box-shadow:var(--shadow-card);min-height:52px}
+.su-key b{font-family:var(--f-display);font-weight:600;font-size:.95rem;white-space:nowrap}
+.su-key .pips{display:flex;gap:3px} .su-key .pips i{width:5px;height:5px;border-radius:50%;background:var(--line)} .su-key .pips i.f{background:var(--gold)}
+.su-key[aria-pressed="true"]{color:#fff;background:linear-gradient(150deg,color-mix(in srgb,var(--mc) 60%,#fff),var(--mc));box-shadow:0 10px 18px -10px var(--mc)}
+.su-key:disabled{opacity:.4;cursor:default}
+.su-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:10px}
+.su-lbl{font-weight:800;font-size:.8rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.su-chips{display:flex;gap:6px;flex-wrap:wrap}
+.su-chips button{border:0;border-radius:999px;padding:7px 14px;background:var(--surface-2);color:var(--ink);font-weight:700;font-size:.85rem}
+.su-chips button[aria-pressed="true"]{background:var(--brand);color:#fff}
+.su-chips button:disabled{opacity:.45}
+.su-side{display:flex;flex-direction:column;gap:12px}
+.su-box{background:var(--surface);border-radius:var(--r-lg);padding:12px 14px;box-shadow:var(--shadow-card)}
+.su-box .su-h{margin-top:0}
+.su-hh{display:flex;justify-content:space-between;align-items:baseline}
+.su-seg{display:flex}
+.su-seg button{flex:1;white-space:nowrap}
+.su-help{display:flex;gap:10px;align-items:flex-start;padding:8px 6px;border-radius:12px;cursor:pointer}
+@media (hover:hover) and (pointer:fine){.su-help:hover{background:var(--surface-2)}}
+.su-help input{width:20px;height:20px;margin-top:2px;accent-color:var(--brand);flex:none}
+.su-help span{display:flex;flex-direction:column;gap:1px;min-width:0}
+.su-help b{font-weight:800;font-size:.9rem} .su-help small{color:var(--muted);font-size:.76rem;line-height:1.3}
+.su-help.mini{padding-block:4px} .su-help.mini b{font-weight:700;font-size:.82rem}
+.su-go{display:flex;align-items:center;justify-content:space-between;gap:12px;border:0;border-radius:var(--r-lg);padding:14px 16px;color:#fff;text-align:left;
+  background:linear-gradient(150deg,color-mix(in srgb,var(--mc) 55%,#fff),var(--mc));box-shadow:0 18px 28px -16px var(--mc),inset 0 1px 0 rgba(255,255,255,.35);transition:transform .15s}
+@media (hover:hover) and (pointer:fine){.su-go:hover{transform:translateY(-2px)}}
+.su-go>span:first-child{display:flex;flex-direction:column;min-width:0} .su-go small{font-weight:700;font-size:.76rem;opacity:.92} .su-go b{font-family:var(--f-display);font-weight:700;font-size:1.15rem;line-height:1.15}
+.su-play{flex:none;border-radius:999px;padding:9px 16px;background:#fff;color:#1b1838;font-weight:800;font-size:.9rem}
+@media (max-width:1100px){ .su-keys{grid-template-columns:repeat(6,minmax(0,1fr))} }
+@media (max-width:900px){ .su-wrap{grid-template-columns:1fr} .su-side{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))} .su-go{grid-column:1/-1} }
+@media (max-height:820px){ .su-card{min-height:50px;padding:9px 12px} .su-key{min-height:44px;padding:7px 2px 6px} .su-help{padding:5px 6px} .su-help small{font-size:.72rem} .su-box{padding:10px 12px} .su .mode-h p{display:none} }
+@media (max-width:640px){ .su .mode-h{display:none} .su-side{grid-template-columns:1fr;gap:8px} .su-help small,.su-card small{display:none} .su .mode-h p{display:none} .su-h{margin:2px 0 4px}
+  .su-cards,.su-keys{display:flex;overflow-x:auto;scroll-snap-type:x proximity;gap:6px;padding:2px 2px 6px;scrollbar-width:none} .su-cards::-webkit-scrollbar,.su-keys::-webkit-scrollbar{display:none}
+  .su-card{flex:0 0 auto;min-height:0;padding:9px 14px;scroll-snap-align:start} .su-key{flex:0 0 52px;min-height:0;padding:7px 0 5px} .su-help{padding:4px 6px} .su-box{padding:8px 12px} .su-go{padding:10px 14px} .su-row{margin-top:4px} }
+@media (max-height:420px) and (orientation:landscape){ .su .mode-h{display:none} .su-wrap{grid-template-columns:minmax(0,1fr) 240px;gap:12px} .su-side{display:flex;gap:6px} .su-help small,.su-card small,.su .mode-h p{display:none}
+  .su-cards,.su-keys{display:flex;overflow-x:auto;gap:6px;padding:2px 2px 4px;scrollbar-width:none} .su-card{flex:0 0 auto;min-height:0;padding:7px 12px} .su-key{flex:0 0 46px;min-height:0;padding:5px 0} .su-key .pips{display:none}
+  .su-h{margin:0 0 3px;font-size:.7rem} .su-box{padding:6px 10px} .su-help{padding:2px 4px} .su-help b{font-size:.8rem} .su-go{padding:8px 12px} .su-go small{display:none} .su-row{margin-top:2px} .su{gap:6px} }
+/* the step-by-step card */
+.fiche{margin-top:10px;max-width:360px;padding:10px 12px;border-radius:var(--r-md);background:var(--surface-2)}
+.fc-h{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px} .fc-h b{font-weight:800;font-size:.85rem} .fc-h small{color:var(--muted);font-weight:700;font-size:.76rem}
+.fc-kb svg{display:block;width:100%;height:46px}
+.fc-kb rect{fill:var(--key-white);stroke:none} .fc-kb rect.bk{fill:var(--key-black)} .fc-kb rect.on{filter:drop-shadow(0 0 3px rgba(255,255,255,.4))}
+.fc-n{display:flex;flex-wrap:wrap;gap:4px;margin-top:6px}
+.fc-n span{min-width:30px;text-align:center;border-radius:999px;padding:2px 8px;font-weight:800;font-size:.8rem;background:var(--surface);color:var(--muted)}
+.fc-n span.ok{background:var(--c);color:#15122e}
+body.gp .wk.k-ok,body.gp .bk.k-ok{background:var(--nc)!important;box-shadow:inset 0 -7px 0 rgba(0,0,0,.16),0 0 18px 0 var(--nc)!important}
+body.gp .wk.k-ok span,body.gp .bk.k-ok span{color:#15122e}
+.playpanel{background:var(--bg)!important}
+

@@ -1,0 +1,10 @@
+/* ==== Jeux 3 (chantier JEUX 3) ==== */
+.rn-goal{font-size:.85rem;font-weight:700;color:var(--good);background:color-mix(in srgb,var(--good) 14%,transparent);padding:3px 10px;border-radius:999px}
+#rnStage,#gmBoard{position:relative}
+.j3-win{position:absolute;inset:0;margin:auto;width:min(92%,380px);height:max-content;max-height:96%;display:flex;flex-direction:column;align-items:center;gap:6px;padding:var(--sp-3,14px) var(--sp-4,18px);text-align:center;background:var(--surface);border-radius:16px;box-shadow:0 10px 30px rgba(20,16,50,.22);cursor:default;z-index:2}
+.j3-wk{font-family:var(--f-display);font-size:1.25rem;color:var(--good)}
+.j3-win p{margin:0;color:var(--muted);font-size:.9rem}
+.j3-wb{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-top:4px}
+@media (max-height:520px){ .j3-win{padding:8px 12px;gap:2px} .j3-wk{font-size:1.05rem} .j3-win p{font-size:.8rem} }
+@media (prefers-reduced-motion:no-preference){ .j3-win{animation:j3In .25s cubic-bezier(.23,1,.32,1)} @keyframes j3In{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}} }
+/* ==== fin Jeux 3 ==== */

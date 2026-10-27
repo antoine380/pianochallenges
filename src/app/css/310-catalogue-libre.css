@@ -1,0 +1,18 @@
+/* ==== Catalogue libre (bibliothèque de morceaux libres de droits, crédits musicaux) ==== */
+.pc-lib .pc-n{font-style:normal;min-width:20px;height:20px;padding:0 6px;border-radius:999px;background:var(--m-play);color:#fff;font:800 .72rem/20px var(--f-body);text-align:center}
+.pc-lib[aria-pressed="true"] .pc-n{background:#fff;color:var(--m-play)}
+.pc-row>h3 .pc-cred{margin-left:auto;border:0;background:none;padding:2px 4px;color:var(--m-play);font:800 .78rem/1 var(--f-body);cursor:pointer;text-decoration:underline;text-underline-offset:3px}
+:root[data-theme="dark"] .pc-row>h3 .pc-cred{color:#b9a8ff}
+@media (prefers-color-scheme:dark){ :root:not([data-theme="light"]) .pc-row>h3 .pc-cred{color:#b9a8ff} }
+.pc-lib-wait{margin:auto;color:var(--muted);font-weight:700}
+.cred-modal .modal-card{width:min(700px,100%);max-height:min(88vh,780px);display:flex;flex-direction:column}
+.cred-body{display:flex;flex-direction:column;gap:10px;min-height:0;flex:1 1 auto;padding:0 22px 20px}
+.cred-sub{margin:0;color:var(--muted);font-size:.86rem;line-height:1.45}
+.cred-list{flex:1 1 auto;min-height:120px;overflow:auto;border-top:1px solid var(--line);padding:4px 4px 4px 0;overscroll-behavior:contain}
+.cred-list h3{font:800 .95rem/1.2 var(--f-display);margin:14px 0 2px}
+.cred-item{padding:7px 0;border-bottom:1px solid var(--line);font-size:.85rem;line-height:1.4}
+.cred-item b{font-weight:800} .cred-item small{display:block;color:var(--muted)} .cred-item a{color:inherit;text-decoration:underline;text-underline-offset:2px;word-break:break-all}
+.cred-x{display:inline-block;margin-left:6px;padding:1px 7px;border-radius:999px;background:var(--surface-2);box-shadow:inset 0 0 0 1px var(--line);font-size:.72rem;font-weight:800}
+@media (max-width:900px){ .pc-lib span,.pcat-bar .pc-free span{display:none} }
+@media (max-width:640px){ .pc-lib span,.pc-lib .pc-n{display:none} .pcat-bar .pc-chip[data-lv] i{display:none} .cred-body{padding:0 14px 14px} }
+/* ==== fin Catalogue libre ==== */

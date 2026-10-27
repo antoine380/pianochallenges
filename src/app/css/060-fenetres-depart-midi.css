@@ -1,0 +1,89 @@
+/* Characters + intro windows */
+.modal-sub{margin:2px 0 0;color:var(--muted);font-size:.88rem}
+.char-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px}
+@media (max-width:760px){.char-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.char{display:flex;flex-direction:column;align-items:center;text-align:center;gap:4px;padding:12px 8px;border:1px solid transparent;border-radius:12px;background:var(--surface-2)}
+.char .av{width:72px;height:72px;margin-bottom:4px}
+.char b{font-family:var(--f-display);font-size:1rem;line-height:1.15}
+.char .ct{font-size:.78rem;color:var(--muted)}
+.char .cx{font-family:var(--f-mono);font-size:.74rem;margin-top:4px}
+.char.locked .av{filter:grayscale(1);opacity:.45}
+.char.locked b{color:var(--muted)}
+.char.got .cx{color:var(--good)}
+.char.me{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent);background:var(--accent-soft)}
+.intro-h{display:flex;align-items:center;gap:12px}
+.intro-ic{width:44px;height:44px;border-radius:12px;background:var(--accent-soft);display:grid;place-items:center;flex:none}
+.intro-ic svg{width:24px;height:24px;fill:none;stroke:var(--accent);stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.intro-h .tut-step{margin:0}
+.intro-steps{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:12px;counter-reset:st}
+.intro-steps li{display:grid;grid-template-columns:30px minmax(0,1fr);gap:12px;align-items:start;counter-increment:st;line-height:1.45}
+.intro-steps li::before{content:counter(st);width:30px;height:30px;border-radius:50%;background:var(--ink);color:var(--bg);display:grid;place-items:center;font-family:var(--f-display);font-weight:800}
+.intro-steps li b{font-family:var(--f-display)}
+[data-page="daily"] .segs{display:none!important}
+@media (max-width:640px), (max-height:520px) and (orientation:landscape){
+  body.playing .dpanel .pane-head{display:none}
+  body.playing .dtl{padding:8px 6px;grid-auto-columns:minmax(28px,1fr)}
+  body.playing .dtl .st-n{display:none}
+  body.playing .dtl .dot{width:24px;height:24px;font-size:.7rem}
+  body.playing .dtl li::before{top:11px}
+}
+[data-page="daily"] .picker{display:none}
+/* Daily practice: the exercise area only appears once the practice has started */
+body[data-page="daily"]:not(.playing) .stage{display:none!important}
+[data-page="rank"] :is(.picker,.stage), [data-page="account"] :is(.picker,.stage){display:none!important}
+[data-page="notif"] :is(.picker,.stage){display:none!important}
+
+/* App launch animation (iOS app only) */
+.splash{display:none}
+html.native .splash{display:grid;place-items:center;align-content:center;gap:18px;position:fixed;inset:0;z-index:100;background:#161920;transition:opacity .35s ease,visibility .35s}
+html.native .splash.out{opacity:0;visibility:hidden}
+.sp-mark{width:96px;height:96px;overflow:visible}
+.sp-k{fill:#eceef2;transform-box:fill-box;transform-origin:top;opacity:0;animation:spKey .5s cubic-bezier(.3,1.4,.5,1) forwards}
+.sp-k2{fill:#e09a2f;animation-delay:.12s} .sp-k3{animation-delay:.24s}
+.sp-b{fill:#161920;opacity:0;animation:spIn .3s ease .42s forwards}
+.sp-k2{animation:spKey .5s cubic-bezier(.3,1.4,.5,1) .12s forwards, spPress .28s ease .75s 2 alternate}
+.sp-wm{display:flex;flex-direction:column;align-items:center;line-height:1;font-family:var(--f-display);opacity:0;transform:translateY(8px);animation:spIn .45s ease .5s forwards}
+.sp-wm span:first-child{color:#fff;font-weight:800;font-size:2rem;letter-spacing:-.02em}
+.sp-wm span:last-child{color:#e09a2f;font-weight:700;font-size:1.05rem;letter-spacing:.14em;text-transform:uppercase;margin-top:4px}
+@keyframes spKey{from{opacity:0;transform:scaleY(.2)}to{opacity:1;transform:none}}
+@keyframes spIn{to{opacity:1;transform:none}}
+@keyframes spPress{to{transform:scaleY(.9)}}
+html.native, html.native body{touch-action:manipulation} /* text stays selectable; controls are not (see "Native feel") */
+html.native :is(input,select,textarea){-webkit-user-select:auto;user-select:auto}
+html.native .midi-body [data-i="midiHint"]{display:none}
+/* MIDI connection window */
+.mconn{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:10px}
+@media (max-width:520px){.mconn{grid-template-columns:minmax(0,1fr)}}
+.mc-card{display:flex;flex-direction:column;gap:6px;border:1px solid transparent;border-radius:12px;padding:12px;background:var(--surface-2)}
+.mc-card .mc-h{display:flex;align-items:center;gap:8px;font-family:var(--f-display);font-weight:800}
+.mc-card .mc-h svg{width:22px;height:22px;fill:none;stroke:var(--accent);stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.mc-card p{margin:0;font-size:.84rem;color:var(--muted);line-height:1.4}
+.mc-card .btn{margin-top:auto;align-self:flex-start}
+.mdev{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px}
+.mdev li{display:flex;align-items:center;gap:10px;padding:8px 12px;border-radius:10px;border:1px solid var(--good);background:var(--good-soft);font-weight:700}
+.mdev li::before{content:"";width:9px;height:9px;border-radius:50%;background:var(--good);flex:none}
+.mdev li.none{border-color:var(--line);background:var(--surface-2);color:var(--muted);font-weight:400}
+.mdev li.none::before{background:var(--line)}
+.mdev-h{font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:0}
+
+/* Picker: one compact toolbar */
+.picker{flex:none;display:flex;flex-wrap:wrap;align-items:center;gap:8px 18px;background:var(--surface);border:1px solid transparent;border-radius:var(--r-lg);box-shadow:var(--shadow-card);padding:8px 12px}
+.pk-field{display:flex;align-items:center;gap:8px;min-width:0}
+.pk-seg button{padding:5px 12px;white-space:nowrap}
+.pk-lbl{font-size:.7rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);white-space:nowrap}
+.picker select{padding:5px 8px}
+.picker .seg button{padding:5px 10px;font-size:.84rem;white-space:nowrap}
+.picker .types button{padding:4px 9px}
+.dd{position:relative;min-width:0}
+.dd-btn{display:inline-flex;align-items:center;gap:6px;border:1px solid transparent;background:var(--surface-2);border-radius:999px;padding:5px 8px 5px 12px;font-weight:700;max-width:min(340px,60vw)}
+#keysBtn{max-width:none}
+.dd-btn span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.dd-btn svg{width:16px;height:16px;flex:none;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;transition:transform .15s}
+.dd-btn[aria-expanded="true"]{border-color:var(--ink)} .dd-btn[aria-expanded="true"] svg{transform:rotate(180deg)}
+.dd-pop{position:absolute;top:calc(100% + 6px);left:0;z-index:25;background:var(--surface);border:1px solid transparent;border-radius:12px;box-shadow:0 14px 40px rgba(0,0,0,.18);padding:10px;width:max-content;max-width:min(460px,calc(100vw - 40px));transform-origin:top left;animation:ddIn 160ms var(--ease-out)}
+
+/* Stage fills the remaining height; the keyboard gives way first */
+.stage{flex:0 1 auto;min-height:0;overflow:visible;gap:14px}
+.kbd-wrap{flex:0 1 250px;min-height:110px;display:flex}
+.kbd{flex:1 0 auto;width:auto;height:auto}
+

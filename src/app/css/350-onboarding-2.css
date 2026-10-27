@@ -1,0 +1,27 @@
+/* ==== Onboarding 2 (25/10/2026) : questions après la première note et « Ton programme » (#gate .fn-st-q et #onb .oq-card) ==== */
+.oq{flex:1 1 auto;min-height:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:clamp(6px,1.3vh,12px);width:100%}
+.oq h2{margin:0;font-family:var(--f-display);font-weight:700;font-size:clamp(1.35rem,3.4vh,2rem);line-height:1.12;color:var(--ink)}
+.oq-k{margin:0;font-weight:800;font-size:.78rem;letter-spacing:.12em;text-transform:uppercase;color:#6a4bf0}
+.oq-sub{margin:0;color:var(--muted);font-weight:700}
+.oq-fx{margin:0;display:inline-flex;align-items:center;gap:8px;max-width:min(620px,100%);padding:7px 14px;border-radius:999px;background:color-mix(in srgb,var(--pp) 14%,var(--surface));color:var(--ink);font-size:.9rem;text-align:left;min-height:34px;box-sizing:border-box}
+.oq-fx svg{flex:none;width:18px;height:18px;fill:none;stroke:var(--pp);stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
+.oq-fx b{color:var(--good)} .oq-fx0{visibility:hidden}
+.oq-opts.fn-lv4 button{display:grid;grid-template-columns:auto 1fr auto;justify-content:stretch;gap:12px;padding:clamp(7px,1.3vh,12px) 18px
+  clamp(7px,1.3vh,12px) 10px}
+.oq-opts.fn-lv4 button[aria-pressed="true"]{background:color-mix(in srgb,#7a5bf5 13%,var(--surface));border-color:#7a5bf5;color:var(--ink)}
+.oq-ic{width:clamp(28px,4.4vh,40px);height:clamp(28px,4.4vh,40px);display:grid;place-items:center} .oq-ic svg{width:100%;height:100%}
+.oq-foot{display:flex;align-items:center;justify-content:space-between;gap:10px;width:min(560px,100%)} .oq-foot .fn-lnk{padding:8px 0}
+.oq-midi{font-size:.82rem;font-weight:700;color:var(--muted)}
+.oq-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:clamp(4px,.9vh,8px);width:min(620px,100%)}
+.oq-list li{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:12px;text-align:left;padding:clamp(5px,1vh,10px) 14px clamp(5px,1vh,10px) 10px;border-radius:16px;background:var(--surface-2)}
+.oq-list li b{display:block;font-size:.95rem} .oq-list li small{display:block;color:var(--muted);font-weight:700;font-size:.82rem;line-height:1.3}
+.oq-act{white-space:nowrap}
+.oq-go{width:min(420px,100%)} .oq-note{margin:0;color:var(--muted);font-size:.82rem;font-weight:700}
+.oq-card{gap:10px} .oq-card .oq-opts{width:min(560px,100%)}
+@media (max-height:560px){ .oq{gap:4px} .oq-sub,.oq-note,.oq-fx0,.oq-k{display:none} .oq h2{font-size:1.1rem} .oq-fx{padding:3px 10px;min-height:0;font-size:.78rem}
+  .oq-opts.fn-lv4{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));width:100%;gap:6px} .oq-opts.fn-lv4 button{min-height:40px;padding:4px 10px 4px 6px;gap:6px} .oq-opts.fn-lv4 button small{display:none}
+  .oq-list{display:grid;grid-template-columns:1fr 1fr;width:100%} .oq-list li{padding:4px 8px;gap:8px;border-radius:12px} .oq-list li small{font-size:.72rem;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden} .oq-ic{width:26px;height:26px} .oq-go{padding:8px} }
+@media (max-width:640px){ .oq-opts.fn-lv4 button small{white-space:normal;text-align:right;font-size:.78rem} .oq-list li{gap:8px} .oq-list li small{font-size:.76rem} .oq-act{grid-column:2/-1;justify-self:start;padding:5px 12px}
+  .oq-opts.fn-lv4 button{grid-template-columns:auto 1fr;row-gap:0;text-align:left} .oq-opts.fn-lv4 button .oq-ic{grid-row:span 2} .oq-opts.fn-lv4 button small{grid-column:2;text-align:left;white-space:normal} }
+@media (prefers-reduced-motion:reduce){ .oq-opt{transition:none} }
+/* ==== fin Onboarding 2 ==== */

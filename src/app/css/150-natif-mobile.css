@@ -1,0 +1,76 @@
+/* ===== Native feel on phones and tablets (mobile-native audit, Oct 2026) ===== */
+/* no tap flash anywhere (keys are divs, links, labels): each control gives its own :active feedback below */
+html{-webkit-tap-highlight-color:transparent}
+/* controls: no double-tap-zoom wait, no text selection or callout on a long press; text stays selectable (body is not touched) */
+button,a,[role=button],.ptile,label,summary{touch-action:manipulation;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
+/* no pull-to-refresh / whole-page rubber band; inner scrollers keep their own bounce without moving the page */
+html,body{overscroll-behavior:none}
+.main,.side,.modal-body,.gate,.onb,.gt-form,.fn-play,.pw-card,.inv-card,.ntf-card,.pf-recs ul,.kbd-wrap,.picker,.pf-row,.su-cards,.su-keys,.su-chips,.qz-themes{overscroll-behavior:contain}
+/* press feedback the instant the finger lands (iOS needs a touchstart listener, added in the script). Never on piano keys. */
+:is(.btn,.tile,.seg button,.su-key,.su-km,.su-help,.qz-diff,.gt-guest,.gt-s,.fn-in,.fn-lv button,.inp-opt,.answers button,.mbar-btn,.hs-go,.dd-btn,.pw-inv,.du-share,.end-share,.du-chal,.how-btn,.hs-more,.linkbtn,.gt-link,.fn-skip,.fn-foot button,.pw-x,.inv-x,.tour-x,.modal-close,.hs-inv){transition:transform 140ms cubic-bezier(.23,1,.32,1)}
+:is(.btn,.seg button,.su-key,.su-km,.su-mode,.su-go,.su-help,.qz-a,.qz-diff,.onb-opt,.pw-plan,.gt-go,.gt-guest,.gt-s,.fn-in,.fn-lv button,.inp-opt,.answers button,.mbar-btn,.hs-go,.dd-btn,.pw-inv,.du-share,.end-share,.du-chal,.how-btn,.hs-more,.linkbtn,.gt-link,.fn-skip,.fn-foot button,.pw-x,.inv-x,.tour-x,.modal-close):not(:disabled):active{transform:scale(.97)}
+:is(.tile,.ptile,.su-card,.qz-theme,.du-mode,.hs-daily,.hs-inv):not(:disabled):not(.soon):active{transform:scale(.98)}
+/* the press itself is quick (140 ms ease-out); the release and the mouse hover keep their own timing */
+:is(.ptile,.su-card,.su-go,.su-mode,.qz-theme,.qz-a,.du-mode,.pw-plan,.gt-go,.onb-opt,.hs-daily):not(:disabled):active{transition-duration:140ms;transition-timing-function:cubic-bezier(.23,1,.32,1)}
+@media (prefers-reduced-motion:reduce){ :is(.btn,.tile,.ptile,.seg button,.su-card,.su-key,.su-km,.su-mode,.su-go,.su-help,.qz-theme,.qz-a,.qz-diff,.du-mode,.onb-opt,.pw-plan,.gt-go,.gt-guest,.gt-s,.fn-in,.fn-lv button,.inp-opt,.answers button,.mbar-btn,.hs-go,.dd-btn,.pw-inv,.du-share,.end-share,.du-chal,.how-btn,.hs-more,.linkbtn,.gt-link,.fn-skip,.fn-foot button,.pw-x,.inv-x,.tour-x,.modal-close,.hs-daily,.hs-inv):active{transform:none!important;filter:brightness(.94)} }
+/* touch screens: 16px fields, or iOS Safari zooms in on focus and stays zoomed */
+@media (pointer:coarse){ input:not([type=checkbox]):not([type=radio]):not([type=range]),select,textarea,.gm-opt select,.timer-sel,.inv-link input,.qz-pl input,.acct-login input{font-size:16px} }
+/* full-screen layers on phones: the background covers the notch, the content stays clear of it and of the home indicator */
+.gate,.onb{padding:max(20px, env(safe-area-inset-top, 0px)) max(20px, env(safe-area-inset-right, 0px)) max(20px, env(safe-area-inset-bottom, 0px)) max(20px, env(safe-area-inset-left, 0px))}
+.pw,.inv{padding:max(16px, env(safe-area-inset-top, 0px)) max(16px, env(safe-area-inset-right, 0px)) max(16px, env(safe-area-inset-bottom, 0px)) max(16px, env(safe-area-inset-left, 0px))}
+@media (max-width:640px){ .gate,.onb{padding:0}
+  .gt-form{padding:max(16px, env(safe-area-inset-top, 0px)) max(18px, env(safe-area-inset-right, 0px)) max(16px, env(safe-area-inset-bottom, 0px)) max(18px, env(safe-area-inset-left, 0px))}
+  .onb-card{padding:max(14px, env(safe-area-inset-top, 0px)) max(16px, env(safe-area-inset-right, 0px)) max(14px, env(safe-area-inset-bottom, 0px)) max(16px, env(safe-area-inset-left, 0px))} }
+@media (max-height:520px){ .gate,.onb{padding:0}
+  .gt-form{padding:max(12px, env(safe-area-inset-top, 0px)) max(20px, env(safe-area-inset-right, 0px)) max(12px, env(safe-area-inset-bottom, 0px)) max(20px, env(safe-area-inset-left, 0px))}
+  .onb-card{padding:max(10px, env(safe-area-inset-top, 0px)) max(16px, env(safe-area-inset-right, 0px)) max(10px, env(safe-area-inset-bottom, 0px)) max(16px, env(safe-area-inset-left, 0px))} }
+@media (max-width:760px){ .gate:has(.fn-card){padding:0}
+  .fn-hero{padding-top:max(18px, env(safe-area-inset-top, 0px));padding-left:max(20px, env(safe-area-inset-left, 0px));padding-right:max(20px, env(safe-area-inset-right, 0px))}
+  .fn-play{padding-left:max(18px, env(safe-area-inset-left, 0px));padding-right:max(18px, env(safe-area-inset-right, 0px));padding-bottom:max(14px, env(safe-area-inset-bottom, 0px))} }
+@media (max-height:560px) and (min-width:700px){ .gate:has(.fn-card){padding:0}
+  .fn-hero{padding-left:max(20px, env(safe-area-inset-left, 0px));padding-top:max(16px, env(safe-area-inset-top, 0px));padding-bottom:max(16px, env(safe-area-inset-bottom, 0px))}
+  .fn-play{padding-right:max(18px, env(safe-area-inset-right, 0px));padding-top:max(12px, env(safe-area-inset-top, 0px));padding-bottom:max(12px, env(safe-area-inset-bottom, 0px))} }
+@media (max-width:760px), (max-height:600px){ .pw{padding:0}
+  .pw-card{padding-top:max(14px, env(safe-area-inset-top, 0px));padding-left:max(16px, env(safe-area-inset-left, 0px));padding-right:max(16px, env(safe-area-inset-right, 0px));padding-bottom:max(12px, env(safe-area-inset-bottom, 0px))}
+  .pw-x{top:max(14px, env(safe-area-inset-top, 0px));right:max(14px, env(safe-area-inset-right, 0px))} }
+@media (max-width:640px){ .inv{padding:0}
+  .inv-top{padding-top:max(18px, env(safe-area-inset-top, 0px));padding-left:max(18px, env(safe-area-inset-left, 0px));padding-right:max(18px, env(safe-area-inset-right, 0px))}
+  .inv-body{padding-left:max(16px, env(safe-area-inset-left, 0px));padding-right:max(16px, env(safe-area-inset-right, 0px));padding-bottom:max(14px, env(safe-area-inset-bottom, 0px))}
+  .inv-x{top:max(12px, env(safe-area-inset-top, 0px));right:max(12px, env(safe-area-inset-right, 0px))} }
+/* first run "Play your first note": the screen keys never select text or pop the iOS callout */
+.fn-kb,.fn-kb *{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
+/* first run on a small phone (iPhone SE 375×667, and less with Safari's bars): everything on one screen */
+@media (max-width:760px) and (max-height:740px){
+  .fn-hero{padding-bottom:12px;gap:4px} .fn-hero h1{font-size:1.5rem;margin-top:4px} .fn-hero p{font-size:.84rem;line-height:1.35} .fn-trust{display:none}
+  .fn-play{padding-top:10px;gap:8px} .fn-play h2{font-size:1.3rem} .fn-step{font-size:.66rem} .fn-lbl{display:none} .fn-in{padding:6px 10px} .fn-lv button{padding:7px 6px}
+  .fn-prompt{min-height:0;padding:8px 12px} .fn-prompt .fn-big{font-size:1.8rem} .fn-prompt small{font-size:.76rem} .fn-foot{font-size:.8rem}
+  .fn-play>*{flex-shrink:0} .fn-kb{flex:1 1 96px;height:auto;min-height:96px;max-height:180px} }
+@media (max-width:760px) and (max-height:600px){ .fn-hero p,.fn-in small{display:none} }
+/* small phone held sideways (667×375): the two-column layout of the larger phones, so the keys keep their room */
+@media (max-height:500px) and (min-width:560px) and (max-width:699px){ .fn-card{grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr);grid-template-rows:none}
+  .fn-hero{padding:max(14px, env(safe-area-inset-top, 0px)) 16px 14px max(16px, env(safe-area-inset-left, 0px))} .fn-hero h1{font-size:1.4rem} .fn-hero p{display:block;font-size:.8rem}
+  .fn-play{padding:10px max(14px, env(safe-area-inset-right, 0px)) max(10px, env(safe-area-inset-bottom, 0px)) 14px;gap:6px} .fn-play h2{font-size:1.15rem} .fn-in{padding:4px 8px} .fn-lv button{padding:5px}
+  .fn-prompt{padding:5px 10px} .fn-prompt .fn-big{font-size:1.5rem} .fn-kb{min-height:80px} }
+/* start screen with a phone held sideways: the Start button stays on screen, pinned at the bottom of the side column */
+@media (max-height:420px) and (orientation:landscape){
+  #setupPanel .su-go{position:sticky;bottom:0;z-index:1;flex:none} }
+/* wider-than-screen keyboard (Settings › keyboard size): a sideways drag scrolls it; a fitting keyboard keeps every touch for the notes */
+.kbd-wrap.kbd-scroll .kbd{touch-action:pan-x}
+/* onboarding on phones: everything on one screen */
+@media (max-width:640px){ .onb-card{height:100dvh;min-height:0;box-sizing:border-box} .onb-body{min-height:0;flex:1}
+  .onb-opts.six .onb-opt{flex-direction:row;text-align:left;gap:10px;padding:10px} .onb-opts.six{grid-template-columns:1fr 1fr;gap:8px} .onb-opts.six .onb-ic{width:36px;height:36px} .onb-opts.six .onb-ot small{display:none}
+  .onb-li{padding:8px 10px;gap:10px} .onb-li .onb-ic{width:36px;height:36px} }
+@media (max-height:520px){ .onb-card{height:100dvh;min-height:0;box-sizing:border-box} .onb-body{min-height:0;flex:1;overflow:hidden} .onb-sum{gap:6px} .onb-li{padding:6px 10px;font-size:.9rem} .onb-li .onb-ic{width:30px;height:30px} .onb-k{display:none} }
+@media (min-width:641px) and (max-width:900px) and (min-height:700px){ .gt-card{height:calc(100dvh - 40px);overflow:hidden} .gt-form{overflow:auto} }
+.qz-ps{flex:1 1 170px;max-width:260px}
+
+.unsub-card{min-height:0;max-width:460px;text-align:center} .unsub-card .onb-ic{width:72px;height:72px;margin:0 auto}
+
+@media (max-height:520px){ .onb-sum{display:grid;grid-template-columns:1fr 1fr;max-width:none} .onb-sub{display:none} }
+@font-face{font-family:Bravura;src:url(assets/fonts/bravura.woff2) format("woff2");font-display:block}
+
+/* staff */
+.staff-box{display:flex;justify-content:center;background:var(--surface);border-radius:var(--r-md);padding:2px 6px;color:var(--ink);min-height:0;overflow:hidden}
+.staff-box[hidden]{display:none} .staff-box svg{max-width:100%;height:auto;display:block}
+body.staff-on.staff-seq .slots{display:none} #clefField[hidden]{display:none}
+.gm-staff{display:inline-flex;background:#fff;color:#1b1838;border-radius:16px;padding:2px 8px;box-shadow:0 10px 24px -14px rgba(27,24,56,.5)} .gm-staff svg{display:block;height:auto;max-height:22vh;width:auto}

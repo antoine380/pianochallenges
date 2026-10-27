@@ -1,0 +1,13 @@
+/* ==== Mesure (back office) : réglage « Aider à améliorer l'app », fenêtre « Signaler un problème » ==== */
+.trk-set{display:flex;flex-wrap:wrap;align-items:center;gap:var(--sp-3) var(--sp-4)} .trk-set .check{flex:1 1 260px;align-items:flex-start} .trk-set .check input{margin-top:3px}
+.trk-set .check span{display:flex;flex-direction:column;gap:2px} .trk-set .check small{color:var(--muted);font-size:.78rem;line-height:1.35}
+.fb-modal .modal-card{width:min(520px,100%)}
+.fb-body{display:flex;flex-direction:column;gap:10px;padding:22px}
+.fb-body h2{margin:0;font-family:var(--f-display)} .fb-sub{margin:0;color:var(--muted);font-size:.9rem}
+.fb-body textarea,.fb-body input{width:100%;box-sizing:border-box;font:inherit;font-size:16px;color:var(--ink);background:var(--surface-2);border:1px solid var(--line);border-radius:14px;padding:10px 12px;resize:vertical;min-height:44px}
+.fb-body textarea{min-height:110px;max-height:40vh}
+.fb-body textarea:focus-visible,.fb-body input:focus-visible{outline:2px solid var(--accent,#6a4bf0);outline-offset:1px}
+.fb-info{color:var(--muted);font-size:.78rem;min-height:1.1em} .fb-info.err{color:var(--bad,#d43c4f)} .fb-info.ok{color:var(--good)}
+.fb-foot{display:flex;justify-content:flex-end;align-items:center;gap:12px}
+@media (max-height:520px) and (orientation:landscape){ .fb-body{padding:12px 16px;gap:6px} .fb-sub{display:none} .fb-body textarea{min-height:70px} }
+/* ==== fin Mesure ==== */

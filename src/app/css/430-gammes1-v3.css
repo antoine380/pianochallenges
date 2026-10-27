@@ -1,0 +1,20 @@
+/* ==== Gammes une à une v3 (chantier sc1-v3) ==== */
+/* touches de notes : seulement avec un clavier MIDI branché */
+body:not(.midi-ok) kbd.kn{display:none!important}
+/* évaluation et révision : ni chrono ni aides dans la barre */
+body.sc1ev :is(#timerSel,.guide-dd,#timeline){display:none!important}
+/* « Terminer la partie » : un vrai bouton gris */
+body.sc1x .gamebar .gend{margin-left:auto;border:1px solid var(--line);background:var(--surface-2);color:var(--ink);text-decoration:none;border-radius:999px;padding:6px 14px;font-weight:800;font-size:.8rem;min-height:34px;cursor:pointer}
+@media (hover:hover) and (pointer:fine){ body.sc1x .gamebar .gend:hover{border-color:var(--muted)} }
+@media (max-width:640px),(max-height:520px) and (orientation:landscape){ body.sc1x .gamebar .gend{padding:4px 10px;min-height:30px;font-size:.74rem} }
+/* le bouton « ? » du tutoriel, les info-bulles */
+.sc1-help{flex:none;width:28px;height:28px;border-radius:50%;border:1px solid var(--line);background:var(--surface-2);color:var(--muted);font-family:var(--f-display);font-weight:700;font-size:.95rem;line-height:1;display:grid;place-items:center;padding:0;cursor:pointer;margin-left:-6px}
+@media (hover:hover) and (pointer:fine){ .sc1-help:hover{color:var(--ink);border-color:var(--sc1c)} }
+.sc1-help:focus-visible,.sc1-cup:focus-visible{outline:3px solid var(--accent);outline-offset:2px;border-radius:8px}
+.sc1-cup,#sc1RvB[data-tip]{-webkit-touch-callout:none;-webkit-user-select:none;user-select:none}
+.sc1-tip{position:fixed;z-index:9000;max-width:min(280px,calc(100vw - 16px));padding:8px 12px;border-radius:12px;background:var(--ink);color:var(--bg);font-size:.82rem;font-weight:700;line-height:1.35;box-shadow:0 12px 26px -12px rgba(10,6,30,.55);pointer-events:none}
+.sc1-tip[hidden]{display:none}
+.sc1-tip::after{content:"";position:absolute;left:calc(var(--ax,50%) - 6px);width:12px;height:12px;background:inherit;transform:rotate(45deg)}
+.sc1-tip[data-side="above"]::after{bottom:-5px} .sc1-tip[data-side="below"]::after{top:-5px}
+@media (prefers-reduced-motion:no-preference){ .sc1-tip{animation:sc1TipIn .14s ease-out} @keyframes sc1TipIn{from{opacity:0}to{opacity:1}} }
+/* ==== fin Gammes une à une v3 ==== */

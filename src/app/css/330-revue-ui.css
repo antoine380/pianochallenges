@@ -1,0 +1,55 @@
+/* ==== Revue UI (25/10) ==== */
+/* écran de connexion : le grand titre se règle sur la largeur du panneau (il débordait sur la carte du formulaire en iPad paysage) */
+.gt-art{container-type:inline-size}
+.gt-big{padding:0 18px 0 48px}
+.gt-big b{font-size:clamp(2rem,10cqi,4.6rem);text-wrap:balance}
+@media (max-width:900px) and (min-height:700px) and (min-width:641px){ .gt-big{padding:0 18px} .gt-big b{font-size:clamp(1.8rem,6.2cqi,3rem)} .gt-o.o1,.gt-o.o2{display:none} }
+/* « Continuer sans compte » : même bouton en pointillés aux deux étapes (c'était un petit lien de 29 px à la première) */
+.gt-choose .gt-noacct{display:flex;align-items:center;justify-content:center;width:100%;min-height:44px;border:2px dashed var(--line);border-radius:999px;color:var(--ink);font-size:.9rem;padding:10px 16px}
+/* certificat des Premiers pas : « Et maintenant ? » en 2 × 2 (en 3 colonnes de 150 px les objets 3D couvraient les titres) */
+@media (min-width:761px) and (min-height:521px){ .pp-ctiles{grid-template-columns:repeat(2,minmax(0,1fr));max-height:min(440px,62vh)} .pp-cnext{justify-content:center} }
+@media (min-width:761px) and (max-width:900px) and (orientation:portrait){ .pp-cbody{grid-template-columns:1fr;align-content:start;gap:var(--sp-5,24px)} .pp-cleft{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:end;gap:12px 18px} .pp-cc{aspect-ratio:auto;max-height:none;min-height:240px;grid-row:span 2} .pp-cbtn{flex-direction:column} .pp-ctiles{max-height:none;grid-auto-rows:220px;row-gap:26px} }
+/* fenêtre MIDI : la liste « Automatique (3 octaves) » était coupée par le bouton voisin ; le bouton passe dessous quand la place manque */
+.midi-body .range-row{flex-wrap:wrap} .midi-body .range-row select{flex:1 1 210px;min-width:0;min-height:40px} .midi-body .range-row .btn{flex:1 1 auto;min-height:40px}
+/* commandes segmentées à 4 choix dans une colonne étroite : 2 × 2 au lieu de libellés écrasés sur 2 ou 3 lignes (Les Douze au salon, Étiquettes) */
+.du-cont[data-k=douze],#lblField .seg{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));border-radius:18px;gap:2px}
+.du-cont[data-k=douze] button,#lblField .seg button{white-space:nowrap;min-height:36px}
+.rn-acts{display:flex;gap:8px;margin-left:auto}
+/* « Invite tes amis » : le cadeau se pousse à gauche de la croix (elle le recouvrait) */
+.inv-top .obj{right:58px} .inv-top h2,.inv-top p{max-width:calc(100% - 150px)}
+@media (max-width:640px){ .inv-top .obj{right:54px;top:12px} .inv-top h2,.inv-top p{max-width:calc(100% - 120px)} }
+#mdGoScreen{display:inline-flex;align-items:center;justify-content:center;gap:8px} #mdGoScreen svg{width:20px;height:20px;flex:none;fill:none;stroke:currentColor;stroke-width:2}
+/* états vides : une icône, une phrase, une action */
+.ntf-eart svg{width:46px;height:46px;fill:none;stroke:var(--brand);stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;padding:12px;box-sizing:content-box;border-radius:50%;background:var(--surface-2);margin-bottom:var(--sp-2,8px)}
+.ntf-empty{gap:var(--sp-2,8px)} .ntf-empty #ntfEmptyGo{margin-top:var(--sp-3,12px)}
+.du-hist li.du-hempty{flex-direction:column;align-items:flex-start;gap:var(--sp-3,12px)} .du-hempty p b{display:block;color:var(--ink);font-weight:800;margin-bottom:4px} .du-hempty .btn{min-height:40px}
+.ru-ach-help{margin:0;padding:0 16px 6px;font-size:.82rem;color:rgba(255,255,255,.75);flex:none}
+.ru-free-tip{display:none;margin:0;color:var(--muted);font-weight:700;font-size:.9rem} body.pc-kb[data-page="free"] .ru-free-tip{display:block}
+.ru-gm-desc{display:none;color:var(--muted);font-size:.86rem;font-weight:600;flex:1 1 240px;min-width:0} body.du-lob .ru-gm-desc{display:block}
+.set-prem .ru-prem{flex:1 1 100%;display:flex;flex-direction:column;gap:4px;padding:var(--card-pad,16px);border-radius:var(--r-lg,18px);background:var(--surface-2)} .ru-prem b{font-family:var(--f-display);font-size:1.1rem} .ru-prem span{color:var(--muted);font-weight:600}
+/* piano libre : le clavier prend la place libre (la moitié de l'écran restait vide sur iPad) */
+@media (min-height:700px){ body.pc-kb[data-page="free"] .kbd{height:clamp(150px,calc(100dvh - 380px),480px)!important} }
+/* cibles tactiles : les petites commandes (pastilles de PLAY 28 px, flèches du calendrier, points des actualités, liens « Tout voir »,
+   « Terminer la partie », croix de la bulle d'import, chiffres du quiz) gagnent une zone de toucher invisible, sans changer la mise en page */
+:is(.pc-chip,.hs-more,.gamebar .gend,.imp-tip-x,#pfPrev,#pfNext,.hs-dots button,#qzBots button,#suHow,.how-btn){position:relative}
+:is(.pc-chip,.hs-more,.gamebar .gend,.imp-tip-x,#pfPrev,#pfNext,#qzBots button,#suHow,.how-btn)::after{content:"";position:absolute;inset:-7px -3px;border-radius:inherit}
+.hs-dots button::after{content:"";position:absolute;inset:-14px -3px}
+/* relecture : la zone de « Comment ça marche ? » (écran de départ) débordait de 7 px sur la 1re rangée des aides (case « Allumer les touches » en téléphone) → elle s'agrandit vers le haut seulement ;
+   les chiffres 0-3 des robots du quiz sont collés : pas de débord sur les côtés (chaque chiffre prenait 3 px au voisin) */
+html #suHow::after{inset:-12px -3px 0} /* « html » : même spécificité que le :is() ci-dessus (qui compte #qzBots button), placé après */
+#qzBots button::after{inset:-7px 0}
+.hs-dots{gap:8px}
+/* carte « Invite tes amis » de l'accueil étirée (iPad portrait) : titre et sous-titre restent ensemble, au centre */
+.hs-inv{align-content:center;justify-items:start;text-align:left;row-gap:2px}
+/* salon des jeux en iPad portrait : la liste des bots remplit la hauteur (la moitié basse restait vide) */
+@media (max-width:900px) and (min-width:641px) and (min-height:700px){ .du-lobby>.du-panel{flex:1 1 auto} #duPBody{flex:1 1 auto;display:flex;flex-direction:column;gap:12px;min-height:0} #duPBody>.du-bots{grid-auto-rows:minmax(110px,auto)} #duPBody .du-bot{flex-direction:column;justify-content:center;text-align:center;gap:6px} #duPBody .du-bot .du-av{width:56px;height:56px} #duPBody .du-bot small{display:block} }
+/* fenêtres : fond presque opaque (le verre à 62-72 % laissait les tuiles colorées derrière le texte : contraste trop faible) */
+.modal-card{background:color-mix(in srgb,var(--surface) 93%,transparent)}
+/* thèmes du quiz sur téléphone : les noms sur 2 lignes débordaient de leur tuile de 30 px → une ligne, points de suspension */
+@media (max-width:640px){ #qzSetup .qz-theme b{font-size:.8rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:calc(100% - 4px)} }
+@media (max-height:520px) and (orientation:landscape){ #qzSetup .qz-theme b{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:calc(100% - 4px)} }
+/* Accompagnement en iPad portrait : la carte « Jeu » prend toute la largeur (elle laissait une moitié vide) */
+@media (max-width:900px){ #accPanel .su-side>.su-box{grid-column:1/-1} }
+/* podium du quiz en téléphone paysage : les boutons « Rejouer » passaient sous le bord de l'écran */
+@media (max-height:520px) and (orientation:landscape){ .qz-end{gap:6px} .qz-endt{font-size:1.25rem} .qz-pod,.qz-pod.r1{padding:6px 12px;gap:0;flex-direction:row;gap:10px;width:auto} .qz-rk{width:28px;height:28px;font-size:.95rem} .qz-sc{font-size:1.1rem} .qz-pod small{display:none} }
+/* ==== fin Revue UI ==== */

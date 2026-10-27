@@ -1,0 +1,56 @@
+/* ==== Gammes v4 + Série 10 min (chantier sc1-v4) ==== */
+/* tutoriel : la pointe vise le centre de la cible (--tax / --tay posés par tuPlace) */
+.tour-tip[data-side="right"]::before{top:calc(var(--tay,50%) - 8px)}
+.tour-tip[data-side="below"]::before,.tour-tip[data-side="above"]::before{left:calc(var(--tax,50%) - 8px)}
+#tourL b{font-weight:800}
+.tu-ic{display:inline-grid;place-items:center;width:22px;height:22px;border-radius:7px;vertical-align:-6px;margin-right:6px;color:#fff;background:linear-gradient(150deg,color-mix(in srgb,var(--sc1c) 55%,#fff),var(--sc1c))}
+.tu-ic svg{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.tu-st{display:inline-block;min-width:3.2em;margin-right:4px;color:var(--sc1-star);letter-spacing:1px}
+/* fin de partie : plus de ligne de série vide */
+#endNext>p:empty{display:none}
+/* série : l'anneau 0 → 10 min */
+.sr-rg{fill:none} .sr-rg circle{fill:none;stroke-width:4} .sr-rg .fg{stroke-linecap:round;transform:rotate(-90deg);transform-origin:50% 50%}
+@media (prefers-reduced-motion:no-preference){ .sr-rg .fg{transition:stroke-dashoffset .6s var(--ease-out,ease-out)} }
+.stat.streak .sr-ic{position:relative;display:grid;place-items:center;flex:none;width:30px;height:30px}
+.stat.streak .sr-ic>svg:not(.sr-rg){width:18px;height:18px}
+.stat.streak .sr-ic .sr-rg{position:absolute;inset:0;width:100%;height:100%}
+.stat.streak .sr-rg .tr{stroke:var(--line)} .stat.streak .sr-rg .fg{stroke:var(--warn)}
+.side.collapsed .stat.streak .sr-ic{width:26px;height:26px} .side.collapsed .stat.streak .sr-ic>svg:not(.sr-rg){width:14px;height:14px}
+.pf-goal[hidden]{display:none}
+.pf-sr{display:flex;align-items:center;flex-wrap:wrap;gap:6px 10px;padding:8px 14px;background:rgba(0,0,0,.14)}
+.pf-sr .sr-ic{position:relative;width:34px;height:34px;flex:none;display:grid;place-items:center}
+.pf-sr .sr-rg{position:absolute;inset:0;width:100%;height:100%} .pf-sr .sr-rg .tr{stroke:rgba(255,255,255,.25)} .pf-sr .sr-rg .fg{stroke:#ffc94a}
+.pf-sr .sr-fl{width:16px;height:16px;fill:rgba(255,255,255,.55)} .pf-sr.done .sr-fl{fill:#ffc94a}
+.pf-sr .gl-t{display:flex;flex-direction:column;min-width:0;flex:1 1 auto} .pf-sr .gl-t b{font-weight:800;font-size:.9rem;white-space:nowrap} .pf-sr .gl-t small{font-size:.74rem;opacity:.85;white-space:nowrap}
+.pf-sr.half .gl-t small{opacity:1;font-weight:800;color:#ffe08a}
+.pf-sr .gl-chips{display:flex;gap:6px;flex-wrap:wrap}
+.pf-sr .gl-chip{display:inline-flex;align-items:center;gap:4px;border-radius:999px;padding:3px 8px;background:rgba(255,255,255,.16);font-size:.74rem;font-weight:800;white-space:nowrap} .pf-sr .gl-chip.ok{background:#ffd75a;color:#4a3200}
+@media (prefers-reduced-motion:no-preference){ .sr-pulse{animation:srPulse 1.2s var(--ease-out,ease-out)} .pf-sr.sr-pulse{animation:srPulseRow 1.2s ease-out}
+  @keyframes srPulse{0%,100%{transform:none}30%{transform:scale(1.18)}60%{transform:scale(.97)}}
+  @keyframes srPulseRow{0%,100%{box-shadow:inset 0 0 0 0 rgba(255,201,74,0)}35%{box-shadow:inset 0 0 0 3px rgba(255,201,74,.75)}} }
+/* série validée : l'animation en coin (maquette serie-anim.html ; non modale, sans focus) */
+.sr-cel{position:fixed;z-index:8500;top:calc(16px + env(safe-area-inset-top,0px));right:16px;display:flex;align-items:center;gap:14px;padding:14px 20px 14px 14px;border-radius:20px;background:linear-gradient(135deg,#2b2560,#1f1a49);color:#f3f1ff;box-shadow:0 18px 40px -14px rgba(0,0,0,.6),0 0 0 1px rgba(255,255,255,.08);pointer-events:none;opacity:0;transform:translateY(-130%)}
+.sr-big{position:relative;width:64px;height:64px;flex:none;display:grid;place-items:center}
+.sr-big .sr-rg{position:absolute;inset:0;width:100%;height:100%} .sr-big .sr-rg circle{stroke-width:6} .sr-big .sr-rg .tr{stroke:rgba(255,255,255,.12)}
+.sr-big .sr-fl{position:relative;width:28px;height:28px;fill:#ff8a1f}
+.sr-burst{position:absolute;inset:-6px;border-radius:50%;border:3px solid #ffcf3f;opacity:0}
+.sr-tx{display:flex;flex-direction:column;min-width:0} .sr-tx b{font-family:var(--f-display);font-size:1.35rem;font-weight:700;line-height:1.1} .sr-tx b .n{display:inline-block}
+.sr-tx small{color:#b9b4e0;font-weight:700;font-size:.86rem}
+.sr-days{display:flex;gap:5px;margin-top:6px} .sr-days i{width:12px;height:12px;border-radius:50%;background:#ff8a1f}
+.sr-days i.td{background:#ffcf3f;box-shadow:0 0 8px #ffcf3f}
+@media (prefers-reduced-motion:no-preference){
+  .sr-cel.in{animation:srInOut 4.6s cubic-bezier(.23,1,.32,1) forwards}
+  .sr-cel.in .sr-big .fg{stroke-dashoffset:calc(var(--c) * .5);animation:srFill 1.3s .45s cubic-bezier(.65,0,.35,1) forwards}
+  .sr-cel.in .sr-fl{fill:rgba(255,255,255,.4);transform:scale(.8);animation:srLit .6s 1.7s cubic-bezier(.34,1.56,.64,1) forwards}
+  .sr-cel.in .sr-burst{animation:srBurst .7s 1.75s ease-out}
+  .sr-cel.in .sr-tx b .n{animation:srPop .5s 1.8s cubic-bezier(.34,1.56,.64,1)}
+  .sr-cel.in .sr-days i.td{background:rgba(255,255,255,.12);box-shadow:none;animation:srDot .4s 1.9s forwards}
+  @keyframes srInOut{0%{transform:translateY(-130%);opacity:0}9%{transform:none;opacity:1}86%{transform:none;opacity:1}100%{transform:translateY(-130%);opacity:0}}
+  @keyframes srFill{to{stroke-dashoffset:0}}
+  @keyframes srLit{to{fill:#ff8a1f;transform:scale(1.15)}}
+  @keyframes srBurst{0%{opacity:.9;transform:scale(.8)}100%{opacity:0;transform:scale(1.45)}}
+  @keyframes srPop{50%{transform:scale(1.35);color:#ffcf3f}}
+  @keyframes srDot{to{background:#ffcf3f;box-shadow:0 0 8px #ffcf3f}} }
+@media (prefers-reduced-motion:reduce){ .sr-cel.in{opacity:1;transform:none;transition:opacity .2s} .sr-cel.in.out{opacity:0} }
+@media (max-width:640px){ .sr-cel{left:16px;right:16px} }
+/* ==== fin Gammes v4 + Série 10 min ==== */

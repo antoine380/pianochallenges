@@ -1,0 +1,404 @@
+/* ===== Mise en page pleine hauteur (22/10/2026) =====
+   One spacing scale for the whole app, the same page header everywhere, and the pages that never scroll fill the whole screen:
+   the active page is a flex column that takes the height left, tile grids stretch their rows, the exercise card and the game grow,
+   the keyboard grows with the room (capped so the keys keep piano proportions). Content pages (settings, progress, ranking…) still scroll. */
+:root{--sp-1:4px;--sp-2:8px;--sp-3:12px;--sp-4:16px;--sp-5:24px;--sp-6:32px;
+  --page-pad:clamp(14px,1.8vw,28px);--gap:clamp(12px,1.5vw,22px);--card-pad:clamp(12px,1.3vw,20px);--ctl-h:44px;--title-size:clamp(1.6rem,2.6vw,2.4rem);
+  --kbd-max:clamp(150px,calc((100vw - 260px) * .36),440px)}
+@media (max-width:900px) and (min-width:641px) and (orientation:portrait){ :root{--kbd-max:clamp(150px,calc((100vw - 90px) * .58),440px)} }
+@media (max-width:640px){ :root{--page-pad:12px;--gap:10px;--card-pad:12px;--title-size:1.5rem;--kbd-max:clamp(130px,calc((100vw - 24px) * .78),340px)} }
+@media (max-height:520px) and (orientation:landscape){ :root{--page-pad:10px;--gap:8px;--card-pad:10px;--title-size:1.2rem} }
+/* shell: page margins from the scale, a wider column on big screens */
+.main{padding:var(--page-pad) max(var(--page-pad), env(safe-area-inset-right, 0px)) calc(var(--page-pad) + env(safe-area-inset-bottom, 0px)) max(var(--page-pad), env(safe-area-inset-left, 0px))}
+.wrap{max-width:1680px;gap:var(--gap)}
+@media (max-width:640px){ .main{padding-bottom:calc(var(--page-pad) + env(safe-area-inset-bottom, 0px))}
+  body:is([data-page="practice"],[data-page="daily"]) .main{padding-bottom:calc(84px + env(safe-area-inset-bottom, 0px))} }
+/* one page header: icon badge + title, same size and margins on every page */
+.mode-h h2,.pane-head h2{font-size:var(--title-size)!important;line-height:1.05}
+.mode-big{gap:var(--sp-3)}
+.mode-h p,.pane-head p{margin-top:var(--sp-1)}
+.mode-big .mb-ic{width:1.2em;height:1.2em}
+.ph-title{gap:var(--sp-3);letter-spacing:-.01em}
+.ph-title svg{box-sizing:border-box;width:1.2em!important;height:1.2em!important;padding:.22em;border-radius:.34em;flex:none;stroke:#fff!important;stroke-width:2;
+  background:linear-gradient(150deg,color-mix(in srgb,var(--mc,var(--brand)) 50%,#fff),var(--mc,var(--brand)));box-shadow:0 10px 20px -10px var(--mc,var(--brand)),inset 0 1px 0 rgba(255,255,255,.4)}
+.mode-page,.pane,.dpanel,.games{gap:var(--gap)}
+.pane-head{gap:var(--sp-3)}
+/* cards of the same role: same radius, shadow and inside spacing */
+.card,.su-box,.hs-card,.du-panel,.du-hist,.du-rate,.qz-q{border-radius:var(--r-lg);box-shadow:var(--shadow-card)}
+.card{padding:var(--card-pad)}
+.su-box,.hs-card,.du-panel,.du-hist{padding:var(--card-pad)}
+
+/* ---- pages that never scroll: the active page takes all the height ---- */
+[data-page="learn"] #learnPanel,
+body:not(.runner-on)[data-page="games"] #gamesPanel,
+[data-page="free"] #freePanel{flex:1 1 auto;min-height:0}
+/* tile grids stretch their rows; each tile is a size container, so its text and its 3D object grow with it */
+:is(#learnTiles,#gameCards,#playCards,#playSongs){flex:1 1 0;min-height:0;grid-auto-rows:minmax(0,1fr);align-content:stretch;gap:calc(var(--gap) + 12px) var(--gap);padding:18px 8px 2px 0;margin:0}
+#gameCards{flex-grow:3} #playCards{flex-grow:2}
+#main :is(#learnTiles,#gameCards,#playCards,#playSongs) .ptile{container:pt/size;min-height:0;height:100%;padding:var(--card-pad);gap:clamp(2px,1.2cqh,8px);justify-content:flex-end;border-radius:var(--r-lg);
+  --os:clamp(44px,min(62cqh,46cqw),210px)}
+#main :is(#learnTiles,#gameCards,#playCards,#playSongs) .ptile .obj{top:-16px;right:6px}
+#main :is(#learnTiles,#gameCards,#playCards,#playSongs) .ptile :is(.pk,.h3,.rec){max-width:calc(100% - var(--os) * .55)}
+#main :is(#learnTiles,#gameCards,#playCards,#playSongs) .ptile .h3{font-size:clamp(.92rem,min(13cqh,8.5cqw),2rem);padding-right:0;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+@container pt (max-height:110px){ #main :is(#learnTiles,#gameCards,#playCards,#playSongs) .ptile :is(.pk,.h3,.rec){max-width:calc(100% - var(--os) * .35)} }
+#main :is(#learnTiles,#gameCards,#playCards,#playSongs) .ptile p{font-size:clamp(.76rem,min(6.5cqh,4.2cqw),1rem);line-height:1.35;max-width:min(100%,46ch)}
+#main :is(#learnTiles,#gameCards,#playCards,#playSongs) .ptile .go{font-size:clamp(.78rem,4cqw,.95rem);padding:.5em 1.1em;margin-top:clamp(2px,1.5cqh,10px)}
+#main :is(#learnTiles,#gameCards,#playCards,#playSongs) .ptile :is(.pk,.go){display:none} #main :is(#learnTiles,#gameCards,#playCards,#playSongs) .ptile p{display:none}
+@container pt (min-height:150px) and (min-width:150px){ #main :is(#learnTiles,#gameCards,#playCards,#playSongs) .ptile p{display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden} }
+@container pt (min-height:200px) and (min-width:170px){ #main :is(#learnTiles,#gameCards,#playCards,#playSongs) .ptile .go{display:inline-flex} }
+@container pt (min-height:240px) and (min-width:200px){ #main :is(#learnTiles,#gameCards,#playCards,#playSongs) .ptile .pk{display:block} #main :is(#learnTiles,#gameCards,#playCards,#playSongs) .ptile p{-webkit-line-clamp:4} }
+.gc-head{margin:0}
+#main #learnTiles{grid-template-columns:repeat(3,minmax(0,1fr))}
+@media (max-width:900px) and (min-width:641px) and (orientation:portrait){ #main #learnTiles{grid-template-columns:repeat(2,minmax(0,1fr))} }
+@media (max-width:640px){ #main #learnTiles{grid-template-columns:repeat(2,minmax(0,1fr))} }
+
+/* hub: the three modes fill the left two thirds, the side column fills the right third */
+.mode-page.hub{justify-content:flex-start}
+.hub-wrap{align-items:stretch}
+.hub-main{min-height:0;gap:var(--gap)}
+.hub-grid{flex:1 1 auto;min-height:0;grid-auto-rows:minmax(0,1fr);gap:var(--gap)}
+#main .hub-grid .ptile{container:hb/size;min-height:0}
+.hub-side{gap:var(--gap);justify-content:flex-start;min-height:0}
+.hub-side .hs-daily{flex:1 1 auto;max-height:300px;--os:clamp(90px,14vh,150px)}
+.hub-side .hs-rank{flex:1 1 auto;min-height:0;overflow:hidden}
+@media (min-width:901px){
+  .hub-wrap .hub-grid{padding:8px 8px 2px 0}
+  #main .hub-wrap .hub-grid .ptile{--os:clamp(90px,min(78cqh,32cqw),230px);padding:clamp(14px,4cqh,30px) clamp(18px,3cqw,34px)}
+  #main .hub-wrap .hub-grid .ptile .h3{font-size:clamp(1.5rem,min(20cqh,7cqw),2.8rem)}
+  #main .hub-wrap .hub-grid .ptile p{font-size:clamp(.84rem,min(8cqh,2.4cqw),1.15rem);line-height:1.4}
+  #main .hub-wrap .hub-grid .ptile .tags{font-size:clamp(.7rem,1.6cqw,.85rem)}
+  @container hb (max-height:150px){ #main .hub-grid .ptile .tags{display:none} }
+}
+@media (max-width:900px){ .hub-wrap{grid-template-rows:minmax(0,1fr) auto;flex:1} .hub-main{display:flex;flex-direction:column} }
+@media (max-width:900px) and (min-width:641px){ #main .hub-grid .ptile{--os:clamp(70px,min(60cqh,60cqw),170px);padding-top:max(12px,calc(var(--os) * .7))} }
+@media (max-width:640px){ #main .hub-grid .ptile{--os:clamp(60px,min(66cqh,30cqw),120px);justify-content:center} .hub-grid .ptile .h3{font-size:clamp(1.3rem,min(22cqh,9cqw),2rem)!important} }
+@media (max-height:420px) and (orientation:landscape){ .hub-main{flex:1} #main .hub-grid .ptile{--os:clamp(44px,min(50cqh,34cqw),110px);justify-content:flex-end;padding:10px 12px}
+  #main .hub-grid .ptile .h3{font-size:clamp(1rem,min(16cqh,10cqw),1.6rem)!important;max-width:calc(100% - var(--os) * .5)} #main .hub-grid .ptile p{display:none}
+  @container hb (min-height:150px){ #main .hub-grid .ptile p{display:block;font-size:.78rem;max-width:none} } }
+
+/* PLAY page: the songs fill the top, the free keyboard keeps a good size underneath */
+[data-page="free"] .stage{flex:none!important}
+[data-page="free"] .kbd{height:clamp(110px,30vh,var(--kbd-max))!important}
+@media (max-width:640px){ [data-page="free"] .kbd{height:clamp(110px,24vh,200px)!important} }
+@media (max-height:420px) and (orientation:landscape){ [data-page="free"] .kbd{height:clamp(80px,30vh,140px)!important} }
+@media (max-width:900px) and (min-width:641px) and (orientation:portrait){ #main #gameCards{grid-template-columns:repeat(2,minmax(0,1fr))} #main #playCards{grid-template-columns:repeat(3,minmax(0,1fr))} }
+
+/* ---- exercise (LEARN, daily practice): the card fills the page, the keyboard grows ---- */
+body:is([data-page="practice"],[data-page="daily"]):not(.setup) .stage{flex:1 1 auto}
+.kbd-wrap{flex:1 1 auto;max-height:var(--kbd-max)}
+.stage{padding:var(--card-pad) clamp(14px,2.2vw,28px);gap:clamp(8px,1.4vh,16px)}
+@media (min-height:861px){ .prompt{font-size:clamp(2.2rem,5.2vh,4.2rem)} .slot .nn{font-size:clamp(1rem,2.2vh,1.6rem)} .slot{padding:8px 4px 10px} }
+
+/* ---- games: the game area and the keyboard share the height ---- */
+#runner{container-type:inline-size}
+body.runner-on:not(.du-lob)[data-page="games"] #runner{flex:0 1 auto}
+body.runner-on #runner .rn-stage{height:clamp(150px,min(46cqw,42vh),600px)}
+body.runner-on:not(.du-lob)[data-page="games"] .stage{flex:1 1 auto}
+@media (max-height:520px) and (orientation:landscape){ body.runner-on #runner .rn-stage{height:clamp(110px,min(46cqw,36vh),200px)} }
+/* duel lobby: the four ways to play fill the height on phones too */
+@media (max-width:640px){ .du-modes{flex:1 1 auto;grid-auto-rows:minmax(0,1fr)} .du-mode{min-height:0} }
+/* the speed and memory boards: the target grows with the board */
+body.runner-on #runner .gm-big{font-size:clamp(2.2rem,min(8cqw,13vh),6.5rem)}
+body.runner-on #runner .gm-kick{font-size:clamp(.78rem,1.4cqw,1.05rem)}
+body.runner-on #runner .gm-sub{font-size:clamp(.9rem,1.6cqw,1.15rem)}
+body.runner-on #runner .gm-bar{height:clamp(8px,1.2vh,12px)}
+/* daily practice, before starting: the ten steps of the day as a grid of cards that fills the page */
+.dtl .st-l{display:none}
+body[data-page="daily"]:not(.playing) #dailyPanel{flex:1 1 auto;min-height:0}
+body[data-page="daily"]:not(.playing) .dtl-wrap{flex:1 1 auto;display:flex;min-height:0}
+body[data-page="daily"]:not(.playing) .dtl{--dd:clamp(40px,min(9vh,6vw),92px);flex:1;grid-auto-flow:row;grid-template-columns:repeat(6,minmax(0,1fr));grid-auto-rows:minmax(0,1fr);gap:var(--gap);padding:0;background:none;box-shadow:none;border-radius:0;overflow:visible}
+body[data-page="daily"]:not(.playing) .dtl li{justify-content:center;gap:clamp(4px,1vh,10px);padding:var(--sp-2);background:var(--surface);border-radius:var(--r-lg);box-shadow:var(--shadow-card);cursor:default}
+body[data-page="daily"]:not(.playing) .dtl li::before{display:none}
+body[data-page="daily"]:not(.playing) .dtl .st-n{position:absolute;top:10px;left:12px;font-size:clamp(.7rem,1.4vh,.9rem)}
+body[data-page="daily"]:not(.playing) .dtl .dot{width:var(--dd);height:var(--dd);border-width:3px}
+body[data-page="daily"]:not(.playing) .dtl .dot svg{width:48%;height:48%}
+body[data-page="daily"]:not(.playing) .dtl .st-l{display:block;font-family:var(--f-display);font-weight:700;font-size:clamp(.8rem,1.8vh,1.15rem);max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+@media (max-width:900px) and (orientation:portrait){ body[data-page="daily"]:not(.playing) .dtl{grid-template-columns:repeat(3,minmax(0,1fr));--dd:clamp(34px,7vh,72px)} }
+@media (max-height:520px) and (orientation:landscape){ body[data-page="daily"]:not(.playing) .dtl{--dd:clamp(28px,9vh,44px)} body[data-page="daily"]:not(.playing) .dtl .st-l{font-size:.72rem} }
+
+/* ---- start screen of a subject: two columns that reach the bottom, the Start button at the bottom of its column ---- */
+body.setup #setupPanel{flex:1 1 auto;min-height:0}
+.su-wrap{flex:1 1 auto;align-items:stretch;gap:var(--gap)}
+.su-main{gap:clamp(4px,1vh,12px)}
+.su-main{--su-push:auto}
+#suKeysWrap,#suModeWrap:has(#suMode:not([hidden])),#suExtra:not(:empty){margin-top:var(--su-push)}
+@media (min-width:1300px){ .su-wrap{grid-template-columns:minmax(0,1fr) clamp(320px,20vw,400px)} }
+.su-cards{grid-template-columns:repeat(auto-fill,minmax(clamp(150px,11vw,230px),1fr))}
+.su-side{gap:var(--gap)}
+.su-side>.su-box:nth-child(2){flex:1 1 auto}
+.su-go{margin-top:auto}
+@media (min-height:861px) and (min-width:901px){
+  .su-card{min-height:clamp(62px,8.5vh,104px);padding:clamp(12px,1.6vh,18px) 16px} .su-card b{font-size:clamp(1rem,1.9vh,1.3rem)} .su-card small{font-size:clamp(.74rem,1.3vh,.88rem)}
+  .su-km{padding:clamp(10px,1.8vh,20px) 16px} .su-km b{font-size:clamp(.92rem,1.8vh,1.15rem)} .su-km small{font-size:clamp(.74rem,1.3vh,.88rem)}
+  .su-keys .su-key{min-height:clamp(40px,6vh,64px)} .su-keys .su-key b{font-size:clamp(.88rem,1.6vh,1.1rem)}
+  .su-mode{padding:clamp(12px,1.8vh,20px) 16px} .su-h{font-size:clamp(.8rem,1.3vh,.92rem)}
+  .su-chips button,.su-row .seg button{padding:clamp(7px,1.1vh,11px) clamp(14px,1.4vw,20px);font-size:clamp(.85rem,1.4vh,.98rem)}
+  .su-help b{font-size:clamp(.9rem,1.5vh,1rem)} .su-go{padding:clamp(14px,2vh,22px) 18px} }
+@media (max-width:900px){ .su-wrap{grid-template-rows:auto 1fr} .su-side{align-content:end} .su-go{margin-top:0} }
+@media (max-width:640px){ .su-main{--su-push:4px} .su-card{min-height:clamp(0px,calc((100vh - 700px) * .3),64px)} }
+@media (max-height:420px) and (orientation:landscape){ .su-wrap{grid-template-columns:minmax(0,1fr) 300px;grid-template-rows:none} .su-main{--su-push:4px}
+  .su-side>.su-box:nth-child(2){display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 4px;align-content:start} .su-side>.su-box:nth-child(2) .su-hh{grid-column:1/-1}
+  .su-side>.su-box:nth-child(2) .su-help b{font-size:.74rem;line-height:1.15} .su-side .su-help{padding:2px} .su-side .su-help input{width:16px;height:16px;margin-top:0} .su-go{margin-top:auto} }
+
+/* ---- quiz: settings and a question fill the page; the answer piano takes the height left ---- */
+[data-page="quiz"] #quizPanel{flex:1 1 auto;min-height:0}
+#qzSetup:not([hidden]){display:flex;flex-direction:column;gap:var(--gap);flex:1 1 auto;min-height:0}
+#qzSetup .qz-wrap{flex:1 1 auto;min-height:0;align-items:stretch;gap:var(--gap)}
+#qzSetup .qz-wrap>.qz-col{min-height:0;gap:clamp(4px,1vh,12px)}
+#qzSetup .qz-themes{grid-template-columns:repeat(4,minmax(0,1fr));flex:1 1 auto;min-height:0;grid-auto-rows:minmax(0,1fr);align-content:stretch;padding-top:10px}
+#qzSetup .qz-theme{container:qt/size;min-height:56px;height:100%}
+#qzSetup .qz-theme b{font-size:clamp(.92rem,min(17cqh,9cqw),1.45rem);max-width:calc(100% - 30px)}
+#qzSetup .qz-theme small{font-size:clamp(.7rem,min(10cqh,6cqw),.9rem)}
+#qzSetup .qz-ti{width:clamp(34px,min(52cqh,34cqw),96px);height:clamp(34px,min(52cqh,34cqw),96px)}
+/* short iPad / laptop landscape: the theme rows get less than 56px; the tiles shrink with them instead of overlapping (and the « n questions » line goes) */
+@media (max-height:820px) and (min-height:600px) and (min-width:1001px){ #qzSetup .qz-theme{min-height:0;padding-block:5px} }
+@container qt (max-height:56px){ #qzSetup .qz-theme small{display:none} #qzSetup .qz-theme b{font-size:.86rem;line-height:1.05} }
+#qzSetup .qz-diff{padding:clamp(8px,1.4vh,16px) 14px}
+#qzSetup .qz-wrap>.su-side{min-height:0}
+#qzLocalBox:not([hidden]),#qzOnlineBox:not([hidden]){flex:1 1 auto;min-height:0}
+#qzLocalBox>.su-box{flex:0 1 auto;min-height:0;overflow-y:auto;overscroll-behavior:contain} /* 4 players, zones: the card scrolls, « Start » stays on screen */
+#qzLocalBox .qz-go{margin-top:auto}
+#qzPlay:not([hidden]){flex:1 1 auto;min-height:0;gap:var(--gap)}
+#qzPlay .qz-kb{flex:1 1 auto;height:auto;min-height:110px;max-height:clamp(150px,44vh,460px)}
+@media (min-height:861px){ #qzPlay .qz-a{min-height:clamp(64px,8vh,104px)} #qzPlay .qz-at{font-size:clamp(1.02rem,1.9vh,1.3rem)} #qzPlay .qz-img{width:clamp(110px,13vh,160px);height:clamp(110px,13vh,160px)} #qzPlay .qz-q{padding:clamp(16px,2.4vh,28px) 24px} }
+@media (max-width:640px){ #qzPlay .qz-kb{min-height:118px} #qzSetup .qz-themes{display:grid;overflow:visible} #qzSetup .qz-themes{grid-template-columns:repeat(3,minmax(0,1fr))} }
+@media (max-height:420px) and (orientation:landscape){ #qzPlay .qz-kb{min-height:60px} #qzPlay{gap:6px} }
+#qzEnd:not([hidden]){flex:1 1 auto;justify-content:center}
+
+
+/* ---- quiz v3: bigger theme, names on the answers at the reveal only, the race on a staff (one note per player, its head = the face) ---- */
+#qzPlay .qz-top{gap:clamp(8px,1.2vw,14px)}
+#qzPlay .qz-chip{display:inline-flex;align-items:center;gap:8px;padding:4px 16px 4px 5px;font-family:var(--f-display);font-weight:600;font-size:clamp(1rem,1.1vw + .5rem,1.3rem);line-height:1.1;letter-spacing:.01em;
+  background:var(--tc);color:#fff;box-shadow:0 10px 18px -12px var(--tc);max-width:min(46%,320px);min-width:0;flex:none}
+#qzPlay .qz-chip b{font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-shadow:0 1px 2px rgba(0,0,0,.25)}
+.qz-ci{width:clamp(30px,2.4vw + 12px,42px);height:clamp(30px,2.4vw + 12px,42px);flex:none;border-radius:50%;display:grid;place-items:center;background:rgba(255,255,255,.22)}
+.qz-ci svg{width:86%;height:86%;display:block;filter:drop-shadow(0 3px 4px rgba(10,6,30,.35))}
+#qzPlay .qz-num{white-space:nowrap}
+#qzNext{margin-left:auto;--mc:var(--m-quiz)}
+/* your own choice when you are alone on this screen: a quiet outline, nothing for the others */
+.qz-a.wrong{opacity:1} .qz-a.wrong>:not(.qz-who){opacity:.5} .qz-a.wrong{background:color-mix(in srgb,var(--surface) 70%,transparent)}
+.qz-kb .ans.wrong{opacity:1;background:color-mix(in srgb,var(--ac) 38%,#2b2560);color:rgba(255,255,255,.6)}
+.nx-s{display:none}
+@media (max-width:640px){ .nx-l{display:none} .nx-s{display:inline} #qzNext kbd{display:none} }
+#qzAns{gap:clamp(14px,2.2vh,24px) clamp(14px,1.6vw,22px)}
+@media (max-width:640px){ #qzAns{gap:14px 10px} }
+@media (max-height:420px) and (orientation:landscape){ #qzAns{gap:9px 12px} }
+.qz-kb.plain .qz-w span{opacity:.75}
+/* settings: game configuration, help switch, keyboards, zones */
+.qz-difl{display:block;margin:2px 0 -2px} #qzSetup .qz-row.qz-conf1{margin-top:0}
+.qz-help{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:8px 12px;border-radius:var(--r-md);background:var(--surface);box-shadow:var(--shadow-card);cursor:pointer}
+.qz-help>span:first-child{display:flex;flex-direction:column;min-width:0} .qz-help b{font-weight:800;font-size:.92rem} .qz-help small{color:var(--muted);font-size:.74rem}
+.qz-help .sw{flex:none}
+.qz-helpbox{display:flex;flex-direction:column;gap:inherit} .qz-help .hs{display:none} #qzWhere{flex:none}
+@media (max-width:640px), (max-height:420px){ .qz-help small{display:none} .qz-help{padding:6px 12px} .qz-difl{display:none!important} }
+@media (max-width:640px){ #qzSetup #qzModeRow>.su-h{display:none} #qzSetup #qzModeRow>.seg{margin-top:4px} #qzSetup #qzPlayers{gap:4px 8px;padding:2px 0} #qzSetup #qzPlayers input{padding:5px 10px} #qzSetup #qzModeRow .su-h{margin-top:4px!important} .qz-zone svg{height:24px} .qz-zmap{margin-top:2px} #qzZoneDevRow{margin-top:4px}
+  #qzSetup .qz-theme{min-height:32px;padding:6px 10px} #qzSetup .qz-themes{gap:6px;padding-top:8px} #qzSetup .qz-theme b{font-size:.86rem} #qzSetup .qz-theme small{display:none} #qzSetup .qz-ti{width:30px;height:30px} .qz-box .qz-helpbox .su-h{display:none} .qz-box .qz-help{box-shadow:none;background:var(--surface-2);margin-top:6px} .qz-help .hl{display:none} .qz-help .hs{display:inline}
+  .qz-row>.qz-helpbox{flex:1;min-width:0} .qz-row>.qz-helpbox .qz-help{margin:0;padding:5px 10px} }
+@media (max-height:420px) and (orientation:landscape){ #qzSetup .su-side{display:grid!important;grid-template-columns:minmax(0,1fr) 200px;grid-template-rows:auto minmax(0,1fr) auto;gap:8px 10px;align-items:start}
+  #qzSetup #qzWhere{grid-column:2;grid-row:1;margin:0;width:100%} #qzSetup #qzLocalBox:not([hidden]){display:contents!important}
+  #qzSetup #qzLocalBox>.su-box{grid-column:1;grid-row:1/4;align-self:stretch;align-content:flex-start;min-height:0} #qzSetup #qzLocalBox>.qz-go{grid-column:2;grid-row:3;align-self:end}
+  #qzSetup #qzOnlineBox{grid-column:1/-1;grid-row:2/4} #qzSetup .qz-zone .zl{flex-direction:row;justify-content:space-between;align-items:baseline;padding:0 6px} #qzSetup .qz-zone svg{height:15px} #qzSetup .qz-zmap{margin-top:0}
+  #qzSetup #qzPlayers{grid-template-columns:repeat(2,auto minmax(0,1fr) auto);gap:4px 8px;padding:0} #qzSetup #qzPlayers[data-mode="dev"]{grid-template-columns:repeat(2,auto minmax(0,1fr) minmax(0,1fr))}
+  #qzSetup #qzPlayers input{padding:4px 8px} #qzSetup #qzPlayers .qz-sel{padding:4px 6px} #qzZoneDevRow .su-lbl{display:none}
+  #qzSetup #qzN{flex:1 1 200px;width:auto} #qzSetup #qzModeRow{flex:2 1 320px;width:auto} #qzSetup #qzModeRow .seg{margin:0} #qzSetup #qzZoneDevRow{width:100%;margin:0} .qz-zmap{width:100%} .qz-zone svg{height:20px} .qz-zone .zl{flex-direction:row;justify-content:space-between} #qzSetup .qz-helpbox{flex-direction:row;align-items:center} #qzSetup .qz-helpbox .su-h{display:none} }
+#qzPlayers{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:6px 8px;align-items:center;padding:4px 0}
+#qzPlayers .qz-pl{display:contents}
+#qzPlayers .qz-pin{justify-self:stretch;text-align:right}
+#qzPlayers[data-mode="dev"]{grid-template-columns:auto minmax(0,1fr) minmax(0,1.1fr)}
+#qzPlayers .qz-pin select,.qz-sel{width:100%;max-width:none;font:inherit;font-size:.82rem;font-weight:700;color:var(--ink);background:var(--surface-2);border:0;border-radius:10px;padding:7px 8px}
+#qzPlayers .dup select{box-shadow:0 0 0 2px var(--warn)}
+#qzZoneDevRow .qz-sel{flex:1;min-width:0}
+.qz-warn{color:var(--warn);font-weight:700;margin:0}
+.qz-zmap{display:flex;gap:3px;margin-top:6px}
+.qz-zone{flex:1 1 0;min-width:0;display:flex;flex-direction:column;gap:3px}
+.qz-zone .zl{display:flex;flex-direction:column;gap:0;padding:2px 6px;border-radius:8px;background:var(--pc);color:#15122e;line-height:1.15;min-width:0}
+.qz-zone .zl b{font-size:.76rem;font-weight:800;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0} .qz-zone .zl small{font-size:.66rem;font-weight:800;white-space:nowrap;opacity:.85}
+.qz-zone svg{display:block;width:100%;height:34px} .qz-zone .zw{fill:color-mix(in srgb,var(--pc) 30%,#fff);stroke:color-mix(in srgb,var(--pc) 60%,#000);stroke-width:.4} .qz-zone .zb{fill:#2b2560}
+.qz-a.mine{box-shadow:0 0 0 2px color-mix(in srgb,var(--ink) 45%,transparent),var(--shadow-card)}
+/* names on the chosen answer, at the reveal */
+.qz-who{position:absolute;top:auto;bottom:calc(100% - 11px);left:auto;right:10px;display:flex;flex-direction:row-reverse;gap:4px;z-index:2;pointer-events:none;max-width:calc(100% - 20px)}
+.qz-wc{display:inline-flex;align-items:center;gap:4px;height:22px;padding:0 8px 0 2px;border-radius:999px;background:var(--pc);color:#15122e;font-size:.74rem;font-weight:800;line-height:1;
+  box-shadow:0 0 0 2px var(--surface),0 6px 12px -8px rgba(10,6,30,.6);min-width:0;animation:qzWho 260ms var(--ease-out) both}
+.qz-wc b{font-weight:800;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:9ch}
+.qz-wc .av,.qz-kw .av{width:18px;height:18px;border-radius:50%;overflow:hidden;flex:none;display:block;background:#fff}
+.qz-wc .av svg,.qz-wc .av img,.qz-kw .av svg,.qz-kw .av img,.qz-hd .av svg,.qz-hd .av img{width:100%;height:100%;display:block;object-fit:cover}
+.qz-a{container-type:inline-size}
+@container (max-width:250px){ .qz-who.many .qz-wc{padding-right:2px} .qz-who.many .qz-wc b{display:none} .qz-who.many{gap:0} .qz-who.many .qz-wc+.qz-wc{margin-right:-5px} }
+@keyframes qzWho{from{opacity:0;transform:translateY(4px) scale(.96)}}
+.qz-kw{position:absolute;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:2px;pointer-events:none}
+.qz-w .qz-kw{bottom:calc(14px + 1.35rem);flex-direction:row;flex-wrap:wrap;justify-content:center;width:100%}
+.qz-b .qz-kw{top:6px}
+.qz-kw .av{box-shadow:0 0 0 2px var(--pc),0 0 0 3px #15122e}
+.qz-w,.qz-b{position:relative} .qz-b{position:absolute}
+/* the race */
+.qz-race{--sp:clamp(14px,2.9vh,32px);--hd:calc(var(--sp) * 1.16);flex:none;position:relative;background:var(--surface);border-radius:var(--r-lg);box-shadow:var(--shadow-card);
+  padding:calc(var(--sp) * 1.05) clamp(10px,1.4vw,18px) calc(var(--sp) * 1.3);container:race/inline-size;color:var(--ink)}
+.qz-staff{position:relative;height:calc(var(--sp) * 4 + 1.5px);
+  background:repeating-linear-gradient(to bottom,color-mix(in srgb,var(--ink) 34%,transparent) 0 1.5px,transparent 1.5px var(--sp))}
+.qz-clef{position:absolute;left:0;top:0;width:calc(var(--sp) * 3);height:calc(var(--sp) * 4);overflow:visible;fill:currentColor;font-family:Bravura;opacity:0;transition:opacity 200ms ease}
+.qz-race.fnt .qz-clef{opacity:.85}
+.qz-fin{position:absolute;right:0;top:0;height:100%;width:calc(var(--sp) * .55);border-left:1.5px solid var(--ink);border-right:calc(var(--sp) * .22) solid var(--m-quiz)}
+.qz-track{position:absolute;left:calc(var(--sp) * 2.9);right:calc(var(--sp) * .95);top:0;bottom:0}
+.qz-ln{position:absolute;left:0;width:calc(100% - var(--hd));height:var(--hd);top:calc((var(--s) + .5) * var(--sp) + .75px - var(--hd) / 2);transition:transform 600ms var(--ease-out);will-change:transform}
+.qz-ln.s0{--s:0} .qz-ln.s1{--s:1} .qz-ln.s2{--s:2} .qz-ln.s3{--s:3}
+.qz-hd{position:absolute;left:0;top:0;width:var(--hd);height:var(--hd);border-radius:50%;transition:transform 300ms var(--ease-out)}
+.qz-hd .av{position:absolute;inset:0;border-radius:50%;overflow:hidden;background:#fff;box-shadow:0 0 0 2px var(--pc),0 4px 10px -4px rgba(10,6,30,.55);transition:opacity 200ms ease,filter 200ms ease}
+.qz-lay{position:absolute;inset:0;pointer-events:none}
+.qz-st{position:absolute;width:2px;border-radius:1px;background:var(--ink);height:calc(var(--sp) * 2.6)}
+.qz-ln.s2 .qz-st,.qz-ln.s3 .qz-st{left:calc(var(--hd) - 2px);bottom:50%}
+.qz-ln.s0 .qz-st,.qz-ln.s1 .qz-st{left:0;top:50%}
+.qz-ok{position:absolute;right:-4px;top:-4px;width:max(13px,calc(var(--hd) * .5));height:max(13px,calc(var(--hd) * .5));border-radius:50%;background:var(--m-quiz);box-shadow:0 0 0 2px var(--surface);
+  opacity:0;transform:scale(.6);transition:opacity 160ms ease,transform 200ms var(--ease-out)}
+.qz-ok::after{content:"";position:absolute;left:30%;top:20%;width:28%;height:44%;border:solid #fff;border-width:0 2px 2px 0;transform:rotate(45deg)}
+.qz-ln.ans .qz-ok{opacity:1;transform:none}
+.qz-ln.ok .qz-ok{background:var(--good)} .qz-ln.ko .qz-ok{background:var(--bad)}
+.qz-ln.ko .qz-ok::after{left:44%;top:18%;width:0;height:64%;border-width:0 0 0 2px;transform:rotate(45deg);box-shadow:none}
+.qz-ln.ko .qz-ok::before{content:"";position:absolute;left:44%;top:18%;height:64%;border-left:2px solid #fff;transform:rotate(-45deg)}
+.qz-ln.wait .qz-hd .av{opacity:.55;filter:grayscale(.5)}
+.qz-ln.turn .qz-hd .av{box-shadow:0 0 0 2px var(--pc),0 0 0 5px color-mix(in srgb,var(--pc) 35%,transparent)}
+.qz-ln.lead .qz-hd{transform:scale(1.18)} .qz-ln.lead{z-index:1}
+.qz-ln.lead .qz-hd .av{box-shadow:0 0 0 2.5px var(--pc),0 6px 16px -4px var(--pc)}
+.qz-ln.gone{opacity:.45}
+.qz-tg{position:absolute;top:50%;left:calc(var(--hd) + 7px);transform:translateY(-50%);display:flex;align-items:baseline;gap:6px;white-space:nowrap;padding:0 7px;border-radius:999px;
+  background:color-mix(in srgb,var(--surface) 88%,transparent);font-size:min(.9rem,max(.58rem,calc(var(--sp) * .55)));line-height:1.2;pointer-events:none}
+.qz-ln.flip .qz-tg{left:auto;right:calc(100% + 7px)}
+.qz-ln.lead.flip .qz-tg{right:calc(100% + 9px)}
+.qz-tg b{font-weight:800;max-width:12ch;overflow:hidden;text-overflow:ellipsis}
+.qz-tg .qz-pts{font-family:var(--f-display);font-weight:700;font-variant-numeric:tabular-nums}
+.qz-tg small{font-weight:800;font-size:.86em;color:var(--muted)} .qz-tg small:empty{display:none}
+.qz-ln.ok .qz-tg small{color:var(--good)} .qz-ln.ko .qz-tg small{color:var(--bad)}
+@container race (max-width:430px){ .qz-ln.ans:not(.ok):not(.ko) .qz-tg small{display:none} .qz-tg b{max-width:8ch} }
+.qz-raceend{width:min(760px,100%)} .qz-raceend:empty{display:none}
+#qzEnd .qz-race{--sp:clamp(15px,2.6vh,28px)}
+@media (max-width:640px){ #qzPlay .qz-kb{min-height:84px} #qzPlay .qz-q{grid-template-columns:auto minmax(0,1fr);text-align:left;justify-items:start;gap:12px;padding:10px 12px} #qzPlay .qz-img{width:52px;height:52px;border-radius:14px} }
+/* phones in landscape: the race sits next to the piano */
+#qzNum .qn-w{white-space:pre}
+@media (max-width:640px){ #qzNum .qn-w{display:none} #qzQuit{font-size:0;width:40px;padding:0;display:inline-grid;place-items:center;flex:none} #qzQuit::before{content:"✕";font-size:1.05rem;font-weight:800} }
+@media (max-height:420px) and (orientation:landscape){ #qzPlay:not([hidden]){display:grid;grid-template-columns:minmax(0,1.45fr) minmax(0,1fr);grid-template-rows:auto auto auto minmax(0,1fr);align-content:stretch}
+  #qzPlay>.qz-top,#qzPlay>.qz-q,#qzPlay>.qz-ans{grid-column:1/-1} #qzPlay>.qz-kb{grid-column:1;max-height:none;height:auto} #qzPlay>.qz-race{grid-column:2;align-self:stretch;display:flex;flex-direction:column;justify-content:center}
+  .qz-race{--sp:16px;padding-block:15px 19px} .qz-tg{padding:0 5px} #qzPlay .qz-chip{padding:2px 12px 2px 3px;font-size:.95rem} .qz-ci{width:26px;height:26px} }
+@media (max-width:640px){ #qzPlay .qz-chip{max-width:52%} #qzPlay .qz-top .qz-timer{min-width:24px} #qzNext{padding-inline:12px} }
+@media (prefers-reduced-motion:reduce){ .qz-ln,.qz-hd,.qz-ok{transition:none} .qz-wc{animation:none} }
+/* ---- first launch "Play your first note": the card takes the screen, its keyboard takes the height left ---- */
+.fn-kb{flex:1 1 auto;height:auto;min-height:140px;max-height:clamp(170px,40vh,440px)}
+@media (min-width:761px) and (min-height:561px){ .fn-card{width:min(1600px,100%);height:calc(100dvh - 40px)} .fn-hero h1{font-size:clamp(2.2rem,min(4.4vw,7vh),4.4rem)} .fn-hero p{font-size:clamp(1.02rem,1.9vh,1.3rem)}
+  .fn-hero .fn-obj{width:min(300px,34%)} .fn-play{gap:clamp(10px,1.6vh,18px)} .fn-play h2{font-size:clamp(1.6rem,3.6vh,2.4rem)} }
+@media (min-width:761px) and (max-width:900px) and (orientation:portrait){ .gate:has(.fn-card){padding:0;place-items:stretch}
+  .fn-card{grid-template-columns:1fr;grid-template-rows:auto 1fr;border-radius:0;height:100dvh;width:100%} .fn-hero{padding:28px 32px 22px;gap:10px} .fn-hero h1{margin:6px 0 0} .fn-trust{margin-top:4px} .fn-hero .fn-obj{width:150px} .fn-play{padding:24px 32px} }
+@media (max-width:760px){ .fn-kb{min-height:110px;max-height:260px} }
+@media (max-height:560px){ .fn-kb{min-height:80px;max-height:150px} }
+@media (max-height:560px) and (min-width:700px){ .fn-kb{min-height:80px;max-height:150px} }
+
+/* ---- content pages (settings, progress, ranking, profile, notifications): they may scroll, but reach the bottom ---- */
+.pane:not([hidden]):not(.lock){flex:1 0 auto}
+.rank-card{flex:1 0 auto;display:flex;flex-direction:column}
+.rank-cta{margin-top:auto}
+.acct-grid{flex:1 0 auto;align-items:stretch}
+.acct-login{display:flex;flex-direction:column}
+#settingsPage>.card,#progressPage>.card{flex:1 0 auto}
+/* phones: the bar on top already says where you are, so the page title is not repeated */
+@media (max-width:640px), (max-height:520px) and (orientation:landscape){
+  .pane-head h2.ph-title{display:none}
+  :is(#learnPanel,#gamesPanel,#freePanel) .mode-h{display:none}
+}
+/* ---- tablets and computers: content pages never scroll (24/10/2026). Settings and Progress show one tab at a time; a long list
+   (notifications, ranking) scrolls inside its own card; any other overflow scrolls inside the page card, never the page. Phones keep scrolling. ---- */
+.set-nav{display:none}
+@media (min-width:641px) and (min-height:521px){
+  body:is([data-page="settings"],[data-page="progress"],[data-page="notif"],[data-page="rank"],[data-page="account"]) .main{overflow:hidden}
+  .pane:not([hidden]):not(.lock){flex:1 1 0;min-height:0;display:flex;flex-direction:column}
+  #settingsPage>.card,#progressPage>.card{flex:1 1 0;min-height:0;overflow:auto;display:flex;flex-direction:column}
+  .set-nav{display:flex;align-self:flex-start;max-width:100%;flex:none;margin-bottom:var(--sp-2)} .set-nav button{white-space:nowrap}
+  #setPane{gap:var(--gap)} #setPane .set-sec[data-tab]:not(.on){display:none} #setPane .set-sec[data-tab]>h3{display:none}
+  #setPane .set-app{display:flex;flex-direction:column;gap:var(--sp-4)} #setPane .set-app .set-legal{margin-top:auto}
+  #progPane{display:flex!important;flex-direction:column;gap:var(--gap);flex:1 1 auto;min-height:0} #progPane[hidden]{display:none!important}
+  #progPane[data-tab="ov"] :is(#progCats,.prog-detail){display:none} #progPane[data-tab="det"] #progFiche{display:none} .pf-detail-h{display:none}
+  #progFiche{flex:1 1 auto;min-height:0;margin:0} #progFiche .pf-row{flex:1 1 auto;min-height:0;grid-auto-rows:minmax(0,1fr);padding:0}
+  #progFiche .pf-card{min-height:0} #progFiche .pf-card ul{flex:1 1 auto;min-height:0;overflow-y:auto;max-height:none}
+  #progFiche .pf-cal{flex:1 1 auto;min-height:0;display:flex;flex-direction:column} #progFiche .pf-grid{flex:1 1 auto;min-height:0;align-content:space-evenly}
+  #progFiche .pf-grid span{aspect-ratio:auto;width:min(100%,2.4em);height:auto;min-height:0;justify-self:center;align-self:stretch;max-height:2.4em}
+  #progFiche .pf-stats li{padding-block:clamp(4px,1vh,10px)} #progFiche .pf-journey li{padding-block:clamp(4px,.9vh,9px)}
+  #progPane[data-tab="det"] .prog-cats{flex:none;margin:0} #progPane[data-tab="det"] .prog-detail{flex:1 1 auto;min-height:0}
+  #progPane[data-tab="det"] .prog-detail .map{flex:1 1 auto;min-height:0;overflow-y:auto;align-content:start}
+  @media (min-aspect-ratio:1/1){ #progFiche .pf-row{grid-template-columns:repeat(4,minmax(0,1fr))} #progFiche .pf-head{padding:10px 16px} #progFiche .pf-head .av{width:52px;height:52px} #progPane .prog-cats{grid-template-columns:repeat(5,minmax(0,1fr))} }
+  .ntf-pane .ntf-card{flex:1 1 0;min-height:0;overflow:auto}
+  .rank-card{flex:1 1 0;min-height:0} .rank-card .rank-list{flex:1 1 auto;min-height:0;overflow-y:auto}
+  #accountPanel .acct-grid{flex:1 1 0;min-height:0;overflow:auto}
+}
+/* guests (24/10/2026, like chess.com): « S'inscrire » / « Se connecter » at the top and in the side menu; nothing changes for an account */
+.auth-bar,.side-auth{display:none}
+.auth-bar{align-items:center;gap:8px;flex:none} .auth-bar .btn{min-height:40px;padding:8px 16px;font-size:.9rem;white-space:nowrap}
+body.guest:not(.sess-wait) .top-auth{display:flex;justify-content:flex-end;padding:max(10px,env(safe-area-inset-top,0px)) max(var(--page-pad),env(safe-area-inset-right,0px)) 0 var(--page-pad)}
+body.guest:not(.sess-wait) #accountBtn{display:none}
+body.guest:not(.sess-wait) .side-auth{display:flex;flex-direction:column;gap:6px;padding:6px 2px 8px}
+.side-auth .btn{width:100%;min-height:40px;padding:8px 12px;font-size:.9rem;justify-content:center}
+.side-auth .auth-ic{display:none}
+.side.collapsed .side-auth .btn{display:none} .side.collapsed .side-auth .auth-ic{display:flex}
+body.gate-on .top-auth{visibility:hidden}
+@media (max-width:640px), (max-height:520px) and (orientation:landscape){
+  body.guest .top-auth{display:none!important}
+  body.guest:not(.sess-wait) .mb-auth{display:flex;margin-left:auto;gap:6px} body.guest:not(.sess-wait) .mb-auth .btn{min-height:38px;padding:7px 12px;font-size:.84rem}
+  body.guest:not(.sess-wait) :is(#mbSet,#mbLvlBtn){display:none} @media (max-width:430px){ body.guest:not(.sess-wait) .mbar-title{display:none} } body.guest:not(.sess-wait) .mbar-title{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+}
+@media (max-width:370px){ body.guest:not(.sess-wait) #mbNtf{display:none} }
+/* the sign-in screen, chess.com-like (one column: title, illustration, e-mail first, then Google / Apple / Facebook) */
+.gt-choose .gt-form{justify-content:center;gap:clamp(8px,1.4vh,14px)}
+.gt-choose .gt-top{margin-bottom:auto} .gt-choose .gt-noacct{margin-top:auto;color:var(--muted);font-weight:700}
+.gt-choose .gt-h{font-size:clamp(1.6rem,3.4vh,2.2rem)}
+.gt-ill{position:relative;display:none;place-items:center;flex:none;padding:4px 0} /* only where the night scene (.gt-art) is not shown */
+@media (max-width:640px), (max-width:900px) and (max-height:699px){ .gt-ill{display:grid} }
+.gt-ill-glow{position:absolute;left:50%;bottom:6%;width:min(300px,80%);height:28%;transform:translateX(-50%);border-radius:50%;background:radial-gradient(closest-side,color-mix(in srgb,#7a5bf5 45%,transparent),transparent)}
+.gt-ill-o{position:relative;width:clamp(80px,16vh,160px);filter:drop-shadow(0 18px 18px rgba(20,12,60,.35))} .gt-ill-o svg{width:100%;height:auto;display:block}
+.gt-ill-n{position:absolute;left:calc(50% + clamp(36px,7vh,70px));top:0;width:clamp(36px,6vh,64px);transform:rotate(12deg)} .gt-ill-n svg{width:100%;height:auto;display:block}
+.gt-mailgo{display:flex;align-items:center;justify-content:center;gap:10px;font-size:1.1rem;padding-block:clamp(12px,1.8vh,16px)}
+.gt-mailgo svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.gt-soc1{grid-template-columns:1fr;gap:8px} .gt-soc1 .gt-s{padding-block:clamp(10px,1.5vh,13px);font-size:.95rem}
+.gt-switch{margin:0;text-align:center;font-size:.9rem;color:var(--muted);font-weight:700} .gt-switch .gt-link{font-size:.9rem}
+.gt-back{display:flex;align-items:center;gap:6px;border:0;background:var(--surface-2);color:var(--ink);font-weight:800;border-radius:999px;padding:6px 12px 6px 8px}
+.gt-back svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
+.gt-mail .gt-or,.gt-mail .gt-soc{display:none}
+@media (max-width:640px){ .gt-choose .gt-form{padding:max(16px,env(safe-area-inset-top,0px)) max(18px,env(safe-area-inset-right,0px)) max(14px,env(safe-area-inset-bottom,0px)) max(18px,env(safe-area-inset-left,0px))} .gt-choose .gt-h{font-size:1.55rem} }
+@media (max-height:520px){ .gt-choose .gt-form{display:flex;align-content:normal} .gt-choose .gt-ill{display:none} .gt-choose .gt-soc1{grid-template-columns:repeat(3,minmax(0,1fr))} .gt-choose .gt-soc1 .gt-google{grid-column:auto} .gt-choose .gt-form .gt-h{display:block} .gt-choose .gt-soc1 .gt-s span{font-size:.8rem} .gt-choose .gt-h{font-size:1.25rem} }
+/* GAMES: its header sits exactly like LEARN / PLAY / QUIZ (same top padding as .mode-page at every size) */
+#gamesPanel{padding-block:6px 10px}
+@media (max-height:820px), (max-width:900px){ #gamesPanel{padding-block:2px 6px} }
+@media (max-width:640px){ #gamesPanel{padding-block:0} }
+@media (max-height:420px) and (orientation:landscape){ #gamesPanel{padding-block:0} }
+/* quiz settings (24/10/2026): big section titles with a small icon, the game settings in one card, Mode and Difficulty as the same
+   choice cards, Help as a row like the time to answer; joyful theme colours at full saturation, « All topics » in every colour */
+#qzSetup .qz-h{display:flex;align-items:center;gap:10px;margin:2px 0 8px;font-family:var(--f-display);font-weight:700;font-size:clamp(1.05rem,.6vw + .8rem,1.35rem);letter-spacing:0;text-transform:none;color:var(--ink)}
+#qzSetup .qz-h svg{width:1.35em;height:1.35em;flex:none;box-sizing:border-box;padding:.2em;border-radius:.34em;fill:none;stroke:#fff;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;
+  background:linear-gradient(150deg,color-mix(in srgb,var(--m-quiz) 50%,#fff),var(--m-quiz));box-shadow:0 8px 16px -8px var(--m-quiz)}
+#qzSetup .qz-conf{display:flex;flex-direction:column;gap:8px;flex:none}
+#qzSetup .qz-conf>.su-lbl{margin-top:2px}
+#qzSetup .qz-conf .qz-row{margin-top:0;display:grid;grid-template-columns:minmax(150px,auto) 1fr;align-items:center;gap:10px}
+#qzSetup .qz-conf .qz-row>.seg{justify-self:start}
+#qzSetup .qz-ans{grid-template-columns:repeat(2,minmax(0,1fr))}
+#qzSetup .qz-conf .qz-diff{background:var(--surface-2);box-shadow:none}
+#qzSetup .qz-conf .qz-diff[aria-pressed="true"]{background:var(--m-quiz);color:#fff}
+.qz-theme{filter:none!important}
+.qz-theme.qz-all{background-image:radial-gradient(120% 80% at 90% -10%,rgba(255,255,255,.28),transparent 55%),linear-gradient(135deg,#d0262f,#b54708 22%,#2e7d32 44%,#0b6bcb 66%,#8e24aa 88%)}
+.qz-theme.qz-all[aria-pressed="true"]{--tc:#8e24aa}
+.qz-helprow{flex-wrap:nowrap}
+@media (max-width:640px), (max-height:420px){ #qzSetup .qz-conf .qz-row{grid-template-columns:auto minmax(0,1fr)} #qzSetup .qz-conf{gap:6px;padding:8px 10px}
+  #qzSetup .qz-conf .qz-row>.seg{justify-self:stretch;min-width:0} #qzSetup .qz-conf .qz-row>.seg button{flex:1 1 0;min-width:0;padding-inline:4px} #qzSetup .qz-conf .qz-row>.su-lbl{font-size:.66rem;letter-spacing:.06em} }
+@media (max-height:420px) and (orientation:landscape){ #qzSetup .qz-conf{flex:1 1 100%;flex-direction:row;flex-wrap:wrap;align-items:center;gap:6px 8px;padding:6px 8px}
+  #qzSetup .qz-conf>:is(.qz-h,.su-lbl){display:none} #qzSetup .qz-conf .qz-ans{flex:1 1 34%;min-width:0} #qzSetup .qz-conf #qzDiff{flex:1 1 60%;min-width:0}
+  #qzSetup .qz-conf .qz-row{display:flex;flex:1 1 auto;min-width:max-content} #qzSetup .qz-conf .qz-row>.seg button{flex:none;padding-inline:9px} #qzSetup .qz-conf .qz-diff{padding:5px 8px} }
+@media (min-width:641px) and (min-height:521px){ .qz .mode-h{display:block!important} .qz .mode-h p{display:none} }
+/* hub: four modes (QUIZ joined the home page, 24/10/2026): a 2 × 2 grid on tablets and computers, 4 in a row on landscape phones */
+#main .hub-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+@media (min-width:901px){
+  #main .hub-wrap .hub-grid .ptile{justify-content:flex-end;--os:clamp(80px,min(50cqh,44cqw),220px)}
+  #main .hub-wrap .hub-grid .ptile .obj{top:clamp(6px,4cqh,22px);right:clamp(8px,3cqw,22px)}
+  #main .hub-wrap .hub-grid .ptile :is(.h3,p,.tags){max-width:none}
+  #main .hub-wrap .hub-grid .ptile .h3{font-size:clamp(1.4rem,min(14cqh,11cqw),2.6rem)}
+  #main .hub-wrap .hub-grid .ptile p{font-size:clamp(.8rem,min(6.2cqh,4.4cqw),1.08rem)}
+  @container hb (max-height:300px){ #main .hub-grid .ptile .tags{display:none} }
+  @container hb (max-height:200px){ #main .hub-grid .ptile p{display:none} }
+}
+@media (max-height:420px) and (orientation:landscape){ #main .hub-grid{grid-template-columns:repeat(4,minmax(0,1fr))} }
+@media (max-width:640px){ #main .hub-grid .ptile{justify-content:flex-end;padding:12px 14px;--os:clamp(52px,min(50cqh,48cqw),112px)} #main .hub-grid .ptile .obj{top:4px;right:4px}
+  #main .hub-grid .ptile :is(p,.tags){display:none} #main .hub-grid .ptile .h3{max-width:none!important;font-size:clamp(1.15rem,min(17cqh,13cqw),1.8rem)!important}
+  @container hb (min-height:230px) and (min-width:160px){ #main .hub-grid .ptile p{display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;font-size:.76rem;max-width:none} } }
+/* ===== fin mise en page ===== */

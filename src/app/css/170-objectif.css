@@ -1,0 +1,30 @@
+/* ==== Objectif (C9 / D21 / D22) ==== */
+:is(#lvlAv,#mbLvlBtn .av).goal-ring{--gp:0;--gr-c:var(--good);position:relative}
+:is(#lvlAv,#mbLvlBtn .av).goal-ring::before{content:"";position:absolute;inset:-5px;border-radius:50%;pointer-events:none;background:conic-gradient(var(--gr-c) calc(var(--gp) * 1turn),var(--line) 0);-webkit-mask:radial-gradient(farthest-side,transparent calc(100% - 4px),#000 calc(100% - 3.5px));mask:radial-gradient(farthest-side,transparent calc(100% - 4px),#000 calc(100% - 3.5px))}
+#mbLvlBtn .av.goal-ring::before{inset:-3px;-webkit-mask:radial-gradient(farthest-side,transparent calc(100% - 3px),#000 calc(100% - 2.5px));mask:radial-gradient(farthest-side,transparent calc(100% - 3px),#000 calc(100% - 2.5px))}
+#mbLvlBtn{padding-left:5px}
+:is(#lvlAv,#mbLvlBtn .av).goal-ring.done{--gr-c:var(--gold)} :is(#lvlAv,#mbLvlBtn .av).goal-ring.done::before{background:var(--gold);box-shadow:0 0 10px var(--gold)}
+.goal-ring.gl-win::before{animation:glWin 900ms var(--ease-out)} @keyframes glWin{0%{transform:scale(1)}35%{transform:scale(1.18)}100%{transform:scale(1)}}
+@media (prefers-reduced-motion:reduce){ .goal-ring.gl-win::before{animation:none} }
+.pf-goal{display:flex;align-items:center;flex-wrap:wrap;gap:6px 10px;padding:8px 14px;background:rgba(0,0,0,.14)}
+.pf-goal .gl-r{width:30px;height:30px;flex:none} .pf-goal .gl-r circle{fill:none;stroke-width:4} .pf-goal .gl-r .tr{stroke:rgba(255,255,255,.25)} .pf-goal .gl-r .fg{stroke:#fff;stroke-linecap:round;transform:rotate(-90deg);transform-origin:50% 50%}
+.pf-goal.done .gl-r .fg{stroke:#ffd75a}
+.pf-goal .gl-t{display:flex;flex-direction:column;min-width:0;flex:1 1 auto} .pf-goal .gl-t b{font-weight:800;font-size:.9rem;white-space:nowrap} .pf-goal .gl-t small{font-size:.74rem;opacity:.85;white-space:nowrap}
+.pf-goal .gl-chips{display:flex;gap:6px;flex-wrap:wrap}
+.pf-goal .gl-chip{display:inline-flex;align-items:center;gap:4px;border-radius:999px;padding:3px 8px;background:rgba(255,255,255,.16);font-size:.74rem;font-weight:800;white-space:nowrap}
+.pf-goal .gl-chip.ok{background:#ffd75a;color:#4a3200}
+.pf-sh b.gl-new{white-space:normal}
+#segGoal button{white-space:nowrap;padding-inline:6px;min-width:0}
+.pf-grid span.frz{background:rgba(124,196,255,.35);opacity:1}
+.goal-modal .modal-card{width:min(560px,100%)}
+.gl-body{display:flex;flex-direction:column;gap:12px;padding:22px}
+.gl-k{font-size:.74rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--good)}
+.gl-body h2{font-family:var(--f-display);font-size:1.5rem;margin:0;line-height:1.15} .gl-body p{margin:0;color:var(--muted)}
+.gl-opts{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px}
+.gl-opt{display:flex;flex-direction:column;align-items:center;gap:2px;padding:12px 4px;border-radius:14px;border:2px solid var(--line);background:var(--surface);color:var(--ink);min-width:0}
+.gl-opt b{font-family:var(--f-display);font-size:1.15rem;white-space:nowrap} .gl-opt small{font-size:.74rem;color:var(--muted);font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+.gl-opt[aria-pressed="true"]{border-color:var(--good);box-shadow:0 0 0 3px var(--good-soft)} .gl-opt[aria-pressed="true"] small{color:var(--good)}
+.gl-foot{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:4px} .gl-foot .linkbtn{align-self:center}
+@media (max-width:520px){ .gl-opts{grid-template-columns:repeat(3,minmax(0,1fr))} .gl-body{padding:18px 16px} .gl-body h2{font-size:1.3rem} }
+@media (max-height:420px){ .gl-body{gap:8px;padding:14px 18px} .gl-body h2{font-size:1.2rem} .gl-opt{padding:7px 4px} }
+/* ==== fin Objectif ==== */

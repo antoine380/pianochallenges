@@ -1,0 +1,14 @@
+/* ==== Gammes une à une : entraînement (chantier sc1-train) ==== */
+body.sc1g #gameLbl{display:none}
+.sc1-tm{flex:0 0 auto;min-width:0} .sc1-tm button{font-weight:800;font-size:.8rem;padding:6px 14px;white-space:nowrap}
+.sc1-tm button[aria-pressed="true"]{background:var(--sc1c);box-shadow:0 6px 14px -8px var(--sc1c)}
+body.sc1tr :is(#timerSel,.guide-dd,#timeline){display:none!important}
+body.sc1tr #feedback{visibility:hidden}
+#actions .sh{display:none}
+#slots.sc1-dm>*:not(.sc1-seen){opacity:.35}
+#slots.sc1-dm>*{transition:opacity .25s ease}
+.sc1-well{margin:0 auto 0 0;font-family:var(--f-display);font-weight:700;font-size:clamp(1.1rem,2.4vh,1.45rem);color:var(--ok-ink,var(--ink));align-self:center}
+@media (max-width:640px),(max-height:520px) and (orientation:landscape){ .sc1-tm button{padding:5px 10px;font-size:.74rem} #actions .lg{display:none} #actions .sh{display:inline} }
+@media (max-width:640px){ .sc1-well{display:none} }
+@media (prefers-reduced-motion:reduce){ #slots.sc1-dm>*{transition:none} }
+/* ==== fin Gammes une à une : entraînement ==== */

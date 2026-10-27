@@ -1,0 +1,139 @@
+/* Three modes, one color each: GAMES (green) / PLAY (violet) / LEARN (coral). The mode pages are tile grids in the Play style. */
+:root{--m-games:#26805a;--m-play:#7a5bf5;--m-learn:#c9463c} /* white text ≥ 4.5:1 on each */
+.mode-nav{display:flex;flex-direction:column;gap:6px}
+.mode-item{display:flex;align-items:center;gap:12px;width:100%;border:1px solid transparent;background:var(--surface);border-radius:14px;padding:8px 10px;text-align:left;color:var(--ink);min-height:56px}
+.mode-item .mi{width:38px;height:38px;border-radius:12px;background:var(--mc);color:#fff;display:grid;place-items:center;flex:none}
+.mode-item .mi svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.mode-item .mt{display:flex;flex-direction:column;min-width:0;line-height:1.15}
+.mode-item .mt b{font-family:var(--f-display);font-weight:800;font-size:.95rem;letter-spacing:.1em;text-transform:uppercase}
+.mode-item .mt small{font-size:.76rem;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+@media (hover:hover) and (pointer:fine){.mode-item:hover{border-color:var(--mc)}}
+.mode-item[aria-current="page"]{background:var(--mc);border-color:var(--mc);color:#fff}
+.mode-item[aria-current="page"] .mi{background:#ffffff2e}
+.mode-item[aria-current="page"] .mt small{color:#fff;opacity:.8}
+#secTabs{display:none!important}
+.side.collapsed .mode-item{justify-content:center;padding:8px 0;min-height:52px} .side.collapsed .mode-item .mt{display:none}
+/* Tiles (Play style): colored card, dark "screen" with the icon, name, line, button */
+.ptile-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:14px}
+.ptile{position:relative;isolation:isolate;overflow:visible;display:flex;flex-direction:column;justify-content:flex-end;gap:8px;text-align:left;border:0;border-radius:var(--r-xl);padding:118px 18px 18px;min-height:250px;color:#fff;min-width:0;transition:transform .2s,box-shadow .2s;background-color:var(--tc,#555);background-image:radial-gradient(120% 80% at 90% -10%,rgba(255,255,255,.32),transparent 55%),radial-gradient(60% 50% at 0% 100%,rgba(0,0,0,.18),transparent 70%),linear-gradient(160deg,var(--tc2,var(--tc)),var(--tc) 64%);box-shadow:0 22px 34px -18px var(--tc),0 8px 16px -10px rgba(10,6,30,.35),inset 0 1px 0 rgba(255,255,255,.4),inset 0 0 0 1px rgba(255,255,255,.12);--os:132px;font-family:var(--f-body)}
+@media (hover:hover) and (pointer:fine){.ptile:hover{transform:translateY(-4px);box-shadow:0 30px 40px -18px var(--tc),0 10px 20px -10px rgba(10,6,30,.4),inset 0 1px 0 rgba(255,255,255,.4),inset 0 0 0 1px rgba(255,255,255,.12)}}
+.ptile .obj{position:absolute;top:-20px;right:-10px;width:var(--os);height:var(--os);pointer-events:none;z-index:1;filter:drop-shadow(0 16px 14px rgba(10,6,30,.45));transition:transform .3s var(--ease-pop)}
+.ptile .obj svg{display:block;width:100%;height:100%}
+@media (hover:hover) and (pointer:fine){.ptile:hover .obj{transform:translateY(-6px) rotate(-4deg) scale(1.05)}}
+.ptile-grid,.hub-grid{padding:18px 10px 4px 0}
+@media (prefers-reduced-motion:reduce){.ptile,.ptile .obj{transition:none}}
+.ptile.soon{cursor:default;filter:saturate(.55)} @media (hover:hover) and (pointer:fine){.ptile.soon:hover{transform:none}} /* greyed, not translucent: the white text keeps its contrast */
+.ptile .pk{font-family:var(--f-mono);font-weight:800;font-size:.68rem;letter-spacing:.12em;text-transform:uppercase;opacity:.92}
+.ptile .h3{display:block;margin:0;font-family:var(--f-display);font-weight:700;font-size:1.4rem;letter-spacing:0;line-height:1.1;text-shadow:0 2px 0 rgba(0,0,0,.12)}
+.ptile p{margin:0;font-size:.88rem;line-height:1.4}
+.ptile .go{margin-top:6px;align-self:flex-start;border-radius:999px;padding:8px 16px;background:rgba(255,255,255,.95);color:#1b1838;font-family:var(--f-body);font-weight:800;font-size:.85rem;border:0;box-shadow:0 6px 14px -6px rgba(10,6,30,.5)}
+.ptile .rec{font-family:var(--f-mono);font-size:.78rem;font-variant-numeric:tabular-nums}
+/* Mode pages: hub, learn, games */
+[data-page="hub"] :is(.picker,.stage,.gamebar,.prompt-row,.timeline,.slots,.answers,.actions,.hint,.notice,.pane-head){display:none!important}
+[data-page="learn"] :is(.picker,.stage,.gamebar,.prompt-row,.timeline,.slots,.answers,.actions,.hint,.notice,.pane-head){display:none!important}
+.mode-page{flex:none;display:flex;flex-direction:column;gap:18px;padding-block:6px 10px}
+.mode-page.hub{flex:1;min-height:0;justify-content:center}
+.mode-h h2{font-family:var(--f-display);font-weight:800;font-size:clamp(1.5rem,3vw,2.3rem);letter-spacing:-.025em;line-height:1.05;margin:0;text-wrap:balance}
+.mode-h p{margin:6px 0 0;color:var(--muted);max-width:62ch}
+.hub-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.hub-grid .ptile .h3{font-size:2rem;letter-spacing:.04em}
+.hub-grid .ptile{--os:170px;padding-top:150px;min-height:300px}
+.hub-grid .ptile .tags{font-family:var(--f-mono);font-size:.72rem;line-height:1.6}
+#gamesPanel .pane-head{display:none!important}
+@media (min-width:1200px){ #gameCards{grid-template-columns:repeat(4,minmax(0,1fr))} #playCards{grid-template-columns:repeat(6,minmax(0,1fr))} }
+.gc-head{margin:6px 0 0;font-family:var(--f-display);font-weight:800;font-size:1.05rem;display:flex;flex-wrap:wrap;align-items:baseline;gap:2px 10px} .gc-head span{white-space:nowrap}
+.gc-head small{font-family:var(--f-body);font-weight:400;color:var(--muted);font-size:.84rem}
+@media (max-width:760px){.ptile-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px} .ptile-grid .ptile{padding:12px 12px 14px;gap:4px} .ptile-grid .ptile .h3{font-size:1rem} .ptile-grid .ptile p{font-size:.76rem} .ptile-grid .ptile .go{padding:6px 11px;font-size:.78rem;margin-top:6px} .hub-grid{grid-template-columns:1fr;gap:12px} .hub-grid .ptile{--os:96px;padding:16px 18px;min-height:110px;justify-content:center} .hub-grid .ptile :is(.h3,p){max-width:calc(100% - 90px)} .hub-grid .ptile .tags{display:none} .mode-page.hub{justify-content:flex-start} .hub-grid .ptile .art{display:none} .hub-grid .ptile{padding:14px 16px;gap:4px} .hub-grid .ptile .h3{font-size:1.3rem} .hub-grid .ptile .tags{display:none}}
+/* Tablets and short screens (iPad 1024×768 and 768×1024, laptops 1280×800): compact tiles without the "screen" art, so Games and Learn fit on one screen */
+@media (max-height:820px), (max-width:900px){
+  .ptile-grid{grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:10px}
+  #learnTiles{grid-template-columns:repeat(3,minmax(0,1fr))}
+  #gameCards{grid-template-columns:repeat(4,minmax(0,1fr))}
+  #playCards{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .ptile-grid .ptile{padding:14px 14px 14px;gap:5px;border-radius:var(--r-lg);min-height:0;--os:80px}
+  .ptile-grid .ptile :is(.pk,.h3){max-width:calc(100% - 58px)}
+  .hub-grid .ptile{--os:120px;padding-top:100px;min-height:0}
+  #learnTiles .ptile{--os:112px;padding-top:84px}
+  :is(#gameCards,#playCards) .ptile{padding-top:64px} :is(#gameCards,#playCards) .ptile :is(.pk,.h3){max-width:none}
+  #learnTiles .ptile :is(.pk,.h3){max-width:none}
+  .ptile-grid .ptile .pk{font-size:.62rem}
+  .ptile-grid .ptile .h3{font-size:1.05rem}
+  .ptile-grid .ptile p{font-size:.78rem;line-height:1.35}
+  .ptile-grid .ptile .rec{font-size:.72rem}
+  .ptile-grid .ptile .go{padding:6px 12px;font-size:.78rem;margin-top:6px}
+  .mode-page{gap:12px;padding-block:2px 6px}
+  .mode-h p{margin-top:4px;font-size:.92rem}
+  .gc-head{margin:2px 0 -2px}
+}
+@media (max-height:820px) and (min-width:900px){ #playCards{grid-template-columns:repeat(6,minmax(0,1fr))} }
+/* Phones, portrait: name + record + button only */
+@media (max-width:640px){
+  #learnTiles,#gameCards,#playCards{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .ptile-grid .ptile :is(.pk,p,.go){display:none}
+  .ptile-grid .ptile{padding:10px 12px;gap:2px;min-height:52px;justify-content:center;--os:56px}
+  .ptile-grid,.hub-grid{padding:12px 8px 0 0}
+  :is(#gameCards,#playCards) .ptile{min-height:46px;padding:8px 12px;--os:50px}
+  .hub-grid .ptile{min-height:0;padding:12px 16px;--os:80px} .hub-grid .ptile p{font-size:.8rem;line-height:1.35} .hub-grid .ptile .h3{font-size:1.5rem}
+  .ptile-grid .ptile :is(.h3,.rec){max-width:calc(100% - 44px)}
+  #learnTiles .ptile{--os:62px;padding-top:12px}
+  :is(#gameCards,#playCards) .ptile .h3{padding-right:calc(var(--os) - 6px)} /* the 3D object no longer hides the end of the title */
+  .ptile,.ptile:hover{box-shadow:0 10px 16px -12px var(--tc),inset 0 1px 0 rgba(255,255,255,.4),inset 0 0 0 1px rgba(255,255,255,.12)}
+  .gc-head{margin:0;font-size:.95rem} .gc-head small{display:none}
+  .mode-h p{display:none}
+  .mode-page{gap:10px;padding-block:0}
+}
+/* Phones held sideways (812×375): even tighter, the hub is a row of three */
+@media (max-height:420px) and (orientation:landscape){
+  .mode-h h2{font-size:1.2rem} .mode-h p{display:none}
+  .mode-page{gap:6px;padding-block:0}
+  .ptile-grid{gap:8px}
+  #learnTiles{grid-template-columns:repeat(3,minmax(0,1fr))} #gameCards{grid-template-columns:repeat(4,minmax(0,1fr))} #playCards{grid-template-columns:repeat(6,minmax(0,1fr))}
+  .ptile-grid .ptile{padding:8px 10px 9px;gap:2px;border-radius:16px;--os:44px}
+  .ptile-grid .ptile :is(.h3,.rec){max-width:calc(100% - 30px)}
+  .ptile-grid,.hub-grid{padding:8px 6px 0 0}
+  .ptile-grid .ptile :is(.pk,p,.rec:not(:last-child),.go){display:none}
+  .ptile-grid .ptile{min-height:44px;justify-content:center}
+  .ptile-grid .ptile .h3{font-size:.9rem}
+  .gc-head{margin:0;font-size:.9rem}
+  .hub-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+  .hub-grid .ptile{padding:10px 12px;gap:3px;--os:64px;min-height:0} .hub-grid .ptile .h3{max-width:calc(100% - 50px)} .hub-grid .ptile .h3{font-size:1.1rem} .hub-grid .ptile .tags{display:none} .hub-grid .ptile p{font-size:.74rem}
+}
+.side .lvl-card{margin-top:auto}
+.side-foot{display:flex;flex-direction:column;gap:2px;padding-top:10px;border-top:1px solid var(--line)}
+/* collapsed rail */
+/* Level card with character */
+.side .lvl-card{display:grid;grid-template-columns:auto minmax(0,1fr);align-items:center;gap:10px 12px;padding:10px;border-radius:12px;background:var(--surface-2);border:1px solid transparent;flex-wrap:nowrap}
+.lvl-av{position:relative;width:48px;height:48px;border:0;padding:0;background:none;border-radius:50%;flex:none}
+.av{display:block;width:100%;height:100%}
+.av svg{display:block;width:100%;height:100%;border-radius:50%}
+.lvl-num{position:absolute;right:-5px;bottom:-4px;background:var(--ink);color:var(--bg);font-size:.72rem;font-weight:700;border-radius:999px;min-width:22px;height:20px;padding:0 5px;display:grid;place-items:center;border:2px solid var(--surface-2)}
+.side .lvl-meta{display:flex;flex-direction:column;gap:4px;min-width:0}
+.lvl-title{font-family:var(--f-display);font-weight:700;font-size:.9rem;text-transform:none;letter-spacing:0;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.lvl-row{display:flex;align-items:center;justify-content:space-between;gap:6px}
+.lvl-more{border:0;background:none;padding:0;color:var(--accent);font-size:.72rem;font-weight:700;text-decoration:underline;text-underline-offset:2px;white-space:nowrap}
+.lvl-stats{grid-column:1 / -1;display:flex;gap:10px}
+.lvl-stats .stat{padding-left:0;border-left:0;flex:1}
+.side-daily{display:flex;align-items:center;gap:10px;width:100%;text-align:left;padding:8px;border:1px solid transparent;border-radius:12px;background:var(--surface);color:var(--ink)}
+@media (hover:hover) and (pointer:fine){.side-daily:hover{border-color:var(--ink)}}
+.side-daily .dicon{width:34px;height:34px;border-radius:9px;background:var(--accent-soft);display:grid;place-items:center;flex:none}
+.side-daily .dicon svg{width:20px;height:20px;fill:none;stroke:var(--accent);stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+.side-daily .lbl{display:flex;flex-direction:column;gap:1px;min-width:0}
+.side-daily .lbl b{font-family:var(--f-display);font-size:.92rem;line-height:1.2}
+.side-daily .lbl small{font-size:.74rem;color:var(--muted);line-height:1.3}
+.side-daily.done .dicon{background:var(--good-soft)} .side-daily.done .dicon svg{stroke:var(--good)}
+.side-daily[aria-current="page"]{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent)}
+/* collapsed rail */
+.side.collapsed{--sw:68px;padding-inline:8px}
+.side.collapsed :is(.wm,.lbl,.lvl-meta,.stat-txt small){display:none}
+.side.collapsed .nav-item{justify-content:center;padding:8px 0}
+.side.collapsed .side-head{display:flex;justify-content:center;padding:0}
+.side.collapsed .lvl-card{grid-template-columns:1fr;justify-items:center;padding:8px 2px;gap:8px}
+.side.collapsed .lvl-av{width:40px;height:40px}
+.side.collapsed .lvl-stats{flex-direction:column;gap:8px}
+.side.collapsed .stat{flex-direction:column;gap:1px}
+.side.collapsed .stat svg{width:18px;height:18px}
+.side.collapsed .stat-txt{align-items:center}
+.side.collapsed .stat-txt b{font-size:.8rem}
+.side.collapsed .side-daily{justify-content:center;padding:6px 0}
+.side.collapsed .side-toggle svg{transform:scaleX(-1)}
+

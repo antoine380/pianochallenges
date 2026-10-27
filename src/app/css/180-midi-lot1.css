@@ -1,0 +1,75 @@
+/* ==== MIDI lot 1 (24/10/2026) : pastille d'état M1, carte M2, test M8, toasts et pause M13 ==== */
+:root{--md-ok:var(--good);--md-wait:var(--warn);--md-mic:#3b82f6;--md-off:var(--muted);--md-plug:var(--brand)}
+.inp-chip.md-pill i{background:var(--md-off)}
+.md-pill.md-ok i{background:var(--md-ok)} .md-pill.md-wait i{background:var(--md-wait);animation:mdBlink 1.6s ease-in-out infinite}
+.md-pill:is(.md-mic,.md-micoff) i{background:var(--md-mic)} .md-pill.md-micoff i{opacity:.55} .md-pill.md-plug i{background:var(--md-plug)}
+@keyframes mdBlink{50%{opacity:.35}}
+.md-pill .mp-ic{display:grid;place-items:center;flex:none} .md-pill .mp-ic svg{width:22px;height:22px}
+.md-pill .mp-t{display:none}
+/* menu ouvert : la pastille prend la ligne, le jour/nuit devient une icône */
+.side:not(.collapsed) .theme-row #themeBtn{flex:none;width:auto} .side:not(.collapsed) .theme-row #themeBtn .lbl{display:none}
+.side:not(.collapsed) .md-pill{flex:1;min-width:0;width:auto;display:flex;align-items:center;gap:8px;padding:0 10px;justify-content:flex-start;color:var(--ink);border:1px solid var(--line)}
+.side:not(.collapsed) .md-pill .mp-t{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;flex:1;min-width:0;text-align:left;font-weight:800;font-size:.8rem;line-height:1.12;overflow:hidden;overflow-wrap:anywhere}
+.side:not(.collapsed) .md-pill .cg{display:none}
+.side:not(.collapsed) .md-pill i{position:static;flex:none;order:-1;width:10px;height:10px;border:0;box-shadow:0 0 0 3px color-mix(in srgb,currentColor 0%,transparent)}
+.side:not(.collapsed) .md-pill .mp-ic{display:none}
+.side:not(.collapsed) .md-pill.md-ok{border-color:color-mix(in srgb,var(--md-ok) 55%,transparent);background:color-mix(in srgb,var(--md-ok) 12%,var(--surface-2))}
+.side:not(.collapsed) .md-pill.md-wait{border-color:color-mix(in srgb,var(--md-wait) 55%,transparent);background:color-mix(in srgb,var(--md-wait) 12%,var(--surface-2))}
+.side:not(.collapsed) .md-pill.md-plug{border-style:dashed;border-color:color-mix(in srgb,var(--md-plug) 60%,transparent);color:var(--accent)}
+.md-mb{position:relative} .md-mb i{position:absolute;right:5px;top:7px;width:9px;height:9px;border-radius:50%;background:var(--md-off);box-shadow:0 0 0 2px var(--bg)}
+.md-mb.md-ok i{background:var(--md-ok)} .md-mb.md-wait i{background:var(--md-wait);animation:mdBlink 1.6s ease-in-out infinite} .md-mb:is(.md-mic,.md-micoff) i{background:var(--md-mic)} .md-mb.md-plug i{background:var(--md-plug)}
+/* carte « Ton clavier » de l'accueil (M2) */
+.hs-midi .obj{display:none} .hs-midi .hs-k{display:none} .hs-acts{display:flex;align-items:center;gap:6px;flex:none} .hs-midi .hs-more{display:none}
+.hs-midi.md-promo{flex-direction:column;align-items:flex-start;gap:6px;color:#fff;padding:14px 16px;--tc:#5a3fd6;--os:80px;
+  background-color:var(--tc);background-image:radial-gradient(120% 80% at 90% -10%,rgba(255,255,255,.28),transparent 55%),linear-gradient(160deg,#8b6cff,var(--tc) 66%);box-shadow:0 18px 30px -16px var(--tc),inset 0 1px 0 rgba(255,255,255,.4)}
+.hs-midi.md-promo .hs-ic{display:none} .hs-midi.md-promo .obj{display:block;position:absolute;top:-12px;right:-4px;width:var(--os);height:var(--os);filter:drop-shadow(0 12px 10px rgba(10,6,30,.45));pointer-events:none}
+.hs-midi.md-promo .obj svg{width:100%;height:100%;display:block}
+.hs-midi.md-promo .hs-k{display:block} .hs-midi.md-promo .hs-t{max-width:calc(100% - 64px)}
+.hs-midi.md-promo .hs-t b{font-family:var(--f-display);font-weight:700;font-size:1.2rem;line-height:1.1}
+.hs-midi.md-promo .hs-t small{color:#fff;opacity:.95;font-weight:600}
+.hs-midi.md-promo .hs-acts{width:100%;justify-content:space-between}
+.hs-midi.md-promo .btn{background:#fff;color:#1b1838;border:0;box-shadow:0 6px 14px -6px rgba(10,6,30,.5)}
+.hs-midi.md-promo .hs-more{display:inline-block;color:#fff;opacity:.95}
+.hs-midi.md-ok .hs-t b{color:var(--good)} .hs-midi.md-ok .hs-t b::before{content:"✓ "}
+@media (min-width:901px) and (max-height:820px){ .hs-midi.md-promo{padding:11px 14px;gap:4px;--os:64px} .hs-midi.md-promo .hs-k{display:none} .hs-midi.md-promo .hs-t b{font-size:1.05rem} }
+@media (max-width:900px) and (max-height:900px){ .hs-midi.md-promo .hs-k{display:none} }
+/* test « joue une note » (M8), en tête de la fenêtre Clavier MIDI */
+.md-test{display:flex;flex-direction:column;gap:8px;padding:10px;border-radius:var(--r-md);background:var(--surface-2);margin-bottom:6px}
+.mt-row{display:flex;gap:10px;align-items:stretch;min-height:96px}
+.mt-note{flex:none;width:78px;border-radius:12px;background:var(--surface);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;text-align:center}
+.mt-note b{font-family:var(--f-display);font-size:1.8rem;line-height:1;color:var(--nc,var(--accent))} .mt-note small{font-size:.68rem;color:var(--muted);font-weight:700}
+.mt-kb{position:relative;flex:1;min-width:0;display:flex;gap:2px;border-top:3px solid var(--hit-line,var(--brand));border-radius:4px}
+.mt-kb .w{flex:1;background:var(--key-white);border-radius:0 0 5px 5px;box-shadow:inset 0 -2px 0 var(--key-white-edge);position:relative}
+.mt-kb .b{position:absolute;top:0;height:58%;background:var(--key-black);border-radius:0 0 4px 4px;z-index:1}
+.mt-kb .on{background:var(--nc)!important;box-shadow:0 0 14px var(--nc)}
+.mt-kb .w small{position:absolute;bottom:3px;left:0;right:0;text-align:center;font-size:.55rem;color:var(--key-label);font-weight:700}
+.mt-vel{flex:none;width:36px;display:flex;flex-direction:column;align-items:center;gap:3px;font-size:.55rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.mt-vel i{flex:1;width:12px;border-radius:999px;background:var(--surface);position:relative;overflow:hidden}
+.mt-vel i b{position:absolute;left:0;right:0;bottom:0;height:0;background:linear-gradient(0deg,var(--good),var(--gold),var(--warn));transition:height .15s}
+.mt-vel em{font-style:normal;font-family:var(--f-display);font-size:.9rem;color:var(--ink)}
+.mt-msg{margin:0;font-weight:800;font-size:.92rem} .mt-msg.ok{color:var(--good)} .mt-msg small{display:block;font-weight:600;color:var(--muted);font-size:.78rem}
+.mt-steps{display:grid;grid-template-columns:1fr 1.4fr;gap:8px}
+.mt-step{display:flex;flex-direction:column;gap:4px;padding:8px 10px;border-radius:12px;background:var(--surface);font-size:.82rem;min-width:0}
+.mt-step b{font-weight:800} .mt-step small{color:var(--muted);font-size:.76rem;font-weight:600} .mt-step small.ok{color:var(--good)}
+.mt-btns{display:flex;flex-wrap:wrap;gap:4px} .mt-btns .btn{min-height:32px;padding:4px 10px;font-size:.78rem}
+.mt-btns .btn[aria-pressed="true"]{box-shadow:inset 0 0 0 2px var(--brand)}
+@media (max-width:520px){ .mt-steps{grid-template-columns:1fr} .mt-note{width:62px} .mt-note b{font-size:1.4rem} }
+/* toasts du clavier (M13), en haut */
+.md-toast{text-align:left;position:fixed;left:50%;top:max(12px,env(safe-area-inset-top));transform:translate(-50%,-12px);z-index:450;width:min(92vw,380px);display:flex;align-items:center;gap:10px;padding:8px 10px 8px 8px;border-radius:999px;
+  background:var(--surface);color:var(--ink);box-shadow:inset 0 0 0 1px var(--line),var(--shadow-float);opacity:0;pointer-events:none;transition:opacity 220ms var(--ease-out),transform 220ms var(--ease-out)}
+.md-toast.on{opacity:1;transform:translate(-50%,0);pointer-events:auto}
+.md-toast .mt-ic{width:36px;height:36px;border-radius:50%;display:grid;place-items:center;flex:none;color:#fff;background:var(--good)}
+.md-toast.md-lost .mt-ic{background:#d9761f} .md-toast .mt-ic svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.md-toast .mt-tx{display:flex;flex-direction:column;flex:1;min-width:0} .md-toast b{font-weight:800;font-size:.88rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap} .md-toast small{color:var(--muted);font-size:.76rem;font-weight:600}
+.md-toast .btn{flex:none;min-height:34px;padding:4px 14px;font-size:.82rem}
+/* fenêtre de pause (M13) */
+.md-lost{align-items:center;text-align:center;gap:10px;padding:24px 22px 18px}
+.md-lost .ml-ic{width:58px;height:58px;border-radius:16px;display:grid;place-items:center;color:#fff;background:linear-gradient(150deg,#f5a15a,#d9761f);box-shadow:0 10px 20px -10px #d9761f}
+.md-lost .ml-ic svg{width:30px;height:30px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.md-lost h2{margin:0;font-family:var(--f-display);font-size:1.45rem} .md-lost .ml-sub{margin:0;color:var(--muted)}
+.md-lost .btn{width:100%;justify-content:center;gap:8px} .md-lost .btn svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.md-lost .ml-wait{margin:0;display:flex;align-items:center;gap:8px;font-size:.84rem;color:var(--muted);font-weight:600}
+.md-lost .ml-wait i{width:14px;height:14px;border-radius:50%;border:2px solid var(--line);border-top-color:var(--brand);animation:mdSpin 1s linear infinite} .md-lost.back .ml-wait{color:var(--good);font-weight:800}
+@keyframes mdSpin{to{transform:rotate(360deg)}}
+@media (prefers-reduced-motion:reduce){ .md-pill.md-wait i,.md-mb.md-wait i,.md-lost .ml-wait i{animation:none} .md-toast{transition:opacity 120ms} .mt-vel i b{transition:none} }
+/* ==== fin MIDI lot 1 ==== */

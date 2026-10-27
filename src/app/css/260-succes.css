@@ -1,0 +1,46 @@
+/* ==== Succès (C10) : onglet « Succès » de la fiche Progression ==== */
+.ach{display:none}
+#progPane[data-tab="suc"] :is(#progFiche,#progCats,.prog-detail){display:none!important}
+#progPane[data-tab="suc"] .ach{display:flex;flex-direction:column;gap:var(--gap);position:relative;flex:1 1 auto;min-height:0}
+.ach-tiles{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:clamp(8px,1.2vw,16px);flex:none}
+.ach-t{position:relative;overflow:hidden;border-radius:var(--r-lg);color:#fff;background:linear-gradient(165deg,rgba(255,255,255,.16),rgba(255,255,255,0) 50%),var(--c);box-shadow:0 14px 26px -18px var(--c);
+  min-height:clamp(92px,17vh,156px);display:flex;flex-direction:column;justify-content:flex-end;padding:clamp(10px,1.2vw,16px);min-width:0}
+.ach-t .obj{position:absolute;top:8px;right:8px;width:48%;height:52%;pointer-events:none} .ach-t .obj svg{width:100%;height:100%;display:block}
+.ach-t b{position:relative;font-family:var(--f-display);font-weight:700;font-size:clamp(1.25rem,2.5vw,2.1rem);line-height:1.05;font-variant-numeric:tabular-nums;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ach-t span{position:relative;font-weight:800;font-size:clamp(.72rem,1.05vw,.9rem);line-height:1.2}
+.ach-card{flex:1 1 auto;min-height:0;display:flex;flex-direction:column;border-radius:var(--r-lg);background:#221d47;color:#fff;box-shadow:var(--shadow-card);overflow:hidden}
+.ach-h{display:flex;align-items:baseline;gap:10px;padding:12px 16px 2px;flex:none} .ach-h h3{margin:0;font-family:var(--f-display);font-weight:700;font-size:1.1rem} .ach-h span{color:#c9c4ea;font-weight:700;font-size:.86rem}
+.ach-grid{flex:1 1 auto;min-height:0;overflow-y:auto;overscroll-behavior:contain;display:grid;grid-template-columns:repeat(auto-fill,minmax(clamp(76px,8.6vw,110px),1fr));gap:10px 4px;padding:10px 10px 14px;align-content:start}
+.ach-b{border:0;background:none;color:#fff;display:flex;flex-direction:column;align-items:center;gap:6px;padding:4px 2px;border-radius:14px;font:inherit;cursor:pointer;min-width:0;-webkit-tap-highlight-color:transparent}
+.ach-b .ach-i{width:clamp(54px,6.2vw,80px);aspect-ratio:1;border-radius:50%;background:#2e2862;display:grid;place-items:center;box-shadow:inset 0 0 0 3px rgba(255,255,255,.07);transition:transform .15s}
+.ach-b.on .ach-i{background:radial-gradient(circle at 50% 40%,#3b3380,#221d47 75%);box-shadow:0 0 0 3px #ffd75a,0 0 18px -2px rgba(255,215,90,.55)}
+.ach-b .ach-i svg{width:68%;height:68%;display:block}
+.ach-b:not(.on) .ach-i svg{filter:grayscale(1) brightness(.85);opacity:.45}
+.ach-b .ach-n{font-weight:800;font-size:.76rem;line-height:1.15;text-align:center;overflow-wrap:break-word;max-width:100%}
+.ach-b:not(.on) .ach-n{color:#b9b3dc}
+.ach-b[aria-expanded="true"] .ach-i{transform:scale(1.06)}
+.ach-b:focus-visible{outline:3px solid #ffd75a;outline-offset:2px}
+@media (hover:hover) and (pointer:fine){ .ach-b:hover .ach-i{transform:scale(1.06)} }
+.ach-b.new .ach-i{animation:achNew .8s ease-out 2}
+@keyframes achNew{50%{transform:scale(1.14)}}
+.ach-pop{position:absolute;z-index:6;width:min(330px,calc(100% - 16px));padding:12px 14px;border-radius:16px;background:#2b2560;color:#fff;box-shadow:0 18px 40px -12px rgba(0,0,0,.55);border:1px solid rgba(255,255,255,.14)}
+.ach-pop[hidden]{display:none}
+.ach-pop .ap-h{display:flex;align-items:flex-start;gap:8px} .ach-pop b{flex:1;font-family:var(--f-display);font-weight:700;font-size:1.05rem}
+.ach-pop .ap-x{border:0;background:rgba(255,255,255,.12);color:#fff;width:30px;height:30px;border-radius:50%;font-size:1.05rem;line-height:1;flex:none}
+.ach-pop p{margin:4px 0 8px;font-size:.86rem;color:#e2def7}
+.ach-pop .bar{height:7px;border-radius:999px;background:rgba(255,255,255,.16);overflow:hidden} .ach-pop .bar i{display:block;height:100%;background:#ffd75a;border-radius:inherit}
+.ach-pop small{display:block;margin-top:6px;font-weight:700;font-size:.78rem;color:#e2def7}
+.ach-pop .btn{margin-top:10px;min-height:40px;padding:8px 16px;background:#ffd75a;color:#1b1838;border:0}
+@media (prefers-reduced-motion:reduce){ .ach-b .ach-i{transition:none} .ach-b.new .ach-i{animation:none} }
+/* phones: the tab bar shows Overview and Achievements (the detail stays under the overview); the Achievements tab never scrolls the page */
+@media (max-width:640px), (max-height:520px){
+  #pfNav.set-nav{display:flex;align-self:flex-start;margin-bottom:var(--sp-2)} #pfNav [data-v="det"]{display:none} #pfNav{flex:none} #pfNav button{white-space:nowrap} .ach-grid{grid-template-columns:repeat(auto-fill,minmax(68px,1fr))} .ach-b .ach-n{font-size:.68rem;letter-spacing:-.01em} .ach-grid{padding-inline:6px;column-gap:2px}
+  body.pf-suc[data-page="progress"] .main{overflow:hidden}
+  body.pf-suc[data-page="progress"] #progressPage{flex:1 1 auto;min-height:0;display:flex;flex-direction:column}
+  body.pf-suc[data-page="progress"] #progressPage>.card{flex:1 1 0;min-height:0;display:flex;flex-direction:column;overflow:hidden}
+  body.pf-suc[data-page="progress"] #progPane{display:flex!important;flex-direction:column;flex:1 1 auto;min-height:0}
+}
+@media (max-width:640px){ .ach-tiles{grid-template-columns:repeat(3,minmax(0,1fr))} .ach-t{min-height:clamp(74px,12.5vh,120px)} .ach-t .obj{width:42%;height:48%} }
+@media (max-height:520px) and (orientation:landscape){ .ach-t{min-height:64px;padding:8px 10px} .ach-t b{font-size:1.05rem} .ach-t span{font-size:.68rem} .ach-t .obj{width:38%;height:50%;top:4px;right:4px} .ach-b .ach-i{width:48px} .ach-h{padding-top:8px} }
+@media (min-width:641px) and (min-height:521px) and (max-aspect-ratio:1/1){ .ach-tiles{grid-template-columns:repeat(3,minmax(0,1fr))} .ach-t{min-height:clamp(96px,12vh,150px)} }
+/* ==== fin Succès ==== */

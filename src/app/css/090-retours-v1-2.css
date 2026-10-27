@@ -1,0 +1,22 @@
+/* ===== v1.2 feedback ===== */
+.ptile .obj{right:6px;top:-18px}
+.mode-h .mode-big+p{margin-top:12px}
+#learnTiles{row-gap:34px;margin-top:6px}
+.side.collapsed .brand-h{margin:0 auto} .side.collapsed .brand{justify-content:center}
+.mode-item[aria-current="page"]{background:transparent;color:var(--ink);box-shadow:inset 0 0 0 2px var(--mc);border-color:transparent}
+.mode-item[aria-current="page"] .mi{background:linear-gradient(150deg,color-mix(in srgb,var(--mc) 55%,#fff),var(--mc))}
+.mode-item[aria-current="page"] .mt small{color:var(--muted);opacity:1}
+.mode-item[aria-current="page"] .mt b{font-weight:800}
+.side.collapsed .mode-item[aria-current="page"],.side.collapsed .nav-item[aria-current="page"]{box-shadow:none}
+.side.collapsed .mode-item[aria-current="page"] .mi{outline:2.5px solid var(--mc);outline-offset:3px}
+.nav-item[aria-current="page"]{background:transparent;color:var(--ink);font-weight:800;box-shadow:inset 0 0 0 2px var(--brand)}
+.nav-item[aria-current="page"] svg{background:var(--surface-2);color:var(--accent)}
+.side.collapsed .nav-item[aria-current="page"] svg{outline:2.5px solid var(--brand);outline-offset:3px}
+/* hover styles are gated by (hover:hover) and (pointer:fine), so touch screens never get a stuck hover */
+.seg.diff button{flex:1 1 auto;white-space:nowrap;padding:6px 12px}
+.theme-row{display:flex;align-items:center;gap:8px} .theme-row .nav-item{flex:1;min-width:0}
+.side.collapsed .theme-row{flex-direction:column;gap:6px}
+.side .legal-links{display:none}
+.set-legal{display:block!important;margin:4px 0 0;font-size:.78rem}
+.set-live{-webkit-user-select:none;user-select:none} .set-live .lu-pend{color:var(--text)}
+

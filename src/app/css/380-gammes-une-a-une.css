@@ -1,0 +1,55 @@
+/* ==== Gammes une à une (chantier gammes1) ==== */
+:root{--sc1c:#9a5410;--sc1-star:#b97300;--sc1-off:color-mix(in srgb,var(--muted) 34%,transparent)}
+@media (prefers-color-scheme:dark){ :root:not([data-theme="light"]){--sc1-star:#ffc94a} }
+:root[data-theme="dark"]{--sc1-star:#ffc94a}
+/* the tile sits next to « Gammes » on screen (it is the last one in the page) */
+#learnTiles>.ptile:nth-child(-n+2),#learnTiles>.sc1-tile{order:-1}
+.ptile .sc1-new{position:absolute;top:-9px;left:14px;z-index:1;border-radius:999px;padding:2px 8px;background:#fff;color:#7a420c;font-family:var(--f-body);font-weight:800;font-size:.64rem;letter-spacing:.08em;text-transform:uppercase;line-height:1.5;box-shadow:0 4px 10px -4px rgba(40,20,0,.45)}
+#sc1Panel{display:none}
+body[data-page="sc1"] #sc1Panel{display:flex;flex:1 1 auto;min-height:0;flex-direction:column;gap:clamp(6px,1.4vh,14px);padding-block:4px 6px}
+[data-page="sc1"] :is(.picker,.stage,.gamebar,.prompt-row,.timeline,.slots,.answers,.actions,.hint,.notice,.pane-head){display:none!important}
+.sc1-top{display:flex;align-items:center;flex-wrap:wrap;gap:8px 16px}
+.sc1-h{display:flex;align-items:center;gap:10px;margin:0;font-family:var(--f-display);font-weight:800;font-size:clamp(1.2rem,2.6vw,1.9rem);letter-spacing:-.01em;line-height:1.1}
+.sc1-h .mb-ic{width:1.5em;height:1.5em;border-radius:.42em;display:grid;place-items:center;flex:none;color:#fff;background:linear-gradient(150deg,color-mix(in srgb,var(--sc1c) 50%,#fff),var(--sc1c));box-shadow:0 8px 16px -8px var(--sc1c),inset 0 1px 0 rgba(255,255,255,.4)}
+.sc1-h .mb-ic svg{width:58%;height:58%;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.sc1-beta{font-family:var(--f-body);font-size:.62rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;padding:2px 8px;border-radius:999px;background:var(--accent-soft);color:var(--accent);align-self:center}
+.sc1-seg{min-width:min(240px,100%)} .sc1-seg button{font-weight:800;letter-spacing:.06em;text-transform:uppercase;font-size:.8rem;padding:7px 14px}
+.sc1-seg button[aria-pressed="true"]{background:var(--sc1c);box-shadow:0 6px 14px -8px var(--sc1c)}
+.sc1-sum{margin:0 0 0 auto;display:flex;align-items:center;gap:4px 12px;flex-wrap:wrap;justify-content:flex-end;color:var(--muted);font-weight:700;font-size:.8rem}
+.sc1-big{display:inline-flex;align-items:baseline;gap:4px;color:var(--muted);font-size:.95rem} .sc1-big i{font-style:normal;color:var(--sc1-star)} .sc1-big b{color:var(--ink);font-size:1.25rem;font-family:var(--f-display)}
+.sc1-grid{flex:1 1 0;min-height:0;display:grid;grid-template-columns:minmax(52px,max-content) repeat(4,minmax(0,1fr)) clamp(22px,4vw,34px);grid-template-rows:auto repeat(7,minmax(0,1fr)) 3px repeat(5,minmax(0,1fr));gap:4px 6px}
+.sc1-grid.tr{grid-template-columns:max-content repeat(7,minmax(0,1fr)) 3px repeat(5,minmax(0,1fr));grid-template-rows:auto repeat(4,minmax(0,1fr)) clamp(18px,7vh,30px)}
+.sc1-sep{background:var(--line);border-radius:2px;margin:0 2px;align-self:center;height:2px} .sc1-grid.tr .sc1-sep{height:auto;width:2px;margin:2px 0;justify-self:center;align-self:stretch}
+.sc1-cup{display:grid;place-items:center;min-width:0;min-height:0;color:var(--sc1-off)} .sc1-cup svg{width:min(100%,26px);height:min(100%,26px);fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.sc1-cup.on{color:var(--sc1-star)} .sc1-cup.on svg{fill:color-mix(in srgb,var(--sc1-star) 30%,transparent)}
+.sc1-cups svg{width:1.1em;height:1.1em;align-self:center;fill:color-mix(in srgb,var(--sc1-star) 30%,transparent);stroke:var(--sc1-star);stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.sc1-cupwon{margin:0;display:inline-flex;align-items:center;gap:8px;padding:4px 14px 4px 8px;border-radius:999px;background:color-mix(in srgb,var(--gold) 22%,var(--surface));font-family:var(--f-display);font-size:1.05rem}
+.sc1-cupwon .sc1-cup svg{width:24px;height:24px}
+.sc1-th{display:flex;align-items:flex-end;justify-content:center;text-align:center;font-size:.78rem;font-weight:800;color:var(--muted);line-height:1.15;padding:0 2px 2px;min-width:0}
+.sc1-th .sh{display:none}
+.sc1-grid.tr .sc1-th{align-items:center;justify-content:flex-start;text-align:left;padding:0 6px 0 0}
+.sc1-rh{display:flex;flex-direction:column;justify-content:center;min-width:0;padding-right:4px;font-family:var(--f-display);font-weight:700;font-size:clamp(.82rem,2vh,1rem);line-height:1.05;white-space:nowrap}
+.sc1-rh small{font-size:.74em;color:var(--muted);font-weight:700}
+.sc1-grid.tr .sc1-rh{align-items:center;justify-content:flex-end;padding:0 0 2px;text-align:center}
+.sc1-c{position:relative;min-width:0;min-height:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;padding:0 2px;border:1px solid var(--line);border-radius:10px;background:var(--surface);color:var(--ink);cursor:pointer;transition:transform .12s var(--ease-out,ease),border-color .12s}
+.sc1-c.s1{background:color-mix(in srgb,var(--sc1c) 9%,var(--surface))}
+.sc1-c.s2{background:color-mix(in srgb,var(--sc1c) 17%,var(--surface))}
+.sc1-c.s3{background:color-mix(in srgb,var(--gold) 26%,var(--surface));border-color:color-mix(in srgb,var(--gold) 70%,var(--line))}
+.sc1-c:active{transform:scale(.97)}
+@media (hover:hover) and (pointer:fine){ .sc1-c:hover{border-color:var(--sc1c)} }
+.sc1-c:focus-visible{outline:3px solid var(--accent);outline-offset:1px}
+.sc1-st{display:flex;gap:1px;font-size:clamp(.7rem,2.3vh,1.15rem);line-height:1;letter-spacing:0}
+.sc1-st i{font-style:normal;color:var(--sc1-off)} .sc1-st i.on{color:var(--sc1-star);text-shadow:0 1px 0 rgba(0,0,0,.12)}
+.sc1-tn{font-size:.62rem;font-weight:800;color:var(--muted);line-height:1}
+.sc1-c.pw-lk{opacity:.75} .sc1-c .pw-chip{top:2px;right:2px;padding:1px 3px;font-size:0} .sc1-c .pw-chip svg{width:10px;height:10px}
+@media (max-width:640px){ .sc1-th .lg{display:none} .sc1-th .sh{display:inline} .sc1-sum small{display:none} .sc1-seg{flex:1 1 100%} .sc1-h{font-size:1.15rem} .sc1-tn{display:none} }
+@media (max-height:520px) and (orientation:landscape){ .sc1-th .lg{display:none} .sc1-th .sh{display:inline} .sc1-sum small{display:none} .sc1-h{font-size:1.05rem} .sc1-tn{display:none} .sc1-seg button{padding:5px 12px} }
+/* end of a game */
+.sc1-end{display:flex;flex-direction:column;align-items:center;text-align:center;gap:6px;margin-bottom:6px}
+.sc1-end .pp-stars{font-size:clamp(2rem,min(8vh,8vw),3.2rem);margin:2px 0}
+.sc1-msg{margin:0;font-weight:700;max-width:40ch}
+.sc1-best{margin:0;color:var(--muted);font-weight:700;font-size:.88rem} .sc1-best span{color:var(--sc1-star)} .sc1-best.new{color:var(--ok-ink,var(--ink))}
+.sc1-tot{margin:0;color:var(--muted);font-size:.82rem;font-weight:700}
+@media (max-height:520px){ .sc1-end{gap:2px} .sc1-end .pp-stars{font-size:1.8rem} .sc1-tot{display:none} }
+@media (prefers-reduced-motion:reduce){ .sc1-c{transition:none} .sc1-c:active{transform:none} .sc1-end .pp-stars span{animation:none!important} }
+/* ==== fin Gammes une à une ==== */

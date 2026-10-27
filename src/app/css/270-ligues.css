@@ -1,0 +1,49 @@
+/* ==== Ligues (C11) : vue Ligue du Classement, carte de l'accueil ==== */
+#lgView{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.2fr);gap:var(--gap);flex:1 1 auto;min-height:0}
+#lgView[hidden]{display:none}
+.lg-left{display:flex;flex-direction:column;gap:var(--gap);min-height:0}
+.lg-head h3{font-family:var(--f-display);font-size:clamp(1.5rem,3.2vw,2.3rem);line-height:1.1;margin:0}
+.lg-head p{margin:4px 0 0;color:var(--muted)}
+.lg-tiers{list-style:none;margin:var(--sp-3) 0 0;padding:0;display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:6px;align-items:end;text-align:center}
+.lg-tiers li{display:flex;flex-direction:column;align-items:center;gap:4px;font-size:.8rem;font-weight:700;color:var(--muted);min-width:0}
+.lg-tiers li span:last-child{max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.lg-hex{display:block;width:clamp(30px,5vw,48px);aspect-ratio:1/1.1;clip-path:polygon(50% 0,100% 25%,100% 75%,50% 100%,0 75%,0 25%);background:var(--line)}
+.lg-tiers li.got .lg-hex{background:linear-gradient(160deg,color-mix(in srgb,var(--lg-c) 55%,#fff),var(--lg-c))}
+.lg-tiers li.cur{color:var(--ink)} .lg-tiers li.cur .lg-hex{width:clamp(40px,6.6vw,64px)}
+.lg-me{display:flex;align-items:center;gap:var(--sp-4)}
+.lg-pos{flex:none;width:clamp(52px,7vw,76px);aspect-ratio:1;border-radius:50%;display:grid;place-items:center;background:var(--surface-2);box-shadow:inset 0 0 0 4px var(--lg-c,var(--accent));font-family:var(--f-display);font-weight:700;font-size:clamp(1.4rem,3vw,2rem);color:var(--ink)}
+.lg-me b{display:block;font-family:var(--f-display);font-size:1.25rem} .lg-me small{display:block;color:var(--muted);font-size:.95rem;line-height:1.35}
+.lg-stats{display:grid;grid-template-columns:1fr 1fr;gap:var(--gap)}
+.lg-stats small{display:block;font-size:.72rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.lg-stats b{display:block;font-family:var(--f-display);font-size:clamp(1.3rem,2.6vw,1.9rem);margin-top:4px;font-variant-numeric:tabular-nums}
+.lg-listc{display:flex;flex-direction:column;min-height:0;overflow:hidden;padding:var(--sp-3)}
+.lg-list{list-style:none;margin:0;padding:0;flex:1 1 auto;min-height:0;overflow-y:auto;display:flex;flex-direction:column;gap:2px}
+.lg-list li{display:grid;grid-template-columns:30px 34px minmax(0,1fr) auto;align-items:center;gap:10px;padding:5px 10px;border-radius:12px;flex:none}
+.lg-list li.me{background:var(--accent-soft);box-shadow:inset 0 0 0 2px var(--accent)}
+.lg-list .rk{font-family:var(--f-display);font-weight:700;text-align:center;color:var(--muted)}
+.lg-list li.up .rk{color:var(--good)} .lg-list li.down .rk{color:var(--bad)}
+.lg-list .av{width:34px;height:34px;border-radius:50%;overflow:hidden;display:block} .lg-list .av :is(svg,img){width:100%;height:100%;display:block}
+.lg-list b{font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.lg-list .num{font-family:var(--f-display);font-weight:700;font-variant-numeric:tabular-nums;white-space:nowrap}
+.lg-list li.lg-band{display:flex;gap:6px;padding:5px 12px;margin:4px 0;font-size:.82rem;font-weight:800;border-radius:10px}
+.lg-band.up{background:var(--good-soft);color:var(--good)} .lg-band.down{background:var(--bad-soft);color:var(--bad)}
+.lg-msg{margin:0;color:var(--muted)}
+.lg-guest{grid-column:1/-1;align-self:start;display:flex;flex-direction:column;gap:var(--sp-3);align-items:flex-start}
+.lg-guest .btn{align-self:flex-start}
+body.lg-on #rankPanel .rank-card{display:none}
+.hs-rank.lg .hs-h b{display:flex;align-items:center;gap:6px} .hs-rank.lg .hs-h b .lg-hex{width:18px;flex:none;background:linear-gradient(160deg,color-mix(in srgb,var(--lg-c) 55%,#fff),var(--lg-c))}
+.hs-list li.lg-sub{display:block;background:transparent;padding:0 4px 2px;font-size:.82rem;color:var(--muted);font-weight:700}
+.hs-list li.up .rk{color:var(--good)} .hs-list li.down .rk{color:var(--bad)}
+@media (min-width:641px) and (min-height:521px){ body.lg-on #rankPanel #lgView{flex:1 1 0} }
+@media (max-width:640px), (max-height:520px) and (orientation:landscape){
+  body.lg-on[data-page="rank"] .main{overflow:hidden}
+  body.lg-on #rankPanel{flex:1 1 0;min-height:0;display:flex;flex-direction:column}
+  body.lg-on #rankPanel .pane-head p{display:none}
+  #lgView{flex:1 1 0} .lg-stats{display:none} .lg-head p{display:none}
+  .lg-head h3{font-size:1.4rem} .lg-tiers{margin-top:6px} .lg-tiers li{font-size:.7rem}
+  .lg-me{gap:12px} .lg-me b{font-size:1.05rem} .lg-me small{font-size:.82rem}
+}
+@media (max-width:640px){ body.lg-on #rankPer{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;max-width:100%} body.lg-on #rankPer::-webkit-scrollbar{display:none} body.lg-on #rankPer button{flex:none} #lgView{grid-template-columns:1fr;grid-template-rows:auto minmax(0,1fr)} .lg-left{gap:10px} .lg-left>.card{padding:12px 14px} }
+@media (max-height:520px) and (orientation:landscape){ .lg-left{gap:8px} .lg-left>.card{padding:10px 12px} .lg-tiers .lg-hex{width:24px} .lg-tiers li.cur .lg-hex{width:30px} .lg-pos{width:44px;font-size:1.2rem} }
+@media (min-width:641px) and (max-width:900px) and (orientation:portrait){ #lgView{grid-template-columns:1fr;grid-template-rows:auto minmax(0,1fr)} .lg-stats{display:none} }
+/* ==== fin Ligues ==== */

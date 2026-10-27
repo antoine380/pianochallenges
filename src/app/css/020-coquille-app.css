@@ -1,0 +1,21 @@
+/* ---------- App shell: sidebar + main, sized to the screen ---------- */
+html,body{height:100%}
+body{margin:0;padding:0;overflow:hidden}
+.app{display:grid;grid-template-columns:auto minmax(0,1fr);height:100vh;height:100dvh;padding-top:env(safe-area-inset-top, 0px)}
+.main{overflow-y:auto;overflow-x:hidden;min-width:0;padding:16px max(22px, env(safe-area-inset-right, 0px)) calc(16px + env(safe-area-inset-bottom, 0px)) 22px}
+.wrap{height:100%;max-width:1240px;margin:0 auto;display:flex;flex-direction:column;gap:12px}
+.mbar,.side-scrim{display:none}
+.shell{display:flex;flex-direction:column;min-width:0;min-height:0;background:var(--bg)}
+.shell > .main{flex:1;min-height:0}
+
+.side{--sw:236px;width:var(--sw);display:flex;flex-direction:column;gap:12px;background:var(--surface);border-right:1px solid var(--line);
+  padding:14px 10px calc(12px + env(safe-area-inset-bottom, 0px)) max(10px, env(safe-area-inset-left, 0px));overflow-y:auto;overflow-x:hidden;transition:width .2s ease;scrollbar-width:none}
+.side::-webkit-scrollbar{display:none}
+.side-head{padding:0 6px}
+.nav-item{display:flex;align-items:center;gap:12px;width:100%;border:0;background:transparent;border-radius:10px;padding:8px 10px;text-align:left;color:var(--muted);
+  font-family:var(--f-display);font-weight:700;font-size:.98rem;white-space:nowrap;min-height:42px}
+.nav-item svg{width:22px;height:22px;flex:none;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.nav-item .lbl{overflow:hidden;text-overflow:ellipsis;min-width:0}
+@media (hover:hover) and (pointer:fine){.nav-item:hover{color:var(--ink);background:var(--surface-2)}}
+.nav-item[aria-current="page"]{background:var(--ink);color:var(--bg)}
+.side-nav{display:flex;flex-direction:column;gap:2px}

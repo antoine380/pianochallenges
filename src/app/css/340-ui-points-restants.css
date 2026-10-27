@@ -1,0 +1,35 @@
+/* ==== UI points restants (25/10) ==== */
+/* Entraînement du jour : un résumé en tête + des cartes compactes sur 2 rangées (10 grandes cartes presque vides avant) */
+.up-dsum{display:none;flex-wrap:wrap;align-items:center;gap:var(--sp-2,8px) var(--sp-4,16px);padding:var(--sp-3,12px) var(--card-pad,16px);background:var(--surface);border-radius:var(--r-lg);box-shadow:var(--shadow-card);flex:none}
+body[data-page="daily"]:not(.playing) .up-dsum{display:flex}
+.up-dk{display:flex;align-items:baseline;gap:6px;white-space:nowrap} .up-dk b{font:700 clamp(1.3rem,2.6vh,1.7rem)/1 var(--f-display);color:var(--ink)} .up-dk span{font-weight:700;color:var(--muted);font-size:.9rem}
+.up-dsecs{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:6px;flex:1 1 100%}
+.up-dsecs li{display:inline-flex;align-items:center;gap:6px;padding:5px 10px 5px 6px;border-radius:999px;background:var(--surface-2);font-weight:800;font-size:.82rem;white-space:nowrap}
+.up-dsecs svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;color:var(--brand)} .up-dsecs i{font-style:normal;color:var(--muted);font-weight:700}
+body[data-page="daily"]:not(.playing) .dtl-wrap{flex:none;display:block}
+body[data-page="daily"]:not(.playing) .dtl{--dd:clamp(36px,7vh,64px);flex:none;grid-template-columns:repeat(6,minmax(0,1fr));grid-auto-rows:auto;align-content:start}
+body[data-page="daily"]:not(.playing) .dtl li{padding:clamp(22px,4.4vh,40px) 6px clamp(10px,3vh,28px);min-width:0}
+body[data-page="daily"]:not(.playing) .dtl .st-l{font-size:clamp(.74rem,min(1.6vh,1.35vw),1rem)}
+@media (max-width:900px) and (orientation:portrait){ body[data-page="daily"]:not(.playing) .dtl{grid-template-columns:repeat(6,minmax(0,1fr));--dd:clamp(34px,5vh,50px)} }
+@media (max-width:640px){ body[data-page="daily"]:not(.playing) .dtl{grid-template-columns:repeat(4,minmax(0,1fr));--dd:34px;gap:8px} body[data-page="daily"]:not(.playing) .dtl li{padding:22px 3px 8px} body[data-page="daily"]:not(.playing) .dtl .st-l{font-size:.7rem}
+  .up-dsum{gap:6px 12px;padding:10px 12px} .up-dsecs li{font-size:.74rem;padding:3px 8px 3px 4px} .up-dsecs svg{width:15px;height:15px} }
+@media (max-height:520px) and (orientation:landscape){ body[data-page="daily"]:not(.playing) .dtl{--dd:28px;gap:8px} body[data-page="daily"]:not(.playing) .dtl li{padding:18px 4px 6px} body[data-page="daily"]:not(.playing) .dtl .st-l{font-size:.72rem}
+  .up-dsum{padding:6px 12px;gap:4px 12px} .up-dk b{font-size:1.1rem} .up-dk span{font-size:.8rem} .up-dsecs li{padding:2px 8px 2px 4px;font-size:.72rem} .up-dsecs svg{width:14px;height:14px} }
+/* Classement de la semaine pour un invité : une invitation (les ligues + « S'inscrire ») au lieu d'une grande carte vide */
+.hs-rank.up-inv .hs-more{display:none}
+.hs-rank.up-inv .hs-list{height:calc(100% - 30px)}
+.hs-list li.up-rinv{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:var(--sp-2,8px);background:transparent;padding:var(--sp-2,8px) 4px;flex:1 1 auto;font-size:inherit}
+.up-hexes{display:flex;align-items:flex-end;gap:6px} .up-hexes .lg-hex{width:clamp(18px,2.2vw,26px);background:linear-gradient(160deg,color-mix(in srgb,var(--lg-c) 55%,#fff),var(--lg-c))} .up-hexes .lg-hex:last-child{width:clamp(26px,3.2vw,38px)}
+.up-rinv b{font:700 1.15rem/1.2 var(--f-display);white-space:normal;overflow:visible} .up-rinv p{margin:0;color:var(--muted);font-size:.86rem;line-height:1.4;max-width:30ch}
+.up-rinv .btn{margin-top:var(--sp-1,4px);min-height:44px;padding-inline:22px}
+@media (max-height:820px){ .up-rinv b{font-size:1rem} .up-rinv p{font-size:.8rem} .up-rinv .btn{min-height:40px} }
+/* tuto d'import en téléphone paysage : les cartes gardent le titre et la phrase principale (le reste était coupé en bas) */
+@media (max-height:500px) and (orientation:landscape){ .imp-help .imp-steps .imp-sx p:not(:first-child){display:none} .imp-help .imp-ill{height:34px} .imp-help .imp-steps li{padding:8px 10px 10px} }
+/* nom du bot en entier sur téléphone (« Hecto… » à côté du bouton) : le nom passe sur 2 lignes et le bouton dessous */
+@media (max-width:640px){ .du-bcard{flex-wrap:wrap} .du-bcard b{white-space:normal;overflow:visible;text-overflow:clip} .du-bcard .du-go{flex:1 1 100%}
+  .du-nm b{white-space:normal;overflow-wrap:anywhere;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;line-height:1.1} }
+@media (max-height:420px){ .du-bcard b{white-space:normal;overflow:visible;text-overflow:clip} }
+/* commandes segmentées (Réglages, Progression, quiz, chrono) : 40 px de haut, 44 px sur téléphone */
+:is(.set-sec .seg,.set-nav,.set-tabs,#quizPanel .seg,#suTimer) button{min-height:40px}
+@media (max-width:640px), (max-height:500px) and (orientation:landscape){ :is(.set-sec .seg,.set-nav,.set-tabs,#quizPanel .seg,#suTimer) button{min-height:44px} }
+/* ==== fin UI points restants ==== */
