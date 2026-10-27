@@ -1,0 +1,29 @@
+<!doctype html><meta charset="utf-8">
+<style>
+ body{font:13px/1.4 Nunito,Inter,system-ui,sans-serif;margin:0;padding:14px;color:#2b2560}
+ h1{font-size:15px;margin:0 0 8px} p{margin:0 0 10px;color:#5a567f} label{display:block;margin:4px 0}
+ button{font:inherit;font-weight:700;border:0;border-radius:999px;padding:8px 16px;background:#7a5bf5;color:#fff;cursor:pointer} button[disabled]{opacity:.5}
+ #log{margin-top:10px;height:250px;overflow:auto;background:#f1f2fb;border-radius:10px;padding:8px;font-size:12px;white-space:pre-wrap}
+ #dl{display:none;margin-left:6px;background:#26805a}
+</style>
+<h1>Revue des écrans · calques modifiables</h1>
+<p>Choisis les fichiers <b>secNN-k.bin</b> du dossier <code>figma-baseline/_figma</code> (tous ceux d'une ou plusieurs sections). Les anciennes captures des sections choisies sont remplacées.</p>
+<input id="f" type="file" multiple accept=".bin,.png">
+<label><input id="ver" type="checkbox" checked> Enregistrer une version avant (historique)</label>
+<label><input id="clr" type="checkbox" checked> Retirer les anciennes captures des sections</label>
+<button id="go" disabled>Construire</button><button id="dl">Télécharger l'index</button>
+<div id="log"></div>
+<script>
+const $ = id => document.getElementById(id), log = t => { $('log').textContent += t + '\n'; $('log').scrollTop = 1e9; };
+let index = null;
+$('f').onchange = () => { $('go').disabled = !$('f').files.length; };
+$('go').onclick = async () => { $('go').disabled = true; const files = [];
+  for (const f of $('f').files) files.push({ name: f.name, bytes: new Uint8Array(await f.arrayBuffer()) });
+  log('Envoi de ' + files.length + ' fichier(s)…');
+  parent.postMessage({ pluginMessage: { type: 'run', files, opts: { version: $('ver').checked, clear: $('clr').checked } } }, '*'); };
+onmessage = e => { const m = e.data.pluginMessage; if (!m) return;
+  if (m.type === 'prog') { const l = $('log'); const lines = l.textContent.split('\n'); if (lines.length > 1 && lines[lines.length - 2].startsWith('· ')) lines.splice(lines.length - 2, 1); l.textContent = lines.join('\n') + '· ' + m.text + '\n'; }
+  else if (m.type === 'log') log(m.text); else if (m.type === 'err') { log('ERREUR : ' + m.text); $('go').disabled = false; }
+  else if (m.type === 'done') { index = m.index; log('Terminé : ' + Object.keys(m.index.screens).length + ' écrans.'); $('dl').style.display = 'inline-block'; } };
+$('dl').onclick = () => { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([JSON.stringify(index, null, 1)], { type: 'application/json' })); a.download = 'figma-index.json'; a.click(); };
+</script>
