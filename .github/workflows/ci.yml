@@ -1,0 +1,169 @@
+# CI de Piano Challenges : on pousse sur `dev` (jamais directement sur `main`).
+# À chaque push sur dev : construction à jour, syntaxe JS, batterie RAPIDE de tests (en parallèle), SQL, fonctions Edge.
+# Si tout passe : `main` avance en avance rapide (fast-forward) jusqu'à ce commit → le webhook GitHub d'OVH met le site en ligne.
+# Les tests longs (r18_layout, tous les r*, scripts t*) tournent la nuit : .github/workflows/nightly.yml.
+# Voir un échec : onglet Actions du dépôt > « CI (dev → main) » > l'exécution en rouge > le job et l'étape en rouge (résumé en bas de page).
+# Urgence : Actions > « CI (dev → main) » > Run workflow sur dev avec « skip_tests » (promotion sans tests) ; ou, en dernier recours,
+#   git push origin dev:main depuis son poste (voir CLAUDE.md, « Workflow habituel »).
+name: CI (dev → main)
+
+on:
+  push:
+    branches: [dev]
+  workflow_dispatch:
+    inputs:
+      skip_tests:
+        description: "URGENCE : mettre en ligne sans lancer les tests"
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+# un nouveau push sur dev annule l'exécution précédente : seul le dernier commit est promu
+concurrency:
+  group: ci-dev
+  cancel-in-progress: true
+
+env:
+  PW_VERSION: "1.56.0"          # = tools/audit/package.json (Node) et le paquet Python : un seul Chromium pour les deux
+  FORCE_COLOR: "0"
+
+jobs:
+  build:
+    name: Construction à jour + syntaxe JS
+    if: ${{ !inputs.skip_tests }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: index.html, version.txt et live/ correspondent à la source
+        # On refait la construction avec l'horodatage déjà commité (version.txt) : à source égale, les fichiers sont identiques à l'octet.
+        run: |
+          PC_BUILD_STAMP="$(tr -d '\r\n' < version.txt)" python3 tools/build.py
+          CHANGED="$(git status --porcelain --untracked-files=all -- index.html version.txt live)"
+          if [ -n "$CHANGED" ]; then
+            echo "$CHANGED"
+            git diff --stat -- index.html version.txt live
+            echo "::error title=Construction pas à jour::index.html / live/ ne correspondent pas à src/piano-challenges.html. Lance « python3 tools/build.py » puis commite index.html, version.txt et live/ avec la source."
+            exit 1
+          fi
+          echo "Construction à jour (version $(cat version.txt))"
+      - name: Syntaxe JS
+        run: node tools/check_js.mjs
+
+  tests:
+    name: Tests ${{ matrix.shard }}
+    if: ${{ !inputs.skip_tests }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    strategy:
+      fail-fast: false           # tous les groupes vont au bout : on voit tous les échecs d'un coup (la mise en ligne est bloquée dès un échec)
+      matrix:
+        include:
+          # répartition par durée (mesurée en local le 27/10/2026, entre parenthèses) : chaque groupe ≈ 3-8 min de tests
+          # + ~2 min de préparation, chacun sur son runner avec son serveur sur un port libre.
+          # A ≈ 5 min · B ≈ 5 min (test_windows 4,5 min) · C ≈ 5 min · D ≈ 8 min (r49 3,3 min) · E ≈ 4 min
+          - shard: "A · non-régression"
+            tests: >-
+              tools/audit/regression.mjs tools/audit/r1_whitelist.mjs tools/audit/r2_windows.mjs tools/audit/r3_paused.mjs
+              tools/audit/r4_unplug.mjs tools/audit/r5_loneC.mjs tools/audit/r8_shortcuts.mjs tools/audit/r9_setup.mjs tools/audit/test_sync.mjs
+          - shard: "B · fenêtres et boutons (Python)"
+            tests: >-
+              tools/test_windows.py tools/test_buttons.py
+          - shard: "C · démarrage, quiz, duels"
+            tests: >-
+              tools/audit/r6_quiz.mjs tools/audit/r7_online.mjs tools/audit/r10_duel.mjs tools/audit/r12_start.mjs
+              tools/audit/r16_activation.mjs tools/audit/r19_confirm.mjs tools/audit/r44_onboarding.mjs
+          - shard: "D · gammes, MIDI, jeux"
+            tests: >-
+              tools/audit/r46_gammes1.mjs tools/audit/r49_sc1train.mjs tools/audit/r52_sc1v3.mjs tools/audit/r50_midi3.mjs
+              tools/audit/r51_jeux3.mjs
+          - shard: "E · premium, famille, mise à jour"
+            tests: >-
+              tools/audit/r15_premium.mjs tools/audit/r45_famille.mjs tools/audit/r47_live.mjs tools/audit/r43_bugs.mjs
+              tools/audit/r11_notifs.mjs tools/audit/r13_audit.mjs tools/audit/r14_staff.mjs tools/audit/r42_finitions.mjs
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup-tests
+      - name: Tests
+        env:
+          CI_SHARD: ${{ matrix.shard }}
+          RETRY: "r7_online"     # appariement au hasard : instable, relancé une fois
+          TEST_TIMEOUT: "600"
+        run: bash tools/audit/ci_run.sh ${{ matrix.tests }}
+
+  sql:
+    name: SQL (Postgres 16 jetable)
+    if: ${{ !inputs.skip_tests }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - name: Postgres 16
+        run: |
+          if [ ! -x /usr/lib/postgresql/16/bin/initdb ]; then sudo apt-get update -q && sudo apt-get install -y -q postgresql-16; fi
+          sudo pg_ctlcluster 16 main start || sudo systemctl start postgresql
+          sudo -u postgres psql -Atc "select version()"
+      - name: Migrations et vérifications (tools/audit/sql/run.sh)
+        run: sudo bash tools/audit/sql/run.sh
+
+  functions:
+    name: Fonctions Edge (deno)
+    if: ${{ !inputs.skip_tests }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: denoland/setup-deno@v2
+        with:
+          deno-version: v2.x
+      - name: deno check
+        run: deno check --node-modules-dir=none --no-lock supabase/functions/*/index.ts
+      - name: fn_pay_test.ts (réseau simulé)
+        run: deno run --node-modules-dir=none --no-lock --allow-env --allow-read --allow-net=127.0.0.1 tools/audit/fn_pay_test.ts
+
+  promote:
+    name: Mise en ligne (main ← dev)
+    needs: [build, tests, sql, functions]
+    # tourne aussi quand les tests sont sautés en urgence (jobs « skipped »), jamais après un échec ou une annulation
+    if: ${{ !cancelled() && github.ref == 'refs/heads/dev' && !contains(needs.*.result, 'failure') && !contains(needs.*.result, 'cancelled') }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    permissions:
+      contents: write   # pousser sur main
+      actions: write    # relancer le workflow des photos de claviers (voir plus bas)
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          # PROMOTE_TOKEN (facultatif) : jeton fin « Contents: read and write » sur ce dépôt. Sans lui, GITHUB_TOKEN.
+          token: ${{ secrets.PROMOTE_TOKEN || github.token }}
+      - name: Avance rapide de main jusqu'à ce commit
+        env:
+          SHA: ${{ github.sha }}
+          HAS_PAT: ${{ secrets.PROMOTE_TOKEN != '' }}
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          git fetch --no-tags origin main
+          OLD=$(git rev-parse origin/main)
+          if git merge-base --is-ancestor "$SHA" "$OLD"; then
+            echo "main contient déjà $SHA : rien à faire."; exit 0
+          fi
+          if ! git merge-base --is-ancestor "$OLD" "$SHA"; then
+            echo "::error title=main a divergé::main contient des commits absents de dev (poussés directement sur main ?). Sur ton poste : git checkout dev && git pull && git merge origin/main && git push origin dev — la CI repartira."
+            exit 1
+          fi
+          git push origin "$SHA:refs/heads/main"
+          echo "main : $OLD → $SHA (OVH déploie via son webhook)" | tee -a "$GITHUB_STEP_SUMMARY"
+          # Un push fait avec GITHUB_TOKEN ne lance aucun autre workflow : on relance nous-mêmes celui des photos de claviers
+          # quand tools/keyboards.json a changé (avec PROMOTE_TOKEN, le push le déclenche tout seul).
+          if [ "$HAS_PAT" != "true" ] && git diff --name-only "$OLD" "$SHA" | grep -qx 'tools/keyboards.json'; then
+            gh workflow run keyboard-images.yml --ref main && echo "Workflow « Keyboard guide photos » relancé sur main."
+          fi

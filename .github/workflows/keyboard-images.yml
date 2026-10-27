@@ -1,5 +1,7 @@
 # Downloads the official keyboard photos into assets/claviers/ and rebuilds /clavier and /keyboard.
 # Runs when tools/keyboards.json changes on main, or by hand (Actions > Keyboard guide photos > Run workflow).
+# Since the dev → main CI (ci.yml), main is moved by GITHUB_TOKEN, which starts no workflow: ci.yml starts this one itself
+# when keyboards.json changed; the commit made here on main is then merged back into dev.
 name: Keyboard guide photos
 on:
   workflow_dispatch:
@@ -25,13 +27,24 @@ jobs:
         with:
           python-version: "3.12"
       - run: pip install pillow
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
       - run: python3 tools/fetch_keyboard_images.py ${{ inputs.force && '--force' || '' }}
+      # les photos sont dans assets/ : la liste des fichiers de l'app iOS (live/manifest.json) doit suivre, sinon la CI refuse le build
+      - run: node tools/live_manifest.mjs
       - name: Commit photos and rebuilt pages
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898732+github-actions[bot]@users.noreply.github.com"
-          git add assets/claviers clavier keyboard
+          git add assets/claviers clavier keyboard live
           if git diff --cached --quiet; then echo "Nothing new"; exit 0; fi
           git commit -m "Guide claviers : photos officielles"
           git pull --rebase origin main
           git push
+      - name: Reporter le commit sur dev (sinon la prochaine mise en ligne dev → main ne serait plus une avance rapide)
+        run: |
+          git fetch origin dev || { echo "pas de branche dev"; exit 0; }
+          git checkout -B dev origin/dev
+          git merge --no-edit origin/main -m "Fusion de main (photos des claviers) dans dev" || { echo "::error ::Conflit en fusionnant main dans dev : à faire à la main (git checkout dev && git merge origin/main)"; exit 1; }
+          git push origin dev

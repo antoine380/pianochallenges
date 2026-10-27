@@ -1,0 +1,95 @@
+# Tests complets de Piano Challenges, chaque nuit sur main (et à la demande : Actions > « Tests complets (nuit) » > Run workflow).
+# Tous les tests r*.mjs (regression.mjs compris, dont r18_layout, ~17-20 min), test_*.mjs, les scripts d'exploration t*.mjs encore valides (plantage seulement),
+# les tests Python, le SQL et les fonctions Edge. Un nouveau test r*.mjs est pris automatiquement.
+# En cas d'échec : une issue « Tests de la nuit en échec » est ouverte (ou commentée si elle l'est déjà) ; la fermer une fois réparé.
+name: Tests complets (nuit)
+
+on:
+  schedule:
+    - cron: "17 2 * * *"      # 2 h 17 UTC (3 h 17 / 4 h 17 à Paris)
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: nightly
+  cancel-in-progress: false
+
+jobs:
+  tests:
+    name: Tests ${{ matrix.shard }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    strategy:
+      fail-fast: false         # la nuit on veut la liste complète des échecs
+      matrix:
+        shard: ["1", "2", "3", "4", "layout"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup-tests
+      - name: Liste des tests du groupe
+        id: list
+        env:
+          SHARD: ${{ matrix.shard }}
+        run: |
+          if [ "$SHARD" = layout ]; then
+            L="tools/audit/r18_layout.mjs tools/test_windows.py tools/test_buttons.py"
+          else
+            # scripts d'exploration t*.mjs (plantage seulement) : ceux qui tournent encore ; t1b_denied, t2_pages, t2b_hidden et t6b_miccpu
+            # sont périmés (délais dépassés sur l'app actuelle) et restent hors CI tant qu'ils ne sont pas remis à jour.
+            T="t0_explore t1_midi t1c_revealC t3_routing t3b_paused t4_play t5_screenkbd t5b_twofinger t6_mic t7_leaks"
+            L=$( { ls tools/audit/r*.mjs tools/audit/test_*.mjs; for t in $T; do echo "tools/audit/$t.mjs"; done; } \
+                | grep -v '/r18_layout\.mjs$' | sort -V \
+                | awk -v s="$SHARD" '(NR-1) % 4 == s-1' | tr '\n' ' ')
+          fi
+          echo "tests=$L" >> "$GITHUB_OUTPUT"; echo "$L"
+      - name: Tests
+        env:
+          CI_SHARD: ${{ matrix.shard }}
+          RETRY: "r7_online"
+          TEST_TIMEOUT: "1800"
+        run: bash tools/audit/ci_run.sh ${{ steps.list.outputs.tests }}
+
+  sql:
+    name: SQL (Postgres 16 jetable)
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - name: Postgres 16
+        run: |
+          if [ ! -x /usr/lib/postgresql/16/bin/initdb ]; then sudo apt-get update -q && sudo apt-get install -y -q postgresql-16; fi
+          sudo pg_ctlcluster 16 main start || sudo systemctl start postgresql
+      - run: sudo bash tools/audit/sql/run.sh
+
+  functions:
+    name: Fonctions Edge (deno)
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: denoland/setup-deno@v2
+        with:
+          deno-version: v2.x
+      - run: deno check --node-modules-dir=none --no-lock supabase/functions/*/index.ts
+      - run: deno run --node-modules-dir=none --no-lock --allow-env --allow-read --allow-net=127.0.0.1 tools/audit/fn_pay_test.ts
+
+  report:
+    name: Signaler l'échec
+    needs: [tests, sql, functions]
+    if: ${{ failure() && github.event_name == 'schedule' }}
+    runs-on: ubuntu-24.04
+    permissions:
+      issues: write
+    steps:
+      - name: Ouvrir ou commenter l'issue
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          RUN: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          T="Tests de la nuit en échec"
+          N=$(gh issue list --state open --search "\"$T\" in:title" --json number --jq '.[0].number // empty')
+          B="Échec des tests complets sur main ($(date -u +%F), commit ${GITHUB_SHA::7}) : $RUN"
+          if [ -n "$N" ]; then gh issue comment "$N" --body "$B"; else gh issue create --title "$T" --body "$B — fermer l'issue une fois réparé."; fi

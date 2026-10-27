@@ -14,6 +14,14 @@ PW_CHROMIUM=/opt/pw-browsers/chromium-1194/chrome-linux/chrome node r1_whitelist
 - `PORT=8771` surcharge le port (défaut 8767), ou `PC_URL=http://…/` l'adresse complète.
 - `PW_CHROMIUM` : chemin de l'exécutable Chromium (sinon celui de Playwright).
 - `./run_all.sh` lance les tests de non-régression `r*.mjs` à la suite et s'arrête au premier échec.
+- `bash tools/audit/ci_run.sh <tests…>` (depuis n'importe où) : ce que fait la CI. Démarre son propre serveur sur un port libre, lance chaque test (`.mjs` → node, `.py` → python3) avec un délai (`TEST_TIMEOUT`, 900 s), relance une fois ceux de `RETRY` (ex. `RETRY=r7_online`), résume et sort en 1 si un test échoue.
+- Playwright : `package.json` ici fixe la version (1.56.0, la même que le paquet Python de la CI : un seul Chromium). La CI fait `npm ci --prefix tools/audit` ; en local, le lien `node_modules` ci-dessus suffit toujours.
+
+## CI (GitHub Actions)
+
+- `.github/workflows/ci.yml` : à chaque push sur `dev` → construction à jour (`PC_BUILD_STAMP=$(cat version.txt) python3 tools/build.py` ne doit rien changer), `node tools/check_js.mjs`, batterie rapide en 5 groupes parallèles, `sql/run.sh`, `deno check` + `fn_pay_test.ts`, puis avance rapide de `main` (mise en ligne OVH). Les tests bloquants sont listés dans le fichier (groupes A à E).
+- `.github/workflows/nightly.yml` : chaque nuit sur `main`, **tous** les `r*.mjs`, `test_*.mjs`, `regression.mjs`, `t*.mjs` (plantage seulement), les tests Python, le SQL et deno ; ouvre une issue en cas d'échec. Un nouveau `r*.mjs` y entre tout seul ; l'ajouter aussi dans un groupe de `ci.yml` s'il est rapide (< 1 min) et important.
+- Les services en ligne de l'app (Supabase du projet, jsdelivr, polices Google, le site) sont coupés sur les runners (`/etc/hosts`, action `.github/actions/setup-tests`) : un test qui en a besoin doit les simuler (`fakesb.mjs`, `page.route`).
 
 ## Tests de non-régression (`process.exit(1)` en cas d'échec)
 

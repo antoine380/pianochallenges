@@ -1,0 +1,40 @@
+# Prépare un runner pour les tests Playwright (utilisé par ci.yml et nightly.yml).
+# Node 22 + Playwright de tools/audit/package.json, Python 3.12 + le même Playwright, Chromium (avec ses dépendances système),
+# puis coupe l'accès aux services en ligne de l'app (Supabase réel, CDN, polices Google, site) : les tests tournent comme en local, hors ligne.
+name: Préparer les tests
+description: Node, Python, Playwright, Chromium et réseau de l'app coupé
+runs:
+  using: composite
+  steps:
+    - uses: actions/setup-node@v4
+      with:
+        node-version: "22"
+        cache: npm
+        cache-dependency-path: tools/audit/package-lock.json
+    - uses: actions/setup-python@v5
+      with:
+        python-version: "3.12"
+    - name: Playwright (Node et Python, même version)
+      shell: bash
+      run: |
+        npm ci --prefix tools/audit --no-audit --no-fund
+        PW=$(node -p "require('./tools/audit/package.json').devDependencies.playwright")
+        python3 -m pip install --quiet "playwright==$PW"
+        echo "Playwright $PW (Node : $(node -p "require('./tools/audit/node_modules/playwright/package.json').version"), Python : $(python3 -c 'import importlib.metadata as m; print(m.version("playwright"))'))"
+    - name: Cache de Chromium
+      uses: actions/cache@v4
+      with:
+        path: ~/.cache/ms-playwright
+        key: pw-chromium-${{ runner.os }}-${{ hashFiles('tools/audit/package-lock.json') }}
+    - name: Chromium et dépendances système
+      shell: bash
+      run: cd tools/audit && npx --no-install playwright install --with-deps chromium
+    - name: Couper les services en ligne de l'app
+      # Les tests ne doivent dépendre d'aucun service réel : Supabase du projet, jsdelivr (SDK de la source), polices Google, le site.
+      # Ceux qui en ont besoin les simulent (fakesb.mjs, page.route) ; les autres doivent marcher sans réseau, comme en local.
+      shell: bash
+      run: |
+        for h in ijdxeasxmgevuchyuenn.supabase.co cdn.jsdelivr.net fonts.googleapis.com fonts.gstatic.com pianochallenges.com www.pianochallenges.com lh3.googleusercontent.com; do
+          echo "0.0.0.0 $h" | sudo tee -a /etc/hosts >/dev/null
+        done
+        getent hosts ijdxeasxmgevuchyuenn.supabase.co || true

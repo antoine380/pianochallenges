@@ -1,0 +1,2 @@
+# dépendances installées (npm ci dans tools/audit pour la CI, ou lien local)
+node_modules

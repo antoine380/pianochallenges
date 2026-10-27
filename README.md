@@ -1,5 +1,7 @@
 # Piano Challenges
 
+[![CI (dev → main)](https://github.com/antoine380/pianochallenges/actions/workflows/ci.yml/badge.svg?branch=dev)](https://github.com/antoine380/pianochallenges/actions/workflows/ci.yml) [![Tests complets (nuit)](https://github.com/antoine380/pianochallenges/actions/workflows/nightly.yml/badge.svg)](https://github.com/antoine380/pianochallenges/actions/workflows/nightly.yml)
+
 Learn piano scales, chords, inversions, harmony and chord progressions by playing on your own piano (MIDI or microphone), with ear training, daily practice, levels and challenges.
 
 Live site: https://pianochallenges.com
@@ -7,6 +9,8 @@ Live site: https://pianochallenges.com
 ## Deployment
 
 The site is a static page. OVHcloud web hosting deploys this repository automatically (Git integration on the `main` branch, triggered by a GitHub webhook on each push).
+
+Changes are pushed to the `dev` branch, never directly to `main`. GitHub Actions (`.github/workflows/ci.yml`) checks that the build is up to date, runs the fast test suite, the SQL and the Edge functions, then fast-forwards `main` to the tested commit, which OVH deploys. The full suite runs every night on `main` (`.github/workflows/nightly.yml`).
 
 - `src/piano-challenges.html` – the editable source of the whole application
 - `tools/build.py` – builds `index.html` from the source (`python3 tools/build.py`)
