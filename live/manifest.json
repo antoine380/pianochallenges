@@ -382,8 +382,8 @@
   },
   {
    "path": "play/index.html",
-   "sha256": "ce4def3df6dca34d8cd8e58785859069226b347201f96af4fc48ae6c05fa910b",
-   "size": 94525,
+   "sha256": "405d51fdf26164542caac28b14406f42fdaa5d622e5130a4efd9adda23e4caa9",
+   "size": 94539,
    "src": "live/files/play/index.html"
   }
  ]
