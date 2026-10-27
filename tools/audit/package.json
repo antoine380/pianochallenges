@@ -3,6 +3,8 @@
   "private": true,
   "description": "Playwright pour les tests de tools/audit (CI : npm ci ici ; en local, un lien node_modules suffit). Même version que le paquet Python playwright de la CI : un seul Chromium.",
   "devDependencies": {
+    "eslint": "10.12.0",
+    "globals": "17.12.0",
     "playwright": "1.56.0"
   }
 }

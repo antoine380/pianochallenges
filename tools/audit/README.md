@@ -19,7 +19,7 @@ PW_CHROMIUM=/opt/pw-browsers/chromium-1194/chrome-linux/chrome node r1_whitelist
 
 ## CI (GitHub Actions)
 
-- `.github/workflows/ci.yml` : à chaque push sur `dev` → construction à jour (`PC_BUILD_STAMP=$(cat version.txt) python3 tools/build.py` ne doit rien changer), `node tools/check_js.mjs`, batterie rapide en 5 groupes parallèles, `sql/run.sh`, `deno check` + `fn_pay_test.ts`, puis avance rapide de `main` (mise en ligne OVH). Les tests bloquants sont listés dans le fichier (groupes A à E).
+- `.github/workflows/ci.yml` : à chaque push sur `dev` → construction à jour (`PC_BUILD_STAMP=$(cat version.txt) python3 tools/build.py` ne doit rien changer), `node tools/check_js.mjs`, `node tools/lint.mjs` (ESLint, version fixée ici dans `package.json`), batterie rapide en 5 groupes parallèles, `sql/run.sh`, `deno check` + `fn_pay_test.ts`, puis avance rapide de `main` (mise en ligne OVH). Les tests bloquants sont listés dans le fichier (groupes A à E).
 - `.github/workflows/nightly.yml` : chaque nuit sur `main`, **tous** les `r*.mjs`, `test_*.mjs`, `regression.mjs`, `t*.mjs` (plantage seulement), les tests Python, le SQL et deno ; ouvre une issue en cas d'échec. Un nouveau `r*.mjs` y entre tout seul ; l'ajouter aussi dans un groupe de `ci.yml` s'il est rapide (< 1 min) et important.
 - Les services en ligne de l'app (Supabase du projet, jsdelivr, polices Google, le site) sont coupés sur les runners (`/etc/hosts`, action `.github/actions/setup-tests`) : un test qui en a besoin doit les simuler (`fakesb.mjs`, `page.route`).
 
