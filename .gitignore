@@ -1,2 +1,5 @@
 # dépendances installées (npm ci dans tools/audit pour la CI, ou lien local)
 node_modules
+
+# page complète assemblée par « python3 tools/build.py --single » (prévisualisation)
+build/

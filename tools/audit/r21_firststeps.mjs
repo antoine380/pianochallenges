@@ -6,6 +6,7 @@
 // Usage: python3 -m http.server <PORT> at the repo root, then PORT=<PORT> node tools/audit/r21_firststeps.mjs
 import { readFileSync } from 'fs';
 import { launch, URL, INIT } from './lib.mjs';
+import { readSource } from '../source.mjs'; // source assemblée depuis src/app/ (voir src/app/README.md)
 const W = (p, ms) => p.waitForTimeout(ms);
 const fails = []; const check = (n, ok, d) => { console.log((ok ? 'OK   ' : 'FAIL ') + n + (d !== undefined && !ok ? ' — ' + JSON.stringify(d) : '')); if (!ok) fails.push(n); };
 const errs = [];
@@ -36,7 +37,7 @@ async function p01Play(p, wrongPlan = [], showAt = -1) { // wrongPlan[i] = mista
 const { browser } = await launch({ mode: 'ok' }); // the shared browser (contexts below)
 
 // ---------- CA-18 / CA-19: every pp* text in both languages, no blaming words in French
-{ const src = readFileSync(new globalThis.URL('../../src/piano-challenges.html', import.meta.url), 'utf8');
+{ const src = readSource();
   const fr = src.slice(src.indexOf('  fr:{help:'), src.indexOf('  en:{help:')), en = src.slice(src.indexOf('  en:{help:'), src.indexOf('const t = k =>'));
   const keys = b => new Set([...b.matchAll(/[\s,{](pp[A-Za-z0-9]*)\s*:/g)].map(m => m[1]));
   const kf = keys(fr), ke = keys(en), miss = [...kf].filter(k => !ke.has(k)).concat([...ke].filter(k => !kf.has(k)).map(k => 'fr:' + k));

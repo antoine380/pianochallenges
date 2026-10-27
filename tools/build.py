@@ -1,8 +1,31 @@
-# Builds the OVH-ready index.html (repo root) from the editable source src/piano-challenges.html.
-# Usage (from the repo root): python3 tools/build.py
-import re, pathlib
+# Construit index.html (racine, servi par OVH et copié dans l'app) à partir de la source découpée src/app/ (voir src/app/README.md).
+# Usage (racine du dépôt) :
+#   python3 tools/build.py            → index.html, version.txt, live/ (mise à jour à distance de l'app)
+#   python3 tools/build.py --single   → build/piano-challenges.html seulement : la page complète, prévisualisable seule
+#                                       (polices Google, Supabase via jsdelivr ; ancien src/piano-challenges.html)
+import re, pathlib, sys
 ROOT=pathlib.Path(__file__).resolve().parent.parent
-SRC=(ROOT/"src/piano-challenges.html").read_text(encoding="utf-8")
+APP=ROOT/"src/app"
+HDR=re.compile(r'// fragment [^\n]*voir src/app/README\.md\n')
+def assemble():
+    """Concatène src/app/** dans l'ordre de src/app/order.txt (sans la 1re ligne « // fragment … » des .js). Même logique : tools/source.mjs."""
+    out=[]
+    for rel in (APP/"order.txt").read_text(encoding="utf-8").split("\n"):
+        rel=rel.strip()
+        if not rel or rel.startswith("#"): continue
+        s=(APP/rel).read_text(encoding="utf-8")
+        if rel.endswith(".js"):
+            m=HDR.match(s); assert m, "src/app/"+rel+" : 1re ligne « // fragment … voir src/app/README.md » manquante"
+            s=s[m.end():]
+        assert s.endswith("\n"), "src/app/"+rel+" doit finir par un retour à la ligne"
+        out.append(s)
+    return "".join(out)
+SRC=assemble()
+if "--single" in sys.argv[1:]:
+    (ROOT/"build").mkdir(exist_ok=True)
+    (ROOT/"build/piano-challenges.html").write_text(SRC,encoding="utf-8",newline="")
+    print("build/piano-challenges.html", len(SRC.encode("utf-8")))
+    sys.exit(0)
 body=SRC
 for pat in [r'<title>.*?</title>\n', r'<meta name="claude:viewport-fit-sides"[^>]*>\n', r'<link rel="preconnect"[^>]*>\n', r'<link rel="stylesheet" href="https://fonts.googleapis.com[^>]*>\n']:
     body, n = re.subn(pat, '', body, count=2); assert n>=1, pat

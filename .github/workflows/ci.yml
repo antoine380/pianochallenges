@@ -43,7 +43,7 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-      - name: index.html, version.txt et live/ correspondent à la source
+      - name: index.html, version.txt et live/ correspondent à la source (src/app/)
         # On refait la construction avec l'horodatage déjà commité (version.txt) : à source égale, les fichiers sont identiques à l'octet.
         run: |
           PC_BUILD_STAMP="$(tr -d '\r\n' < version.txt)" python3 tools/build.py
@@ -51,7 +51,7 @@ jobs:
           if [ -n "$CHANGED" ]; then
             echo "$CHANGED"
             git diff --stat -- index.html version.txt live
-            echo "::error title=Construction pas à jour::index.html / live/ ne correspondent pas à src/piano-challenges.html. Lance « python3 tools/build.py » puis commite index.html, version.txt et live/ avec la source."
+            echo "::error title=Construction pas à jour::index.html / live/ ne correspondent pas à la source src/app/. Lance « python3 tools/build.py » puis commite index.html, version.txt et live/ avec la source."
             exit 1
           fi
           echo "Construction à jour (version $(cat version.txt))"

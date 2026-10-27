@@ -7,6 +7,7 @@ import { fileURLToPath } from "node:url";
 import { tmpdir } from "node:os";
 import { spawnSync } from "node:child_process";
 import vm from "node:vm";
+import { readSource, where } from "./source.mjs";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const fails = [];
@@ -30,12 +31,14 @@ function checkFile(label, path) {
 }
 
 // 1. pages HTML : chaque <script> en ligne (sans src, hors JSON)
-const PAGES = ["index.html", "play/index.html", "admin/index.html", "src/piano-challenges.html", "clavier/index.html", "keyboard/index.html",
+// 0. la source découpée src/app/ (assemblée) : une erreur est située dans son fragment (src/app/js/NNN-….js:ligne)
+const PAGES = ["src/app (source assemblée)", "index.html", "play/index.html", "admin/index.html", "clavier/index.html", "keyboard/index.html",
   "mentions-legales.html", "confidentialite.html"];
 for (const p of PAGES) {
+  const src = p.startsWith("src/app");
   const abs = join(ROOT, p);
-  if (!existsSync(abs)) continue;
-  const html = readFileSync(abs, "utf8");
+  if (!src && !existsSync(abs)) continue;
+  const html = src ? readSource() : readFileSync(abs, "utf8");
   const re = /<script(\s[^>]*)?>([\s\S]*?)<\/script>/gi;
   let m, k = 0;
   while ((m = re.exec(html))) {
@@ -46,6 +49,8 @@ for (const p of PAGES) {
     const line = html.slice(0, m.index + m[0].indexOf(">") + 1).split("\n").length - 1;
     k++;
     if (type === "module") { const f = join(TMP, "m" + n + ".mjs"); writeFileSync(f, m[2]); checkFile(p + " (module " + k + ")", f); }
+    else if (src) { const before = fails.length; checkClassic(p + " (script " + k + ")", m[2], line);
+      if (fails.length > before) fails[fails.length - 1] = fails[fails.length - 1].replace(/\(ligne (\d+)\)/, (x, l) => "(" + where(+l) + ")"); }
     else checkClassic(p + " (script " + k + ")", m[2], line);
   }
 }

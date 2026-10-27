@@ -9,10 +9,11 @@
 import { createRequire } from 'module';
 import fs from 'fs';
 import { FAKE_FAM } from './fakesb.mjs';
+import { readSource } from '../source.mjs'; // source assemblée depuis src/app/ (voir src/app/README.md)
 const { chromium } = createRequire(import.meta.url)('playwright');
 const PORT = process.env.PORT || '8767', URL = `http://localhost:${PORT}/`, CAP = process.env.CAP || '/home/claude/captures-famille';
 fs.mkdirSync(CAP, { recursive: true });
-const SRC = fs.readFileSync(new globalThis.URL('../../src/piano-challenges.html', import.meta.url), 'utf8');
+const SRC = readSource();
 const O = Function('return ' + /const PREM_OFFER=(\{[\s\S]*?\n\});/.exec(SRC)[1])();
 const money = (v, fr = 1) => { const w = Math.abs(v - Math.round(v)) < .005, d = w ? 0 : 2; return new Intl.NumberFormat(fr ? 'fr-FR' : 'en-IE', { style: 'currency', currency: O.currency, minimumFractionDigits: d, maximumFractionDigits: d }).format(w ? Math.round(v) : v).replace(/[  ]/g, ' '); };
 const norm = x => String(x || '').replace(/[  ]/g, ' ');

@@ -11,6 +11,7 @@
 import { readFileSync, mkdirSync } from 'fs';
 import { deflateRawSync } from 'zlib';
 import { launch, URL, INIT } from './lib.mjs';
+import { readSource } from '../source.mjs'; // source assemblée depuis src/app/ (voir src/app/README.md)
 const W = (p, ms) => p.waitForTimeout(ms);
 const fails = []; const check = (n, ok, d) => { console.log((ok ? 'OK   ' : 'FAIL ') + n + (d !== undefined && !ok ? ' — ' + JSON.stringify(d).slice(0, 500) : '')); if (!ok) fails.push(n); };
 const root = new globalThis.URL('../../', import.meta.url);
@@ -88,7 +89,7 @@ const MXL = zip([['mimetype', 'application/vnd.recordare.musicxml', true], ['MET
   const bad = []; for (const [nm, buf, code] of [['x.mid', Buffer.from('MThd'), 'midiBad'], ['photo.jpg', Buffer.from([0xff, 0xd8, 0xff, 0xe0, 1, 2, 3]), 'format'], ['vide.mid', Buffer.alloc(0), 'empty'], ['gros.mid', Buffer.alloc(2 * 1024 * 1024 + 10, 0x4d), 'size']]) {
     try { await I.parse(nm, buf); bad.push(nm + ' accepté'); } catch (e) { if (e.code !== code) bad.push(nm + ' → ' + e.code); } }
   check('fichiers invalides : codes d’erreur (abîmé, autre format, vide, > 2 Mo)', bad.length === 0, bad);
-  const src = readFileSync(new globalThis.URL('src/piano-challenges.html', root), 'utf8');
+  const src = readSource();
   const fr = src.slice(src.indexOf('  fr:{help:'), src.indexOf('  en:{help:')), en = src.slice(src.indexOf('  en:{help:'), src.indexOf('const t = k =>'));
   const keys = b => new Set([...b.matchAll(/[\s,{](imp[A-Z][A-Za-z0-9]*)\s*:/g)].map(m => m[1]));
   const kf = keys(fr), ke = keys(en); check('textes imp* en FR et en EN (' + kf.size + ')', kf.size >= 7 && [...kf].every(k => ke.has(k)) && [...ke].every(k => kf.has(k)));

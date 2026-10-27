@@ -4,7 +4,8 @@
 // simulated trial unlocks everything; Settings › Subscription shows the grid; invitations (?ref= link, share sheet), a friend's link is remembered.
 import { launch, closeOnboarding, URL } from './lib.mjs';
 import fs from 'fs';
-const SRC = fs.readFileSync(new globalThis.URL('../../src/piano-challenges.html', import.meta.url), 'utf8');
+import { readSource } from '../source.mjs'; // source assemblée depuis src/app/ (voir src/app/README.md)
+const SRC = readSource();
 const O = Function('return ' + /const PREM_OFFER=(\{[\s\S]*?\n\});/.exec(SRC)[1])();
 const CAT = (fs.readFileSync(new globalThis.URL('../../assets/js/songs-data.js', import.meta.url), 'utf8').match(/\bid:"([a-z]+)"/g) || []).map(x => x.slice(4, -1)); // catalogue order (C6)
 const NSONGS = CAT.length, NFREE = Math.min(O.freeSongs, NSONGS), FREE = CAT.slice(0, NFREE);

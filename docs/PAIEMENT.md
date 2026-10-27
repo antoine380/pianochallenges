@@ -16,8 +16,8 @@ contrat, banque et fiscalité à valider).
 | Solo annuel (1 personne) | 149 €/an | 7 jours | `solo_year` | `pc_solo_year` |
 | Famille annuel (jusqu'à 4 personnes, chacun son compte) | 199 €/an | — | `family_year` | `pc_family_year` |
 
-Pas d'offre à vie. Les prix **affichés** dans l'app viennent de `PREM_OFFER` (début du module Premium de
-`src/piano-challenges.html`) ou de la clé `prem_offer` du back office ; l'économie de l'annuel (−31 %) et le « soit 12,42 €/mois »
+Pas d'offre à vie. Les prix **affichés** dans l'app viennent de `PREM_OFFER` (début du module Premium,
+`src/app/js/480-premium.js`) ou de la clé `prem_offer` du back office ; l'économie de l'annuel (−31 %) et le « soit 12,42 €/mois »
 se calculent tout seuls. Les prix **facturés** viennent de Stripe et d'App Store Connect : **garde-les identiques**.
 
 Ce qui existe déjà :

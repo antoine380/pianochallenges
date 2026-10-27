@@ -5,6 +5,7 @@
 import fs from 'fs';
 import vm from 'vm';
 import { createRequire } from 'module';
+import { readSource } from '../source.mjs'; // source assemblée depuis src/app/ (voir src/app/README.md)
 const { chromium } = createRequire(import.meta.url)('playwright');
 const PORT = process.env.PORT || '8767', URL = `http://localhost:${PORT}/`, CAP = process.env.CAP || '';
 const LIB = fs.readFileSync(new globalThis.URL('./lib.mjs', import.meta.url), 'utf8');
@@ -39,7 +40,7 @@ check('specs connues : FP-10 88 + Bluetooth, P-225 88 USB seul, microKEY Air 37 
   const a = f('Roland', 'FP-10'), y = f('Yamaha', 'P-225'), k = f('Korg', 'microKEY Air 37'), m = f('Arturia', 'MiniLab 3');
   return a.k === 88 && a.c.includes('bt') && y.k === 88 && y.c.join() === 'usb' && k.k === 37 && k.c.includes('bt') && m.k === 25 && m.mini; })());
 check('SOURCES.md existe et cite les fabricants', /roland\.com/.test(fs.readFileSync(new globalThis.URL('../midi-catalogue/SOURCES.md', import.meta.url), 'utf8')));
-{ const src = fs.readFileSync(new globalThis.URL('../../src/piano-challenges.html', import.meta.url), 'utf8');
+{ const src = readSource();
   const fr = src.slice(src.indexOf('Object.assign(TXT.fr,{mkcT:'), src.indexOf('Object.assign(TXT.en,{mkcT:')), en = src.slice(src.indexOf('Object.assign(TXT.en,{mkcT:'), src.indexOf('const MKC='));
   const keys = s => new Set([...s.matchAll(/[\s,{](mkc[A-Z]\w*):/g)].map(m => m[1])), kf = keys(fr), ke = keys(en);
   const used = new Set([...src.matchAll(/t\("(mkc[A-Z]\w*)"\)/g)].map(m => m[1]));

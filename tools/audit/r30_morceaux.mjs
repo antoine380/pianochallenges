@@ -9,6 +9,7 @@
 // Usage: python3 -m http.server <PORT> at the repo root, then PORT=<PORT> node tools/audit/r30_morceaux.mjs
 import { readFileSync } from 'fs';
 import { launch, URL, INIT } from './lib.mjs';
+import { readSource } from '../source.mjs'; // source assemblée depuis src/app/ (voir src/app/README.md)
 const W = (p, ms) => p.waitForTimeout(ms);
 const fails = []; const check = (n, ok, d) => { console.log((ok ? 'OK   ' : 'FAIL ') + n + (d !== undefined && !ok ? ' — ' + JSON.stringify(d).slice(0, 400) : '')); if (!ok) fails.push(n); };
 const root = new globalThis.URL('../../', import.meta.url);
@@ -34,7 +35,7 @@ const PS = G.PC_SONG;
     if (e.length) bad.push(s.id + ': ' + e.join(', ')); }
   check('mesures complètes, aucune note à cheval, étendues justes, grilles d’accords de la bonne longueur', bad.length === 0, bad);
   // grid examples: the songs listed under I–IV–V only use I, IV and V (their key = first chord)
-  const src = readFileSync(new globalThis.URL('src/piano-challenges.html', root), 'utf8');
+  const src = readSource();
   const g145 = JSON.parse(/id:"g145".*?songs:(\[[^\]]*\])/.exec(src)[1]);
   const off = g145.filter(id => { const s = L.find(x => x.id === id), ch = PS.parseChart(s), I = ch[0].chord.pc; return !ch.every(c => !c.chord.minor && [0, 5, 7].includes((c.chord.pc - I + 12) % 12)); });
   check('exemples de I–IV–V : uniquement I, IV et V (' + g145.length + ' morceaux)', g145.length >= 5 && off.length === 0, off);

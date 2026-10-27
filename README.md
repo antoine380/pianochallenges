@@ -12,7 +12,7 @@ The site is a static page. OVHcloud web hosting deploys this repository automati
 
 Changes are pushed to the `dev` branch, never directly to `main`. GitHub Actions (`.github/workflows/ci.yml`) checks that the build is up to date, runs the fast test suite, the SQL and the Edge functions, then fast-forwards `main` to the tested commit, which OVH deploys. The full suite runs every night on `main` (`.github/workflows/nightly.yml`).
 
-- `src/piano-challenges.html` – the editable source of the whole application
+- `src/app/` – the editable source of the whole application, split into ordered files (map and rules: `src/app/README.md`); `python3 tools/build.py` assembles it into `index.html` (`--single` writes the stand-alone preview `build/piano-challenges.html`)
 - `tools/build.py` – builds `index.html` from the source (`python3 tools/build.py`)
 - `index.html` – the built application (do not edit by hand)
 - `CLAUDE.md` – project brief for Claude sessions

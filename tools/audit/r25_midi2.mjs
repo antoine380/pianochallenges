@@ -4,6 +4,7 @@
 // Usage : PORT=8767 NODE_PATH=… PW_CHROMIUM=… node tools/audit/r25_midi2.mjs
 import fs from 'fs';
 import { createRequire } from 'module';
+import { readSource } from '../source.mjs'; // source assemblée depuis src/app/ (voir src/app/README.md)
 const { chromium } = createRequire(import.meta.url)('playwright');
 const PORT = process.env.PORT || '8767', URL = `http://localhost:${PORT}/`;
 const LIB = fs.readFileSync(new globalThis.URL('./lib.mjs', import.meta.url), 'utf8');
@@ -40,7 +41,7 @@ async function open(o = {}) {
 const wiz = p => ev(p, () => { const e = document.querySelector('#mkCard [data-a=wiz]'); if (e) e.click(); return !!e; });
 
 // ---- CA-M16 : clés md* FR / EN ----
-{ const src = fs.readFileSync(new globalThis.URL('../../src/piano-challenges.html', import.meta.url), 'utf8');
+{ const src = readSource();
   const fr = src.slice(src.indexOf('  fr:{help:'), src.indexOf('  en:{help:')), en = src.slice(src.indexOf('  en:{help:'), src.indexOf('\n};', src.indexOf('  en:{help:')));
   const keys = s => new Set([...s.matchAll(/[\s,{](md[A-Z]\w*):/g)].map(m => m[1]));
   const kf = keys(fr), ke = keys(en), miss = [...kf].filter(k => !ke.has(k)).concat([...ke].filter(k => !kf.has(k)));

@@ -6,6 +6,7 @@ import { readFileSync, existsSync, rmSync } from 'node:fs';
 import { execFileSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
+import { readSource } from '../source.mjs'; // source assemblée depuis src/app/ (voir src/app/README.md)
 const { chromium } = createRequire(import.meta.url)('playwright');
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..', '..');
 const PORT = process.env.PORT || '8767', URL = `http://localhost:${PORT}/`;
@@ -22,7 +23,7 @@ const ev = (p, f, a) => p.evaluate(f, a);
 const errs = [];
 
 // 1) CSS: every :hover is gated, :active exists, never on keys
-const src = readFileSync(join(ROOT, 'src/piano-challenges.html'), 'utf8'), css = src.slice(src.indexOf('<style>') + 7, src.indexOf('</style>')).replace(/\/\*[\s\S]*?\*\//g, '');
+const src = readSource(), css = src.slice(src.indexOf('<style>') + 7, src.indexOf('</style>')).replace(/\/\*[\s\S]*?\*\//g, '');
 const loose = []; { let depth = 0, gated = [], i = 0, start = 0;
   for (; i < css.length; i++) { const ch = css[i];
     if (ch === '{') { const sel = css.slice(start, i); if (/:hover/.test(sel) && !gated.some(Boolean) && !/^\s*@/.test(sel) && sel.trim() !== '.ptile,.ptile:hover' /* only resets the shadow on phones */) loose.push(sel.trim().slice(-60)); gated.push(/@media\s*\(hover:hover\)\s*and\s*\(pointer:fine\)/.test(sel)); depth++; start = i + 1; }

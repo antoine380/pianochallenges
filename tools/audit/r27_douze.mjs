@@ -4,6 +4,7 @@
 // Usage : python3 -m http.server 8787 à la racine, puis PORT=8787 NODE_PATH=… PW_CHROMIUM=… node tools/audit/r27_douze.mjs
 import fs from 'fs';
 import { createRequire } from 'module';
+import { readSource } from '../source.mjs'; // source assemblée depuis src/app/ (voir src/app/README.md)
 const { chromium } = createRequire(import.meta.url)('playwright');
 const PORT = process.env.PORT || '8767', URL = `http://localhost:${PORT}/`;
 const LIB = fs.readFileSync(new globalThis.URL('./lib.mjs', import.meta.url), 'utf8');
@@ -181,7 +182,7 @@ await douze(E);
 check('EN : « Chromatic down from B », cases B, B♭', await ev(E, () => document.getElementById('dzOrder').selectedOptions[0].textContent === 'Chromatic down from B') && (await DZ(E)).names.slice(0, 2).join() === 'B,B♭');
 check('EN : « Ready? », medals Bronze / Silver / Gold', await ev(E, () => document.getElementById('dzName').textContent === 'Ready?' && /Silver/.test(document.getElementById('dzMeds').textContent)));
 const keys = await ev(E, () => 0); // FR/EN keys
-{ const src = fs.readFileSync(new globalThis.URL('../../src/piano-challenges.html', import.meta.url), 'utf8');
+{ const src = readSource();
   const fr = src.slice(src.indexOf('  fr:{help:'), src.indexOf('  en:{help:')), en = src.slice(src.indexOf('  en:{help:'), src.indexOf('const t = k => TXT'));
   const k = s => new Set([...s.matchAll(/\b(dz[A-Za-z]+):/g)].map(m => m[1]));
   const a = k(fr), bb = k(en), miss = [...a].filter(x => !bb.has(x)).concat([...bb].filter(x => !a.has(x)));

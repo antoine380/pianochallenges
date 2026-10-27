@@ -5,6 +5,7 @@
 // Usage : PORT=8767 NODE_PATH=… PW_CHROMIUM=… node tools/audit/r31_accomp.mjs
 import fs from 'fs';
 import { createRequire } from 'module';
+import { readSource } from '../source.mjs'; // source assemblée depuis src/app/ (voir src/app/README.md)
 const { chromium } = createRequire(import.meta.url)('playwright');
 const PORT = process.env.PORT || '8767', URL = `http://localhost:${PORT}/`;
 const LIB = fs.readFileSync(new globalThis.URL('./lib.mjs', import.meta.url), 'utf8');
@@ -40,7 +41,7 @@ const same = (x, e) => e.c === 'any' || x === e.c;
 const untilBeat = (p, beat) => ev(p, beat => new Promise(r => { const P = document.getElementById('accPanel'); setTimeout(r, Math.max(0, +P.dataset.t0 + beat * 60000 / +P.dataset.bpm - performance.now())); }), beat);
 
 // ---- clés acc* FR / EN ----
-{ const src = fs.readFileSync(new globalThis.URL('../../src/piano-challenges.html', import.meta.url), 'utf8');
+{ const src = readSource();
   const fr = src.slice(src.indexOf('  fr:{help:'), src.indexOf('  en:{help:')), en = src.slice(src.indexOf('  en:{help:'), src.indexOf('\n};', src.indexOf('  en:{help:')));
   const keys = s => new Set([...s.matchAll(/[\s,{](acc[A-Z]\w*):/g)].map(m => m[1]));
   const kf = keys(fr), ke = keys(en), miss = [...kf].filter(k => !ke.has(k)).concat([...ke].filter(k => !kf.has(k)));
