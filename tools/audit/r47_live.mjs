@@ -22,7 +22,9 @@ const sha = b => createHash('sha256').update(b).digest('hex');
 const walk = d => readdirSync(d).flatMap(n => { const p = join(d, n); return statSync(p).isDirectory() ? walk(p) : [p]; });
 
 // ---------- 1. manifeste ----------
-execFileSync('python3', [join(ROOT, 'tools/build.py')], { stdio: 'ignore' });
+// même horodatage que la construction commitée (PC_BUILD_STAMP) : le test ne modifie pas index.html / version.txt / live/ (CI, arbre propre)
+const stamp0 = existsSync(join(ROOT, 'version.txt')) ? readFileSync(join(ROOT, 'version.txt'), 'utf8').trim() : '';
+execFileSync('python3', [join(ROOT, 'tools/build.py')], { stdio: 'ignore', env: { ...process.env, ...(stamp0 && stamp0 !== 'dev' ? { PC_BUILD_STAMP: stamp0 } : {}) } });
 const version = readFileSync(join(ROOT, 'version.txt'), 'utf8').trim();
 const man = JSON.parse(readFileSync(join(ROOT, 'live/manifest.json'), 'utf8'));
 check('manifeste : version = version.txt', man.version === version, [man.version, version]);

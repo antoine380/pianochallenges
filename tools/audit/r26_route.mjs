@@ -52,7 +52,7 @@ for (const [lbl, o, want] of [['débutant, Premiers pas en cours : #ppMap reste'
   const f = await R(p, () => { const m = document.getElementById('rtMap'); return { k: m.querySelector('.rt-k').textContent, t: m.querySelector('.rt-tt b').textContent, n: m.querySelectorAll('.rt-pill').length, done: m.querySelectorAll('.rt-pill.done').length, next: m.querySelectorAll('.rt-pill.next').length,
     nextId: (m.querySelector('.rt-pill.next') || {}).dataset?.id, cnt: m.querySelector('.rt-cnt').textContent, chips: m.querySelectorAll('.rt-chip').length, go: /Continuer/.test(document.getElementById('rtGo').textContent), tiles: document.querySelectorAll('#learnTiles .ptile').length,
     ck: m.querySelectorAll('.rt-pill.done .rt-ck').length, free: document.getElementById('rtFreeH').textContent }; });
-  check('frise : « Ma route · Étape 1 sur 6 », Les notes, 9 pastilles, 6 étapes, 7 tuiles gardées dessous (avec Accompagnement)', /Étape 1 sur 6/.test(f.k) && f.t === 'Les notes' && f.n === 9 && f.chips === 6 && f.tiles === 7 && /Entraînement libre/.test(f.free), f);
+  check('frise : « Ma route · Étape 1 sur 6 », Les notes, 9 pastilles, 6 étapes, 8 tuiles gardées dessous (avec Accompagnement et Gammes une à une, 26/10)', /Étape 1 sur 6/.test(f.k) && f.t === 'Les notes' && f.n === 9 && f.chips === 6 && f.tiles === 8 && /Entraînement libre/.test(f.free), f);
   check('pastilles : 4 faites (coche), 1 prochaine (Leçon Do Ré Mi), « 4/9 », Continuer', f.done === 4 && f.ck === 4 && f.next === 1 && f.nextId === 's1.2' && /4\s*\/\s*9/.test(f.cnt) && f.go, f);
   const anim = await R(p, () => getComputedStyle(document.querySelector('.rt-pill.next .rt-dot'), '::after').animationName);
   check('la prochaine pastille pulse', anim === 'rtPulse', anim);

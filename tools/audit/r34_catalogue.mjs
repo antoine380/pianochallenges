@@ -92,7 +92,7 @@ for (const [w, h] of [[1024, 768], [768, 1024], [1280, 800], [812, 375], [375, 6
   check('Réglages › Application : bouton « Crédits musicaux » visible', await ev(p, () => { const b = document.getElementById('credBtn'); const r = b.getBoundingClientRect(); return r.height > 0 && r.bottom <= innerHeight && /Crédits musicaux/.test(b.textContent); }));
   await ev(p, () => document.getElementById('credBtn').click());
   await p.waitForFunction(n => document.querySelectorAll('#credList .cred-item b').length === n, LIB.length, { timeout: 15000 }).catch(() => {});
-  const c = await ev(p, () => ({ open: !document.getElementById('credModal').hidden, items: document.querySelectorAll('#credList .cred-item b').length, txt: document.getElementById('credList').textContent,
+  const c = await ev(p, () => ({ open: !document.getElementById('credModal').hidden, items: [...document.querySelectorAll('#credList .cred-item b')].filter(b => !b.closest('#snCred')).length /* hors « Sons » (#snCred, 26/10) */, txt: document.getElementById('credList').textContent,
     scroll: getComputedStyle(document.getElementById('credList')).overflowY, fit: document.querySelector('#credModal .modal-card').getBoundingClientRect().bottom <= innerHeight + 1 }));
   check('fenêtre des crédits : une ligne par pièce (' + c.items + '), source, licence, lien, la liste défile dans sa carte', c.open && c.items === LIB.length && /OpenScore Lieder/.test(c.txt) && /Mutopia Project n° \d+/.test(c.txt) && /Licence CC0 1\.0/.test(c.txt) && c.scroll === 'auto' && c.fit, { ...c, txt: c.txt.slice(0, 200) });
   await p.keyboard.press('Escape'); await W(p, 200);

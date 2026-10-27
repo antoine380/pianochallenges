@@ -54,7 +54,8 @@ const untilBeat = (p, beat) => ev(p, beat => new Promise(r => { const P = docume
 let A = await open();
 await click(A, '#modeNav [data-mode="learn"]'); await W(A, 400);
 const tiles = await ev(A, () => [...document.querySelectorAll('#learnTiles .ptile')].map(t => t.querySelector('.h3').textContent));
-check('LEARN : 7 tuiles, « Accompagnement » avant l’Entraînement du jour', tiles.length === 7 && tiles[5] === 'Accompagnement' && /Entraînement/.test(tiles[6]), tiles);
+// depuis « Gammes une à une » (26/10) : 8e tuile ajoutée en dernier dans le DOM (placée après Gammes à l'écran par `order`)
+check('LEARN : « Accompagnement » avant l’Entraînement du jour (7 tuiles, + « Gammes une à une »)', tiles.length >= 7 && tiles[5] === 'Accompagnement' && /Entraînement/.test(tiles[6]) && tiles.slice(7).every(t => /Gammes une à une/.test(t)), tiles);
 await ev(A, () => document.querySelectorAll('#learnTiles .ptile')[5].click()); await W(A, 400);
 check('la tuile ouvre l’écran de départ (page acc)', await ev(A, () => document.body.dataset.page === 'acc' && !!document.getElementById('acGo')));
 const su = await ev(A, () => ({ styles: [...document.querySelectorAll('#acStyles [data-s]')].map(b => b.dataset.s), pats: document.querySelectorAll('#acPats [data-p]').length, progs: document.querySelectorAll('#acProgs [data-g]').length, keys: document.querySelectorAll('#acKeys [data-k]').length, bpm: [document.getElementById('acBpm').min, document.getElementById('acBpm').max], modes: [...document.querySelectorAll('#acModes [data-v]')].map(b => b.dataset.v + ':' + b.getAttribute('aria-pressed')) }));

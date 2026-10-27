@@ -49,7 +49,8 @@ export async function newPage(browser, {state=null, midi=true, tz=null, viewport
     const res = await route.fetch(); let html = await res.text();
     // the end of the app's main script (the boot): the internal functions are exposed just before it closes
     const end = html.lastIndexOf('})();\n</script>');
-    if(end<0 || !html.slice(end-400,end).includes('maybeAskInput()')) throw new Error('marker introuvable');
+    // (le Boot n'est plus forcément la dernière ligne : des modules, comme LiveUpdate, le suivent dans le même script)
+    if(end<0 || html.lastIndexOf('maybeAskInput()', end) < html.lastIndexOf('<script>', end)) throw new Error('marker introuvable');
     html = html.slice(0,end)+EXPOSE+'\n'+html.slice(end);
     await route.fulfill({ response: res, body: html, headers:{...res.headers(), 'content-type':'text/html; charset=utf-8'} });
   });
