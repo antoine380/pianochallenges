@@ -8,7 +8,7 @@ const { chromium } = createRequire(import.meta.url)('playwright');
 const PORT = process.env.PORT || '8767', URL = `http://localhost:${PORT}/`;
 const fails = []; const check = (n, ok, d) => { console.log((ok ? 'OK   ' : 'FAIL ') + n + (d !== undefined && !ok ? ' — ' + JSON.stringify(d) : '')); if (!ok) fails.push(n); };
 const b = await chromium.launch(process.env.PW_CHROMIUM ? { executablePath: process.env.PW_CHROMIUM } : {});
-const STATE = { xp: 120, xpDays: {}, streak: { days: 0, last: '' }, gate: 'guest', onb: { done: 1 }, tourDone: 1, langV2: true, pwShown: 1,
+const STATE = { xp: 120, xpDays: {}, streak: { days: 0, last: '' }, srFrom: '9999-12-31', /* ancienne règle (XP = jour compté) : les gels et l'objectif sont testés ici, la série des 10 min dans r53 */ gate: 'guest', onb: { done: 1 }, tourDone: 1, langV2: true, pwShown: 1,
   introSeen: { hub: 1, learn: 1, games: 1, chords: 1, scales: 1, settings: 1, progress: 1, notif: 1 }, stats: {}, mastery: {}, srs: {}, secStats: {},
   acct: { n: 2 }, notifs: { list: [], keys: {}, init: 1, nv2: 1 }, settings: { lang: 'fr', notation: 'fr', input: 'screen', uiSound: true } };
 
@@ -78,10 +78,10 @@ await X('renderStatus()');
 check('menu : jamais « 0 j » (« À toi »)', await p.evaluate(() => document.getElementById('streak').textContent === 'À toi'));
 
 // 5) fiche Progression : objectif, semaine, gels, sans défilement
-await X('S.freeze={n:2,used:[],at:1}; S.streak={days:3,last:dayStr()}; S.goal={kind:"min",v:10,at:1}; S.playSec={[dayStr()]:240}; S.xpDays={[dayStr()]:10}');
+await X('S.freeze={n:2,used:[],at:1}; S.streak={days:3,last:dayStr()}; S.goal={kind:"min",v:20,at:1}; S.playSec={[dayStr()]:240}; S.xpDays={[dayStr()]:10}'); // 20 min : avec 10 min, la ligne de l'objectif se fond dans celle de la série (r53)
 await p.click('#lvlAv'); await p.waitForTimeout(500);
 const pf = await p.evaluate(() => { const g = document.getElementById('pfGoal'), pane = document.getElementById('progPane'); return { txt: g.textContent, vis: g.offsetParent !== null, scroll: pane.scrollHeight - pane.clientHeight, day: document.getElementById('pfDay').textContent }; });
-check('fiche : ligne objectif « 4 / 10 min », semaine, 2 gels', pf.vis && /4 \/ 10 min/.test(pf.txt) && /Semaine : 1\/7/.test(pf.txt) && /2 gels/.test(pf.txt), pf);
+check('fiche : ligne objectif « 4 / 20 min », semaine, 2 gels', pf.vis && /4 \/ 20 min/.test(pf.txt) && /Semaine : 1\/7/.test(pf.txt) && /2 gels/.test(pf.txt), pf);
 check('fiche : pas de défilement ajouté (1024×768)', pf.scroll <= 1, pf);
 await X('S.streak={days:5,last:addDays(-4)}; S.xpDays={}; renderFiche()');
 check('fiche : série cassée = « Nouvelle série : joue aujourd\'hui », jamais 0', await p.evaluate(() => document.getElementById('pfDay').textContent === "Nouvelle série : joue aujourd'hui"));

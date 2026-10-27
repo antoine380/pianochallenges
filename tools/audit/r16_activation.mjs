@@ -22,7 +22,7 @@ await ev(() => document.getElementById('suGo').click()); await wait(page, 700);
 for (let i = 0; i < 4; i++) { if (await vis('endModal')) break; const p = await ev(() => document.getElementById('prompt').textContent); const m = /^(\S+)\s+Majeur/.exec(p); if (!m) break; const r = 60 + PC[m[1]];
   for (const n of [r, r + 4, r + 7]) { await midi.on(page, n); await wait(page, 80); } await wait(page, 500); for (const n of [r, r + 4, r + 7]) await midi.off(page, n); await wait(page, 700); await page.keyboard.press('Enter'); await wait(page, 900); }
 await wait(page, 500);
-check('fin de partie : XP avant le niveau suivant et série', await ev(() => /avant le niveau/.test(document.getElementById('endNext').textContent) && /Série/.test(document.getElementById('endNext').textContent)));
+check('fin de partie : XP avant le niveau suivant, sans la ligne de série répétée (série = animation des 10 min, r53)', await ev(() => /avant le niveau/.test(document.getElementById('endNext').textContent) && !/Série|Reviens demain/.test(document.getElementById('endNext').textContent)));
 check('fin de partie (invité) : « Garde ta série », créer un compte', await vis('endAcct'));
 check('l’offre ne s’ouvre pas par-dessus la fin de partie', !(await vis('pw')));
 await ev(() => document.getElementById('endX').click()); await wait(page, 800);
