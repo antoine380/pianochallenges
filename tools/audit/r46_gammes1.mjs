@@ -64,7 +64,7 @@ const st1 = await stored(p);
 check('pendant la partie, la sauvegarde garde sc7 et dir du joueur', st1.settings.sc7 === true && st1.settings.dir === 'down', st1.settings);
 await notes(p, C_MAJ); await W(p, 2400);
 const e1 = await ev(p, () => ({ end: !document.getElementById('endModal').hidden, page: document.body.dataset.page, t: document.getElementById('endTitle').textContent, next: document.getElementById('sc1Next')?.textContent, back: !!document.getElementById('sc1Back'), again: !!document.getElementById('sc1Again') }));
-check('sans faute : 3 étoiles (S.scStars.notes["C-major"]=3), fin au-dessus de la liste (« Suivante : Ré Majeur »), message court « Sans faute ! »', await stars(p, 'notes', 'C-major') === 3 && await endStars(p) === 3 && e1.end && e1.page === 'sc1' && e1.back && e1.again && /Suivante : Ré Majeur/.test(e1.next || '') && await ev(p, () => document.querySelector('.sc1-msg').textContent === 'Sans faute !'), e1);
+check('sans faute : 3 étoiles (S.scStars.notes["C-major"]=3), fin au-dessus de la liste (« Suivante : Ré Majeur »), message court des 3 étoiles (variantes v4 : t("sc1RV")[3])', await stars(p, 'notes', 'C-major') === 3 && await endStars(p) === 3 && e1.end && e1.page === 'sc1' && e1.back && e1.again && /Suivante : Ré Majeur/.test(e1.next || '') && await p.X('t("sc1RV")[3].includes(document.querySelector(".sc1-msg").textContent)'), e1);
 check('XP habituel gagné', await p.X('S.xp>900'));
 const st2 = await stored(p);
 check('après la partie : sc7=true et dir="down" toujours là (mémoire et sauvegarde)', await p.X('S.settings.sc7===true && S.settings.dir==="down"') && st2.settings.sc7 === true && st2.settings.dir === 'down');
@@ -76,7 +76,7 @@ await ev(p, () => window.__midi.noteOn(64)); await W(p, 500); await toEval(p);
 const g2 = await p.X('({tid:cur&&cur.tid, k:cur&&cur.k, page})');
 check('Mi seul (MIDI) sur la fin à 3 étoiles = gamme suivante (même type, ligne suivante : Ré majeur)', g2.tid === 'major' && g2.k === 'D' && g2.page === 'practice', g2);
 await notes(p, [62, 61, 64, 66, 67, 69, 71, 73, 74]); await W(p, 2400); // 61 = faute
-check('une faute : 2 étoiles, message court « Gamme finie ! » sans règle', await stars(p, 'notes', 'D-major') === 2 && await endStars(p) === 2 && await ev(p, () => document.querySelector('.sc1-msg').textContent === 'Gamme finie !'));
+check('une faute : 2 étoiles, message court des 2 étoiles sans règle (variantes v4)', await stars(p, 'notes', 'D-major') === 2 && await endStars(p) === 2 && await p.X('t("sc1RV")[2].includes(document.querySelector(".sc1-msg").textContent)'));
 // Si = recommencer la même ; sans faute cette fois → 3 (meilleur score monte)
 await ev(p, () => window.__midi.noteOn(71)); await W(p, 500); await toEval(p);
 check('Si seul (MIDI) sur la fin = recommencer la même gamme', await p.X('cur&&cur.k==="D"&&cur.tid==="major"&&page==="practice"'));
