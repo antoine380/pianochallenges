@@ -197,15 +197,15 @@ const STREAK_STEPS = [7, 14, 30, 50, 100, 200, 365, 500, 1000];
 function streakMail(lang: Lang, name: string, days: number) {
   const fr = lang === "fr", n = esc(name), cta = GO("daily", "streak"), next = STREAK_STEPS.find(s => s > days + 1), today = parisDay();
   const subject = fr ? `🔥 ${days} jours d'affilée : on continue ?` : `🔥 ${days} days in a row: keep it going?`;
-  const pre = fr ? `Un seul exercice avant minuit et ta série passe à ${days + 1} jours. Environ 2 minutes.` : `One exercise before midnight and your streak goes to ${days + 1} days. About 2 minutes.`;
+  const pre = fr ? `10 minutes de piano avant minuit et ta série passe à ${days + 1} jours.` : `10 minutes of piano before midnight and your streak goes to ${days + 1} days.`;
   const state = Array.from({ length: 7 }, (_, i) => i === 6 ? "today" as const : (6 - i <= days ? "on" as const : "off" as const));
   const inner = `<table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr><td align="center" style="padding:0 0 4px"><div style="font-size:46px;line-height:1">🔥</div>
 <div style="font-family:${FONT_T};font-size:56px;font-weight:700;line-height:1.05;color:${C.fire}">${days}</div><div class="pc-mut" style="font-size:14px;font-weight:800;color:${C.mut};text-transform:uppercase;letter-spacing:.06em">${fr ? "jours d'affilée" : "days in a row"}</div></td></tr></table>`
     + week(lang, dayLetters(lang, today), state)
-    + para(fr ? `${n}, ta série tient à <b>un seul exercice</b> aujourd'hui : il passe à <b>${days + 1} jours</b> dès que tu joues.` : `${n}, your streak needs <b>just one exercise</b> today: it goes to <b>${days + 1} days</b> as soon as you play.`)
+    + para(fr ? `${n}, ta série tient à <b>10 minutes de jeu</b> aujourd'hui : elle passe à <b>${days + 1} jours</b> dès que tu les as jouées.` : `${n}, your streak needs <b>10 minutes of play</b> today: it goes to <b>${days + 1} days</b> as soon as you have played them.`)
     + (next ? para(fr ? `Encore ${next - days} jours et tu atteins le palier des <b>${next} jours</b>.` : `${next - days} more days and you reach the <b>${next}-day</b> milestone.`) : "")
     + muted(fr ? "Pas le temps aujourd'hui ? Un gel (gagné tous les 7 jours de série) protège ta série tout seul, sans rien faire." : "No time today? A freeze (earned every 7 days of streak) protects your streak by itself.");
-  const text = `${fr ? `🔥 ${days} jours d'affilée, ${name} !` : `🔥 ${days} days in a row, ${name}!`}\n\n${fr ? `Un seul exercice avant minuit et ta série passe à ${days + 1} jours (environ 2 minutes).` : `One exercise before midnight and your streak goes to ${days + 1} days (about 2 minutes).`}\n\n${fr ? "Garder ma série : " : "Keep my streak: "}${cta}\n\n${T[lang].textSet}`;
+  const text = `${fr ? `🔥 ${days} jours d'affilée, ${name} !` : `🔥 ${days} days in a row, ${name}!`}\n\n${fr ? `10 minutes de piano avant minuit et ta série passe à ${days + 1} jours.` : `10 minutes of piano before midnight and your streak goes to ${days + 1} days.`}\n\n${fr ? "Garder ma série : " : "Keep my streak: "}${cta}\n\n${T[lang].textSet}`;
   return { subject, pre, inner, text, cta, btn: fr ? "Garder ma série" : "Keep my streak" };
 }
 // on: the 7 days that end today, played or not; prevXp: XP of the 7 days before; need: XP of the current level (for the bar)
@@ -305,6 +305,9 @@ async function jobWelcome() {
   return { sent };
 }
 async function jobStreak() {
+  // Série 10 min (27/10/2026) : dans l'app, un jour compte quand on a joué 10 minutes (avant la bascule : tout jour avec de l'XP).
+  // Ici « joué » = une ligne xp_log > 0 : quelqu'un qui a gagné de l'XP aujourd'hui sans atteindre 10 min ne reçoit pas de rappel
+  // (écart connu, accepté) ; profiles.streak (envoyé par l'app, effStreak) suit déjà la règle des 10 minutes.
   const today = parisDay(), yest = addDays(today, -1);
   const y = await allRows<{ user_id: string }>(() => db.from("xp_log").select("user_id").eq("day", yest).gt("xp", 0));
   const tdy = await allRows<{ user_id: string }>(() => db.from("xp_log").select("user_id").eq("day", today).gt("xp", 0));
@@ -317,7 +320,7 @@ async function jobStreak() {
     const email = await emailOf(pr.id); if (!email) continue;
     if (!p) p = await ensurePrefs(pr.id, await langOf(pr.id));
     const m = streakMail(p.lang, pr.name || (p.lang === "fr" ? "musicien" : "musician"), pr.streak), l = layout(p.lang, p, "streak", m.subject, m.inner, m.cta, m.btn, m);
-    await notifyRow(pr.id, "streak", "remind", p.lang === "fr" ? `Ta série de ${pr.streak} jours est en danger` : `Your ${pr.streak}-day streak is in danger`, p.lang === "fr" ? "Joue un exercice avant minuit pour la garder." : "Play one exercise before midnight to keep it.", "daily");
+    await notifyRow(pr.id, "streak", "remind", p.lang === "fr" ? `Ta série de ${pr.streak} jours est en danger` : `Your ${pr.streak}-day streak is in danger`, p.lang === "fr" ? "Joue 10 minutes avant minuit pour la garder." : "Play 10 minutes before midnight to keep it.", "daily");
     if (await send(email, m.subject, l.html, m.text, l.unsub)) { sent++; await db.from("notif_prefs").update({ last_streak_mail: today }).eq("user_id", pr.id); }
   }
   return { sent };
