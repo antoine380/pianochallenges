@@ -63,6 +63,7 @@ async function enableMidi(quiet){
         names.push(inp.name); inp.onmidimessage=ev=>midiEach(ev.data, inp, d=>{
         const [st,note,vel]=d;
         if(LV.on){ if((st&0xf0)===0x90 && vel>0) lvNote(note); return; } // the leave window: C = keep playing, B = leave
+        if(SR.on){ if((st&0xf0)===0x90 && vel>0) srNote(note); return; } // série validée (plein écran) : un Do seul ferme, aucune note ne passe en dessous
         if(MW.on && mwMsg(st,note,vel,inp)) return; // the « Connect my keyboard » assistant (MIDI lots 2-3) gets every message while it is open
         if(midiOpen && !calib && (st&0xf0)===0x90 && vel>0){ pressKey(note); mtNote(note,vel,inp.name); return; } // the MIDI window: the « play a note » test (M8)
         if(page==="quiz"){ if((st&0xf0)===0x90 && vel>0){ if(S.settings.midiSound) tone(note,0,.9,.1+.26*vel/127); if(!anyModal()) quizIn(String(inp.id||inp.name),note); } return; } // every keyboard counts: one per player

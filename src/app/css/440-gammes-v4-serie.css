@@ -28,29 +28,43 @@
 @media (prefers-reduced-motion:no-preference){ .sr-pulse{animation:srPulse 1.2s var(--ease-out,ease-out)} .pf-sr.sr-pulse{animation:srPulseRow 1.2s ease-out}
   @keyframes srPulse{0%,100%{transform:none}30%{transform:scale(1.18)}60%{transform:scale(.97)}}
   @keyframes srPulseRow{0%,100%{box-shadow:inset 0 0 0 0 rgba(255,201,74,0)}35%{box-shadow:inset 0 0 0 3px rgba(255,201,74,.75)}} }
-/* série validée : l'animation en coin (maquette serie-anim.html ; non modale, sans focus) */
-.sr-cel{position:fixed;z-index:8500;top:calc(16px + env(safe-area-inset-top,0px));right:16px;display:flex;align-items:center;gap:14px;padding:14px 20px 14px 14px;border-radius:20px;background:linear-gradient(135deg,#2b2560,#1f1a49);color:#f3f1ff;box-shadow:0 18px 40px -14px rgba(0,0,0,.6),0 0 0 1px rgba(255,255,255,.08);pointer-events:none;opacity:0;transform:translateY(-130%)}
-.sr-big{position:relative;width:64px;height:64px;flex:none;display:grid;place-items:center}
-.sr-big .sr-rg{position:absolute;inset:0;width:100%;height:100%} .sr-big .sr-rg circle{stroke-width:6} .sr-big .sr-rg .tr{stroke:rgba(255,255,255,.12)}
-.sr-big .sr-fl{position:relative;width:28px;height:28px;fill:#ff8a1f}
-.sr-burst{position:absolute;inset:-6px;border-radius:50%;border:3px solid #ffcf3f;opacity:0}
-.sr-tx{display:flex;flex-direction:column;min-width:0} .sr-tx b{font-family:var(--f-display);font-size:1.35rem;font-weight:700;line-height:1.1} .sr-tx b .n{display:inline-block}
-.sr-tx small{color:#b9b4e0;font-weight:700;font-size:.86rem}
-.sr-days{display:flex;gap:5px;margin-top:6px} .sr-days i{width:12px;height:12px;border-radius:50%;background:#ff8a1f}
-.sr-days i.td{background:#ffcf3f;box-shadow:0 0 8px #ffcf3f}
+/* série validée : le « happening » plein écran au centre (maquette serie-anim-plein.html) ; voile violet nuit dans les deux thèmes */
+.sr-cel{position:fixed;inset:0;z-index:9500;display:grid;place-items:center;padding:calc(16px + env(safe-area-inset-top,0px)) 16px calc(16px + env(safe-area-inset-bottom,0px));overflow:hidden;cursor:pointer;
+  background:radial-gradient(circle at 50% 45%,rgba(255,150,40,.3),rgba(255,150,40,0) 58%),rgba(21,18,46,.9);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);color:#f3f1ff;font-family:var(--f-body);
+  -webkit-tap-highlight-color:transparent;user-select:none;-webkit-user-select:none;outline:none;opacity:1;transition:opacity .3s ease}
+.sr-cel.out{opacity:0;pointer-events:none}
+.sr-box{display:flex;flex-direction:column;align-items:center;gap:clamp(8px,2.4vmin,18px);text-align:center;max-width:100%}
+.sr-big{position:relative;width:min(40vmin,250px);aspect-ratio:1;display:grid;place-items:center}
+.sr-big .sr-rg{position:absolute;inset:0;width:100%;height:100%}
+.sr-big .sr-rg circle{stroke-width:7} .sr-big .sr-rg .tr{stroke:rgba(255,255,255,.14)} .sr-big .sr-rg{overflow:visible;filter:drop-shadow(0 0 8px rgba(255,170,40,.55))}
+.sr-big .sr-fl{position:relative;width:46%;height:46%;fill:#ff8a1f;filter:drop-shadow(0 0 18px rgba(255,160,40,.85))}
+.sr-wave{position:absolute;inset:0;border-radius:50%;border:4px solid #ffcf3f;opacity:0}
+.sr-t{margin:0;font-family:var(--f-display);font-weight:700;font-size:clamp(1.6rem,8.5vmin,3.5rem);line-height:1.05;color:#fff}
+.sr-t .n{display:inline-block;color:#ffcf3f}
+.sr-s{margin:0;color:#d6d1f5;font-weight:700;font-size:clamp(.95rem,3.8vmin,1.25rem)}
+.sr-days{display:flex;gap:clamp(6px,1.6vmin,10px)}
+.sr-days i{display:grid;place-items:center;width:clamp(26px,6.5vmin,36px);aspect-ratio:1;border-radius:50%;background:#ff8a1f;color:#2a1400;font-style:normal;font-weight:800;font-size:clamp(.7rem,2.4vmin,.85rem)}
+.sr-days i.td{background:#ffcf3f;box-shadow:0 0 14px #ffcf3f}
+.sr-hint{color:#c9c4ee;opacity:.85;font-weight:700;font-size:.82rem}
+.sr-conf{position:absolute;inset:0;pointer-events:none;overflow:hidden}
+.sr-cf{position:absolute;top:-20px;width:10px;height:14px;border-radius:2px;opacity:0}
 @media (prefers-reduced-motion:no-preference){
-  .sr-cel.in{animation:srInOut 4.6s cubic-bezier(.23,1,.32,1) forwards}
-  .sr-cel.in .sr-big .fg{stroke-dashoffset:calc(var(--c) * .5);animation:srFill 1.3s .45s cubic-bezier(.65,0,.35,1) forwards}
-  .sr-cel.in .sr-fl{fill:rgba(255,255,255,.4);transform:scale(.8);animation:srLit .6s 1.7s cubic-bezier(.34,1.56,.64,1) forwards}
-  .sr-cel.in .sr-burst{animation:srBurst .7s 1.75s ease-out}
-  .sr-cel.in .sr-tx b .n{animation:srPop .5s 1.8s cubic-bezier(.34,1.56,.64,1)}
-  .sr-cel.in .sr-days i.td{background:rgba(255,255,255,.12);box-shadow:none;animation:srDot .4s 1.9s forwards}
-  @keyframes srInOut{0%{transform:translateY(-130%);opacity:0}9%{transform:none;opacity:1}86%{transform:none;opacity:1}100%{transform:translateY(-130%);opacity:0}}
+  .sr-cel.in{animation:srVeil .45s ease both}
+  .sr-cel.in .sr-box{animation:srBoxIn .7s .15s cubic-bezier(.34,1.56,.64,1) both}
+  .sr-cel.in .sr-big .fg{stroke-dashoffset:calc(var(--c) * .5);animation:srFill 1.4s .6s cubic-bezier(.65,0,.35,1) forwards}
+  .sr-cel.in .sr-fl{fill:rgba(255,255,255,.35);filter:none;transform:scale(.8);animation:srLit .7s 2s cubic-bezier(.34,1.56,.64,1) forwards}
+  .sr-cel.in .sr-wave{animation:srWave 1s 2.05s ease-out} .sr-cel.in .sr-wave.b{animation-delay:2.3s}
+  .sr-cel.in .sr-t .n{animation:srPop .6s 2.1s cubic-bezier(.34,1.56,.64,1)}
+  .sr-cel.in .sr-days i.td{background:rgba(255,255,255,.14);color:#c9c4ee;box-shadow:none;animation:srDot .5s 2.2s forwards}
+  .sr-cel.in .sr-cf{animation:srFall 2.6s linear forwards}
+  @keyframes srVeil{from{opacity:0}}
+  @keyframes srBoxIn{from{transform:scale(.7);opacity:0}}
   @keyframes srFill{to{stroke-dashoffset:0}}
-  @keyframes srLit{to{fill:#ff8a1f;transform:scale(1.15)}}
-  @keyframes srBurst{0%{opacity:.9;transform:scale(.8)}100%{opacity:0;transform:scale(1.45)}}
-  @keyframes srPop{50%{transform:scale(1.35);color:#ffcf3f}}
-  @keyframes srDot{to{background:#ffcf3f;box-shadow:0 0 8px #ffcf3f}} }
-@media (prefers-reduced-motion:reduce){ .sr-cel.in{opacity:1;transform:none;transition:opacity .2s} .sr-cel.in.out{opacity:0} }
-@media (max-width:640px){ .sr-cel{left:16px;right:16px} }
+  @keyframes srLit{to{fill:#ff8a1f;filter:drop-shadow(0 0 18px rgba(255,160,40,.85));transform:scale(1.1)}}
+  @keyframes srWave{0%{opacity:.9;transform:scale(.9)}100%{opacity:0;transform:scale(1.8)}}
+  @keyframes srPop{50%{transform:scale(1.5)}}
+  @keyframes srDot{to{background:#ffcf3f;color:#2a1400;box-shadow:0 0 14px #ffcf3f}}
+  @keyframes srFall{0%{opacity:1;transform:translateY(0) rotate(0)}100%{opacity:0;transform:translateY(110vh) rotate(calc(var(--r,1) * 720deg))}} }
+/* mouvement réduit : le même contenu, immobile (anneau plein, flamme allumée, jour coché), sans confettis */
+@media (prefers-reduced-motion:reduce){ .sr-conf{display:none} .sr-cel{transition:none} }
 /* ==== fin Gammes v4 + Série 10 min ==== */

@@ -1,8 +1,11 @@
 // Chantier GAMMES v4 + SÉRIE 10 MIN (retours d'Antoine du 27/10/2026).
 // A. Série : un jour compte quand on a joué 10 minutes (S.playSec du jour, horloge simulée par page.clock + noteIn) :
 //    anneau à 0 / 5 / 10 min (menu #streakStat, fiche #pfSr), « Encore 5 min pour valider ta série » + pulsation au passage des 5 min,
-//    l'XP seul ne fait plus avancer la série, animation #srCel à 10 min (une seule fois par jour, sur une autre page, non modale,
-//    sans focus, maquette serie-anim.html : bandeau qui descend, anneau ½ → plein, flamme, points des jours), jamais pendant une note attendue d'un exercice, ancienne règle gardée pour les jours d'avant la bascule (S.srFrom),
+//    l'XP seul ne fait plus avancer la série, animation #srCel à 10 min (une seule fois par jour, PLEIN ÉCRAN au centre, maquette
+//    serie-anim-plein.html : voile, anneau ½ → plein, flamme, « Tes 10 minutes du jour sont faites. », initiales des jours, confettis),
+//    jamais pendant une note attendue (exercice, partie de jeu), centrée et couvrant l'écran aux 5 tailles, fermée au clic / Échap /
+//    Do seul MIDI (faux Web MIDI ; ce Do n'est pas compté par l'exercice en dessous, en pause pendant l'animation),
+//    ancienne règle gardée pour les jours d'avant la bascule (S.srFrom),
 //    fusion mergeState (playSec max par jour, srFrom le plus ancien, srShown le plus récent), mouvement réduit, EN.
 // B. Fin de Gammes une à une : messages variés, pas de « coupe sur 12 », pas de ligne « Série : … Reviens demain ».
 // C. Tutoriel : la pointe de la bulle vise le centre de la cible (mesure géométrique), tutoriel de Gammes une à une et tutoriel
@@ -40,7 +43,15 @@ const stored = p => ev(p, () => JSON.parse(localStorage.getItem('memo-gammes-v1'
 // playing time: one note then 15 s of (simulated) clock = one tick of S.playSec
 const play = async (p, ticks) => { for (let i = 0; i < ticks; i++) { await p.X('lastNoteAt=Date.now()'); const s0 = await p.X('(S.playSec||{})[dayStr()]|0'); for (let k = 0; k < 17; k++) { await p.clock.runFor(1000); if ((await p.X('(S.playSec||{})[dayStr()]|0')) !== s0) break; } } };
 const ringP = p => ev(p, () => { const f = document.querySelector('#streakStat .sr-ic .fg'); if (!f) return null; const C = 2 * Math.PI * 16; return +(1 - (+f.getAttribute('stroke-dashoffset')) / C).toFixed(2); });
-const cel = p => ev(p, () => { const c = document.getElementById('srCel'); return c ? { t: c.querySelector('b').textContent, s: c.querySelector('small').textContent, pe: getComputedStyle(c).pointerEvents, focus: c.contains(document.activeElement), r: c.getBoundingClientRect().toJSON() } : null; });
+const cel = p => ev(p, () => { const c = document.getElementById('srCel'); if (!c || c.classList.contains('out')) return null; const r = c.getBoundingClientRect(), bx = c.querySelector('.sr-box').getBoundingClientRect(), W = innerWidth, H = innerHeight;
+  return { t: c.querySelector('.sr-t').textContent, s: c.querySelector('.sr-s').textContent, h: c.querySelector('.sr-hint').textContent, role: c.getAttribute('role'), modal: c.getAttribute('aria-modal'), lbl: !!document.getElementById(c.getAttribute('aria-labelledby')),
+    pe: getComputedStyle(c).pointerEvents, z: +getComputedStyle(c).zIndex, cover: r.left <= 0 && r.top <= 0 && r.right >= W && r.bottom >= H,
+    centred: Math.abs((bx.left + bx.right) / 2 - W / 2) <= 2 && Math.abs((bx.top + bx.bottom) / 2 - H / 2) <= 24, fits: bx.top >= 0 && bx.left >= 0 && bx.right <= W && bx.bottom <= H,
+    top: (() => { const e = document.elementFromPoint(W / 2, H - 8); return !!e && c.contains(e); })(), days: [...c.querySelectorAll('.sr-days i')].map(i => i.textContent), td: c.querySelectorAll('.sr-days i.td').length }; });
+// faux Web MIDI minimal (un clavier) : window.__mon(n) envoie une note-on
+const FAKE_MIDI = `(()=>{ const p={id:'in-1',name:'Fake Keyboard 61',state:'connected',connection:'open',type:'input',manufacturer:'Fake',onmidimessage:null};
+  const acc={inputs:new Map([[p.id,p]]),outputs:new Map(),onstatechange:null,addEventListener(){},removeEventListener(){}};
+  navigator.requestMIDIAccess=async()=>acc; window.__mon=(n,v=100)=>{ if(p.onmidimessage) p.onmidimessage({data:new Uint8Array([0x90,n,v]),timeStamp:performance.now(),target:p}); return !!p.onmidimessage; }; })();`;
 const noScroll = p => ev(p, () => { const d = document.scrollingElement, m = document.getElementById('main'); return d.scrollHeight - d.clientHeight <= 1 && d.scrollWidth - d.clientWidth <= 1 && (!m || m.scrollHeight - m.clientHeight <= 1); });
 const fiche = async p => { await p.X('openPage("progress")'); await W(p, 500); };
 
@@ -69,15 +80,18 @@ await play(p, 19);
 check('9 min 45 : pas d’animation, série toujours à 3', !(await cel(p)) && await p.X('S.streak.days') === 3);
 await play(p, 1); await p.clock.runFor(300);
 const c1 = await cel(p);
-check('10 min, sur une autre page (GAMES) : l’animation « Série : 4 jours ! » apparaît', !!c1 && c1.t === 'Série : 4 jours !' && c1.s === "10 minutes jouées aujourd'hui", c1);
-const pg1 = await p.X('[page, anyWin(), openMods.join()]');
-check('animation non modale : pas de clic capté, pas de focus, page inchangée', c1 && c1.pe === 'none' && !c1.focus && pg1[0] === 'games' && !pg1[1], [c1, pg1]);
+check('10 min, sur une autre page (GAMES) : l’animation « Série : 4 jours ! » / « Tes 10 minutes du jour sont faites. » apparaît', !!c1 && c1.t === 'Série : 4 jours !' && c1.s === 'Tes 10 minutes du jour sont faites.' && c1.h === "Touche l'écran pour continuer", c1);
+const pg1 = await p.X('[page, anyWin(), SR.on]');
+check('plein écran : couvre tout l’écran, au-dessus des fenêtres (z ≥ 9500), centrée, dialogue accessible (aria-modal, titre), capte les clics ; page inchangée en dessous', c1 && c1.cover && c1.top && c1.centred && c1.fits && c1.z >= 9500 && c1.role === 'dialog' && c1.modal === 'true' && c1.lbl && c1.pe === 'auto' && pg1[0] === 'games' && !pg1[1] && pg1[2], [c1, pg1]);
 check('… la série est validée : 4 j, dernier jour = aujourd’hui, animation notée (S.srShown)', await p.X('S.streak.days===4 && S.streak.last===dayStr() && S.srShown===dayStr()'));
 check('anneau plein sur la flamme du menu', await ringP(p) === 1);
-check('les 4 points des jours, le dernier s’allume (série réelle)', await ev(p, () => !!document.querySelector('#srCel .sr-days i.td') && document.querySelectorAll('#srCel .sr-days i').length === 4));
+const DAYS = await ev(p, () => [3, 2, 1, 0].map(i => { const d = new Date(); d.setDate(d.getDate() - i); return new Intl.DateTimeFormat('fr-FR', { weekday: 'narrow' }).format(d).toUpperCase(); }));
+check('les 4 pastilles des jours = initiales des 4 derniers jours (série réelle), la dernière s’allume', JSON.stringify(c1.days) === JSON.stringify(DAYS) && c1.td === 1 && await ev(p, () => document.querySelector('#srCel .sr-days i:last-child').classList.contains('td')), [c1.days, DAYS]);
 if (CAP) await p.screenshot({ path: `${CAP}/03_animation_10min_ipad.png` });
-await p.clock.runFor(5000);
-check('l’animation s’efface seule (≈ 4,5 s)', !(await cel(p)));
+await p.clock.runFor(Math.max(0, 4000 - await p.X('Date.now()-SR.at')));
+check('à 4 s elle est encore là', !!(await cel(p)));
+await p.clock.runFor(2000);
+check('l’animation s’efface seule (≈ 5 s), SR.on retombe', !(await cel(p)) && !(await p.X('SR.on')));
 await play(p, 8); await p.clock.runFor(1500);
 check('encore du jeu le même jour : pas de 2e animation', !(await cel(p)));
 await fiche(p);
@@ -99,13 +113,67 @@ await ev(p, () => document.querySelector('.sc1-c[data-tid="major"][data-k="C"]')
 await ev(p, () => document.getElementById('sc1PkEval').click()); await p.clock.runFor(600);
 check('exercice lancé (Évaluation, note attendue)', await p.X('phase') === 'listening' && await p.X('page') === 'practice');
 await p.X('noteIn(60)'); await p.clock.runFor(15000); await p.clock.runFor(1000);
-check('10 min atteintes pendant la note attendue : série validée, mais pas d’animation (elle attend)', await p.X('S.streak.last===dayStr()') && !(await cel(p)) && await p.X('phase') === 'listening');
+check('10 min atteintes pendant la note attendue : série validée, mais pas d’animation (elle attend, S.srShown pas encore posé)', await p.X('S.streak.last===dayStr()') && !(await cel(p)) && await p.X('phase') === 'listening' && await p.X('S.srShown!==dayStr() && SR.pend===1'));
+await p.clock.runFor(30000);
+check('… toujours rien 30 s plus tard tant que la note est attendue', !(await cel(p)) && await p.X('phase') === 'listening');
 for (const m of [62, 64, 65, 67, 69, 71, 72]) { await p.X(`noteIn(${m})`); await p.clock.runFor(60); }
 await p.clock.runFor(1200);
+check('gamme jouée, écran de fin pas encore ouvert (phase success, actNow) : toujours rien', !(await cel(p)) || await p.X('endOpen'));
+await p.clock.runFor(3000);
 const c2 = await cel(p);
-check('gamme finie : l’animation apparaît, sans prendre le focus', !!c2 && !c2.focus && c2.pe === 'none', c2);
+check('gamme finie (écran de fin, calme) : l’animation apparaît, au-dessus de la fenêtre de fin', !!c2 && c2.cover && c2.top && c2.z > await ev(p, () => +getComputedStyle(document.getElementById('endModal')).zIndex || 0), c2);
+await ev(p, () => document.getElementById('srCel').click()); await p.clock.runFor(400);
+check('fermée au clic (toucher), la fenêtre de fin reste', !(await cel(p)) && await ev(p, () => !document.getElementById('endModal').hidden));
 check('aucune erreur JS (exercice)', !p.errs.length, p.errs);
 await p.context().close();
+
+// ---- fermeture : Échap, Do seul MIDI (non compté par l'exercice en dessous, en pause pendant l'animation) ; pas pendant un jeu ----
+p = await open({ clock: true, st: STATE({ st: { srFrom: TODAY, playSec: { [TODAY]: 900 }, streak: { days: 4, last: TODAY }, srShown: D(-1) }, set: { input: 'midi' } }) });
+await p.addInitScript(FAKE_MIDI); await p.evaluate(FAKE_MIDI); await p.X('enableMidi(true)'); await p.clock.runFor(300);
+check('faux clavier MIDI branché', await p.X('midiMode()') && await ev(p, () => window.__mon(30, 0)));
+await p.X('srCelebrate()'); await p.clock.runFor(300);
+let c4 = await cel(p);
+check('en MIDI : « Touche l’écran ou joue Do pour continuer »', !!c4 && c4.h === "Touche l'écran ou joue Do pour continuer", c4);
+await p.keyboard.press('Escape'); await p.clock.runFor(400);
+check('fermée par Échap', !(await cel(p)) && !(await p.X('SR.on')));
+await p.X('openPage("learn")'); await p.clock.runFor(300);
+await ev(p, () => document.querySelector('#learnTiles .sc1-tile').click()); await p.clock.runFor(700);
+await ev(p, () => document.querySelector('.sc1-c[data-tid="major"][data-k="C"]').click()); await p.clock.runFor(400);
+await ev(p, () => document.getElementById('sc1PkEval').click()); await p.clock.runFor(600);
+check('exercice en écoute (Do majeur, Évaluation) : srBusy', await p.X('phase') === 'listening' && await p.X('srBusy()'));
+await p.X('srCelebrate()'); await p.clock.runFor(2000);
+check('demandée pendant la note attendue : elle attend', !(await cel(p)) && await p.X('SR.pend') === 1);
+await p.X('SR.pend=0; srShow()'); await p.clock.runFor(300); // le pire cas, forcé : l'animation est là alors qu'une note est attendue
+check('pendant l’animation : l’exercice en dessous est en pause', !!(await cel(p)) && await p.X('paused') === true);
+await ev(p, () => window.__mon(64)); await ev(p, () => window.__mon(67)); await p.clock.runFor(300);
+check('un accord (Mi + Sol) ne ferme pas et n’est pas compté', !!(await cel(p)) && await p.X('idx===0 && errors===0'));
+await ev(p, () => window.__mon(62)); await p.clock.runFor(300);
+check('une note seule autre que Do (Ré) ne ferme pas', !!(await cel(p)) && await p.X('idx===0 && errors===0'));
+await ev(p, () => window.__mon(60)); await p.clock.runFor(400);
+check('Do seul MIDI : fermée ; ce Do n’est PAS compté par l’exercice, qui reprend', !(await cel(p)) && await p.X('idx===0 && errors===0 && played.length===0 && phase==="listening" && paused===false'), await p.X('({idx,errors,phase,paused})'));
+await ev(p, () => window.__mon(60)); await p.clock.runFor(200);
+check('le Do suivant compte normalement (1re note de la gamme)', await p.X('idx') === 1);
+await p.X('openPage("games")'); await p.clock.runFor(300); await ev(p, () => { const e = document.getElementById('lvGo'); if (e && !document.getElementById('leaveModal').hidden) e.click(); }); await p.clock.runFor(300);
+await p.X('openPage("games")'); await p.clock.runFor(300);
+await ev(p, () => document.querySelectorAll('#gameCards .ptile')[1].click()); await p.clock.runFor(600); await ev(p, () => document.querySelector('#duModes [data-m=solo]').click()); await p.clock.runFor(400);
+await ev(p, () => { const c = document.getElementById(document.getElementById('rnStage').hidden ? 'gmBoard' : 'rnCanvas'); c.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true })); }); await p.clock.runFor(500);
+const gRun = await p.X('JSON.stringify(actNow())');
+await p.X('srCelebrate()'); await p.clock.runFor(2000);
+check('partie de jeu en cours (Contre la montre, actNow) : pas d’animation, elle attend', gRun === '{"k":"game"}' && !(await cel(p)) && await p.X('SR.pend') === 1, gRun);
+check('aucune erreur JS (fermeture)', !p.errs.length, p.errs);
+await p.context().close();
+
+// ---- couvre l'écran et reste centrée aux 5 tailles, clair / sombre ----
+for (const scheme of ['light', 'dark']) for (const vp of [{ width: 375, height: 667 }, { width: 812, height: 375 }, { width: 768, height: 1024 }, { width: 1024, height: 768 }, { width: 1280, height: 800 }]) {
+  p = await open({ vp, scheme, clock: true, st: STATE({ st: { srFrom: TODAY, playSec: { [TODAY]: 590 }, streak: { days: 6, last: D(-1) }, xpDays: { [D(-1)]: 9, [D(-2)]: 9, [D(-3)]: 9, [D(-4)]: 9, [D(-5)]: 9, [D(-6)]: 9 } } }) });
+  await play(p, 1); await p.clock.runFor(300);
+  if (CAP && (vp.width === 375 || vp.width === 1024)) await W(p, 2700); // l'horloge simulée avance aussi en temps réel : ~3 s après l'apparition, tout est allumé
+  const c5 = await cel(p);
+  check(`${vp.width}×${vp.height} ${scheme} : plein écran, contenu centré et entier, 7 jours`, !!c5 && c5.cover && c5.top && c5.centred && c5.fits && c5.days.length === 7 && c5.t === 'Série : 7 jours !', c5);
+  check(`${vp.width}×${vp.height} ${scheme} : la fenêtre « Garde tes progrès » (premier objectif) attend la fin de l’animation`, await ev(p, () => { const m = document.getElementById('accModal'); return !m || m.hidden; }));
+  if (CAP && (vp.width === 375 || vp.width === 1024)) await p.screenshot({ path: `${CAP}/05_plein_ecran_${vp.width}_${scheme}.png` });
+  await p.context().close();
+}
 
 // ---- ancienne règle pour les jours d'avant la bascule ----
 p = await open({ st: STATE({ st: { srFrom: D(-2), xpDays: { [D(-5)]: 10, [D(-4)]: 10, [D(-3)]: 10, [D(-2)]: 10, [D(-1)]: 10 }, playSec: { [D(-1)]: 700, [D(-2)]: 120 }, streak: { days: 1, last: D(-1) } } }) });
@@ -129,7 +197,9 @@ p = await open({ clock: true, rm: 'reduce', lang: 'en', st: STATE({ lang: 'en', 
 await play(p, 1); await p.clock.runFor(300);
 const c3 = await cel(p);
 const anims = await ev(p, () => { const c = document.getElementById('srCel'); return c ? c.getAnimations({ subtree: true }).filter(a => a instanceof CSSAnimation).length : -1; });
-check('EN + mouvement réduit : « Streak: 4 days! », aucune animation CSS', !!c3 && c3.t === 'Streak: 4 days!' && c3.s === '10 minutes played today' && anims === 0, [c3, anims]);
+check('EN + mouvement réduit : « Streak: 4 days! », même contenu, plein écran, aucune animation CSS', !!c3 && c3.t === 'Streak: 4 days!' && c3.s === 'Your 10 minutes for today are done.' && c3.cover && c3.days.length === 4 && anims === 0, [c3, anims]);
+await p.clock.runFor(6000);
+check('mouvement réduit : se ferme seule aussi', !(await cel(p)));
 await fiche(p);
 check('EN : fiche « Streak locked in today »', await ev(p, () => document.querySelector('#pfSr b').textContent) === 'Streak locked in today');
 await p.context().close();

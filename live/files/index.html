@@ -3931,31 +3931,45 @@ body.sc1x .gamebar .gend{margin-left:auto;border:1px solid var(--line);backgroun
 @media (prefers-reduced-motion:no-preference){ .sr-pulse{animation:srPulse 1.2s var(--ease-out,ease-out)} .pf-sr.sr-pulse{animation:srPulseRow 1.2s ease-out}
   @keyframes srPulse{0%,100%{transform:none}30%{transform:scale(1.18)}60%{transform:scale(.97)}}
   @keyframes srPulseRow{0%,100%{box-shadow:inset 0 0 0 0 rgba(255,201,74,0)}35%{box-shadow:inset 0 0 0 3px rgba(255,201,74,.75)}} }
-/* série validée : l'animation en coin (maquette serie-anim.html ; non modale, sans focus) */
-.sr-cel{position:fixed;z-index:8500;top:calc(16px + env(safe-area-inset-top,0px));right:16px;display:flex;align-items:center;gap:14px;padding:14px 20px 14px 14px;border-radius:20px;background:linear-gradient(135deg,#2b2560,#1f1a49);color:#f3f1ff;box-shadow:0 18px 40px -14px rgba(0,0,0,.6),0 0 0 1px rgba(255,255,255,.08);pointer-events:none;opacity:0;transform:translateY(-130%)}
-.sr-big{position:relative;width:64px;height:64px;flex:none;display:grid;place-items:center}
-.sr-big .sr-rg{position:absolute;inset:0;width:100%;height:100%} .sr-big .sr-rg circle{stroke-width:6} .sr-big .sr-rg .tr{stroke:rgba(255,255,255,.12)}
-.sr-big .sr-fl{position:relative;width:28px;height:28px;fill:#ff8a1f}
-.sr-burst{position:absolute;inset:-6px;border-radius:50%;border:3px solid #ffcf3f;opacity:0}
-.sr-tx{display:flex;flex-direction:column;min-width:0} .sr-tx b{font-family:var(--f-display);font-size:1.35rem;font-weight:700;line-height:1.1} .sr-tx b .n{display:inline-block}
-.sr-tx small{color:#b9b4e0;font-weight:700;font-size:.86rem}
-.sr-days{display:flex;gap:5px;margin-top:6px} .sr-days i{width:12px;height:12px;border-radius:50%;background:#ff8a1f}
-.sr-days i.td{background:#ffcf3f;box-shadow:0 0 8px #ffcf3f}
+/* série validée : le « happening » plein écran au centre (maquette serie-anim-plein.html) ; voile violet nuit dans les deux thèmes */
+.sr-cel{position:fixed;inset:0;z-index:9500;display:grid;place-items:center;padding:calc(16px + env(safe-area-inset-top,0px)) 16px calc(16px + env(safe-area-inset-bottom,0px));overflow:hidden;cursor:pointer;
+  background:radial-gradient(circle at 50% 45%,rgba(255,150,40,.3),rgba(255,150,40,0) 58%),rgba(21,18,46,.9);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);color:#f3f1ff;font-family:var(--f-body);
+  -webkit-tap-highlight-color:transparent;user-select:none;-webkit-user-select:none;outline:none;opacity:1;transition:opacity .3s ease}
+.sr-cel.out{opacity:0;pointer-events:none}
+.sr-box{display:flex;flex-direction:column;align-items:center;gap:clamp(8px,2.4vmin,18px);text-align:center;max-width:100%}
+.sr-big{position:relative;width:min(40vmin,250px);aspect-ratio:1;display:grid;place-items:center}
+.sr-big .sr-rg{position:absolute;inset:0;width:100%;height:100%}
+.sr-big .sr-rg circle{stroke-width:7} .sr-big .sr-rg .tr{stroke:rgba(255,255,255,.14)} .sr-big .sr-rg{overflow:visible;filter:drop-shadow(0 0 8px rgba(255,170,40,.55))}
+.sr-big .sr-fl{position:relative;width:46%;height:46%;fill:#ff8a1f;filter:drop-shadow(0 0 18px rgba(255,160,40,.85))}
+.sr-wave{position:absolute;inset:0;border-radius:50%;border:4px solid #ffcf3f;opacity:0}
+.sr-t{margin:0;font-family:var(--f-display);font-weight:700;font-size:clamp(1.6rem,8.5vmin,3.5rem);line-height:1.05;color:#fff}
+.sr-t .n{display:inline-block;color:#ffcf3f}
+.sr-s{margin:0;color:#d6d1f5;font-weight:700;font-size:clamp(.95rem,3.8vmin,1.25rem)}
+.sr-days{display:flex;gap:clamp(6px,1.6vmin,10px)}
+.sr-days i{display:grid;place-items:center;width:clamp(26px,6.5vmin,36px);aspect-ratio:1;border-radius:50%;background:#ff8a1f;color:#2a1400;font-style:normal;font-weight:800;font-size:clamp(.7rem,2.4vmin,.85rem)}
+.sr-days i.td{background:#ffcf3f;box-shadow:0 0 14px #ffcf3f}
+.sr-hint{color:#c9c4ee;opacity:.85;font-weight:700;font-size:.82rem}
+.sr-conf{position:absolute;inset:0;pointer-events:none;overflow:hidden}
+.sr-cf{position:absolute;top:-20px;width:10px;height:14px;border-radius:2px;opacity:0}
 @media (prefers-reduced-motion:no-preference){
-  .sr-cel.in{animation:srInOut 4.6s cubic-bezier(.23,1,.32,1) forwards}
-  .sr-cel.in .sr-big .fg{stroke-dashoffset:calc(var(--c) * .5);animation:srFill 1.3s .45s cubic-bezier(.65,0,.35,1) forwards}
-  .sr-cel.in .sr-fl{fill:rgba(255,255,255,.4);transform:scale(.8);animation:srLit .6s 1.7s cubic-bezier(.34,1.56,.64,1) forwards}
-  .sr-cel.in .sr-burst{animation:srBurst .7s 1.75s ease-out}
-  .sr-cel.in .sr-tx b .n{animation:srPop .5s 1.8s cubic-bezier(.34,1.56,.64,1)}
-  .sr-cel.in .sr-days i.td{background:rgba(255,255,255,.12);box-shadow:none;animation:srDot .4s 1.9s forwards}
-  @keyframes srInOut{0%{transform:translateY(-130%);opacity:0}9%{transform:none;opacity:1}86%{transform:none;opacity:1}100%{transform:translateY(-130%);opacity:0}}
+  .sr-cel.in{animation:srVeil .45s ease both}
+  .sr-cel.in .sr-box{animation:srBoxIn .7s .15s cubic-bezier(.34,1.56,.64,1) both}
+  .sr-cel.in .sr-big .fg{stroke-dashoffset:calc(var(--c) * .5);animation:srFill 1.4s .6s cubic-bezier(.65,0,.35,1) forwards}
+  .sr-cel.in .sr-fl{fill:rgba(255,255,255,.35);filter:none;transform:scale(.8);animation:srLit .7s 2s cubic-bezier(.34,1.56,.64,1) forwards}
+  .sr-cel.in .sr-wave{animation:srWave 1s 2.05s ease-out} .sr-cel.in .sr-wave.b{animation-delay:2.3s}
+  .sr-cel.in .sr-t .n{animation:srPop .6s 2.1s cubic-bezier(.34,1.56,.64,1)}
+  .sr-cel.in .sr-days i.td{background:rgba(255,255,255,.14);color:#c9c4ee;box-shadow:none;animation:srDot .5s 2.2s forwards}
+  .sr-cel.in .sr-cf{animation:srFall 2.6s linear forwards}
+  @keyframes srVeil{from{opacity:0}}
+  @keyframes srBoxIn{from{transform:scale(.7);opacity:0}}
   @keyframes srFill{to{stroke-dashoffset:0}}
-  @keyframes srLit{to{fill:#ff8a1f;transform:scale(1.15)}}
-  @keyframes srBurst{0%{opacity:.9;transform:scale(.8)}100%{opacity:0;transform:scale(1.45)}}
-  @keyframes srPop{50%{transform:scale(1.35);color:#ffcf3f}}
-  @keyframes srDot{to{background:#ffcf3f;box-shadow:0 0 8px #ffcf3f}} }
-@media (prefers-reduced-motion:reduce){ .sr-cel.in{opacity:1;transform:none;transition:opacity .2s} .sr-cel.in.out{opacity:0} }
-@media (max-width:640px){ .sr-cel{left:16px;right:16px} }
+  @keyframes srLit{to{fill:#ff8a1f;filter:drop-shadow(0 0 18px rgba(255,160,40,.85));transform:scale(1.1)}}
+  @keyframes srWave{0%{opacity:.9;transform:scale(.9)}100%{opacity:0;transform:scale(1.8)}}
+  @keyframes srPop{50%{transform:scale(1.5)}}
+  @keyframes srDot{to{background:#ffcf3f;color:#2a1400;box-shadow:0 0 14px #ffcf3f}}
+  @keyframes srFall{0%{opacity:1;transform:translateY(0) rotate(0)}100%{opacity:0;transform:translateY(110vh) rotate(calc(var(--r,1) * 720deg))}} }
+/* mouvement réduit : le même contenu, immobile (anneau plein, flamme allumée, jour coché), sans confettis */
+@media (prefers-reduced-motion:reduce){ .sr-conf{display:none} .sr-cel{transition:none} }
 /* ==== fin Gammes v4 + Série 10 min ==== */
 </style>
 
@@ -8854,6 +8868,7 @@ async function enableMidi(quiet){
         names.push(inp.name); inp.onmidimessage=ev=>midiEach(ev.data, inp, d=>{
         const [st,note,vel]=d;
         if(LV.on){ if((st&0xf0)===0x90 && vel>0) lvNote(note); return; } // the leave window: C = keep playing, B = leave
+        if(SR.on){ if((st&0xf0)===0x90 && vel>0) srNote(note); return; } // série validée (plein écran) : un Do seul ferme, aucune note ne passe en dessous
         if(MW.on && mwMsg(st,note,vel,inp)) return; // the « Connect my keyboard » assistant (MIDI lots 2-3) gets every message while it is open
         if(midiOpen && !calib && (st&0xf0)===0x90 && vel>0){ pressKey(note); mtNote(note,vel,inp.name); return; } // the MIDI window: the « play a note » test (M8)
         if(page==="quiz"){ if((st&0xf0)===0x90 && vel>0){ if(S.settings.midiSound) tone(note,0,.9,.1+.26*vel/127); if(!anyModal()) quizIn(String(inp.id||inp.name),note); } return; } // every keyboard counts: one per player
@@ -10305,7 +10320,7 @@ addEventListener("resize",()=>{ if(page==="acc" && ACC.view==="play" && ACC.run)
 // (fetch keepalive vers la fonction SQL track_events), sans le SDK Supabase. Hors ligne, la file attend. Une table ou une
 // fonction absente (migration pas encore lancée) coupe l'envoi sans erreur. En développement (localhost), rien ne part sur
 // le réseau, sauf si localStorage « pc-trk-test » = "1" (tests). Interrupteur : S.settings.analytics (absent = activé).
-const APP_BUILD="2026-10-27T12:00Z"; // remplacé par tools/build.py par la date de construction (version.txt)
+const APP_BUILD="2026-10-27T14:11Z"; // remplacé par tools/build.py par la date de construction (version.txt)
 const TRK={q:[], t:0, off:false, anon:null, sent:0, errs:[], errT:0, errSeen:new Set(), errOn:null, ports:new Set(), first:false};
 const RC={flags:{}, daily:{}, at:0};
 const TRK_NAMES=new Set(["song_import","app_open","first_note","input_mode","midi_connected","pp_lesson_done","learn_end","game_end","quiz_end","duel_end","goal_reached","badge","signup","login","play","feedback","acc_end","song_open","route_step","route_stage"]);
@@ -14028,7 +14043,8 @@ function sc1TipShow(el, auto){ const tx=el && el.dataset.tip; if(!tx) return; le
 // B. Fin de Gammes une à une : messages variés (sc1RV, jamais deux fois le même de suite), plus de compteur de coupes, plus de ligne de série.
 // C. Série : un jour compte quand on a joué SR_MIN minutes ce jour-là (S.playSec). Bascule S.srFrom (les jours d'avant gardent l'ancienne
 //    règle : XP = jour compté). Anneau 0 → 10 min sur la flamme du menu (#streakStat) et dans la carte verte de la fiche (#pfSr) ;
-//    à 5 min : demi-anneau + « Encore 5 min… » + pulsation ; à 10 min : animation non modale en coin (#srCel), une fois par jour (S.srShown).
+//    à 5 min : demi-anneau + « Encore 5 min… » + pulsation ; à 10 min : animation PLEIN ÉCRAN au centre (#srCel, srShow), une fois par jour
+//    (S.srShown), jamais pendant une note attendue (srBusy), fermée au toucher / Échap / Do seul MIDI (note avalée) ou seule après ~5 s.
 //    Test : tools/audit/r53_serie.mjs.
 Object.assign(TXT.fr,{
   sc1Tu:{seg:["Notes ou accords",["**NOTES** : tu joues chaque gamme note par note.","**ACCORDS** : tu joues les accords de la gamme, un par un.","Chaque mode a ses propres étoiles."]],
@@ -14045,7 +14061,7 @@ Object.assign(TXT.fr,{
     rec:["Nouveau record pour cette gamme !","Tu bats ton record sur cette gamme !","Mieux que la dernière fois !","Record battu, tu progresses !"]},
   endStreak:()=>"", ntfStreakX:"Joue 10 minutes avant minuit pour la garder.",
   srOf:(a,b)=>"Série du jour : "+a+" / "+b+" min", srLeft:n=>"Encore "+n+" min pour valider ta série", srHow:n=>"Joue "+n+" min pour valider ta série",
-  srOkT:"Série validée aujourd'hui", srOkS:n=>n+" min jouées : aujourd'hui compte !", srCelT:n=>"Série : "+n+" jour"+(n>1?"s":"")+" !", srCelS:n=>n+" minutes jouées aujourd'hui"});
+  srOkT:"Série validée aujourd'hui", srOkS:n=>n+" min jouées : aujourd'hui compte !", srCelT:n=>"Série : "+n+" jour"+(n>1?"s":"")+" !", srCelS:n=>"Tes "+n+" minutes du jour sont faites.", srCelH:"Touche l'écran pour continuer", srCelHm:c=>"Touche l'écran ou joue "+c+" pour continuer"});
 Object.assign(TXT.en,{
   sc1Tu:{seg:["Notes or chords",["**NOTES**: you play each scale note by note.","**CHORDS**: you play the chords of the scale, one by one.","Each mode has its own stars."]],
     cell:["One box = one scale",["Tap a box to play it.","{train}**Practice**: I show you the scale, then you play it back with the keys lit and the fingering. Nothing is scored.","{eval}**Test**: you play it on your own, with no help, to win stars."]],
@@ -14061,7 +14077,7 @@ Object.assign(TXT.en,{
     rec:["New best for this scale!","You beat your best on this scale!","Better than last time!","Record broken, you're improving!"]},
   endStreak:()=>"", ntfStreakX:"Play 10 minutes before midnight to keep it.",
   srOf:(a,b)=>"Today's streak: "+a+" / "+b+" min", srLeft:n=>n+" more min to lock in your streak", srHow:n=>"Play "+n+" min to lock in your streak",
-  srOkT:"Streak locked in today", srOkS:n=>n+" min played: today counts!", srCelT:n=>"Streak: "+n+" day"+(n!==1?"s":"")+"!", srCelS:n=>n+" minutes played today"});
+  srOkT:"Streak locked in today", srOkS:n=>n+" min played: today counts!", srCelT:n=>"Streak: "+n+" day"+(n!==1?"s":"")+"!", srCelS:n=>"Your "+n+" minutes for today are done.", srCelH:"Tap the screen to continue", srCelHm:c=>"Tap the screen or play "+c+" to continue"});
 
 // ---- A. tutoriel : puces mises en forme, pointe centrée sur la cible ----
 function tuFmt(s){ return esc(s).replace(/\*\*(.+?)\*\*/g,"<b>$1</b>")
@@ -14089,7 +14105,7 @@ function sc1Var(cat){ const L=(t("sc1RV")||{})[cat]||[]; if(L.length<2) return L
 
 // ---- C. série validée au bout de SR_MIN minutes de jeu ----
 const SR_MIN=10, SR_SEC=SR_MIN*60;
-const SR={prev:-1, t0:0, wait:0, fanAt:0, force:0};
+const SR={prev:-1, wait:0, fanAt:0, force:0, pend:0, on:false, buf:[], bt:0, h:null, hide:0, gone:0, prevFocus:null};
 const srSec = d => (((S.playSec||{})[d||dayStr()])|0);
 // date de bascule : la nouvelle règle compte à partir de ce jour (un jour déjà compté par l'ancienne règle aujourd'hui reste compté)
 function srFrom(){ if(typeof S.srFrom!=="string" || !/^\d{4}-\d\d-\d\d$/.test(S.srFrom)){ S.srFrom = (S.streak && S.streak.last===dayStr()) ? addDays(1) : dayStr(); save(); } return S.srFrom; }
@@ -14137,28 +14153,77 @@ function srPulse(){ SR.pulseAt=Date.now(); [$("streakStat")&&$("streakStat").que
 // chaque tick de temps de jeu (et chaque XP) : passage des 5 min, validation à 10 min
 function srTick(){ const d=dayStr(), s=srSec(d), was=SR.prev; SR.prev=s;
   if(d>=srFrom() && s>=SR_SEC){ if(S.streak.last!==d){ SR.force=1; try{ bumpStreak(); }finally{ SR.force=0; } save(); try{ renderStatus(); }catch(e){} }
-    if(S.srShown!==d){ S.srShown=d; save(); srCelebrate(); } }
+    if(S.srShown!==d && !SR.pend && !SR.on) srCelebrate(); } // S.srShown est posé quand elle se montre vraiment
   else if(was>=0 && was<SR_SEC/2 && s>=SR_SEC/2) srPulse();
   srPaint(); }
 { const o=goalTick; goalTick=function(){ const r=o.apply(this,arguments); try{ srTick(); }catch(e){ console.warn(e); } return r; }; }
-// l'animation : jamais pendant une note attendue d'un exercice (elle attend la fin, 90 s au plus), non modale, sans focus
-const srBusy = () => !!(game && (page==="practice"||page==="daily") && phase==="listening");
-function srCelebrate(){ SR.t0=Date.now(); clearTimeout(SR.wait); srSoon(); }
-function srSoon(){ if(srBusy() && Date.now()-SR.t0<90000){ SR.wait=setTimeout(srSoon,400); return; } srShow(); }
-function srShow(){ let c=$("srCel"); if(c) c.remove(); clearTimeout(SR.hide); c=document.createElement("div"); c.id="srCel"; c.className="sr-cel"; c.setAttribute("role","status"); c.setAttribute("aria-live","polite");
-  // maquette validée (captures-sc1v4-proto/serie-anim.html) : bandeau qui descend en haut à droite, anneau de la moitié au plein (jaune → orange),
-  // flamme grise qui s'allume avec un rebond et une onde, le chiffre qui rebondit, les points des jours (le dernier s'allume), remonte vers 4,5 s
-  const n=Math.max(1,effStreak()), dots=Math.min(7,n), R=28, C=2*Math.PI*R;
-  c.innerHTML='<span class="sr-big"><svg class="sr-rg" viewBox="0 0 64 64" aria-hidden="true"><defs><linearGradient id="srGrad" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffcf3f"/><stop offset="1" stop-color="#ff6a1f"/></linearGradient></defs>'
-    +'<circle class="tr" cx="32" cy="32" r="'+R+'"/><circle class="fg" cx="32" cy="32" r="'+R+'" stroke="url(#srGrad)" stroke-dasharray="'+C.toFixed(2)+'" style="--c:'+C.toFixed(2)+'px"/></svg>'
-    +'<svg class="sr-fl" viewBox="0 0 24 24" aria-hidden="true">'+SR_FLAME+'</svg><i class="sr-burst" aria-hidden="true"></i></span>'
-    +'<span class="sr-tx"><b></b><small></small><span class="sr-days" aria-hidden="true">'+'<i></i>'.repeat(dots-1)+'<i class="td"></i></span></span>';
-  const T=String(t("srCelT")(fmtN(n))), k=T.indexOf(fmtN(n)), b=c.querySelector("b");
-  if(k>=0){ b.append(T.slice(0,k)); const sp=document.createElement("span"); sp.className="n"; sp.textContent=fmtN(n); b.append(sp, T.slice(k+fmtN(n).length)); } else b.textContent=T;
-  c.querySelector("small").textContent=t("srCelS")(fmtN(SR_MIN));
+// l'animation plein écran (maquette validée captures-sc1v4-proto/serie-anim-plein.html) : un « happening » au milieu, au-dessus de tout.
+// Jamais pendant qu'une note est attendue (srBusy : exercice en écoute, activité en cours actNow(), leçon, placement, accompagnement,
+// écrans de départ, assistant MIDI, app en arrière-plan) : elle attend l'écran calme suivant. Se ferme au toucher / clic, Échap, Entrée,
+// Espace, Do seul MIDI (note avalée, jamais comptée en dessous) ou seule après ~5 s. Les activités solo en dessous attendent (srHold).
+const srBusy = () => { try{
+  if(document.hidden || LV.on || FN.on || MW.on || midiOpen) return true;
+  if(game && (page==="practice"||page==="daily") && phase==="listening") return true;
+  if(actNow()) return true;
+  if(page==="pp" && (PP.view==="lesson"||PP.view==="place")) return true;
+  if(page==="acc" && ACC.view==="play") return true;
+  return ["gate","onb","tour"].some(id=>{ const e=$(id); return e && !e.hidden; }) || document.body.classList.contains("gate-on");
+}catch(e){ return false; } };
+function srCelebrate(){ SR.pend=1; clearTimeout(SR.wait); srSoon(); }
+function srSoon(){ clearTimeout(SR.wait); if(!SR.pend) return; if(srBusy()){ SR.wait=setTimeout(srSoon,400); return; } SR.pend=0; srShow(); }
+// pause des activités solo en dessous (même mécanique que l'arrière-plan, bloc « Chasse aux bugs ») ; rien en ligne
+function srHold(on){ try{
+  if(on){ if(SR.h || LV.on || HOLD) return; const pg=lvBase();
+    if((pg==="practice"||pg==="daily") && game && phase==="listening" && !paused){ pauseRound(); SR.h={k:"learn"}; return; }
+    const a=actNow(); if(!a || a.online) return;
+    if(a.k==="learn"||a.k==="daily"){ if(!paused){ pauseRound(); SR.h=a; } return; }
+    const keep=LV.a; LV.a=a; lvHold(true); LV.a=keep; SR.h=a; return; }
+  const a=SR.h; if(!a) return; SR.h=null;
+  if(a.k==="learn"||a.k==="daily"){ resumeRound(); return; }
+  if(HOLD && !LV.on){ const keep=LV.a; LV.a=a; lvHold(false); LV.a=keep; }
+}catch(e){ console.warn(e); } }
+// les initiales des derniers jours de série (L M M J V S D), le dernier = aujourd'hui
+function srDays(n){ const out=[]; let f; try{ f=new Intl.DateTimeFormat(S.settings.lang==="en"?"en-GB":"fr-FR",{weekday:"narrow"}); }catch(e){}
+  for(let i=n-1;i>=0;i--){ const d=new Date(); d.setDate(d.getDate()-i); out.push(f ? f.format(d).toUpperCase() : ""); } return out; }
+const SR_CONF=["--note-0","--note-2","--note-4","--note-5","--note-7","--note-9","--note-11"];
+function srShow(){ let c=$("srCel"); if(c) c.remove(); clearTimeout(SR.hide); clearTimeout(SR.gone);
+  S.srShown=dayStr(); save();
+  const n=Math.max(1,effStreak()), N=fmtN(n), days=srDays(Math.min(7,n)), R=46, C=2*Math.PI*R;
+  c=document.createElement("div"); c.id="srCel"; c.className="sr-cel"; c.tabIndex=-1;
+  c.setAttribute("role","dialog"); c.setAttribute("aria-modal","true"); c.setAttribute("aria-labelledby","srCelT"); c.setAttribute("aria-describedby","srCelS");
+  let conf=""; for(let i=0;i<40;i++) conf+='<i class="sr-cf" style="left:'+(Math.random()*100).toFixed(1)+'%;background:var('+SR_CONF[i%7]+');animation-delay:'+(2+Math.random()*.8).toFixed(2)+'s;--r:'+(Math.random()<.5?-1:1)+'"></i>';
+  c.innerHTML='<div class="sr-conf" aria-hidden="true">'+conf+'</div><div class="sr-box">'
+    +'<span class="sr-big"><svg class="sr-rg" viewBox="0 0 100 100" aria-hidden="true"><defs><linearGradient id="srGrad" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffcf3f"/><stop offset="1" stop-color="#ff6a1f"/></linearGradient></defs>'
+    +'<circle class="tr" cx="50" cy="50" r="'+R+'"/><circle class="fg" cx="50" cy="50" r="'+R+'" stroke="url(#srGrad)" stroke-dasharray="'+C.toFixed(2)+'" style="--c:'+C.toFixed(2)+'px"/></svg>'
+    +'<svg class="sr-fl" viewBox="0 0 24 24" aria-hidden="true">'+SR_FLAME+'</svg><i class="sr-wave" aria-hidden="true"></i><i class="sr-wave b" aria-hidden="true"></i></span>'
+    +'<h2 class="sr-t" id="srCelT"></h2><p class="sr-s" id="srCelS"></p>'
+    +'<span class="sr-days" aria-hidden="true">'+days.map((d,i)=>'<i'+(i===days.length-1?' class="td"':'')+'>'+esc(d)+'</i>').join("")+'</span>'
+    +'<small class="sr-hint"></small></div>';
+  const T=String(t("srCelT")(N)), k=T.indexOf(N), h=c.querySelector(".sr-t");
+  if(k>=0){ h.append(T.slice(0,k)); const sp=document.createElement("span"); sp.className="n"; sp.textContent=N; h.append(sp, T.slice(k+N.length)); } else h.textContent=T;
+  c.querySelector(".sr-s").textContent=t("srCelS")(fmtN(SR_MIN));
+  c.querySelector(".sr-hint").textContent = midiMode() && S.settings.midiC!==false ? t("srCelHm")(CNAME()) : t("srCelH");
+  c.addEventListener("click",e=>{ e.preventDefault(); e.stopPropagation(); srClose(); });
+  SR.prevFocus=document.activeElement; SR.on=true; SR.buf=[]; SR.at=Date.now();
   document.body.appendChild(c); void c.offsetWidth; c.classList.add("in");
-  if(uiSound() && ctx && ctx.state==="running" && Date.now()-SR.fanAt>1500){ try{ tone(79,1.7,.35,.07); tone(84,1.84,.7,.06); }catch(e){} } // au moment où la flamme s'allume
-  SR.hide=setTimeout(()=>{ c.classList.add("out"); SR.hide=setTimeout(()=>c.remove(),300); }, 4500); }
+  try{ c.focus({preventScroll:true}); }catch(e){}
+  addEventListener("keydown",srKey,true); srHold(true);
+  if(uiSound() && ctx && ctx.state==="running" && Date.now()-SR.fanAt>1500){ try{ tone(79,2.0,.35,.06); tone(84,2.12,.7,.05); }catch(e){} } // discret, quand la flamme s'allume
+  SR.hide=setTimeout(srClose, 5200); }
+function srClose(){ const c=$("srCel"); clearTimeout(SR.hide); clearTimeout(SR.bt); if(!SR.on){ return; } SR.on=false; SR.buf=[];
+  removeEventListener("keydown",srKey,true); srHold(false);
+  if(c){ c.classList.add("out"); SR.gone=setTimeout(()=>c.remove(),320); }
+  const f=SR.prevFocus; SR.prevFocus=null; try{ if(f && f.isConnected && f!==document.body) f.focus({preventScroll:true}); }catch(e){} }
+// clavier d'ordinateur : Échap / Entrée / Espace ferment, les autres touches (notes A…J, raccourcis) ne passent pas en dessous
+function srKey(e){ if(!SR.on) return; e.preventDefault(); e.stopImmediatePropagation(); if(e.repeat) return; if(["Escape","Enter"," ","Spacebar"].includes(e.key)) srClose(); }
+// MIDI (appelé par onmidimessage avant tout le reste) : toutes les notes sont avalées ; un Do seul (120 ms) ferme
+function srNote(m){ if(S.settings.midiC===false) return; SR.buf.push(((m%12)+12)%12); clearTimeout(SR.bt);
+  SR.bt=setTimeout(()=>{ const b=SR.buf; SR.buf=[]; if(SR.on && b.length===1 && b[0]===0) srClose(); },120); }
+// écran, micro, clavier d'ordinateur : rien ne passe à l'exercice pendant l'animation
+{ const o=noteIn; noteIn=function(){ if(SR.on) return; return o.apply(this,arguments); }; }
+{ const o=midiIn; midiIn=function(){ if(SR.on) return; return o.apply(this,arguments); }; }
+// la fenêtre « Garde tes progrès » (D23, ouverte au premier objectif atteint, souvent la même seconde) attend la fin de la fête
+{ const o=acctBusy; acctBusy=function(){ return SR.on || !!SR.pend || (dayStr()>=srFrom() && srSec()>=SR_SEC && S.srShown!==dayStr()) || o.apply(this,arguments); }; }
 // fusion entre appareils : temps de jeu = max par jour, bascule = la plus ancienne, animation vue = la plus récente
 { const o=mergeState; mergeState=function(local, cloud){ const r=o.apply(this,arguments); try{ const isO=x=>x&&typeof x==="object"&&!Array.isArray(x), c=isO(cloud)?cloud:{}, M=r.merged;
     const ps={...(isO(local.playSec)?local.playSec:{})}; Object.entries(isO(c.playSec)?c.playSec:{}).forEach(([k,v])=>{ if(Number.isFinite(+v)) ps[k]=Math.max(+ps[k]||0,+v); }); if(Object.keys(ps).length) M.playSec=ps;
