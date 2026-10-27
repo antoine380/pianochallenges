@@ -33,7 +33,7 @@ window.__nat=(data,id)=>window.__nl.forEach(f=>f({id:id||'7',data}));
 window.__ports=list=>{ window.__in=list; const f=window.__cb['Midi:statechange']; if(f) f({inputs:list}); };`;
 const STATE = (o = {}) => ({ xp: 900, gate: 'account', onb: { done: 1 }, tourDone: 1, langV2: true, pwShown: 1, ...(o.stars ? { scStars: o.stars } : {}),
   introSeen: { scales: 1, chords: 1, harmony: 1, prog: 1, ear: 1, games: 1, daily: 1 }, midi: { later: Date.now() }, goal: { kind: 'min', v: 10, asked: 1, at: 1 },
-  settings: { lang: o.lang || 'fr', notation: o.lang || 'fr', input: 'midi', uiSound: false, octave: true, fing: true, guideK: false, guideN: false, guideP: true, delay: 0, ...(o.set || {}) } });
+  settings: { sc1Tour: 1, lang: o.lang || 'fr', notation: o.lang || 'fr', input: 'midi', uiSound: false, octave: true, fing: true, guideK: false, guideN: false, guideP: true, delay: 0, ...(o.set || {}) } });
 async function open({ vp = { width: 1024, height: 768 }, st = STATE(), scheme = 'light' } = {}) {
   const c = await b.newContext({ viewport: vp, hasTouch: vp.width < 900, colorScheme: scheme });
   await c.addInitScript(NAT);
@@ -188,12 +188,13 @@ for (const m of [65, 67, 69, 71, 72]) { await p.X(`noteIn(${m})`); await W(p, 40
 await W(p, 400);
 g = await G(p);
 const end1 = await ev(p, () => ({ well: document.getElementById('sc1Well')?.textContent, b: [...document.querySelectorAll('#actions button')].map(x => x.id), endModal: !document.getElementById('endModal').hidden }));
-check('gamme rejouée : « Bien joué ! » avec Revoir la gamme / Passer à l’évaluation / Rejouer, pas d’écran de fin noté', g.phase === 'success' && end1.well === 'Bien joué !' && end1.b.join() === 'sc1See,sc1ToEval,sc1Replay' && !end1.endModal, { g, end1 });
+const end1c = await ev(p, () => ({ ev: document.getElementById('sc1ToEval').classList.contains('primary'), rp: !document.getElementById('sc1Replay').classList.contains('primary') }));
+check('gamme rejouée : « Bien joué ! » avec Revoir la gamme … Rejouer (gris) puis « Passer à l’évaluation » (principal, à droite), pas d’écran de fin noté (v3)', g.phase === 'success' && end1.well === 'Bien joué !' && end1.b.join() === 'sc1See,sc1Replay,sc1ToEval' && end1c.ev && end1c.rp && !end1.endModal, { g, end1, end1c });
 check('entraînement : ni étoiles ni XP', await p.X('sc1Get("notes","major","C")') === 0 && await p.X('S.xp') === xp0 && !(await stored(p)).scStars?.notes?.['C-major']);
 if (CAP) await p.screenshot({ path: `${CAP}/r49_fin.png` });
-// MIDI: Si = see it again, Do = play again (the lone-note shortcuts only when a command is awaited)
-await p.X('midiStart(71)'); await W(p, 300);
-check('Si seul sur « Bien joué » = revoir la démonstration', (await G(p)).demo);
+// MIDI (v3) : Mi = revoir, Si = rejouer, Do = passer à l'évaluation (the lone-note shortcuts only when a command is awaited)
+await p.X('midiStart(64)'); await W(p, 300);
+check('Mi seul sur « Bien joué » = revoir la démonstration', (await G(p)).demo);
 await p.X('midiStart(60)'); await W(p, 300);
 g = await G(p);
 check('Do seul pendant la démo : une simple note (la démo continue)', g.demo && g.phase === 'revealed', g);
@@ -205,17 +206,17 @@ await ev(p, () => document.getElementById('sc1See').click()); await W(p, 300);
 check('« Revoir la gamme » (toujours visible) relance la démonstration', (await G(p)).demo);
 await ev(p, () => document.getElementById('sc1Your').click()); await W(p, 200);
 for (const m of C_MAJ) { await p.X(`noteIn(${m})`); await W(p, 40); } await W(p, 300);
-await p.X('midiStart(60)'); await W(p, 300);
+await p.X('midiStart(71)'); await W(p, 300);
 g = await G(p);
-check('Do seul sur « Bien joué » = rejouer (à toi, sans démo)', g.phase === 'listening' && !g.demo && g.tr, g);
+check('Si seul sur « Bien joué » = rejouer (à toi, sans démo)', g.phase === 'listening' && !g.demo && g.tr, g);
 // → Evaluation (Mi on « Well played ») : unchanged, stars
 for (const m of C_MAJ) { await p.X(`noteIn(${m})`); await W(p, 40); } await W(p, 300);
 const kb = await ev(p, () => [...document.querySelectorAll('#actions button')].map(b => b.id + ':' + (b.querySelector('kbd')?.textContent || '')).join());
-check('fin d’entraînement : raccourcis affichés Revoir = Si, Passer à l’évaluation = Mi, Rejouer = Do', kb === 'sc1See:Si,sc1ToEval:Mi,sc1Replay:Do', kb);
-await p.X('midiStart(64)'); await W(p, 400);
+check('fin d’entraînement : raccourcis affichés Revoir = Mi, Rejouer = Si, Passer à l’évaluation = Do', kb === 'sc1See:Mi,sc1Replay:Si,sc1ToEval:Do', kb);
+await p.X('midiStart(60)'); await W(p, 400);
 g = await G(p);
 const bar2 = await ev(p, () => [...document.querySelectorAll('#sc1Tm button')].map(b => b.getAttribute('aria-pressed')).join());
-check('Mi seul sur « Bien joué » = « Passer à l’évaluation » : la même gamme, notée, mode retenu (S.settings.sc1Train="eval"), aides du joueur rendues', g.phase === 'listening' && !g.tr && g.k === 'C' && bar2 === 'false,true' && await p.X('S.settings.sc1Train') === 'eval' && await p.X('S.settings.guideK===false && S.settings.guideP===true'), { g, bar2 });
+check('Do seul sur « Bien joué » = « Passer à l’évaluation » : la même gamme, notée, mode retenu (S.settings.sc1Train="eval"), aides du joueur intactes dans la sauvegarde', g.phase === 'listening' && !g.tr && g.k === 'C' && bar2 === 'false,true' && await p.X('S.settings.sc1Train') === 'eval' && await ev(p, () => { const s = JSON.parse(localStorage.getItem('memo-gammes-v1')).settings; return s.guideK === false && s.guideP === true; }), { g, bar2 });
 for (const m of C_MAJ) { await p.X(`noteIn(${m})`); await W(p, 40); } await W(p, 2400);
 check('évaluation inchangée : 3 étoiles, fin au-dessus de la liste', await p.X('sc1Get("notes","major","C")') === 3 && await ev(p, () => !document.getElementById('endModal').hidden && document.querySelectorAll('#endBody .sc1-stars span.on').length === 3) && await p.X('page') === 'sc1' && await p.X('S.xp') > xp0);
 await ev(p, () => document.getElementById('sc1Back').click()); await W(p, 300);
@@ -357,29 +358,29 @@ await toList(p);
 let rb = await ev(p, () => { const b = document.getElementById('sc1RvB'); return { t: b.querySelector('.lg')?.textContent, dis: b.getAttribute('aria-disabled') }; });
 check('liste : bouton « Révision · tes 3 gammes » à côté de NOTES | ACCORDS', rb.t === 'Révision · tes 3 gammes' && !rb.dis, rb);
 await ev(p, () => document.querySelector('#sc1Seg [data-v=chords]').click()); await W(p, 300);
-rb = await ev(p, () => { const b = document.getElementById('sc1RvB'); return { t: b.textContent, dis: b.getAttribute('aria-disabled'), title: b.title }; });
+rb = await ev(p, () => { const b = document.getElementById('sc1RvB'); return { t: b.textContent, dis: b.getAttribute('aria-disabled'), title: b.dataset.tip || '' }; }); // v3 : info-bulle #sc1Tip (data-tip)
 await ev(p, () => document.getElementById('sc1RvB').click()); await W(p, 300);
 check('ACCORDS sans gamme à 3 étoiles : bouton désactivé avec explication, rien ne s’ouvre', rb.dis === 'true' && /3 étoiles/.test(rb.title) && await ev(p, () => document.getElementById('sc1Rv').hidden), rb);
 await ev(p, () => document.querySelector('#sc1Seg [data-v=notes]').click()); await W(p, 300);
 await ev(p, () => document.getElementById('sc1RvB').click()); await W(p, 300);
-const rw = await ev(p, () => ({ open: !document.getElementById('sc1Rv').hidden, ti: document.getElementById('sc1RvTi').textContent, s: document.getElementById('sc1RvS').textContent, tx: document.getElementById('sc1RvTx').textContent, tm: [...document.querySelectorAll('#sc1RvTm button')].map(b => b.textContent + ':' + b.getAttribute('aria-pressed')).join(), mix: document.getElementById('sc1RvMix').checked, go: document.getElementById('sc1RvGo').textContent }));
-check('fenêtre Révision : « Révision de tes 3 gammes », explication, chrono (Sans chrono / 30 s / 20 s / 10 s), « Mélanger l’ordre » coché, « Lancer la révision » (Do)', rw.open && rw.ti === 'Révision de tes 3 gammes' && /3 gammes/.test(rw.s) && /sans faute \(3 étoiles\)/.test(rw.tx) && rw.tm === 'Sans chrono:true,30 s:false,20 s:false,10 s:false' && rw.mix && /Lancer la révision/.test(rw.go) && /Do$/.test(rw.go), rw);
+const rw = await ev(p, () => ({ open: !document.getElementById('sc1Rv').hidden, ti: document.getElementById('sc1RvTi').textContent, s: document.getElementById('sc1RvS').textContent, tx: document.getElementById('sc1RvTx').textContent, tm: !!document.getElementById('sc1RvTm'), mix: document.getElementById('sc1RvMix').checked, go: document.getElementById('sc1RvGo').textContent }));
+check('fenêtre Révision : « Révision de tes 3 gammes », explication, plus de chrono (v3), « Mélanger l’ordre » coché, « Lancer la révision » (Do)', rw.open && rw.ti === 'Révision de tes 3 gammes' && /3 gammes/.test(rw.s) && /sans faute \(3 étoiles\)/.test(rw.tx) && !rw.tm && rw.mix && /Lancer la révision/.test(rw.go) && /Do$/.test(rw.go), rw);
 if (CAP) await p.screenshot({ path: `${CAP}/r49_revision.png` });
-await ev(p, () => document.querySelector('#sc1RvTm [data-v="10"]').click()); await ev(p, () => document.getElementById('sc1RvMix').click()); await W(p, 200);
-check('réglages de la révision mémorisés (S.settings.sc1RvT=10, sc1RvMix=false)', (await stored(p)).settings.sc1RvT === 10 && (await stored(p)).settings.sc1RvMix === false);
+await ev(p, () => document.getElementById('sc1RvMix').click()); await W(p, 200);
+check('réglage de la révision mémorisé (sc1RvMix=false)', (await stored(p)).settings.sc1RvMix === false);
 await p.X('midiStart(71)'); await W(p, 300);
 check('Si = fermer la fenêtre Révision', await ev(p, () => document.getElementById('sc1Rv').hidden) && await p.X('page') === 'sc1');
 await ev(p, () => document.getElementById('sc1RvB').click()); await W(p, 300); await p.X('midiStart(60)'); await W(p, 500);
 const rg = await p.X('({page, n:game&&game.total, q:game&&game.queue.map(i=>i.k+"-"+i.tid).join(), rv:game&&game.queue.every(i=>i.sc1rv), dl:Math.round((deadline-startT)/1000), lbl:game&&game.label, dir:cur&&cur.dir, delay:S.settings.delay})');
-check('Do = lancer : partie de 3 gammes (ordre de la liste, mélange décoché), en évaluation, chrono de 10 s par gamme', rg.page === 'practice' && rg.n === 3 && rg.q === 'C-major,G-major,A-minor' && rg.rv && rg.dl === 10 && /Révision/.test(rg.lbl) && rg.dir === 'up' && rg.delay === 0, rg);
-check('le chrono prêté n’est jamais sauvegardé (delay du joueur = 0)', (await stored(p)).settings.delay === 0);
+check('Do = lancer : partie de 3 gammes (ordre de la liste, mélange décoché), en évaluation, sans chrono (v3)', rg.page === 'practice' && rg.n === 3 && rg.q === 'C-major,G-major,A-minor' && rg.rv && rg.dl <= 0 && /Révision/.test(rg.lbl) && rg.dir === 'up' && rg.delay === 0, rg);
+check('le réglage de chrono du joueur jamais modifié dans la sauvegarde (delay = 0)', (await stored(p)).settings.delay === 0);
 const playCur = async (bad) => { await p.waitForFunction(() => window.__X('phase=="listening"')); const ms = await p.X('revealMidis()'); if (bad) { await p.X('noteIn(61)'); await W(p, 30); } for (const m of ms) { await p.X(`noteIn(${m})`); await W(p, 30); } await W(p, 1500); };
 await playCur(false); await playCur(true); await playCur(false); await W(p, 1200);
 const re = await ev(p, () => ({ end: !document.getElementById('endModal').hidden, t: document.getElementById('endTitle').textContent, rework: !!document.getElementById('endRework'), sc1: !!document.getElementById('sc1Next') }));
 check('fin de la révision : écran de fin habituel des parties (pas celui d’une gamme), « Retravailler les erreurs »', re.end && !re.sc1 && re.rework, re);
 check('étoiles inchangées (une faute en révision ne fait rien perdre)', await p.X('sc1Get("notes","major","C")===3 && sc1Get("notes","major","G")===3 && sc1Get("notes","minor","A")===3 && sc1Get("notes","major","D")===2'));
 await ev(p, () => document.getElementById('endRework').click()); await W(p, 400);
-check('« Retravailler les erreurs » : la gamme ratée, toujours en révision (montée, chrono 10 s)', await p.X('page==="practice" && game.total===1 && game.queue[0].sc1rv===1 && cur.k==="G" && Math.round((deadline-startT)/1000)===10'));
+check('« Retravailler les erreurs » : la gamme ratée, toujours en révision (montée, sans chrono)', await p.X('page==="practice" && game.total===1 && game.queue[0].sc1rv===1 && cur.k==="G" && !deadline'));
 check('D : aucune erreur JS', p.errs.length === 0, p.errs);
 await p.context().close();
 for (const [w, h] of [[375, 667], [812, 375], [768, 1024], [1024, 768], [1280, 800]]) for (const scheme of ['light', 'dark']) {

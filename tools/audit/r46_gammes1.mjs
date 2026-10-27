@@ -14,7 +14,7 @@ const fails = []; const check = (n, ok, d) => { console.log((ok ? 'OK   ' : 'FAI
 const b = await chromium.launch(process.env.PW_CHROMIUM ? { executablePath: process.env.PW_CHROMIUM } : {});
 const STATE = (o = {}) => ({ xp: 900, gate: 'account', onb: { done: 1 }, tourDone: 1, langV2: true, pwShown: 1, ...(o.stars ? { scStars: o.stars } : {}),
   introSeen: { scales: 1, chords: 1, harmony: 1, prog: 1, ear: 1, games: 1, daily: 1 }, midi: { later: Date.now() }, goal: { kind: 'min', v: 10, asked: 1, at: 1 },
-  settings: { lang: o.lang || 'fr', notation: o.lang || 'fr', input: o.input || 'midi', uiSound: false, octave: true, sc7: true, dir: 'down', autoNext: true, delay: 0, ...(o.paywall ? { paywall: true } : {}) } });
+  settings: { sc1Tour: 1, lang: o.lang || 'fr', notation: o.lang || 'fr', input: o.input || 'midi', uiSound: false, octave: true, sc7: true, dir: 'down', autoNext: true, delay: 0, ...(o.paywall ? { paywall: true } : {}) } });
 async function open({ vp = { width: 1024, height: 768 }, st = STATE(), scheme = 'light' } = {}) {
   const c = await b.newContext({ viewport: vp, hasTouch: vp.width < 900, colorScheme: scheme });
   await c.addInitScript(`window.__midiMode="ok";`); await c.addInitScript(INIT.replace('${MODE}', 'ok'));
@@ -98,10 +98,11 @@ await ev(p, () => document.getElementById('endX').click()); await W(p, 400);
 check('× sur la fin : la liste', await ev(p, () => document.body.dataset.page === 'sc1' && document.getElementById('endModal').hidden));
 await cell(p, 'major', 'F'); await W(p, 400); await toEval(p); await notes(p, [65, 67]); await quit(p);
 check('Fa majeur, 2 notes puis quitter : 0 étoile, retour direct à la liste', await stars(p, 'notes', 'F-major') === 0 && await ev(p, () => document.body.dataset.page === 'sc1' && document.getElementById('endModal').hidden));
-// « Montre-moi » puis réussite = 2 au plus
-await cell(p, 'minor', 'A'); await W(p, 400); await toEval(p); await p.X('reveal(false)'); await W(p, 300); await p.X('grade(false)'); await W(p, 300);
+// v3 : en Évaluation, plus de « Montre-moi » (aucune aide ; on bascule en Entraînement si on bloque) : reveal ne fait rien, pas de bouton
+await cell(p, 'minor', 'A'); await W(p, 400); await toEval(p); await p.X('reveal(false)'); await W(p, 300);
+check('Évaluation : « Montre-moi » sans effet, aucun bouton d’aide', await p.X('phase') === 'listening' && await ev(p, () => document.querySelectorAll('#actions button').length === 0));
 await notes(p, [69, 71, 72, 74, 76, 77, 79, 81]); await W(p, 2400);
-check('après « Montre-moi », gamme finie sans faute : 2 étoiles au plus', await stars(p, 'notes', 'A-minor') === 2, await stars(p, 'notes', 'A-minor'));
+check('Évaluation : gamme finie sans faute = 3 étoiles', await stars(p, 'notes', 'A-minor') === 3, await stars(p, 'notes', 'A-minor'));
 await ev(p, () => document.getElementById('sc1Back').click()); await W(p, 300);
 
 // 5) accords : triades de la gamme, en montée ; sans faute → 3 étoiles (notes inchangées) ; une fausse note → 2

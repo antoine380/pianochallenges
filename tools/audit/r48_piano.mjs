@@ -23,7 +23,7 @@ const fails = []; const check = (n, ok, d) => { console.log((ok ? 'OK   ' : 'FAI
 const b = await chromium.launch(process.env.PW_CHROMIUM ? { executablePath: process.env.PW_CHROMIUM } : {});
 const STATE = (o = {}) => ({ xp: 900, gate: 'account', onb: { done: 1 }, tourDone: 1, langV2: true, pwShown: 1,
   introSeen: { scales: 1, chords: 1, harmony: 1, prog: 1, ear: 1, games: 1, daily: 1 }, midi: { later: Date.now() }, goal: { kind: 'min', v: 10, asked: 1, at: 1 },
-  settings: { lang: o.lang || 'fr', notation: o.lang || 'fr', input: 'midi', uiSound: false, octave: true, autoNext: true, delay: 0, ...(o.set || {}) } });
+  settings: { sc1Tour: 1, lang: o.lang || 'fr', notation: o.lang || 'fr', input: 'midi', uiSound: false, octave: true, autoNext: true, delay: 0, ...(o.set || {}) } });
 async function open({ vp = { width: 1024, height: 768 }, st = STATE(), scheme = 'light', reduce = 'no-preference' } = {}) {
   const c = await b.newContext({ viewport: vp, hasTouch: vp.width < 900, colorScheme: scheme, reducedMotion: reduce });
   await c.addInitScript(`window.__midiMode="ok";`); await c.addInitScript(INIT.replace('${MODE}', 'ok'));

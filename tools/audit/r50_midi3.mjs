@@ -24,7 +24,7 @@ window.__nat=(data,id)=>window.__nl.forEach(f=>f({id:id||'7',data}));
 window.__ports=list=>{ window.__in=list; const f=window.__cb['Midi:statechange']; if(f) f({inputs:list}); };`;
 const STATE = (o = {}) => ({ xp: 900, gate: 'account', onb: { done: 1 }, tourDone: 1, langV2: true, pwShown: 1,
   introSeen: { scales: 1, chords: 1, harmony: 1, prog: 1, ear: 1, games: 1, daily: 1, free: 1, play: 1, piano: 1 }, midi: { later: Date.now(), ...(o.midi || {}) }, goal: { kind: 'min', v: 10, asked: 1, at: 1 },
-  settings: { lang: 'fr', notation: 'fr', input: 'midi', uiSound: false, octave: true, guideP: true, delay: 0, ...(o.set || {}) } });
+  settings: { sc1Tour: 1, lang: 'fr', notation: 'fr', input: 'midi', uiSound: false, octave: true, guideP: true, delay: 0, ...(o.set || {}) } });
 async function open({ vp = { width: 1024, height: 768 }, st = STATE(), ports } = {}) {
   const c = await b.newContext({ viewport: vp, hasTouch: vp.width < 900 });
   await c.addInitScript(NAT + (ports ? `window.__in=${JSON.stringify(ports)};` : ''));
