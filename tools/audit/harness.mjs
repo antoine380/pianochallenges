@@ -5,6 +5,7 @@ import { createRequire } from 'module';
 // playwright est résolu depuis NODE_PATH (ex. NODE_PATH=/home/claude/node_modules) ou depuis le node_modules le plus proche
 const require = createRequire(process.env.NODE_PATH ? process.env.NODE_PATH.replace(/\/?$/,'/') : import.meta.url);
 const { chromium } = require('playwright');
+const EXE = [process.env.CHROMIUM, process.env.PW_CHROMIUM, '/opt/pw-browsers/chromium'].find(x => x && require('fs').existsSync(x)); // CI : Chromium de Playwright
 export const URL = 'http://localhost:'+(process.env.PORT||8767)+'/';
 export const STORE = 'memo-gammes-v1';
 
@@ -28,7 +29,7 @@ window.__T = {
 };`;
 
 export async function launch(opts={}){
-  const browser = await chromium.launch({ executablePath: process.env.CHROMIUM||'/opt/pw-browsers/chromium', headless: true });
+  const browser = await chromium.launch({ ...(EXE ? { executablePath: EXE } : {}), headless: true });
   return browser;
 }
 

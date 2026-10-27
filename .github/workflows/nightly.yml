@@ -47,7 +47,7 @@ jobs:
       - name: Tests
         env:
           CI_SHARD: ${{ matrix.shard }}
-          RETRY: "r7_online"
+          RETRY: "r7_online r19_confirm r53_serie r21_firststeps"
           TEST_TIMEOUT: "1800"
         run: bash tools/audit/ci_run.sh ${{ steps.list.outputs.tests }}
 

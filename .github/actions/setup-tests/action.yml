@@ -14,6 +14,9 @@ runs:
     - uses: actions/setup-python@v5
       with:
         python-version: "3.12"
+    - name: Dossier des captures des tests (/home/claude)
+      shell: bash
+      run: sudo mkdir -p /home/claude && sudo chown "$(id -u):$(id -g)" /home/claude
     - name: Playwright (Node et Python, même version)
       shell: bash
       run: |
