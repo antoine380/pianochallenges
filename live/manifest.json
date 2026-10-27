@@ -1,5 +1,5 @@
 {
- "version": "2026-10-27T10:04Z",
+ "version": "2026-10-27T12:00Z",
  "native_min": 1,
  "files": [
   {
@@ -365,7 +365,7 @@
   },
   {
    "path": "index.html",
-   "sha256": "5291345e0ba19a069a9de65a319879614d58fc532c6159c03c769e11b5d29453",
+   "sha256": "d19ebe9540f1853be536d20bd3236b8d75b333fe0175678242b9e1244cf8501a",
    "size": 1754029,
    "src": "live/files/index.html"
   },
@@ -382,8 +382,8 @@
   },
   {
    "path": "play/index.html",
-   "sha256": "5bf644a42e5f3ca314b0b5c22a37752c56714768b5d15e2d61919b38dde83da8",
-   "size": 94667,
+   "sha256": "ce4def3df6dca34d8cd8e58785859069226b347201f96af4fc48ae6c05fa910b",
+   "size": 94525,
    "src": "live/files/play/index.html"
   }
  ]
