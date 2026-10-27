@@ -23,7 +23,7 @@ Object.assign(TXT.fr,{
     rec:["Nouveau record pour cette gamme !","Tu bats ton record sur cette gamme !","Mieux que la dernière fois !","Record battu, tu progresses !"]},
   endStreak:()=>"", ntfStreakX:"Joue 10 minutes avant minuit pour la garder.",
   srOf:(a,b)=>"Série du jour : "+a+" / "+b+" min", srLeft:n=>"Encore "+n+" min pour valider ta série", srHow:n=>"Joue "+n+" min pour valider ta série",
-  srOkT:"Série validée aujourd'hui", srOkS:n=>n+" min jouées : aujourd'hui compte !", srCelT:n=>"Série : "+n+" jour"+(n>1?"s":"")+" !", srCelS:n=>"Tes "+n+" minutes du jour sont faites.", srCelH:"Touche l'écran pour continuer", srCelHm:c=>"Touche l'écran ou joue "+c+" pour continuer"});
+  srOkT:"Série validée aujourd'hui", srOkS:n=>n+" min jouées : aujourd'hui compte !", srCelGo:"Voir ma progression", srCelT:n=>"Série : "+n+" jour"+(n>1?"s":"")+" !", srCelS:n=>"Tes "+n+" minutes du jour sont faites.", srCelH:"Touche l'écran pour continuer", srCelHm:c=>"Touche l'écran ou joue "+c+" pour continuer"});
 Object.assign(TXT.en,{
   sc1Tu:{seg:["Notes or chords",["**NOTES**: you play each scale note by note.","**CHORDS**: you play the chords of the scale, one by one.","Each mode has its own stars."]],
     cell:["One box = one scale",["Tap a box to play it.","{train}**Practice**: I show you the scale, then you play it back with the keys lit and the fingering. Nothing is scored.","{eval}**Test**: you play it on your own, with no help, to win stars."]],
@@ -39,7 +39,7 @@ Object.assign(TXT.en,{
     rec:["New best for this scale!","You beat your best on this scale!","Better than last time!","Record broken, you're improving!"]},
   endStreak:()=>"", ntfStreakX:"Play 10 minutes before midnight to keep it.",
   srOf:(a,b)=>"Today's streak: "+a+" / "+b+" min", srLeft:n=>n+" more min to lock in your streak", srHow:n=>"Play "+n+" min to lock in your streak",
-  srOkT:"Streak locked in today", srOkS:n=>n+" min played: today counts!", srCelT:n=>"Streak: "+n+" day"+(n!==1?"s":"")+"!", srCelS:n=>"Your "+n+" minutes for today are done.", srCelH:"Tap the screen to continue", srCelHm:c=>"Tap the screen or play "+c+" to continue"});
+  srOkT:"Streak locked in today", srOkS:n=>n+" min played: today counts!", srCelGo:"See my progress", srCelT:n=>"Streak: "+n+" day"+(n!==1?"s":"")+"!", srCelS:n=>"Your "+n+" minutes for today are done.", srCelH:"Tap the screen to continue", srCelHm:c=>"Tap the screen or play "+c+" to continue"});
 
 // ---- A. tutoriel : puces mises en forme, pointe centrée sur la cible ----
 function tuFmt(s){ return esc(s).replace(/\*\*(.+?)\*\*/g,"<b>$1</b>")
@@ -160,18 +160,19 @@ function srShow(){ let c=$("srCel"); if(c) c.remove(); clearTimeout(SR.hide); cl
     +'<svg class="sr-fl" viewBox="0 0 24 24" aria-hidden="true">'+SR_FLAME+'</svg><i class="sr-wave" aria-hidden="true"></i><i class="sr-wave b" aria-hidden="true"></i></span>'
     +'<h2 class="sr-t" id="srCelT"></h2><p class="sr-s" id="srCelS"></p>'
     +'<span class="sr-days" aria-hidden="true">'+days.map((d,i)=>'<i'+(i===days.length-1?' class="td"':'')+'>'+esc(d)+'</i>').join("")+'</span>'
-    +'<small class="sr-hint"></small></div>';
+    +'<button type="button" class="btn primary sr-go" id="srGo"></button><small class="sr-hint"></small></div>';
   const T=String(t("srCelT")(N)), k=T.indexOf(N), h=c.querySelector(".sr-t");
   if(k>=0){ h.append(T.slice(0,k)); const sp=document.createElement("span"); sp.className="n"; sp.textContent=N; h.append(sp, T.slice(k+N.length)); } else h.textContent=T;
   c.querySelector(".sr-s").textContent=t("srCelS")(fmtN(SR_MIN));
   c.querySelector(".sr-hint").textContent = midiMode() && S.settings.midiC!==false ? t("srCelHm")(CNAME()) : t("srCelH");
-  c.addEventListener("click",e=>{ e.preventDefault(); e.stopPropagation(); srClose(); });
+  c.querySelector(".sr-go").textContent=t("srCelGo");
+  c.addEventListener("click",e=>{ e.preventDefault(); e.stopPropagation(); const go=e.target.closest&&e.target.closest(".sr-go"); srClose(); if(go){ try{ openPage("progress"); }catch(_){} } });
   SR.prevFocus=document.activeElement; SR.on=true; SR.buf=[]; SR.at=Date.now();
   document.body.appendChild(c); void c.offsetWidth; c.classList.add("in");
   try{ c.focus({preventScroll:true}); }catch(e){}
   addEventListener("keydown",srKey,true); srHold(true);
   if(uiSound() && ctx && ctx.state==="running" && Date.now()-SR.fanAt>1500){ try{ tone(79,2.0,.35,.06); tone(84,2.12,.7,.05); }catch(e){} } // discret, quand la flamme s'allume
-  SR.hide=setTimeout(srClose, 5200); }
+  SR.hide=setTimeout(srClose, 8000); }
 function srClose(){ const c=$("srCel"); clearTimeout(SR.hide); clearTimeout(SR.bt); if(!SR.on){ return; } SR.on=false; SR.buf=[];
   removeEventListener("keydown",srKey,true); srHold(false);
   if(c){ c.classList.add("out"); SR.gone=setTimeout(()=>c.remove(),320); }

@@ -88,10 +88,10 @@ check('anneau plein sur la flamme du menu', await ringP(p) === 1);
 const DAYS = await ev(p, () => [3, 2, 1, 0].map(i => { const d = new Date(); d.setDate(d.getDate() - i); return new Intl.DateTimeFormat('fr-FR', { weekday: 'narrow' }).format(d).toUpperCase(); }));
 check('les 4 pastilles des jours = initiales des 4 derniers jours (série réelle), la dernière s’allume', JSON.stringify(c1.days) === JSON.stringify(DAYS) && c1.td === 1 && await ev(p, () => document.querySelector('#srCel .sr-days i:last-child').classList.contains('td')), [c1.days, DAYS]);
 if (CAP) await p.screenshot({ path: `${CAP}/03_animation_10min_ipad.png` });
-await p.clock.runFor(Math.max(0, 4000 - await p.X('Date.now()-SR.at')));
-check('à 4 s elle est encore là', !!(await cel(p)));
+await p.clock.runFor(Math.max(0, 7000 - await p.X('Date.now()-SR.at')));
+check('à 7 s elle est encore là, avec le bouton « Voir ma progression »', !!(await cel(p)) && await ev(p, () => (document.querySelector('#srCel #srGo')||{}).textContent === 'Voir ma progression'));
 await p.clock.runFor(2000);
-check('l’animation s’efface seule (≈ 5 s), SR.on retombe', !(await cel(p)) && !(await p.X('SR.on')));
+check('l’animation s’efface seule (≈ 8 s), SR.on retombe', !(await cel(p)) && !(await p.X('SR.on')));
 await play(p, 8); await p.clock.runFor(1500);
 check('encore du jeu le même jour : pas de 2e animation', !(await cel(p)));
 await fiche(p);
@@ -198,7 +198,7 @@ await play(p, 1); await p.clock.runFor(300);
 const c3 = await cel(p);
 const anims = await ev(p, () => { const c = document.getElementById('srCel'); return c ? c.getAnimations({ subtree: true }).filter(a => a instanceof CSSAnimation).length : -1; });
 check('EN + mouvement réduit : « Streak: 4 days! », même contenu, plein écran, aucune animation CSS', !!c3 && c3.t === 'Streak: 4 days!' && c3.s === 'Your 10 minutes for today are done.' && c3.cover && c3.days.length === 4 && anims === 0, [c3, anims]);
-await p.clock.runFor(6000);
+await p.clock.runFor(9000);
 check('mouvement réduit : se ferme seule aussi', !(await cel(p)));
 await fiche(p);
 check('EN : fiche « Streak locked in today »', await ev(p, () => document.querySelector('#pfSr b').textContent) === 'Streak locked in today');
@@ -282,6 +282,16 @@ for (const scheme of ['light', 'dark']) for (const vp of SIZES) {
   check(`${vp.width}×${vp.height} ${scheme} : accueil sans défilement, fiche sans défilement (iPad / ordinateur ; téléphone : page seule), ligne de la série présente`, h && f && vis && !p.errs.length, { h, f, vis, e: p.errs });
   await p.context().close();
 }
+
+// ================= E. Bouton « Voir ma progression » + mise en page (anneau au-dessus du texte) =================
+{ p = await open({ vp: { width: 1024, height: 768 }, scheme: 'light', st: STATE({ st: { srFrom: TODAY, playSec: { [TODAY]: 320 } } }) });
+  await p.X('srShow()'); await p.clock.runFor(3500);
+  const geo = await ev(p, () => { const r = document.querySelector('#srCel .sr-big').getBoundingClientRect(), t = document.querySelector('#srCel .sr-t').getBoundingClientRect(); return { gap: t.top - r.bottom }; });
+  check('mise en page : le texte « Série : n jours » commence sous l’anneau, avec de l’espace', geo.gap >= 12, geo);
+  await ev(p, () => document.getElementById('srGo').click()); await p.clock.runFor(600);
+  check('« Voir ma progression » ferme l’animation et ouvre la fiche Progression', !(await p.X('SR.on')) && await p.X('page') === 'progress' && !p.errs.length, { page: await p.X('page'), e: p.errs });
+  await p.context().close(); }
+
 await b.close();
 console.log(fails.length ? `\nr53 FAIL ${fails.length}` : '\nr53 OK');
 process.exit(fails.length ? 1 : 0);

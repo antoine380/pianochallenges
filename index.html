@@ -3937,7 +3937,7 @@ body.sc1x .gamebar .gend{margin-left:auto;border:1px solid var(--line);backgroun
   -webkit-tap-highlight-color:transparent;user-select:none;-webkit-user-select:none;outline:none;opacity:1;transition:opacity .3s ease}
 .sr-cel.out{opacity:0;pointer-events:none}
 .sr-box{display:flex;flex-direction:column;align-items:center;gap:clamp(8px,2.4vmin,18px);text-align:center;max-width:100%}
-.sr-big{position:relative;width:min(40vmin,250px);aspect-ratio:1;display:grid;place-items:center}
+.sr-big{position:relative;width:min(40vmin,250px);aspect-ratio:1;display:grid;place-items:center;margin:calc(-1 * clamp(10px,4vmin,40px)) 0 clamp(16px,5vmin,44px)}
 .sr-big .sr-rg{position:absolute;inset:0;width:100%;height:100%}
 .sr-big .sr-rg circle{stroke-width:7} .sr-big .sr-rg .tr{stroke:rgba(255,255,255,.14)} .sr-big .sr-rg{overflow:visible;filter:drop-shadow(0 0 8px rgba(255,170,40,.55))}
 .sr-big .sr-fl{position:relative;width:46%;height:46%;fill:#ff8a1f;filter:drop-shadow(0 0 18px rgba(255,160,40,.85))}
@@ -3948,6 +3948,7 @@ body.sc1x .gamebar .gend{margin-left:auto;border:1px solid var(--line);backgroun
 .sr-days{display:flex;gap:clamp(6px,1.6vmin,10px)}
 .sr-days i{display:grid;place-items:center;width:clamp(26px,6.5vmin,36px);aspect-ratio:1;border-radius:50%;background:#ff8a1f;color:#2a1400;font-style:normal;font-weight:800;font-size:clamp(.7rem,2.4vmin,.85rem)}
 .sr-days i.td{background:#ffcf3f;box-shadow:0 0 14px #ffcf3f}
+.sr-go{margin-top:clamp(4px,1.6vmin,12px)}
 .sr-hint{color:#c9c4ee;opacity:.85;font-weight:700;font-size:.82rem}
 .sr-conf{position:absolute;inset:0;pointer-events:none;overflow:hidden}
 .sr-cf{position:absolute;top:-20px;width:10px;height:14px;border-radius:2px;opacity:0}
@@ -3964,7 +3965,7 @@ body.sc1x .gamebar .gend{margin-left:auto;border:1px solid var(--line);backgroun
   @keyframes srBoxIn{from{transform:scale(.7);opacity:0}}
   @keyframes srFill{to{stroke-dashoffset:0}}
   @keyframes srLit{to{fill:#ff8a1f;filter:drop-shadow(0 0 18px rgba(255,160,40,.85));transform:scale(1.1)}}
-  @keyframes srWave{0%{opacity:.9;transform:scale(.9)}100%{opacity:0;transform:scale(1.8)}}
+  @keyframes srWave{0%{opacity:.9;transform:scale(.9)}100%{opacity:0;transform:scale(1.3)}}
   @keyframes srPop{50%{transform:scale(1.5)}}
   @keyframes srDot{to{background:#ffcf3f;color:#2a1400;box-shadow:0 0 14px #ffcf3f}}
   @keyframes srFall{0%{opacity:1;transform:translateY(0) rotate(0)}100%{opacity:0;transform:translateY(110vh) rotate(calc(var(--r,1) * 720deg))}} }
@@ -10320,7 +10321,7 @@ addEventListener("resize",()=>{ if(page==="acc" && ACC.view==="play" && ACC.run)
 // (fetch keepalive vers la fonction SQL track_events), sans le SDK Supabase. Hors ligne, la file attend. Une table ou une
 // fonction absente (migration pas encore lancée) coupe l'envoi sans erreur. En développement (localhost), rien ne part sur
 // le réseau, sauf si localStorage « pc-trk-test » = "1" (tests). Interrupteur : S.settings.analytics (absent = activé).
-const APP_BUILD="2026-10-27T14:11Z"; // remplacé par tools/build.py par la date de construction (version.txt)
+const APP_BUILD="2026-10-27T15:20Z"; // remplacé par tools/build.py par la date de construction (version.txt)
 const TRK={q:[], t:0, off:false, anon:null, sent:0, errs:[], errT:0, errSeen:new Set(), errOn:null, ports:new Set(), first:false};
 const RC={flags:{}, daily:{}, at:0};
 const TRK_NAMES=new Set(["song_import","app_open","first_note","input_mode","midi_connected","pp_lesson_done","learn_end","game_end","quiz_end","duel_end","goal_reached","badge","signup","login","play","feedback","acc_end","song_open","route_step","route_stage"]);
@@ -14061,7 +14062,7 @@ Object.assign(TXT.fr,{
     rec:["Nouveau record pour cette gamme !","Tu bats ton record sur cette gamme !","Mieux que la dernière fois !","Record battu, tu progresses !"]},
   endStreak:()=>"", ntfStreakX:"Joue 10 minutes avant minuit pour la garder.",
   srOf:(a,b)=>"Série du jour : "+a+" / "+b+" min", srLeft:n=>"Encore "+n+" min pour valider ta série", srHow:n=>"Joue "+n+" min pour valider ta série",
-  srOkT:"Série validée aujourd'hui", srOkS:n=>n+" min jouées : aujourd'hui compte !", srCelT:n=>"Série : "+n+" jour"+(n>1?"s":"")+" !", srCelS:n=>"Tes "+n+" minutes du jour sont faites.", srCelH:"Touche l'écran pour continuer", srCelHm:c=>"Touche l'écran ou joue "+c+" pour continuer"});
+  srOkT:"Série validée aujourd'hui", srOkS:n=>n+" min jouées : aujourd'hui compte !", srCelGo:"Voir ma progression", srCelT:n=>"Série : "+n+" jour"+(n>1?"s":"")+" !", srCelS:n=>"Tes "+n+" minutes du jour sont faites.", srCelH:"Touche l'écran pour continuer", srCelHm:c=>"Touche l'écran ou joue "+c+" pour continuer"});
 Object.assign(TXT.en,{
   sc1Tu:{seg:["Notes or chords",["**NOTES**: you play each scale note by note.","**CHORDS**: you play the chords of the scale, one by one.","Each mode has its own stars."]],
     cell:["One box = one scale",["Tap a box to play it.","{train}**Practice**: I show you the scale, then you play it back with the keys lit and the fingering. Nothing is scored.","{eval}**Test**: you play it on your own, with no help, to win stars."]],
@@ -14077,7 +14078,7 @@ Object.assign(TXT.en,{
     rec:["New best for this scale!","You beat your best on this scale!","Better than last time!","Record broken, you're improving!"]},
   endStreak:()=>"", ntfStreakX:"Play 10 minutes before midnight to keep it.",
   srOf:(a,b)=>"Today's streak: "+a+" / "+b+" min", srLeft:n=>n+" more min to lock in your streak", srHow:n=>"Play "+n+" min to lock in your streak",
-  srOkT:"Streak locked in today", srOkS:n=>n+" min played: today counts!", srCelT:n=>"Streak: "+n+" day"+(n!==1?"s":"")+"!", srCelS:n=>"Your "+n+" minutes for today are done.", srCelH:"Tap the screen to continue", srCelHm:c=>"Tap the screen or play "+c+" to continue"});
+  srOkT:"Streak locked in today", srOkS:n=>n+" min played: today counts!", srCelGo:"See my progress", srCelT:n=>"Streak: "+n+" day"+(n!==1?"s":"")+"!", srCelS:n=>"Your "+n+" minutes for today are done.", srCelH:"Tap the screen to continue", srCelHm:c=>"Tap the screen or play "+c+" to continue"});
 
 // ---- A. tutoriel : puces mises en forme, pointe centrée sur la cible ----
 function tuFmt(s){ return esc(s).replace(/\*\*(.+?)\*\*/g,"<b>$1</b>")
@@ -14198,18 +14199,19 @@ function srShow(){ let c=$("srCel"); if(c) c.remove(); clearTimeout(SR.hide); cl
     +'<svg class="sr-fl" viewBox="0 0 24 24" aria-hidden="true">'+SR_FLAME+'</svg><i class="sr-wave" aria-hidden="true"></i><i class="sr-wave b" aria-hidden="true"></i></span>'
     +'<h2 class="sr-t" id="srCelT"></h2><p class="sr-s" id="srCelS"></p>'
     +'<span class="sr-days" aria-hidden="true">'+days.map((d,i)=>'<i'+(i===days.length-1?' class="td"':'')+'>'+esc(d)+'</i>').join("")+'</span>'
-    +'<small class="sr-hint"></small></div>';
+    +'<button type="button" class="btn primary sr-go" id="srGo"></button><small class="sr-hint"></small></div>';
   const T=String(t("srCelT")(N)), k=T.indexOf(N), h=c.querySelector(".sr-t");
   if(k>=0){ h.append(T.slice(0,k)); const sp=document.createElement("span"); sp.className="n"; sp.textContent=N; h.append(sp, T.slice(k+N.length)); } else h.textContent=T;
   c.querySelector(".sr-s").textContent=t("srCelS")(fmtN(SR_MIN));
   c.querySelector(".sr-hint").textContent = midiMode() && S.settings.midiC!==false ? t("srCelHm")(CNAME()) : t("srCelH");
-  c.addEventListener("click",e=>{ e.preventDefault(); e.stopPropagation(); srClose(); });
+  c.querySelector(".sr-go").textContent=t("srCelGo");
+  c.addEventListener("click",e=>{ e.preventDefault(); e.stopPropagation(); const go=e.target.closest&&e.target.closest(".sr-go"); srClose(); if(go){ try{ openPage("progress"); }catch(_){} } });
   SR.prevFocus=document.activeElement; SR.on=true; SR.buf=[]; SR.at=Date.now();
   document.body.appendChild(c); void c.offsetWidth; c.classList.add("in");
   try{ c.focus({preventScroll:true}); }catch(e){}
   addEventListener("keydown",srKey,true); srHold(true);
   if(uiSound() && ctx && ctx.state==="running" && Date.now()-SR.fanAt>1500){ try{ tone(79,2.0,.35,.06); tone(84,2.12,.7,.05); }catch(e){} } // discret, quand la flamme s'allume
-  SR.hide=setTimeout(srClose, 5200); }
+  SR.hide=setTimeout(srClose, 8000); }
 function srClose(){ const c=$("srCel"); clearTimeout(SR.hide); clearTimeout(SR.bt); if(!SR.on){ return; } SR.on=false; SR.buf=[];
   removeEventListener("keydown",srKey,true); srHold(false);
   if(c){ c.classList.add("out"); SR.gone=setTimeout(()=>c.remove(),320); }
