@@ -48,13 +48,17 @@ TXT.en.tourT.piano=["PIANO",["An instrument to play freely","7 sounds, effects a
 { const o=tourSteps; tourSteps=function(){ const s=o.apply(this,arguments), i=s.findIndex(x=>x[1]==="quiz"); s.splice(i+1,0,["#modeNav [data-mode=piano]","piano"]); return s; }; }
 
 // ---- réglages ----
-function pnCfg(){ const st=S.settings; let c=st.piano; if(!c || typeof c!=="object" || Array.isArray(c)) c=st.piano={};
+// sans S.settings.piano (état ancien) : réglages par défaut gardés à part (PN_C0), rattachés à S seulement quand l'utilisateur change
+// quelque chose (pnKeep), sinon le premier save() venu (notification, badge…) écrivait les valeurs par défaut
+let PN_C0=null;
+function pnCfg(){ const st=S.settings; let c=st.piano; if(!c || typeof c!=="object" || Array.isArray(c)) c=PN_C0||(PN_C0={});
   if(!PN_INS.some(i=>i.id===c.ins)) c.ins=PN_DEF.ins;
   ["rev","dly","cho","vol"].forEach(k=>{ const v=+c[k]; c[k]=Number.isFinite(v)?Math.max(0,Math.min(1,v)):PN_DEF[k]; });
   if(typeof c.snd!=="boolean") c.snd=true;
   if(!c.viz || typeof c.viz!=="object" || Array.isArray(c.viz)) c.viz={};
   Object.keys(c.viz).forEach(k=>{ if(!PN_INS.some(i=>i.id===k) || !PN_VIZ.includes(c.viz[k])) delete c.viz[k]; });
   return c; }
+function pnKeep(){ const c=pnCfg(); if(S.settings.piano!==c){ S.settings.piano=c; PN_C0=null; } return c; }
 const pnInsDef = id => PN_INS.find(i=>i.id===id)||PN_INS[0];
 const pnVizNow = () => { const c=pnCfg(); return c.viz[c.ins] || pnInsDef(c.ins).viz; };
 
@@ -234,12 +238,12 @@ function pnRender(){ const P=$("pianoPanel"); if(!P) return; const k=pnCfg(), vi
       +'<div class="pn-fx" id="pnFx" hidden>'+[["rev","pnRev"],["dly","pnDly"],["cho","pnCho"],["vol","pnVol"]].map(([id,l])=>'<label class="pn-sl"><span>'+esc(t(l))+'</span><input type="range" min="0" max="100" step="1" data-fx="'+id+'"><b class="mono"></b></label>').join("")+'</div></div>'
       +'<button class="pn-t" type="button" id="pnSus" aria-pressed="false" title="'+esc(t("pnSusTip"))+'">'+pnSvg("sus")+'<span>'+esc(t("pnSus"))+'</span></button>'
       +'<button class="pn-t pn-snd" type="button" id="pnSnd" aria-pressed="true" title="'+esc(t("pnSndTip"))+'"><i class="on">'+pnSvg("snd")+'</i><i class="off">'+pnSvg("mute")+'</i><span>'+esc(t("pnSnd"))+'</span></button></div></div>';
-    P.querySelectorAll(".pn-i").forEach(b=>b.onclick=()=>{ const c=pnCfg(); if(c.ins===b.dataset.ins) return; c.ins=b.dataset.ins; save(); pnAllOff(); pnRender(); pnCapShow(1800); pnDemo(); });
-    P.querySelectorAll(".pn-v").forEach(b=>b.onclick=()=>{ const c=pnCfg(); c.viz[c.ins]=b.dataset.viz; save(); VZ.P.length=0; VZ.en=0; if(VZ.x) VZ.x.clearRect(0,0,VZ.w,VZ.h); pnRender(); pnCapShow(1400); pnDemo(true); });
-    P.querySelectorAll("input[data-fx]").forEach(r=>r.oninput=()=>{ pnCfg()[r.dataset.fx]=r.value/100; pnFx(); r.nextElementSibling.textContent=r.value; clearTimeout(PN.svT); PN.svT=setTimeout(save,300); });
+    P.querySelectorAll(".pn-i").forEach(b=>b.onclick=()=>{ const c=pnCfg(); if(c.ins===b.dataset.ins) return; pnKeep(); c.ins=b.dataset.ins; save(); pnAllOff(); pnRender(); pnCapShow(1800); pnDemo(); });
+    P.querySelectorAll(".pn-v").forEach(b=>b.onclick=()=>{ const c=pnKeep(); c.viz[c.ins]=b.dataset.viz; save(); VZ.P.length=0; VZ.en=0; if(VZ.x) VZ.x.clearRect(0,0,VZ.w,VZ.h); pnRender(); pnCapShow(1400); pnDemo(true); });
+    P.querySelectorAll("input[data-fx]").forEach(r=>r.oninput=()=>{ pnKeep()[r.dataset.fx]=r.value/100; pnFx(); r.nextElementSibling.textContent=r.value; clearTimeout(PN.svT); PN.svT=setTimeout(save,300); });
     $("pnFxBtn").onclick=()=>{ const p=$("pnFx"), op=p.hidden; p.hidden=!op; $("pnFxBtn").setAttribute("aria-expanded",String(op)); };
     $("pnSus").onclick=()=>pnSusSet(!PN.sus,false);
-    $("pnSnd").onclick=()=>{ const c=pnCfg(); c.snd=!c.snd; save(); pnRender(); }; }
+    $("pnSnd").onclick=()=>{ const c=pnKeep(); c.snd=!c.snd; save(); pnRender(); }; }
   P.querySelectorAll(".pn-i").forEach(b=>b.setAttribute("aria-checked",String(b.dataset.ins===k.ins)));
   P.querySelectorAll(".pn-v").forEach(b=>b.setAttribute("aria-checked",String(b.dataset.viz===viz)));
   P.querySelectorAll("input[data-fx]").forEach(r=>{ const v=Math.round(k[r.dataset.fx]*100); r.value=v; r.nextElementSibling.textContent=v; r.style.setProperty("--v",v+"%"); });

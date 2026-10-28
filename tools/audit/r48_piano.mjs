@@ -61,7 +61,8 @@ const pg = await ev(p, () => ({ page: document.body.dataset.page, cur: document.
   snd: document.getElementById('pnSnd').getAttribute('aria-pressed'), cap: document.getElementById('pnCap').classList.contains('on') }));
 check('page piano : menu sélectionné, 7 instruments, 6 ambiances, Piano à queue + Cascade par défaut, canvas dimensionné, clavier visible, « Son de l’app » activé',
   pg.page === 'piano' && pg.cur === 'page' && pg.ins === 7 && pg.viz === 6 && pg.sel === 'grand' && pg.vsel === 'cascade' && pg.canvas && pg.kb > 80 && pg.snd === 'true' && pg.cap, pg);
-check('état ancien sans S.settings.piano : rien n’est écrit tant qu’on ne change rien, pnCfg() complète', !(await stored(p)).settings.piano && await p.X('pnCfg().ins==="grand" && pnCfg().snd===true && pnCfg().rev===.3'));
+await p.X('save()'); // un save() d'ailleurs (notification, badge… à ~1,5 s du démarrage) ne doit pas écrire les réglages par défaut
+check('état ancien sans S.settings.piano : rien n’est écrit tant qu’on ne change rien (même après un save() d’ailleurs), pnCfg() complète', !(await stored(p)).settings.piano && await p.X('pnCfg().ins==="grand" && pnCfg().snd===true && pnCfg().rev===.3'));
 
 // 3) notes MIDI → son de l'instrument puis lumière ; même avec « Son des notes MIDI » coupé ailleurs
 await p.X('S.settings.midiSound=false; window.__tc=0; { const o=tone; tone=function(){ window.__tc++; return o.apply(this,arguments); }; }');
