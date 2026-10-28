@@ -149,6 +149,10 @@ td.num,th.num{text-align:right;font-variant-numeric:tabular-nums}
 @media (max-width:900px){ .g4{grid-template-columns:repeat(2,minmax(0,1fr))} .g4>.card:not(.kpi){grid-column:1/-1} }
 @media (max-width:420px){ .kpi b{font-size:1.45rem} .kpi{padding:10px 12px} .kpi span{font-size:.74rem} .top .btn .txt{display:none} }
 @media (prefers-reduced-motion:reduce){ .side{transition:none} }
+/* MIDI 4 : alerte « Nouveau signalement » */
+#fbPop{position:fixed;right:16px;bottom:16px;z-index:45;width:min(360px,calc(100% - 32px));background:var(--surface);border:1px solid var(--line);border-left:4px solid var(--brand);border-radius:14px;box-shadow:0 12px 32px rgba(0,0,0,.22);padding:12px 14px;display:flex;flex-direction:column;gap:6px}
+#fbPop[hidden]{display:none} #fbPop .fp-h{display:flex;align-items:center;gap:8px} #fbPop .fp-h b{flex:1;font-size:.95rem} #fbPop p{margin:0;font-size:.88rem;white-space:pre-wrap;word-break:break-word;max-height:4.2em;overflow:hidden}
+#fbPop .fp-x{border:0;background:none;font-size:1.3rem;line-height:1;cursor:pointer;color:var(--muted);padding:2px 6px} .fb.hl{box-shadow:0 0 0 2px var(--brand)}
 </style>
 </head>
 <body>
@@ -560,7 +564,33 @@ WIRE.support=m=>{ const s=m.querySelector("#sSt"); if(!s) return; s.onclick=e=>{
   m.querySelectorAll(".fb[data-id]").forEach(el=>el.onclick=async e=>{ const id=+el.dataset.id, st=e.target.closest("[data-st]"), nt=e.target.closest("[data-note]"), us=e.target.closest("[data-user]");
     if(st){ if(await act(()=>rpc("admin_feedback_set",{p_id:id,p_status:st.dataset.st}),"C'est noté.")) go("support"); }
     else if(nt){ const v=await ask("Note interne","Visible seulement dans le back office.",{ok:"Enregistrer",input:{max:1000}}); if(v!=null && await act(()=>rpc("admin_feedback_set",{p_id:id,p_status:"seen",p_note:v}),"Note enregistrée.")) go("support"); }
-    else if(us) userOpen(us.dataset.user); }); };
+    else if(us) userOpen(us.dataset.user); });
+  if(A.fbFocus){ const el=m.querySelector('.fb[data-id="'+A.fbFocus+'"]'); A.fbFocus=null; if(el){ el.classList.add("hl"); el.scrollIntoView({block:"center"}); } } };
+
+// MIDI 4 : alerte « Nouveau signalement » : sondage léger de admin_feedback (nouveaux) toutes les 60 s (?poll= en local pour les tests) ;
+// le premier passage note le dernier message sans alerte (le tableau de bord les compte déjà), puis chaque nouveau message = une fenêtre.
+const FB_POLL=(LOCAL && +new URLSearchParams(location.search).get("poll")) || 60e3, FB_MAX="pc-admin-fbmax";
+const fbLast=()=>{ try{ const v=localStorage.getItem(FB_MAX); return v==null?null:+v; }catch(e){ return null; } }, fbPut=v=>{ try{ localStorage.setItem(FB_MAX,String(v)); }catch(e){} };
+let fbBusy=false;
+async function fbPoll(){ if(fbBusy || !A.role || !can("support") || document.hidden) return; fbBusy=true;
+  try{ let list; try{ list=await rpc("admin_feedback",{p_status:"new",p_limit:20}); }catch(e){ return; }
+    const rows=(list||[]).filter(f=>f && f.id!=null), mx=rows.reduce((m,f)=>Math.max(m,+f.id||0),0), last=fbLast();
+    if(last==null){ fbPut(mx); return; }
+    const fresh=rows.filter(f=>+f.id>last).sort((a,b)=>b.id-a.id); if(!fresh.length) return;
+    fbPut(Math.max(last,mx)); fbPop(fresh);
+  } finally{ fbBusy=false; } }
+function fbPop(fresh){ let el=$("fbPop");
+  if(!el){ el=document.createElement("div"); el.id="fbPop"; el.setAttribute("role","alertdialog"); el.setAttribute("aria-labelledby","fbPopT");
+    el.innerHTML='<div class="fp-h"><b id="fbPopT"></b><button class="fp-x" type="button" id="fbPopX" aria-label="Fermer">×</button></div><small class="muted" id="fbPopS"></small><p id="fbPopM"></p><div class="row"><button class="btn sm primary" type="button" id="fbPopGo">Voir le signalement</button></div>';
+    document.body.appendChild(el); $("fbPopX").onclick=()=>{ el.hidden=true; };
+    $("fbPopGo").onclick=()=>{ el.hidden=true; A.fbStatus="new"; A.fbFocus=+el.dataset.id||null; go("support"); }; }
+  const f=fresh[0]; el.dataset.id=f.id;
+  $("fbPopT").textContent = fresh.length>1 ? fresh.length+" nouveaux signalements" : "Nouveau signalement";
+  $("fbPopS").textContent = fmtDT(f.at)+" · "+(FBK[f.kind]||f.kind)+(f.name?" · "+f.name:"")+(f.ctx&&f.ctx.midi?" · "+f.ctx.midi:"");
+  $("fbPopM").textContent = String(f.msg||"").replace(/\s+/g," ").trim().slice(0,160);
+  $("fbPopGo").textContent = fresh.length>1 ? "Voir les signalements" : "Voir le signalement"; el.hidden=false; }
+setInterval(fbPoll, FB_POLL);
+addEventListener("keydown",e=>{ const el=$("fbPop"); if(e.key==="Escape" && el && !el.hidden){ el.hidden=true; } });
 
 // ---------- 8. système ----------
 VIEWS.system=async()=>{ const [s, ver, log]=await Promise.all([rpc("admin_system"), fetch("/version.txt",{cache:"no-store"}).then(r=>r.ok?r.text():"").catch(()=>""), can("support")?rpc("admin_log_list",{p_limit:100}):Promise.resolve(null)]);
@@ -621,7 +651,7 @@ async function verify(code){ const {data:ch,error}=await A.sb.auth.mfa.challenge
   const {error:e2}=await A.sb.auth.mfa.verify({factorId:A.factor, challengeId:ch.id, code}); if(e2) throw e2; await enter(); }
 async function enter(){ let me; try{ me=await rpc("admin_me"); }catch(e){ if(e instanceof Denied){ showLogin("denied"); lgMsg(""); return; } throw e; }
   A.role=me.role; A.email=me.email||""; $("meRole").textContent=me.role; $("meEmail").textContent=A.email; lgMsg("");
-  $("login").hidden=true; $("shell").hidden=false; buildNav(); idleReset(); go(A.page||"dash"); }
+  $("login").hidden=true; $("shell").hidden=false; buildNav(); idleReset(); go(A.page||"dash"); setTimeout(fbPoll, 1200); }
 function idleReset(){ A.idleAt=Date.now(); clearTimeout(A.idleT); if(A.role) A.idleT=setTimeout(()=>signOut("Déconnecté après "+Math.round(IDLE_MS/60000)+" min sans activité."), IDLE_MS); }
 ["pointerdown","keydown","wheel","touchstart"].forEach(t=>addEventListener(t,()=>{ if(A.role && Date.now()-A.idleAt>2000) idleReset(); },{passive:true,capture:true}));
 setInterval(()=>{ if(!A.role) return; const left=Math.max(0,IDLE_MS-(Date.now()-A.idleAt)); $("idleTxt").textContent=left<5*60e3?"Déconnexion dans "+Math.ceil(left/60000)+" min":""; },20000);

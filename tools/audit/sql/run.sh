@@ -1,5 +1,5 @@
 #!/bin/bash
-# Teste les migrations dans l'ordre (2026-10-24_leagues, 2026-10-25_admin, 2026-10-25_reminder, 2026-10-26_onboarding, 2026-10-26_family) dans un Postgres local jetable
+# Teste les migrations dans l'ordre (2026-10-24_leagues, 2026-10-25_admin, 2026-10-25_reminder, 2026-10-26_onboarding, 2026-10-26_family, 2026-10-28_admin_feedback) dans un Postgres local jetable
 # (base pc_admin_test, recréée à chaque fois), puis les vérifications du back office (checks.sql), de la famille (family_checks.sql) et du rappel de leçon (run_reminder.sh).
 # Ligues : chargées si supabase/migrations/2026-10-24_leagues.sql existe (ou LEAGUES_SQL=<chemin>).
 # Usage (root, Postgres 16 local démarré : pg_ctlcluster 16 main start) : bash tools/audit/sql/run.sh
@@ -30,6 +30,8 @@ cp tools/audit/sql/checks.sql $TMP/4.sql
 cp supabase/migrations/2026-10-26_onboarding.sql $TMP/6.sql; cp tools/audit/sql/checks_onb.sql $TMP/7.sql
 cp supabase/migrations/2026-10-26_family.sql $TMP/8.sql
 cp tools/audit/sql/family_checks.sql $TMP/9.sql
+# MIDI 4 (28/10) : alerte des nouveaux signalements pour l'admin dans l'app
+cp supabase/migrations/2026-10-28_admin_feedback.sql $TMP/10.sql; cp tools/audit/sql/admin_feedback_checks.sql $TMP/11.sql
 chmod 644 $TMP/*.sql
 run(){ $P "psql -X -q -t -v ON_ERROR_STOP=1 -d $DB -f $1" 2>&1 | { grep -E "NOTICE:  ok|ERROR|ÉCHEC" || true; } | sed -E "s/^psql:[^ ]+ (NOTICE:  )?/  /"; test ${PIPESTATUS[0]} -eq 0; }
 run $TMP/0.sql; run $TMP/1.sql
@@ -43,4 +45,5 @@ echo "SQL OK (leagues → admin → reminder → onboarding, back office)"
 run $TMP/8.sql; run $TMP/8.sql; echo "  (famille et paiement installés, deux fois)"
 run $TMP/9.sql
 echo "SQL OK (… → family, famille)"
+run $TMP/10.sql; run $TMP/10.sql; run $TMP/11.sql; echo "SQL OK (admin_feedback : am_i_admin, admin_feedback_peek)"
 bash tools/audit/sql/run_reminder.sh
