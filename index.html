@@ -3972,6 +3972,16 @@ body.sc1x .gamebar .gend{margin-left:auto;border:1px solid var(--line);backgroun
 /* mouvement réduit : le même contenu, immobile (anneau plein, flamme allumée, jour coché), sans confettis */
 @media (prefers-reduced-motion:reduce){ .sr-conf{display:none} .sr-cel{transition:none} }
 /* ==== fin Gammes v4 + Série 10 min ==== */
+/* ==== MIDI 4 ==== */
+/* fenêtre Clavier MIDI : le lien « Signaler un problème avec mon clavier », une seule étape (pédale) dans le test de l'assistant */
+.md-rep{margin:-4px 0 0;text-align:right}
+.md-rep .mw-link{font-size:.86rem}
+.mw-tsteps{grid-template-columns:1fr!important} .mw-tsteps .mt-step{grid-column:auto!important}
+/* mini-claviers à beaucoup de touches (49, 61, 88) : touches serrées */
+.mt-kb:has(> .w:nth-child(23)){gap:1px}
+/* alerte « Nouveau signalement » (administrateur) : la pastille d'icône en couleur de l'app */
+.md-toast.adm-fb .mt-ic{background:var(--brand)} .md-toast.adm-fb b{white-space:normal}
+/* ==== fin MIDI 4 ==== */
 </style>
 
 <script>if(window.Capacitor&&window.webkit&&window.webkit.messageHandlers&&window.webkit.messageHandlers.bridge)document.documentElement.classList.add("native");</script>
@@ -4484,23 +4494,21 @@ body.sc1x .gamebar .gend{margin-left:auto;border:1px solid var(--line);backgroun
     <div class="modal-head"><h2 id="midiTitle" data-i="midiTitle"></h2><button class="modal-close" id="midiX" type="button" aria-label="Close">×</button></div>
     <div class="modal-body midi-body">
       <div class="md-test" id="mdTest" hidden>
-        <div class="mt-row"><div class="mt-note"><b id="mtName">♪</b><small id="mtSub"></small></div><div class="mt-kb" id="mtKb" aria-hidden="true"></div><div class="mt-vel" aria-hidden="true"><span data-i="mdForce"></span><i><b id="mtBar"></b></i><em id="mtVel"></em></div></div>
+        <div class="mt-row"><div class="mt-note"><b id="mtName">♪</b><small id="mtSub"></small></div><div class="mt-kb" id="mtKb" aria-hidden="true"></div></div>
         <p class="mt-msg" id="mtMsg" role="status" aria-live="polite"></p>
-        <div class="mt-steps"><div class="mt-step" id="mtTouch"><b data-i="mdLoudSoft"></b><small id="mtTouchRes"></small></div>
-          <div class="mt-step" id="mtTwice"><b data-i="mdTwice"></b><span class="mt-btns"><button class="btn" type="button" data-v="yes" data-i="mdYes"></button><button class="btn" type="button" data-v="no" data-i="mdNo"></button><button class="btn" type="button" data-v="none" data-i="mdNone"></button></span><small id="mtTwiceRes"></small></div></div>
       </div>
       <div class="midi-status"><span class="dot"></span><span id="mStTxt"></span><span class="spacer"></span><button class="btn primary" id="mEnable" type="button" data-i="midiOff"></button></div>
       <p class="notice midi-setup" id="midiSetupMsg" hidden></p>
       <p class="mdev-h"><span data-i="midiFound"></span><button class="mw-link md-wiz" id="mdWizB" type="button" data-i="mdWizard"></button></p>
       <ul class="mdev" id="mDevList"></ul>
+      <p class="md-rep"><button class="mw-link" id="mdReport" type="button" data-i="md4Report"></button></p>
       <div class="mconn">
         <div class="mc-card"><span class="mc-h"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v13M12 3l-2.5 3h5zM7 10v3l5 3M17 8v3l-5 3"/><circle cx="12" cy="19" r="2"/><rect x="5.6" y="8" width="2.8" height="2.8" rx=".5"/><circle cx="17" cy="7" r="1.4"/></svg>USB</span><p id="mcUsb"></p></div>
         <div class="mc-card"><span class="mc-h"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 7l10 10-5 4V3l5 4L7 17"/></svg>Bluetooth</span><p id="mcBt"></p><button class="btn primary" id="mBt" type="button" hidden data-i="midiBt"></button></div>
       </div>
       <div class="field" id="mInField"><span data-i="midiInput"></span><select id="mInput"></select></div>
       <div class="field" id="kbField"><span data-i="kbLbl"></span>
-        <div class="range-row"><select id="kbSize" aria-label="On-screen keyboard"></select><button class="btn" id="kbDetect" type="button" data-i="kbDetect"></button></div>
-        <p class="notice" id="calibMsg" hidden></p>
+        <div class="range-row"><select id="kbSize" aria-label="On-screen keyboard"></select></div>
         <p class="hint" id="kbRange"></p>
       </div>
       <label class="check"><input type="checkbox" id="optMidiSound"> <span data-i="optMidiSound"></span></label>
@@ -4675,7 +4683,7 @@ const TXT = {
     accuracy:"Précision", avgTime:"Temps moyen", xpWon:"XP gagnés", bestCombo:"Meilleur combo", toRework:"À retravailler", allPerfect:"Aucune erreur, bravo !",
     reworkBtn:"Retravailler mes erreurs", newGame:"Nouvelle partie", closeLbl:"Fermer", outOf:"exercices sans faute", tomorrow:"demain",
     secHarmony:"Harmonie", secProg:"Progressions", secEar:"Oreille", secGames:"Jeux", secPlay:"Play", hub:"Accueil", learn:"Learn", learnTitle:"Qu'est-ce qu'on travaille ?", learnSub:"Choisis une matière : les exercices se jouent sur ton piano et sont corrigés note par note.", learnTiles:[["chords","Accords","Majeurs, mineurs, renversements, accords de 7e."],["scales","Gammes","Majeures, mineures, pentatoniques, en notes ou en accords."],["harmony","Harmonie","Les degrés d'une tonalité et leurs accords."],["prog","Progressions","Les enchaînements d'accords des chansons."],["ear","Oreille","Reconnais intervalles et accords à l'écoute."],["accomp","Accompagnement","Une grille aux deux mains : la basse à gauche, les accords à droite, en rythme."],["daily","Entraînement du jour","10 exercices mélangés, environ 5 minutes."]], modeLearnSub:"Théorie et exercices", modePlaySub:"Morceaux en cascade", modeGamesSub:"Mini-jeux", hubTitle:"Qu'est-ce qu'on joue aujourd'hui ?", hubSub:"Quatre façons de progresser au piano. Tu peux changer à tout moment depuis le menu.", hubLearn:"Accords, gammes, harmonie, progressions et oreille, avec des exercices corrigés note par note.", hubPlay:"Des morceaux qui tombent sur le clavier, à ta vitesse, avec les doigtés. Le morceau t'attend si tu te trompes.", hubGames:"Des mini-jeux courts pour repérer les notes, tenir le tempo, lire une portée ou tendre l'oreille.", hubLearnTags:"Accords · Gammes · Harmonie · Progressions · Oreille · Entraînement du jour", hubPlayTags:"Cascade 3D · Mode attente · Vitesse · Noms des notes · Doigtés", hubGamesTags:"Saute-notes · Contre la montre · Mémoire · Note Runner · Rythme Pulse · Accord Blaster · Gamme Climber · Oreille d'Or · Partition Express", playGamesHead:"Jeux Play", playGamesSub:"Sur le clavier lumineux, avec les notes qui tombent", playGames:[["Note Runner","Saute les obstacles en jouant la note écrite dessus.","runner"],["Rythme Pulse","Frappe au moment exact où le cercle touche la cible.","pulse"],["Accord Blaster","Joue l'accord affiché pour détruire l'astéroïde.","blaster"],["Gamme Climber","Grimpe la tour en jouant la gamme sans faute.","climber"],["Oreille d'Or","Écoute une note ou une mélodie, puis rejoue-la.","ear"],["Partition Express","Lis les notes qui arrivent sur la portée.","staff"]], secRank:"Classement", secAccount:"Profil",
-    inTitle:"Comment vas-tu jouer ?", secInter:"Interaction", secGame:"Réglages de jeu", periods:{day:"Jour",week:"Semaine",month:"Mois",year:"Année",all:"Depuis le début"}, rankEmptyP:"Personne n'a encore gagné d'XP sur cette période. À toi de jouer !", pcSolved:n=>fmtN(n)+(n>1?" réussis":" réussi"), inChange:"Mode de jeu", leaveTitle:"Quitter l'entraînement du jour ?", leaveSub:"Tu es en cours. Si tu quittes, cet entraînement s'arrête et il faudra le recommencer.", leaveStay:"Continuer", leaveGo:"Quitter", dcStart:"Démarrer l'entraînement", inMidiApp:"Un clavier MIDI ? Sur iPhone et iPad, il faut l'app Piano Challenges (le navigateur ne gère pas le MIDI).", midiDone:"Terminer la configuration", midiSetupNeed:"Branche ton clavier en USB ou cherche-le en Bluetooth : il doit apparaître dans la liste pour continuer.", midiSetupOk:"Clavier détecté ! Joue quelques notes pour vérifier, puis termine la configuration.", backPlay:"← Retour", lockGuest:"Continuer sans compte pour l'instant", inSub:"Choisis une fois pour toutes. Tu pourras changer dans les Réglages.", inLbl:"Je joue avec",
+    inTitle:"Comment vas-tu jouer ?", secInter:"Interaction", secGame:"Réglages de jeu", periods:{day:"Jour",week:"Semaine",month:"Mois",year:"Année",all:"Depuis le début"}, rankEmptyP:"Personne n'a encore gagné d'XP sur cette période. À toi de jouer !", pcSolved:n=>fmtN(n)+(n>1?" réussis":" réussi"), inChange:"Mode d'entrée", leaveTitle:"Quitter l'entraînement du jour ?", leaveSub:"Tu es en cours. Si tu quittes, cet entraînement s'arrête et il faudra le recommencer.", leaveStay:"Continuer", leaveGo:"Quitter", dcStart:"Démarrer l'entraînement", inMidiApp:"Un clavier MIDI ? Sur iPhone et iPad, il faut l'app Piano Challenges (le navigateur ne gère pas le MIDI).", midiDone:"Terminer la configuration", midiSetupNeed:"Branche ton clavier en USB ou cherche-le en Bluetooth : il doit apparaître dans la liste pour continuer.", midiSetupOk:"Clavier détecté ! Joue quelques notes pour vérifier, puis termine la configuration.", backPlay:"← Retour", lockGuest:"Continuer sans compte pour l'instant", inSub:"Choisis une fois pour toutes. Tu pourras changer dans les Réglages.", inLbl:"Je joue avec",
     inModes:{screen:["Le clavier à l'écran","Touche les notes à l'écran, ou utilise le clavier de l'ordinateur.","Écran"],midi:["Mon clavier MIDI","Branché en USB ou connecté en Bluetooth. Le plus précis.","MIDI"],mic:["Mon piano, avec le micro","Pour un piano acoustique : l'app écoute les notes que tu joues.","Micro"]},
     inCfgMidi:"Connecter / régler le clavier MIDI", inCfgMic:"Activer le micro", inMidiNo:"Ce navigateur ne gère pas le MIDI : utilise Chrome ou Edge, l'app iPhone/iPad, ou le micro.",
     inMidiOk:n=>"Connecté : "+n, inMidiNone:"Aucun clavier détecté : branche-le ou connecte-le en Bluetooth.", inMicOk:"Le micro écoute.", inMicOff:"Micro pas encore activé.", inScreenOk:"Touche les notes à l'écran.",
@@ -4996,7 +5004,7 @@ const TXT = {
     accuracy:"Accuracy", avgTime:"Average time", xpWon:"XP earned", bestCombo:"Best combo", toRework:"To rework", allPerfect:"No mistakes, well done!",
     reworkBtn:"Rework my mistakes", newGame:"New game", closeLbl:"Close", outOf:"exercises without mistakes", tomorrow:"tomorrow",
     secHarmony:"Harmony", secProg:"Progressions", secEar:"Ear", secGames:"Games", secPlay:"Play", hub:"Home", learn:"Learn", learnTitle:"What do we work on?", learnSub:"Pick a topic: exercises are played on your piano and checked note by note.", learnTiles:[["chords","Chords","Major, minor, inversions, 7th chords."],["scales","Scales","Major, minor, pentatonic, as notes or chords."],["harmony","Harmony","The degrees of a key and their chords."],["prog","Progressions","The chord sequences behind songs."],["ear","Ear","Recognise intervals and chords by ear."],["accomp","Accompaniment","Play a chord grid with both hands: bass on the left, chords on the right, in time."],["daily","Daily practice","10 mixed exercises, about 5 minutes."]], modeLearnSub:"Theory and exercises", modePlaySub:"Falling-note songs", modeGamesSub:"Mini-games", hubTitle:"What do we play today?", hubSub:"Four ways to get better at the piano. Switch any time from the menu.", hubLearn:"Chords, scales, harmony, progressions and ear training, checked note by note.", hubPlay:"Songs that fall onto the keys at your own speed, with fingering. The song waits for you when you miss.", hubGames:"Short mini-games to find the notes, keep the beat, read the staff or train your ear.", hubLearnTags:"Chords · Scales · Harmony · Progressions · Ear · Daily practice", hubPlayTags:"3D cascade · Wait mode · Speed · Note names · Fingering", hubGamesTags:"Note Jumper · Time attack · Memory · Note Runner · Rhythm Pulse · Chord Blaster · Scale Climber · Golden Ear · Staff Express", playGamesHead:"Play games", playGamesSub:"On the lit keyboard, with falling notes", playGames:[["Note Runner","Jump over obstacles by playing the note written on them.","runner"],["Rhythm Pulse","Hit a key exactly when the ring reaches the target.","pulse"],["Chord Blaster","Play the chord shown to blast the asteroid.","blaster"],["Scale Climber","Climb the tower by playing the scale without a slip.","climber"],["Golden Ear","Listen to a note or a short melody, then play it back.","ear"],["Staff Express","Read the notes as they reach the bar on the staff.","staff"]], secRank:"Leaderboard", secAccount:"Profile",
-    inTitle:"How will you play?", secInter:"Interaction", secGame:"Game settings", periods:{day:"Today",week:"This week",month:"This month",year:"This year",all:"All time"}, rankEmptyP:"Nobody has earned XP in this period yet. Your turn!", pcSolved:n=>fmtN(n)+" solved", inChange:"Play mode", leaveTitle:"Leave the daily practice?", leaveSub:"You are in the middle of it. If you leave, it stops and you will have to start again.", leaveStay:"Keep playing", leaveGo:"Leave", dcStart:"Start the practice", inMidiApp:"A MIDI keyboard? On iPhone and iPad you need the Piano Challenges app (the browser has no MIDI).", midiDone:"Finish set-up", midiSetupNeed:"Plug your keyboard in with USB or search for it over Bluetooth: it must show up in the list to continue.", midiSetupOk:"Keyboard detected! Play a few notes to check, then finish the set-up.", backPlay:"← Back", lockGuest:"Continue without an account for now", inSub:"Choose once. You can change it later in Settings.", inLbl:"I play with",
+    inTitle:"How will you play?", secInter:"Interaction", secGame:"Game settings", periods:{day:"Today",week:"This week",month:"This month",year:"This year",all:"All time"}, rankEmptyP:"Nobody has earned XP in this period yet. Your turn!", pcSolved:n=>fmtN(n)+" solved", inChange:"Input mode", leaveTitle:"Leave the daily practice?", leaveSub:"You are in the middle of it. If you leave, it stops and you will have to start again.", leaveStay:"Keep playing", leaveGo:"Leave", dcStart:"Start the practice", inMidiApp:"A MIDI keyboard? On iPhone and iPad you need the Piano Challenges app (the browser has no MIDI).", midiDone:"Finish set-up", midiSetupNeed:"Plug your keyboard in with USB or search for it over Bluetooth: it must show up in the list to continue.", midiSetupOk:"Keyboard detected! Play a few notes to check, then finish the set-up.", backPlay:"← Back", lockGuest:"Continue without an account for now", inSub:"Choose once. You can change it later in Settings.", inLbl:"I play with",
     inModes:{screen:["The on-screen keyboard","Tap the notes on screen, or use your computer keyboard.","Screen"],midi:["My MIDI keyboard","Plugged in with USB or connected over Bluetooth. The most accurate.","MIDI"],mic:["My piano, with the mic","For an acoustic piano: the app listens to the notes you play.","Mic"]},
     inCfgMidi:"Connect / set up the MIDI keyboard", inCfgMic:"Turn the mic on", inMidiNo:"This browser has no MIDI: use Chrome or Edge, the iPhone/iPad app, or the mic.",
     inMidiOk:n=>"Connected: "+n, inMidiNone:"No keyboard detected: plug it in or connect it over Bluetooth.", inMicOk:"The mic is listening.", inMicOff:"Mic not turned on yet.", inScreenOk:"Tap the notes on screen.",
@@ -5832,11 +5840,12 @@ function scrollKbdTo(m){
 const kbdPtr=new Map(); // pointerId -> key held down (the key stays down until the finger or the mouse is released)
 kbd.addEventListener("pointerdown", e=>{
   const el=e.target.closest("[data-m]"); if(!el) return;
-  e.preventDefault(); const m=+el.dataset.m; keyDown(m,true); kbdPtr.set(e.pointerId,m); pressKey(m); tone(m); midiIn(m); // key lit before the grouping; same 35 ms grouping as MIDI (two-finger chords)
+  e.preventDefault(); if(!md4Screen()) return; // MIDI 4 : en entrée « micro », le clavier à l'écran est un affichage
+  const m=+el.dataset.m; keyDown(m,true); kbdPtr.set(e.pointerId,m); pressKey(m); tone(m); midiIn(m); // key lit before the grouping; same 35 ms grouping as MIDI (two-finger chords)
 });
 // keys are buttons for assistive tech (not in the Tab order: the letter keys are the shortcuts); Enter/Space on a focused key plays it
 function keyA11y(el,m){ el.setAttribute("role","button"); el.tabIndex=-1; el.setAttribute("aria-label",(S.settings.notation==="fr"?PC_FR:PC_EN)[m%12]+" "+(Math.floor(m/12)-(S.settings.notation==="fr"?2:1))); }
-kbd.addEventListener("keydown", e=>{ const el=e.target.closest("[data-m]"); if(!el || (e.code!=="Enter" && e.code!=="Space")) return; e.preventDefault(); e.stopPropagation(); const m=+el.dataset.m; tone(m); noteIn(m); });
+kbd.addEventListener("keydown", e=>{ const el=e.target.closest("[data-m]"); if(!el || (e.code!=="Enter" && e.code!=="Space")) return; e.preventDefault(); e.stopPropagation(); if(!md4Screen()) return; const m=+el.dataset.m; tone(m); noteIn(m); });
 function pressKey(m){ const el=keyEls[fold(m)]; if(!el) return; el.classList.add("k-press"); setTimeout(()=>el.classList.remove("k-press"),130); }
 // k-down: the key stays down while the note is held (MIDI note-off, pointer up, key up); k-press (130 ms) stays for the mic
 function keyDown(m,on){ const el=keyEls[fold(m)]; if(el) el.classList.toggle("k-down",on); }
@@ -5863,6 +5872,7 @@ document.addEventListener("keydown", e=>{
   if(e.code==="Enter" && phase==="revealed"){ e.preventDefault(); grade(true); return; }
   if(e.code==="Backspace" && phase==="revealed"){ e.preventDefault(); grade(false); return; }
   const m=CODE_MAP[e.code]; if(m==null||e.repeat||e.metaKey||e.ctrlKey||e.altKey) return;
+  if(!md4Screen()) return; // MIDI 4 : micro = l'écran et les lettres ne jouent pas
   const mm=fold(m); pressKey(mm); keyDown(mm,true); tone(mm); midiIn(mm);
 });
 function flashKey(m, cls, ms=220){ const el=keyEls[fold(m)]; if(!el) return; el.classList.add(cls); setTimeout(()=>el.classList.remove(cls), ms); }
@@ -6047,22 +6057,6 @@ function tick(){
     if(left<=0){ reveal(true); return; }
   }
   raf=requestAnimationFrame(tick);
-}
-// keyboard detection: lowest key, then highest key
-let calib=null;
-function calibNote(note){
-  calib.lo = calib.lo==null ? note : Math.min(calib.lo,note);
-  calib.hi = calib.hi==null ? note : Math.max(calib.hi,note);
-  calibMsg(t("calibLive")(calib.hi-calib.lo+1, octName(calib.lo), octName(calib.hi)));
-}
-function calibApply(){
-  const c=calib; calib=null; $("kbDetect").textContent=t("kbDetect");
-  if(!c || c.lo==null || c.hi-c.lo<11){ calibMsg(t("calibShort")); return; }
-  // keyboards start and end on white keys: snap outward if needed
-  let lo=c.lo, hi=c.hi; const white=m=>[0,2,4,5,7,9,11].includes(m%12);
-  while(!white(lo)) lo--; while(!white(hi)) hi++;
-  Object.assign(S.settings,{kbdSize:"custom",kbdLow:lo,kbdHigh:hi}); save(); buildKeyboard(); renderSettings();
-  calibMsg(t("kbDone")(hi-lo+1,octName(lo),octName(hi)));
 }
 // most keyboards say their size in their name ("Keystation 49", "Launchkey 61"...); a few are known models
 // a virtual MIDI port of the system (macOS / iOS "Network Session 1" / « Session réseau 1 », IAC driver) is not a keyboard: never listed nor listened to
@@ -6902,7 +6896,6 @@ function closeSet(){ if(INFO_PAGES.includes(page)){ page="practice"; returnPage=
 $("setBtn").addEventListener("click",()=>openSet("settings")); $("mbSet").addEventListener("click",()=>openSet("settings")); $("progBtn").addEventListener("click",()=>openSet("progress"));
 document.querySelectorAll("[data-back]").forEach(b=>b.addEventListener("click",()=>openPage(returnPage||"practice")));
 $("kbSize").addEventListener("change",e=>{ S.settings.kbdSize=e.target.value; save(); buildKeyboard(); renderSettings(); if(cur&&seq.length) scrollKbdTo(revealMidis()[0]); });
-$("kbDetect").addEventListener("click",()=>{ if(calib){ calibApply(); return; } if(!midiReady){ calibMsg(t("calibNeedMidi")); return; } calib={lo:null,hi:null}; $("kbDetect").textContent=t("kbValidate"); calibMsg(t("calibListen")); });
 $("homeLink").addEventListener("click",e=>{ e.preventDefault(); guardLeave(()=>{ goHome(); openPage("hub"); }); });
 $("homeLink2").addEventListener("click",e=>{ e.preventDefault(); goHome(); openPage("hub"); });
 
@@ -8825,10 +8818,9 @@ function renderMidiModal(){
 }
 function openMidi(){ if(!midiOpen) modalOpened(); midiOpen=true; mtReset(); renderMidiModal(); startMidiPoll(); $("midiModal").hidden=false; $("midiOk").focus(); }
 function closeMidi(){ if(!midiOpen) return; midiOpen=false; $("midiModal").hidden=true;
-  if(midiSetup){ const prev=midiSetup.prev; midiSetup=null; S.settings.input = midiReady ? "midi" : (prev && prev!=="midi" ? prev : undefined); if(!S.settings.input) delete S.settings.input; save(); renderInputUI(); render(); } if(calib){ calib=null; calibMsg(""); $("kbDetect").textContent=t("kbDetect"); } clearInterval(midiPoll); modalClosed(); }
+  if(midiSetup){ const prev=midiSetup.prev; midiSetup=null; S.settings.input = midiReady ? "midi" : (prev && prev!=="midi" ? prev : undefined); if(!S.settings.input) delete S.settings.input; save(); renderInputUI(); render(); } clearInterval(midiPoll); modalClosed(); }
 let midiPoll=0; // in the app, look for newly paired / plugged keyboards while the window is open
 function startMidiPoll(){ clearInterval(midiPoll); if(window.__nativeMidi && midiAcc) midiPoll=setInterval(()=>{ window.__nativeMidi.listInputs().catch(()=>{}); },2000); }
-function calibMsg(x){ const m=$("calibMsg"); m.textContent=x; m.hidden=!x; if(!midiOpen) notice(x); }
 $("midiCfg").addEventListener("click",openMidi);
 $("midiX").addEventListener("click",closeMidi); $("midiBg").addEventListener("click",closeMidi); $("midiOk").addEventListener("click",closeMidi);
 $("mEnable").addEventListener("click",()=>$("midiBtn").click());
@@ -8868,10 +8860,11 @@ async function enableMidi(quiet){
         if((inp.state && inp.state!=="connected") || midiVirtual(inp.name)){ inp.onmidimessage=null; return; } // Chrome keeps unplugged ports in the map; virtual ports are not keyboards
         names.push(inp.name); inp.onmidimessage=ev=>midiEach(ev.data, inp, d=>{
         const [st,note,vel]=d;
+        if(!md4Live(st)) return; // MIDI 4 : entrée « écran » ou « micro » choisie = les notes MIDI sont ignorées (sauf assistant, test, quiz, premier lancement)
         if(LV.on){ if((st&0xf0)===0x90 && vel>0) lvNote(note); return; } // the leave window: C = keep playing, B = leave
         if(SR.on){ if((st&0xf0)===0x90 && vel>0) srNote(note); return; } // série validée (plein écran) : un Do seul ferme, aucune note ne passe en dessous
         if(MW.on && mwMsg(st,note,vel,inp)) return; // the « Connect my keyboard » assistant (MIDI lots 2-3) gets every message while it is open
-        if(midiOpen && !calib && (st&0xf0)===0x90 && vel>0){ pressKey(note); mtNote(note,vel,inp.name); return; } // the MIDI window: the « play a note » test (M8)
+        if(midiOpen && (st&0xf0)===0x90 && vel>0){ midiSeen(note,inp); pressKey(note); mtNote(note,vel,inp.name); return; } // the MIDI window: the « play a note » test (M8)
         if(page==="quiz"){ if((st&0xf0)===0x90 && vel>0){ if(S.settings.midiSound) tone(note,0,.9,.1+.26*vel/127); if(!anyModal()) quizIn(String(inp.id||inp.name),note); } return; } // every keyboard counts: one per player
         if(S.settings.midiInput && inp.name!==S.settings.midiInput && midiNames.includes(S.settings.midiInput) && !midiTakeOver(st,vel,inp)) return; // the chosen keyboard only, while it is played (MIDI 3 : un autre clavier joué quand le choisi se tait depuis 3 s prend la main)
         if((st&0xf0)===0x90 && vel>0 && midiDup(note,inp)) return; // the same keyboard on a second port
@@ -8881,9 +8874,8 @@ async function enableMidi(quiet){
         if((st&0xf0)===0x80 || ((st&0xf0)===0x90 && vel===0)){ keyDown(note,false); return; }
         if((st&0xf0)===0x90 && vel>0){
           if(S.settings.midiSound) tone(note,0,.9,.1+.26*vel/127);
-          if(!calib) followMidi(note); // MIDI 3 : le clavier à l'écran suit AVANT d'allumer la touche (le Do du haut allumait le Do du milieu, replié, puis l'écran sautait)
+          followMidi(note); // MIDI 3 : le clavier à l'écran suit AVANT d'allumer la touche (le Do du haut allumait le Do du milieu, replié, puis l'écran sautait)
           pressKey(note); keyDown(note,true); // light the key at once, before the 35 ms grouping
-          if(calib){ calibNote(note); return; }
           midiIn(note,true); } }); });
       $("midiBtn").classList.toggle("on",names.length>0); $("midiBtn").classList.remove("err");
       const shown = S.settings.midiInput && names.includes(S.settings.midiInput) ? S.settings.midiInput : names[0];
@@ -9577,6 +9569,7 @@ OBJ.midikbd=()=>{ const o=O3(); o.raw('<path d="M98 86c14 4 16 18 6 26" stroke="
 // ---- état affiché (M1) ----
 function mdState(){ const m=S.settings.input, poss=midiPossible();
   if(m==="mic") return {k:micOn?"mic":"micoff", lbl:t(micOn?"mdMic":"mdMicOff")};
+  if(m==="screen" && (midiReady || !poss || mdS().seenAt)) return {k:"screen", lbl:t("mdScreen")}; // MIDI 4 : l'entrée « écran » n'écoute pas le clavier MIDI branché
   if(midiReady){ const n=midiNames.length, one=S.settings.midiInput&&midiNames.includes(S.settings.midiInput)?S.settings.midiInput:(n===1?midiNames[0]:"");
     return one ? {k:"ok", lbl:mdTrunc(one), full:one} : {k:"ok", lbl:t("mdNKb")(n), full:midiNames.join(", ")}; }
   if(m==="midi" && poss) return {k:"wait", lbl:t("mdWait")};
@@ -9594,7 +9587,7 @@ function mdPillClick(){ closeDrawer(); if(!midiPossible()){ openInputChooser(tru
 $("mbMidi").addEventListener("click",mdPillClick);
 $("mdChange").addEventListener("click",()=>{ closeMidi(); openInputChooser(true); });
 // ---- carte « Ton clavier » de l'accueil (M2) ----
-function mdHub(){ const c=$("hsMidi"); if(!c||!MD) return; const s=mdS(), poss=midiPossible(), ok=midiReady && S.settings.input!=="mic";
+function mdHub(){ const c=$("hsMidi"); if(!c||!MD) return; const s=mdS(), poss=midiPossible(), ok=midiReady && md4MidiOn();
   const st = ok ? "ok" : !poss ? "no" : (s.later && Date.now()-s.later<7*864e5) ? "later" : "promo";
   c.className="hs-card hs-midi md-"+st; $("hsMidiDot").classList.toggle("on",ok);
   const o=$("hsMidiObj"); if(st==="promo" && !o.firstChild) o.innerHTML=OBJ.midikbd();
@@ -9643,33 +9636,24 @@ function mdWatch(){ if(midiAcc || !navigator.requestMIDIAccess || !midiPossible(
   if(document.documentElement.classList.contains("native")){ enableMidi(true); return; }
   try{ navigator.permissions.query({name:"midi"}).then(p=>{ if(p && p.state==="granted" && !midiAcc) enableMidi(true); }).catch(()=>{}); }catch(e){} }
 // ---- test « joue une note » en tête de la fenêtre Clavier MIDI (M8) ----
-const MT={vels:[], lo:48, last:null, twice:""};
-function mtReset(){ MT.vels=[]; MT.last=null; MT.twice=""; mtRender(); }
-function mtTouch(){ const v=MT.vels; if(v.length<2) return null; const mx=Math.max(...v), mn=Math.min(...v); if(mx-mn>=40) return true; if(mx===mn) return false; return null; }
-function mtNote(m, v, port){ MT.vels.push(v); MT.last={m,v,port};
+// MIDI 4 (28/10/2026) : plus de force ni de « Tu entends le son deux fois ? » ; la bande montre exactement les touches du clavier reconnu (md4Band)
+const MT={lo:null, n:25, last:null};
+function mtReset(){ MT.last=null; MT.lo=null; mtRender(); }
+function mtNote(m, v, port){ MT.last={m,v,port};
   if(S.settings.midiSound) tone(m,0,.9,.1+.26*v/127);
-  const s=mdS(); s.tested=Date.now(); s.hw={...(s.hw&&s.hw.name===port?s.hw:{}), name:port}; const r=mtTouch(); if(r!=null) s.hw.vel=r; save();
-  if(m<MT.lo || m>MT.lo+24) MT.lo=Math.max(0,Math.min(103,12*Math.floor(m/12))); // MIDI 3 : 25 touches, le Do du haut est sur la bande
+  const s=mdS(); s.tested=Date.now(); s.hw={...(s.hw&&s.hw.name===port?s.hw:{}), name:port}; save();
+  const b=md4Band(m, MT.lo, port); MT.lo=b.lo; MT.n=b.n;
   mtRender(); }
-function mtKb(){ const kb=$("mtKb"); if(!kb) return; if(kb.dataset.lo==String(MT.lo)) return; kb.dataset.lo=MT.lo; kb.innerHTML="";
-  const whites=[], WH=[0,2,4,5,7,9,11]; for(let m=MT.lo;m<=MT.lo+24;m++) if(WH.includes(m%12)) whites.push(m);
-  whites.forEach(m=>{ const w=document.createElement("span"); w.className="w"; w.dataset.m=m; if(m%12===0){ const l=document.createElement("small"); l.textContent=octName(m); w.appendChild(l); } kb.appendChild(w); });
-  const ww=100/whites.length; for(let m=MT.lo;m<MT.lo+24;m++) if(!WH.includes(m%12)){ const i=whites.indexOf(m-1); const b=document.createElement("span"); b.className="b"; b.dataset.m=m; b.style.left="calc("+((i+1)*ww)+"% - "+(ww*.3)+"%)"; b.style.width=(ww*.6)+"%"; kb.appendChild(b); } }
+function mtKb(){ const kb=$("mtKb"); if(!kb) return; if(MT.lo==null){ const b=md4Band(null,null,MT.last&&MT.last.port); MT.lo=b.lo; MT.n=b.n; }
+  const key=MT.lo+":"+MT.n; if(kb.dataset.lo===key) return; kb.dataset.lo=key; kb.innerHTML=md4BandHTML(MT.lo, MT.lo+MT.n-1); }
 function mtRender(){ const box=$("mdTest"); if(!box) return; box.hidden=!midiReady; if(!midiReady) return; mtKb();
   const L=MT.last, kb=$("mtKb"); kb.querySelectorAll(".on").forEach(e=>e.classList.remove("on"));
   const msg=$("mtMsg"); msg.classList.toggle("ok",!!L);
   if(L){ const pc=L.m%12, nc="var(--note-"+pc+")"; const k=kb.querySelector('[data-m="'+L.m+'"]'); if(k){ k.style.setProperty("--nc",nc); k.classList.add("on"); }
     $("mtName").textContent=(S.settings.notation==="fr"?PC_FR:PC_EN)[pc]; $("mtName").parentNode.style.setProperty("--nc",nc);
-    $("mtSub").textContent=octName(L.m)+" · "+t("mdForceN")(L.v); $("mtBar").style.height=Math.round(L.v/127*100)+"%"; $("mtVel").textContent=L.v;
+    $("mtSub").textContent=octName(L.m);
     msg.textContent=t("mdTalks"); const sm=document.createElement("small"); sm.textContent=t("mdFrom")(octName(L.m),L.port); msg.appendChild(sm); }
-  else { $("mtName").textContent="♪"; $("mtName").parentNode.style.removeProperty("--nc"); $("mtSub").textContent=""; $("mtBar").style.height="0"; $("mtVel").textContent=""; msg.textContent=t("mdPressAny"); }
-  const r=mtTouch(), tr=$("mtTouchRes"), v=MT.vels; tr.className = r ? "ok" : "";
-  tr.textContent = r===true ? t("mdTouchVals")(Math.max(...v),Math.min(...v))+" · "+t("mdTouchOk") : r===false ? t("mdTouchNo") : v.length ? t("mdForceN")(v[v.length-1]) : "";
-  $("mtTwice").querySelectorAll("[data-v]").forEach(b=>b.setAttribute("aria-pressed",b.dataset.v===MT.twice));
-  $("mtTwiceRes").textContent = MT.twice==="yes" ? t("mdTwiceYes") : MT.twice==="none" ? t("mdTwiceNone") : MT.twice==="no" ? t("mdTwiceNo") : ""; }
-$("mtTwice").addEventListener("click",e=>{ const b=e.target.closest("[data-v]"); if(!b) return; MT.twice=b.dataset.v;
-  if(MT.twice==="yes") S.settings.midiSound=false; else if(MT.twice==="none") S.settings.midiSound=true;
-  save(); renderSettings(); mtRender(); });
+  else { $("mtName").textContent="♪"; $("mtName").parentNode.style.removeProperty("--nc"); $("mtSub").textContent=""; msg.textContent=t("mdPressAny"); } }
 /* ==== fin MIDI lot 1 ==== */
 /* ==== Premiers pas (chantier Débutant, lot 1) ==== */
 // The "First steps" path: 14 two-minute lessons (P01–P03 written in lot 1, the others shown as "soon"). A lesson = Watch (the keyboard
@@ -10321,7 +10305,7 @@ addEventListener("resize",()=>{ if(page==="acc" && ACC.view==="play" && ACC.run)
 // (fetch keepalive vers la fonction SQL track_events), sans le SDK Supabase. Hors ligne, la file attend. Une table ou une
 // fonction absente (migration pas encore lancée) coupe l'envoi sans erreur. En développement (localhost), rien ne part sur
 // le réseau, sauf si localStorage « pc-trk-test » = "1" (tests). Interrupteur : S.settings.analytics (absent = activé).
-const APP_BUILD="2026-10-27T15:20Z"; // remplacé par tools/build.py par la date de construction (version.txt)
+const APP_BUILD="2026-10-28T19:31Z"; // remplacé par tools/build.py par la date de construction (version.txt)
 const TRK={q:[], t:0, off:false, anon:null, sent:0, errs:[], errT:0, errSeen:new Set(), errOn:null, ports:new Set(), first:false};
 const RC={flags:{}, daily:{}, at:0};
 const TRK_NAMES=new Set(["song_import","app_open","first_note","input_mode","midi_connected","pp_lesson_done","learn_end","game_end","quiz_end","duel_end","goal_reached","badge","signup","login","play","feedback","acc_end","song_open","route_step","route_stage"]);
@@ -11198,7 +11182,7 @@ function mwPrev(){ const p=MW.hist.pop(); if(p) mwGo(p,true); }
 function mwEnter(){ const st=MW.step, s=mdS(); s.wizard={...(s.wizard||{}), step:st};
   if(["hw","cable","bt","trouble"].includes(st)) mwListen();
   if(st==="cable"){ MW.tm=setTimeout(()=>{ if(MW.on&&MW.step==="cable"&&!midiReady){ MW.still=true; mwRender(); } },20000); }
-  if(st==="test"){ MW.t={vels:[], last:null, lo:48, ped:!!mwHw().ped, pedAsk:true, twice:"", picked:"", n:0}; MW.tm=setTimeout(()=>{ if(MW.on&&MW.step==="test"&&MW.t&&!MW.t.n){ MW.t.silent=true; mwRender(); } },15000); }
+  if(st==="test"){ MW.t={vels:[], last:null, lo:null, lo0:null, ped:!!mwHw().ped, pedAsk:true, twice:"", picked:"", n:0}; MW.tm=setTimeout(()=>{ if(MW.on&&MW.step==="test"&&MW.t&&!MW.t.n){ MW.t.silent=true; mwRender(); } },15000); }
   if(st==="range") mwRangeStart();
   if(st==="ready") mwFinish();
   if(st==="lat") MW.lat={run:false, beats:[], hits:[], res:undefined};
@@ -11226,12 +11210,10 @@ function mwMsg(st, note, vel, inp){ if(!MW.on) return false; const ty=st&0xf0, n
 function mwTestNote(m, v, name){ const T=MW.t; if(!T) return; T.n++; T.vels.push(v); T.last={m,v,name}; T.silent=false;
   if(midiNames.length>1 && !T.picked && name){ T.picked=name; S.settings.midiInput=name; }
   const s=mdS(), h=mwHw(); s.tested=Date.now(); if(name && h.name!==name){ s.hw={name}; } const r=mwTouch(); if(r!=null) mwHw().vel=r; save();
-  if(m<T.lo || m>T.lo+24) T.lo=Math.max(0,Math.min(103,12*Math.floor(m/12))); mwRender(); }
+  const bd=md4Band(m, T.lo0, name); T.lo=T.lo0=bd.lo; T.nk=bd.n; mwRender(); }
 function mwTouch(){ const v=MW.t?MW.t.vels:[]; if(v.length<2) return null; const mx=Math.max(...v), mn=Math.min(...v); if(mx-mn>=30) return true; if(mx===mn) return false; return null; }
-function mwKb2(lo, on, nc){ const WH=[0,2,4,5,7,9,11], wh=[]; for(let m=lo;m<=lo+24;m++) if(WH.includes(m%12)) wh.push(m); const ww=100/wh.length;
-  let h=wh.map(m=>'<span class="w'+(m===on?' on':'')+'"'+(m===on?' style="--nc:'+nc+'"':'')+'>'+(m%12===0?'<small>'+esc(octName(m))+'</small>':'')+'</span>').join("");
-  for(let m=lo;m<lo+24;m++) if(!WH.includes(m%12)){ const i=wh.indexOf(m-1); h+='<span class="b'+(m===on?' on':'')+'" style="left:calc('+((i+1)*ww)+'% - '+(ww*.3)+'%);width:'+(ww*.6)+'%'+(m===on?';--nc:'+nc:'')+'"></span>'; }
-  return '<div class="mt-kb mw-kb" aria-hidden="true">'+h+'</div>'; }
+// MIDI 4 : exactement les touches du clavier reconnu (24 pour un LUMI, 25, 49…), voir md4Band
+function mwKb2(lo, on, nc, n){ if(lo==null){ const b=md4Band(null,null,""); lo=b.lo; n=b.n; } return '<div class="mt-kb mw-kb" aria-hidden="true">'+md4BandHTML(lo, lo+(n||25)-1, on, nc)+'</div>'; }
 // ---- M9 range ----
 function mwRangeStart(){ const sz=S.settings.kbdSize||"auto", h=mwHw(); MW.r={lo:null, hi:null, mode: /^\d+$/.test(sz) && !(h.lo>0) ? "guess" : "measure", err:""}; }
 function mwRangeNote(m){ const R=MW.r; if(!R) return; if(R.mode==="guess") R.mode="measure"; R.lo=R.lo==null?m:Math.min(R.lo,m); R.hi=R.hi==null?m:Math.max(R.hi,m); R.err=""; mwRender(); }
@@ -11299,12 +11281,11 @@ function mwRender(){ if(!MW.on) return; const st=MW.step, d=mwDev(), body=$("mwB
       +(MW.found?'<div class="mw-found" role="status"><span class="mw-ok">'+MW_ICON.check+'</span><b>'+esc(t("mdFound")(mdTrunc(MW.found)))+'</b></div>':d.nat?'<p class="mw-sub">'+esc(t("mdBtAfter"))+'</p>':'')
       +(MW.btAsked && !MW.found?'<p class="mw-tip"><b>'+esc(t("mdBtNot"))+'</b> <button type="button" class="mw-link" data-a="trouble">'+esc(t("mdMoreHelp"))+'</button></p>':'');
     f=mwFoot(d.nat ? mwB("bt",t("mdBtFind"),"primary","search") : d.kind==="mac" ? (midiNames.length?mwB("totest",t("mdTestNow"),"primary"):mwB("trouble",t("mdTrouble"),"")) : mwB("tocable",t("mdBtCable"),"primary")); }
-  else if(st==="test"){ dot=4; const T=MW.t||{vels:[],lo:48}, L=T.last, nc=L?"var(--note-"+(L.m%12)+")":"", r=mwTouch(), v=T.vels, many=midiNames.length>1 && !T.picked;
+  else if(st==="test"){ dot=4; const T=MW.t||{vels:[],lo:null}, L=T.last, nc=L?"var(--note-"+(L.m%12)+")":"", many=midiNames.length>1 && !T.picked;
     h='<h2 id="mwH">'+esc(t("mdPressAny"))+'</h2>'
       +'<p class="mw-msg'+(L?' ok':'')+(T.silent?' bad':'')+'" role="status">'+(L?'<span class="mw-ok">'+MW_ICON.check+'</span>':'')+'<span><b>'+esc(L?t("mdTalks"):T.silent?t("mdSilent"):many?t("mdPickKb"):t("mdLooking"))+'</b><small>'+esc(L?t("mdFrom")(octName(L.m),L.name)+(T.picked&&midiNames.length>1?" · "+t("mdPicked")(T.picked):""):"")+'</small></span>'+(T.silent?mwB("trouble",t("mdTrouble"),"ghost"):'')+'</p>'
-      +'<div class="mt-row mw-trow"><div class="mt-note"'+(L?' style="--nc:'+nc+'"':'')+'><b>'+(L?esc((S.settings.notation==="fr"?PC_FR:PC_EN)[L.m%12]):"♪")+'</b><small>'+(L?esc(octName(L.m)+" · "+t("mdForceN")(L.v)):"")+'</small></div>'+mwKb2(T.lo,L?L.m:-1,nc)+'<div class="mt-vel" aria-hidden="true"><span>'+esc(t("mdForce"))+'</span><i><b style="height:'+(L?Math.round(L.v/127*100):0)+'%"></b></i><em>'+(L?L.v:"")+'</em></div></div>'
-      +'<div class="mw-tsteps"><div class="mt-step'+(r!=null?' done':'')+'"><b>'+esc(t("mdLoudSoft"))+'</b><small class="'+(r?'ok':'')+'">'+esc(r===true?t("mdTouchVals")(Math.max(...v),Math.min(...v))+" · "+t("mdTouchOk"):r===false?t("mdTouchNo"):v.length?t("mdForceN")(v[v.length-1]):"")+'</small></div>'
-      +'<div class="mt-step'+(T.twice?' done':'')+'"><b>'+esc(t("mdTwice"))+'</b><span class="mt-btns">'+[["yes","mdYes"],["no","mdNo"],["none","mdNone"]].map(([k,l])=>'<button class="btn" type="button" data-a="tw:'+k+'" aria-pressed="'+(T.twice===k)+'">'+esc(t(l))+'</button>').join("")+'</span><small>'+esc(T.twice==="yes"?t("mdTwiceYes"):T.twice==="none"?t("mdTwiceNone"):T.twice==="no"?t("mdTwiceNo"):"")+'</small></div>'
+      +'<div class="mt-row mw-trow"><div class="mt-note"'+(L?' style="--nc:'+nc+'"':'')+'><b>'+(L?esc((S.settings.notation==="fr"?PC_FR:PC_EN)[L.m%12]):"♪")+'</b><small>'+(L?esc(octName(L.m)):"")+'</small></div>'+mwKb2(T.lo,L?L.m:-1,nc,T.nk)+'</div>'
+      +'<div class="mw-tsteps">'
       +'<div class="mt-step'+(T.ped||T.noPed?' done':'')+'"><b>'+esc(t("mdPedal"))+'</b><small class="'+(T.ped?'ok':'')+'">'+(T.ped?esc(t("mdPedalOk")):T.noPed?'—':'<button type="button" class="mw-link" data-a="noped">'+esc(t("mdNoPedal"))+'</button>')+'</small></div></div>'
       +((MW.conn==="bt"||mwHw().conn==="bt")?'<p class="mw-tip"><button type="button" class="mw-link" data-a="lat">'+esc(t("mdLatAsk"))+'</button></p>':'');
     f=mwFoot(mwB("range",t("mdNext"),"primary","",!L)); }
@@ -13338,9 +13319,9 @@ function pnMidi(st,note,vel){ const ty=st&0xf0;
   if(ty===0xB0 && (note===120||note===123)) pnAllOff(); }
 // the screen keys (capture: the exercise handler does not run here) and the computer keyboard
 kbd.addEventListener("pointerdown",e=>{ if(page!=="piano") return; const el=e.target.closest("[data-m]"); if(!el) return;
-  e.preventDefault(); e.stopImmediatePropagation(); const m=+el.dataset.m; PN.ptr.set(e.pointerId,m); pnOn(m,.72,"screen"); },true);
+  e.preventDefault(); e.stopImmediatePropagation(); if(!md4Screen()) return; const m=+el.dataset.m; PN.ptr.set(e.pointerId,m); pnOn(m,.72,"screen"); },true);
 ["pointerup","pointercancel","pointerleave"].forEach(ty=>kbd.addEventListener(ty,e=>{ const m=PN.ptr.get(e.pointerId); if(m==null) return; PN.ptr.delete(e.pointerId); pnOff(m); }));
-function pnKey(e){ const m=CODE_MAP[e.code]; if(m==null||e.repeat||e.metaKey||e.ctrlKey||e.altKey) return; pnOn(fold(m),.72,"key"); }
+function pnKey(e){ const m=CODE_MAP[e.code]; if(m==null||e.repeat||e.metaKey||e.ctrlKey||e.altKey||!md4Screen()) return; pnOn(fold(m),.72,"key"); }
 document.addEventListener("keyup",e=>{ if(page!=="piano") return; const m=CODE_MAP[e.code]; if(m!=null) pnOff(fold(m)); });
 // the mic (an acoustic piano): light only, no app sound
 { const o=noteIn; noteIn=function(m){ if(page==="piano"){ if(LV.on||FN.on) return o.apply(this,arguments); pnOn(m,.7,"mic"); setTimeout(()=>{ if(page==="piano") pnOff(m); },350); return; } return o.apply(this,arguments); }; }
@@ -13913,6 +13894,7 @@ function midiWiden(n){ if(MS.lo==null || n<MS.lo || n>MS.hi || (S.settings.kbdSi
   let lo=MS.lo, hi=MS.hi; if(hi-lo<=HIGH-LOW || hi-lo>36) return false;
   const white=m=>[0,2,4,5,7,9,11].includes(((m%12)+12)%12); while(!white(lo)) lo--; while(!white(hi)) hi++;
   if(lo<21 || hi>108) return false;
+  const K=md4Keys(MS.name); if(K && hi-lo+1>K) return false; // MIDI 4 : jamais plus de touches que le clavier reconnu (un LUMI 24 touches décalé d'une octave se décale, il ne grandit pas)
   Object.assign(S.settings,{kbdSize:"custom",kbdLow:lo,kbdHigh:hi}); save(); buildKeyboard(); renderSettings();
   if(cur && typeof markPlayed==="function") markPlayed(); return true; }
 // the chosen keyboard (S.settings.midiInput) mutes the other ports only while it is played: another keyboard played when the chosen one has
@@ -14234,6 +14216,145 @@ function srNote(m){ if(S.settings.midiC===false) return; SR.buf.push(((m%12)+12)
     r.changed=!syncSame(M,local); }catch(e){} return r; }; }
 srFrom(); SR.prev=srSec(); setTimeout(srPaint,0);
 /* ==== fin Gammes v4 + Série 10 min ==== */
+/* ==== MIDI 4 (28/10/2026) : fenêtre clavier, modes d'entrée exclusifs, touches exactes, signalement, alerte admin ==== */
+Object.assign(TXT.fr, {
+  md4Report:"Signaler un problème avec mon clavier",
+  md4Recog:(m,k,c)=>"Reconnu : "+m+(k?" · "+k+" touches":"")+(c?" · "+c:""),
+  md4Keys:k=>k+" touches",
+  md4NotUsed:m=>"Entrée choisie : "+m+". Ce clavier n'est pas écouté.",
+  md4Use:"Utiliser ce clavier",
+  md4Conn:{usb:"USB", bt:"Bluetooth", din:"MIDI DIN"},
+  md4Ask:"(Décris ton problème ici : ce qui se passe, sur quelle page…)",
+  md4Diag:"— Diagnostic du clavier MIDI (rempli par l'app) —",
+  md4L:{dev:"Appareil", ports:"Ports vus", pick:"Port choisi", all:"tous", model:"Modèle reconnu", range:"Plage", seen:"Notes jouées", screen:"Clavier à l'écran", input:"Mode d'entrée", ver:"Version web", none:"aucun", noneF:"aucune", meas:"mesurée", guess:"d'après le modèle", virt:"virtuel, ignoré", off:"débranché"},
+  md4In:{midi:"clavier MIDI", screen:"écran", mic:"micro", "":"pas encore choisi"},
+  md4FbT:n=>"Nouveau signalement"+(n?" de "+n:""),
+  md4FbN:n=>n+" nouveaux signalements",
+  md4FbGo:"Ouvrir le back office"
+});
+Object.assign(TXT.en, {
+  md4Report:"Report a problem with my keyboard",
+  md4Recog:(m,k,c)=>"Recognised: "+m+(k?" · "+k+" keys":"")+(c?" · "+c:""),
+  md4Keys:k=>k+" keys",
+  md4NotUsed:m=>"Chosen input: "+m+". This keyboard is not listened to.",
+  md4Use:"Use this keyboard",
+  md4Conn:{usb:"USB", bt:"Bluetooth", din:"MIDI DIN"},
+  md4Ask:"(Describe your problem here: what happens, on which page…)",
+  md4Diag:"— MIDI keyboard diagnostics (filled in by the app) —",
+  md4L:{dev:"Device", ports:"Ports seen", pick:"Chosen port", all:"all", model:"Recognised model", range:"Range", seen:"Notes played", screen:"On-screen keyboard", input:"Input mode", ver:"Web version", none:"none", noneF:"none", meas:"measured", guess:"from the model", virt:"virtual, ignored", off:"unplugged"},
+  md4In:{midi:"MIDI keyboard", screen:"screen", mic:"microphone", "":"not chosen yet"},
+  md4FbT:n=>"New report"+(n?" from "+n:""),
+  md4FbN:n=>n+" new reports",
+  md4FbGo:"Open the back office"
+});
+
+// ---- modes d'entrée exclusifs ----
+// MIDI joue seulement en entrée « MIDI » (ou tant qu'aucune entrée n'a été choisie : anciens états, comme avant). Restent à l'écoute quel que
+// soit le mode : l'assistant « Brancher mon clavier » et le test de la fenêtre Clavier MIDI (ils testent le clavier), le quiz (un clavier
+// par joueur) et le premier lancement (il choisit lui-même l'entrée). Le micro est déjà coupé hors entrée « micro » (setInput).
+const md4MidiOn = () => !S.settings.input || S.settings.input==="midi";
+function md4Live(){ if(md4MidiOn()) return true; return !!((MW && MW.on) || midiOpen || page==="quiz" || (FN && FN.on)); }
+// le clavier à l'écran et les lettres du clavier d'ordinateur jouent sauf en entrée « micro » (là, l'écran montre seulement ce que le micro entend)
+const md4Screen = () => S.settings.input!=="mic" || page==="quiz" || !!(FN && FN.on);
+
+// ---- le nombre de touches du clavier reconnu ----
+// modèle du catalogue, mesure de l'assistant (S.midi.hw.keys, même port), sinon le nom du port (kbdSzOf) ; 0 = inconnu
+function md4Keys(name){ const h=(S.midi&&S.midi.hw)||{}, nm=String(name||MS.name||S.settings.midiInput||midiNames[0]||"");
+  if(+h.keys>0 && (!h.name || !nm || h.name===nm)) return Math.min(88,+h.keys);
+  const g=kbdSzOf(nm); return g ? +g : 0; }
+// la plage par défaut d'une taille (catalogue, puis tailles de l'écran)
+const md4Range = n => (MKC_RANGE && MKC_RANGE[n]) || KB_PRESETS[String(n)] || null;
+// la bande des mini-claviers (test de la fenêtre MIDI, assistant) : exactement n touches, décalée par octaves pour montrer la note jouée
+function md4Band(m, lo0, port){ let n=md4Keys(port);
+  if(!n){ const sz=S.settings.kbdSize||"auto"; n = KB_PRESETS[sz] ? KB_PRESETS[sz][1]-KB_PRESETS[sz][0]+1 : 25; } // inconnu : 25 (MIDI 3)
+  n=Math.max(12,Math.min(88,n)); const h=(S.midi&&S.midi.hw)||{}, R=md4Range(n);
+  let base = (h.lo>=21 && +h.hi-h.lo+1===n && (!h.name || !port || h.name===port)) ? +h.lo : R ? R[0] : 48;
+  if(n===88) base=21;
+  let lo = lo0!=null ? lo0 : base;
+  if(m!=null && (m<lo || m>lo+n-1)){ const k = m<base ? -Math.ceil((base-m)/12) : Math.max(0, Math.ceil((m-(base+n-1))/12)); lo=base+12*k; }
+  lo=Math.max(21, Math.min(109-n, lo)); return {lo, n}; }
+function md4BandHTML(lo, hi, on, nc){ const WH=[0,2,4,5,7,9,11], wh=[]; for(let m=lo;m<=hi;m++) if(WH.includes(m%12)) wh.push(m);
+  const ww=100/wh.length, lab=wh.length<=22, st=m=>m===on&&nc?' style="--nc:'+nc+'"':'';
+  let h=wh.map(m=>'<span class="w'+(m===on?' on':'')+'" data-m="'+m+'"'+st(m)+'>'+(m%12===0 && (lab||m===60)?'<small>'+esc(octName(m))+'</small>':'')+'</span>').join("");
+  for(let m=lo;m<=hi;m++) if(!WH.includes(m%12)){ const i=wh.indexOf(m-1); if(i<0) continue;
+    h+='<span class="b'+(m===on?' on':'')+'" data-m="'+m+'" style="left:calc('+((i+1)*ww)+'% - '+(ww*.3)+'%);width:'+(ww*.6)+'%'+(m===on&&nc?';--nc:'+nc:'')+'"></span>'; }
+  return h; }
+// le clavier à l'écran prend la taille du clavier reconnu (avant : une taille « détectée » ou élargie pour un autre clavier restait, un LUMI
+// 24 touches pouvait garder un Do du haut en trop) ; la position (octave) affichée est gardée
+function kbdFit(name){ const sz=S.settings.kbdSize||"auto"; if(sz==="auto") return false; const K=md4Keys(name); if(!K) return false;
+  const w = sz==="custom" ? (+S.settings.kbdHigh)-(+S.settings.kbdLow)+1 : KB_PRESETS[sz] ? KB_PRESETS[sz][1]-KB_PRESETS[sz][0]+1 : 0;
+  if(!w || w===K) return false;
+  if(sz!=="custom" && KB_PRESETS[String(K)]) S.settings.kbdSize=String(K);
+  else { const R=md4Range(K); let lo = sz==="custom" ? +S.settings.kbdLow : R ? R[0] : 48, hi=lo+K-1;
+    while(hi>108){ lo-=12; hi-=12; } while(lo<21){ lo+=12; hi+=12; } if(K===88){ lo=21; hi=108; }
+    Object.assign(S.settings,{kbdSize:"custom",kbdLow:lo,kbdHigh:hi}); }
+  save(); buildKeyboard(); renderSettings(); if(cur && typeof markPlayed==="function") markPlayed(); return true; }
+{ const _mp=mdPorts; mdPorts=function(names){ const r=_mp.apply(this,arguments); try{ if(names&&names.length) kbdFit(); }catch(e){} return r; }; }
+{ const _ma=mkcApply; mkcApply=function(){ const r=_ma.apply(this,arguments); try{ kbdFit(); }catch(e){} return r; }; }
+{ const _rg=mwRangeApply; mwRangeApply=function(){ const r=_rg.apply(this,arguments); try{ kbdFit(); }catch(e){} return r; }; }
+
+// ---- fenêtre Clavier MIDI : une seule ligne par clavier (« Reconnu : … »), pas de ligne d'état en double ----
+function md4Line(n){ const h=(S.midi&&S.midi.hw)||{}, mine=h.name===n, k=mine&&+h.keys>0 ? +h.keys : +kbdSzOf(n)||0, c=mine&&h.conn ? (t("md4Conn")[h.conn]||"") : "";
+  if(mine && h.model) return t("md4Recog")(mkcModelTxt(), k, c);
+  return n+(k?" · "+t("md4Keys")(k):"")+(c?" · "+c:""); }
+function md4Modal(){ const box=$("midiModal"); if(!box) return; const st=box.querySelector(".midi-status"), used=midiReady && md4MidiOn();
+  // branché et écouté : la liste dit tout ; sinon la ligne d'état reste (activer le MIDI, refusé, aucun appareil, entrée écran / micro)
+  st.style.display = used ? "none" : "";
+  if(midiReady && !md4MidiOn()) st.classList.remove("on"); // branché mais pas écouté : point gris
+  let u=$("md4Use");
+  if(midiReady && !md4MidiOn()){ $("mStTxt").textContent=t("md4NotUsed")(t("md4In")[S.settings.input]||S.settings.input);
+    if(!u){ u=document.createElement("button"); u.id="md4Use"; u.type="button"; u.className="btn primary";
+      u.addEventListener("click",async ()=>{ await setInput("midi"); if(midiOpen) renderMidiModal(); }); st.appendChild(u); }
+    u.textContent=t("md4Use"); u.hidden=false; }
+  else if(u) u.hidden=true;
+  if(midiNames.length){ const dl=$("mDevList"); dl.innerHTML=""; midiNames.forEach(n=>{ const li=document.createElement("li"); li.textContent=md4Line(n); li.title=n; dl.appendChild(li); }); } }
+{ const _rm=renderMidiModal; renderMidiModal=function(){ const r=_rm.apply(this,arguments); try{ md4Modal(); }catch(e){} return r; }; }
+
+// ---- « Signaler un problème avec mon clavier » : la fenêtre de signalement, pré-remplie d'un diagnostic ----
+function md4Diag(){ const L=t("md4L"), h=(S.midi&&S.midi.hw)||{}, x=trkCtx(), d=mwDev(), rows=[], ports=[];
+  try{ if(midiAcc) midiAcc.inputs.forEach(p=>ports.push(p.name+(midiVirtual(p.name)?" ("+L.virt+")":p.state&&p.state!=="connected"?" ("+L.off+")":""))); }catch(e){}
+  const sz=S.settings.kbdSize||"auto";
+  rows.push([L.dev, mwDevLbl(d)+(d.nat?"":" · "+String(navigator.userAgent||"").slice(0,90))]);
+  rows.push([L.ports, ports.join(", ")||L.none]);
+  rows.push([L.pick, S.settings.midiInput||L.all]);
+  rows.push([L.model, h.model ? mkcModelTxt()+(h.keys?" · "+t("md4Keys")(h.keys):"")+(h.src?" ("+h.src+")":"") : L.none]);
+  rows.push([L.range, h.lo>0&&h.hi>h.lo ? octName(+h.lo)+"–"+octName(+h.hi)+" ("+h.lo+"–"+h.hi+", "+t("md4Keys")(+h.hi-h.lo+1)+", "+(h.measured?L.meas:L.guess)+")" : L.none]);
+  rows.push([L.seen, MS.lo!=null ? MS.lo+"–"+MS.hi+" ("+MS.name+")" : L.noneF]);
+  rows.push([L.screen, sz+" · "+LOW+"–"+HIGH+" ("+t("md4Keys")(HIGH-LOW+1)+")"]);
+  rows.push([L.input, t("md4In")[S.settings.input||""]||S.settings.input]);
+  rows.push([L.ver, x.v+" · "+x.s+" · "+x.l]);
+  return t("md4Diag")+"\n"+rows.map(r=>r[0]+" : "+r[1]).join("\n"); }
+function md4Report(){ if(midiOpen) closeMidi(); fbOpen(); fbKind("bug");
+  const tx=$("fbMsg"); tx.value="\n\n"+md4Diag().slice(0,1500); tx.placeholder=t("md4Ask");
+  setTimeout(()=>{ try{ tx.focus({preventScroll:true}); tx.setSelectionRange(0,0); tx.scrollTop=0; }catch(e){} },60); }
+$("mdReport").addEventListener("click", md4Report);
+
+// ---- administrateur connecté dans l'app : nouveau signalement = notification + petite fenêtre ----
+// am_i_admin() et admin_feedback_peek() (supabase/migrations/2026-10-28_admin_feedback.sql) : absentes = rien, sans erreur.
+const ADM={is:null, uid:"", busy:false, off:false};
+const admUrl = () => (document.documentElement.classList.contains("native") || !/^https?:/.test(location.protocol) ? "https://pianochallenges.com" : location.origin)+"/admin/";
+function admOpen(){ try{ window.open(admUrl(), "_blank", "noopener"); }catch(e){} }
+const ADM_BELL='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 16V11a6 6 0 0 1 12 0v5l1.5 2h-15zM10 20.5a2 2 0 0 0 4 0"/></svg>';
+function admPop(r, n){ if(!r) return; if(mdQuiet() || (typeof actNow==="function" && actNow())) return; // pas pendant une partie : la cloche suffit
+  mdToast("found", n>1 ? t("md4FbN")(n) : t("md4FbT")(r.name||""), String(r.msg||"").slice(0,80), t("md4FbGo"), 9000, admOpen);
+  const el=$("mdToast"); if(el){ el.classList.add("adm-fb"); const ic=el.querySelector(".mt-ic"); if(ic) ic.innerHTML=ADM_BELL; } }
+async function admTick(){ if(ADM.off || ADM.busy || !sb || !user || document.hidden) return;
+  if(ADM.uid!==user.id){ ADM.uid=user.id; ADM.is=null; }
+  if(ADM.is===false) return; ADM.busy=true;
+  try{ if(ADM.is===null){ const {data,error}=await sb.rpc("am_i_admin"); if(error){ ADM.is=false; if(/function|404|PGRST202/i.test(error.message+" "+(error.code||""))) ADM.off=true; return; } ADM.is=data===true; if(!ADM.is) return; }
+    const K="pc-adm-fb-"+String(user.id).slice(0,8); let last=null; try{ const v=localStorage.getItem(K); last=v==null?null:+v; }catch(e){}
+    const {data,error}=await sb.rpc("admin_feedback_peek",{p_after:last||0}); if(error || !data || typeof data!=="object") return;
+    const put=v=>{ try{ localStorage.setItem(K,String(v)); }catch(e){} };
+    if(last==null){ put(+data.max||0); return; } // premier passage : point de départ, aucune alerte pour les anciens messages
+    const rows=(Array.isArray(data.rows)?data.rows:[]).filter(r=>r && +r.id>last).sort((a,b)=>b.id-a.id); if(!rows.length) return;
+    put(+rows[0].id);
+    rows.slice().reverse().forEach(r=>ntfAdd({key:"fb-"+r.id, cat:"news", type:"admfb", ti:t("md4FbT")(String(r.name||"").slice(0,40)), tx:String(r.msg||"").slice(0,120), t:Date.parse(r.at)||Date.now(), act:{k:"admin",l:"md4FbGo"}}));
+    admPop(rows[0], rows.length);
+  }catch(e){} finally{ ADM.busy=false; } }
+setInterval(admTick, 60000);
+{ const _su=setUser; setUser=async function(u){ const r=await _su.apply(this,arguments); try{ if(!u){ ADM.is=null; ADM.uid=""; } else if(ADM.uid!==u.id) setTimeout(admTick,3000); }catch(e){} return r; }; }
+{ const _nd=ntfDo; ntfDo=function(a){ if(a && a.k==="admin"){ admOpen(); return; } return _nd.apply(this,arguments); }; }
+/* ==== fin MIDI 4 ==== */
 // ---------- Boot ----------
 
 applyStatic(); applySide(); buildKeyboard(); renderSettings(); render(); renderDaily(); openPage("hub");

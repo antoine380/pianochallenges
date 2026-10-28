@@ -11,6 +11,7 @@ function midiWiden(n){ if(MS.lo==null || n<MS.lo || n>MS.hi || (S.settings.kbdSi
   let lo=MS.lo, hi=MS.hi; if(hi-lo<=HIGH-LOW || hi-lo>36) return false;
   const white=m=>[0,2,4,5,7,9,11].includes(((m%12)+12)%12); while(!white(lo)) lo--; while(!white(hi)) hi++;
   if(lo<21 || hi>108) return false;
+  const K=md4Keys(MS.name); if(K && hi-lo+1>K) return false; // MIDI 4 : jamais plus de touches que le clavier reconnu (un LUMI 24 touches décalé d'une octave se décale, il ne grandit pas)
   Object.assign(S.settings,{kbdSize:"custom",kbdLow:lo,kbdHigh:hi}); save(); buildKeyboard(); renderSettings();
   if(cur && typeof markPlayed==="function") markPlayed(); return true; }
 // the chosen keyboard (S.settings.midiInput) mutes the other ports only while it is played: another keyboard played when the chosen one has

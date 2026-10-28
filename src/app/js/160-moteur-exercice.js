@@ -81,22 +81,6 @@ function tick(){
   }
   raf=requestAnimationFrame(tick);
 }
-// keyboard detection: lowest key, then highest key
-let calib=null;
-function calibNote(note){
-  calib.lo = calib.lo==null ? note : Math.min(calib.lo,note);
-  calib.hi = calib.hi==null ? note : Math.max(calib.hi,note);
-  calibMsg(t("calibLive")(calib.hi-calib.lo+1, octName(calib.lo), octName(calib.hi)));
-}
-function calibApply(){
-  const c=calib; calib=null; $("kbDetect").textContent=t("kbDetect");
-  if(!c || c.lo==null || c.hi-c.lo<11){ calibMsg(t("calibShort")); return; }
-  // keyboards start and end on white keys: snap outward if needed
-  let lo=c.lo, hi=c.hi; const white=m=>[0,2,4,5,7,9,11].includes(m%12);
-  while(!white(lo)) lo--; while(!white(hi)) hi++;
-  Object.assign(S.settings,{kbdSize:"custom",kbdLow:lo,kbdHigh:hi}); save(); buildKeyboard(); renderSettings();
-  calibMsg(t("kbDone")(hi-lo+1,octName(lo),octName(hi)));
-}
 // most keyboards say their size in their name ("Keystation 49", "Launchkey 61"...); a few are known models
 // a virtual MIDI port of the system (macOS / iOS "Network Session 1" / « Session réseau 1 », IAC driver) is not a keyboard: never listed nor listened to
 // virtual ports are not keyboards (macOS / iOS network sessions « Session réseau », IAC buses): never listed, counted nor listened to.

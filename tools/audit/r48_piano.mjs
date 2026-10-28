@@ -233,7 +233,8 @@ for (const scheme of ['light', 'dark']) for (const [w, h] of [[375, 667], [812, 
   await ev(p, () => document.querySelector('#modeNav [data-mode=piano]').click()); await W(p, 600);
   const ns = await noScroll(p), fit = await ev(p, () => { const r = s => document.querySelector(s).getBoundingClientRect(), k = r('#kbd'), sc = r('#pnScene'), bar = r('.pn-bar'), ins = r('.pn-ins');
     return { k: Math.round(k.height), kb: k.bottom <= innerHeight + 1, sc: Math.round(sc.height), bar: bar.bottom <= sc.top + 1 && bar.height > 20, ins: ins.height > 20 }; });
-  await ev(p, () => { [48, 52, 55, 60, 64, 67].forEach(n => window.__midi.noteOn(n, 100)); }); await W(p, 250);
+  // MIDI 4 : sur téléphone (web), l'entrée est l'écran et les notes MIDI sont ignorées : la lumière vient du toucher de l'écran
+  await ev(p, () => { const ks = [...document.querySelectorAll('#kbd .wk')].slice(0, 6); ks.forEach((k, i) => k.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, pointerId: 20 + i }))); }); await W(p, 250);
   const px2 = await lit(p);
   if (CAP) await p.screenshot({ path: `${CAP}/r48_${w}x${h}_${scheme}.png` });
   check(`${w}×${h} ${scheme} : sans défilement, clavier ≥ 80 px entier, scène ≥ 90 px, choix au-dessus, lumière dessinée`, ns && fit.kb && fit.k >= 80 && fit.sc >= 90 && fit.bar && fit.ins && px2 > 20, { ns, ...fit, px2 });

@@ -19,10 +19,9 @@ function renderMidiModal(){
 }
 function openMidi(){ if(!midiOpen) modalOpened(); midiOpen=true; mtReset(); renderMidiModal(); startMidiPoll(); $("midiModal").hidden=false; $("midiOk").focus(); }
 function closeMidi(){ if(!midiOpen) return; midiOpen=false; $("midiModal").hidden=true;
-  if(midiSetup){ const prev=midiSetup.prev; midiSetup=null; S.settings.input = midiReady ? "midi" : (prev && prev!=="midi" ? prev : undefined); if(!S.settings.input) delete S.settings.input; save(); renderInputUI(); render(); } if(calib){ calib=null; calibMsg(""); $("kbDetect").textContent=t("kbDetect"); } clearInterval(midiPoll); modalClosed(); }
+  if(midiSetup){ const prev=midiSetup.prev; midiSetup=null; S.settings.input = midiReady ? "midi" : (prev && prev!=="midi" ? prev : undefined); if(!S.settings.input) delete S.settings.input; save(); renderInputUI(); render(); } clearInterval(midiPoll); modalClosed(); }
 let midiPoll=0; // in the app, look for newly paired / plugged keyboards while the window is open
 function startMidiPoll(){ clearInterval(midiPoll); if(window.__nativeMidi && midiAcc) midiPoll=setInterval(()=>{ window.__nativeMidi.listInputs().catch(()=>{}); },2000); }
-function calibMsg(x){ const m=$("calibMsg"); m.textContent=x; m.hidden=!x; if(!midiOpen) notice(x); }
 $("midiCfg").addEventListener("click",openMidi);
 $("midiX").addEventListener("click",closeMidi); $("midiBg").addEventListener("click",closeMidi); $("midiOk").addEventListener("click",closeMidi);
 $("mEnable").addEventListener("click",()=>$("midiBtn").click());
@@ -62,10 +61,11 @@ async function enableMidi(quiet){
         if((inp.state && inp.state!=="connected") || midiVirtual(inp.name)){ inp.onmidimessage=null; return; } // Chrome keeps unplugged ports in the map; virtual ports are not keyboards
         names.push(inp.name); inp.onmidimessage=ev=>midiEach(ev.data, inp, d=>{
         const [st,note,vel]=d;
+        if(!md4Live(st)) return; // MIDI 4 : entrée « écran » ou « micro » choisie = les notes MIDI sont ignorées (sauf assistant, test, quiz, premier lancement)
         if(LV.on){ if((st&0xf0)===0x90 && vel>0) lvNote(note); return; } // the leave window: C = keep playing, B = leave
         if(SR.on){ if((st&0xf0)===0x90 && vel>0) srNote(note); return; } // série validée (plein écran) : un Do seul ferme, aucune note ne passe en dessous
         if(MW.on && mwMsg(st,note,vel,inp)) return; // the « Connect my keyboard » assistant (MIDI lots 2-3) gets every message while it is open
-        if(midiOpen && !calib && (st&0xf0)===0x90 && vel>0){ pressKey(note); mtNote(note,vel,inp.name); return; } // the MIDI window: the « play a note » test (M8)
+        if(midiOpen && (st&0xf0)===0x90 && vel>0){ midiSeen(note,inp); pressKey(note); mtNote(note,vel,inp.name); return; } // the MIDI window: the « play a note » test (M8)
         if(page==="quiz"){ if((st&0xf0)===0x90 && vel>0){ if(S.settings.midiSound) tone(note,0,.9,.1+.26*vel/127); if(!anyModal()) quizIn(String(inp.id||inp.name),note); } return; } // every keyboard counts: one per player
         if(S.settings.midiInput && inp.name!==S.settings.midiInput && midiNames.includes(S.settings.midiInput) && !midiTakeOver(st,vel,inp)) return; // the chosen keyboard only, while it is played (MIDI 3 : un autre clavier joué quand le choisi se tait depuis 3 s prend la main)
         if((st&0xf0)===0x90 && vel>0 && midiDup(note,inp)) return; // the same keyboard on a second port
@@ -75,9 +75,8 @@ async function enableMidi(quiet){
         if((st&0xf0)===0x80 || ((st&0xf0)===0x90 && vel===0)){ keyDown(note,false); return; }
         if((st&0xf0)===0x90 && vel>0){
           if(S.settings.midiSound) tone(note,0,.9,.1+.26*vel/127);
-          if(!calib) followMidi(note); // MIDI 3 : le clavier à l'écran suit AVANT d'allumer la touche (le Do du haut allumait le Do du milieu, replié, puis l'écran sautait)
+          followMidi(note); // MIDI 3 : le clavier à l'écran suit AVANT d'allumer la touche (le Do du haut allumait le Do du milieu, replié, puis l'écran sautait)
           pressKey(note); keyDown(note,true); // light the key at once, before the 35 ms grouping
-          if(calib){ calibNote(note); return; }
           midiIn(note,true); } }); });
       $("midiBtn").classList.toggle("on",names.length>0); $("midiBtn").classList.remove("err");
       const shown = S.settings.midiInput && names.includes(S.settings.midiInput) ? S.settings.midiInput : names[0];

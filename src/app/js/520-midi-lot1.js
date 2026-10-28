@@ -15,6 +15,7 @@ OBJ.midikbd=()=>{ const o=O3(); o.raw('<path d="M98 86c14 4 16 18 6 26" stroke="
 // ---- état affiché (M1) ----
 function mdState(){ const m=S.settings.input, poss=midiPossible();
   if(m==="mic") return {k:micOn?"mic":"micoff", lbl:t(micOn?"mdMic":"mdMicOff")};
+  if(m==="screen" && (midiReady || !poss || mdS().seenAt)) return {k:"screen", lbl:t("mdScreen")}; // MIDI 4 : l'entrée « écran » n'écoute pas le clavier MIDI branché
   if(midiReady){ const n=midiNames.length, one=S.settings.midiInput&&midiNames.includes(S.settings.midiInput)?S.settings.midiInput:(n===1?midiNames[0]:"");
     return one ? {k:"ok", lbl:mdTrunc(one), full:one} : {k:"ok", lbl:t("mdNKb")(n), full:midiNames.join(", ")}; }
   if(m==="midi" && poss) return {k:"wait", lbl:t("mdWait")};
@@ -32,7 +33,7 @@ function mdPillClick(){ closeDrawer(); if(!midiPossible()){ openInputChooser(tru
 $("mbMidi").addEventListener("click",mdPillClick);
 $("mdChange").addEventListener("click",()=>{ closeMidi(); openInputChooser(true); });
 // ---- carte « Ton clavier » de l'accueil (M2) ----
-function mdHub(){ const c=$("hsMidi"); if(!c||!MD) return; const s=mdS(), poss=midiPossible(), ok=midiReady && S.settings.input!=="mic";
+function mdHub(){ const c=$("hsMidi"); if(!c||!MD) return; const s=mdS(), poss=midiPossible(), ok=midiReady && md4MidiOn();
   const st = ok ? "ok" : !poss ? "no" : (s.later && Date.now()-s.later<7*864e5) ? "later" : "promo";
   c.className="hs-card hs-midi md-"+st; $("hsMidiDot").classList.toggle("on",ok);
   const o=$("hsMidiObj"); if(st==="promo" && !o.firstChild) o.innerHTML=OBJ.midikbd();
@@ -81,31 +82,22 @@ function mdWatch(){ if(midiAcc || !navigator.requestMIDIAccess || !midiPossible(
   if(document.documentElement.classList.contains("native")){ enableMidi(true); return; }
   try{ navigator.permissions.query({name:"midi"}).then(p=>{ if(p && p.state==="granted" && !midiAcc) enableMidi(true); }).catch(()=>{}); }catch(e){} }
 // ---- test « joue une note » en tête de la fenêtre Clavier MIDI (M8) ----
-const MT={vels:[], lo:48, last:null, twice:""};
-function mtReset(){ MT.vels=[]; MT.last=null; MT.twice=""; mtRender(); }
-function mtTouch(){ const v=MT.vels; if(v.length<2) return null; const mx=Math.max(...v), mn=Math.min(...v); if(mx-mn>=40) return true; if(mx===mn) return false; return null; }
-function mtNote(m, v, port){ MT.vels.push(v); MT.last={m,v,port};
+// MIDI 4 (28/10/2026) : plus de force ni de « Tu entends le son deux fois ? » ; la bande montre exactement les touches du clavier reconnu (md4Band)
+const MT={lo:null, n:25, last:null};
+function mtReset(){ MT.last=null; MT.lo=null; mtRender(); }
+function mtNote(m, v, port){ MT.last={m,v,port};
   if(S.settings.midiSound) tone(m,0,.9,.1+.26*v/127);
-  const s=mdS(); s.tested=Date.now(); s.hw={...(s.hw&&s.hw.name===port?s.hw:{}), name:port}; const r=mtTouch(); if(r!=null) s.hw.vel=r; save();
-  if(m<MT.lo || m>MT.lo+24) MT.lo=Math.max(0,Math.min(103,12*Math.floor(m/12))); // MIDI 3 : 25 touches, le Do du haut est sur la bande
+  const s=mdS(); s.tested=Date.now(); s.hw={...(s.hw&&s.hw.name===port?s.hw:{}), name:port}; save();
+  const b=md4Band(m, MT.lo, port); MT.lo=b.lo; MT.n=b.n;
   mtRender(); }
-function mtKb(){ const kb=$("mtKb"); if(!kb) return; if(kb.dataset.lo==String(MT.lo)) return; kb.dataset.lo=MT.lo; kb.innerHTML="";
-  const whites=[], WH=[0,2,4,5,7,9,11]; for(let m=MT.lo;m<=MT.lo+24;m++) if(WH.includes(m%12)) whites.push(m);
-  whites.forEach(m=>{ const w=document.createElement("span"); w.className="w"; w.dataset.m=m; if(m%12===0){ const l=document.createElement("small"); l.textContent=octName(m); w.appendChild(l); } kb.appendChild(w); });
-  const ww=100/whites.length; for(let m=MT.lo;m<MT.lo+24;m++) if(!WH.includes(m%12)){ const i=whites.indexOf(m-1); const b=document.createElement("span"); b.className="b"; b.dataset.m=m; b.style.left="calc("+((i+1)*ww)+"% - "+(ww*.3)+"%)"; b.style.width=(ww*.6)+"%"; kb.appendChild(b); } }
+function mtKb(){ const kb=$("mtKb"); if(!kb) return; if(MT.lo==null){ const b=md4Band(null,null,MT.last&&MT.last.port); MT.lo=b.lo; MT.n=b.n; }
+  const key=MT.lo+":"+MT.n; if(kb.dataset.lo===key) return; kb.dataset.lo=key; kb.innerHTML=md4BandHTML(MT.lo, MT.lo+MT.n-1); }
 function mtRender(){ const box=$("mdTest"); if(!box) return; box.hidden=!midiReady; if(!midiReady) return; mtKb();
   const L=MT.last, kb=$("mtKb"); kb.querySelectorAll(".on").forEach(e=>e.classList.remove("on"));
   const msg=$("mtMsg"); msg.classList.toggle("ok",!!L);
   if(L){ const pc=L.m%12, nc="var(--note-"+pc+")"; const k=kb.querySelector('[data-m="'+L.m+'"]'); if(k){ k.style.setProperty("--nc",nc); k.classList.add("on"); }
     $("mtName").textContent=(S.settings.notation==="fr"?PC_FR:PC_EN)[pc]; $("mtName").parentNode.style.setProperty("--nc",nc);
-    $("mtSub").textContent=octName(L.m)+" · "+t("mdForceN")(L.v); $("mtBar").style.height=Math.round(L.v/127*100)+"%"; $("mtVel").textContent=L.v;
+    $("mtSub").textContent=octName(L.m);
     msg.textContent=t("mdTalks"); const sm=document.createElement("small"); sm.textContent=t("mdFrom")(octName(L.m),L.port); msg.appendChild(sm); }
-  else { $("mtName").textContent="♪"; $("mtName").parentNode.style.removeProperty("--nc"); $("mtSub").textContent=""; $("mtBar").style.height="0"; $("mtVel").textContent=""; msg.textContent=t("mdPressAny"); }
-  const r=mtTouch(), tr=$("mtTouchRes"), v=MT.vels; tr.className = r ? "ok" : "";
-  tr.textContent = r===true ? t("mdTouchVals")(Math.max(...v),Math.min(...v))+" · "+t("mdTouchOk") : r===false ? t("mdTouchNo") : v.length ? t("mdForceN")(v[v.length-1]) : "";
-  $("mtTwice").querySelectorAll("[data-v]").forEach(b=>b.setAttribute("aria-pressed",b.dataset.v===MT.twice));
-  $("mtTwiceRes").textContent = MT.twice==="yes" ? t("mdTwiceYes") : MT.twice==="none" ? t("mdTwiceNone") : MT.twice==="no" ? t("mdTwiceNo") : ""; }
-$("mtTwice").addEventListener("click",e=>{ const b=e.target.closest("[data-v]"); if(!b) return; MT.twice=b.dataset.v;
-  if(MT.twice==="yes") S.settings.midiSound=false; else if(MT.twice==="none") S.settings.midiSound=true;
-  save(); renderSettings(); mtRender(); });
+  else { $("mtName").textContent="♪"; $("mtName").parentNode.style.removeProperty("--nc"); $("mtSub").textContent=""; msg.textContent=t("mdPressAny"); } }
 /* ==== fin MIDI lot 1 ==== */

@@ -68,7 +68,7 @@ function mwPrev(){ const p=MW.hist.pop(); if(p) mwGo(p,true); }
 function mwEnter(){ const st=MW.step, s=mdS(); s.wizard={...(s.wizard||{}), step:st};
   if(["hw","cable","bt","trouble"].includes(st)) mwListen();
   if(st==="cable"){ MW.tm=setTimeout(()=>{ if(MW.on&&MW.step==="cable"&&!midiReady){ MW.still=true; mwRender(); } },20000); }
-  if(st==="test"){ MW.t={vels:[], last:null, lo:48, ped:!!mwHw().ped, pedAsk:true, twice:"", picked:"", n:0}; MW.tm=setTimeout(()=>{ if(MW.on&&MW.step==="test"&&MW.t&&!MW.t.n){ MW.t.silent=true; mwRender(); } },15000); }
+  if(st==="test"){ MW.t={vels:[], last:null, lo:null, lo0:null, ped:!!mwHw().ped, pedAsk:true, twice:"", picked:"", n:0}; MW.tm=setTimeout(()=>{ if(MW.on&&MW.step==="test"&&MW.t&&!MW.t.n){ MW.t.silent=true; mwRender(); } },15000); }
   if(st==="range") mwRangeStart();
   if(st==="ready") mwFinish();
   if(st==="lat") MW.lat={run:false, beats:[], hits:[], res:undefined};
@@ -96,12 +96,10 @@ function mwMsg(st, note, vel, inp){ if(!MW.on) return false; const ty=st&0xf0, n
 function mwTestNote(m, v, name){ const T=MW.t; if(!T) return; T.n++; T.vels.push(v); T.last={m,v,name}; T.silent=false;
   if(midiNames.length>1 && !T.picked && name){ T.picked=name; S.settings.midiInput=name; }
   const s=mdS(), h=mwHw(); s.tested=Date.now(); if(name && h.name!==name){ s.hw={name}; } const r=mwTouch(); if(r!=null) mwHw().vel=r; save();
-  if(m<T.lo || m>T.lo+24) T.lo=Math.max(0,Math.min(103,12*Math.floor(m/12))); mwRender(); }
+  const bd=md4Band(m, T.lo0, name); T.lo=T.lo0=bd.lo; T.nk=bd.n; mwRender(); }
 function mwTouch(){ const v=MW.t?MW.t.vels:[]; if(v.length<2) return null; const mx=Math.max(...v), mn=Math.min(...v); if(mx-mn>=30) return true; if(mx===mn) return false; return null; }
-function mwKb2(lo, on, nc){ const WH=[0,2,4,5,7,9,11], wh=[]; for(let m=lo;m<=lo+24;m++) if(WH.includes(m%12)) wh.push(m); const ww=100/wh.length;
-  let h=wh.map(m=>'<span class="w'+(m===on?' on':'')+'"'+(m===on?' style="--nc:'+nc+'"':'')+'>'+(m%12===0?'<small>'+esc(octName(m))+'</small>':'')+'</span>').join("");
-  for(let m=lo;m<lo+24;m++) if(!WH.includes(m%12)){ const i=wh.indexOf(m-1); h+='<span class="b'+(m===on?' on':'')+'" style="left:calc('+((i+1)*ww)+'% - '+(ww*.3)+'%);width:'+(ww*.6)+'%'+(m===on?';--nc:'+nc:'')+'"></span>'; }
-  return '<div class="mt-kb mw-kb" aria-hidden="true">'+h+'</div>'; }
+// MIDI 4 : exactement les touches du clavier reconnu (24 pour un LUMI, 25, 49…), voir md4Band
+function mwKb2(lo, on, nc, n){ if(lo==null){ const b=md4Band(null,null,""); lo=b.lo; n=b.n; } return '<div class="mt-kb mw-kb" aria-hidden="true">'+md4BandHTML(lo, lo+(n||25)-1, on, nc)+'</div>'; }
 // ---- M9 range ----
 function mwRangeStart(){ const sz=S.settings.kbdSize||"auto", h=mwHw(); MW.r={lo:null, hi:null, mode: /^\d+$/.test(sz) && !(h.lo>0) ? "guess" : "measure", err:""}; }
 function mwRangeNote(m){ const R=MW.r; if(!R) return; if(R.mode==="guess") R.mode="measure"; R.lo=R.lo==null?m:Math.min(R.lo,m); R.hi=R.hi==null?m:Math.max(R.hi,m); R.err=""; mwRender(); }
@@ -169,12 +167,11 @@ function mwRender(){ if(!MW.on) return; const st=MW.step, d=mwDev(), body=$("mwB
       +(MW.found?'<div class="mw-found" role="status"><span class="mw-ok">'+MW_ICON.check+'</span><b>'+esc(t("mdFound")(mdTrunc(MW.found)))+'</b></div>':d.nat?'<p class="mw-sub">'+esc(t("mdBtAfter"))+'</p>':'')
       +(MW.btAsked && !MW.found?'<p class="mw-tip"><b>'+esc(t("mdBtNot"))+'</b> <button type="button" class="mw-link" data-a="trouble">'+esc(t("mdMoreHelp"))+'</button></p>':'');
     f=mwFoot(d.nat ? mwB("bt",t("mdBtFind"),"primary","search") : d.kind==="mac" ? (midiNames.length?mwB("totest",t("mdTestNow"),"primary"):mwB("trouble",t("mdTrouble"),"")) : mwB("tocable",t("mdBtCable"),"primary")); }
-  else if(st==="test"){ dot=4; const T=MW.t||{vels:[],lo:48}, L=T.last, nc=L?"var(--note-"+(L.m%12)+")":"", r=mwTouch(), v=T.vels, many=midiNames.length>1 && !T.picked;
+  else if(st==="test"){ dot=4; const T=MW.t||{vels:[],lo:null}, L=T.last, nc=L?"var(--note-"+(L.m%12)+")":"", many=midiNames.length>1 && !T.picked;
     h='<h2 id="mwH">'+esc(t("mdPressAny"))+'</h2>'
       +'<p class="mw-msg'+(L?' ok':'')+(T.silent?' bad':'')+'" role="status">'+(L?'<span class="mw-ok">'+MW_ICON.check+'</span>':'')+'<span><b>'+esc(L?t("mdTalks"):T.silent?t("mdSilent"):many?t("mdPickKb"):t("mdLooking"))+'</b><small>'+esc(L?t("mdFrom")(octName(L.m),L.name)+(T.picked&&midiNames.length>1?" · "+t("mdPicked")(T.picked):""):"")+'</small></span>'+(T.silent?mwB("trouble",t("mdTrouble"),"ghost"):'')+'</p>'
-      +'<div class="mt-row mw-trow"><div class="mt-note"'+(L?' style="--nc:'+nc+'"':'')+'><b>'+(L?esc((S.settings.notation==="fr"?PC_FR:PC_EN)[L.m%12]):"♪")+'</b><small>'+(L?esc(octName(L.m)+" · "+t("mdForceN")(L.v)):"")+'</small></div>'+mwKb2(T.lo,L?L.m:-1,nc)+'<div class="mt-vel" aria-hidden="true"><span>'+esc(t("mdForce"))+'</span><i><b style="height:'+(L?Math.round(L.v/127*100):0)+'%"></b></i><em>'+(L?L.v:"")+'</em></div></div>'
-      +'<div class="mw-tsteps"><div class="mt-step'+(r!=null?' done':'')+'"><b>'+esc(t("mdLoudSoft"))+'</b><small class="'+(r?'ok':'')+'">'+esc(r===true?t("mdTouchVals")(Math.max(...v),Math.min(...v))+" · "+t("mdTouchOk"):r===false?t("mdTouchNo"):v.length?t("mdForceN")(v[v.length-1]):"")+'</small></div>'
-      +'<div class="mt-step'+(T.twice?' done':'')+'"><b>'+esc(t("mdTwice"))+'</b><span class="mt-btns">'+[["yes","mdYes"],["no","mdNo"],["none","mdNone"]].map(([k,l])=>'<button class="btn" type="button" data-a="tw:'+k+'" aria-pressed="'+(T.twice===k)+'">'+esc(t(l))+'</button>').join("")+'</span><small>'+esc(T.twice==="yes"?t("mdTwiceYes"):T.twice==="none"?t("mdTwiceNone"):T.twice==="no"?t("mdTwiceNo"):"")+'</small></div>'
+      +'<div class="mt-row mw-trow"><div class="mt-note"'+(L?' style="--nc:'+nc+'"':'')+'><b>'+(L?esc((S.settings.notation==="fr"?PC_FR:PC_EN)[L.m%12]):"♪")+'</b><small>'+(L?esc(octName(L.m)):"")+'</small></div>'+mwKb2(T.lo,L?L.m:-1,nc,T.nk)+'</div>'
+      +'<div class="mw-tsteps">'
       +'<div class="mt-step'+(T.ped||T.noPed?' done':'')+'"><b>'+esc(t("mdPedal"))+'</b><small class="'+(T.ped?'ok':'')+'">'+(T.ped?esc(t("mdPedalOk")):T.noPed?'—':'<button type="button" class="mw-link" data-a="noped">'+esc(t("mdNoPedal"))+'</button>')+'</small></div></div>'
       +((MW.conn==="bt"||mwHw().conn==="bt")?'<p class="mw-tip"><button type="button" class="mw-link" data-a="lat">'+esc(t("mdLatAsk"))+'</button></p>':'');
     f=mwFoot(mwB("range",t("mdNext"),"primary","",!L)); }

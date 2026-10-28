@@ -146,9 +146,9 @@ function pnMidi(st,note,vel){ const ty=st&0xf0;
   if(ty===0xB0 && (note===120||note===123)) pnAllOff(); }
 // the screen keys (capture: the exercise handler does not run here) and the computer keyboard
 kbd.addEventListener("pointerdown",e=>{ if(page!=="piano") return; const el=e.target.closest("[data-m]"); if(!el) return;
-  e.preventDefault(); e.stopImmediatePropagation(); const m=+el.dataset.m; PN.ptr.set(e.pointerId,m); pnOn(m,.72,"screen"); },true);
+  e.preventDefault(); e.stopImmediatePropagation(); if(!md4Screen()) return; const m=+el.dataset.m; PN.ptr.set(e.pointerId,m); pnOn(m,.72,"screen"); },true);
 ["pointerup","pointercancel","pointerleave"].forEach(ty=>kbd.addEventListener(ty,e=>{ const m=PN.ptr.get(e.pointerId); if(m==null) return; PN.ptr.delete(e.pointerId); pnOff(m); }));
-function pnKey(e){ const m=CODE_MAP[e.code]; if(m==null||e.repeat||e.metaKey||e.ctrlKey||e.altKey) return; pnOn(fold(m),.72,"key"); }
+function pnKey(e){ const m=CODE_MAP[e.code]; if(m==null||e.repeat||e.metaKey||e.ctrlKey||e.altKey||!md4Screen()) return; pnOn(fold(m),.72,"key"); }
 document.addEventListener("keyup",e=>{ if(page!=="piano") return; const m=CODE_MAP[e.code]; if(m!=null) pnOff(fold(m)); });
 // the mic (an acoustic piano): light only, no app sound
 { const o=noteIn; noteIn=function(m){ if(page==="piano"){ if(LV.on||FN.on) return o.apply(this,arguments); pnOn(m,.7,"mic"); setTimeout(()=>{ if(page==="piano") pnOff(m); },350); return; } return o.apply(this,arguments); }; }

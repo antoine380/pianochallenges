@@ -60,11 +60,12 @@ function scrollKbdTo(m){
 const kbdPtr=new Map(); // pointerId -> key held down (the key stays down until the finger or the mouse is released)
 kbd.addEventListener("pointerdown", e=>{
   const el=e.target.closest("[data-m]"); if(!el) return;
-  e.preventDefault(); const m=+el.dataset.m; keyDown(m,true); kbdPtr.set(e.pointerId,m); pressKey(m); tone(m); midiIn(m); // key lit before the grouping; same 35 ms grouping as MIDI (two-finger chords)
+  e.preventDefault(); if(!md4Screen()) return; // MIDI 4 : en entrée « micro », le clavier à l'écran est un affichage
+  const m=+el.dataset.m; keyDown(m,true); kbdPtr.set(e.pointerId,m); pressKey(m); tone(m); midiIn(m); // key lit before the grouping; same 35 ms grouping as MIDI (two-finger chords)
 });
 // keys are buttons for assistive tech (not in the Tab order: the letter keys are the shortcuts); Enter/Space on a focused key plays it
 function keyA11y(el,m){ el.setAttribute("role","button"); el.tabIndex=-1; el.setAttribute("aria-label",(S.settings.notation==="fr"?PC_FR:PC_EN)[m%12]+" "+(Math.floor(m/12)-(S.settings.notation==="fr"?2:1))); }
-kbd.addEventListener("keydown", e=>{ const el=e.target.closest("[data-m]"); if(!el || (e.code!=="Enter" && e.code!=="Space")) return; e.preventDefault(); e.stopPropagation(); const m=+el.dataset.m; tone(m); noteIn(m); });
+kbd.addEventListener("keydown", e=>{ const el=e.target.closest("[data-m]"); if(!el || (e.code!=="Enter" && e.code!=="Space")) return; e.preventDefault(); e.stopPropagation(); if(!md4Screen()) return; const m=+el.dataset.m; tone(m); noteIn(m); });
 function pressKey(m){ const el=keyEls[fold(m)]; if(!el) return; el.classList.add("k-press"); setTimeout(()=>el.classList.remove("k-press"),130); }
 // k-down: the key stays down while the note is held (MIDI note-off, pointer up, key up); k-press (130 ms) stays for the mic
 function keyDown(m,on){ const el=keyEls[fold(m)]; if(el) el.classList.toggle("k-down",on); }
@@ -91,6 +92,7 @@ document.addEventListener("keydown", e=>{
   if(e.code==="Enter" && phase==="revealed"){ e.preventDefault(); grade(true); return; }
   if(e.code==="Backspace" && phase==="revealed"){ e.preventDefault(); grade(false); return; }
   const m=CODE_MAP[e.code]; if(m==null||e.repeat||e.metaKey||e.ctrlKey||e.altKey) return;
+  if(!md4Screen()) return; // MIDI 4 : micro = l'écran et les lettres ne jouent pas
   const mm=fold(m); pressKey(mm); keyDown(mm,true); tone(mm); midiIn(mm);
 });
 function flashKey(m, cls, ms=220){ const el=keyEls[fold(m)]; if(!el) return; el.classList.add(cls); setTimeout(()=>el.classList.remove(cls), ms); }

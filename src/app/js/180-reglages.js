@@ -45,7 +45,6 @@ function closeSet(){ if(INFO_PAGES.includes(page)){ page="practice"; returnPage=
 $("setBtn").addEventListener("click",()=>openSet("settings")); $("mbSet").addEventListener("click",()=>openSet("settings")); $("progBtn").addEventListener("click",()=>openSet("progress"));
 document.querySelectorAll("[data-back]").forEach(b=>b.addEventListener("click",()=>openPage(returnPage||"practice")));
 $("kbSize").addEventListener("change",e=>{ S.settings.kbdSize=e.target.value; save(); buildKeyboard(); renderSettings(); if(cur&&seq.length) scrollKbdTo(revealMidis()[0]); });
-$("kbDetect").addEventListener("click",()=>{ if(calib){ calibApply(); return; } if(!midiReady){ calibMsg(t("calibNeedMidi")); return; } calib={lo:null,hi:null}; $("kbDetect").textContent=t("kbValidate"); calibMsg(t("calibListen")); });
 $("homeLink").addEventListener("click",e=>{ e.preventDefault(); guardLeave(()=>{ goHome(); openPage("hub"); }); });
 $("homeLink2").addEventListener("click",e=>{ e.preventDefault(); goHome(); openPage("hub"); });
 

@@ -1,0 +1,10 @@
+/* ==== MIDI 4 ==== */
+/* fenêtre Clavier MIDI : le lien « Signaler un problème avec mon clavier », une seule étape (pédale) dans le test de l'assistant */
+.md-rep{margin:-4px 0 0;text-align:right}
+.md-rep .mw-link{font-size:.86rem}
+.mw-tsteps{grid-template-columns:1fr!important} .mw-tsteps .mt-step{grid-column:auto!important}
+/* mini-claviers à beaucoup de touches (49, 61, 88) : touches serrées */
+.mt-kb:has(> .w:nth-child(23)){gap:1px}
+/* alerte « Nouveau signalement » (administrateur) : la pastille d'icône en couleur de l'app */
+.md-toast.adm-fb .mt-ic{background:var(--brand)} .md-toast.adm-fb b{white-space:normal}
+/* ==== fin MIDI 4 ==== */

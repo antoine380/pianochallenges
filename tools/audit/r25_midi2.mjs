@@ -168,14 +168,12 @@ await ev(P, () => window.__midi.noteOn(64, 20, 1)); await W(P, 200);
 check('CA-M12 une note sur le second : ce port est choisi (midiInput)', (await st(P)).settings.midiInput === 'Fake Keyboard 25');
 check('CA-M08 (assistant) la bonne touche s’allume, son nom s’affiche', await ev(P, () => document.querySelector('#mwBody .mt-note b').textContent === 'Mi' && document.querySelectorAll('#mwBody .mw-kb .on').length === 1));
 await ev(P, () => window.__midi.noteOn(67, 110, 1)); await W(P, 200);
-check('CA-M08 (assistant) 20 puis 110 : « Sensible au toucher ✓ »', /Sensible au toucher ✓/.test(await body(P)) && (await st(P)).midi.hw.vel === true);
+// MIDI 4 (28/10/2026) : plus de force, de « Sensible au toucher » ni de « Tu entends le son deux fois ? » dans l'étape test
+check('MIDI 4 (assistant) : ni force ni « deux fois » à l’étape test', !/Sensible au toucher|deux fois|Appuie fort/.test(await body(P)) && await ev(P, () => !document.querySelector('#mwBody .mt-vel, #mwBody [data-a^="tw:"]')));
 check('les notes de l’assistant ne vont pas au jeu dessous', await ev(P, () => document.querySelectorAll('#kbd .k-hit, #kbd .k-bad').length === 0));
 await ev(P, () => window.__midi.send(1, [0xB0, 64, 127])); await W(P, 150);
 check('CA-M11 CC64 ≥ 64 pendant le test : « Pédale reconnue ✓ », S.midi.hw.ped', /Pédale reconnue/.test(await body(P)) && (await st(P)).midi.hw.ped === true);
-await A(P, 'tw:yes'); await W(P, 100);
-check('CA-M09 (assistant) Oui → son de l’app coupé', (await st(P)).settings.midiSound === false);
-await A(P, 'tw:none'); await W(P, 100);
-check('CA-M09 (assistant) Je n’entends rien → son activé', (await st(P)).settings.midiSound === true);
+check('MIDI 4 (assistant) : le son de l’app garde sa valeur', (await st(P)).settings.midiSound === true);
 await A(P, 'range'); await W(P, 200);
 check('M9 : étape « Joue la touche la plus à gauche… »', await step(P) === 'range' && /la plus à gauche, puis la plus à droite/.test(await body(P)));
 await ev(P, () => window.__midi.noteOn(36, 90, 1)); await W(P, 80); await A(P, 'rok'); await W(P, 100);
@@ -189,7 +187,7 @@ check('M10 « Ton clavier est prêt ! » : fiche (touches, toucher, pédale, son
 check('M10 enregistre l’assistant terminé et la connexion', !!S1.midi.wizard?.done && !!S1.midi.hw.dev);
 await A(P, 'play'); await W(P, 300);
 check('M10 « Jouer » referme l’assistant', await step(P) === '' && await ev(P, () => !document.getElementById('app').inert));
-check('followMidi : le clavier mesuré tient à l’écran, il ne bouge pas', await ev(P, () => { window.__midi.noteOn(40, 80); return true; }) && (await st(P)).settings.kbdLow === 36);
+check('followMidi : le clavier mesuré tient à l’écran, il ne bouge pas', await ev(P, () => { window.__midi.noteOn(40, 80, 1); return true; }) && (await st(P)).settings.kbdLow === 36); // MIDI 4 : la note vient du clavier mesuré (port 1) ; jouée sur le Roland FP-10 reconnu (88 touches), l'écran prendrait ses 88 touches
 check('aucune erreur de page (M8-M10)', P.errs.length === 0, P.errs);
 await P.ctx.close();
 
