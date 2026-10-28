@@ -11,7 +11,7 @@ const PORT = process.env.PORT || '8767', URL = `http://localhost:${PORT}/`, SHOT
 const fails = []; const check = (n, ok, d) => { console.log((ok ? 'OK   ' : 'FAIL ') + n + (d !== undefined && !ok ? ' — ' + JSON.stringify(d) : '')); if (!ok) fails.push(n); };
 const b = await chromium.launch({ ...(process.env.PW_CHROMIUM ? { executablePath: process.env.PW_CHROMIUM } : {}), args: ['--autoplay-policy=no-user-gesture-required', '--use-fake-ui-for-media-stream'] });
 const BASE = { xp: 120, xpDays: {}, streak: { days: 0, last: '' }, gate: 'guest', onb: { done: 1, level: 'debut' }, tourDone: 1, langV2: true, pwShown: 1,
-  introSeen: { hub: 1, learn: 1, games: 1, chords: 1, scales: 1, settings: 1, progress: 1, notif: 1 }, stats: {}, mastery: {}, srs: {}, secStats: {},
+  introSeen: { hub: 1, learn: 1, games: 1, chords: 1, scales: 1, harmony: 1, prog: 1, ear: 1, daily: 1, settings: 1, progress: 1, notif: 1 }, stats: {}, mastery: {}, srs: {}, secStats: {},
   hints: { seen: { resume: 1, map: 1, inp: 1, star: 1, fing: 1, labels: 1 }, off: true }, wkRev: { last: '2099-01-01' },
   notifs: { list: [], keys: {}, init: 1, nv2: 1 }, settings: { lang: 'fr', notation: 'fr', input: 'screen', uiSound: false } };
 const errs = [];
@@ -182,7 +182,8 @@ const rn = JSON.parse(await p.X('JSON.stringify(S.notifs.list.find(n=>n.id==="pp
 check('D24 : « Ta leçon 4 t\'attend » · « Fa, Sol, La, Si · 3 min », catégorie Rappels', rn && rn.cat === 'remind' && rn.ti === 'Ta leçon 4 t\'attend' && /^Fa, Sol, La, Si · \d min$/.test(rn.tx), rn);
 check('une seule fois par jour', await p.X(`remCheck(${at(19)})`) === false && await p.X('S.notifs.list.filter(n=>n.type==="path").length===1'));
 await p.click('#ntfBtn'); await T(p, 400); await shot(p, 'd24_notifs_1024');
-await p.click('#ntfList .ntf-it .ntf-go'); await T(p, 500);
+// le bouton du rappel lui-même : l'entraînement du jour (ntfCheck à ~1,5 s du démarrage) peut arriver après lui et passer en tête de liste
+await p.locator('#ntfList .ntf-it', { hasText: 'Ta leçon 4 t\'attend' }).locator('.ntf-go').click(); await T(p, 500);
 check('« Jouer » ouvre la prochaine leçon (P04)', await p.X('page==="pp" && PP.view==="open" && PP.open.id==="p04"'));
 // 3 rappels sans retour, puis « Ta place est gardée » à J14
 await p.X('S.xpDays={[addDays(-3)]:40}; S.ppRem={n:3,last:addDays(-1)}');
