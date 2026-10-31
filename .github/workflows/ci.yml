@@ -78,7 +78,7 @@ jobs:
         include:
           # répartition par durée (mesurée en local le 27/10/2026, entre parenthèses) : chaque groupe ≈ 3-8 min de tests
           # + ~2 min de préparation, chacun sur son runner avec son serveur sur un port libre.
-          # A ≈ 5 min · B ≈ 5 min (test_windows 4,5 min) · C ≈ 5 min · D ≈ 8 min (r49 3,3 min) · E ≈ 4 min
+          # A ≈ 5 min · B ≈ 5 min (test_windows 4,5 min) · C ≈ 5 min · D ≈ 8 min (r49 3,3 min) · E ≈ 4 min · F ≈ 6 min (audio)
           - shard: "A · non-régression"
             tests: >-
               tools/audit/regression.mjs tools/audit/r1_whitelist.mjs tools/audit/r2_windows.mjs tools/audit/r3_paused.mjs
@@ -98,13 +98,19 @@ jobs:
             tests: >-
               tools/audit/r15_premium.mjs tools/audit/r45_famille.mjs tools/audit/r47_live.mjs tools/audit/r43_bugs.mjs
               tools/audit/r11_notifs.mjs tools/audit/r13_audit.mjs tools/audit/r14_staff.mjs tools/audit/r42_finitions.mjs
+          # F = garde audio (demande d'Antoine : « à chaque release, il faut s'assurer que tout est bon ») : r55_audio (rendu hors ligne de
+          # chaque instrument et de tone(), 2 min de temps réel simulé avec effets visuels, fuites de nœuds) + r48_piano (mode PIANO,
+          # échantillons, timbres) ≈ 3 + 3 min ; r55 relancé une fois s'il échoue (mesures temps réel sur un runner partagé).
+          - shard: "F · audio"
+            tests: >-
+              tools/audit/r55_audio.mjs tools/audit/r48_piano.mjs
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/setup-tests
       - name: Tests
         env:
           CI_SHARD: ${{ matrix.shard }}
-          RETRY: "r7_online r19_confirm r53_serie"     # sensibles au temps (appariement au hasard, attentes courtes) : relancés une fois
+          RETRY: "r7_online r19_confirm r53_serie r55_audio"     # sensibles au temps (appariement au hasard, attentes courtes) : relancés une fois
           TEST_TIMEOUT: "600"
         run: bash tools/audit/ci_run.sh ${{ matrix.tests }}
 
