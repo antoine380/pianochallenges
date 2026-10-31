@@ -33,7 +33,7 @@ async function open(o = {}) {
   const p = await ctx.newPage(); const errs = []; p.on('pageerror', e => errs.push(e.message)); p.errs = errs; p.ctx = ctx;
   await p.goto(URL); await W(p, 1200); return p; }
 const mode = (p, m) => click(p, `#modeNav [data-mode="${m}"]`);
-async function learn(p, i = 0) { await mode(p, 'learn'); await W(p, 300); await ev(p, i => document.querySelectorAll('#learnTiles .ptile')[i].click(), i); await W(p, 400); await click(p, '#suGo'); await W(p, 700); }
+async function learn(p, i = 0) { await mode(p, 'learn'); await W(p, 300); await ev(p, i => document.querySelectorAll('#learnTiles .ptile')[i].click(), i); await W(p, 400); await ev(p, () => document.getElementById('uaCfg')?.click()); await W(p, 400); await click(p, '#suGo'); await W(p, 700); }
 async function gameSolo(p, i) { await mode(p, 'games'); await W(p, 300); await ev(p, i => document.querySelectorAll('#gameCards .ptile')[i].click(), i); await W(p, 500); await click(p, '#duModes [data-m=solo]'); await W(p, 300); }
 const fill = p => ev(p, () => document.getElementById('tFill').style.transform);
 

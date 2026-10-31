@@ -18,7 +18,7 @@ const SEED = `(()=>{try{if(sessionStorage.getItem("r18"))return;sessionStorage.s
 const W = ms => new Promise(r => setTimeout(r, ms));
 const click = (p, s) => p.evaluate(s => { const e = document.querySelector(s); if (e) e.click(); return !!e; }, s);
 const mode = (p, m) => click(p, `#modeNav [data-mode="${m}"]`);
-const subj = async (p, i) => { await mode(p, 'learn'); await W(300); await p.evaluate(i => document.querySelectorAll('#learnTiles .ptile')[i].click(), i); await W(500); };
+const subj = async (p, i) => { await mode(p, 'learn'); await W(300); await p.evaluate(i => document.querySelectorAll('#learnTiles .ptile')[i].click(), i); await W(500); await p.evaluate(() => document.getElementById('uaCfg')?.click()); await W(400); };
 const game = async (p, i, start) => { await mode(p, 'games'); await W(300); await p.evaluate(i => document.querySelectorAll('#gameCards .ptile')[i].click(), i); await W(600);
   if (start) { await click(p, '#duModes [data-m=solo]'); await W(500); await p.keyboard.press('Space').catch(() => {}); await W(1500); } };
 // [nom, action, élément de référence (sinon #main)]

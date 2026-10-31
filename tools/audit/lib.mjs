@@ -144,6 +144,7 @@ export async function gotoExercise(page, sec = 'chords') {
   await page.waitForTimeout(400); await leaveIfAsked(page); await closeOnboarding(page);
   await page.locator('#learnTiles .ptile').first().click();
   await page.waitForTimeout(400);
+  await page.evaluate(() => document.getElementById('uaCfg')?.click()); await page.waitForTimeout(300); // MATIÈRES : Configurer mon cours = l'écran de départ
   await closeOnboarding(page);
   // si la section n'est pas la bonne, cliquer le bouton de section
   await page.evaluate(s => { const b = document.querySelector('#secTabs [data-v="' + s + '"]'); if (b) b.click(); }, sec);

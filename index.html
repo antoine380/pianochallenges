@@ -3982,6 +3982,37 @@ body.sc1x .gamebar .gend{margin-left:auto;border:1px solid var(--line);backgroun
 /* alerte « Nouveau signalement » (administrateur) : la pastille d'icône en couleur de l'app */
 .md-toast.adm-fb .mt-ic{background:var(--brand)} .md-toast.adm-fb b{white-space:normal}
 /* ==== fin MIDI 4 ==== */
+/* ==== Matières une à une (chantier MATIÈRES) ==== */
+/* une coupure entre deux groupes de colonnes (verticale), horizontale quand la grille est transposée */
+.sc1-sep.v{height:auto;width:2px;margin:2px 0;justify-self:center;align-self:stretch}
+.sc1-grid.tr .sc1-sep.v{width:auto;height:2px;margin:0 2px;align-self:center;justify-self:stretch}
+/* « Configurer mon cours » : bien visible, en haut */
+.ua-cfg{flex:none;display:inline-flex;align-items:center;gap:6px;padding:6px 14px;border-radius:999px;border:2px solid var(--sc1c);background:color-mix(in srgb,var(--sc1c) 9%,var(--surface));color:var(--ink);font-weight:800;font-size:.85rem;white-space:nowrap;cursor:pointer;min-height:36px}
+.ua-cfg svg{width:18px;height:18px;flex:none;fill:none;stroke:var(--sc1c);stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+@media (hover:hover) and (pointer:fine){ .ua-cfg:hover{background:color-mix(in srgb,var(--sc1c) 18%,var(--surface))} }
+.ua-cfg:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.ua-cfg .sh{display:none}
+@media (max-width:640px),(max-height:520px) and (orientation:landscape){ .ua-cfg .lg{display:none} .ua-cfg .sh{display:inline} .ua-cfg{padding:4px 10px;font-size:.78rem;min-height:32px} }
+@media (max-width:640px){ #sc1Panel .sc1-top .ua-cfg{margin-left:auto} }
+/* Progressions : en-têtes longs (I–V–vi–IV…) */
+#sc1Panel[data-sec="prog"] .sc1-th{font-size:.7rem;overflow-wrap:anywhere}
+#sc1Panel[data-sec="prog"] .sc1-grid.tr .sc1-th{max-width:9.5em}
+#sc1Panel[data-sec="harmony"] .sc1-th{font-family:var(--f-display);font-size:.9rem}
+/* Oreille : une case par son, sans lignes */
+.sc1-grid.ua-flat{grid-template-columns:repeat(4,minmax(0,1fr));grid-template-rows:none;grid-auto-rows:minmax(0,1fr);gap:8px}
+.ua-flat .sc1-c{gap:4px;padding:4px 6px}
+.ua-lb{font-family:var(--f-display);font-weight:700;font-size:clamp(.82rem,2.2vh,1.05rem);line-height:1.1;text-align:center}
+.ua-lb .sh{display:none}
+@media (max-width:640px){ .sc1-grid.ua-flat{grid-template-columns:repeat(3,minmax(0,1fr));gap:6px} .ua-lb{font-size:.8rem} }
+@media (max-height:520px) and (orientation:landscape){ .sc1-grid.ua-flat{grid-template-columns:repeat(6,minmax(0,1fr));gap:6px} .ua-lb{font-size:.78rem} }
+/* Oreille, démonstration : le son joué */
+#answers button.ua-dm{border-color:var(--sc1c);background:color-mix(in srgb,var(--sc1c) 18%,var(--surface));color:var(--ink);opacity:1;box-shadow:0 0 0 3px color-mix(in srgb,var(--sc1c) 30%,transparent)}
+@media (prefers-reduced-motion:reduce){ .ua-cfg{transition:none} }
+/* ==== fin Matières une à une ==== */
+/* sous-modes : libellé court sur téléphone ; en paysage bas, le titre est déjà dans la barre du haut */
+.sc1-seg .sh{display:none} .sc1-seg button{white-space:nowrap}
+@media (max-width:640px),(max-height:520px) and (orientation:landscape){ .sc1-seg .lg{display:none} .sc1-seg .sh{display:inline} #sc1Panel .sc1-seg button{padding-inline:10px;letter-spacing:.02em} }
+@media (max-height:520px) and (orientation:landscape){ #sc1Panel .sc1-h{display:none} #sc1Panel .sc1-help{margin-left:0} #sc1Panel .sc1-top{gap:6px 10px} }
 </style>
 
 <script>if(window.Capacitor&&window.webkit&&window.webkit.messageHandlers&&window.webkit.messageHandlers.bridge)document.documentElement.classList.add("native");</script>
@@ -10305,7 +10336,7 @@ addEventListener("resize",()=>{ if(page==="acc" && ACC.view==="play" && ACC.run)
 // (fetch keepalive vers la fonction SQL track_events), sans le SDK Supabase. Hors ligne, la file attend. Une table ou une
 // fonction absente (migration pas encore lancée) coupe l'envoi sans erreur. En développement (localhost), rien ne part sur
 // le réseau, sauf si localStorage « pc-trk-test » = "1" (tests). Interrupteur : S.settings.analytics (absent = activé).
-const APP_BUILD="2026-10-28T19:46Z"; // remplacé par tools/build.py par la date de construction (version.txt)
+const APP_BUILD="2026-10-31T09:56Z"; // remplacé par tools/build.py par la date de construction (version.txt)
 const TRK={q:[], t:0, off:false, anon:null, sent:0, errs:[], errT:0, errSeen:new Set(), errOn:null, ports:new Set(), first:false};
 const RC={flags:{}, daily:{}, at:0};
 const TRK_NAMES=new Set(["song_import","app_open","first_note","input_mode","midi_connected","pp_lesson_done","learn_end","game_end","quiz_end","duel_end","goal_reached","badge","signup","login","play","feedback","acc_end","song_open","route_step","route_stage"]);
@@ -13056,66 +13087,108 @@ Object.assign(TXT.en,{sc1Name:"Scales one by one", sc1Desc:"Every scale, one at 
   sc1Best:"Your best:", sc1New:"New best for this scale!", sc1Back:"All scales", sc1Again:"Start again", sc1NextB:x=>"Next: "+x});
 const SC1_T=["major","minor","harm","mel"], SC1_COL="#9a5410";
 const SC1={tr:null, tmp:0, keep:null};
-const sc1Mode = () => S.settings.sc1Mode==="chords" ? "chords" : "notes";
-function sc1S(){ const isO=x=>x&&typeof x==="object"&&!Array.isArray(x); if(!isO(S.scStars)) S.scStars={}; ["notes","chords"].forEach(m=>{ if(!isO(S.scStars[m])) S.scStars[m]={}; }); return S.scStars; }
+// ---- MOTEUR « UNE À UNE » (chantier MATIÈRES, 31/10/2026) : la page sc1 sert à toutes les matières LEARN. Une matière = une entrée de
+// UA_DEF (les gammes ici, les autres dans js/886-matieres-une-a-une.js) : ses sous-modes (ids uniques dans toute l'app : le mode dit la
+// matière, uaSecOf), ses colonnes (cols, coupure après sep), ses lignes (rows, coupure après rsep ; flat = cases sans lignes), la case →
+// {tid, k} (k), l'élément du moteur LEARN (item, ou queue = plusieurs éléments), son nom, la validité, le cadenas, la ligne de la coupe.
+// UA.cur = la matière affichée / jouée. Étoiles : gammes = S.scStars[mode] (inchangé), autres = S.uaStars[sec][mode] ; clé "<k>-<tid>".
+const UA={cur:"scales"}, UA_DEF={};
+const uaIsO = x => !!x && typeof x==="object" && !Array.isArray(x);
+const uaSecOf = mode => { for(const s in UA_DEF) if(UA_DEF[s].modes.some(m=>m.v===mode)) return s; return "scales"; };
+const uaDef = mode => UA_DEF[uaSecOf(mode)] || UA_DEF.scales;
+function uaUse(sec){ UA.cur = UA_DEF[sec] ? sec : "scales"; try{ document.body.style.setProperty("--sc1c", UA_DEF[UA.cur].col); }catch(e){} }
+function uaModeGet(sec){ const d=UA_DEF[sec]||UA_DEF.scales; if(d.sec==="scales") return S.settings.sc1Mode==="chords" ? "chords" : "notes";
+  const v=uaIsO(S.settings.uaMode) ? S.settings.uaMode[d.sec] : null; return d.modes.some(m=>m.v===v) ? v : d.modes[0].v; }
+function uaModeSet(sec,v){ if(sec==="scales") S.settings.sc1Mode=v; else { if(!uaIsO(S.settings.uaMode)) S.settings.uaMode={}; S.settings.uaMode[sec]=v; } save(); }
+const sc1Mode = () => uaModeGet(UA.cur);
+// the tutorial of the page, once per subject (scales: S.settings.sc1Tour as before; the others: S.settings.uaTour[sec])
+const uaTourDone = sec => sec==="scales" ? !!S.settings.sc1Tour : !!(uaIsO(S.settings.uaTour) && S.settings.uaTour[sec]);
+function uaTourSet(sec){ if(sec==="scales") S.settings.sc1Tour=1; else { if(!uaIsO(S.settings.uaTour)) S.settings.uaTour={}; S.settings.uaTour[sec]=1; } }
+const sc1ModeName = mode => { const m=uaDef(mode).modes.find(x=>x.v===mode); return m ? m.l() : ""; };
+function sc1S(){ if(!uaIsO(S.scStars)) S.scStars={}; ["notes","chords"].forEach(m=>{ if(!uaIsO(S.scStars[m])) S.scStars[m]={}; }); return S.scStars; }
+function uaStore(mode){ const sec=uaSecOf(mode); if(sec==="scales") return sc1S()[mode==="chords"?"chords":"notes"];
+  if(!uaIsO(S.uaStars)) S.uaStars={}; if(!uaIsO(S.uaStars[sec])) S.uaStars[sec]={}; if(!uaIsO(S.uaStars[sec][mode])) S.uaStars[sec][mode]={}; return S.uaStars[sec][mode]; }
 const sc1Key = (tid,k) => k+"-"+tid;
-function sc1Get(mode,tid,k){ const v=Math.floor(+sc1S()[mode][sc1Key(tid,k)]||0); return Math.max(0,Math.min(3,v)); }
-function sc1Set(mode,tid,k,n){ if(n<=sc1Get(mode,tid,k)) return false; sc1S()[mode][sc1Key(tid,k)]=n; save(); return true; }
+function sc1Get(mode,tid,k){ const v=Math.floor(+uaStore(mode)[sc1Key(tid,k)]||0); return Math.max(0,Math.min(3,v)); }
+function sc1Set(mode,tid,k,n){ if(n<=sc1Get(mode,tid,k)) return false; uaStore(mode)[sc1Key(tid,k)]=n; save(); return true; }
 const sc1K = (tid,pc) => TONICS[tid].find(k=>keyPc(k)===pc);
 // rows: the natural tonics first (Do Ré Mi Fa Sol La Si), then the altered ones (Ré♭ Mi♭ Fa♯ La♭ Si♭)
 const SC1_PC=[0,2,4,5,7,9,11,1,3,6,8,10];
-// the order of the list for « next »: the same type, the next row, then the next type
-function sc1List(){ const L=[]; SC1_T.forEach(tid=>SC1_PC.forEach(pc=>L.push({tid, k:sc1K(tid,pc)}))); return L; }
-// a cup per tonic and per mode: the 4 scales of the row at 3 stars
-const sc1Cup = (mode,pc) => SC1_T.every(tid=>sc1Get(mode,tid,sc1K(tid,pc))>=3);
-const sc1Cups = mode => SC1_PC.filter(pc=>sc1Cup(mode,pc)).length;
-const sc1RowName = pc => noteName(tonicNote(sc1K("major",pc)));
+// the order of the list for « next »: the same column, the next row, then the next column
+function sc1List(mode){ mode=mode||sc1Mode(); const d=uaDef(mode), L=[], R=d.rows(mode);
+  d.cols(mode).forEach(c=>R.forEach(r=>{ const k=d.k(mode,c.id,r.id); if(k!=null) L.push({tid:c.id, k}); })); return L; }
+// a cup per row and per mode: every cell of the row at 3 stars
+const sc1Cup = (mode,row) => { const d=uaDef(mode); return d.cols(mode).every(c=>{ const k=d.k(mode,c.id,row); return k==null || sc1Get(mode,c.id,k)>=3; }); };
+const sc1Cups = mode => uaDef(mode).cups ? uaDef(mode).rows(mode).filter(r=>sc1Cup(mode,r.id)).length : 0;
+const sc1RowName = (row,mode) => { mode=mode||sc1Mode(); return uaDef(mode).rowName(row,mode); };
 const SC1_TROPHY='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 4h8v5a4 4 0 0 1-8 0zM8 6H4.5a3 3 0 0 0 3.5 4M16 6h3.5a3 3 0 0 1-3.5 4M12 13v4M8.5 20h7"/></svg>';
-const sc1Lock = (tid,k) => paywallOn() && !isPremium() && (premType("scales",tid) || !keySimple(k));
-const sc1Total = mode => sc1List().reduce((a,c)=>a+sc1Get(mode,c.tid,c.k),0);
+const sc1Lock = (tid,k,mode) => { mode=mode||sc1Mode(); return paywallOn() && !isPremium() && !!uaDef(mode).lock(tid,k,mode); };
+const sc1Total = mode => sc1List(mode).reduce((a,c)=>a+sc1Get(mode,c.tid,c.k),0);
 const SC1_MAX = SC1_T.length*12*3;
-function sc1Next(tid,k){ const L=sc1List(), i=L.findIndex(c=>c.tid===tid&&c.k===k); for(let j=1;j<=L.length;j++){ const c=L[(i+j)%L.length]; if(!sc1Lock(c.tid,c.k)) return c; } return null; }
-function sc1Todo(mode){ return sc1List().find(c=>!sc1Lock(c.tid,c.k)&&sc1Get(mode,c.tid,c.k)<3) || sc1List()[0]; }
-const sc1Item = (tid,k,mode) => mode==="chords" ? {sec:"scales",tid,k,ch:1} : {sec:"scales",tid,k};
+const sc1Max = mode => sc1List(mode).length*3;
+function sc1Next(tid,k,mode){ mode=mode||sc1Mode(); const L=sc1List(mode), i=L.findIndex(c=>c.tid===tid&&c.k===k); for(let j=1;j<=L.length;j++){ const c=L[(i+j)%L.length]; if(!sc1Lock(c.tid,c.k,mode)) return c; } return null; }
+function sc1Todo(mode){ const L=sc1List(mode); return L.find(c=>!sc1Lock(c.tid,c.k,mode)&&sc1Get(mode,c.tid,c.k)<3) || L[0]; }
+const sc1Item = (tid,k,mode) => uaDef(mode).item(tid,k,mode);
+const sc1CellName = (tid,k,mode) => uaDef(mode).name(tid,k,mode);
 const escA = x => esc(x).replace(/"/g,"&quot;");
-function sc1Render(){ const P=$("sc1Panel"); if(!P) return; const mode=sc1Mode(), tr=railMQ.matches; SC1.tr=tr; SC1.lang=S.settings.lang+S.settings.notation;
-  const TY=t("sc1Types"), tot=sc1Total(mode);
-  const R=i=>i<7?i+1:i+2, pos=(r,c)=>tr ? "grid-row:"+(c+1)+";grid-column:"+(r+1) : "grid-row:"+(r+1)+";grid-column:"+(c+1); // row 8 = the thin line between natural and altered tonics
+// the scales: the first subject of the engine (unchanged since the « Gammes une à une » chantiers)
+UA_DEF.scales={sec:"scales", col:SC1_COL, cups:true, rsep:7, sep:0, modes:[{v:"notes",l:()=>t("sc1Notes")},{v:"chords",l:()=>t("sc1Chords")}],
+  cols:()=>{ const TY=t("sc1Types"); return SC1_T.map((id,j)=>({id, lg:TY[j][0], sh:TY[j][1]})); },
+  rows:()=>SC1_PC.map(pc=>({id:pc, names:[...new Set(SC1_T.map(tid=>noteName(tonicNote(sc1K(tid,pc)))))]})),
+  k:(mode,tid,pc)=>sc1K(tid,pc),
+  item:(tid,k,mode)=>mode==="chords" ? {sec:"scales",tid,k,ch:1} : {sec:"scales",tid,k},
+  name:(tid,k,mode)=>itemName(mode==="chords" ? {sec:"scales",tid,k,ch:1} : {sec:"scales",tid,k}),
+  ok:(tid,k)=>!!TONICS[tid] && TONICS[tid].includes(k), lock:(tid,k)=>premType("scales",tid) || !keySimple(k), why:tid=>premType("scales",tid)?"types":"keys",
+  row:(tid,k)=>keyPc(k), rowName:pc=>noteName(tonicNote(sc1K("major",pc))), tn:k=>noteName(tonicNote(k))};
+function sc1Render(){ const P=$("sc1Panel"); if(!P) return; const mode=sc1Mode(), d=uaDef(mode), tr=railMQ.matches; SC1.tr=tr; SC1.lang=S.settings.lang+S.settings.notation;
+  const tot=sc1Total(mode), mx=sc1Max(mode), C=d.cols(mode), Rw=d.rows(mode); P.dataset.sec=d.sec; uaUse(d.sec);
   const star=n=>'<span class="sc1-st" aria-hidden="true">'+[0,1,2].map(i=>'<i'+(i<n?' class="on"':'')+'>★</i>').join("")+'</span>';
-  let h='<span class="sc1-corner" style="'+pos(0,0)+'"></span>';
-  SC1_T.forEach((tid,j)=>{ h+='<span class="sc1-th" style="'+pos(0,j+1)+'"><b class="lg">'+esc(TY[j][0])+'</b><b class="sh" aria-hidden="true">'+esc(TY[j][1])+'</b></span>'; });
-  h+='<span class="sc1-sep" style="'+(tr?"grid-row:1/-1;grid-column:9":"grid-column:1/-1;grid-row:9")+'" aria-hidden="true"></span>';
-  SC1_PC.forEach((pc,i)=>{ const names=[...new Set(SC1_T.map(tid=>noteName(tonicNote(sc1K(tid,pc)))))], r=R(i), cup=sc1Cup(mode,pc);
-    h+='<span class="sc1-rh" style="'+pos(r,0)+'"><b>'+esc(names[0])+'</b>'+(names[1]?'<small>'+esc(names[1])+'</small>':'')+'</span>';
-    h+='<span class="sc1-cup'+(cup?' on':'')+'" style="'+pos(r,SC1_T.length+1)+'" role="img" aria-label="'+escA(t("sc1CupA")(names[0],cup))+'" title="'+escA(t("sc1CupA")(names[0],cup))+'">'+SC1_TROPHY+'</span>';
-    SC1_T.forEach((tid,j)=>{ const k=sc1K(tid,pc), n=sc1Get(mode,tid,k), lk=sc1Lock(tid,k), nm=itemName(sc1Item(tid,k,mode)), tn=noteName(tonicNote(k));
-      h+='<button type="button" class="sc1-c s'+n+(lk?' pw-lk':'')+'" style="'+pos(r,j+1)+'" data-tid="'+tid+'" data-k="'+escA(k)+'" aria-label="'+escA(t("sc1Cell")(nm,n))+'" title="'+escA(nm)+'">'+star(n)
-        +(names[1]?'<small class="sc1-tn">'+esc(tn)+'</small>':'')+(lk?pwChip():'')+'</button>'; }); });
-  const midi=midiMode() && S.settings.midiC!==false, nx=sc1Todo(mode);
-  P.innerHTML='<div class="sc1-top"><h2 class="sc1-h"><span class="mb-ic">'+SEC_ICON("scales")+'</span><span>'+esc(t("sc1Name"))+'</span></h2>'
-    +'<div class="seg sc1-seg" id="sc1Seg" role="group" aria-label="'+escA(t("sc1Notes")+" / "+t("sc1Chords"))+'">'+[["notes","sc1Notes"],["chords","sc1Chords"]].map(([v,l])=>'<button type="button" data-v="'+v+'" aria-pressed="'+(mode===v)+'">'+esc(t(l))+'</button>').join("")+'</div>'
-    +'<p class="sc1-sum" id="sc1Sum"><span class="sc1-big" aria-label="'+escA(t("sc1SumA")(tot,SC1_MAX))+'"><i aria-hidden="true">★</i><b class="mono">'+tot+'</b><span aria-hidden="true"> / '+SC1_MAX+'</span></span><span class="sc1-big sc1-cups" aria-label="'+escA(t("sc1Cups")(sc1Cups(mode),12))+'">'+SC1_TROPHY+'<b class="mono">'+sc1Cups(mode)+'</b><span aria-hidden="true"> / 12</span></span>'+'</p></div>'
-    +'<div class="sc1-grid'+(tr?' tr':'')+'" id="sc1Grid">'+h+'</div>';
-  P.querySelectorAll("#sc1Seg [data-v]").forEach(b=>b.onclick=()=>{ if(S.settings.sc1Mode===b.dataset.v) return; S.settings.sc1Mode=b.dataset.v; save(); sc1Render(); const f=$("sc1Seg").querySelector('[data-v="'+b.dataset.v+'"]'); if(f) f.focus({preventScroll:true}); });
+  const cell=(tid,k,n,lk,nm,pos,lead,tail)=>'<button type="button" class="sc1-c s'+n+(lk?' pw-lk':'')+'"'+(pos?' style="'+pos+'"':'')+' data-tid="'+escA(tid)+'" data-k="'+escA(k)+'" aria-label="'+escA(t("sc1Cell")(nm,n))+'" title="'+escA(nm)+'">'+lead+star(n)+tail+(lk?pwChip():'')+'</button>';
+  let h="", tpl="";
+  if(d.flat){ // one cell per element (Oreille), no rows
+    const row=Rw[0].id; C.forEach(c=>{ const k=d.k(mode,c.id,row); if(k==null) return; const n=sc1Get(mode,c.id,k), lk=sc1Lock(c.id,k,mode), nm=sc1CellName(c.id,k,mode);
+      h+=cell(c.id,k,n,lk,nm,"",'<b class="ua-lb"><span class="lg">'+esc(c.lg)+'</span><span class="sh" aria-hidden="true">'+esc(c.sh)+'</span></b>',""); }); }
+  else {
+    const rs=d.rsep||0, cs=d.sep||0, nr=Rw.length, nc=C.length, cup=!!d.cups;
+    const R=i=>rs && i>=rs ? i+2 : i+1, CC=j=>cs && j>=cs ? j+2 : j+1, pos=(r,c)=>tr ? "grid-row:"+(c+1)+";grid-column:"+(r+1) : "grid-row:"+(r+1)+";grid-column:"+(c+1);
+    const fr=n=>"repeat("+n+",minmax(0,1fr))", lines=(n,sp)=>sp&&sp<n ? fr(sp)+" 3px "+fr(n-sp) : fr(n);
+    tpl = tr ? "grid-template-columns:max-content "+lines(nr,rs)+";grid-template-rows:auto "+lines(nc,cs)+(cup?" clamp(18px,7vh,30px)":"")
+             : "grid-template-columns:minmax(52px,max-content) "+lines(nc,cs)+(cup?" clamp(22px,4vw,34px)":"")+";grid-template-rows:auto "+lines(nr,rs);
+    const lastC=cs&&cs<nc ? nc+1 : nc;
+    h='<span class="sc1-corner" style="'+pos(0,0)+'"></span>';
+    C.forEach((c,j)=>{ h+='<span class="sc1-th" style="'+pos(0,CC(j))+'"><b class="lg">'+esc(c.lg)+'</b><b class="sh" aria-hidden="true">'+esc(c.sh)+'</b></span>'; });
+    if(rs && rs<nr) h+='<span class="sc1-sep" style="'+(tr?"grid-row:1/-1;grid-column:"+(rs+2):"grid-column:1/-1;grid-row:"+(rs+2))+'" aria-hidden="true"></span>';
+    if(cs && cs<nc) h+='<span class="sc1-sep v" style="'+(tr?"grid-column:1/-1;grid-row:"+(cs+2):"grid-row:1/-1;grid-column:"+(cs+2))+'" aria-hidden="true"></span>';
+    Rw.forEach((rw,i)=>{ const names=rw.names, r=R(i), on=cup && sc1Cup(mode,rw.id);
+      h+='<span class="sc1-rh" style="'+pos(r,0)+'"><b>'+esc(names[0])+'</b>'+(names[1]?'<small>'+esc(names[1])+'</small>':'')+'</span>';
+      if(cup) h+='<span class="sc1-cup'+(on?' on':'')+'" data-row="'+escA(rw.id)+'" style="'+pos(r,lastC+1)+'" role="img" aria-label="'+escA(t("sc1CupA")(names[0],on))+'" title="'+escA(t("sc1CupA")(names[0],on))+'">'+SC1_TROPHY+'</span>';
+      C.forEach((c,j)=>{ const k=d.k(mode,c.id,rw.id); if(k==null) return; const n=sc1Get(mode,c.id,k), lk=sc1Lock(c.id,k,mode), nm=sc1CellName(c.id,k,mode);
+        h+=cell(c.id,k,n,lk,nm,pos(r,CC(j)),"",names[1]&&d.tn?'<small class="sc1-tn">'+esc(d.tn(k))+'</small>':''); }); }); }
+  const cups=d.cups ? Rw.length : 0;
+  P.innerHTML='<div class="sc1-top"><h2 class="sc1-h"><span class="mb-ic">'+SEC_ICON(d.sec)+'</span><span>'+esc(t("sc1Name"))+'</span></h2>'
+    +'<div class="seg sc1-seg" id="sc1Seg" role="group" aria-label="'+escA(d.modes.map(m=>m.l()).join(" / "))+'">'+d.modes.map(m=>'<button type="button" data-v="'+m.v+'" aria-pressed="'+(mode===m.v)+'"'+(m.s?' aria-label="'+escA(m.l())+'"><span class="lg">'+esc(m.l())+'</span><span class="sh" aria-hidden="true">'+esc(m.s())+'</span>':'>'+esc(m.l()))+'</button>').join("")+'</div>'
+    +'<p class="sc1-sum" id="sc1Sum"><span class="sc1-big" aria-label="'+escA(t("sc1SumA")(tot,mx))+'"><i aria-hidden="true">★</i><b class="mono">'+tot+'</b><span aria-hidden="true"> / '+mx+'</span></span>'+(cups?'<span class="sc1-big sc1-cups" aria-label="'+escA(t("sc1Cups")(sc1Cups(mode),cups))+'">'+SC1_TROPHY+'<b class="mono">'+sc1Cups(mode)+'</b><span aria-hidden="true"> / '+cups+'</span></span>':'')+'</p></div>'
+    +'<div class="sc1-grid'+(tr?' tr':'')+(d.flat?' ua-flat':'')+'" id="sc1Grid"'+(tpl?' style="'+tpl+'"':'')+'>'+h+'</div>';
+  P.querySelectorAll("#sc1Seg [data-v]").forEach(b=>b.onclick=()=>{ if(sc1Mode()===b.dataset.v) return; uaModeSet(d.sec,b.dataset.v); sc1Render(); const f=$("sc1Seg").querySelector('[data-v="'+b.dataset.v+'"]'); if(f) f.focus({preventScroll:true}); });
   P.querySelectorAll(".sc1-c").forEach(b=>b.onclick=()=>sc1Play(b.dataset.tid,b.dataset.k)); }
 // one scale, alone, in the exercise engine
-function sc1Play(tid,k,mode){ mode=mode||sc1Mode(); if(!TONICS[tid] || !TONICS[tid].includes(k)) return;
-  if(sc1Lock(tid,k)){ pwOpen(premType("scales",tid)?"types":"keys"); return; }
+function sc1Play(tid,k,mode){ mode=mode||sc1Mode(); const d=uaDef(mode); if(!d.ok(tid,k,mode)) return; uaUse(d.sec);
+  if(sc1Lock(tid,k,mode)){ pwOpen(d.why(tid,k,mode)); return; }
   closeEnd();
-  if(S.section!=="scales"){ S.section="scales"; save(); }
+  if(S.section!==d.sec){ S.section=d.sec; save(); }
   openPage("practice");
-  const it=sc1Item(tid,k,mode);
-  game=makeGame([it]); game.label=itemName(it); game.single=false; game.sc1={mode,tid,k,best0:sc1Get(mode,tid,k),cup0:sc1Cup(mode,keyPc(k)),got:0,res:0,rev:false,err:0}; game.i=-1; startRound(); }
+  const q=d.queue ? d.queue(tid,k,mode) : [sc1Item(tid,k,mode)];
+  game=makeGame(q); game.label=sc1CellName(tid,k,mode); game.single=false; game.sc1={mode,sec:d.sec,tid,k,multi:q.length>1,best0:sc1Get(mode,tid,k),cup0:d.cups?sc1Cup(mode,d.row(tid,k,mode)):true,got:0,res:0,rev:false,err:0,errT:0,hits0:0}; game.i=-1; startRound(); }
 // the end of a game: the stars won, Do = next scale, Si = again, back to the list
-function sc1End(g){ if(page!=="sc1") openPage("sc1"); const pc=keyPc(g.sc1.k), cupNew=!g.sc1.cup0 && sc1Cup(g.sc1.mode,pc); // the summary opens over the list, with its new stars
-  const s=g.sc1, n=s.stars|0, best=sc1Get(s.mode,s.tid,s.k), ch=s.mode==="chords", nx=sc1Next(s.tid,s.k);
-  $("endTitle").textContent=itemName(sc1Item(s.tid,s.k,s.mode));
-  const B=$("endBody"); B.innerHTML='<div class="sc1-end"><small class="pp-k">'+esc(t("sc1Name")+" · "+t(ch?"sc1Chords":"sc1Notes"))+'</small>'
+function sc1End(g){ uaUse(uaSecOf(g.sc1.mode)); if(page!=="sc1") openPage("sc1"); const d=uaDef(g.sc1.mode), pc=d.cups?d.row(g.sc1.tid,g.sc1.k,g.sc1.mode):null, cupNew=d.cups && !g.sc1.cup0 && sc1Cup(g.sc1.mode,pc); // the summary opens over the list, with its new stars
+  const s=g.sc1, n=s.stars|0, best=sc1Get(s.mode,s.tid,s.k), ch=s.mode==="chords", nx=sc1Next(s.tid,s.k,s.mode);
+  $("endTitle").textContent=sc1CellName(s.tid,s.k,s.mode);
+  const B=$("endBody"); B.innerHTML='<div class="sc1-end"><small class="pp-k">'+esc(t("sc1Name")+" · "+sc1ModeName(s.mode))+'</small>'
     +'<p class="pp-stars sc1-stars" role="img" aria-label="'+escA(t("sc1StarsA")(n))+'">'+[0,1,2].map(i=>'<span'+(i<n?' class="on"':'')+' style="--d:'+(i*220)+'ms">★</span>').join("")+'</p>'
-    +(cupNew?'<p class="sc1-cupwon"><span class="sc1-cup on" aria-hidden="true">'+SC1_TROPHY+'</span><b>'+esc(t("sc1CupWon")(sc1RowName(pc)))+'</b></p>':'')
+    +(cupNew?'<p class="sc1-cupwon"><span class="sc1-cup on" aria-hidden="true">'+SC1_TROPHY+'</span><b>'+esc(t("sc1CupWon")(sc1RowName(pc,s.mode)))+'</b></p>':'')
     +'<p class="sc1-msg">'+esc(t("sc1R")(n,ch))+'</p>'
     +(best>n?'<p class="sc1-best">'+esc(t("sc1Best"))+' <span role="img" aria-label="'+escA(t("sc1StarsA")(best))+'">'+"★".repeat(best)+"☆".repeat(3-best)+'</span></p>':recNew(s.best0,n,"stars")?'<p class="sc1-best new">'+esc(t("sc1New"))+'</p>':'')
-    +'<p class="sc1-tot"><span aria-hidden="true">★ </span>'+esc(t("sc1SumA")(sc1Total(s.mode),SC1_MAX))+' · '+esc(t("sc1Cups")(sc1Cups(s.mode),12))+'</p></div>';
+    +'<p class="sc1-tot"><span aria-hidden="true">★ </span>'+esc(t("sc1SumA")(sc1Total(s.mode),sc1Max(s.mode)))+(d.cups?' · '+esc(t("sc1Cups")(sc1Cups(s.mode),d.rows(s.mode).length)):'')+'</p></div>';
   { const li=levelInfo(S.xp), nxe=document.createElement("div"); nxe.className="end-next"; nxe.id="endNext";
     nxe.innerHTML='<div class="en-row"><b></b><span class="en-bar"><i></i></span></div><p></p>'; nxe.querySelector("b").textContent="+"+fmtN(Math.max(0,S.xp-g.xp0))+" XP · "+t("endNext")(fmtN(li.need-li.into), fmtN(li.L+1));
     const sk=effStreak(); nxe.querySelector("p").textContent = sk ? t("endStreak")(sk) : ""; B.appendChild(nxe); try{ endNextMotion(nxe, g, li, sk); }catch(e){} }
@@ -13123,13 +13196,10 @@ function sc1End(g){ if(page!=="sc1") openPage("sc1"); const pc=keyPc(g.sc1.k), c
   const btn=(lbl,cls,fn,k)=>{ const b=document.createElement("button"); b.type="button"; b.className="btn "+cls; b.textContent=lbl; b.onclick=fn; if(k){ const kb=kbdEl(); kb.textContent=k; b.appendChild(kb); } F.appendChild(b); return b; };
   btn(t("sc1Back"),"",()=>{ closeEnd(); if(page!=="sc1") openPage("sc1"); }).id="sc1Back";
   btn(t("sc1Again"),"",()=>sc1Play(s.tid,s.k,s.mode),BNAME()).id="sc1Again";
-  const go=nx ? btn(t("sc1NextB")(itemName(sc1Item(nx.tid,nx.k,s.mode))),"primary",()=>sc1Play(nx.tid,nx.k,s.mode),CNAME()) : null; if(go) go.id="sc1Next";
+  const go=nx ? btn(t("sc1NextB")(sc1CellName(nx.tid,nx.k,s.mode)),"primary",()=>sc1Play(nx.tid,nx.k,s.mode),CNAME()) : null; if(go) go.id="sc1Next";
   $("endX").setAttribute("aria-label",t("closeLbl")); if(!endOpen) modalOpened(); endOpen=true; $("endModal").hidden=false;
   (go||F.lastChild).focus({preventScroll:true}); if((cupNew || (n===3 && n>s.best0)) && !lvlUp) setTimeout(()=>{ try{ confetti(); }catch(e){} },150); }
-// LEARN: the tile, shown next to « Gammes » (CSS order: it comes last in the page, so the other tiles keep their place for the tests)
-function sc1Tile(){ const b=$("learnTiles"); if(!b) return; const old=b.querySelector(".sc1-tile"); if(old) old.remove();
-  const c=tile({color:SC1_COL,obj:"sc1",kick:"Learn",title:t("sc1Name"),desc:t("sc1Desc"),btn:t("rnPlay"),rec:"★ "+fmtN(sc1Total("notes")+sc1Total("chords"))+" / "+fmtN(2*SC1_MAX),onOpen:()=>openPage("sc1")});
-  c.classList.add("sc1-tile"); c.dataset.id="sc1"; b.appendChild(c); }
+// LEARN: the tiles of the subjects open this page (uaTiles in js/886-matieres-une-a-une.js) ; « Gammes » = the scales
 TILE_COL.sc1=SC1_COL;
 OBJ.sc1=()=>{ const o=O3(); [0,1,2].forEach(i=>o.block(10+i*30,80-i*20,28,32+i*20,NC[i+3],8)); return o.raw('<path d="M90 6l6.6 13.4 14.8 2.2-10.7 10.4 2.5 14.7L90 39.8 76.8 46.7l2.5-14.7L68.6 21.6l14.8-2.2z" fill="#ffc94a" stroke="#c98a00" stroke-width="2.4" stroke-linejoin="round"/>').svg(); };
 { const P=document.createElement("section"); P.className="mode-page sc1-page"; P.id="sc1Panel"; P.setAttribute("aria-label",t("sc1Name")); const lp=$("learnPanel"); lp.parentNode.insertBefore(P,lp.nextSibling); }
@@ -13142,24 +13212,26 @@ function sc1Fix(fn){ return function(){ if(!sc1On()) return fn.apply(this,argume
 { const o=save; save=function(){ if(!SC1.tmp || !SC1.keep) return o.apply(this,arguments); const s=S.settings, a=s.sc7, d=s.dir; s.sc7=SC1.keep.sc7; s.dir=SC1.keep.dir; try{ return o.apply(this,arguments); } finally{ s.sc7=a; s.dir=d; } }; }
 startRound=sc1Fix(startRound); render=sc1Fix(render);
 { const o=reveal; reveal=sc1Fix(function(){ if(sc1On() && phase==="listening") game.sc1.rev=true; return o.apply(this,arguments); }); }
-{ const o=success; success=sc1Fix(function(){ const g=sc1On()?game.sc1:null, e=errors; const r=o.apply(this,arguments);
-    if(g){ const n=(e===0 && !g.rev) ? 3 : 2; g.err=Math.max(e,g.err|0); g.res=Math.max(g.res|0,n); sc1Set(g.mode,g.tid,g.k,n);
-      const pc=keyPc(g.k); if(!g.cup0 && sc1Cup(g.mode,pc)) try{ ntfAdd({key:"sc1cup-"+g.mode+"-"+pc, cat:"progress", type:"unlock", ti:t("sc1CupWon")(sc1RowName(pc))+" · "+t(g.mode==="chords"?"sc1Chords":"sc1Notes"), tx:t("sc1CupNtf"), act:{k:"learn",l:"ntfPlay"}}); }catch(e){} } return r; }); }
+{ const o=success; success=sc1Fix(function(){ const g=sc1On()?game.sc1:null, e=errors, last=!!game && game.i>=game.total-1, add=cur ? (cur.sec==="ear" ? 1 : seq.length) : 0; const r=o.apply(this,arguments);
+    if(g){ g.err=Math.max(e,g.err|0); g.errT=(g.errT|0)+e;
+      if(g.multi){ g.hits0=(g.hits0|0)+add; if(!g.got && g.hits0>=3){ g.got=1; sc1Set(g.mode,g.tid,g.k,1); } if(!last) return r; } // several elements (inversions, listens): the stars at the last one
+      const n=((g.multi?g.errT:e)===0 && !g.rev) ? 3 : 2; g.res=Math.max(g.res|0,n); sc1Set(g.mode,g.tid,g.k,n);
+      const d=uaDef(g.mode), pc=d.cups ? d.row(g.tid,g.k,g.mode) : null; if(d.cups && !g.cup0 && sc1Cup(g.mode,pc)) try{ ntfAdd({key:"sc1cup-"+g.mode+"-"+pc, cat:"progress", type:"unlock", ti:t("sc1CupWon")(sc1RowName(pc,g.mode))+" · "+sc1ModeName(g.mode), tx:t("sc1CupNtf"), act:{k:"learn",l:"ntfPlay"}}); }catch(e){} } return r; }); }
 // 3 right notes (or chords) of the scale: the first star at once, even if the scale is not finished
-{ const o=noteIn; noteIn=function(){ const r=o.apply(this,arguments); try{ const g=sc1On()?game.sc1:null; if(g && !g.got && !g.train && cur && phase==="listening" && idx>=3){ g.got=1; sc1Set(g.mode,g.tid,g.k,1); } }catch(e){} return r; }; }
+{ const o=noteIn; noteIn=function(){ const r=o.apply(this,arguments); try{ const g=sc1On()?game.sc1:null; if(g && !g.got && !g.train && cur && phase==="listening" && (g.hits0|0)+idx>=3){ g.got=1; sc1Set(g.mode,g.tid,g.k,1); } }catch(e){} return r; }; }
 { const o=finishGame; finishGame=function(){ const g=game; if(!(g && g.sc1)) return o.apply(this,arguments);
-    const s=g.sc1; s.stars=Math.max(s.res|0, s.got?1:0); g.single=true; const done=g.results.filter(Boolean).length; const r=o.apply(this,arguments);
+    const s=g.sc1; if(s.multi && !s.train && g.results.filter(Boolean).length>=g.total && !s.res){ s.res=2; sc1Set(s.mode,s.tid,s.k,2); } // the last listen missed: finished, with a mistake
+    s.stars=Math.max(s.res|0, s.got?1:0); g.single=true; const done=g.results.filter(Boolean).length; const r=o.apply(this,arguments);
     if(!done){ if(s.got) sc1End(g); else setTimeout(()=>{ if(!game && page==="practice" && !endOpen) openPage("sc1"); },0); } // stopped before the end
     return r; }; }
 { const o=openEnd; openEnd=function(g){ if(g && g.sc1) return sc1End(g); return o.apply(this,arguments); }; }
-{ const o=endNext; endNext=function(g){ if(g && g.sc1){ const nx=sc1Next(g.sc1.tid,g.sc1.k); if(nx) sc1Play(nx.tid,nx.k,g.sc1.mode); return; } return o.apply(this,arguments); }; }
+{ const o=endNext; endNext=function(g){ if(g && g.sc1){ const nx=sc1Next(g.sc1.tid,g.sc1.k,g.sc1.mode); if(nx) sc1Play(nx.tid,nx.k,g.sc1.mode); return; } return o.apply(this,arguments); }; }
 { const o=endReplay; endReplay=function(g){ if(g && g.sc1){ sc1Play(g.sc1.tid,g.sc1.k,g.sc1.mode); return; } return o.apply(this,arguments); }; }
 // on the list, a lone C plays the next scale to work on
 { const o=midiStart; midiStart=function(note){ const pc=((note%12)+12)%12; if(page==="sc1" && S.settings.midiC!==false && (pc===0||pc===11)){
     if(endOpen && lastGame && lastGame.sc1 && !openMods.length && !helpOpen && !midiOpen){ if(pc===0) endNext(lastGame); else endReplay(lastGame); return true; } // the summary: C = next, B = again
     if(pc===0 && !anyModal()){ const c=sc1Todo(sc1Mode()); sc1Play(c.tid,c.k); return true; } return false; }
   return o.apply(this,arguments); }; }
-{ const o=renderLearn; renderLearn=function(){ const r=o.apply(this,arguments); try{ sc1Tile(); }catch(e){ console.warn(e); } return r; }; }
 { const o=openPage; openPage=function(pg){ const r=o.apply(this,arguments); if(page==="sc1" && pg==="sc1") sc1Render(); return r; }; }
 { const o=setNav; setNav=function(){ o.apply(this,arguments); if(page==="sc1") $("mbTitle").textContent=t("sc1Name"); }; }
 { const o=render; render=function(){ const r=o.apply(this,arguments); if(page==="sc1" && SC1.lang!==S.settings.lang+S.settings.notation) sc1Render(); return r; }; }
@@ -13170,7 +13242,6 @@ addEventListener("resize",()=>{ if(page==="sc1" && SC1.tr!==railMQ.matches) sc1R
       ["notes","chords"].forEach(md=>{ const x={}; [a[md],b[md]].forEach(o2=>{ if(isO(o2)) Object.entries(o2).forEach(([k,v])=>{ const n=Math.max(0,Math.min(3,Math.floor(+v)||0)); if(n && /^[A-G][#b]?-[a-z]+$/.test(k)) x[k]=Math.max(x[k]||0,n); }); }); m[md]=x; });
       r.merged.scStars=m; r.changed=!syncSame(r.merged,local); }
     return r; }; }
-if(page==="learn") renderLearn();
 /* ==== fin Gammes une à une ==== */
 /* ==== Mode PIANO (chantier piano) ==== */
 // 5e mode du menu (#modeNav [data-mode=piano], couleur --m-piano) → page "piano" (#pianoPanel) : instruments PN_INS (synthèse Web Audio
@@ -13610,7 +13681,7 @@ function sc1Bar(){ const on=page==="practice" && sc1On(), tr=sc1Tr(); document.b
       mk([t("sc1See"),t("sc1SeeS")],"",sc1Demo,md?BNAME():null,"sc1See"); sp(); mk([t("sc1ToEval"),t("sc1Eval")],"",()=>sc1Switch("eval"),null,"sc1ToEval"); mk(t("sc1Replay"),"primary",sc1Turn,md?CNAME():space,"sc1Replay"); }
     return r; }; }
 { const o=renderPrompt; renderPrompt=function(){ const r=o.apply(this,arguments); if(sc1Tr() && cur){
-      $("eyebrow").textContent=t("sc1Train")+" · "+t(game.sc1.mode==="chords"?"sc1Chords":"sc1Notes");
+      $("eyebrow").textContent=t("sc1Train")+" · "+sc1ModeName(game.sc1.mode);
       $("promptSub").textContent = phase==="revealed" ? t(chSeq()?"sc1DemoSubC":"sc1DemoSub") : phase==="success" ? t("sc1Well")+" "+t("sc1WellSub") : t("sc1TurnSub"); }
     return r; }; }
 { const o=render; render=function(){ sc1TrGuide(); const r=o.apply(this,arguments); try{ sc1Bar(); }catch(e){ console.warn(e); } return r; }; }
@@ -13640,13 +13711,13 @@ const SC1P={c:null};
 const SC1_PK_IC={train:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2.5 12s3.6-6.5 9.5-6.5S21.5 12 21.5 12s-3.6 6.5-9.5 6.5S2.5 12 2.5 12z"/><circle cx="12" cy="12" r="3"/></svg>',
   eval:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.2l2.7 5.5 6 .9-4.4 4.2 1 6-5.3-2.8-5.3 2.8 1-6-4.4-4.2 6-.9z"/></svg>'};
 // open the choice for one scale (nothing starts until a choice is made)
-function sc1Ask(tid,k,mode){ mode=mode||sc1Mode(); if(!TONICS[tid] || !TONICS[tid].includes(k)) return;
-  if(sc1Lock(tid,k)){ pwOpen(premType("scales",tid)?"types":"keys"); return; }
+function sc1Ask(tid,k,mode){ mode=mode||sc1Mode(); const d=uaDef(mode); if(!d.ok(tid,k,mode)) return; uaUse(d.sec);
+  if(sc1Lock(tid,k,mode)){ pwOpen(d.why(tid,k,mode)); return; }
   if(endOpen) closeEnd();
   openMods.slice().forEach(id=>{ if(id!=="sc1Pick") closeMod(id); }); // one window at a time
   const n=sc1Get(mode,tid,k), ch=mode==="chords", rec=sc1TrPick(tid,k,mode) ? "train" : "eval", md=midiMode() && S.settings.midiC!==false;
   SC1P.c={tid,k,mode};
-  $("sc1PkT").textContent=itemName(sc1Item(tid,k,mode))+" · "+t(ch?"sc1Chords":"sc1Notes");
+  $("sc1PkT").textContent=sc1CellName(tid,k,mode)+" · "+sc1ModeName(mode);
   $("sc1PkS").innerHTML='<span class="sc1-st" role="img" aria-label="'+escA(t("sc1StarsA")(n))+'">'+[0,1,2].map(i=>'<i'+(i<n?' class="on"':'')+'>★</i>').join("")+'</span>'+(n?'':'<span>'+esc(t("sc1PkNone"))+'</span>');
   $("sc1PkQ").textContent=t("sc1PkQ"); $("sc1PkX").setAttribute("aria-label",t("closeLbl"));
   const O=$("sc1PkO"); O.innerHTML="";
@@ -13759,7 +13830,7 @@ Object.assign(TXT.en,{sc1Rv:"Review", sc1RvB:n=>"Review · "+(n>1?"your "+n+" sc
   sc1RvTx:"Play again, in one go, every scale you nailed without a mistake (3 stars), to keep them in mind.",
   sc1RvN:(n,m)=>n+(n>1?" scales":" scale")+" · "+m, sc1RvT:"Timer per scale", sc1RvMix:"Shuffle the order", sc1RvGo:"Start the review"});
 const SC1_RVT=[0,30,20,10];
-const sc1RvList = mode => sc1List().filter(c=>!sc1Lock(c.tid,c.k) && sc1Get(mode,c.tid,c.k)>=3);
+const sc1RvList = mode => sc1List(mode).filter(c=>!sc1Lock(c.tid,c.k,mode) && sc1Get(mode,c.tid,c.k)>=3);
 const sc1RvT = () => 0; // v3 (Antoine) : pas de chrono dans la révision ; S.settings.sc1RvT, s'il existe, est ignoré
 const sc1RvMix = () => S.settings.sc1RvMix!==false;
 { const m=document.createElement("div"); m.className="modal"; m.id="sc1Rv"; m.hidden=true; m.setAttribute("role","dialog"); m.setAttribute("aria-modal","true"); m.setAttribute("aria-labelledby","sc1RvTi");
@@ -13771,15 +13842,15 @@ const sc1RvMix = () => S.settings.sc1RvMix!==false;
   $("sc1Pick").after(m);
   $("sc1RvGo").onclick=()=>sc1RvStart(); $("sc1RvMix").onchange=e=>{ S.settings.sc1RvMix=!!e.target.checked; save(); }; }
 function sc1RvRender(){ const mode=sc1Mode(), n=sc1RvList(mode).length, md=midiMode() && S.settings.midiC!==false, T=sc1RvT();
-  $("sc1RvTi").textContent=n?t("sc1RvTi")(n):t("sc1Rv"); $("sc1RvS").textContent=t("sc1RvN")(n,t(mode==="chords"?"sc1Chords":"sc1Notes")); $("sc1RvTx").textContent=t("sc1RvTx");
+  $("sc1RvTi").textContent=n?t("sc1RvTi")(n):t("sc1Rv"); $("sc1RvS").textContent=t("sc1RvN")(n,sc1ModeName(mode)); $("sc1RvTx").textContent=t("sc1RvTx");
   $("sc1RvMixL").textContent=t("sc1RvMix"); $("sc1RvMix").checked=sc1RvMix(); $("sc1RvX").setAttribute("aria-label",t("closeLbl"));
   // v3 : plus de chrono dans la révision (gardé pour les jeux et les duels)
   const go=$("sc1RvGo"); go.textContent=t("sc1RvGo"); { const k=kbdEl(); k.textContent=CNAME(); go.appendChild(k); } go.disabled=!n; }
 function sc1RvOpen(){ if(!sc1RvList(sc1Mode()).length) return; if(endOpen) closeEnd(); openMods.slice().forEach(id=>{ if(id!=="sc1Rv") closeMod(id); }); sc1RvRender(); openMod("sc1Rv"); $("sc1RvGo").focus({preventScroll:true}); }
 function sc1RvStart(){ const mode=sc1Mode(), L=sc1RvList(mode); if(!L.length) return; if(!$("sc1Rv").hidden) closeMod("sc1Rv");
-  const q=L.map(c=>({...sc1Item(c.tid,c.k,mode), sc1rv:1})); if(sc1RvMix()) for(let i=q.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [q[i],q[j]]=[q[j],q[i]]; }
-  closeEnd(); if(S.section!=="scales"){ S.section="scales"; save(); } openPage("practice");
-  game=makeGame(q); game.label=t("sc1Rv")+" · "+t(mode==="chords"?"sc1Chords":"sc1Notes"); game.single=false; game.i=-1; startRound(); }
+  const d=uaDef(mode), q=L.flatMap(c=>(d.rvItems ? d.rvItems(c.tid,c.k,mode) : [sc1Item(c.tid,c.k,mode)]).map(it=>({...it, sc1rv:1}))); if(sc1RvMix()) for(let i=q.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [q[i],q[j]]=[q[j],q[i]]; }
+  closeEnd(); if(S.section!==d.sec){ S.section=d.sec; save(); } openPage("practice");
+  game=makeGame(q); game.label=t("sc1Rv")+" · "+sc1ModeName(mode); game.single=false; game.i=-1; startRound(); }
 const sc1RvOn = () => !$("sc1Rv").hidden && openMods[openMods.length-1]==="sc1Rv";
 // during a review: up, triads, and the chosen timer per scale (lent, never saved)
 const rvOn = () => !!(game && game.queue && game.queue.length && game.queue.every(it=>it && it.sc1rv));
@@ -13967,12 +14038,12 @@ sc1TrGuide=function(){ const w=sc1Want(), sig=w?JSON.stringify(w):"", s=S.settin
 { const o=save; save=function(){ if(SC1L.on===null) return o.apply(this,arguments); const s=S.settings, now={}; Object.keys(SC1L.keep).forEach(x=>now[x]=s[x]); sc1Back();
     try{ return o.apply(this,arguments); } finally{ Object.assign(s,now); } }; }
 { const o=autoHelp; autoHelp=function(){ if(sc1Ev()) return; return o.apply(this,arguments); }; }
-{ const o=primaryAction; primaryAction=function(){ if(sc1Ev() && phase==="listening") return; // pas de « Je sèche » en évaluation : on bascule en Entraînement
+{ const o=primaryAction; primaryAction=function(){ if(sc1Ev() && phase==="listening" && !(cur && cur.sec==="ear")) return; // Oreille : Espace = réécouter // pas de « Je sèche » en évaluation : on bascule en Entraînement
     if(sc1Tr() && phase==="success"){ sc1Switch("eval"); return; } return o.apply(this,arguments); }; }
-{ const o=reveal; reveal=function(){ if(sc1Ev() && phase==="listening") return; return o.apply(this,arguments); }; }
+{ const o=reveal; reveal=function(){ if(sc1Ev() && phase==="listening" && !(cur && cur.sec==="ear")) return; return o.apply(this,arguments); }; } // Oreille : une mauvaise réponse montre la bonne
 { const o=renderGameBar; renderGameBar=function(){ const r=o.apply(this,arguments); try{ sc1TrGuide(); }catch(e){} return r; }; }
 { const o=renderActions; renderActions=function(){ const r=o.apply(this,arguments); try{
-    if(sc1Ev() && phase==="listening"){ $("actions").innerHTML=""; return r; }
+    if(sc1Ev() && phase==="listening" && !(cur && cur.sec==="ear")){ $("actions").innerHTML=""; return r; }
     // fin d'entraînement : Revoir (Mi) à gauche … Rejouer (gris, Si) puis « Passer à l'évaluation » (principal, Do) à droite
     if(sc1Tr() && phase==="success"){ const a=$("actions"), see=$("sc1See"), ev=$("sc1ToEval"), rp=$("sc1Replay"); if(!(see&&ev&&rp)) return r;
       const md=midiMode() && S.settings.midiC!==false, kb=hasKeyboard(), space=kb?(S.settings.lang==="fr"?"Espace":"Space"):null;
@@ -13987,11 +14058,11 @@ addEventListener("click",e=>{ if(LV.pass || LV.on || !e.target.closest) return; 
 { const o=lvOpen; lvOpen=function(a,fn,end){ const r=o.apply(this,arguments); if(end && page==="practice" && game && (sc1On()||rvOn())){
       $("lvTitle").textContent=t("lvEndT"); $("lvSub").textContent=t(rvOn()?"sc1EndSR":"sc1EndS"); } return r; }; }
 // ---- tutoriel de la page (première visite, puis le bouton « ? ») ----
-function sc1TourSteps(){ const T=t("sc1Tu"); return [["#sc1Seg","",T.seg],["#sc1Grid .sc1-c","",T.cell],["#sc1Grid .sc1-c .sc1-st","",T.stars],["#sc1Grid .sc1-cup","",T.cup],["#sc1RvB","",T.rv]]; }
+function sc1TourSteps(){ const T=t("sc1Tu"); return [["#sc1Seg","",T.seg],["#sc1Grid .sc1-c","",T.cell],["#sc1Grid .sc1-c .sc1-st","",T.stars],["#sc1Grid .sc1-cup","",T.cup],["#sc1RvB","",T.rv]].filter(x=>x[2] && document.querySelector(x[0])); } // une matière sans coupe (Oreille) : 4 bulles
 const sc1TourOn = () => !!(TOUR.custom && $("tour") && !$("tour").hidden);
 function sc1TourStart(){ if(page!=="sc1" || ($("tour") && !$("tour").hidden)) return; sc1TipHide();
-  TOUR.custom=sc1TourSteps(); TOUR.kf=t("sc1TuK"); TOUR.onEnd=()=>{ S.settings.sc1Tour=1; save(); const h=$("sc1Help"); if(h) h.focus({preventScroll:true}); }; tourStart(); }
-function sc1TourAuto(){ if(page!=="sc1" || S.settings.sc1Tour || startUI() || anyWin() || endOpen) return; sc1TourStart(); }
+  TOUR.custom=sc1TourSteps(); TOUR.kf=t("sc1TuK"); TOUR.onEnd=()=>{ uaTourSet(UA.cur); save(); const h=$("sc1Help"); if(h) h.focus({preventScroll:true}); }; tourStart(); }
+function sc1TourAuto(){ if(page!=="sc1" || uaTourDone(UA.cur) || startUI() || anyWin() || endOpen) return; sc1TourStart(); }
 { const o=tourShow; tourShow=function(){ const r=o.apply(this,arguments); try{ if(TOUR.custom){ const n=$("tourNext"); if(n && !n.querySelector("kbd")){ const x=kbdEl(); x.textContent=CNAME(); n.appendChild(x); } } }catch(e){} return r; }; }
 { const o=openPage; openPage=function(pg){ const r=o.apply(this,arguments); if(page==="sc1" && pg==="sc1") setTimeout(sc1TourAuto,300); else if(sc1TourOn() && page!=="sc1") tourEnd(); sc1TipHide(); return r; }; }
 // ---- info-bulles : la Révision désactivée, les coupes ----
@@ -14011,7 +14082,7 @@ function sc1TipShow(el, auto){ const tx=el && el.dataset.tip; if(!tx) return; le
   P.addEventListener("contextmenu",e=>{ if(e.target.closest("[data-tip]")) e.preventDefault(); }); // appui long sur mobile : la bulle, pas le menu
   addEventListener("scroll",sc1TipHide,true); addEventListener("resize",sc1TipHide); }
 { const o=sc1Render; sc1Render=function(){ const r=o.apply(this,arguments); try{ const P=$("sc1Panel"), mode=sc1Mode();
-      P.querySelectorAll(".sc1-cup").forEach((c,i)=>{ const pc=SC1_PC[i], nm=sc1RowName(pc), tx=sc1Cup(mode,pc) ? t("sc1CupWon")(nm) : t("sc1CupOff")(nm);
+      P.querySelectorAll(".sc1-cup").forEach(c=>{ const pc=uaDef(mode).rows(mode).find(r=>String(r.id)===c.dataset.row).id, nm=sc1RowName(pc,mode), tx=sc1Cup(mode,pc) ? t("sc1CupWon")(nm) : t("sc1CupOff")(nm);
         c.removeAttribute("title"); c.dataset.tip=tx; c.setAttribute("aria-label",tx); c.tabIndex=0; });
       const rb=$("sc1RvB"); if(rb && rb.getAttribute("aria-disabled")==="true"){ rb.removeAttribute("title"); rb.dataset.tip=t("sc1RvNone"); rb.setAttribute("aria-label",t("sc1Rv")+" : "+t("sc1RvNone")); }
       const top=P.querySelector(".sc1-top"), hd=P.querySelector(".sc1-h"); if(top && hd){ const b=document.createElement("button"); b.type="button"; b.id="sc1Help"; b.className="sc1-help";
@@ -14088,7 +14159,7 @@ function sc1Var(cat){ const L=(t("sc1RV")||{})[cat]||[]; if(L.length<2) return L
 { const o=sc1End; sc1End=function(g){ const r=o.apply(this,arguments); try{ const s=g&&g.sc1; if(s){ const n=s.stars|0, B=$("endBody");
       const m=B.querySelector(".sc1-msg"); if(m) m.textContent=sc1Var(B.querySelector(".sc1-cupwon") ? "cup" : n===1 && s.mode==="chords" ? "1c" : String(Math.max(0,Math.min(3,n))));
       const nw=B.querySelector(".sc1-best.new"); if(nw) nw.textContent=sc1Var("rec");
-      const tot=B.querySelector(".sc1-tot"); if(tot) tot.innerHTML='<span aria-hidden="true">★ </span>'+esc(t("sc1SumA")(sc1Total(s.mode),SC1_MAX)); } }catch(e){ console.warn(e); } return r; }; }
+      const tot=B.querySelector(".sc1-tot"); if(tot) tot.innerHTML='<span aria-hidden="true">★ </span>'+esc(t("sc1SumA")(sc1Total(s.mode),sc1Max(s.mode))); } }catch(e){ console.warn(e); } return r; }; }
 
 // ---- C. série validée au bout de SR_MIN minutes de jeu ----
 const SR_MIN=10, SR_SEC=SR_MIN*60;
@@ -14359,6 +14430,257 @@ setInterval(admTick, 60000);
 { const _su=setUser; setUser=async function(u){ const r=await _su.apply(this,arguments); try{ if(!u){ ADM.is=null; ADM.uid=""; } else if(ADM.uid!==u.id) setTimeout(admTick,3000); }catch(e){} return r; }; }
 { const _nd=ntfDo; ntfDo=function(a){ if(a && a.k==="admin"){ admOpen(); return; } return _nd.apply(this,arguments); }; }
 /* ==== fin MIDI 4 ==== */
+/* ==== Matières une à une (chantier MATIÈRES, 31/10/2026) ==== */
+// Chaque matière LEARN s'ouvre sur l'écran « une à une » (page sc1, moteur UA de js/800-gammes-une-a-une.js) : Accords, Gammes, Harmonie,
+// Progressions, Oreille. La tuile « Gammes » ouvre « Gammes une à une » (plus de tuile en double). Grilles retenues :
+//   Accords      : 12 fondamentales (Do…Si | Ré♭…Si♭) × types ; TRIADES (Majeur Mineur Diminué Augmenté Sus2 Sus4, fondamental),
+//                  7e (Maj7 7 m7 ø7 °7, fondamental), RENVERSEMENTS (Majeur Mineur Diminué Maj7 7 m7 : l'accord dans toutes ses positions,
+//                  plusieurs éléments) ; coupe par ligne.
+//   Harmonie     : 12 tonalités × 7 degrés (I…VII) ; MAJEUR / MINEUR / MAJEUR 7e / MINEUR 7e ; une case = l'accord du degré ; coupe.
+//   Progressions : 12 tonalités × progressions ; BASES (I–IV–V–I, I–V–vi–IV, vi–IV–I–V, I–vi–IV–V, i–iv–v–i) / PLUS LOIN (ii–V–I,
+//                  i–VI–III–VII, blues, ii7–V7–Imaj7, canon) ; coupe.
+//   Oreille      : une case par son à reconnaître (sans lignes) ; INTERVALLES / ACCORDS / GAMMES ; une case = 6 écoutes, le son et ses
+//                  3 voisins les plus proches comme réponses (uaEarSet) ; pas de coupe.
+// Étoiles : S.uaStars[sec][mode]["<k>-<tid>"] (fusion = max par case) ; mode choisi S.settings.uaMode[sec] ; tutoriel S.settings.uaTour[sec].
+// « Configurer mon cours » #uaCfg (en haut de la page) = l'ancien écran de départ de la matière, inchangé (#secTabs). Ma route, Premiers
+// pas, l'Entraînement du jour et les jeux lancent leurs parties comme avant. Textes : ceux de Gammes une à une, remplacés le temps
+// d'une matière (UA_TX, uaUse). Test : tools/audit/r57_matieres.mjs.
+const UA_SUBJ=["chords","scales","harmony","prog","ear"];
+const uaFr = () => S.settings.lang==="fr";
+const uaLang = (fr,en) => () => uaFr() ? fr : en;
+// ---- Accords ----
+const UA_CH={tri:["maj","min","dim","aug","sus2","sus4"], sev:["maj7","dom7","min7","hdim7","dim7"], inv:["maj","min","dim","maj7","dom7","min7"]};
+const UA_CH_SH={maj:["Maj.","Maj"],min:["Min.","Min"],dim:["Dim.","Dim"],aug:["Aug.","Aug"],sus2:["Sus2","Sus2"],sus4:["Sus4","Sus4"],maj7:["Maj7","Maj7"],dom7:["7","7"],min7:["m7","m7"],hdim7:["ø7","ø7"],dim7:["°7","°7"]};
+const uaCRoot = (tid,pc) => CROOTS[tid].find(k=>keyPc(k)===pc);
+UA_DEF.chords={sec:"chords", col:"#c9463c", cups:true, rsep:7, sep:0,
+  modes:[{v:"tri",l:uaLang("Triades","Triads")},{v:"sev",l:uaLang("7e","7ths")},{v:"inv",l:uaLang("Renversements","Inversions"),s:uaLang("Renv.","Inv.")}],
+  cols:mode=>(UA_CH[mode]||UA_CH.tri).map(id=>({id, lg:uaFr()?CTYPE[id].fr:CTYPE[id].en, sh:UA_CH_SH[id][uaFr()?0:1]})),
+  rows:mode=>SC1_PC.map(pc=>({id:pc, names:[...new Set((UA_CH[mode]||UA_CH.tri).map(tid=>noteName(tonicNote(uaCRoot(tid,pc)))))]})),
+  k:(mode,tid,pc)=>uaCRoot(tid,pc),
+  item:(tid,k)=>({sec:"chords",tid,k,inv:0}),
+  queue:(tid,k,mode)=>mode==="inv" ? CTYPE[tid].iv.map((x,i)=>({sec:"chords",tid,k,inv:i})) : [{sec:"chords",tid,k,inv:0}],
+  rvItems:(tid,k,mode)=>mode==="inv" ? CTYPE[tid].iv.map((x,i)=>({sec:"chords",tid,k,inv:i})) : [{sec:"chords",tid,k,inv:0}],
+  name:(tid,k,mode)=>chordName(tid,k)+(mode==="inv"?" · "+(uaFr()?"renversements":"inversions"):""),
+  ok:(tid,k,mode)=>!!UA_CH[mode] && UA_CH[mode].includes(tid) && !!CROOTS[tid] && CROOTS[tid].includes(k),
+  lock:(tid,k)=>premType("chords",tid) || !keySimple(k), why:tid=>premType("chords",tid)?"types":"keys",
+  row:(tid,k)=>keyPc(k), rowName:pc=>noteName(tonicNote(uaCRoot("maj",pc))), tn:k=>noteName(tonicNote(k))};
+// ---- Harmonie ----
+const UA_H={hmaj:"maj",hmin:"min",hmaj7:"maj7",hmin7:"min7"};
+const uaHKey = (mode,pc) => TONICS[HTYPE[UA_H[mode]||"maj"].scale].find(k=>keyPc(k)===pc);
+UA_DEF.harmony={sec:"harmony", col:"#2c56d6", cups:true, rsep:7, sep:0,
+  modes:[{v:"hmaj",l:uaLang("Majeur","Major"),s:uaLang("Maj.","Maj.")},{v:"hmin",l:uaLang("Mineur","Minor"),s:uaLang("Min.","Min.")},{v:"hmaj7",l:uaLang("Majeur 7e","Major 7th"),s:uaLang("Maj. 7e","Maj. 7th")},{v:"hmin7",l:uaLang("Mineur 7e","Minor 7th"),s:uaLang("Min. 7e","Min. 7th")}],
+  cols:mode=>{ const h=HTYPE[UA_H[mode]||"maj"], k0=h.scale==="major"?"C":"A"; return [0,1,2,3,4,5,6].map(d=>{ const r=hChord(h.scale,k0,d,h.sev).roman; return {id:String(d), lg:r, sh:r}; }); },
+  rows:mode=>SC1_PC.map(pc=>({id:pc, names:[noteName(tonicNote(uaHKey(mode,pc)))]})),
+  k:(mode,tid,pc)=>uaHKey(mode,pc),
+  item:(tid,k,mode)=>({sec:"harmony",tid:UA_H[mode]||"maj",k,deg:+tid}),
+  name:(tid,k,mode)=>itemName({sec:"harmony",tid:UA_H[mode]||"maj",k,deg:+tid}),
+  ok:(tid,k,mode)=>!!UA_H[mode] && /^[0-6]$/.test(String(tid)) && TONICS[HTYPE[UA_H[mode]].scale].includes(k),
+  lock:(tid,k,mode)=>premType("harmony",UA_H[mode]||"maj") || !keySimple(k), why:(tid,k,mode)=>premType("harmony",UA_H[mode]||"maj")?"types":"keys",
+  row:(tid,k)=>keyPc(k), rowName:(pc,mode)=>noteName(tonicNote(uaHKey(mode,pc)))};
+// ---- Progressions ----
+const UA_P={pbase:["p145","pop","pop2","fifties","m145"], padv:["ii5i","mpop","blues","jazz","canon"]};
+const uaPKey = (pid,pc) => TONICS[PROG[pid].scale].find(k=>keyPc(k)===pc);
+const uaPName = pid => progName(pid)+(PROG[pid].scale==="minor"?(uaFr()?" (min.)":" (min.)"):"");
+UA_DEF.prog={sec:"prog", col:"#6a3fd1", cups:true, rsep:7, sep:0,
+  modes:[{v:"pbase",l:uaLang("Bases","Basics")},{v:"padv",l:uaLang("Plus loin","Further")}],
+  cols:mode=>(UA_P[mode]||UA_P.pbase).map(id=>({id, lg:uaPName(id), sh:uaPName(id)})),
+  rows:mode=>SC1_PC.map(pc=>({id:pc, names:[...new Set((UA_P[mode]||UA_P.pbase).map(pid=>noteName(tonicNote(uaPKey(pid,pc)))))]})),
+  k:(mode,pid,pc)=>uaPKey(pid,pc),
+  item:(pid,k)=>({sec:"prog",tid:pid,k}),
+  name:(pid,k)=>itemName({sec:"prog",tid:pid,k}),
+  ok:(pid,k,mode)=>!!UA_P[mode] && UA_P[mode].includes(pid) && TONICS[PROG[pid].scale].includes(k),
+  lock:(pid,k)=>premType("prog",pid) || !keySimple(k), why:pid=>premType("prog",pid)?"types":"keys",
+  row:(pid,k)=>keyPc(k), rowName:pc=>noteName(tonicNote(uaPKey("p145",pc))), tn:k=>noteName(tonicNote(k))};
+// ---- Oreille ----
+const UA_E={eint:"int", echord:"chord", escale:"scale"};
+// the answers of a listen: the sound and its 3 closest neighbours in the list (intervals by size, chords and scales by family)
+function uaEarSet(cat,id){ const L=earAnswers(cat).map(a=>a.id), i=L.indexOf(id);
+  const near=L.map((x,j)=>[x,Math.abs(j-i)]).filter(([x])=>x!==id).sort((a,b)=>a[1]-b[1]).slice(0,3).map(x=>x[0]); return L.filter(x=>x===id||near.includes(x)); }
+const uaEarItem = (cat,id) => ({sec:"ear",tid:cat,k:id,uaSet:uaEarSet(cat,id)});
+// 6 listens: the sound 3 times, its neighbours 3 times, mixed
+function uaEarQueue(cat,id){ const set=uaEarSet(cat,id), o=set.filter(x=>x!==id), q=[id,id,id].concat([0,1,2].map(()=>o[Math.floor(Math.random()*o.length)]));
+  for(let i=q.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [q[i],q[j]]=[q[j],q[i]]; } return q.map(k=>({sec:"ear",tid:cat,k,uaSet:set})); }
+UA_DEF.ear={sec:"ear", col:"#0e7490", cups:false, flat:true,
+  modes:[{v:"eint",l:uaLang("Intervalles","Intervals"),s:uaLang("Interv.","Interv.")},{v:"echord",l:uaLang("Accords","Chords")},{v:"escale",l:uaLang("Gammes","Scales")}],
+  cols:mode=>{ const cat=UA_E[mode]||"int"; return earAnswers(cat).map(a=>({id:a.id, lg:earLabel(cat,a.id), sh:cat==="int"?earLabel(cat,a.id,true):earLabel(cat,a.id)})); },
+  rows:mode=>[{id:UA_E[mode]||"int", names:[""]}],
+  k:mode=>UA_E[mode]||"int",
+  item:(id,cat)=>uaEarItem(cat,id), queue:(id,cat)=>uaEarQueue(cat,id), rvItems:(id,cat)=>[uaEarItem(cat,id)],
+  name:(id,cat)=>earLabel(cat,id),
+  ok:(id,cat,mode)=>UA_E[mode]===cat && earAnswers(cat).some(a=>a.id===id),
+  lock:(id,cat)=>premType("ear",cat), why:()=>"types", row:()=>null, rowName:()=>""};
+
+// ---- textes : ceux de Gammes une à une, remplacés le temps d'une autre matière ----
+const uaCap = s => s.charAt(0).toUpperCase()+s.slice(1);
+// o : nm (titre), one/ones (élément), le, ce (« cet accord »), un, f (féminin), r1 (1 étoile), show (« je te montre … »), play (« tu … »), ev, seg (bulles du sous-mode)
+function uaTxFr(o){ const e=o.f?"e":"", tous=o.f?"toutes les ":"tous les ";
+  return {sc1Name:o.nm, sc1OrC:c=>"Joue "+c+" pour "+(o.f?"la prochaine ":"le prochain ")+o.one,
+    sc1R:n=>n>=3?"Sans faute !":n===2?uaCap(o.one)+" fini"+e+" !":n===1?o.r1+", continue !":"Prêt pour un nouvel essai ?",
+    sc1New:"Nouveau record pour "+o.ce+" !", sc1Back:uaCap(tous+o.ones), sc1CupNtf:uaCap(tous+o.ones)+" de la ligne à 3 étoiles.",
+    sc1CupA:(x,on)=>"Coupe de "+x+(on?" : gagnée":" : "+tous+o.ones+" à 3 étoiles"), sc1CupOff:x=>"Termine "+tous+o.ones+" de "+x+" avec 3 étoiles pour gagner la coupe.",
+    sc1TmA:"Mode", sc1See:o.see, sc1DemoSub:o.demo, sc1DemoSubC:o.demo, sc1TurnSub:o.turn, sc1WellSub:"Rejoue ou passe à l'évaluation.",
+    sc1PkTr:o.pkTr, sc1PkTrC:o.pkTr, sc1PkEv:o.pkEv, sc1PkEvC:o.pkEv,
+    sc1RvB:n=>"Révision · "+(n>1?"tes "+n+" "+o.ones:o.f?"ta "+o.one:"ton "+o.one), sc1RvBS:n=>n>1?"Tes "+n+" "+o.ones:(o.f?"Ta ":"Ton ")+o.one,
+    sc1RvTi:n=>"Révision de "+(n>1?"tes "+n+" "+o.ones:o.f?"ta "+o.one:"ton "+o.one), sc1RvNone:"Termine "+o.un+" avec 3 étoiles pour débloquer la révision.",
+    sc1RvTx:"Rejoue d'un coup "+tous+o.ones+" que tu as réussi"+(o.f?"es":"s")+" sans faute (3 étoiles), pour les garder en mémoire.", sc1RvN:(n,m)=>n+" "+(n>1?o.ones:o.one)+" · "+m,
+    sc1EndS:"Ta progression sur "+o.ce+" ne sera pas comptée.",
+    sc1Tu:{seg:o.seg, cell:["Une case = "+o.un,["Touche une case pour "+o.go+".","{train}**Entraînement** : "+o.trTu+" Rien n'est noté.","{eval}**Évaluation** : "+o.evTu]],
+      stars:["Les étoiles",["{s1}1 étoile : "+o.r1.toLowerCase()+".","{s2}2 étoiles : "+o.le+" fini"+e+", avec au moins une faute.","{s3}3 étoiles : "+o.le+" fini"+e+" sans faute."]],
+      cup:["La coupe",["Au bout de chaque ligne, une coupe.","Tu la gagnes quand "+tous+o.ones+" de la ligne ont 3 étoiles."]],
+      rv:["La révision",["Rejoue d'un coup "+tous+o.ones+" à 3 étoiles, pour les garder en mémoire.","Elle s'ouvre dès "+(o.f?"ta première ":"ton premier ")+o.one+" à 3 étoiles."]],
+      cfg:UA_TU_CFG.fr},
+    sc1RV:{3:["Sans faute !","Parfait, pas une seule faute !","Impeccable, du premier coup !","Zéro faute, bravo !","Propre et net : 3 étoiles !"],
+      2:[uaCap(o.one)+" fini"+e+" !","Jusqu'au bout ! Le sans-faute est tout près.","Bien tenu jusqu'à la fin !"],
+      1:[o.r1+", continue !","Bon début, continue !","Le début est là, la suite va venir !"], "1c":[o.r1+", continue !","Bon début, continue !"],
+      0:["Prêt pour un nouvel essai ?","On remet ça ?","Chaque essai compte, on recommence ?","Pas grave, on y retourne ?"],
+      cup:["Toute la ligne à 3 étoiles, chapeau !","Une coupe de plus dans ta vitrine !","Quelle régularité : la ligne complète !"],
+      rec:["Nouveau record pour "+o.ce+" !","Mieux que la dernière fois !","Record battu, tu progresses !"]}}; }
+function uaTxEn(o){ return {sc1Name:o.nm, sc1OrC:c=>"Play "+c+" for the next "+o.one,
+    sc1R:n=>n>=3?"No mistake!":n===2?uaCap(o.one)+" finished!":n===1?o.r1+", keep going!":"Ready for another go?",
+    sc1New:"New best for this "+o.one+"!", sc1Back:"All "+o.ones, sc1CupNtf:"All the "+o.ones+" of the row at 3 stars.",
+    sc1CupA:(x,on)=>x+" cup"+(on?": won":": all the "+o.ones+" at 3 stars"), sc1CupOff:x=>"Finish all the "+x+" "+o.ones+" with 3 stars to win the cup.",
+    sc1TmA:"Mode", sc1See:o.see, sc1DemoSub:o.demo, sc1DemoSubC:o.demo, sc1TurnSub:o.turn, sc1WellSub:"Play again or take the test.",
+    sc1PkTr:o.pkTr, sc1PkTrC:o.pkTr, sc1PkEv:o.pkEv, sc1PkEvC:o.pkEv,
+    sc1RvB:n=>"Review · "+(n>1?"your "+n+" "+o.ones:"your "+o.one), sc1RvBS:n=>n>1?"Your "+n+" "+o.ones:"Your "+o.one,
+    sc1RvTi:n=>"Review your "+(n>1?n+" "+o.ones:o.one), sc1RvNone:"Finish a "+o.one+" with 3 stars to unlock the review.",
+    sc1RvTx:"Play again, in one go, every "+o.one+" you nailed without a mistake (3 stars), to keep them in mind.", sc1RvN:(n,m)=>n+" "+(n>1?o.ones:o.one)+" · "+m,
+    sc1EndS:"Your progress on this "+o.one+" won't count.",
+    sc1Tu:{seg:o.seg, cell:["One box = one "+o.one,["Tap a box to "+o.go+".","{train}**Practice**: "+o.trTu+" Nothing is scored.","{eval}**Test**: "+o.evTu]],
+      stars:["The stars",["{s1}1 star: "+o.r1.toLowerCase()+".","{s2}2 stars: the "+o.one+" finished, with at least one mistake.","{s3}3 stars: the "+o.one+" finished with no mistake."]],
+      cup:["The cup",["At the end of each row, a cup.","You win it when all the "+o.ones+" of the row have 3 stars."]],
+      rv:["The review",["Play all your 3-star "+o.ones+" again in one go, to keep them in mind.","It opens with your first 3-star "+o.one+"."]],
+      cfg:UA_TU_CFG.en},
+    sc1RV:{3:["No mistake!","Perfect, not a single mistake!","Spotless, first time!","Zero mistakes, well done!","Clean and neat: 3 stars!"],
+      2:[uaCap(o.one)+" finished!","Right to the end! A clean run is close.","You held on to the end!"],
+      1:[o.r1+", keep going!","Good start, keep going!","The start is there, the rest will come!"], "1c":[o.r1+", keep going!","Good start, keep going!"],
+      0:["Ready for another go?","Shall we go again?","Every try counts, again?","No problem, let's go again?"],
+      cup:["The whole row at 3 stars, hats off!","One more cup in your cabinet!","So steady: the full row!"],
+      rec:["New best for this "+o.one+"!","Better than last time!","Record broken, you're improving!"]}}; }
+const UA_TU_CFG={fr:["Configurer mon cours",["Tu préfères choisir toi-même ? Ici, tu règles ton cours comme avant : types, tonalités, chrono, aides.","Ces parties-là ne changent pas tes étoiles."]],
+  en:["Set up my lesson",["Prefer to choose yourself? Here you set up your lesson as before: types, keys, timer, helps.","Those games don't change your stars."]]};
+const UA_TX={fr:{
+  chords:uaTxFr({nm:"Accords un à un", one:"accord", ones:"accords", le:"l'accord", ce:"cet accord", un:"un accord", r1:"3 notes justes", go:"jouer l'accord",
+    see:"Revoir l'accord", demo:"Regarde et écoute l'accord, note par note.", turn:"À toi : joue-le. Ici, rien n'est noté.",
+    pkTr:"Je te montre l'accord note par note, puis tu le joues avec les touches allumées et les doigtés. Rien n'est noté, à ton rythme.", pkEv:"Tu joues l'accord sans aide. Sans faute : 3 étoiles.",
+    trTu:"je te montre l'accord, puis tu le joues avec les touches allumées et les doigtés.", evTu:"tu le joues seul, sans aide, pour gagner des étoiles.",
+    seg:["Triades, 7e, renversements",["**TRIADES** : les accords de 3 notes, en position fondamentale.","**7e** : les accords de 4 notes.","**RENVERSEMENTS** : le même accord dans toutes ses positions, l'une après l'autre.","Chaque mode a ses propres étoiles."]]}),
+  harmony:uaTxFr({nm:"Harmonie degré par degré", one:"degré", ones:"degrés", le:"l'accord", ce:"ce degré", un:"un degré", r1:"3 notes justes", go:"jouer l'accord de ce degré",
+    see:"Revoir l'accord", demo:"Regarde et écoute l'accord du degré, note par note.", turn:"À toi : joue-le. Ici, rien n'est noté.",
+    pkTr:"Je te montre l'accord du degré note par note, puis tu le joues avec les touches allumées et les doigtés. Rien n'est noté, à ton rythme.", pkEv:"Tu joues l'accord du degré sans aide. Sans faute : 3 étoiles.",
+    trTu:"je te montre l'accord du degré, puis tu le joues avec les touches allumées et les doigtés.", evTu:"tu le joues seul, sans aide, pour gagner des étoiles.",
+    seg:["Majeur, mineur, 7e",["Une ligne = une tonalité, une colonne = un degré (I à VII).","**MAJEUR** / **MINEUR** : les accords de 3 notes de la tonalité.","**7e** : les mêmes degrés en accords de 4 notes.","Chaque mode a ses propres étoiles."]]}),
+  prog:uaTxFr({nm:"Progressions une à une", one:"progression", ones:"progressions", le:"la progression", ce:"cette progression", un:"une progression", f:true, r1:"3 accords justes", go:"la jouer",
+    see:"Revoir la progression", demo:"Regarde et écoute les accords de la progression, un par un.", turn:"À toi : rejoue-la. Ici, rien n'est noté.",
+    pkTr:"Je te montre les accords de la progression un par un, puis tu les rejoues avec les touches allumées. Rien n'est noté, à ton rythme.", pkEv:"Tu joues la progression sans aide. Sans faute : 3 étoiles.",
+    trTu:"je te montre la progression, puis tu la rejoues avec les touches allumées et les doigtés.", evTu:"tu la joues seul, sans aide, pour gagner des étoiles.",
+    seg:["Bases ou plus loin",["Une ligne = une tonalité, une colonne = une progression.","**BASES** : les enchaînements des chansons les plus connues.","**PLUS LOIN** : jazz, blues, canon…","Chaque mode a ses propres étoiles."]]}),
+  ear:uaTxFr({nm:"Oreille son par son", one:"son", ones:"sons", le:"le son", ce:"ce son", un:"un son", r1:"3 bonnes réponses", go:"t'entraîner à le reconnaître",
+    see:"Réécouter les sons", demo:"Écoute chaque son et retiens son nom.", turn:"À toi : quel son entends-tu ? Ici, rien n'est noté.",
+    pkTr:"Je te fais écouter le son et ses voisins, chacun avec son nom, puis tu devines à ton rythme. Rien n'est noté.", pkEv:"6 écoutes sans aide : reconnais le son parmi ses voisins. Sans faute : 3 étoiles.",
+    trTu:"je te fais écouter le son et ses voisins, puis tu devines.", evTu:"6 écoutes sans aide pour gagner des étoiles.",
+    seg:["Intervalles, accords, gammes",["**INTERVALLES** : l'écart entre deux notes.","**ACCORDS** : majeur, mineur, 7e…","**GAMMES** : majeure, mineure, pentatonique…","Chaque mode a ses propres étoiles."]]})},
+ en:{
+  chords:uaTxEn({nm:"Chords one by one", one:"chord", ones:"chords", r1:"3 right notes", go:"play the chord",
+    see:"See the chord again", demo:"Watch and listen to the chord, note by note.", turn:"Your turn: play it. Nothing is scored here.",
+    pkTr:"I show you the chord note by note, then you play it with the keys lit and the fingering. Nothing is scored, take your time.", pkEv:"You play the chord without help. No mistake: 3 stars.",
+    trTu:"I show you the chord, then you play it with the keys lit and the fingering.", evTu:"you play it on your own, with no help, to win stars.",
+    seg:["Triads, 7ths, inversions",["**TRIADS**: 3-note chords, in root position.","**7THS**: 4-note chords.","**INVERSIONS**: the same chord in all its positions, one after the other.","Each mode has its own stars."]]}),
+  harmony:uaTxEn({nm:"Harmony degree by degree", one:"degree", ones:"degrees", r1:"3 right notes", go:"play the chord of this degree",
+    see:"See the chord again", demo:"Watch and listen to the chord of the degree, note by note.", turn:"Your turn: play it. Nothing is scored here.",
+    pkTr:"I show you the chord of the degree note by note, then you play it with the keys lit and the fingering. Nothing is scored, take your time.", pkEv:"You play the chord of the degree without help. No mistake: 3 stars.",
+    trTu:"I show you the chord of the degree, then you play it with the keys lit and the fingering.", evTu:"you play it on your own, with no help, to win stars.",
+    seg:["Major, minor, 7ths",["One row = one key, one column = one degree (I to VII).","**MAJOR** / **MINOR**: the 3-note chords of the key.","**7TH**: the same degrees as 4-note chords.","Each mode has its own stars."]]}),
+  prog:uaTxEn({nm:"Progressions one by one", one:"progression", ones:"progressions", r1:"3 right chords", go:"play it",
+    see:"See the progression again", demo:"Watch and listen to the chords of the progression, one by one.", turn:"Your turn: play it again. Nothing is scored here.",
+    pkTr:"I show you the chords of the progression one by one, then you play them back with the keys lit. Nothing is scored, take your time.", pkEv:"You play the progression without help. No mistake: 3 stars.",
+    trTu:"I show you the progression, then you play it back with the keys lit and the fingering.", evTu:"you play it on your own, with no help, to win stars.",
+    seg:["Basics or further",["One row = one key, one column = one progression.","**BASICS**: the chord changes of the best-known songs.","**FURTHER**: jazz, blues, canon…","Each mode has its own stars."]]}),
+  ear:uaTxEn({nm:"Ear, sound by sound", one:"sound", ones:"sounds", r1:"3 right answers", go:"practise recognising it",
+    see:"Hear the sounds again", demo:"Listen to each sound and remember its name.", turn:"Your turn: which sound do you hear? Nothing is scored here.",
+    pkTr:"I play you the sound and its neighbours, each with its name, then you guess at your own pace. Nothing is scored.", pkEv:"6 listens without help: recognise the sound among its neighbours. No mistake: 3 stars.",
+    trTu:"I play you the sound and its neighbours, then you guess.", evTu:"6 listens with no help, to win stars.",
+    seg:["Intervals, chords, scales",["**INTERVALS**: the gap between two notes.","**CHORDS**: major, minor, 7th…","**SCALES**: major, minor, pentatonic…","Each mode has its own stars."]]})}};
+Object.assign(TXT.fr,{uaCfg:"Configurer mon cours", uaCfgS:"Configurer", uaCfgA:"Configurer mon cours : choisir les types, les tonalités, le chrono et les aides, comme avant"});
+Object.assign(TXT.en,{uaCfg:"Set up my lesson", uaCfgS:"Set up", uaCfgA:"Set up my lesson: choose the types, keys, timer and helps, as before"});
+TXT.fr.sc1Tu.cfg=UA_TU_CFG.fr; TXT.en.sc1Tu.cfg=UA_TU_CFG.en;
+// the scales' own texts are kept aside, and put back when the scales are shown again
+const UA_TXB={fr:{}, en:{}};
+["fr","en"].forEach(L=>Object.values(UA_TX[L]).forEach(o=>Object.keys(o).forEach(k=>{ if(!(k in UA_TXB[L])) UA_TXB[L][k]=TXT[L][k]; })));
+let uaTxOn="scales";
+function uaTx(sec){ if(uaTxOn===sec) return; uaTxOn=sec; ["fr","en"].forEach(L=>{ const o=UA_TX[L][sec]||{}; Object.keys(UA_TXB[L]).forEach(k=>{ TXT[L][k] = k in o ? o[k] : UA_TXB[L][k]; }); }); }
+{ const o=uaUse; uaUse=function(sec){ const r=o.apply(this,arguments); uaTx(UA.cur); return r; }; }
+
+// ---- LEARN : les tuiles des matières ouvrent leur page « une à une » ----
+function uaOpen(sec){ if(!UA_DEF[sec]) return; uaUse(sec); openPage("sc1"); }
+const uaAll = sec => UA_DEF[sec].modes.reduce((a,m)=>[a[0]+sc1Total(m.v), a[1]+sc1Max(m.v)],[0,0]);
+function uaTiles(){ const box=$("learnTiles"); if(!box) return; const L=t("learnTiles");
+  [...box.children].forEach((el,i)=>{ const row=L[i]; if(!row || !UA_DEF[row[0]]) return; const sec=row[0], [n,m]=uaAll(sec);
+    const c=tile({color:TILE_COL[sec],obj:sec,kick:"Learn",title:row[1],desc:row[2],btn:t("rnPlay"),rec:"★ "+fmtN(n)+" / "+fmtN(m),onOpen:()=>uaOpen(sec)});
+    c.dataset.id=sec; c.classList.add("ua-tile"); if(sec==="scales") c.classList.add("sc1-tile"); el.replaceWith(c); }); }
+{ const o=renderLearn; renderLearn=function(){ const r=o.apply(this,arguments); try{ uaTiles(); }catch(e){ console.warn(e); } return r; }; }
+if(page==="learn") renderLearn();
+
+// ---- « Configurer mon cours » : l'ancien écran de départ de la matière ----
+function uaCfg(){ const sec=UA.cur, b=$("secTabs").querySelector('[data-v="'+sec+'"]'); if(!b) return; sc1TipHide();
+  if(!game && phase!=="idle") phase="idle"; // the start screen shows when nothing runs
+  b.click(); }
+{ const o=sc1Render; sc1Render=function(){ const r=o.apply(this,arguments); try{ const P=$("sc1Panel"), hd=$("sc1Help")||P.querySelector(".sc1-h"); if(!hd) return r;
+    const b=document.createElement("button"); b.type="button"; b.id="uaCfg"; b.className="btn ua-cfg"; b.setAttribute("aria-label",t("uaCfgA"));
+    b.innerHTML='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h10M18 6h2M4 12h4M12 12h8M4 18h12M20 18h0"/><circle cx="16" cy="6" r="2"/><circle cx="10" cy="12" r="2"/><circle cx="18" cy="18" r="2"/></svg><span class="lg">'+esc(t("uaCfg"))+'</span><span class="sh" aria-hidden="true">'+esc(t("uaCfgS"))+'</span>';
+    b.onclick=uaCfg; hd.after(b); }catch(e){ console.warn(e); } return r; }; }
+{ const o=sc1TourSteps; sc1TourSteps=function(){ const r=o.apply(this,arguments), T=t("sc1Tu"); if(T && T.cfg && $("uaCfg")) r.push(["#uaCfg","",T.cfg]); return r; }; }
+
+// ---- Oreille : les réponses d'une écoute = le son et ses voisins ; démonstration ; entraînement ----
+const UAE={dm:-1};
+{ const o=renderAnswers; renderAnswers=function(){ if(!(cur && cur.sec==="ear" && Array.isArray(cur.uaSet))) return o.apply(this,arguments);
+    const box=$("answers"); box.innerHTML=""; const demo=!!(SC1.demo && sc1Tr());
+    cur.uaSet.forEach((id,i)=>{ const b=document.createElement("button"); b.type="button"; b.textContent=earLabel(cur.tid,id);
+      if(demo){ b.disabled=true; if(i===UAE.dm) b.classList.add("ua-dm"); }
+      else if(phase!=="listening"){ b.disabled=true; if(id===cur.k) b.classList.add("right"); else if(id===earPick) b.classList.add("wrong"); }
+      b.onclick=()=>earAnswer(id); box.appendChild(b); }); }; }
+function uaEarSound(cat,ms){ if(cat==="int"){ tone(ms[0],0,.9,.22); tone(ms[1],.6,.9,.22); }
+  else if(cat==="chord") ms.forEach(m=>tone(m,0,1.3,.16));
+  else ms.forEach((m,i)=>tone(m,i*.2,.3,.2)); }
+const uaEarStep = cat => cat==="scale" ? 2.9 : 2.1;
+// the demo of a listen: each sound of the set, named, then « your turn »
+{ const o=sc1Demo; sc1Demo=function(){ if(!(sc1Tr() && cur && cur.sec==="ear" && Array.isArray(cur.uaSet))) return o.apply(this,arguments);
+    const g=game, set=cur.uaSet, cat=cur.tid, root=cur.root!=null?cur.root:(cat==="scale"?52:55);
+    clearTimeout(advanceTimer); clearPlayTimers(); autoHelpHide(); cancelAnimationFrame(raf);
+    phase="revealed"; SC1.demo=true; UAE.dm=-1; earPick=null; render();
+    const step=uaEarStep(cat);
+    set.forEach((id,i)=>playTimers.push(setTimeout(()=>{ if(game!==g || !SC1.demo || phase!=="revealed") return; UAE.dm=i; renderAnswers();
+      uaEarSound(cat, earMidis({tid:cat,k:id,root})); }, (.3+i*step)*1000)));
+    playTimers.push(setTimeout(()=>{ if(game===g && SC1.demo && phase==="revealed"){ UAE.dm=-1; sc1Turn(); } }, (.3+set.length*step+.4)*1000)); }; }
+// « À toi » / « Rejouer » : Oreille = une nouvelle écoute ; renversements = la case depuis le début
+{ const o=sc1Turn; sc1Turn=function(){ if(!sc1Tr() || !cur) return o.apply(this,arguments); const s=game.sc1;
+    if(cur.sec==="ear" && Array.isArray(cur.uaSet)){ SC1.demo=false; UAE.dm=-1; clearPlayTimers(); const set=cur.uaSet;
+      startRound({...cur, k:set[Math.floor(Math.random()*set.length)], root:null}, true); return; }
+    if(phase==="success" && s && s.multi){ sc1Play(s.tid,s.k,s.mode,"train"); return; }
+    return o.apply(this,arguments); }; }
+// a wrong answer while training (Oreille): the right one is shown and heard, nothing more
+{ const o=earAnswer; earAnswer=function(id){ if(!(sc1Tr() && phase==="listening" && cur && cur.sec==="ear") || id===cur.k) return o.apply(this,arguments);
+    earPick=id; errors=1; phase="revealed"; SC1.demo=false; render(); try{ showEarKeys(); playScale(0); }catch(e){} }; }
+// renversements en entraînement : chaque position réussie passe à la suivante (démonstration, puis à toi) ; « Bien joué » à la fin
+{ const o=success; success=function(){ if(!(sc1Tr() && game.sc1.multi && cur && cur.sec!=="ear" && game.i<game.total-1)) return o.apply(this,arguments);
+    const g=game; phase="success"; SC1.demo=false; cancelAnimationFrame(raf); clearTimeout(advanceTimer);
+    try{ const root=48+(seqMidis()[0]%12); [0,4,7].forEach((iv,i)=>tone(root+iv+24,i*.07,.4,.14)); }catch(e){}
+    render(); playTimers.push(setTimeout(()=>{ if(game===g && phase==="success" && sc1Tr()){ startRound(); sc1Demo(); } },900)); }; }
+// the actions of that short pause: nothing to press
+{ const o=renderActions; renderActions=function(){ const r=o.apply(this,arguments); try{ if(sc1Tr() && phase==="success" && game.sc1.multi && cur && cur.sec!=="ear" && game.i<game.total-1) $("actions").innerHTML="";
+      else if(sc1Tr() && phase==="listening" && cur && cur.sec==="ear"){ const a=$("actions"), b=document.createElement("button"); b.type="button"; b.className="btn primary"; b.id="uaReplay"; b.textContent=tx("replay"); b.onclick=()=>playScale(0); a.appendChild(b); } }catch(e){} return r; }; }
+
+// ---- fusion entre appareils : étoiles (max par case), tutoriels vus (OU) ----
+{ const o=mergeState; mergeState=function(local, cloud){ const r=o.apply(this,arguments); try{
+      const a=uaIsO(local)&&uaIsO(local.uaStars)?local.uaStars:{}, b=uaIsO(cloud)&&uaIsO(cloud.uaStars)?cloud.uaStars:{};
+      if(Object.keys(a).length || Object.keys(b).length){ const m={};
+        UA_SUBJ.filter(s=>s!=="scales").forEach(sec=>UA_DEF[sec].modes.forEach(({v})=>{ const x={};
+          [a[sec],b[sec]].forEach(o2=>{ const z=uaIsO(o2)&&uaIsO(o2[v])?o2[v]:null; if(z) Object.entries(z).forEach(([k,n])=>{ n=Math.max(0,Math.min(3,Math.floor(+n)||0)); if(n && /^[A-Za-z#]+-[A-Za-z0-9#]+$/.test(k)) x[k]=Math.max(x[k]||0,n); }); });
+          if(Object.keys(x).length){ (m[sec]=m[sec]||{})[v]=x; } }));
+        r.merged.uaStars=m; }
+      const ta=local&&local.settings&&local.settings.uaTour, tb=cloud&&cloud.settings&&cloud.settings.uaTour;
+      if(r.merged && r.merged.settings && (uaIsO(ta)||uaIsO(tb))){ const u={}; [ta,tb].forEach(x=>{ if(uaIsO(x)) Object.keys(x).forEach(k=>{ if(UA_DEF[k] && x[k]) u[k]=1; }); }); r.merged.settings.uaTour=u; }
+      r.changed=!syncSame(r.merged,local); }catch(e){ console.warn(e); } return r; }; }
+/* ==== fin Matières une à une ==== */
 // ---------- Boot ----------
 
 applyStatic(); applySide(); buildKeyboard(); renderSettings(); render(); renderDaily(); openPage("hub");

@@ -1,5 +1,5 @@
 // Chantier GAMMES UNE À UNE v3 (retours d'Antoine du 27/10/2026).
-// A. Tutoriel à la première visite de la page sc1 (moteur #tour : « Étape i sur 5 », bulle sur NOTES | ACCORDS, une case, les étoiles,
+// A. Tutoriel à la première visite de la page sc1 (moteur #tour : « Étape i sur 6 » (6e : Configurer mon cours, chantier MATIÈRES), bulle sur NOTES | ACCORDS, une case, les étoiles,
 //    la coupe, la Révision ; Suivant / Précédent / croix ; Do MIDI = Suivant ; mémorisé dans S.settings.sc1Tour ; « ? » #sc1Help pour le revoir ; EN).
 // B. Info-bulles exactes (#sc1Tip) : Révision désactivée, coupe éteinte / gagnée (survol souris, tap).
 // C. Touches de notes (kbd.kn) seulement avec un vrai clavier MIDI : fenêtre du choix sans « Conseillé », débranchement / rebranchement,
@@ -59,28 +59,30 @@ let p = await open({ st: STATE({ set: {} }) });
 await toList(p);
 check('1re visite de Gammes une à une : le tutoriel s’ouvre', await tourVis(p));
 let tu = await tour(p);
-check('étape 1 : « Étape 1 sur 5 », NOTES / ACCORDS, bulle sur le sélecteur', tu.k === 'Étape 1 sur 5' && /Notes ou accords/.test(tu.h) && await holeOn(p, '#sc1Seg'), tu);
+check('étape 1 : « Étape 1 sur 6 », NOTES / ACCORDS, bulle sur le sélecteur', tu.k === 'Étape 1 sur 6' && /Notes ou accords/.test(tu.h) && await holeOn(p, '#sc1Seg'), tu);
 check('bouton Suivant : la touche Do affichée (clavier MIDI branché)', tu.kbd === 'Do', tu);
 if (CAP) await p.screenshot({ path: `${CAP}/01_tutoriel_ipad.png` });
 await ev(p, () => document.getElementById('tourNext').click()); await W(p, 350);
 tu = await tour(p);
-check('étape 2 : une case de gamme, Entraînement et Évaluation expliqués', tu.k === 'Étape 2 sur 5' && await holeOn(p, '#sc1Grid .sc1-c') && await ev(p, () => /Entraînement/.test(document.getElementById('tourL').textContent) && /Évaluation/.test(document.getElementById('tourL').textContent)), tu);
+check('étape 2 : une case de gamme, Entraînement et Évaluation expliqués', tu.k === 'Étape 2 sur 6' && await holeOn(p, '#sc1Grid .sc1-c') && await ev(p, () => /Entraînement/.test(document.getElementById('tourL').textContent) && /Évaluation/.test(document.getElementById('tourL').textContent)), tu);
 await nat(p, [0x90, 60, 90], 300); await nat(p, [0x80, 60, 0]);
 tu = await tour(p);
-check('Do seul (MIDI) = Suivant : étape 3, les étoiles (1 / 2 / 3)', tu.k === 'Étape 3 sur 5' && await holeOn(p, '#sc1Grid .sc1-c .sc1-st') && await ev(p, () => document.querySelectorAll('#tourL li').length === 3) && await p.X('page') === 'sc1' && await ev(p, () => document.getElementById('sc1Pick').hidden), tu);
+check('Do seul (MIDI) = Suivant : étape 3, les étoiles (1 / 2 / 3)', tu.k === 'Étape 3 sur 6' && await holeOn(p, '#sc1Grid .sc1-c .sc1-st') && await ev(p, () => document.querySelectorAll('#tourL li').length === 3) && await p.X('page') === 'sc1' && await ev(p, () => document.getElementById('sc1Pick').hidden), tu);
 await ev(p, () => document.getElementById('tourPrev').click()); await W(p, 350);
-check('Précédent : retour à l’étape 2', (await tour(p)).k === 'Étape 2 sur 5');
+check('Précédent : retour à l’étape 2', (await tour(p)).k === 'Étape 2 sur 6');
 await ev(p, () => document.getElementById('tourNext').click()); await W(p, 300); await ev(p, () => document.getElementById('tourNext').click()); await W(p, 350);
-check('étape 4 : la coupe en bout de ligne', (await tour(p)).k === 'Étape 4 sur 5' && await holeOn(p, '#sc1Grid .sc1-cup'));
+check('étape 4 : la coupe en bout de ligne', (await tour(p)).k === 'Étape 4 sur 6' && await holeOn(p, '#sc1Grid .sc1-cup'));
 await ev(p, () => document.getElementById('tourNext').click()); await W(p, 350);
-check('étape 5 : le bouton Révision', (await tour(p)).k === 'Étape 5 sur 5' && await holeOn(p, '#sc1RvB'));
+check('étape 5 : le bouton Révision', (await tour(p)).k === 'Étape 5 sur 6' && await holeOn(p, '#sc1RvB'));
+await ev(p, () => document.getElementById('tourNext').click()); await W(p, 350);
+check('étape 6 (chantier MATIÈRES) : « Configurer mon cours »', (await tour(p)).k === 'Étape 6 sur 6' && await holeOn(p, '#uaCfg'));
 await ev(p, () => document.getElementById('tourNext').click()); await W(p, 350);
 check('Terminé : tutoriel fermé, mémorisé (S.settings.sc1Tour), le tutoriel général non touché', !await tourVis(p) && (await stored(p)).settings.sc1Tour === 1 && (await stored(p)).tourDone === 1);
 await ev(p, () => document.getElementById('homeLink').click()); await W(p, 300); await toList(p);
 check('2e visite : pas de tutoriel', !await tourVis(p));
 check('bouton « ? » discret pour le revoir', await ev(p, () => { const h = document.getElementById('sc1Help'); return !!h && h.getAttribute('aria-label') === 'Revoir le tutoriel' && h.getBoundingClientRect().width <= 32; }));
 await ev(p, () => document.getElementById('sc1Help').click()); await W(p, 350);
-check('« ? » relance le tutoriel à l’étape 1', await tourVis(p) && (await tour(p)).k === 'Étape 1 sur 5');
+check('« ? » relance le tutoriel à l’étape 1', await tourVis(p) && (await tour(p)).k === 'Étape 1 sur 6');
 await ev(p, () => document.getElementById('tourX').click()); await W(p, 300);
 check('croix : fermé', !await tourVis(p));
 check('aucune erreur JS (A)', !p.errs.length, p.errs);

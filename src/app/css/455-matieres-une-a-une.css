@@ -1,0 +1,31 @@
+/* ==== Matières une à une (chantier MATIÈRES) ==== */
+/* une coupure entre deux groupes de colonnes (verticale), horizontale quand la grille est transposée */
+.sc1-sep.v{height:auto;width:2px;margin:2px 0;justify-self:center;align-self:stretch}
+.sc1-grid.tr .sc1-sep.v{width:auto;height:2px;margin:0 2px;align-self:center;justify-self:stretch}
+/* « Configurer mon cours » : bien visible, en haut */
+.ua-cfg{flex:none;display:inline-flex;align-items:center;gap:6px;padding:6px 14px;border-radius:999px;border:2px solid var(--sc1c);background:color-mix(in srgb,var(--sc1c) 9%,var(--surface));color:var(--ink);font-weight:800;font-size:.85rem;white-space:nowrap;cursor:pointer;min-height:36px}
+.ua-cfg svg{width:18px;height:18px;flex:none;fill:none;stroke:var(--sc1c);stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+@media (hover:hover) and (pointer:fine){ .ua-cfg:hover{background:color-mix(in srgb,var(--sc1c) 18%,var(--surface))} }
+.ua-cfg:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.ua-cfg .sh{display:none}
+@media (max-width:640px),(max-height:520px) and (orientation:landscape){ .ua-cfg .lg{display:none} .ua-cfg .sh{display:inline} .ua-cfg{padding:4px 10px;font-size:.78rem;min-height:32px} }
+@media (max-width:640px){ #sc1Panel .sc1-top .ua-cfg{margin-left:auto} }
+/* Progressions : en-têtes longs (I–V–vi–IV…) */
+#sc1Panel[data-sec="prog"] .sc1-th{font-size:.7rem;overflow-wrap:anywhere}
+#sc1Panel[data-sec="prog"] .sc1-grid.tr .sc1-th{max-width:9.5em}
+#sc1Panel[data-sec="harmony"] .sc1-th{font-family:var(--f-display);font-size:.9rem}
+/* Oreille : une case par son, sans lignes */
+.sc1-grid.ua-flat{grid-template-columns:repeat(4,minmax(0,1fr));grid-template-rows:none;grid-auto-rows:minmax(0,1fr);gap:8px}
+.ua-flat .sc1-c{gap:4px;padding:4px 6px}
+.ua-lb{font-family:var(--f-display);font-weight:700;font-size:clamp(.82rem,2.2vh,1.05rem);line-height:1.1;text-align:center}
+.ua-lb .sh{display:none}
+@media (max-width:640px){ .sc1-grid.ua-flat{grid-template-columns:repeat(3,minmax(0,1fr));gap:6px} .ua-lb{font-size:.8rem} }
+@media (max-height:520px) and (orientation:landscape){ .sc1-grid.ua-flat{grid-template-columns:repeat(6,minmax(0,1fr));gap:6px} .ua-lb{font-size:.78rem} }
+/* Oreille, démonstration : le son joué */
+#answers button.ua-dm{border-color:var(--sc1c);background:color-mix(in srgb,var(--sc1c) 18%,var(--surface));color:var(--ink);opacity:1;box-shadow:0 0 0 3px color-mix(in srgb,var(--sc1c) 30%,transparent)}
+@media (prefers-reduced-motion:reduce){ .ua-cfg{transition:none} }
+/* ==== fin Matières une à une ==== */
+/* sous-modes : libellé court sur téléphone ; en paysage bas, le titre est déjà dans la barre du haut */
+.sc1-seg .sh{display:none} .sc1-seg button{white-space:nowrap}
+@media (max-width:640px),(max-height:520px) and (orientation:landscape){ .sc1-seg .lg{display:none} .sc1-seg .sh{display:inline} #sc1Panel .sc1-seg button{padding-inline:10px;letter-spacing:.02em} }
+@media (max-height:520px) and (orientation:landscape){ #sc1Panel .sc1-h{display:none} #sc1Panel .sc1-help{margin-left:0} #sc1Panel .sc1-top{gap:6px 10px} }

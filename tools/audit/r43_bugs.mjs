@@ -79,7 +79,7 @@ async function open(state, { mode = 'ok', gum = 'none', tz, clock, viewport = { 
   check('arrière-plan : Contre la montre garde son temps', l0 > 0 && l0 - l1 < 0.8, { l0, l1 });
   check('arrière-plan : la partie reprend (pas de pause restée)', !(await p.ev('HOLD')));
   await p.ev('S.settings.delay=8; openPage("learn")'); await W(p, 400);
-  await p.evaluate(() => document.querySelector('#learnTiles .ptile').click()); await W(p, 500);
+  await p.evaluate(() => document.querySelector('#learnTiles .ptile').click()); await W(p, 500); await p.evaluate(() => document.getElementById('uaCfg')?.click()); await W(p, 400);
   await p.ev('suState("chords").timer=true; try{ S.settings.su.chords.timed=true }catch(e){}'); await p.evaluate(() => document.getElementById('suGo').click()); await W(p, 900);
   const d0 = await p.ev('deadline ? deadline-performance.now() : null');
   if (d0 != null) { await hide(true); await W(p, 2500); await hide(false); await W(p, 150);

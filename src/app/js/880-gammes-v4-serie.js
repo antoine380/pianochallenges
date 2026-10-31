@@ -63,7 +63,7 @@ function sc1Var(cat){ const L=(t("sc1RV")||{})[cat]||[]; if(L.length<2) return L
 { const o=sc1End; sc1End=function(g){ const r=o.apply(this,arguments); try{ const s=g&&g.sc1; if(s){ const n=s.stars|0, B=$("endBody");
       const m=B.querySelector(".sc1-msg"); if(m) m.textContent=sc1Var(B.querySelector(".sc1-cupwon") ? "cup" : n===1 && s.mode==="chords" ? "1c" : String(Math.max(0,Math.min(3,n))));
       const nw=B.querySelector(".sc1-best.new"); if(nw) nw.textContent=sc1Var("rec");
-      const tot=B.querySelector(".sc1-tot"); if(tot) tot.innerHTML='<span aria-hidden="true">★ </span>'+esc(t("sc1SumA")(sc1Total(s.mode),SC1_MAX)); } }catch(e){ console.warn(e); } return r; }; }
+      const tot=B.querySelector(".sc1-tot"); if(tot) tot.innerHTML='<span aria-hidden="true">★ </span>'+esc(t("sc1SumA")(sc1Total(s.mode),sc1Max(s.mode))); } }catch(e){ console.warn(e); } return r; }; }
 
 // ---- C. série validée au bout de SR_MIN minutes de jeu ----
 const SR_MIN=10, SR_SEC=SR_MIN*60;

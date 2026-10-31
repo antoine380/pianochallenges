@@ -8,7 +8,7 @@ await page.goto(URL); await wait(page, 1000); await closeOnboarding(page, 'midi'
 await page.evaluate(() => { const S = JSON.parse(localStorage.getItem('memo-gammes-v1')); Object.assign(S.settings, { autoNext: false, delay: 0, dir: 'up', scMode: 'notes', guideN: false, guideK: false, guideP: false, uiSound: false, su: { scales: { tids: [], keys: 'pick', picked: [0] } } }); localStorage.setItem('memo-gammes-v1', JSON.stringify(S)); });
 await page.reload(); await wait(page, 1000); await closeOnboarding(page, 'midi');
 await page.evaluate(() => document.querySelector('.mode-item[data-mode="learn"]').click()); await wait(page, 300);
-await page.evaluate(() => document.querySelectorAll('#learnTiles .ptile')[1].click()); await wait(page, 500); await closeOnboarding(page);
+await page.evaluate(() => document.querySelectorAll('#learnTiles .ptile')[1].click()); await wait(page, 500); await page.evaluate(() => document.getElementById('uaCfg')?.click()); await wait(page, 400); // MATIÈRES : la tuile ouvre « une à une », Configurer mon cours = l'écran de départ await closeOnboarding(page);
 const ev = f => page.evaluate(f);
 check('gammes : 2 grandes cartes Notes / Accords', await ev(() => !document.getElementById('suMode').hidden && document.querySelectorAll('#suMode .su-mode').length === 2));
 await ev(() => document.querySelectorAll('#suMode .su-mode')[1].click()); await wait(page, 200);

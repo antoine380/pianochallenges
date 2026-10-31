@@ -46,8 +46,8 @@ let p = await open();
 await ev(p, () => document.querySelector('#modeNav [data-mode=learn]').click()); await W(p, 400);
 const tl = await ev(p, () => { const T = [...document.querySelectorAll('#learnTiles .ptile')], r = e => e.getBoundingClientRect(), s = T.find(x => x.classList.contains('sc1-tile')), g = T[1];
   const vis = T.slice().sort((a, c) => (r(a).top - r(c).top) || (r(a).left - r(c).left));
-  return { n: T.length, title: s && s.querySelector('.h3').textContent, beta: s && s.querySelector('.sc1-new')?.textContent, after: vis.indexOf(s) === vis.indexOf(g) + 1, last: T[T.length - 1] === s }; });
-check('LEARN : tuile « Gammes une à une » sans pastille, juste après « Gammes » à l’écran, dernière dans la page (index des autres tuiles inchangés)', tl.n === 8 && tl.title === 'Gammes une à une' && !tl.beta && tl.after && tl.last, tl);
+  return { n: T.length, title: s && s.querySelector('.h3').textContent, beta: s && s.querySelector('.sc1-new')?.textContent, s2: s === g && vis.indexOf(s) === 1 }; });
+check('LEARN (chantier MATIÈRES) : la tuile « Gammes » (2e) ouvre Gammes une à une (sc1-tile), plus de tuile en double, index des tuiles inchangés', tl.n === 7 && tl.title === 'Gammes' && !tl.beta && tl.s2, tl);
 await toList(p);
 const L = await ev(p, () => ({ page: document.body.dataset.page, cells: document.querySelectorAll('#sc1Grid .sc1-c').length, th: [...document.querySelectorAll('.sc1-th .lg')].map(x => x.textContent),
   rows: [...document.querySelectorAll('.sc1-rh b')].map(x => x.textContent), sep: !!document.querySelector('#sc1Grid .sc1-sep'), cups: document.querySelectorAll('#sc1Grid .sc1-cup').length, cupsOn: document.querySelectorAll('#sc1Grid .sc1-cup.on').length, legend: /★|justes|faute/.test(document.querySelector('.sc1-sum small')?.textContent || ''), cupSum: document.querySelector('.sc1-cups b')?.textContent, seg: [...document.querySelectorAll('#sc1Seg button')].map(x => x.textContent + ':' + x.getAttribute('aria-pressed')), sum: document.querySelector('.sc1-big b').textContent }));

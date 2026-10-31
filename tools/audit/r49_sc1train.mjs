@@ -134,7 +134,7 @@ check('fenêtre MIDI, test « joue une note » : la dernière note d’un paquet
 await ev(p, () => document.getElementById('midiX').click()); await W(p, 300);
 // a normal LEARN game with the same bridge
 await ev(p, () => document.querySelector('#modeNav [data-mode=learn]').click()); await W(p, 400);
-await ev(p, () => document.querySelectorAll('#learnTiles .ptile')[0].click()); await W(p, 500);
+await ev(p, () => document.querySelectorAll('#learnTiles .ptile')[0].click()); await W(p, 500); await ev(p, () => document.getElementById('uaCfg')?.click()); await W(p, 400);
 await ev(p, () => document.getElementById('suGo')?.click()); await W(p, 600);
 const lg = await p.X('({page, phase, n:seq.length, notes:seq.map(x=>x.midi!=null?x.midi:null), pcs:seq.map(x=>x.pc)})');
 for (const pc of lg.pcs) await nat(p, [0x91, 60 + pc, 90], undefined, 60);

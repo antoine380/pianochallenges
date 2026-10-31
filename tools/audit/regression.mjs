@@ -58,7 +58,7 @@ for(const v of [{w:812,h:375},{w:667,h:375},{w:375,h:667}]){
     await click(pg,GO.learn); await pg.waitForTimeout(300);
     for(let i=0;i<5;i++){
       const n=await pg.evaluate(i=>{ const t=document.querySelectorAll('#learnTiles .ptile:not(.soon)')[i]; if(!t) return null; t.click(); return t.querySelector('.h3')?.textContent||''; },i); if(n==null) break;
-      await pg.waitForTimeout(450);
+      await pg.waitForTimeout(450); await pg.evaluate(()=>document.getElementById('uaCfg')?.click()); await pg.waitForTimeout(400);
       const g=await inView(pg,'#suGo');
       ok(!!g && g.ok, `${v.w}×${v.h} ${lang} start screen "${n}": Start button on screen (${JSON.stringify(g)})`);
       await click(pg,GO.learn); await pg.waitForTimeout(300);

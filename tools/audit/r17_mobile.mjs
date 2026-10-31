@@ -50,7 +50,7 @@ await ev(p, () => { const x = [...document.querySelectorAll('#duLobby button')].
 const f = await ev(p, () => ['#gmDiff', '#gmCont', '#timerSel'].map(s => { const e = document.getElementById(s.slice(1)); return e ? getComputedStyle(e).fontSize : null; }));
 check('champs à 16 px sur écran tactile (#gmDiff, #gmCont, #timerSel)', f.every(x => x === '16px'), f);
 await ev(p, () => document.querySelector('#modeNav [data-mode=learn]').click()); await p.waitForTimeout(400);
-await ev(p, () => document.querySelector('#learnTiles .ptile').click()); await p.waitForTimeout(500);
+await ev(p, () => document.querySelector('#learnTiles .ptile').click()); await p.waitForTimeout(500); await ev(p, () => document.getElementById('uaCfg')?.click()); await p.waitForTimeout(400);
 await ev(p, () => document.getElementById('suGo').click()); await p.waitForTimeout(700);
 const keyT = await ev(p, () => { const k = document.querySelector('#kbd .wk'); return getComputedStyle(k).transform; });
 check('touche de piano : aucun scale au repos', !/matrix\(0\.9/.test(keyT), keyT);
@@ -59,7 +59,7 @@ errs.push(...p.errs); await p.context().close();
 // 3) wide keyboard (88 keys) on a phone: a finger drag scrolls it; the default keyboard keeps touch-action none
 p = await open({ width: 812, height: 375 }, { settings: { kbdSize: '88' } });
 await ev(p, () => document.querySelector('#modeNav [data-mode=learn]').click()); await p.waitForTimeout(300);
-await ev(p, () => document.querySelector('#learnTiles .ptile').click()); await p.waitForTimeout(400);
+await ev(p, () => document.querySelector('#learnTiles .ptile').click()); await p.waitForTimeout(400); await ev(p, () => document.getElementById('uaCfg')?.click()); await p.waitForTimeout(400);
 await ev(p, () => document.getElementById('suGo').click()); await p.waitForTimeout(700);
 const k0 = await ev(p, () => { const w = document.getElementById('kbdWrap'); return { cls: w.classList.contains('kbd-scroll'), ta: getComputedStyle(document.getElementById('kbd')).touchAction, sl: w.scrollLeft }; });
 const c2 = await p.context().newCDPSession(p);
@@ -72,7 +72,7 @@ check('clavier élargi : pan-x et glissé au doigt qui le fait défiler', k0.cls
 errs.push(...p.errs); await p.context().close();
 p = await open({ width: 812, height: 375 });
 await ev(p, () => document.querySelector('#modeNav [data-mode=learn]').click()); await p.waitForTimeout(300);
-await ev(p, () => document.querySelector('#learnTiles .ptile').click()); await p.waitForTimeout(400);
+await ev(p, () => document.querySelector('#learnTiles .ptile').click()); await p.waitForTimeout(400); await ev(p, () => document.getElementById('uaCfg')?.click()); await p.waitForTimeout(400);
 await ev(p, () => document.getElementById('suGo').click()); await p.waitForTimeout(700);
 check('clavier qui tient : touch-action none (jeu au doigt inchangé)', await ev(p, () => !document.getElementById('kbdWrap').classList.contains('kbd-scroll') && getComputedStyle(document.getElementById('kbd')).touchAction === 'none'));
 errs.push(...p.errs); await p.context().close();
@@ -85,7 +85,7 @@ const pressT = async sel => { const r = await ev(p, s => { const e = document.qu
   await p.mouse.move(r.x, r.y); await p.mouse.down(); await p.waitForTimeout(250); const v = await ev(p, s => getComputedStyle(document.querySelector(s)).transform, sel);
   await p.mouse.move(5, 5); await p.mouse.up(); await p.waitForTimeout(200); return v; };
 const tT = await pressT('#learnTiles .ptile'); check('tuile enfoncée (scale .98)', /^matrix\(0\.98/.test(tT), tT);
-await ev(p, () => document.querySelector('#learnTiles .ptile').click()); await p.waitForTimeout(500);
+await ev(p, () => document.querySelector('#learnTiles .ptile').click()); await p.waitForTimeout(500); await ev(p, () => document.getElementById('uaCfg')?.click()); await p.waitForTimeout(400);
 const gT = await pressT('#suGo'); check('bouton Commencer enfoncé (scale .97)', /^matrix\(0\.97/.test(gT), gT);
 await ev(p, () => document.getElementById('suGo').click()); await p.waitForTimeout(700);
 const kT = await pressT('#kbd .wk'); check('touche de piano enfoncée : pas de scale .97/.98', !/^matrix\(0\.9[78]/.test(kT), kT);

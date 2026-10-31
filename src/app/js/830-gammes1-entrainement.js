@@ -77,7 +77,7 @@ function sc1Bar(){ const on=page==="practice" && sc1On(), tr=sc1Tr(); document.b
       mk([t("sc1See"),t("sc1SeeS")],"",sc1Demo,md?BNAME():null,"sc1See"); sp(); mk([t("sc1ToEval"),t("sc1Eval")],"",()=>sc1Switch("eval"),null,"sc1ToEval"); mk(t("sc1Replay"),"primary",sc1Turn,md?CNAME():space,"sc1Replay"); }
     return r; }; }
 { const o=renderPrompt; renderPrompt=function(){ const r=o.apply(this,arguments); if(sc1Tr() && cur){
-      $("eyebrow").textContent=t("sc1Train")+" · "+t(game.sc1.mode==="chords"?"sc1Chords":"sc1Notes");
+      $("eyebrow").textContent=t("sc1Train")+" · "+sc1ModeName(game.sc1.mode);
       $("promptSub").textContent = phase==="revealed" ? t(chSeq()?"sc1DemoSubC":"sc1DemoSub") : phase==="success" ? t("sc1Well")+" "+t("sc1WellSub") : t("sc1TurnSub"); }
     return r; }; }
 { const o=render; render=function(){ sc1TrGuide(); const r=o.apply(this,arguments); try{ sc1Bar(); }catch(e){ console.warn(e); } return r; }; }

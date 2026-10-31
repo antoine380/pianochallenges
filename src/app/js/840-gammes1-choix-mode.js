@@ -23,13 +23,13 @@ const SC1P={c:null};
 const SC1_PK_IC={train:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2.5 12s3.6-6.5 9.5-6.5S21.5 12 21.5 12s-3.6 6.5-9.5 6.5S2.5 12 2.5 12z"/><circle cx="12" cy="12" r="3"/></svg>',
   eval:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.2l2.7 5.5 6 .9-4.4 4.2 1 6-5.3-2.8-5.3 2.8 1-6-4.4-4.2 6-.9z"/></svg>'};
 // open the choice for one scale (nothing starts until a choice is made)
-function sc1Ask(tid,k,mode){ mode=mode||sc1Mode(); if(!TONICS[tid] || !TONICS[tid].includes(k)) return;
-  if(sc1Lock(tid,k)){ pwOpen(premType("scales",tid)?"types":"keys"); return; }
+function sc1Ask(tid,k,mode){ mode=mode||sc1Mode(); const d=uaDef(mode); if(!d.ok(tid,k,mode)) return; uaUse(d.sec);
+  if(sc1Lock(tid,k,mode)){ pwOpen(d.why(tid,k,mode)); return; }
   if(endOpen) closeEnd();
   openMods.slice().forEach(id=>{ if(id!=="sc1Pick") closeMod(id); }); // one window at a time
   const n=sc1Get(mode,tid,k), ch=mode==="chords", rec=sc1TrPick(tid,k,mode) ? "train" : "eval", md=midiMode() && S.settings.midiC!==false;
   SC1P.c={tid,k,mode};
-  $("sc1PkT").textContent=itemName(sc1Item(tid,k,mode))+" · "+t(ch?"sc1Chords":"sc1Notes");
+  $("sc1PkT").textContent=sc1CellName(tid,k,mode)+" · "+sc1ModeName(mode);
   $("sc1PkS").innerHTML='<span class="sc1-st" role="img" aria-label="'+escA(t("sc1StarsA")(n))+'">'+[0,1,2].map(i=>'<i'+(i<n?' class="on"':'')+'>★</i>').join("")+'</span>'+(n?'':'<span>'+esc(t("sc1PkNone"))+'</span>');
   $("sc1PkQ").textContent=t("sc1PkQ"); $("sc1PkX").setAttribute("aria-label",t("closeLbl"));
   const O=$("sc1PkO"); O.innerHTML="";
@@ -142,7 +142,7 @@ Object.assign(TXT.en,{sc1Rv:"Review", sc1RvB:n=>"Review · "+(n>1?"your "+n+" sc
   sc1RvTx:"Play again, in one go, every scale you nailed without a mistake (3 stars), to keep them in mind.",
   sc1RvN:(n,m)=>n+(n>1?" scales":" scale")+" · "+m, sc1RvT:"Timer per scale", sc1RvMix:"Shuffle the order", sc1RvGo:"Start the review"});
 const SC1_RVT=[0,30,20,10];
-const sc1RvList = mode => sc1List().filter(c=>!sc1Lock(c.tid,c.k) && sc1Get(mode,c.tid,c.k)>=3);
+const sc1RvList = mode => sc1List(mode).filter(c=>!sc1Lock(c.tid,c.k,mode) && sc1Get(mode,c.tid,c.k)>=3);
 const sc1RvT = () => 0; // v3 (Antoine) : pas de chrono dans la révision ; S.settings.sc1RvT, s'il existe, est ignoré
 const sc1RvMix = () => S.settings.sc1RvMix!==false;
 { const m=document.createElement("div"); m.className="modal"; m.id="sc1Rv"; m.hidden=true; m.setAttribute("role","dialog"); m.setAttribute("aria-modal","true"); m.setAttribute("aria-labelledby","sc1RvTi");
@@ -154,15 +154,15 @@ const sc1RvMix = () => S.settings.sc1RvMix!==false;
   $("sc1Pick").after(m);
   $("sc1RvGo").onclick=()=>sc1RvStart(); $("sc1RvMix").onchange=e=>{ S.settings.sc1RvMix=!!e.target.checked; save(); }; }
 function sc1RvRender(){ const mode=sc1Mode(), n=sc1RvList(mode).length, md=midiMode() && S.settings.midiC!==false, T=sc1RvT();
-  $("sc1RvTi").textContent=n?t("sc1RvTi")(n):t("sc1Rv"); $("sc1RvS").textContent=t("sc1RvN")(n,t(mode==="chords"?"sc1Chords":"sc1Notes")); $("sc1RvTx").textContent=t("sc1RvTx");
+  $("sc1RvTi").textContent=n?t("sc1RvTi")(n):t("sc1Rv"); $("sc1RvS").textContent=t("sc1RvN")(n,sc1ModeName(mode)); $("sc1RvTx").textContent=t("sc1RvTx");
   $("sc1RvMixL").textContent=t("sc1RvMix"); $("sc1RvMix").checked=sc1RvMix(); $("sc1RvX").setAttribute("aria-label",t("closeLbl"));
   // v3 : plus de chrono dans la révision (gardé pour les jeux et les duels)
   const go=$("sc1RvGo"); go.textContent=t("sc1RvGo"); { const k=kbdEl(); k.textContent=CNAME(); go.appendChild(k); } go.disabled=!n; }
 function sc1RvOpen(){ if(!sc1RvList(sc1Mode()).length) return; if(endOpen) closeEnd(); openMods.slice().forEach(id=>{ if(id!=="sc1Rv") closeMod(id); }); sc1RvRender(); openMod("sc1Rv"); $("sc1RvGo").focus({preventScroll:true}); }
 function sc1RvStart(){ const mode=sc1Mode(), L=sc1RvList(mode); if(!L.length) return; if(!$("sc1Rv").hidden) closeMod("sc1Rv");
-  const q=L.map(c=>({...sc1Item(c.tid,c.k,mode), sc1rv:1})); if(sc1RvMix()) for(let i=q.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [q[i],q[j]]=[q[j],q[i]]; }
-  closeEnd(); if(S.section!=="scales"){ S.section="scales"; save(); } openPage("practice");
-  game=makeGame(q); game.label=t("sc1Rv")+" · "+t(mode==="chords"?"sc1Chords":"sc1Notes"); game.single=false; game.i=-1; startRound(); }
+  const d=uaDef(mode), q=L.flatMap(c=>(d.rvItems ? d.rvItems(c.tid,c.k,mode) : [sc1Item(c.tid,c.k,mode)]).map(it=>({...it, sc1rv:1}))); if(sc1RvMix()) for(let i=q.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [q[i],q[j]]=[q[j],q[i]]; }
+  closeEnd(); if(S.section!==d.sec){ S.section=d.sec; save(); } openPage("practice");
+  game=makeGame(q); game.label=t("sc1Rv")+" · "+sc1ModeName(mode); game.single=false; game.i=-1; startRound(); }
 const sc1RvOn = () => !$("sc1Rv").hidden && openMods[openMods.length-1]==="sc1Rv";
 // during a review: up, triads, and the chosen timer per scale (lent, never saved)
 const rvOn = () => !!(game && game.queue && game.queue.length && game.queue.every(it=>it && it.sc1rv));

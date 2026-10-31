@@ -46,12 +46,12 @@ sc1TrGuide=function(){ const w=sc1Want(), sig=w?JSON.stringify(w):"", s=S.settin
 { const o=save; save=function(){ if(SC1L.on===null) return o.apply(this,arguments); const s=S.settings, now={}; Object.keys(SC1L.keep).forEach(x=>now[x]=s[x]); sc1Back();
     try{ return o.apply(this,arguments); } finally{ Object.assign(s,now); } }; }
 { const o=autoHelp; autoHelp=function(){ if(sc1Ev()) return; return o.apply(this,arguments); }; }
-{ const o=primaryAction; primaryAction=function(){ if(sc1Ev() && phase==="listening") return; // pas de « Je sèche » en évaluation : on bascule en Entraînement
+{ const o=primaryAction; primaryAction=function(){ if(sc1Ev() && phase==="listening" && !(cur && cur.sec==="ear")) return; // Oreille : Espace = réécouter // pas de « Je sèche » en évaluation : on bascule en Entraînement
     if(sc1Tr() && phase==="success"){ sc1Switch("eval"); return; } return o.apply(this,arguments); }; }
-{ const o=reveal; reveal=function(){ if(sc1Ev() && phase==="listening") return; return o.apply(this,arguments); }; }
+{ const o=reveal; reveal=function(){ if(sc1Ev() && phase==="listening" && !(cur && cur.sec==="ear")) return; return o.apply(this,arguments); }; } // Oreille : une mauvaise réponse montre la bonne
 { const o=renderGameBar; renderGameBar=function(){ const r=o.apply(this,arguments); try{ sc1TrGuide(); }catch(e){} return r; }; }
 { const o=renderActions; renderActions=function(){ const r=o.apply(this,arguments); try{
-    if(sc1Ev() && phase==="listening"){ $("actions").innerHTML=""; return r; }
+    if(sc1Ev() && phase==="listening" && !(cur && cur.sec==="ear")){ $("actions").innerHTML=""; return r; }
     // fin d'entraînement : Revoir (Mi) à gauche … Rejouer (gris, Si) puis « Passer à l'évaluation » (principal, Do) à droite
     if(sc1Tr() && phase==="success"){ const a=$("actions"), see=$("sc1See"), ev=$("sc1ToEval"), rp=$("sc1Replay"); if(!(see&&ev&&rp)) return r;
       const md=midiMode() && S.settings.midiC!==false, kb=hasKeyboard(), space=kb?(S.settings.lang==="fr"?"Espace":"Space"):null;
@@ -66,11 +66,11 @@ addEventListener("click",e=>{ if(LV.pass || LV.on || !e.target.closest) return; 
 { const o=lvOpen; lvOpen=function(a,fn,end){ const r=o.apply(this,arguments); if(end && page==="practice" && game && (sc1On()||rvOn())){
       $("lvTitle").textContent=t("lvEndT"); $("lvSub").textContent=t(rvOn()?"sc1EndSR":"sc1EndS"); } return r; }; }
 // ---- tutoriel de la page (première visite, puis le bouton « ? ») ----
-function sc1TourSteps(){ const T=t("sc1Tu"); return [["#sc1Seg","",T.seg],["#sc1Grid .sc1-c","",T.cell],["#sc1Grid .sc1-c .sc1-st","",T.stars],["#sc1Grid .sc1-cup","",T.cup],["#sc1RvB","",T.rv]]; }
+function sc1TourSteps(){ const T=t("sc1Tu"); return [["#sc1Seg","",T.seg],["#sc1Grid .sc1-c","",T.cell],["#sc1Grid .sc1-c .sc1-st","",T.stars],["#sc1Grid .sc1-cup","",T.cup],["#sc1RvB","",T.rv]].filter(x=>x[2] && document.querySelector(x[0])); } // une matière sans coupe (Oreille) : 4 bulles
 const sc1TourOn = () => !!(TOUR.custom && $("tour") && !$("tour").hidden);
 function sc1TourStart(){ if(page!=="sc1" || ($("tour") && !$("tour").hidden)) return; sc1TipHide();
-  TOUR.custom=sc1TourSteps(); TOUR.kf=t("sc1TuK"); TOUR.onEnd=()=>{ S.settings.sc1Tour=1; save(); const h=$("sc1Help"); if(h) h.focus({preventScroll:true}); }; tourStart(); }
-function sc1TourAuto(){ if(page!=="sc1" || S.settings.sc1Tour || startUI() || anyWin() || endOpen) return; sc1TourStart(); }
+  TOUR.custom=sc1TourSteps(); TOUR.kf=t("sc1TuK"); TOUR.onEnd=()=>{ uaTourSet(UA.cur); save(); const h=$("sc1Help"); if(h) h.focus({preventScroll:true}); }; tourStart(); }
+function sc1TourAuto(){ if(page!=="sc1" || uaTourDone(UA.cur) || startUI() || anyWin() || endOpen) return; sc1TourStart(); }
 { const o=tourShow; tourShow=function(){ const r=o.apply(this,arguments); try{ if(TOUR.custom){ const n=$("tourNext"); if(n && !n.querySelector("kbd")){ const x=kbdEl(); x.textContent=CNAME(); n.appendChild(x); } } }catch(e){} return r; }; }
 { const o=openPage; openPage=function(pg){ const r=o.apply(this,arguments); if(page==="sc1" && pg==="sc1") setTimeout(sc1TourAuto,300); else if(sc1TourOn() && page!=="sc1") tourEnd(); sc1TipHide(); return r; }; }
 // ---- info-bulles : la Révision désactivée, les coupes ----
@@ -90,7 +90,7 @@ function sc1TipShow(el, auto){ const tx=el && el.dataset.tip; if(!tx) return; le
   P.addEventListener("contextmenu",e=>{ if(e.target.closest("[data-tip]")) e.preventDefault(); }); // appui long sur mobile : la bulle, pas le menu
   addEventListener("scroll",sc1TipHide,true); addEventListener("resize",sc1TipHide); }
 { const o=sc1Render; sc1Render=function(){ const r=o.apply(this,arguments); try{ const P=$("sc1Panel"), mode=sc1Mode();
-      P.querySelectorAll(".sc1-cup").forEach((c,i)=>{ const pc=SC1_PC[i], nm=sc1RowName(pc), tx=sc1Cup(mode,pc) ? t("sc1CupWon")(nm) : t("sc1CupOff")(nm);
+      P.querySelectorAll(".sc1-cup").forEach(c=>{ const pc=uaDef(mode).rows(mode).find(r=>String(r.id)===c.dataset.row).id, nm=sc1RowName(pc,mode), tx=sc1Cup(mode,pc) ? t("sc1CupWon")(nm) : t("sc1CupOff")(nm);
         c.removeAttribute("title"); c.dataset.tip=tx; c.setAttribute("aria-label",tx); c.tabIndex=0; });
       const rb=$("sc1RvB"); if(rb && rb.getAttribute("aria-disabled")==="true"){ rb.removeAttribute("title"); rb.dataset.tip=t("sc1RvNone"); rb.setAttribute("aria-label",t("sc1Rv")+" : "+t("sc1RvNone")); }
       const top=P.querySelector(".sc1-top"), hd=P.querySelector(".sc1-h"); if(top && hd){ const b=document.createElement("button"); b.type="button"; b.id="sc1Help"; b.className="sc1-help";

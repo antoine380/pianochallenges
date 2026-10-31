@@ -23,7 +23,7 @@ await ev(() => document.querySelector('#segClef [data-v=auto]').click()); await 
 
 // LEARN: scales
 await ev(() => document.querySelector('.mode-item[data-mode="learn"]').click()); await wait(page, 300);
-await ev(() => document.querySelectorAll('#learnTiles .ptile')[1].click()); await wait(page, 500); await closeOnboarding(page);
+await ev(() => document.querySelectorAll('#learnTiles .ptile')[1].click()); await wait(page, 500); await ev(() => document.getElementById('uaCfg')?.click()); await wait(page, 400); await closeOnboarding(page);
 check('écran de départ : case « Notes sur la portée » cochée', await ev(() => document.getElementById('suStaff').checked));
 await ev(() => document.getElementById('suGo').click()); await wait(page, 900);
 const L = await ev(() => { const b = document.getElementById('staffBox'); return { vis: !b.hidden, svg: !!b.querySelector('svg'), lines: b.querySelectorAll('line').length, sw: document.documentElement.scrollWidth, cw: innerWidth }; });
@@ -33,7 +33,7 @@ check('LEARN : pas de défilement horizontal', L.sw <= L.cw, L);
 await ev(() => { const S = JSON.parse(localStorage.getItem('memo-gammes-v1')); S.settings.staffRead = true; localStorage.setItem('memo-gammes-v1', JSON.stringify(S)); });
 await page.reload(); await wait(page, 1000); await closeOnboarding(page, 'screen');
 await ev(() => document.querySelector('.mode-item[data-mode="learn"]').click()); await wait(page, 300);
-await ev(() => document.querySelectorAll('#learnTiles .ptile')[1].click()); await wait(page, 500); await closeOnboarding(page);
+await ev(() => document.querySelectorAll('#learnTiles .ptile')[1].click()); await wait(page, 500); await ev(() => document.getElementById('uaCfg')?.click()); await wait(page, 400); await closeOnboarding(page);
 await ev(() => document.getElementById('suGo').click()); await wait(page, 900);
 check('Lecture : notes écrites à l’encre et consigne de lecture', await ev(() => document.querySelectorAll('#staffBox svg text').length > 4 && /lis|read/i.test(document.getElementById('prompt').textContent)), await ev(() => document.getElementById('prompt').textContent));
 
@@ -62,7 +62,7 @@ await frame.evaluate(() => { localStorage.removeItem('clavio:sheet'); });
 await ev(() => { const S = JSON.parse(localStorage.getItem('memo-gammes-v1')); S.settings.staff = false; S.settings.staffRead = false; localStorage.setItem('memo-gammes-v1', JSON.stringify(S)); });
 await page.reload(); await wait(page, 1000); await closeOnboarding(page, 'screen');
 await ev(() => document.querySelector('.mode-item[data-mode="learn"]').click()); await wait(page, 300);
-await ev(() => document.querySelectorAll('#learnTiles .ptile')[1].click()); await wait(page, 500); await closeOnboarding(page);
+await ev(() => document.querySelectorAll('#learnTiles .ptile')[1].click()); await wait(page, 500); await ev(() => document.getElementById('uaCfg')?.click()); await wait(page, 400); await closeOnboarding(page);
 await ev(() => document.getElementById('suGo').click()); await wait(page, 900);
 check('Sans : aucune portée dans LEARN', await ev(() => document.getElementById('staffBox').hidden && !document.body.classList.contains('staff-on')));
 await ev(() => document.querySelector('.mode-item[data-mode="play"]').click()); await wait(page, 500); await closeOnboarding(page);

@@ -127,7 +127,7 @@ await ev(p, () => window.__ports([{ id: '7', name: 'LUMI Keys BLOCK 3F1A' }])); 
 check('… et le LUMI rebranché retrouve ses 24 touches', await p.X('S.settings.kbdSize') === '24');
 await p.close();
 // a 24-key screen (size chosen by hand) and a 25-key keyboard: the top C widens the screen, lights the right key, and is a C
-const LEARN = async q => { await ev(q, () => document.querySelector('#modeNav [data-mode=learn]').click()); await W(q, 400); await ev(q, () => [...document.querySelectorAll('#learnTiles .ptile')].find(t => !t.classList.contains('sc1-tile'))?.click()); await W(q, 500); await ev(q, () => document.getElementById('suGo')?.click()); await W(q, 800); };
+const LEARN = async q => { await ev(q, () => document.querySelector('#modeNav [data-mode=learn]').click()); await W(q, 400); await ev(q, () => [...document.querySelectorAll('#learnTiles .ptile')].find(t => !t.classList.contains('sc1-tile'))?.click()); await W(q, 500); await ev(q, () => document.getElementById('uaCfg')?.click()); await W(q, 400); await ev(q, () => document.getElementById('suGo')?.click()); await W(q, 800); };
 p = await open({ ports: [{ id: '8', name: 'USB MIDI' }], st: STATE({ set: { kbdSize: '24', kbdGuessFor: 'USB MIDI' } }) });
 await LEARN(p);
 const g0 = await p.X('({page, phase, lo:LOW, hi:HIGH, sec:cur&&cur.sec, seq:seq.map(x=>x.pc)})');

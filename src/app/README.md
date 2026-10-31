@@ -81,6 +81,7 @@ elle est **retirée à l'assemblage** (la construction échoue si elle manque). 
 | `css/430-gammes1-v3.css` | 20 | 2 | Styles du bloc : gammes une à une v3 : tutoriel, aides prêtées, ports virtuels. (JS : `js/870-gammes1-v3.js`) |
 | `css/440-gammes-v4-serie.css` | 56 | 5 | Styles du bloc : gammes v4 + Série 10 min. (JS : `js/880-gammes-v4-serie.js`) |
 | `css/450-midi-4.css` | 10 | 1 | Styles du bloc : MIDI 4 (lien « Signaler un problème avec mon clavier », alerte admin). (JS : `js/885-midi-4.js`) |
+| `css/455-matieres-une-a-une.css` | 30 | 3 | Styles du bloc : matières une à une (« Configurer mon cours », Oreille en cases). (JS : `js/886-matieres-une-a-une.js`) |
 | `body.html` | 656 | 65 | Fin du `<style>`, petit script `native`, tout le HTML (splash, menu, pages, fenêtres), `staff.js`, ouverture du `<script>` principal. |
 | `js/000-midi-natif.js` | 30 | 2 | Pont MIDI natif de l'app iOS (CoreMIDI → forme Web MIDI). Petite IIFE à part, **avant** l'IIFE principale. |
 | `js/010-debut-iife.js` | 3 | 0 | Ouverture de l'IIFE principale `(() => { "use strict";` — refermée par `910-fin-iife.js`. |
@@ -162,7 +163,7 @@ elle est **retirée à l'assemblage** (la construction échoue si elle manque). 
 | `js/770-onboarding-2.js` | 134 | 17 | Onboarding 2 (`OQ`, « Ton programme »). |
 | `js/780-catalogue-claviers.js` | 169 | 23 | Catalogue de claviers MIDI (`MKC`, `mkcLoad`). |
 | `js/790-famille-paiement.js` | 188 | 26 | Famille et paiement (`FAM`, Stripe, Apple). |
-| `js/800-gammes-une-a-une.js` | 143 | 17 | Gammes une à une (page `sc1`). |
+| `js/800-gammes-une-a-une.js` | 143 | 17 | Moteur « une à une » `UA` (page `sc1`, `UA_DEF`, `sc1Render` générique) et sa 1re matière, les gammes. |
 | `js/810-mode-piano.js` | 268 | 33 | Mode PIANO (instruments, ambiances). |
 | `js/820-sons-piano.js` | 90 | 11 | Sons du piano (échantillons Salamander). |
 | `js/830-gammes1-entrainement.js` | 85 | 10 | Gammes une à une : entraînement, MIDI (`midiEach`, `midiDup`). |
@@ -172,6 +173,7 @@ elle est **retirée à l'assemblage** (la construction échoue si elle manque). 
 | `js/870-gammes1-v3.js` | 105 | 12 | Gammes une à une v3 : tutoriel, aides prêtées, ports virtuels. |
 | `js/880-gammes-v4-serie.js` | 146 | 18 | Gammes v4 + Série 10 min. |
 | `js/885-midi-4.js` | 140 | 16 | MIDI 4 : modes d'entrée exclusifs (`md4Live`), touches exactes (`md4Keys`, `md4Band`, `kbdFit`), fenêtre Clavier MIDI, signalement, alerte admin (`admTick`). |
+| `js/886-matieres-une-a-une.js` | 200 | 30 | Matières une à une : Accords, Harmonie, Progressions, Oreille dans le moteur `UA` (page sc1), textes `UA_TX`, tuiles `uaTiles`, « Configurer mon cours » `uaCfg`. |
 | `js/890-demarrage-boot.js` | 15 | 1 | **Boot** : premier rendu et écrans de départ (exécuté une fois, à la fin). |
 | `js/900-live-update.js` | 32 | 2 | Mise à jour à distance de l'app iOS (après le Boot). |
 | `js/910-fin-iife.js` | 3 | 0 | Fermeture de l'IIFE principale `})();`. |

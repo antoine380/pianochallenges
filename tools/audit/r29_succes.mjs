@@ -83,7 +83,7 @@ errs.push(...p.errs); await p.close();
 
 // 3) compteurs en jouant : notes justes et accords trouvés (LEARN), achHit (jeux)
 p = await open({ width: 1024, height: 768 });
-await p.click('#modeNav [data-mode=learn]'); await W(300); await p.evaluate(() => document.querySelectorAll('#learnTiles .ptile')[0].click()); await W(500);
+await p.click('#modeNav [data-mode=learn]'); await W(300); await p.evaluate(() => document.querySelectorAll('#learnTiles .ptile')[0].click()); await W(500); await p.evaluate(() => document.getElementById('uaCfg')?.click()); await W(400);
 await p.click('#suGo'); await W(900);
 const pcs = await p.X('JSON.stringify(seq.map(n=>n.pc))');
 const before = await p.X('JSON.stringify({n:achN("notes"),c:achN("chords")})');

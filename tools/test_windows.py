@@ -8,7 +8,7 @@ PORT=os.environ.get("PORT","8767")
 PAGES={
  "hub":"document.getElementById('homeLink').click()",
  "learn":"document.querySelector('#modeNav [data-mode=learn]').click()",
- "practice":"document.querySelector('#modeNav [data-mode=learn]').click(); document.querySelector('#learnTiles .ptile').click()",
+ "practice":"document.querySelector('#modeNav [data-mode=learn]').click(); document.querySelector('#learnTiles .ptile').click(); setTimeout(()=>document.getElementById('uaCfg')?.click(),300)",
  "games":"document.querySelector('#modeNav [data-mode=games]').click()",
  "play":"document.querySelector('#modeNav [data-mode=play]').click()",
  "daily":"document.getElementById('dailyCard').click()",
