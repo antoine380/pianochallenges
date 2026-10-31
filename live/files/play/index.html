@@ -333,9 +333,13 @@ let best=store.get('best',{}),gbest=store.get('gbest',{});
 /* ================= Audio ================= */
 let AC=null, master=null;
 function audio(){
-  if(!AC){try{AC=new (window.AudioContext||window.webkitAudioContext)();master=AC.createGain();master.gain.value=.55;
-    const comp=AC.createDynamicsCompressor();master.connect(comp);comp.connect(AC.destination)}catch(e){return null}}
-  if(AC.state==='suspended')AC.resume();return AC}
+  // Audio parfait (31/10/2026) : dans l'app, le lecteur joue sur le contexte de l'hôte (window.parent.__pcAudio) = un seul AudioContext
+  // (filtres en k-rate, reprise en fondu après une interruption iOS) ; seul (page ouverte à part), il garde le sien.
+  if(!AC){try{let P=null;try{if(window.parent!==window&&window.parent.__pcAudio)P=window.parent.__pcAudio()}catch(e){}
+    AC=P||new (window.AudioContext||window.webkitAudioContext)();AC.__pcShared=!!P;master=AC.createGain();master.gain.value=.55;
+    const comp=AC.createDynamicsCompressor();master.connect(comp);comp.connect(AC.destination);
+    if(P)addEventListener('pagehide',()=>{try{comp.disconnect()}catch(e){}})}catch(e){return null}}
+  if(AC.state==='suspended'||AC.state==='interrupted'){if(AC.__pcShared){try{window.parent.__pcAudio()}catch(e){}}else{try{AC.resume().catch(()=>{})}catch(e){}}}return AC}
 const voices=new Map();
 const lsTone=(m,sec)=>{try{if(LS&&window.parent!==window&&window.parent.__ppTone){window.parent.__ppTone(m,sec);return true}}catch(e){}return false};
 function soundOn(m,vel=.8){

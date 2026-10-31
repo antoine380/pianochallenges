@@ -3,7 +3,7 @@
 // CA-06 (3 mistakes → « Show me », the exercise still ends), CA-07 (P02 middle C: note 60 at MIDI, a C4 at the simulated mic),
 // CA-12 (pick up at the same step from the hub, from step 1 after 24 h), CA-13 (a lone MIDI C on the hub picks up),
 // CA-16 (no scroll: path, lesson, bravo, LEARN map, hub card at 5 sizes), CA-18 (every pp* text in FR and EN).
-// Usage: python3 -m http.server <PORT> at the repo root, then PORT=<PORT> node tools/audit/r21_firststeps.mjs
+// Usage: python3 -m http.server <PORT> at the repo root, then PORT=<PORT> node tools/audit/r21_firststeps.mjs (CPU=4 : processeur ralenti, comme le runner de nuit)
 import { readFileSync } from 'fs';
 import { launch, URL, INIT } from './lib.mjs';
 import { readSource } from '../source.mjs'; // source assemblée depuis src/app/ (voir src/app/README.md)
@@ -16,9 +16,17 @@ const seed = (extra = '') => `(()=>{ try{ if(sessionStorage.getItem('seeded')) r
 async function ctx(browser, { w = 1180, h = 820, init = '', gum = 'none', mobile = false, dark = false } = {}) {
   const c = await browser.newContext({ viewport: { width: w, height: h }, locale: 'fr-FR', isMobile: mobile, hasTouch: mobile, colorScheme: dark ? 'dark' : 'light' });
   await c.addInitScript(`window.__midiMode="ok"; window.__gumMode=${JSON.stringify(gum)};`); await c.addInitScript(INIT.replace('${MODE}', 'ok')); if (init) await c.addInitScript(init);
-  const p = await c.newPage(); p.on('pageerror', e => errs.push(e.message)); return p; }
+  const p = await c.newPage(); p.on('pageerror', e => errs.push(e.message));
+  if (+process.env.CPU > 1) await (await c.newCDPSession(p)).send('Emulation.setCPUThrottlingRate', { rate: +process.env.CPU }); // CPU=4: a slow runner
+  return p; }
 const S = p => p.evaluate(() => JSON.parse(localStorage.getItem('memo-gammes-v1')));
 const note = (p, n) => p.evaluate(n => { window.__midi.noteOn(n); setTimeout(() => window.__midi.noteOff(n), 60); }, n);
+// on a phone (web), the app switches the input to « screen » and, since MIDI 4 (28/10), ignores MIDI notes there: tap the screen key instead
+const play = (p, n) => p.evaluate(n => { const inp = (JSON.parse(localStorage.getItem('memo-gammes-v1')) || {settings:{}}).settings.input;
+  if (inp !== 'screen') { window.__midi.noteOn(n); setTimeout(() => window.__midi.noteOff(n), 60); return 'midi'; }
+  const el = document.querySelector('#kbd [data-m="' + n + '"]'); if (!el) return 'nokey'; const r = el.getBoundingClientRect(), o = { bubbles: true, pointerId: 7, clientX: r.x + r.width / 2, clientY: r.bottom - 8 };
+  el.dispatchEvent(new PointerEvent('pointerdown', o)); setTimeout(() => el.dispatchEvent(new PointerEvent('pointerup', o)), 60); return 'screen'; }, n);
+const waitView = async (p, want, ms = 5000) => { const t0 = Date.now(); let v; while ((v = await view(p)) !== want && Date.now() - t0 < ms) await W(p, 100); return v; };
 const say = p => p.evaluate(() => (document.getElementById('ppSay') || {}).textContent || '');
 const view = p => p.evaluate(() => { const P = document.getElementById('ppPanel'); return document.body.dataset.page !== 'pp' ? document.body.dataset.page : P.querySelector('.pp-path') ? 'path' : P.querySelector('.pp-bravo') ? 'bravo' : P.querySelector('.pp-opencard') ? 'open' : P.querySelector('.pp-lesson') ? 'lesson' : '?'; });
 const stepLbl = p => p.evaluate(() => (document.querySelector('.pp-mid .pp-k') || {}).textContent || '');
@@ -161,7 +169,7 @@ for (const v of SIZES) for (const dark of [false, true]) {
   await click(p, '#modeNav [data-mode=learn]'); await W(p, 400); res.push(await fit(p, 'LEARN + carte du parcours'));
   await click(p, '#ppMapOpen'); await W(p, 400); res.push(await fit(p, 'D6 présentation'));
   await click(p, '#ppMain'); await W(p, 500); res.push(await fit(p, 'leçon (À toi 2)'));
-  for (let i = 0; i < 3; i++) { await note(p, 61); await W(p, 380); } res.push(await fit(p, 'aide palier 3'));
+  for (let i = 0; i < 3; i++) { await play(p, 61); await W(p, 380); } res.push(await fit(p, 'aide palier 3'));
   await click(p, '#ppX'); await W(p, 300); await click(p, '#ppMapGo'); await W(p, 300); res.push(await fit(p, 'D9 ouverture'));
   const bad = res.filter(r => !r.ok);
   check('CA-16 ' + lbl + ' : aucun défilement (accueil, LEARN, D6, leçon, aide, D9)', bad.length === 0, bad);
@@ -169,8 +177,9 @@ for (const v of SIZES) for (const dark of [false, true]) {
 // bravo at 2 sizes that matter most (phone landscape and portrait)
 for (const v of [{ w: 812, h: 375, mobile: true }, { w: 375, h: 667, mobile: true }, { w: 1024, h: 768 }]) {
   const p = await ctx(browser, { w: v.w, h: v.h, mobile: !!v.mobile, init: seed('S.pp={v:1,on:true,start:Date.now(),cur:"p02",done:{p01:{stars:3,at:Date.now()}},fail:{}}; S.resume={kind:"pp",id:"p02",step:3,v:1,at:Date.now(),inp:"midi"};') });
-  await p.goto(URL); await W(p, 1200); await click(p, '#ppResume'); await W(p, 300); await click(p, '#ppMain'); await W(p, 400); await note(p, 60); await W(p, 1000);
-  const f = await fit(p, 'bravo'); check('CA-16 ' + v.w + '×' + v.h + ' : la fin de leçon tient sur l’écran', (await view(p)) === 'bravo' && f.ok, f);
+  await p.goto(URL); await W(p, 1200); await click(p, '#ppResume'); await W(p, 300); await click(p, '#ppMain'); await W(p, 400); const how = await play(p, 60);
+  const vw = await waitView(p, 'bravo'); await W(p, 300); // the bravo arrives ~0,9 s after the note on a slow runner
+  const f = await fit(p, 'bravo'); check('CA-16 ' + v.w + '×' + v.h + ' : la fin de leçon tient sur l’écran', vw === 'bravo' && f.ok, { ...f, view: vw, how });
   await p.context().close(); }
 
 check('aucune erreur JS', errs.length === 0, errs);

@@ -40,10 +40,13 @@ await page.locator('#playSongs .ptile').first().click(); await wait(page, 1500);
 const frame = page.frames().find(f => f.url().includes('play/'));
 await frame.locator('#go').click(); await wait(page, 2000);
 await page.evaluate(() => { document.getElementById('menuBtn')?.focus(); document.body.focus(); }); await page.mouse.click(600, 5);
-const o0 = (await state(page)).osc;
+// le lecteur Play joue sur le contexte audio de l'hôte (Audio parfait, 31/10) : on ne compte que les oscillateurs créés par le code de l'HÔTE
+await page.evaluate(() => { const AC = window.AudioContext || window.webkitAudioContext; const co = AC.prototype.createOscillator; window.__hostOsc = 0;
+  AC.prototype.createOscillator = function(){ if (!/play\/index\.html/.test(new Error().stack || '')) window.__hostOsc++; return co.apply(this, arguments); }; });
+const o0 = await page.evaluate(() => window.__hostOsc);
 await page.keyboard.press('KeyA'); await wait(page, 150);
 const held = await frame.evaluate(() => [...document.querySelectorAll('.key.down')].map(k => +k.dataset.m));
-const o1 = (await state(page)).osc;
+const o1 = await page.evaluate(() => window.__hostOsc);
 check('Play : KeyA (focus hôte) est relayé au cadre', held.includes(60), { held });
 check('Play : KeyA (focus hôte) ne joue pas de son côté hôte', o1 - o0 === 0, { oscHote: o1 - o0 });
 await browser.close();

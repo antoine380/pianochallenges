@@ -1,0 +1,12 @@
+/* ==== Audio parfait ==== */
+/* Réglages › Application : « Diagnostic audio », discret (replié par défaut) */
+.au-diag{margin:var(--sp-2,8px) 0;font-size:.88rem}
+.au-diag summary{cursor:pointer;color:var(--muted);font-weight:700;width:max-content;max-width:100%}
+.au-diag[open] summary{color:var(--ink)}
+.au-diag .au-s{margin:.4em 0;color:var(--muted)}
+.au-diag .au-t{display:grid;grid-template-columns:max-content 1fr;gap:2px 12px;margin:.4em 0;font-variant-numeric:tabular-nums}
+.au-diag .au-t dt{color:var(--muted)} .au-diag .au-t dd{margin:0;overflow-wrap:anywhere}
+.au-diag .au-safe small{display:block;color:var(--muted)}
+.au-diag .au-b{display:flex;flex-wrap:wrap;gap:8px;margin:.5em 0 0}
+@media (max-width:520px){ .au-diag .au-t{grid-template-columns:1fr} .au-diag .au-t dd{margin-bottom:4px} }
+/* ==== fin Audio parfait ==== */
