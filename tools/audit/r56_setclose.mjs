@@ -53,7 +53,7 @@ await click(A, '#setBtn'); await W(A, 250); await lang(A, 'fr'); await A.keyboar
 check('… Échap : retour à l’accueil, de nouveau en français', await pg(A) === 'hub' && await ev(A, () => document.documentElement.lang === 'fr'));
 
 // ---- 2. exercice LEARN en cours → Réglages → EN → croix : même élément, même progression, texte en anglais ----
-await mode(A, 'learn'); await W(A, 300); await ev(A, () => document.querySelectorAll('#learnTiles .ptile')[0].click()); await W(A, 400); await click(A, '#suGo'); await W(A, 700);
+await mode(A, 'learn'); await W(A, 300); await ev(A, () => document.querySelectorAll('#learnTiles .ptile')[0].click()); await W(A, 400); await click(A, '#uaCfg'); await W(A, 400); await click(A, '#suGo'); await W(A, 700);
 const ex0 = await ev(A, () => ({ t: document.getElementById('promptTitle') ? document.getElementById('promptTitle').textContent : '', end: document.getElementById('gameEnd').textContent }));
 const pk = await ev(A, () => [...document.querySelectorAll('#kbd .k-rev,#kbd .k-guide')].map(k => +k.dataset.m));
 await key(A, 61); await W(A, 300);
