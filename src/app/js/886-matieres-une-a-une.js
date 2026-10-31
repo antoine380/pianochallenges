@@ -83,7 +83,8 @@ UA_DEF.ear={sec:"ear", col:"#0e7490", cups:false, flat:true,
 const uaCap = s => s.charAt(0).toUpperCase()+s.slice(1);
 // o : nm (titre), one/ones (élément), le, ce (« cet accord »), un, f (féminin), r1 (1 étoile), show (« je te montre … »), play (« tu … »), ev, seg (bulles du sous-mode)
 function uaTxFr(o){ const e=o.f?"e":"", tous=o.f?"toutes les ":"tous les ";
-  return {sc1Name:o.nm, sc1OrC:c=>"Joue "+c+" pour "+(o.f?"la prochaine ":"le prochain ")+o.one,
+  const none=o.none||("Pas encore joué"+e);
+  return {sc1Name:o.nm, sc1PkNone:none, sc1Cell:(nm,n)=>nm+" : "+(n?n+(n>1?" étoiles":" étoile")+" sur 3":none.toLowerCase()), sc1OrC:c=>"Joue "+c+" pour "+(o.f?"la prochaine ":"le prochain ")+o.one,
     sc1R:n=>n>=3?"Sans faute !":n===2?uaCap(o.one)+" fini"+e+" !":n===1?o.r1+", continue !":"Prêt pour un nouvel essai ?",
     sc1New:"Nouveau record pour "+o.ce+" !", sc1Back:uaCap(tous+o.ones), sc1CupNtf:uaCap(tous+o.ones)+" de la ligne à 3 étoiles.",
     sc1CupA:(x,on)=>"Coupe de "+x+(on?" : gagnée":" : "+tous+o.ones+" à 3 étoiles"), sc1CupOff:x=>"Termine "+tous+o.ones+" de "+x+" avec 3 étoiles pour gagner la coupe.",
@@ -143,7 +144,7 @@ const UA_TX={fr:{
     pkTr:"Je te montre les accords de la progression un par un, puis tu les rejoues avec les touches allumées. Rien n'est noté, à ton rythme.", pkEv:"Tu joues la progression sans aide. Sans faute : 3 étoiles.",
     trTu:"je te montre la progression, puis tu la rejoues avec les touches allumées et les doigtés.", evTu:"tu la joues seul, sans aide, pour gagner des étoiles.",
     seg:["Bases ou plus loin",["Une ligne = une tonalité, une colonne = une progression.","**BASES** : les enchaînements des chansons les plus connues.","**PLUS LOIN** : jazz, blues, canon…","Chaque mode a ses propres étoiles."]]}),
-  ear:uaTxFr({nm:"Oreille son par son", one:"son", ones:"sons", le:"le son", ce:"ce son", un:"un son", r1:"3 bonnes réponses", go:"t'entraîner à le reconnaître",
+  ear:uaTxFr({nm:"Oreille son par son", none:"Pas encore écouté", one:"son", ones:"sons", le:"le son", ce:"ce son", un:"un son", r1:"3 bonnes réponses", go:"t'entraîner à le reconnaître",
     see:"Réécouter les sons", demo:"Écoute chaque son et retiens son nom.", turn:"À toi : quel son entends-tu ? Ici, rien n'est noté.",
     pkTr:"Je te fais écouter le son et ses voisins, chacun avec son nom, puis tu devines à ton rythme. Rien n'est noté.", pkEv:"6 écoutes sans aide : reconnais le son parmi ses voisins. Sans faute : 3 étoiles.",
     trTu:"je te fais écouter le son et ses voisins, puis tu devines.", evTu:"6 écoutes sans aide pour gagner des étoiles.",

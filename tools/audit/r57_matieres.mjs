@@ -84,8 +84,8 @@ await p.context().close();
 // 3) Accords : Évaluation (3 étoiles, puis 2 sur une autre case, meilleur gardé), Entraînement (démo puis à toi, rien n'est noté), renversements
 p = await open();
 await toSubj(p, 'chords'); await cell(p, 'maj', 'C');
-const pk = await ev(p, () => ({ on: !document.getElementById('sc1Pick').hidden, t: document.getElementById('sc1PkT').textContent, tr: document.getElementById('sc1PkTrain').textContent, ev: document.getElementById('sc1PkEval').textContent }));
-check('Accords : fenêtre du choix (Entraînement / Évaluation, textes de l’accord)', pk.on && /Do Majeur · Triades/.test(pk.t) && /accord/.test(pk.tr) && /accord/.test(pk.ev), pk);
+const pk = await ev(p, () => ({ on: !document.getElementById('sc1Pick').hidden, t: document.getElementById('sc1PkT').textContent, tr: document.getElementById('sc1PkTrain').textContent, ev: document.getElementById('sc1PkEval').textContent, sub: document.getElementById('sc1PkS').textContent }));
+check('Accords : fenêtre du choix (Entraînement / Évaluation, textes de l’accord)', pk.on && /Do Majeur · Triades/.test(pk.t) && /Pas encore joué$/.test(pk.sub) && /accord/.test(pk.tr) && /accord/.test(pk.ev), pk);
 await pick(p, 'eval'); await notes(p, [60, 64, 67]); await W(p, 2200);
 check('Accords › Évaluation sans faute : 3 étoiles (S.uaStars.chords.tri["C-maj"]), fin au-dessus de la liste', await ua(p, 'chords', 'tri', 'C-maj') === 3 && await endOn(p) && await endStars(p) === 3 && (await p.X('page')) === 'sc1', await p.X('JSON.stringify(S.uaStars)'));
 const endT = await ev(p, () => ({ t: document.getElementById('endTitle').textContent, back: document.getElementById('sc1Back')?.textContent, nx: document.getElementById('sc1Next')?.textContent }));
