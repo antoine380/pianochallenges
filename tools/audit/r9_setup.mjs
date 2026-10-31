@@ -7,7 +7,7 @@ await page.goto(URL); await wait(page, 1000); await closeOnboarding(page, 'midi'
 await page.evaluate(() => { const S = JSON.parse(localStorage.getItem('memo-gammes-v1')); Object.assign(S.settings, { unlockAll: true, scMode: 'notes', uiSound: false }); delete S.settings.su; localStorage.setItem('memo-gammes-v1', JSON.stringify(S)); });
 await page.reload(); await wait(page, 1000); await closeOnboarding(page, 'midi');
 await page.evaluate(() => document.querySelector('.mode-item[data-mode="learn"]').click()); await wait(page, 300);
-await page.evaluate(() => document.querySelectorAll('#learnTiles .ptile')[1].click()); await wait(page, 500); await page.evaluate(() => document.getElementById('uaCfg')?.click()); await wait(page, 400); // MATIÈRES : la tuile ouvre « une à une », Configurer mon cours = l'écran de départ await closeOnboarding(page);
+await page.evaluate(() => document.querySelectorAll('#learnTiles .ptile')[1].click()); await wait(page, 500); await page.evaluate(() => document.getElementById('uaCfg')?.click()); await wait(page, 400); await closeOnboarding(page); // MATIÈRES : la tuile ouvre « une à une », Configurer mon cours = l'écran de départ
 const ev = f => page.evaluate(f);
 const count = () => ev(() => document.getElementById('suCount').textContent);
 const n = async () => +((await count()).match(/\d+/) || [0])[0];

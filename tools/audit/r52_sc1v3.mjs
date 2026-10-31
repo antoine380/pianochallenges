@@ -91,7 +91,7 @@ await p.context().close();
 p = await open({ st: STATE({ lang: 'en', input: 'screen' }), ports: [] });
 await toList(p);
 tu = await tour(p);
-check('EN : « Step 1 of 5 », « Notes or chords », pas de touche Do sans clavier MIDI', tu.k === 'Step 1 of 5' && /Notes or chords/.test(tu.h) && !tu.kbd, tu);
+check('EN : « Step 1 of 6 », « Notes or chords », pas de touche Do sans clavier MIDI', tu.k === 'Step 1 of 6' && /Notes or chords/.test(tu.h) && !tu.kbd, tu);
 for (const v of [{ width: 375, height: 667 }, { width: 812, height: 375 }]) { await p.setViewportSize(v); await W(p, 400);
   check(`tutoriel ${v.width}×${v.height} : bulle entière à l’écran, pas de défilement`, await ev(p, () => { const r = document.getElementById('tourTip').getBoundingClientRect(); return r.left >= 0 && r.top >= 0 && r.right <= innerWidth && r.bottom <= innerHeight; }) && await noScroll(p)); }
 await p.context().close();

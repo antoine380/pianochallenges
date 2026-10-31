@@ -8,7 +8,7 @@ PORT=os.environ.get("PORT","8767")
 PAGES={
  "hub":"document.getElementById('homeLink').click()",
  "learn":"document.querySelector('#modeNav [data-mode=learn]').click()",
- "practice":"document.querySelector('#modeNav [data-mode=learn]').click(); document.querySelector('#learnTiles .ptile').click(); setTimeout(()=>document.getElementById('uaCfg')?.click(),300)",
+ "practice":"document.querySelector('#modeNav [data-mode=learn]').click(); document.querySelector('#learnTiles .ptile').click(); document.getElementById('uaCfg')?.click()",
  "games":"document.querySelector('#modeNav [data-mode=games]').click()",
  "play":"document.querySelector('#modeNav [data-mode=play]').click()",
  "daily":"document.getElementById('dailyCard').click()",
@@ -59,13 +59,13 @@ async def main():
             if await pg.evaluate("[...document.querySelectorAll('.modal')].some(m=>!m.hidden)"): await pg.keyboard.press("Escape"); await pg.wait_for_timeout(150)
           n+=1
           inert=await pg.evaluate("document.getElementById('app').inert")
-          # a real click must work: Learn mode, then the Scales tile
+          # a real click must work: Learn mode, then the Scales tile (→ Gammes une à une)
           r=await pg.evaluate("(()=>{const r=document.querySelector('#modeNav [data-mode=learn]').getBoundingClientRect(); return [r.x+r.width/2, r.y+r.height/2]})()")
           await pg.mouse.click(*r); await pg.wait_for_timeout(250)
           if await pg.is_visible("#leaveModal"): await pg.click("#lvGo"); await pg.wait_for_timeout(250)
           r=await pg.evaluate("(()=>{const r=document.querySelector('#learnTiles .ptile:nth-child(2)').getBoundingClientRect(); return [r.x+r.width/2, r.y+r.height/2]})()")
           await pg.mouse.click(*r); await pg.wait_for_timeout(300)
-          okc=await pg.evaluate("document.body.dataset.page==='practice' && document.querySelector('#secTabs [data-v=\"scales\"]').hasAttribute('aria-current')")
+          okc=await pg.evaluate("document.body.dataset.page==='sc1' && document.getElementById('sc1Panel').dataset.sec==='scales'")  # chantier MATIÈRES : la tuile Gammes ouvre Gammes une à une
           if inert or not okc: bad.append((pname,oname,how,mid,"inert" if inert else "click failed"))
     print("combinations tested:", n, "| problems:", bad[:12], "| JS errors:", errs[:5])
     await b.close()

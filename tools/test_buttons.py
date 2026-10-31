@@ -5,7 +5,7 @@ from playwright.async_api import async_playwright
 PORT=os.environ.get("PORT","8767")
 mock="""window.webkit={messageHandlers:{bridge:{postMessage(){}}}}; window.__cb={};
 window.Capacitor={nativePromise:(p,m,o)=>{ window.__calls=(window.__calls||[]).concat(p+'.'+m); return Promise.resolve(m==='start'||m==='listInputs'?{inputs:[{id:'1',name:'Keystation 49 MK3'}]}:{}); }, nativeCallback:(p,m,o,cb)=>{ window.__cb[o.eventName]=cb; return 'id'; }};"""
-LEARN="document.querySelector('#modeNav [data-mode=learn]').click(); document.querySelector('#learnTiles .ptile').click(); setTimeout(()=>document.getElementById('uaCfg')?.click(),300)"
+LEARN="document.querySelector('#modeNav [data-mode=learn]').click(); document.querySelector('#learnTiles .ptile').click(); document.getElementById('uaCfg')?.click()"
 # window or page id -> how to open it (the Help of a topic, #howPk, needs a topic page first)
 OPENERS={"settingsPage":"document.getElementById('setBtn').click()","charModal":"document.getElementById('charMore').click()",
  "midiModal":"document.getElementById('midiCfg').click()","introModal":LEARN+"; document.getElementById('howPk').click()",
