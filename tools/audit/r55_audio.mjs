@@ -24,7 +24,7 @@ const fails = []; const check = (n, ok, d) => { console.log((ok ? 'OK   ' : 'FAI
 const b = await chromium.launch({ ...(process.env.PW_CHROMIUM ? { executablePath: process.env.PW_CHROMIUM } : {}), args: ['--autoplay-policy=no-user-gesture-required', '--enable-blink-features=AudioContextPlayoutStats'] });
 const STATE = (piano = {}) => ({ xp: 900, gate: 'account', onb: { done: 1 }, tourDone: 1, langV2: true, pwShown: 1,
   introSeen: { scales: 1, chords: 1, harmony: 1, prog: 1, ear: 1, games: 1, daily: 1 }, midi: { later: Date.now() }, goal: { kind: 'min', v: 10, asked: 1, at: 1 }, srFrom: '2000-01-01', srShown: '2999-01-01',
-  settings: { sc1Tour: 1, lang: 'fr', notation: 'fr', input: 'midi', uiSound: false, octave: true, autoNext: true, delay: 0, midiSound: true, piano: { ins: 'grand', rev: .3, dly: 0, cho: .15, vol: .8, snd: true, viz: {}, ...piano } } });
+  settings: { sc1Tour: 1, uaTour: { chords: 1, scales: 1, harmony: 1, prog: 1, ear: 1 }, lang: 'fr', notation: 'fr', input: 'midi', uiSound: false, octave: true, autoNext: true, delay: 0, midiSound: true, piano: { ins: 'grand', rev: .3, dly: 0, cho: .15, vol: .8, snd: true, viz: {}, ...piano } } });
 async function open(st = STATE()) {
   const c = await b.newContext({ viewport: { width: 1024, height: 768 } });
   await c.addInitScript(`window.__midiMode="ok";`); await c.addInitScript(INIT.replace('${MODE}', 'ok'));
@@ -51,7 +51,7 @@ const types = p => { const ids = rtIds(p), o = {}; p.live.forEach(v => { if (ids
 const mode = async (p, m) => { await p.evaluate(m => document.querySelector(`#modeNav [data-mode=${m}]`).click(), m); await W(p, 300);
   if (await p.isVisible('#leaveModal')) { await p.click('#lvGo'); await W(p, 300); if (!(await p.evaluate(m => document.body.dataset.page, m)).startsWith(m === 'play' ? 'free' : m)) await p.evaluate(m => document.querySelector(`#modeNav [data-mode=${m}]`).click(), m); } };
 async function toPiano(p) { await mode(p, 'piano'); await W(p, 500); await p.X('pnSmpLoad()'); await p.waitForFunction(() => window.__X('PN_SMP.st') === 2, null, { timeout: 30000 }); }
-async function toExercise(p) { await mode(p, 'learn'); await W(p, 400); await p.evaluate(() => document.querySelectorAll('#learnTiles .ptile')[0].click()); await W(p, 500); await p.click('#suGo'); await W(p, 800); }
+async function toExercise(p) { await mode(p, 'learn'); await W(p, 400); await p.evaluate(() => document.querySelectorAll('#learnTiles .ptile')[0].click()); await W(p, 500); await p.click('#uaCfg'); await W(p, 400); await p.click('#suGo'); await W(p, 800); }
 async function toGame(p) { await mode(p, 'games'); await W(p, 400); await p.evaluate(() => document.querySelectorAll('#gameCards .ptile')[0].click()); await W(p, 600); await p.click('#duModes [data-m=solo]').catch(() => {}); await W(p, 800); }
 // sustained playing: 10 events/s, a 4-note chord every 3rd, pedal down/up every 2 s, every note released after 150 ms; pedal up at the end
 const play = (p, sec) => p.evaluate(sec => new Promise(res => { const ch = [[48, 55, 60, 64], [53, 57, 60, 65], [43, 50, 55, 59]]; let i = 0; const t0 = performance.now();
