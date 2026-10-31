@@ -1,4 +1,4 @@
-// fragment de l'IIFE principale — ordre 887, voir src/app/README.md
+// fragment de l'IIFE principale — ordre 888, voir src/app/README.md
 /* ==== Audio parfait (chantier audio5) ==== */
 // Craquements en temps réel (31/10/2026). Les rendus hors ligne étaient propres : les trous venaient du fil audio qui ne tenait pas le
 // rythme (charge du graphe) et de pointes de travail du fil principal pendant le jeu. Ce bloc :

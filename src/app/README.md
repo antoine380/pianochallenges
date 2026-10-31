@@ -81,7 +81,7 @@ elle est **retirée à l'assemblage** (la construction échoue si elle manque). 
 | `css/430-gammes1-v3.css` | 20 | 2 | Styles du bloc : gammes une à une v3 : tutoriel, aides prêtées, ports virtuels. (JS : `js/870-gammes1-v3.js`) |
 | `css/440-gammes-v4-serie.css` | 56 | 5 | Styles du bloc : gammes v4 + Série 10 min. (JS : `js/880-gammes-v4-serie.js`) |
 | `css/450-midi-4.css` | 10 | 1 | Styles du bloc : MIDI 4 (lien « Signaler un problème avec mon clavier », alerte admin). (JS : `js/885-midi-4.js`) |
-| `css/460-audio-parfait.css` | 12 | 1 | Styles du bloc : Audio parfait (Réglages › Application › « Diagnostic audio »). (JS : `js/887-audio-parfait.js`) |
+| `css/465-audio-parfait.css` | 12 | 1 | Styles du bloc : Audio parfait (Réglages › Application › « Diagnostic audio »). (JS : `js/888-audio-parfait.js`) |
 | `body.html` | 656 | 65 | Fin du `<style>`, petit script `native`, tout le HTML (splash, menu, pages, fenêtres), `staff.js`, ouverture du `<script>` principal. |
 | `js/000-midi-natif.js` | 30 | 2 | Pont MIDI natif de l'app iOS (CoreMIDI → forme Web MIDI). Petite IIFE à part, **avant** l'IIFE principale. |
 | `js/010-debut-iife.js` | 3 | 0 | Ouverture de l'IIFE principale `(() => { "use strict";` — refermée par `910-fin-iife.js`. |
@@ -173,7 +173,7 @@ elle est **retirée à l'assemblage** (la construction échoue si elle manque). 
 | `js/870-gammes1-v3.js` | 105 | 12 | Gammes une à une v3 : tutoriel, aides prêtées, ports virtuels. |
 | `js/880-gammes-v4-serie.js` | 146 | 18 | Gammes v4 + Série 10 min. |
 | `js/885-midi-4.js` | 140 | 16 | MIDI 4 : modes d'entrée exclusifs (`md4Live`), touches exactes (`md4Keys`, `md4Band`, `kbdFit`), fenêtre Clavier MIDI, signalement, alerte admin (`admTick`). |
-| `js/887-audio-parfait.js` | 136 | 16 | Audio parfait : un seul AudioContext (`audio()`, `__pcAudio` pour l'iframe Play), filtres k-rate (`auKctx`), plafond de voix (`AU_CAP`, `auKill`), sortie de `tone()` (`auTail`), fondu de reprise (`auFadeArm`), lumières hors du chemin de la note, Diagnostic audio (`#auDiag`). |
+| `js/888-audio-parfait.js` | 136 | 16 | Audio parfait : un seul AudioContext (`audio()`, `__pcAudio` pour l'iframe Play), filtres k-rate (`auKctx`), plafond de voix (`AU_CAP`, `auKill`), sortie de `tone()` (`auTail`), fondu de reprise (`auFadeArm`), lumières hors du chemin de la note, Diagnostic audio (`#auDiag`). |
 | `js/890-demarrage-boot.js` | 15 | 1 | **Boot** : premier rendu et écrans de départ (exécuté une fois, à la fin). |
 | `js/900-live-update.js` | 32 | 2 | Mise à jour à distance de l'app iOS (après le Boot). |
 | `js/910-fin-iife.js` | 3 | 0 | Fermeture de l'IIFE principale `})();`. |

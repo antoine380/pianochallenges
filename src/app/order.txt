@@ -47,7 +47,8 @@ css/420-jeux-3.css
 css/430-gammes1-v3.css
 css/440-gammes-v4-serie.css
 css/450-midi-4.css
-css/460-audio-parfait.css
+css/460-reglages-fermer.css
+css/465-audio-parfait.css
 body.html
 js/000-midi-natif.js
 js/010-debut-iife.js
@@ -139,7 +140,8 @@ js/860-midi-3.js
 js/870-gammes1-v3.js
 js/880-gammes-v4-serie.js
 js/885-midi-4.js
-js/887-audio-parfait.js
+js/887-reglages-fermer.js
+js/888-audio-parfait.js
 js/890-demarrage-boot.js
 js/900-live-update.js
 js/910-fin-iife.js

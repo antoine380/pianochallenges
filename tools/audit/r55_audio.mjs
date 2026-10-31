@@ -81,7 +81,7 @@ async function segment(p, name, sec) {
 let p = await open();
 await toPiano(p);
 await p.evaluate(s => window.__X(s), PN_OFFLINE);
-// tone() rendered offline through its real output stage (AU.off = offline context, see 887-audio-parfait.js)
+// tone() rendered offline through its real output stage (AU.off = offline context, see 888-audio-parfait.js)
 await p.X(`window.__auToneR = async (ev, dur) => { const oc = new OfflineAudioContext(2, Math.round(48000 * dur), 48000); AU.off = oc; AU.offM = oc.createGain(); AU.offM.gain.value = .55; auKctx(oc); AU.offT = auTail(oc, AU.offM); AU.tones = [];
   const by = new Map(); ev.forEach(e => { const q = Math.round(e.t * 48000 / 128) * 128 / 48000; if (!by.has(q)) by.set(q, []); by.get(q).push(e); });
   [...by.keys()].forEach(q => { const run = () => by.get(q).forEach(e => tone(e.m, 0, e.d || .9, .1 + .26 * e.v / 127)); if (q <= 0) run(); else oc.suspend(q).then(() => { run(); oc.resume(); }); });

@@ -1,5 +1,5 @@
 {
- "version": "2026-10-31T10:30Z",
+ "version": "2026-10-31T10:31Z",
  "native_min": 1,
  "files": [
   {
@@ -365,8 +365,8 @@
   },
   {
    "path": "index.html",
-   "sha256": "fd21cf72013907d13382ff50ad33828e58578f4ba9cfb60180abb350f0cb37d1",
-   "size": 1787568,
+   "sha256": "4e2a6c4fa1a25a60a94528fa938a4abec419cc202c67078f5875e3e956e6e09f",
+   "size": 1793408,
    "src": "live/files/index.html"
   },
   {
