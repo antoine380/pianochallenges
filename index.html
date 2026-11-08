@@ -15449,7 +15449,7 @@ auModal("authOk",'<button class="modal-close au-x" type="button" data-close="aut
 auModal("authOut",'<h2 id="authOutT"></h2><p class="au-s" id="auOutS"></p><div class="au-acts"><button class="btn" id="auCancel" type="button"></button><button class="btn primary au-danger" id="auOutGo" type="button"></button></div>');
 const auName = () => { const m=(user&&user.user_metadata)||{}; return (m.full_name||m.name||"").split(" ")[0] || myName(); };
 const auProv = () => { const p=user && user.app_metadata && user.app_metadata.provider; return t("auVia")[p] ? p : "email"; };
-function auWelcome(){ if(!user || AUT.shown===user.id) return; AUT.shown=user.id; const fresh = user.created_at && Date.now()-Date.parse(user.created_at) < 15*60e3;
+function auWelcome(){ if(!user || AUT.shown===user.id) return; try{ if(typeof famPending==="function" && famPending()) return; }catch(e){} // rejoindre une famille : sa fenêtre suffit AUT.shown=user.id; const fresh = user.created_at && Date.now()-Date.parse(user.created_at) < 15*60e3;
   const m=$("authOk"), av=m.querySelector(".au-av"); try{ avFill(av, userPhoto(), charIndex(levelInfo(S.xp).L)); }catch(e){}
   $("auKick").textContent = fresh ? t("auNew") : t("auBack"); $("authOkT").textContent = t("auHi")(auName());
   $("auMail").textContent = (user.email||"")+(user.email?" · ":"")+t("auVia")[auProv()]; $("auSyncS").textContent=t("auSync");
