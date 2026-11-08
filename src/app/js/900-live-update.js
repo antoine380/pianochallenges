@@ -13,13 +13,17 @@ function luRender(){ const el=$("setLive"); if(!el) return;
   if(!luOn()){ el.hidden=true; el.textContent=""; return; }
   const i=LU.info||{}, v=i.version||(APP_BUILD!=="dev"?APP_BUILD:"");
   el.hidden=false;
-  el.innerHTML='<br>'+esc(t("luVer")(luFmt(v)))+(i.source==="live"?' · '+esc(t("luLive")):"")+(i.pending?'<br><b class="lu-pend">'+esc(t("luPending"))+'</b>':""); }
+  el.innerHTML='<br>'+esc(t("luVer")(luFmt(v)))+(i.source==="live"?' · '+esc(t("luLive")):"")+(i.pending?'<br><b class="lu-pend">'+esc(t("luPending"))+'</b>':"")
+    +'<br><button type="button" class="mw-link lu-chk" id="luChk">'+esc(LU.chk ? t("luChkS")[LU.chk]||t("luChkS").error : t("luChk"))+'</button>';
+  const b=$("luChk"); if(b) b.onclick=e=>{ e.stopPropagation(); luCheck(); }; }
+// « Vérifier les mises à jour » (08/11/2026) : vérification tout de suite, sans attendre l'heure
+function luCheck(){ LU.chk="busy"; luRender(); luCall("check").then(r=>{ const st=String(r&&r.status||"error"); LU.chk = st.startsWith("pending:") ? "pending" : (["uptodate","native","trial","busy"].includes(st) ? st : "error"); return luInfo(); }).catch(()=>{ LU.chk="error"; luRender(); }); }
 function luInfo(){ return luCall("info").then(i=>{ if(i && typeof i==="object") LU.info=i; luRender(); }).catch(()=>{}); }
 function luTap(){ const now=Date.now(); LU.taps = now-LU.t0<3000 ? LU.taps+1 : 1; if(LU.taps===1) LU.t0=now;
   if(LU.taps<5) return; LU.taps=0;
   if(confirm(t("luResetQ"))) luCall("reset").catch(()=>{}); }
-Object.assign(TXT.fr,{luVer:v=>"Version web "+v, luLive:"mise à jour", luPending:"Mise à jour prête au prochain lancement", luResetQ:"Revenir à la version d'origine de l'app ? Ta progression est gardée."});
-Object.assign(TXT.en,{luVer:v=>"Web version "+v, luLive:"updated", luPending:"Update ready for next launch", luResetQ:"Go back to the app's original version? Your progress is kept."});
+Object.assign(TXT.fr,{luVer:v=>"Version web "+v, luLive:"mise à jour", luPending:"Mise à jour prête au prochain lancement", luResetQ:"Revenir à la version d'origine de l'app ? Ta progression est gardée.", luChk:"Vérifier les mises à jour", luChkS:{busy:"Vérification…",pending:"Mise à jour téléchargée : quitte et rouvre l'app",uptodate:"L'app est à jour",native:"Il faut réinstaller l'app depuis Xcode",trial:"Relance l'app une fois, puis réessaie",error:"Vérification impossible (réseau ?) : réessaie"}});
+Object.assign(TXT.en,{luVer:v=>"Web version "+v, luLive:"updated", luPending:"Update ready for next launch", luResetQ:"Go back to the app's original version? Your progress is kept.", luChk:"Check for updates", luChkS:{busy:"Checking…",pending:"Update downloaded: quit and reopen the app",uptodate:"The app is up to date",native:"The app needs reinstalling from Xcode",trial:"Restart the app once, then try again",error:"Couldn't check (network?): try again"}});
 if(luOn()){
   LU.on=true;
   { const el=$("setLive"); if(el) el.addEventListener("click", luTap); }
