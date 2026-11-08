@@ -85,6 +85,7 @@ elle est **retirée à l'assemblage** (la construction échoue si elle manque). 
 | `css/465-audio-parfait.css` | 12 | 1 | Styles du bloc : Audio parfait (Réglages › Application › « Diagnostic audio »). (JS : `js/888-audio-parfait.js`) |
 | `css/470-navigation-retour.css` | 46 | 1 | Styles du bloc : Navigation (retour, en-tête des matières, encart des résultats, fin de partie, « S'inscrire » retiré en haut à droite). (JS : `js/889-navigation-retour.js`) |
 | `css/475-notifs-partage-serie.css` | 50 | 1 | Styles du bloc : Notifications en haut à droite, fenêtre de partage, bilan à 3 chiffres, série (temps par jour, rond du jour, minutes d'un jour). (JS : `js/889b-notifs-partage-serie.js`) |
+| `css/480-micro.css` | 22 | 1 | Styles du bloc : panneau « Mode d'entrée » (3 boutons, micro : état, vu-mètre, note, sensibilité, accordage). (JS : `js/889c-micro.js`) |
 | `body.html` | 656 | 65 | Fin du `<style>`, petit script `native`, tout le HTML (splash, menu, pages, fenêtres), `staff.js`, ouverture du `<script>` principal. |
 | `js/000-midi-natif.js` | 30 | 2 | Pont MIDI natif de l'app iOS (CoreMIDI → forme Web MIDI). Petite IIFE à part, **avant** l'IIFE principale. |
 | `js/010-debut-iife.js` | 3 | 0 | Ouverture de l'IIFE principale `(() => { "use strict";` — refermée par `910-fin-iife.js`. |
@@ -180,6 +181,7 @@ elle est **retirée à l'assemblage** (la construction échoue si elle manque). 
 | `js/888-audio-parfait.js` | 136 | 16 | Audio parfait : un seul AudioContext (`audio()`, `__pcAudio` pour l'iframe Play), filtres k-rate (`auKctx`), plafond de voix (`AU_CAP`, `auKill`), sortie de `tone()` (`auTail`), fondu de reprise (`auFadeArm`), lumières hors du chemin de la note, Diagnostic audio (`#auDiag`). |
 | `js/889-navigation-retour.js` | 60 | 10 | Navigation : boutons retour `#sc1BackB` (→ LEARN) et `#suBack` (→ page « une à une », `UA.cfgFrom`), titre « Configurer mon cours » (`body.su-cfg`), en-tête `#uaActs` (NOTES/ACCORDS · Révision · Configurer), encart `.ua-res` ; fin de partie : fautes par exercice (`R.err`), « i » `#endInfo`/`#endChips`, plus de « Changer de choix », révision qui revient aux étoiles (`endRv`, `endRvBack`). |
 | `js/889b-notifs-partage-serie.js` | 105 | 12 | Notifications `#ntfPop` (file `NP`, badge `.np-badge`), `toast()` en haut à droite, partage `#shSheet` (`shSheetOpen`/`shDo`, enrobage de `shareIt`), bilan sans combo, série (`#srMin`, `#pfDayTip`, animation qui reste). |
+| `js/889c-micro.js` | 125 | 14 | Micro et mode d'entrée : moteur `MIC` (`micStart`, `micPitch` NSDF, contexte à part), panneau `#inPanel` (`ipOpen`/`ipRender`/`ipPick`), 3 boutons dans la fenêtre Clavier MIDI (`#mdInSeg`). |
 | `js/890-demarrage-boot.js` | 15 | 1 | **Boot** : premier rendu et écrans de départ (exécuté une fois, à la fin). |
 | `js/900-live-update.js` | 32 | 2 | Mise à jour à distance de l'app iOS (après le Boot). |
 | `js/910-fin-iife.js` | 3 | 0 | Fermeture de l'IIFE principale `})();`. |

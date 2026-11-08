@@ -1,0 +1,22 @@
+/* ==== Micro et mode d'entrée (08/11/2026) (JS : js/889c-micro.js) ==== */
+.ip-card{max-width:460px}
+.ip-seg{display:grid;grid-template-columns:repeat(auto-fit,minmax(0,1fr));margin-bottom:14px}
+.ip-seg button{display:flex;align-items:center;justify-content:center;gap:6px;font-weight:800;min-height:42px}
+.ip-ic svg{width:18px;height:18px;display:block}
+.ip-st{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:14px;background:var(--surface-2);margin-bottom:12px}
+.ip-dot{flex:none;width:10px;height:10px;border-radius:50%;background:var(--muted)}
+.ip-st.on .ip-dot{background:#22c55e;box-shadow:0 0 0 4px rgba(34,197,94,.2)} .ip-st.err .ip-dot{background:var(--bad)}
+.ip-stt{flex:1;min-width:0;display:flex;flex-direction:column} .ip-stt b{font-size:.92rem} .ip-stt small{color:var(--muted);font-size:.78rem;line-height:1.25}
+.ip-st .btn{flex:none;white-space:nowrap}
+.ip-live{display:flex;align-items:center;gap:14px;margin-bottom:12px}
+.ip-vu{flex:1;height:12px;border-radius:999px;background:var(--surface-2);overflow:hidden}
+.ip-vu i{display:block;height:100%;width:100%;transform-origin:left;transform:scaleX(0);background:linear-gradient(90deg,#22c55e,#facc15 70%,#ef4444);transition:transform .06s linear}
+.ip-note{flex:none;min-width:120px;text-align:center;display:flex;flex-direction:column}
+.ip-note small{font-size:.7rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.ip-note b{font:700 1.6rem/1.1 var(--f-display);color:var(--ink);border-bottom:4px solid transparent;align-self:center;padding:0 4px} .ip-note b.hit{border-bottom-color:var(--nc)} .ip-note span{font-size:.72rem;color:var(--muted);min-height:1em}
+.ip-row{display:flex;flex-direction:column;gap:6px;margin-bottom:12px}
+.ip-l{font-weight:800;font-size:.85rem} .ip-h{color:var(--muted);font-size:.76rem;line-height:1.3}
+.ip-tune{display:flex;align-items:center;gap:10px} .ip-tune input{flex:1} .ip-tune b{min-width:52px;text-align:right;font-size:.85rem}
+.ip-tip,.ip-p{margin:0 0 10px;color:var(--muted);font-size:.84rem}
+#mdInSeg{margin-bottom:12px}
+@media (prefers-reduced-motion:reduce){ .ip-vu i{transition:none} }

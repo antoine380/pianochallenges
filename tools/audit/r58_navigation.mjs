@@ -126,5 +126,33 @@ for (const [n, vp] of [['iPad', { width: 1024, height: 768 }], ['téléphone', {
   check('choisir 20 min : objectif et série à 20 min', await p.X('S.goal.kind==="min" && S.goal.v===20 && SR_MIN===20'));
   check('aucune erreur JS (notifications, partage, série)', !p.errs.length, p.errs); await p.c.close(); }
 
+// 6) micro : la pastille ouvre le panneau « Mode d'entrée » (3 boutons), le moteur entend Do3, Do1, La3 et une note rejouée
+{ const c = await b.newContext({ viewport: { width: 1024, height: 768 } });
+  await c.addInitScript(`window.__midiMode="ok"; window.__gumMode="osc";`); await c.addInitScript(INIT.replace('${MODE}', 'ok'));
+  await c.route(u => u.href.startsWith(URL) && (u.pathname === '/' || u.pathname === '/index.html'), async r => { const res = await r.fetch(); let h = await res.text(); const e = h.lastIndexOf('})();\n</script>'); h = h.slice(0, e) + '\nwindow.__X=s=>eval(s);\n' + h.slice(e); await r.fulfill({ response: res, body: h, headers: { ...res.headers(), 'content-type': 'text/html; charset=utf-8' } }); });
+  await c.route('https://ijdxeasxmgevuchyuenn.supabase.co/**', r => r.abort());
+  const p = await c.newPage(); p.errs = []; p.on('pageerror', e => p.errs.push(e.message));
+  const st = { ...STATE({ input: 'mic' }), micPrep: 1 };
+  await p.addInitScript(`if(!sessionStorage.getItem('s')){ sessionStorage.setItem('s','1'); localStorage.setItem('memo-gammes-v1', ${JSON.stringify(JSON.stringify(st))}); }`);
+  await p.goto(URL); await p.waitForFunction(() => !!window.__X, null, { timeout: 15000 }); await W(p, 1500); p.X = s => p.evaluate(s => window.__X(s), s);
+  await p.mouse.click(600, 400); await W(p, 700); // premier toucher = le micro démarre
+  await p.click('#inChip'); await W(p, 400);
+  const pn = await ev(p, () => ({ on: !document.getElementById('inPanel').hidden, midi: !document.getElementById('midiModal').hidden, seg: [...document.querySelectorAll('#inSeg button')].map(b => b.dataset.v + ':' + b.getAttribute('aria-pressed')).join(), st: document.getElementById('micStT')?.textContent }));
+  check('micro : la pastille ouvre le panneau « Mode d’entrée » (pas la fenêtre Clavier MIDI), 3 boutons, micro choisi, « Le micro écoute »', pn.on && !pn.midi && pn.seg === 'midi:false,mic:true,screen:false' && /écoute/.test(pn.st || ''), pn);
+  await p.X('window.__got=[]; const o=midiIn; midiIn=function(m){ window.__got.push(m); return o.apply(this,arguments); }');
+  for (const f of [261.63, 0, 261.63, 65.41, 440]) { await p.evaluate(f => window.__setFreqs(f ? [f] : []), f); await W(p, f ? 380 : 300); }
+  const got = await p.X('window.__got.join()'), note = await ev(p, () => document.getElementById('micNote').textContent);
+  check('moteur du micro : Do3, Do3 rejoué, Do1 (grave), La3 reconnus ; note affichée dans le panneau', got === '60,60,36,69' && note === 'La3', { got, note });
+  await click(p, '#micSens [data-v="3"]'); check('sensibilité « Forte » mémorisée', await p.X('S.settings.micSens') === 3);
+  await p.evaluate(() => window.__setFreqs([440 * Math.pow(2, 20 / 1200)])); await click(p, '#micTune'); await W(p, 1200);
+  check('accordage : « Mesurer » sur un La un peu haut → +20 cents environ', Math.abs((await p.X('S.settings.micCents')) - 20) <= 3, await p.X('S.settings.micCents'));
+  await click(p, '#inSeg [data-v=screen]'); await W(p, 300);
+  check('bouton « Écran » : entrée écran, micro coupé', await p.X('S.settings.input==="screen" && !micOn'));
+  await click(p, '#inSeg [data-v=midi]'); await W(p, 700);
+  check('bouton « Clavier MIDI » : la fenêtre Clavier MIDI, avec les mêmes 3 boutons en tête', await ev(p, () => !document.getElementById('midiModal').hidden && !!document.querySelector('#mdInSeg [data-v=mic]')));
+  await click(p, '#mdInSeg [data-v=mic]'); await W(p, 800);
+  check('… et « Micro » depuis la fenêtre MIDI : retour au panneau, micro relancé', await p.X('S.settings.input==="mic" && micOn && !document.getElementById("inPanel").hidden'));
+  check('aucune erreur JS (micro)', !p.errs.length, p.errs); await c.close(); }
+
 await b.close();
 if (fails.length) { console.log('\nECHEC r58 :', fails); process.exit(1); } else console.log('\nr58 OK');
