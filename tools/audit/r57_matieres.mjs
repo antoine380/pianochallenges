@@ -88,7 +88,7 @@ const pk = await ev(p, () => ({ on: !document.getElementById('sc1Pick').hidden, 
 check('Accords : fenêtre du choix (Entraînement / Évaluation, textes de l’accord)', pk.on && /Do Majeur · Triades/.test(pk.t) && /Pas encore joué$/.test(pk.sub) && /accord/.test(pk.tr) && /accord/.test(pk.ev), pk);
 await pick(p, 'eval'); await notes(p, [60, 64, 67]); await W(p, 2200);
 check('Accords › Évaluation sans faute : 3 étoiles (S.uaStars.chords.tri["C-maj"]), fin au-dessus de la liste', await ua(p, 'chords', 'tri', 'C-maj') === 3 && await endOn(p) && await endStars(p) === 3 && (await p.X('page')) === 'sc1', await p.X('JSON.stringify(S.uaStars)'));
-const endT = await ev(p, () => ({ t: document.getElementById('endTitle').textContent, back: document.getElementById('sc1Back')?.textContent, nx: document.getElementById('sc1Next')?.textContent }));
+const endT = await ev(p, () => ({ t: document.getElementById('endTitle').textContent, back: document.getElementById('sc1Back')?.firstChild?.textContent, nx: document.getElementById('sc1Next')?.textContent }));
 check('fin : « Tous les accords », « Suivante : Ré Majeur »', endT.back === 'Tous les accords' && /Ré Majeur/.test(endT.nx || ''), endT);
 await ev(p, () => document.getElementById('sc1Again').click()); await W(p, 400); await notes(p, [60, 62, 64, 67]); await W(p, 2200);
 check('meilleur gardé : rejouée avec une faute → reste à 3', await ua(p, 'chords', 'tri', 'C-maj') === 3 && await endStars(p) === 2);
