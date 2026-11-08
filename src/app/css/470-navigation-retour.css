@@ -44,3 +44,9 @@ body.su-cfg #suName .su-cfgs{font-family:var(--f-body);font-size:.42em;font-weig
 #endModal .end-hero{position:relative}
 #endChips{position:absolute;left:0;top:calc(100% + 6px);z-index:5;width:min(420px,100%);background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:10px 12px;box-shadow:var(--shadow-float)}
 #endChips[hidden]{display:none}
+/* jeux : la flèche remplace « Quitter » / « Salon » (gardés dans le DOM pour les raccourcis et les tests) */
+#runner .rn-head{align-items:center} #runner .rn-head > .nav-back{margin-right:4px}
+#runner .rn-acts{display:none!important}
+/* fiches PLAY (grille, import) : la flèche en haut à gauche */
+.gr-x.nav-back{position:absolute;top:12px;left:12px;right:auto;width:38px;height:38px;border-radius:12px;background:var(--surface);border:1px solid var(--line);z-index:2}
+.gr-x.nav-back svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}

@@ -81,4 +81,7 @@ function sc1ToNotes(tid,k){ S.settings.sc1Mode="notes"; save(); if(page==="sc1")
     if((pc===0||pc===4) && page==="sc1" && endOpen && lastGame && lastGame.sc1 && $("sc1Again") && !openMods.length && !helpOpen && !midiOpen && S.settings.midiC!==false){
       const b = pc===0 ? $("endFoot").querySelector(".btn.primary") : $("endFoot").querySelector('[data-mi="1"]'); if(b){ b.click(); return true; } if(pc===4) return false; }
     return o.apply(this,arguments); }; }
+// ---- en-tête des jeux (08/11) : ← à gauche du titre, comme partout ; plus de « Quitter » / « Salon » à droite ----
+// salon → retour aux jeux ; partie solo lancée du salon → retour au salon ; partie classée ou sans salon → « Quitter » (avec la confirmation habituelle)
+{ const h=document.querySelector("#runner .rn-head"); if(h && !$("rnBack")) h.prepend(navBtn("rnBack", t("navBack"), ()=>{ const l=$("duToLobby"); (l && !l.hidden ? l : $("rnQuit")).click(); })); }
 /* ==== fin Navigation ==== */

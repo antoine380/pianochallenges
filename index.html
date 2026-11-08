@@ -4088,6 +4088,12 @@ body.su-cfg #suName .su-cfgs{font-family:var(--f-body);font-size:.42em;font-weig
 #endModal .end-hero{position:relative}
 #endChips{position:absolute;left:0;top:calc(100% + 6px);z-index:5;width:min(420px,100%);background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:10px 12px;box-shadow:var(--shadow-float)}
 #endChips[hidden]{display:none}
+/* jeux : la flèche remplace « Quitter » / « Salon » (gardés dans le DOM pour les raccourcis et les tests) */
+#runner .rn-head{align-items:center} #runner .rn-head > .nav-back{margin-right:4px}
+#runner .rn-acts{display:none!important}
+/* fiches PLAY (grille, import) : la flèche en haut à gauche */
+.gr-x.nav-back{position:absolute;top:12px;left:12px;right:auto;width:38px;height:38px;border-radius:12px;background:var(--surface);border:1px solid var(--line);z-index:2}
+.gr-x.nav-back svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
 /* ==== Notifications, partage, bilan, série (08/11/2026) (JS : js/889b-notifs-partage-serie.js) ==== */
 /* A. cartes en haut à droite */
 .ntf-pop,.pc-toast{position:fixed;top:max(14px,env(safe-area-inset-top,0px));right:max(14px,env(safe-area-inset-right,0px));z-index:9400;display:flex;align-items:center;gap:12px;
@@ -10172,7 +10178,7 @@ function grRender(){ const box=$("grPanel"), g=grOf(PC.gr), pr=PROG[g.pid], sc=p
     b.innerHTML="<b></b><small></small>"; b.firstChild.textContent=grName(x); b.lastChild.textContent=t("grSongs")(x.songs.length); b.onclick=()=>{ PC.gr=x.id; grRender(); }; list.appendChild(b); });
   const card=document.createElement("div"); card.className="gr-card"; card.setAttribute("role","tabpanel");
   const core=g.core.map(ch), open=typeOpenS("prog",g.pid);
-  card.innerHTML='<button type="button" class="gr-x" id="grClose"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>'+
+  card.innerHTML='<button type="button" class="gr-x nav-back" id="grClose"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></button>'+
     '<div class="gr-top"><div class="gr-degs'+(core.length>4?' many':'')+'">'+core.map(c=>'<span><b>'+esc(c.ro)+'</b><small>'+esc(c.nm)+'</small></span>').join('<i aria-hidden="true">·</i>')+'</div>'+
     '<div class="gr-side"><span class="gr-lvl"></span><button type="button" class="gr-play" id="grPlay"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.5l12 7.5-12 7.5z"/></svg><span></span></button></div></div>'+
     '<div class="gr-keys" id="grKeys" role="group"></div>'+
@@ -10493,7 +10499,7 @@ addEventListener("resize",()=>{ if(page==="acc" && ACC.view==="play" && ACC.run)
 // (fetch keepalive vers la fonction SQL track_events), sans le SDK Supabase. Hors ligne, la file attend. Une table ou une
 // fonction absente (migration pas encore lancée) coupe l'envoi sans erreur. En développement (localhost), rien ne part sur
 // le réseau, sauf si localStorage « pc-trk-test » = "1" (tests). Interrupteur : S.settings.analytics (absent = activé).
-const APP_BUILD="2026-11-08T16:27Z"; // remplacé par tools/build.py par la date de construction (version.txt)
+const APP_BUILD="2026-11-08T16:37Z"; // remplacé par tools/build.py par la date de construction (version.txt)
 const TRK={q:[], t:0, off:false, anon:null, sent:0, errs:[], errT:0, errSeen:new Set(), errOn:null, ports:new Set(), first:false};
 const RC={flags:{}, daily:{}, at:0};
 const TRK_NAMES=new Set(["song_import","app_open","first_note","input_mode","midi_connected","pp_lesson_done","learn_end","game_end","quiz_end","duel_end","goal_reached","badge","signup","login","play","feedback","acc_end","song_open","route_step","route_stage"]);
@@ -10701,7 +10707,7 @@ const IMP_ROLE_COL={rh:"#7a5bf5", lh:"#c9463c", both:"#0e7490", off:"#8a86a8"};
 function impRender(){ const box=$("impPanel"); box.innerHTML=""; box.dataset.v=PC.view;
   if(PC.view==="help") return impRenderHelp(box); if(PC.view==="mine") return impRenderMine(box);
   const card=document.createElement("div"); card.className="imp-card"; box.appendChild(card);
-  const x=document.createElement("button"); x.type="button"; x.className="gr-x imp-x"; x.id="impClose"; x.setAttribute("aria-label",t("close")); x.innerHTML='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>';
+  const x=document.createElement("button"); x.type="button"; x.className="gr-x imp-x nav-back"; x.id="impClose"; x.setAttribute("aria-label",t("navBack")); x.innerHTML='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>';
   x.onclick=()=>{ IMP.draft=null; IMP.err=null; IMP.editId=null; PC.view="cat"; renderPlaySongs(); }; card.appendChild(x);
   if(IMP.err || !IMP.draft){ const code=IMP.err||"format", e=t("impErr");
     card.insertAdjacentHTML("beforeend",'<div class="imp-errb" role="alert"><span class="imp-fi err" aria-hidden="true">!</span><div><h3></h3><p></p></div></div><div class="imp-acts"><button type="button" class="btn primary" id="impRetry"></button><button type="button" class="btn" id="impErrHelp"></button></div>');
@@ -15097,6 +15103,9 @@ function sc1ToNotes(tid,k){ S.settings.sc1Mode="notes"; save(); if(page==="sc1")
     if((pc===0||pc===4) && page==="sc1" && endOpen && lastGame && lastGame.sc1 && $("sc1Again") && !openMods.length && !helpOpen && !midiOpen && S.settings.midiC!==false){
       const b = pc===0 ? $("endFoot").querySelector(".btn.primary") : $("endFoot").querySelector('[data-mi="1"]'); if(b){ b.click(); return true; } if(pc===4) return false; }
     return o.apply(this,arguments); }; }
+// ---- en-tête des jeux (08/11) : ← à gauche du titre, comme partout ; plus de « Quitter » / « Salon » à droite ----
+// salon → retour aux jeux ; partie solo lancée du salon → retour au salon ; partie classée ou sans salon → « Quitter » (avec la confirmation habituelle)
+{ const h=document.querySelector("#runner .rn-head"); if(h && !$("rnBack")) h.prepend(navBtn("rnBack", t("navBack"), ()=>{ const l=$("duToLobby"); (l && !l.hidden ? l : $("rnQuit")).click(); })); }
 /* ==== fin Navigation ==== */
 /* ==== Notifications, partage, bilan, série (08/11/2026, retours d'Antoine) ====
 // A. Une notification ajoutée (ntfAdd) apparaît en carte en haut à droite (#ntfPop : picto, ou le badge gagné), un clic = l'action ;

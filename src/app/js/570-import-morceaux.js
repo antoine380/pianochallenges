@@ -77,7 +77,7 @@ const IMP_ROLE_COL={rh:"#7a5bf5", lh:"#c9463c", both:"#0e7490", off:"#8a86a8"};
 function impRender(){ const box=$("impPanel"); box.innerHTML=""; box.dataset.v=PC.view;
   if(PC.view==="help") return impRenderHelp(box); if(PC.view==="mine") return impRenderMine(box);
   const card=document.createElement("div"); card.className="imp-card"; box.appendChild(card);
-  const x=document.createElement("button"); x.type="button"; x.className="gr-x imp-x"; x.id="impClose"; x.setAttribute("aria-label",t("close")); x.innerHTML='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>';
+  const x=document.createElement("button"); x.type="button"; x.className="gr-x imp-x nav-back"; x.id="impClose"; x.setAttribute("aria-label",t("navBack")); x.innerHTML='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>';
   x.onclick=()=>{ IMP.draft=null; IMP.err=null; IMP.editId=null; PC.view="cat"; renderPlaySongs(); }; card.appendChild(x);
   if(IMP.err || !IMP.draft){ const code=IMP.err||"format", e=t("impErr");
     card.insertAdjacentHTML("beforeend",'<div class="imp-errb" role="alert"><span class="imp-fi err" aria-hidden="true">!</span><div><h3></h3><p></p></div></div><div class="imp-acts"><button type="button" class="btn primary" id="impRetry"></button><button type="button" class="btn" id="impErrHelp"></button></div>');

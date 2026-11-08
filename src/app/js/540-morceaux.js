@@ -81,7 +81,7 @@ function grRender(){ const box=$("grPanel"), g=grOf(PC.gr), pr=PROG[g.pid], sc=p
     b.innerHTML="<b></b><small></small>"; b.firstChild.textContent=grName(x); b.lastChild.textContent=t("grSongs")(x.songs.length); b.onclick=()=>{ PC.gr=x.id; grRender(); }; list.appendChild(b); });
   const card=document.createElement("div"); card.className="gr-card"; card.setAttribute("role","tabpanel");
   const core=g.core.map(ch), open=typeOpenS("prog",g.pid);
-  card.innerHTML='<button type="button" class="gr-x" id="grClose"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>'+
+  card.innerHTML='<button type="button" class="gr-x nav-back" id="grClose"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></button>'+
     '<div class="gr-top"><div class="gr-degs'+(core.length>4?' many':'')+'">'+core.map(c=>'<span><b>'+esc(c.ro)+'</b><small>'+esc(c.nm)+'</small></span>').join('<i aria-hidden="true">·</i>')+'</div>'+
     '<div class="gr-side"><span class="gr-lvl"></span><button type="button" class="gr-play" id="grPlay"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.5l12 7.5-12 7.5z"/></svg><span></span></button></div></div>'+
     '<div class="gr-keys" id="grKeys" role="group"></div>'+
