@@ -6,8 +6,8 @@
 // étoiles et coupes, barre de progression). « S'inscrire / Se connecter » n'est plus en haut à droite (il est dans le menu, CSS 470). */
 const NAV_BACK_SVG='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>';
 const NAV_RV_SVG='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 12a8 8 0 1 1-2.34-5.66"/><path d="M20 4v4.5h-4.5"/><path d="M12 8v4l2.5 2"/></svg>';
-Object.assign(TXT.fr,{endErr:n=>n+(n>1?" fautes":" faute"), endInfoA:"Comment sont comptés les exercices", endInfoT:"Un exercice est sans faute quand tu le joues en entier sans aucune fausse note.", navBack:"Retour", navBackLearn:"Retour à LEARN", navBackUa:x=>"Retour à « "+x+" »", uaResStars:"étoiles", uaResCups:"coupes"});
-Object.assign(TXT.en,{endErr:n=>n+(n>1?" mistakes":" mistake"), endInfoA:"How exercises are counted", endInfoT:"An exercise is flawless when you play it all the way through without a single wrong note.", navBack:"Back", navBackLearn:"Back to LEARN", navBackUa:x=>"Back to “"+x+"”", uaResStars:"stars", uaResCups:"cups"});
+Object.assign(TXT.fr,{sc1ToN:"Jouer en notes", endErr:n=>n+(n>1?" fautes":" faute"), endInfoA:"Comment sont comptés les exercices", endInfoT:"Un exercice est sans faute quand tu le joues en entier sans aucune fausse note.", navBack:"Retour", navBackLearn:"Retour à LEARN", navBackUa:x=>"Retour à « "+x+" »", uaResStars:"étoiles", uaResCups:"coupes"});
+Object.assign(TXT.en,{sc1ToN:"Play it in notes", endErr:n=>n+(n>1?" mistakes":" mistake"), endInfoA:"How exercises are counted", endInfoT:"An exercise is flawless when you play it all the way through without a single wrong note.", navBack:"Back", navBackLearn:"Back to LEARN", navBackUa:x=>"Back to “"+x+"”", uaResStars:"stars", uaResCups:"cups"});
 function navBtn(id, label, go){ const b=document.createElement("button"); b.type="button"; b.id=id; b.className="nav-back"; b.innerHTML=NAV_BACK_SVG; b.setAttribute("aria-label",label); b.title=label; b.onclick=go; return b; }
 // ---- page « une à une » : retour, ordre des boutons, picto Révision, encart des résultats ----
 { const o=sc1Render; sc1Render=function(){ const r=o.apply(this,arguments); try{ const P=$("sc1Panel"), top=P&&P.querySelector(".sc1-top"); if(!top) return r;
@@ -57,4 +57,28 @@ function endRvBack(g){ if(!endRv(g)) return; const sec=UA.cur; setTimeout(()=>{ 
 { const o=closeEnd; closeEnd=function(){ const was=endOpen, g=lastGame, r=o.apply(this,arguments); if(was) endRvBack(g); return r; }; }
 ["endX","endBg"].forEach(id=>{ const el=$(id); if(el) el.addEventListener("click",()=>endRvBack(lastGame)); }); // ces deux-là appellent l'ancien closeEnd (lié au chargement)
 document.addEventListener("click",e=>{ const c=$("endChips"); if(c && !c.hidden && !c.contains(e.target)){ c.hidden=true; const i=$("endInfo"); if(i) i.setAttribute("aria-expanded","false"); } });
+// ---- fin d'une case « une à une » (08/11) : 3 boutons ; à refaire → « Recommencer » en bleu ; réussie → « Suivante » en bleu ----
+// Gammes : « Toutes les gammes » devient « Jouer en accords » (en NOTES) / « Jouer en notes » (en ACCORDS) ; la croix ramène à la liste.
+// Touches MIDI : Do = le bouton bleu, Mi = le bouton marqué data-mi, Si = Recommencer.
+function sc1ToNotes(tid,k){ S.settings.sc1Mode="notes"; save(); if(page==="sc1") sc1Render(); sc1Ask(tid,k,"notes"); }
+{ const o=sc1End; sc1End=function(g){ const r=o.apply(this,arguments); try{ const s=g&&g.sc1; if(!s) return r;
+    const F=$("endFoot"), n=s.stars|0, scales=uaSecOf(s.mode)==="scales", again=$("sc1Again"), nx=$("sc1Next");
+    const kb=(b,x)=>{ if(!b) return; b.querySelectorAll("kbd").forEach(e=>e.remove()); delete b.dataset.mi; if(x){ const e=kbdEl(); e.textContent=x; b.appendChild(e); } };
+    let sw=$("sc1ToCh");
+    if(scales){ const back=$("sc1Back"); if(back) back.remove();
+      if(!sw){ sw=document.createElement("button"); sw.type="button"; sw.className="btn";
+        if(s.mode==="notes"){ sw.id="sc1ToCh"; sw.textContent=t("sc1ToCh"); sw.onclick=()=>sc1ToChords(s.tid,s.k); } else { sw.id="sc1ToN"; sw.textContent=t("sc1ToN"); sw.onclick=()=>sc1ToNotes(s.tid,s.k); } } }
+    else sw=$("sc1Back");
+    [sw,again,nx].forEach(b=>{ if(b) b.classList.remove("primary"); });
+    const main = n<3 || !nx ? again : nx; if(main) main.classList.add("primary");
+    // ordre : l'autre mode (ou la liste), Recommencer, Suivante
+    [sw,again,nx].forEach(b=>{ if(b) F.appendChild(b); });
+    kb(main,CNAME()); if(main!==again) kb(again,BNAME());
+    const other = main===nx ? sw : nx; [sw,nx].forEach(b=>{ if(b && b!==main) kb(b, b===other?ENAME():""); }); if(other && other!==main) other.dataset.mi="1";
+    if(main) main.focus({preventScroll:true});
+  }catch(e){ console.warn(e); } return r; }; }
+{ const o=midiStart; midiStart=function(note){ const pc=((note%12)+12)%12;
+    if((pc===0||pc===4) && page==="sc1" && endOpen && lastGame && lastGame.sc1 && $("sc1Again") && !openMods.length && !helpOpen && !midiOpen && S.settings.midiC!==false){
+      const b = pc===0 ? $("endFoot").querySelector(".btn.primary") : $("endFoot").querySelector('[data-mi="1"]'); if(b){ b.click(); return true; } if(pc===4) return false; }
+    return o.apply(this,arguments); }; }
 /* ==== fin Navigation ==== */

@@ -2,7 +2,7 @@
 // A. Série : un jour compte quand on a joué 10 minutes (S.playSec du jour, horloge simulée par page.clock + noteIn) :
 //    anneau à 0 / 5 / 10 min (menu #streakStat, fiche #pfSr), « Encore 5 min pour valider ta série » + pulsation au passage des 5 min,
 //    l'XP seul ne fait plus avancer la série, animation #srCel à 10 min (une seule fois par jour, PLEIN ÉCRAN au centre, maquette
-//    serie-anim-plein.html : voile, anneau ½ → plein, flamme, « Tes 10 minutes du jour sont faites. », initiales des jours, confettis),
+//    serie-anim-plein.html : voile, anneau ½ → plein, flamme, « Tu as joué 10 minutes ! », initiales des jours, confettis),
 //    jamais pendant une note attendue (exercice, partie de jeu), centrée et couvrant l'écran aux 5 tailles, fermée au clic / Échap /
 //    Do seul MIDI (faux Web MIDI ; ce Do n'est pas compté par l'exercice en dessous, en pause pendant l'animation),
 //    ancienne règle gardée pour les jours d'avant la bascule (S.srFrom),
@@ -80,7 +80,7 @@ await play(p, 19);
 check('9 min 45 : pas d’animation, série toujours à 3', !(await cel(p)) && await p.X('S.streak.days') === 3);
 await play(p, 1); await p.clock.runFor(300);
 const c1 = await cel(p);
-check('10 min, sur une autre page (GAMES) : l’animation « Série : 4 jours ! » / « Tes 10 minutes du jour sont faites. » apparaît', !!c1 && c1.t === 'Série : 4 jours !' && c1.s === 'Tes 10 minutes du jour sont faites.' && c1.h === "Touche l'écran pour continuer", c1);
+check('10 min, sur une autre page (GAMES) : l’animation « Série : 4 jours ! » / « Tu as joué 10 minutes ! » apparaît', !!c1 && c1.t === 'Série : 4 jours !' && c1.s === 'Tu as joué 10 minutes !' && c1.h === "Touche l'écran pour continuer", c1);
 const pg1 = await p.X('[page, anyWin(), SR.on]');
 check('plein écran : couvre tout l’écran, au-dessus des fenêtres (z ≥ 9500), centrée, dialogue accessible (aria-modal, titre), capte les clics ; page inchangée en dessous', c1 && c1.cover && c1.top && c1.centred && c1.fits && c1.z >= 9500 && c1.role === 'dialog' && c1.modal === 'true' && c1.lbl && c1.pe === 'auto' && pg1[0] === 'games' && !pg1[1] && pg1[2], [c1, pg1]);
 check('… la série est validée : 4 j, dernier jour = aujourd’hui, animation notée (S.srShown)', await p.X('S.streak.days===4 && S.streak.last===dayStr() && S.srShown===dayStr()'));
@@ -90,8 +90,10 @@ check('les 4 pastilles des jours = initiales des 4 derniers jours (série réell
 if (CAP) await p.screenshot({ path: `${CAP}/03_animation_10min_ipad.png` });
 await p.clock.runFor(Math.max(0, 7000 - await p.X('Date.now()-SR.at')));
 check('à 7 s elle est encore là, avec le bouton « Voir ma progression »', !!(await cel(p)) && await ev(p, () => (document.querySelector('#srCel #srGo')||{}).textContent === 'Voir ma progression'));
-await p.clock.runFor(2000);
-check('l’animation s’efface seule (≈ 8 s), SR.on retombe', !(await cel(p)) && !(await p.X('SR.on')));
+await p.clock.runFor(15000);
+check('08/11 : elle reste à l’écran (plus de fermeture seule, 22 s)', !!(await cel(p)) && await p.X('SR.on'));
+await ev(p, () => document.getElementById('srCel').click()); await p.clock.runFor(1500);
+check('un toucher la ferme, SR.on retombe', !(await cel(p)) && !(await p.X('SR.on')));
 await play(p, 8); await p.clock.runFor(1500);
 check('encore du jeu le même jour : pas de 2e animation', !(await cel(p)));
 await fiche(p);
@@ -197,9 +199,9 @@ p = await open({ clock: true, rm: 'reduce', lang: 'en', st: STATE({ lang: 'en', 
 await play(p, 1); await p.clock.runFor(300);
 const c3 = await cel(p);
 const anims = await ev(p, () => { const c = document.getElementById('srCel'); return c ? c.getAnimations({ subtree: true }).filter(a => a instanceof CSSAnimation).length : -1; });
-check('EN + mouvement réduit : « Streak: 4 days! », même contenu, plein écran, aucune animation CSS', !!c3 && c3.t === 'Streak: 4 days!' && c3.s === 'Your 10 minutes for today are done.' && c3.cover && c3.days.length === 4 && anims === 0, [c3, anims]);
+check('EN + mouvement réduit : « Streak: 4 days! », même contenu, plein écran, aucune animation CSS', !!c3 && c3.t === 'Streak: 4 days!' && c3.s === 'You played 10 minutes!' && c3.cover && c3.days.length === 4 && anims === 0, [c3, anims]);
 await p.clock.runFor(9000);
-check('mouvement réduit : se ferme seule aussi', !(await cel(p)));
+check('mouvement réduit : reste aussi à l’écran jusqu’au toucher (08/11)', !!(await cel(p)));
 await fiche(p);
 check('EN : fiche « Streak locked in today »', await ev(p, () => document.querySelector('#pfSr b').textContent) === 'Streak locked in today');
 await p.context().close();
@@ -214,7 +216,7 @@ await p.X('openPage("sc1")'); await W(p, 500);
 const RV = await p.X('t("sc1RV")');
 const msgs = [];
 for (let i = 0; i < 4; i++) {
-  await ev(p, () => { const e = document.getElementById('endModal'); if (e && !e.hidden) document.getElementById('sc1Back')?.click(); }); await W(p, 200);
+  await ev(p, () => { const e = document.getElementById('endModal'); if (e && !e.hidden) (document.getElementById('sc1Back')||document.getElementById('endX')).click(); }); await W(p, 200);
   await ev(p, () => document.querySelector('.sc1-c[data-tid="major"][data-k="G"]').click()); await W(p, 400);
   await ev(p, () => document.getElementById('sc1PkEval').click()); await W(p, 500);
   for (const m of [67, 69, 71, 72, 74, 76, 78, 79]) { await p.X(`noteIn(${m})`); await W(p, 40); } await W(p, 1800);
@@ -226,7 +228,7 @@ check('plus de « · 0 coupe sur 12 » sur le panneau (seulement les étoiles)',
 check('plus de ligne « Série : … Reviens demain pour la garder. »', msgs.every(x => !x.nx && x.nxv === 'none'), msgs.map(x => x.nx));
 if (CAP) await p.screenshot({ path: `${CAP}/01_fin_gamme_ipad.png` });
 // the cup of the C row (4th scale at 3 stars): the cup line stays, the message comes from the cup list
-await ev(p, () => document.getElementById('sc1Back')?.click()); await W(p, 200);
+await ev(p, () => (document.getElementById('sc1Back')||document.getElementById('endX')).click()); await W(p, 200);
 await ev(p, () => document.querySelector('.sc1-c[data-tid="mel"][data-k="C"]').click()); await W(p, 400);
 await ev(p, () => document.getElementById('sc1PkEval').click()); await W(p, 500);
 for (const m of [60, 62, 63, 65, 67, 69, 71, 72]) { await p.X(`noteIn(${m})`); await W(p, 40); } await W(p, 1800);

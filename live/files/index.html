@@ -4088,6 +4088,56 @@ body.su-cfg #suName .su-cfgs{font-family:var(--f-body);font-size:.42em;font-weig
 #endModal .end-hero{position:relative}
 #endChips{position:absolute;left:0;top:calc(100% + 6px);z-index:5;width:min(420px,100%);background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:10px 12px;box-shadow:var(--shadow-float)}
 #endChips[hidden]{display:none}
+/* ==== Notifications, partage, bilan, série (08/11/2026) (JS : js/889b-notifs-partage-serie.js) ==== */
+/* A. cartes en haut à droite */
+.ntf-pop,.pc-toast{position:fixed;top:max(14px,env(safe-area-inset-top,0px));right:max(14px,env(safe-area-inset-right,0px));z-index:9400;display:flex;align-items:center;gap:12px;
+  width:min(360px,calc(100vw - 28px));padding:10px 14px 10px 10px;border-radius:18px;border:1px solid var(--line);background:var(--surface);color:var(--ink);text-align:left;
+  box-shadow:var(--shadow-float);opacity:0;transform:translateY(-12px) scale(.98);pointer-events:none;transition:opacity .22s var(--ease-out),transform .32s var(--ease-out);font:inherit}
+.ntf-pop{cursor:pointer}
+.ntf-pop.on,.pc-toast.on{opacity:1;transform:none;pointer-events:auto}
+.pc-toast{width:auto;max-width:min(360px,calc(100vw - 28px));padding:8px 14px 8px 8px}
+.np-ic{flex:none;width:44px;height:44px;border-radius:12px;background:var(--surface-2);display:grid;place-items:center;overflow:hidden}
+.pc-toast .np-ic{width:32px;height:32px;border-radius:10px}
+.np-ic svg{width:100%;height:100%}
+.np-badge{display:block;width:100%;height:100%;background:radial-gradient(circle at 50% 40%,#fff4cf,#f5b62a 70%);padding:4px}
+.np-badge svg{width:100%;height:100%}
+.np-tx{display:flex;flex-direction:column;min-width:0;gap:1px}
+.np-tx b{font-weight:800;font-size:.92rem;line-height:1.2}
+.np-tx small{font-size:.78rem;color:var(--muted);line-height:1.25;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.ntf-pop:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.ntf-ic.is-badge{background:radial-gradient(circle at 50% 40%,#fff4cf,#f5b62a 70%);border-radius:12px;overflow:hidden}
+.ntf-ic.is-badge .np-badge{background:none}
+@media (prefers-reduced-motion:reduce){ .ntf-pop,.pc-toast{transition:opacity .15s linear;transform:none} }
+/* B. fenêtre de partage */
+#shSheet{z-index:9300}
+.sh-card{max-width:420px}
+.sh-prev{display:flex;justify-content:center;margin:0 0 14px}
+.sh-prev img{width:min(220px,46vw,32vh);aspect-ratio:1;border-radius:16px;box-shadow:0 14px 30px -16px rgba(40,30,110,.5);display:block}
+.sh-opts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.sh-o{display:flex;flex-direction:column;align-items:center;gap:6px;padding:10px 4px;border-radius:16px;border:1px solid var(--line);background:var(--surface);color:var(--ink);font:700 .78rem/1.15 var(--f-body);cursor:pointer;min-height:44px}
+.sh-i{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;background:var(--surface-2)}
+.sh-i svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.sh-wa .sh-i{background:#25d366;color:#fff} .sh-sms .sh-i{background:#34c759;color:#fff} .sh-mail .sh-i{background:#2f6fe4;color:#fff}
+.sh-more .sh-i svg{fill:currentColor;stroke:none}
+@media (hover:hover) and (pointer:fine){ .sh-o:hover{border-color:var(--brand)} }
+.sh-o:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+@media (max-height:520px) and (orientation:landscape){ .sh-prev{display:none} .sh-opts{grid-template-columns:repeat(6,minmax(0,1fr))} }
+/* C. bilan : 3 chiffres */
+.end-stats.n3{grid-template-columns:repeat(3,minmax(0,1fr))}
+@media (max-width:640px){ .end-stats.n3{grid-template-columns:repeat(3,minmax(0,1fr))} .end-stats.n3 .end-stat span{font-size:.62rem} }
+/* D. série : temps par jour, rond du jour, minutes d'un jour */
+.sr-min{display:flex;align-items:center;gap:8px;flex:1 1 100%;margin-top:6px;font-size:.78rem;font-weight:700;opacity:.95}
+.sr-min select{font:800 .82rem var(--f-body);color:#16764e;background:#fff;border:0;border-radius:999px;padding:4px 10px;min-height:30px;cursor:pointer}
+.sr-min select:focus-visible{outline:3px solid #ffe27a;outline-offset:2px}
+#progFiche .pf-grid span{aspect-ratio:1;width:min(100%,2.3em);height:auto;max-height:none;align-self:center;justify-self:center}
+.pf-grid span[data-k]{cursor:pointer}
+.pf-grid span.sel{box-shadow:0 0 0 2px #fff;opacity:1}
+.pf-grid span[data-k]:focus-visible{outline:2px solid #ffe27a;outline-offset:1px}
+.pf-cal{position:relative}
+.pf-daytip{position:absolute;z-index:5;padding:6px 10px;border-radius:10px;background:#0f3d28;color:#fff;font-size:.78rem;font-weight:700;white-space:nowrap;box-shadow:0 8px 20px -10px rgba(0,0,0,.6);pointer-events:none;text-transform:none}
+.pf-daytip::first-letter{text-transform:uppercase}
+body:has(.ntf-pop.on) .pc-toast{top:calc(max(14px,env(safe-area-inset-top,0px)) + 76px)}
+#ntfList .ntf-ic.is-badge{background:radial-gradient(circle at 50% 40%,#fff4cf,#f5b62a 70%)!important;padding:3px}
 </style>
 
 <script>if(window.Capacitor&&window.webkit&&window.webkit.messageHandlers&&window.webkit.messageHandlers.bridge)document.documentElement.classList.add("native");</script>
@@ -4699,7 +4749,7 @@ body.su-cfg #suName .su-cfgs{font-family:var(--f-body);font-size:.42em;font-weig
           <div class="seg diff" id="segDiff"><button type="button" data-v="0"><b data-i="noTimer"></b></button><button type="button" data-v="20"><b>20 s</b></button><button type="button" data-v="10"><b>10 s</b></button><button type="button" data-v="5"><b>5 s</b></button></div>
           <div class="range-row"><input type="range" id="delay" min="0" max="20" step="1" aria-label="Seconds"><output class="mono" id="delayOut"></output></div>
         </div><div class="field" id="goalField"><span data-i="goalSetL"></span>
-          <div class="seg" id="segGoal"><button type="button" data-v="min:5">5 min</button><button type="button" data-v="min:10">10 min</button><button type="button" data-v="min:20">20 min</button><button type="button" data-v="xp:50">50 XP</button><button type="button" data-v="xp:100">100 XP</button></div>
+          <div class="seg" id="segGoal"><button type="button" data-v="min:5">5 min</button><button type="button" data-v="min:10">10 min</button><button type="button" data-v="min:15">15 min</button><button type="button" data-v="min:20">20 min</button><button type="button" data-v="min:30">30 min</button></div>
         </div>
           <div class="set-checks"><label class="check" id="octField"><input type="checkbox" id="optOct"> <span data-i="optOct"></span></label>
           <label class="check"><input type="checkbox" id="optAuto"> <span data-i="optAuto"></span></label>
@@ -4898,7 +4948,7 @@ const TXT = {
     ntfCat_social:"Défis", ntfCat_progress:"Progrès", ntfCat_remind:"Rappels", ntfCat_news:"Nouveautés",
     ntfCatD_social:"Duels, revanches, classement de la semaine", ntfCatD_progress:"Niveaux, déblocages, records d'ELO", ntfCatD_remind:"Entraînement du jour, série en danger", ntfCatD_news:"Nouveaux morceaux, jeux et questions",
     ntfWeeklyT:"Récap de la semaine", ntfWeeklyD:"Le dimanche : XP, série, ELO et ton objectif", ntfApp:"Dans l'app", ntfMail:"E-mail",
-    ntfMailNote:"Au plus 2 e-mails par semaine, en plus des rappels de série. Chaque e-mail a un lien pour se désinscrire.", ntfMailGuest:"Crée un compte (S'inscrire, en haut) pour recevoir le récap et les rappels par e-mail.",
+    ntfMailNote:"Au plus 2 e-mails par semaine, en plus des rappels de série. Chaque e-mail a un lien pour se désinscrire.", ntfMailGuest:"Crée un compte (S'inscrire) pour recevoir le récap et les rappels par e-mail.",
     ntfMailOn:"Les e-mails sont activés pour ton compte. Tu peux les régler dans Réglages.", ntfMailOff:"Les e-mails sont désactivés. Tu peux les activer dans Réglages.",
     ntfEmptyT:"Rien de nouveau", ntfEmptyX:"Tes défis, tes progrès et les nouveautés arriveront ici.", ntfToday:"Aujourd'hui", ntfYesterday:"Hier", ntfWeek:"Cette semaine", ntfOlder:"Plus ancien",
     ntfNow:"à l'instant", ntfMin:n=>"il y a "+n+" min", ntfH:n=>"il y a "+n+" h", ntfYest:"hier", ntfOpen:"Voir", ntfPlay:"Jouer", ntfSee:"Voir", ntfSetGo:"Régler",
@@ -5218,7 +5268,7 @@ const TXT = {
     ntfCat_social:"Challenges", ntfCat_progress:"Progress", ntfCat_remind:"Reminders", ntfCat_news:"What's new",
     ntfCatD_social:"Duels, rematches, weekly leaderboard", ntfCatD_progress:"Levels, unlocks, ELO records", ntfCatD_remind:"Daily practice, streak in danger", ntfCatD_news:"New songs, games and questions",
     ntfWeeklyT:"Weekly recap", ntfWeeklyD:"On Sundays: XP, streak, ELO and your goal", ntfApp:"In the app", ntfMail:"E-mail",
-    ntfMailNote:"At most 2 e-mails a week, plus streak reminders. Every e-mail has an unsubscribe link.", ntfMailGuest:"Create an account (Sign up, at the top) to get the recap and reminders by e-mail.",
+    ntfMailNote:"At most 2 e-mails a week, plus streak reminders. Every e-mail has an unsubscribe link.", ntfMailGuest:"Create an account (Sign up) to get the recap and reminders by e-mail.",
     ntfMailOn:"E-mails are on for your account. You can change them in Settings.", ntfMailOff:"E-mails are off. You can turn them on in Settings.",
     ntfEmptyT:"Nothing new", ntfEmptyX:"Your challenges, progress and news will show up here.", ntfToday:"Today", ntfYesterday:"Yesterday", ntfWeek:"This week", ntfOlder:"Older",
     ntfNow:"just now", ntfMin:n=>n+" min ago", ntfH:n=>n+" h ago", ntfYest:"yesterday", ntfOpen:"Open", ntfPlay:"Play", ntfSee:"See", ntfSetGo:"Set up",
@@ -10411,7 +10461,7 @@ addEventListener("resize",()=>{ if(page==="acc" && ACC.view==="play" && ACC.run)
 // (fetch keepalive vers la fonction SQL track_events), sans le SDK Supabase. Hors ligne, la file attend. Une table ou une
 // fonction absente (migration pas encore lancée) coupe l'envoi sans erreur. En développement (localhost), rien ne part sur
 // le réseau, sauf si localStorage « pc-trk-test » = "1" (tests). Interrupteur : S.settings.analytics (absent = activé).
-const APP_BUILD="2026-11-08T09:09Z"; // remplacé par tools/build.py par la date de construction (version.txt)
+const APP_BUILD="2026-11-08T09:29Z"; // remplacé par tools/build.py par la date de construction (version.txt)
 const TRK={q:[], t:0, off:false, anon:null, sent:0, errs:[], errT:0, errSeen:new Set(), errOn:null, ports:new Set(), first:false};
 const RC={flags:{}, daily:{}, at:0};
 const TRK_NAMES=new Set(["song_import","app_open","first_note","input_mode","midi_connected","pp_lesson_done","learn_end","game_end","quiz_end","duel_end","goal_reached","badge","signup","login","play","feedback","acc_end","song_open","route_step","route_stage"]);
@@ -14194,7 +14244,7 @@ Object.assign(TXT.fr,{
     rec:["Nouveau record pour cette gamme !","Tu bats ton record sur cette gamme !","Mieux que la dernière fois !","Record battu, tu progresses !"]},
   endStreak:()=>"", ntfStreakX:"Joue 10 minutes avant minuit pour la garder.",
   srOf:(a,b)=>"Série du jour : "+a+" / "+b+" min", srLeft:n=>"Encore "+n+" min pour valider ta série", srHow:n=>"Joue "+n+" min pour valider ta série",
-  srOkT:"Série validée aujourd'hui", srOkS:n=>n+" min jouées : aujourd'hui compte !", srCelGo:"Voir ma progression", srCelT:n=>"Série : "+n+" jour"+(n>1?"s":"")+" !", srCelS:n=>"Tes "+n+" minutes du jour sont faites.", srCelH:"Touche l'écran pour continuer", srCelHm:c=>"Touche l'écran ou joue "+c+" pour continuer"});
+  srOkT:"Série validée aujourd'hui", srOkS:n=>"Tu as joué "+n+" minutes !", srCelGo:"Voir ma progression", srCelT:n=>"Série : "+n+" jour"+(n>1?"s":"")+" !", srCelS:n=>"Tu as joué "+n+" minutes !", srCelH:"Touche l'écran pour continuer", srCelHm:c=>"Touche l'écran ou joue "+c+" pour continuer"});
 Object.assign(TXT.en,{
   sc1Tu:{seg:["Notes or chords",["**NOTES**: you play each scale note by note.","**CHORDS**: you play the chords of the scale, one by one.","Each mode has its own stars."]],
     cell:["One box = one scale",["Tap a box to play it.","{train}**Practice**: I show you the scale, then you play it back with the keys lit and the fingering. Nothing is scored.","{eval}**Test**: you play it on your own, with no help, to win stars."]],
@@ -14210,7 +14260,7 @@ Object.assign(TXT.en,{
     rec:["New best for this scale!","You beat your best on this scale!","Better than last time!","Record broken, you're improving!"]},
   endStreak:()=>"", ntfStreakX:"Play 10 minutes before midnight to keep it.",
   srOf:(a,b)=>"Today's streak: "+a+" / "+b+" min", srLeft:n=>n+" more min to lock in your streak", srHow:n=>"Play "+n+" min to lock in your streak",
-  srOkT:"Streak locked in today", srOkS:n=>n+" min played: today counts!", srCelGo:"See my progress", srCelT:n=>"Streak: "+n+" day"+(n!==1?"s":"")+"!", srCelS:n=>"Your "+n+" minutes for today are done.", srCelH:"Tap the screen to continue", srCelHm:c=>"Tap the screen or play "+c+" to continue"});
+  srOkT:"Streak locked in today", srOkS:n=>"You played "+n+" minutes!", srCelGo:"See my progress", srCelT:n=>"Streak: "+n+" day"+(n!==1?"s":"")+"!", srCelS:n=>"You played "+n+" minutes!", srCelH:"Tap the screen to continue", srCelHm:c=>"Tap the screen or play "+c+" to continue"});
 
 // ---- A. tutoriel : puces mises en forme, pointe centrée sur la cible ----
 function tuFmt(s){ return esc(s).replace(/\*\*(.+?)\*\*/g,"<b>$1</b>")
@@ -14237,12 +14287,13 @@ function sc1Var(cat){ const L=(t("sc1RV")||{})[cat]||[]; if(L.length<2) return L
       const tot=B.querySelector(".sc1-tot"); if(tot) tot.innerHTML='<span aria-hidden="true">★ </span>'+esc(t("sc1SumA")(sc1Total(s.mode),sc1Max(s.mode))); } }catch(e){ console.warn(e); } return r; }; }
 
 // ---- C. série validée au bout de SR_MIN minutes de jeu ----
-const SR_MIN=10, SR_SEC=SR_MIN*60;
+let SR_MIN=10, SR_SEC=600; // 08/11/2026 : le temps par jour se règle (= l'objectif en minutes, S.goal ; 10 si l'objectif est en XP)
+function srSync(){ const g=goalCfg(); SR_MIN = g.kind==="min" ? Math.max(1,Math.min(60,Math.round(+g.v)||10)) : 10; SR_SEC=SR_MIN*60; }
 const SR={prev:-1, wait:0, fanAt:0, force:0, pend:0, on:false, buf:[], bt:0, h:null, hide:0, gone:0, prevFocus:null};
 const srSec = d => (((S.playSec||{})[d||dayStr()])|0);
 // date de bascule : la nouvelle règle compte à partir de ce jour (un jour déjà compté par l'ancienne règle aujourd'hui reste compté)
 function srFrom(){ if(typeof S.srFrom!=="string" || !/^\d{4}-\d\d-\d\d$/.test(S.srFrom)){ S.srFrom = (S.streak && S.streak.last===dayStr()) ? addDays(1) : dayStr(); save(); } return S.srFrom; }
-function srOk(d){ d=d||dayStr(); return d<srFrom() ? ((S.xpDays||{})[d]|0)>0 : srSec(d)>=SR_SEC; }
+function srOk(d){ srSync(); const td=dayStr(); d=d||td; return d<srFrom() ? ((S.xpDays||{})[d]|0)>0 : srSec(d)>=(d<td ? Math.min(SR_SEC,600) : SR_SEC); } // un jour passé validé à 10 min le reste si l'objectif monte
 const srPct = () => srOk() ? 1 : Math.min(1, srSec()/SR_SEC);
 // le temps de jeu compte aussi le quiz au MIDI, le mode PIANO, le lecteur Play (MIDI relayé et touches de l'iframe)
 { const o=quizIn; quizIn=function(){ lastNoteAt=Date.now(); return o.apply(this,arguments); }; }
@@ -14284,7 +14335,7 @@ function srPaint(){ try{ srMenu(); }catch(e){} try{ if($("pfSr")) srRow(); }catc
 { const o=goalFanfare; goalFanfare=function(){ SR.fanAt=Date.now(); return o.apply(this,arguments); }; }
 function srPulse(){ SR.pulseAt=Date.now(); [$("streakStat")&&$("streakStat").querySelector(".sr-ic"), $("pfSr")].forEach(el=>{ if(!el) return; el.classList.remove("sr-pulse"); void el.offsetWidth; el.classList.add("sr-pulse"); setTimeout(()=>el.classList.remove("sr-pulse"),1300); }); }
 // chaque tick de temps de jeu (et chaque XP) : passage des 5 min, validation à 10 min
-function srTick(){ const d=dayStr(), s=srSec(d), was=SR.prev; SR.prev=s;
+function srTick(){ srSync(); const d=dayStr(), s=srSec(d), was=SR.prev; SR.prev=s;
   if(d>=srFrom() && s>=SR_SEC){ if(S.streak.last!==d){ SR.force=1; try{ bumpStreak(); }finally{ SR.force=0; } save(); try{ renderStatus(); }catch(e){} }
     if(S.srShown!==d && !SR.pend && !SR.on) srCelebrate(); } // S.srShown est posé quand elle se montre vraiment
   else if(was>=0 && was<SR_SEC/2 && s>=SR_SEC/2) srPulse();
@@ -14334,7 +14385,7 @@ function srShow(){ let c=$("srCel"); if(c) c.remove(); clearTimeout(SR.hide); cl
     +'<button type="button" class="btn primary sr-go" id="srGo"></button><small class="sr-hint"></small></div>';
   const T=String(t("srCelT")(N)), k=T.indexOf(N), h=c.querySelector(".sr-t");
   if(k>=0){ h.append(T.slice(0,k)); const sp=document.createElement("span"); sp.className="n"; sp.textContent=N; h.append(sp, T.slice(k+N.length)); } else h.textContent=T;
-  c.querySelector(".sr-s").textContent=t("srCelS")(fmtN(SR_MIN));
+  c.querySelector(".sr-s").textContent=t("srCelS")(fmtN(Math.max(SR_MIN,Math.floor(srSec()/60))));
   c.querySelector(".sr-hint").textContent = midiMode() && S.settings.midiC!==false ? t("srCelHm")(CNAME()) : t("srCelH");
   c.querySelector(".sr-go").textContent=t("srCelGo");
   c.addEventListener("click",e=>{ e.preventDefault(); e.stopPropagation(); const go=e.target.closest&&e.target.closest(".sr-go"); srClose(); if(go){ try{ openPage("progress"); }catch(_){} } });
@@ -14939,8 +14990,8 @@ function auDiagRender(){ const D=$("auDiag"); if(!D) return; D.querySelector("su
 // étoiles et coupes, barre de progression). « S'inscrire / Se connecter » n'est plus en haut à droite (il est dans le menu, CSS 470). */
 const NAV_BACK_SVG='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>';
 const NAV_RV_SVG='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 12a8 8 0 1 1-2.34-5.66"/><path d="M20 4v4.5h-4.5"/><path d="M12 8v4l2.5 2"/></svg>';
-Object.assign(TXT.fr,{endErr:n=>n+(n>1?" fautes":" faute"), endInfoA:"Comment sont comptés les exercices", endInfoT:"Un exercice est sans faute quand tu le joues en entier sans aucune fausse note.", navBack:"Retour", navBackLearn:"Retour à LEARN", navBackUa:x=>"Retour à « "+x+" »", uaResStars:"étoiles", uaResCups:"coupes"});
-Object.assign(TXT.en,{endErr:n=>n+(n>1?" mistakes":" mistake"), endInfoA:"How exercises are counted", endInfoT:"An exercise is flawless when you play it all the way through without a single wrong note.", navBack:"Back", navBackLearn:"Back to LEARN", navBackUa:x=>"Back to “"+x+"”", uaResStars:"stars", uaResCups:"cups"});
+Object.assign(TXT.fr,{sc1ToN:"Jouer en notes", endErr:n=>n+(n>1?" fautes":" faute"), endInfoA:"Comment sont comptés les exercices", endInfoT:"Un exercice est sans faute quand tu le joues en entier sans aucune fausse note.", navBack:"Retour", navBackLearn:"Retour à LEARN", navBackUa:x=>"Retour à « "+x+" »", uaResStars:"étoiles", uaResCups:"coupes"});
+Object.assign(TXT.en,{sc1ToN:"Play it in notes", endErr:n=>n+(n>1?" mistakes":" mistake"), endInfoA:"How exercises are counted", endInfoT:"An exercise is flawless when you play it all the way through without a single wrong note.", navBack:"Back", navBackLearn:"Back to LEARN", navBackUa:x=>"Back to “"+x+"”", uaResStars:"stars", uaResCups:"cups"});
 function navBtn(id, label, go){ const b=document.createElement("button"); b.type="button"; b.id=id; b.className="nav-back"; b.innerHTML=NAV_BACK_SVG; b.setAttribute("aria-label",label); b.title=label; b.onclick=go; return b; }
 // ---- page « une à une » : retour, ordre des boutons, picto Révision, encart des résultats ----
 { const o=sc1Render; sc1Render=function(){ const r=o.apply(this,arguments); try{ const P=$("sc1Panel"), top=P&&P.querySelector(".sc1-top"); if(!top) return r;
@@ -14990,7 +15041,135 @@ function endRvBack(g){ if(!endRv(g)) return; const sec=UA.cur; setTimeout(()=>{ 
 { const o=closeEnd; closeEnd=function(){ const was=endOpen, g=lastGame, r=o.apply(this,arguments); if(was) endRvBack(g); return r; }; }
 ["endX","endBg"].forEach(id=>{ const el=$(id); if(el) el.addEventListener("click",()=>endRvBack(lastGame)); }); // ces deux-là appellent l'ancien closeEnd (lié au chargement)
 document.addEventListener("click",e=>{ const c=$("endChips"); if(c && !c.hidden && !c.contains(e.target)){ c.hidden=true; const i=$("endInfo"); if(i) i.setAttribute("aria-expanded","false"); } });
+// ---- fin d'une case « une à une » (08/11) : 3 boutons ; à refaire → « Recommencer » en bleu ; réussie → « Suivante » en bleu ----
+// Gammes : « Toutes les gammes » devient « Jouer en accords » (en NOTES) / « Jouer en notes » (en ACCORDS) ; la croix ramène à la liste.
+// Touches MIDI : Do = le bouton bleu, Mi = le bouton marqué data-mi, Si = Recommencer.
+function sc1ToNotes(tid,k){ S.settings.sc1Mode="notes"; save(); if(page==="sc1") sc1Render(); sc1Ask(tid,k,"notes"); }
+{ const o=sc1End; sc1End=function(g){ const r=o.apply(this,arguments); try{ const s=g&&g.sc1; if(!s) return r;
+    const F=$("endFoot"), n=s.stars|0, scales=uaSecOf(s.mode)==="scales", again=$("sc1Again"), nx=$("sc1Next");
+    const kb=(b,x)=>{ if(!b) return; b.querySelectorAll("kbd").forEach(e=>e.remove()); delete b.dataset.mi; if(x){ const e=kbdEl(); e.textContent=x; b.appendChild(e); } };
+    let sw=$("sc1ToCh");
+    if(scales){ const back=$("sc1Back"); if(back) back.remove();
+      if(!sw){ sw=document.createElement("button"); sw.type="button"; sw.className="btn";
+        if(s.mode==="notes"){ sw.id="sc1ToCh"; sw.textContent=t("sc1ToCh"); sw.onclick=()=>sc1ToChords(s.tid,s.k); } else { sw.id="sc1ToN"; sw.textContent=t("sc1ToN"); sw.onclick=()=>sc1ToNotes(s.tid,s.k); } } }
+    else sw=$("sc1Back");
+    [sw,again,nx].forEach(b=>{ if(b) b.classList.remove("primary"); });
+    const main = n<3 || !nx ? again : nx; if(main) main.classList.add("primary");
+    // ordre : l'autre mode (ou la liste), Recommencer, Suivante
+    [sw,again,nx].forEach(b=>{ if(b) F.appendChild(b); });
+    kb(main,CNAME()); if(main!==again) kb(again,BNAME());
+    const other = main===nx ? sw : nx; [sw,nx].forEach(b=>{ if(b && b!==main) kb(b, b===other?ENAME():""); }); if(other && other!==main) other.dataset.mi="1";
+    if(main) main.focus({preventScroll:true});
+  }catch(e){ console.warn(e); } return r; }; }
+{ const o=midiStart; midiStart=function(note){ const pc=((note%12)+12)%12;
+    if((pc===0||pc===4) && page==="sc1" && endOpen && lastGame && lastGame.sc1 && $("sc1Again") && !openMods.length && !helpOpen && !midiOpen && S.settings.midiC!==false){
+      const b = pc===0 ? $("endFoot").querySelector(".btn.primary") : $("endFoot").querySelector('[data-mi="1"]'); if(b){ b.click(); return true; } if(pc===4) return false; }
+    return o.apply(this,arguments); }; }
 /* ==== fin Navigation ==== */
+/* ==== Notifications, partage, bilan, série (08/11/2026, retours d'Antoine) ====
+// A. Une notification ajoutée (ntfAdd) apparaît en carte en haut à droite (#ntfPop : picto, ou le badge gagné), un clic = l'action ;
+//    les toasts texte (toast()) passent aussi en haut à droite avec un picto ; dans la liste des notifications, un badge montre son dessin.
+// B. Partager = d'abord une fenêtre dans l'app (#shSheet : aperçu de l'image, WhatsApp, Messages, E-mail, Copier, Enregistrer l'image,
+//    « Plus… » = la feuille de partage du système), comme Duolingo / chess.com.
+// C. Bilan de partie : sans « Meilleur combo », sans « Aucune erreur, bravo ! » (déjà dit par « n / n exercices sans faute »).
+// D. Série : l'animation reste jusqu'au toucher (ou Do) ; temps par jour réglable dans la carte verte (#srMin : 5/10/15/20/30 min =
+//    l'objectif du jour, SR_MIN) ; plus de « Semaine : n/7 » ; rond du jour bien rond ; toucher un jour = ses minutes jouées (#pfDayTip). */
+Object.assign(TXT.fr,{ntfPopA:"Ouvrir la notification", shT:"Partager", shSub:"Choisis comment partager", shWa:"WhatsApp", shSms:"Messages", shMail:"E-mail", shCopy:"Copier", shSave:"Enregistrer l'image", shMore:"Plus…", shCopied:"Copié !",
+  srMinL:"Mon temps par jour", srMinA:n=>n+" minutes par jour", dayMin:(d,n)=>d+" · "+(n ? n+" min jouée"+(n>1?"s":"") : "pas joué"), dayMin0:"moins d'une minute"});
+Object.assign(TXT.en,{ntfPopA:"Open the notification", shT:"Share", shSub:"Choose how to share", shWa:"WhatsApp", shSms:"Messages", shMail:"Email", shCopy:"Copy", shSave:"Save image", shMore:"More…", shCopied:"Copied!",
+  srMinL:"My time per day", srMinA:n=>n+" minutes a day", dayMin:(d,n)=>d+" · "+(n ? n+" min played" : "not played"), dayMin0:"less than a minute"});
+
+// ---- A. notifications en haut à droite ----
+const NP={q:[], on:false, tt:0}, NP_QUIET=["welcome","news"]; // l'accueil et les actualités restent dans la liste, sans carte
+const npIcon = n => { const m=/^badge-(.+)$/.exec(n.id||n.key||""); if(m && typeof achSvg==="function") try{ return '<span class="np-badge">'+achSvg(m[1])+'</span>'; }catch(e){}
+  return (OBJ[NTF_ICON[n.type]]||OBJ.bell)(); };
+function npShow(){ if(NP.on || !NP.q.length) return; const n=NP.q.shift(); let el=$("ntfPop");
+  if(!el){ el=document.createElement("button"); el.type="button"; el.id="ntfPop"; el.className="ntf-pop"; el.setAttribute("aria-live","polite"); document.body.appendChild(el);
+    el.addEventListener("click",()=>{ const a=el._act; npHide(); if(a){ try{ const it=ntfStore().list.find(x=>x.id===el._id); if(it){ it.read=true; save(); ntfBadge(); } }catch(e){} ntfDo(a); } else openPage("notif"); }); }
+  el._act=n.act||null; el._id=n.id; el.setAttribute("aria-label",t("ntfPopA")+" : "+n.ti);
+  el.innerHTML='<span class="np-ic" aria-hidden="true">'+npIcon(n)+'</span><span class="np-tx"><b></b>'+(n.tx?'<small></small>':'')+'</span>';
+  el.querySelector("b").textContent=n.ti; if(n.tx) el.querySelector("small").textContent=n.tx;
+  NP.on=true; el.classList.remove("on"); void el.offsetWidth; el.classList.add("on"); clearTimeout(NP.tt); NP.tt=setTimeout(npHide, 5200); }
+function npHide(){ const el=$("ntfPop"); clearTimeout(NP.tt); if(el) el.classList.remove("on"); NP.on=false; setTimeout(npShow, 380); }
+{ const o=ntfAdd; ntfAdd=function(n, silent){ const r=o.apply(this,arguments);
+    try{ if(r && !silent && !NP_QUIET.includes(n.type) && Date.now()-(n.t||Date.now())<120000){ const it=ntfStore().list.find(x=>x.id===(n.key||"")) || {...n, id:n.key};
+        if(NP.q.length<3) NP.q.push(it); npShow(); } }catch(e){} return r; }; }
+// le badge gagné : sa notification suffit (plus de toast texte en double)
+{ const o=achParty; achParty=function(got){ const tt=toast; toast=()=>{}; try{ return o.apply(this,arguments); } finally { toast=tt; } }; }
+// toast() : en haut à droite, avec un picto
+{ toast=function(x){ let el=$("toast"); if(!el){ el=document.createElement("div"); el.id="toast"; el.className="pc-toast"; el.setAttribute("role","status"); el.setAttribute("aria-live","polite"); document.body.appendChild(el); }
+    el.innerHTML='<span class="np-ic" aria-hidden="true">'+OBJ.bell()+'</span><span class="np-tx"><b></b></span>'; el.querySelector("b").textContent=x;
+    el.classList.remove("on"); void el.offsetWidth; el.classList.add("on"); clearTimeout(toastT); toastT=setTimeout(()=>el.classList.remove("on"),2800); }; }
+// la liste : un badge montre son dessin
+{ const o=renderNotifs; renderNotifs=function(){ const r=o.apply(this,arguments); try{ const L=ntfStore().list.filter(n=>ntfFilter==="all"||n.cat===ntfFilter), lis=[...document.querySelectorAll("#ntfList .ntf-it")];
+    lis.forEach((li,i)=>{ const n=L[i]; if(n && /^badge-/.test(n.id||"")){ const ic=li.querySelector(".ntf-ic"); if(ic){ ic.innerHTML=npIcon(n); ic.classList.add("is-badge"); } } }); }catch(e){} return r; }; }
+
+// ---- B. partager : la fenêtre de l'app d'abord ----
+const SH={o:null, url:""};
+{ const m=document.createElement("div"); m.className="modal"; m.id="shSheet"; m.hidden=true; m.setAttribute("role","dialog"); m.setAttribute("aria-modal","true"); m.setAttribute("aria-labelledby","shT");
+  m.innerHTML='<div class="modal-bg" data-close="shSheet"></div><div class="modal-card small sh-card"><div class="modal-head"><div><h2 id="shT"></h2><p class="modal-sub" id="shSub"></p></div>'
+    +'<button class="modal-close" type="button" data-close="shSheet" aria-label="Close">×</button></div><div class="modal-body"><div class="sh-prev" id="shPrev"></div><div class="sh-opts" id="shOpts"></div></div></div>';
+  document.body.appendChild(m); }
+const SH_IC={wa:'<path d="M4 20l1.3-4A8 8 0 1 1 8 18.7z"/><path d="M9 9.5c0 3 2.5 5.5 5.5 5.5l1-1.5-2-1-1 1c-1-.4-1.6-1-2-2l1-1-1-2z"/>', sms:'<path d="M4 5h16v11H9l-5 4z"/>', mail:'<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/>',
+  copy:'<rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V5a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h3"/>', save:'<path d="M12 4v11"/><path d="M7 10l5 5 5-5"/><path d="M5 20h14"/>', more:'<circle cx="6" cy="12" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="18" cy="12" r="1.6"/>'};
+const shText = o => o.text+(o.url?" "+o.url:"");
+const shOpen = url => { try{ const w=window.open(url,"_blank","noopener"); if(!w) location.href=url; }catch(e){ location.href=url; } };
+function shSheetOpen(o){ SH.o=o; try{ if(SH.url) URL.revokeObjectURL(SH.url); }catch(e){} SH.url="";
+  $("shT").textContent=t("shT"); $("shSub").textContent=t("shSub");
+  const pv=$("shPrev"); pv.innerHTML=""; pv.hidden=!o.file;
+  if(o.file){ try{ SH.url=URL.createObjectURL(o.file); const im=document.createElement("img"); im.src=SH.url; im.alt=""; pv.appendChild(im); }catch(e){ pv.hidden=true; } }
+  const nat=!!navigator.share, list=[["wa",t("shWa"),"wa"],["sms",t("shSms"),"sms"],["mail",t("shMail"),"mail"],["copy",t("shCopy"),"copy"]];
+  if(o.file) list.push(["save",t("shSave"),"save"]); if(nat) list.push(["more",t("shMore"),"more"]);
+  const box=$("shOpts"); box.innerHTML="";
+  list.forEach(([k,l])=>{ const b=document.createElement("button"); b.type="button"; b.className="sh-o sh-"+k; b.dataset.k=k;
+    b.innerHTML='<span class="sh-i" aria-hidden="true"><svg viewBox="0 0 24 24">'+SH_IC[k]+'</svg></span><span class="sh-l"></span>'; b.querySelector(".sh-l").textContent=l; b.onclick=()=>shDo(k,b); box.appendChild(b); });
+  openMod("shSheet"); }
+async function shDo(k, b){ const o=SH.o; if(!o) return; const tx=shText(o), e=encodeURIComponent;
+  if(k==="wa") shOpen("https://wa.me/?text="+e(tx));
+  else if(k==="sms") shOpen("sms:?&body="+e(tx));
+  else if(k==="mail") shOpen("mailto:?subject="+e(o.title||"Piano Challenges")+"&body="+e(tx));
+  else if(k==="copy"){ try{ await navigator.clipboard.writeText(tx); const l=b.querySelector(".sh-l"), w=l.textContent; l.textContent=t("shCopied"); setTimeout(()=>{ l.textContent=w; },1600); }catch(err){} return; }
+  else if(k==="save"){ if(navigator.share && navigator.canShare && navigator.canShare({files:[o.file]})){ try{ await navigator.share({files:[o.file]}); }catch(err){} return; } // iPhone/iPad : « Enregistrer l'image » de la feuille du système
+    try{ const a=document.createElement("a"); a.href=SH.url||URL.createObjectURL(o.file); a.download=(o.file.name||"piano-challenges.png"); document.body.appendChild(a); a.click(); a.remove(); }catch(err){} return; }
+  else if(k==="more"){ closeMod("shSheet"); SH.native=1; try{ await shareIt(o); } finally { SH.native=0; } return; }
+}
+{ const o=shareIt; shareIt=async function(x){ if(SH.native || !x || !x.text) return o.apply(this,arguments); shSheetOpen(x); }; }
+
+// ---- C. bilan de partie plus léger ----
+{ const o=openEnd; openEnd=function(){ const r=o.apply(this,arguments); try{
+    document.querySelectorAll("#endBody .end-stat").forEach(d=>{ if(d.firstChild && d.firstChild.textContent===t("bestCombo")) d.remove(); });
+    const st=document.querySelector("#endBody .end-stats"); if(st) st.classList.add("n3");
+    document.querySelectorAll("#endBody > h3").forEach(h=>{ if(h.textContent===t("allPerfect")) h.remove(); });
+  }catch(e){ console.warn(e); } return r; }; }
+
+// ---- D. série ----
+{ const o=srShow; srShow=function(){ const r=o.apply(this,arguments); clearTimeout(SR.hide); return r; }; } // reste à l'écran jusqu'au toucher, Échap/Entrée ou Do
+const SR_MINS=[5,10,15,20,30];
+{ const o=srRow; srRow=function(){ const r=o.apply(this,arguments); try{ const row=$("pfSr"); if(!row) return r;
+    row.querySelectorAll(".gl-chip.wk").forEach(x=>x.remove());
+    const sel=document.createElement("label"); sel.className="sr-min"; sel.innerHTML='<span></span><select id="srMin"></select>'; sel.firstChild.textContent=t("srMinL");
+    const s=sel.lastChild; s.setAttribute("aria-label",t("srMinL")); SR_MINS.forEach(v=>{ const op=document.createElement("option"); op.value=v; op.textContent=v+" min"; if(v===SR_MIN) op.selected=true; s.appendChild(op); });
+    if(!SR_MINS.includes(SR_MIN)){ const op=document.createElement("option"); op.value=SR_MIN; op.textContent=SR_MIN+" min"; op.selected=true; s.prepend(op); }
+    s.onchange=()=>{ goalSet("min", +s.value); srSync(); try{ renderFiche(); }catch(e){} try{ srTick(); }catch(e){} };
+    row.appendChild(sel); }catch(e){ console.warn(e); } return r; }; }
+{ const o=goalFiche; goalFiche=function(){ const r=o.apply(this,arguments); try{ const w=document.querySelector("#pfGoal .gl-chip.wk"); if(w) w.remove(); }catch(e){} return r; }; }
+// le calendrier : toucher un jour = ses minutes
+{ const o=renderFiche; renderFiche=function(){ const r=o.apply(this,arguments); try{ const cal=$("pfCal"); if(!cal || !pfMonth) return r; const y=pfMonth.getFullYear(), m=pfMonth.getMonth(), td=dayStr();
+    cal.querySelectorAll("span").forEach(sp=>{ const d=+sp.textContent; if(!d) return; const k=dayStr(new Date(y,m,d)); if(k>td) return; sp.dataset.k=k; sp.tabIndex=0; sp.setAttribute("role","button");
+      sp.setAttribute("aria-label",pfDayTx(k)); }); }catch(e){ console.warn(e); } return r; }; }
+function pfDayTx(k){ const d=pDate(k), sec=srSec(k), mn=Math.floor(sec/60), L=S.settings.lang==="fr"?"fr-FR":"en-GB";
+  let ds; try{ ds=d.toLocaleDateString(L,{weekday:"long",day:"numeric",month:"long"}); }catch(e){ ds=k; }
+  return sec>0 && !mn ? ds+" · "+t("dayMin0") : t("dayMin")(ds, mn); }
+function pfDayTip(sp){ let tip=$("pfDayTip"); const card=sp.closest(".pf-cal")||document.body;
+  if(!tip){ tip=document.createElement("div"); tip.id="pfDayTip"; tip.className="pf-daytip"; tip.setAttribute("role","status"); }
+  if(tip.parentNode!==card) card.appendChild(tip);
+  cal_sel(sp); tip.textContent=pfDayTx(sp.dataset.k); tip.hidden=false;
+  const cr=card.getBoundingClientRect(), r=sp.getBoundingClientRect(); tip.style.left=Math.max(6,Math.min(cr.width-tip.offsetWidth-6, r.left-cr.left+r.width/2-tip.offsetWidth/2))+"px"; tip.style.top=(r.top-cr.top-tip.offsetHeight-6)+"px";
+  clearTimeout(pfDayTip.tt); pfDayTip.tt=setTimeout(()=>{ tip.hidden=true; cal_sel(null); },3500); }
+function cal_sel(sp){ document.querySelectorAll("#pfCal span.sel").forEach(x=>x.classList.remove("sel")); if(sp) sp.classList.add("sel"); }
+document.addEventListener("click",e=>{ const sp=e.target.closest && e.target.closest("#pfCal span[data-k]"); if(sp) pfDayTip(sp); });
+document.addEventListener("keydown",e=>{ if((e.key==="Enter"||e.key===" ") && document.activeElement && document.activeElement.matches && document.activeElement.matches("#pfCal span[data-k]")){ e.preventDefault(); pfDayTip(document.activeElement); } });
+/* ==== fin Notifications, partage, bilan, série ==== */
 // ---------- Boot ----------
 
 applyStatic(); applySide(); buildKeyboard(); renderSettings(); render(); renderDaily(); openPage("hub");

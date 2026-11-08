@@ -2,7 +2,8 @@
 // d'où l'on vient), ordre NOTES | ACCORDS · Révision (picto) · Configurer mon cours, encart des résultats, titre « Configurer mon cours »,
 // fin de partie (fautes par exercice, « i » pour l'explication, plus de « Changer de choix », deux boutons sur une ligne), révision :
 // le bilan s'ouvre au-dessus de la page des étoiles et y revient, « Nouvelle partie » relance la révision ; touche noire jouée colorée
-// dans la fenêtre Clavier MIDI ; « S'inscrire / Se connecter » plus en haut à droite. Usage : PORT=… NODE_PATH=… PW_CHROMIUM=… node tools/audit/r58_navigation.mjs
+// dans la fenêtre Clavier MIDI ; « S'inscrire / Se connecter » plus en haut à droite ; fin d'une case (3 boutons, bleu = Recommencer ou
+// Suivante) ; notifications et toasts en haut à droite ; fenêtre de partage ; bilan sans combo ; série (temps par jour, minutes d'un jour). Usage : PORT=… NODE_PATH=… PW_CHROMIUM=… node tools/audit/r58_navigation.mjs
 import { createRequire } from 'module';
 import { INIT } from './lib.mjs';
 const { chromium } = createRequire(import.meta.url)('playwright');
@@ -85,6 +86,45 @@ for (const [n, vp] of [['iPad', { width: 1024, height: 768 }], ['téléphone', {
   check('Clavier MIDI : Do♯ joué allumé dans une couleur (pas transparent)', k && k.on && k.bg !== 'rgba(0, 0, 0, 0)', k);
   const v = await p.X('[1,3,6,8,10].map(i=>getComputedStyle(document.documentElement).getPropertyValue("--note-"+i).trim())');
   check('--note-1/3/6/8/10 définies (couleur de la blanche de gauche)', v.every(Boolean), v); await p.c.close(); }
+
+// 4) fin d'une case : 3 boutons, l'autre mode à gauche ; à refaire = Recommencer en bleu (Do), réussie = Suivante en bleu (Do)
+{ const p = await open(); await toScales(p);
+  const foot = () => p.X('[...document.querySelectorAll("#endFoot button")].map(b=>(b.classList.contains("primary")?"*":"")+b.id+(b.dataset.mi?"[mi]":"")).join(" ")');
+  const end = async (mode, n) => { await p.X(`lastGame={sc1:{mode:"${mode}",tid:"major",k:"G",stars:${n},best0:0},xp0:S.xp}; sc1End(lastGame)`); await W(p, 300); const f = await foot(); await click(p, '#endX'); await W(p, 300); return f; };
+  check('NOTES 3 étoiles : Jouer en accords (Mi) · Recommencer · Suivante en bleu', await end('notes', 3) === 'sc1ToCh[mi] sc1Again *sc1Next', await end('notes', 3));
+  check('NOTES 2 étoiles : Recommencer en bleu, Suivante en Mi', await end('notes', 2) === 'sc1ToCh *sc1Again sc1Next[mi]', await end('notes', 2));
+  check('ACCORDS 3 étoiles : Jouer en notes à la place de « Toutes les gammes »', await end('chords', 3) === 'sc1ToN[mi] sc1Again *sc1Next', await end('chords', 3));
+  await p.X('lastGame={sc1:{mode:"notes",tid:"major",k:"G",stars:1,best0:0},xp0:S.xp}; sc1End(lastGame)'); await W(p, 300);
+  await p.X('midiStart(60)'); await W(p, 500);
+  check('Do = le bouton bleu (Recommencer → la fenêtre du choix pour la même gamme)', await p.X('!endOpen && (!document.getElementById("sc1Pick").hidden || !!game)'));
+  check('aucune erreur JS (fin de case)', !p.errs.length, p.errs); await p.c.close(); }
+
+// 5) notifications en haut à droite, partage dans l'app, bilan sans combo, série
+{ const p = await open({ st: { ...STATE(), playSec: { [new Date().toISOString().slice(0, 10)]: 30 } } });
+  await W(p, 6000); // la carte de l'entraînement du jour passe
+  await p.X('ntfAdd({key:"badge-"+ACH[3][0], cat:"progress", type:"badge", ti:"Badge obtenu : test", tx:"x", act:{k:"badges",l:"ntfSee"}})'); await W(p, 500);
+  const np = await ev(p, () => { const e = document.getElementById('ntfPop'), r = e && e.getBoundingClientRect(); return e && { on: e.classList.contains('on'), badge: !!e.querySelector('.np-badge svg'), right: innerWidth - r.right < 30, top: r.top < 40 }; });
+  check('notification : carte en haut à droite avec le dessin du badge', np && np.on && np.badge && np.right && np.top, np);
+  await p.X('toast("Bonjour")'); await W(p, 300);
+  check('toast : en haut à droite, avec un picto, sous la carte de notification', await ev(p, () => { const e = document.getElementById('toast'), r = e.getBoundingClientRect(); return e.classList.contains('on') && !!e.querySelector('.np-ic svg') && innerWidth - r.right < 30 && r.top > 60; }));
+  await p.evaluate(() => { window.__sh = null; navigator.canShare = () => true; navigator.share = async d => { window.__sh = d; }; });
+  await p.X('shareIt({text:"Salut", url:"https://pianochallenges.com/"})'); await W(p, 300);
+  check('partager : fenêtre de l’app (WhatsApp, Messages, E-mail, Copier, Plus…), pas encore la feuille du système', await ev(p, () => !document.getElementById('shSheet').hidden && [...document.querySelectorAll('#shOpts .sh-o')].map(b => b.dataset.k).join() === 'wa,sms,mail,copy,more' && !window.__sh));
+  await click(p, '#shOpts .sh-more'); await W(p, 300);
+  check('« Plus… » = la feuille de partage du système', await ev(p, () => !!window.__sh && document.getElementById('shSheet').hidden));
+  await p.X('lastGame={label:"Test", results:[{it:{sec:"scales",tid:"major",k:"C"},level:"good",ok:8,total:8,secs:3,solved:true}], xp0:S.xp, queue:[{sec:"scales",tid:"major",k:"C"}], maxCombo:4}; openEnd(lastGame)'); await W(p, 300);
+  const en = await ev(p, () => ({ stats: [...document.querySelectorAll('#endBody .end-stat span')].map(x => x.textContent), h3: [...document.querySelectorAll('#endBody > h3')].map(x => x.textContent) }));
+  check('bilan : sans « Meilleur combo » ni « Aucune erreur, bravo ! »', en.stats.length === 3 && !en.stats.some(x => /combo/i.test(x)) && !en.h3.some(x => /Aucune erreur/.test(x)), en);
+  await click(p, '#endX'); await W(p, 300);
+  await p.X('openSet("progress")'); await W(p, 600);
+  const sr = await ev(p, () => ({ sel: document.getElementById('srMin')?.value, opts: [...(document.getElementById('srMin')?.options || [])].map(o => o.value).join(), wk: !!document.querySelector('#pfSr .gl-chip.wk, #pfGoal .gl-chip.wk'),
+    td: (() => { const e = document.querySelector('#pfCal .today'); if (!e) return null; const r = e.getBoundingClientRect(); return Math.abs(r.width - r.height) < 1.5; })() }));
+  check('série : « Mon temps par jour » 5/10/15/20/30 (10 choisi), plus de « Semaine : n/7 », rond du jour bien rond', sr.sel === '10' && sr.opts === '5,10,15,20,30' && !sr.wk && sr.td === true, sr);
+  await ev(p, () => document.querySelector('#pfCal .today').click()); await W(p, 200);
+  check('toucher un jour : ses minutes (aujourd’hui : moins d’une minute)', await ev(p, () => { const t = document.getElementById('pfDayTip'); return !!t && !t.hidden && /moins d'une minute/.test(t.textContent); }));
+  await p.X('(()=>{ const s=document.getElementById("srMin"); s.value="20"; s.onchange(); })()'); await W(p, 300);
+  check('choisir 20 min : objectif et série à 20 min', await p.X('S.goal.kind==="min" && S.goal.v===20 && SR_MIN===20'));
+  check('aucune erreur JS (notifications, partage, série)', !p.errs.length, p.errs); await p.c.close(); }
 
 await b.close();
 if (fails.length) { console.log('\nECHEC r58 :', fails); process.exit(1); } else console.log('\nr58 OK');

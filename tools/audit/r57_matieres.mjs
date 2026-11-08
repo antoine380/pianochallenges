@@ -38,7 +38,7 @@ const notes = async (p, ms) => { for (const m of ms) { await p.X(`noteIn(${m})`)
 const ua = (p, sec, mode, key) => p.X(`((S.uaStars||{})[${JSON.stringify(sec)}]||{})[${JSON.stringify(mode)}] ? (S.uaStars[${JSON.stringify(sec)}][${JSON.stringify(mode)}][${JSON.stringify(key)}]|0) : 0`);
 const endStars = p => ev(p, () => document.querySelectorAll('#endBody .sc1-stars span.on').length);
 const endOn = p => ev(p, () => !document.getElementById('endModal').hidden);
-const closeEndM = async p => { await ev(p, () => document.getElementById('sc1Back')?.click()); await W(p, 300); };
+const closeEndM = async p => { await ev(p, () => (document.getElementById('sc1Back')||document.getElementById('endX')).click()); await W(p, 300); };
 const noScroll = p => ev(p, () => { const d = document.scrollingElement, m = document.getElementById('main'); return d.scrollHeight - d.clientHeight <= 1 && d.scrollWidth - d.clientWidth <= 1 && m.scrollHeight - m.clientHeight <= 1; });
 const gridFits = p => ev(p, () => { const g = document.getElementById('sc1Grid'), r = g.getBoundingClientRect(); let ok = true;
   g.querySelectorAll('.sc1-c').forEach(c => { const q = c.getBoundingClientRect(); if (q.bottom > innerHeight + 1 || q.right > innerWidth + 1 || q.height < 18 || q.width < 18) ok = false; }); return ok && r.bottom <= innerHeight + 1; });

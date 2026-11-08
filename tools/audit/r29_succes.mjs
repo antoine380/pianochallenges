@@ -53,7 +53,9 @@ check('Échap ferme la bulle', await p.evaluate(() => document.getElementById('a
 await p.evaluate(() => { window.__sh = null; navigator.canShare = () => true; navigator.share = async d => { window.__sh = d; }; });
 await p.click('#achGrid [data-id=xp10k]'); await W(200);
 check('badge obtenu : « Obtenu le … » et bouton Partager', await p.evaluate(() => /Obtenu le/.test(document.getElementById('achPop').textContent) && !!document.querySelector('#achPop .ap-sh')));
-await p.click('#achPop .ap-sh'); await p.waitForFunction(() => !!window.__sh, null, { timeout: 5000 }).catch(() => {});
+await p.click('#achPop .ap-sh'); await W(400);
+check('08/11 : Partager ouvre d’abord la fenêtre de l’app (aperçu, WhatsApp, Messages, E-mail, Copier, Enregistrer, Plus…)', await p.evaluate(() => !document.getElementById('shSheet').hidden && !!document.querySelector('#shPrev img') && [...document.querySelectorAll('#shOpts .sh-o')].map(b => b.dataset.k).join() === 'wa,sms,mail,copy,save,more'));
+await p.click('#shOpts .sh-more'); await p.waitForFunction(() => !!window.__sh, null, { timeout: 5000 }).catch(() => {});
 const sh = await p.evaluate(async () => { const d = window.__sh; if (!d || !d.files) return null; const f = d.files[0]; const bm = await createImageBitmap(f); return { type: f.type, w: bm.width, h: bm.height, text: d.text, url: d.url }; });
 check('partage : image PNG carrée 1080 × 1080, texte du badge, lien d\'invitation', sh && sh.type === 'image/png' && sh.w === 1080 && sh.h === 1080 && /10 000 XP/.test(sh.text) && /\?ref=/.test(sh.url), sh);
 check('partager compte pour le badge « Ambassadeur »', await p.X('S.cnt.share>=1') && (await p.waitForFunction(() => window.__X('!!S.badges.share'), null, { timeout: 3000 }).then(() => true).catch(() => false)));
@@ -62,7 +64,7 @@ check('partager compte pour le badge « Ambassadeur »', await p.X('S.cnt.share>
 await p.X('S.cnt.night=1; badgeCheck()');
 check('Noctambule obtenu : S.badges.night = date du jour', await p.X('S.badges.night===dayStr()'));
 check('notification « Badge obtenu : Noctambule » (catégorie Progrès)', await p.X('(()=>{ const n=S.notifs.list.filter(x=>x.type==="badge" && x.id==="badge-night"); return n.length===1 && n[0].cat==="progress" && /Noctambule/.test(n[0].ti); })()'));
-check('petite fête : toast « Nouveau badge »', await p.evaluate(() => /Nouveau badge : Noctambule/.test((document.getElementById('toast') || {}).textContent || '')));
+check('08/11 : la notification du badge apparaît en haut à droite avec son dessin', await p.X('(()=>{ const e=document.getElementById("ntfPop"), q=NP.q.find(n=>/Noctambule/.test(n.ti)); return (!!e && /Noctambule/.test(e.textContent) && !!e.querySelector(".np-badge svg")) || (!!q && /np-badge/.test(npIcon(q))); })()'));
 await p.X('badgeCheck(); badgeCheck()');
 check('une seule fois (pas de doublon)', await p.X('S.notifs.list.filter(x=>x.id==="badge-night").length===1'));
 check('la grille se met à jour (Noctambule doré)', await p.evaluate(() => document.querySelector('#achGrid [data-id=night]').classList.contains('on')));

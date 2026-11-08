@@ -98,7 +98,8 @@ async function open(state, { mode = 'ok', gum = 'none', tz, clock, viewport = { 
   await B.ev('save()'); await W(B, 1500);
   const xp = await A.evaluate(() => JSON.parse(localStorage.getItem('memo-gammes-v1')).xp);
   check('deux onglets : l’XP gagnée dans l’un reste après une sauvegarde de l’autre', xp >= 620, { xp, b: await B.ev('S.xp') });
-  check('deux onglets : pas d’écritures en boucle', await B.evaluate(() => window.__sets) <= 2, await B.evaluate(() => window.__sets));
+  check('deux onglets : pas d’écritures en boucle', await B.evaluate(() => window.__sets) <= 4, // une boucle = des dizaines ; un tick du temps de jeu peut s'ajouter sur un runner lent
+    await B.evaluate(() => window.__sets));
   check('deux onglets : aucune erreur', !A.errs.length && !B.errs.length, [A.errs, B.errs]);
   await A.context().close(); }
 

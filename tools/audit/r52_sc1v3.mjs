@@ -184,7 +184,7 @@ check('Do (MIDI) = Continuer : la partie reprend', await ev(p, () => document.ge
 await ev(p, () => document.getElementById('gameEnd').click()); await W(p, 300);
 await ev(p, () => document.getElementById('lvGo').click()); await W(p, 600);
 check('Terminer : la partie s’arrête', await p.X('page') !== 'practice' || await p.X('!game'));
-await ev(p, () => { const x = document.getElementById('endModal'); if (!x.hidden) document.getElementById('sc1Back')?.click(); }); await W(p, 300);
+await ev(p, () => { const x = document.getElementById('endModal'); if (!x.hidden) (document.getElementById('sc1Back')||document.getElementById('endX')).click(); }); await W(p, 300);
 // training, before any note: still asked
 await cell(p, 'major', 'G'); await pick(p, 'train'); await W(p, 300);
 await ev(p, () => document.getElementById('gameEnd').click()); await W(p, 300);

@@ -23,7 +23,7 @@ Object.assign(TXT.fr,{
     rec:["Nouveau record pour cette gamme !","Tu bats ton record sur cette gamme !","Mieux que la dernière fois !","Record battu, tu progresses !"]},
   endStreak:()=>"", ntfStreakX:"Joue 10 minutes avant minuit pour la garder.",
   srOf:(a,b)=>"Série du jour : "+a+" / "+b+" min", srLeft:n=>"Encore "+n+" min pour valider ta série", srHow:n=>"Joue "+n+" min pour valider ta série",
-  srOkT:"Série validée aujourd'hui", srOkS:n=>n+" min jouées : aujourd'hui compte !", srCelGo:"Voir ma progression", srCelT:n=>"Série : "+n+" jour"+(n>1?"s":"")+" !", srCelS:n=>"Tes "+n+" minutes du jour sont faites.", srCelH:"Touche l'écran pour continuer", srCelHm:c=>"Touche l'écran ou joue "+c+" pour continuer"});
+  srOkT:"Série validée aujourd'hui", srOkS:n=>"Tu as joué "+n+" minutes !", srCelGo:"Voir ma progression", srCelT:n=>"Série : "+n+" jour"+(n>1?"s":"")+" !", srCelS:n=>"Tu as joué "+n+" minutes !", srCelH:"Touche l'écran pour continuer", srCelHm:c=>"Touche l'écran ou joue "+c+" pour continuer"});
 Object.assign(TXT.en,{
   sc1Tu:{seg:["Notes or chords",["**NOTES**: you play each scale note by note.","**CHORDS**: you play the chords of the scale, one by one.","Each mode has its own stars."]],
     cell:["One box = one scale",["Tap a box to play it.","{train}**Practice**: I show you the scale, then you play it back with the keys lit and the fingering. Nothing is scored.","{eval}**Test**: you play it on your own, with no help, to win stars."]],
@@ -39,7 +39,7 @@ Object.assign(TXT.en,{
     rec:["New best for this scale!","You beat your best on this scale!","Better than last time!","Record broken, you're improving!"]},
   endStreak:()=>"", ntfStreakX:"Play 10 minutes before midnight to keep it.",
   srOf:(a,b)=>"Today's streak: "+a+" / "+b+" min", srLeft:n=>n+" more min to lock in your streak", srHow:n=>"Play "+n+" min to lock in your streak",
-  srOkT:"Streak locked in today", srOkS:n=>n+" min played: today counts!", srCelGo:"See my progress", srCelT:n=>"Streak: "+n+" day"+(n!==1?"s":"")+"!", srCelS:n=>"Your "+n+" minutes for today are done.", srCelH:"Tap the screen to continue", srCelHm:c=>"Tap the screen or play "+c+" to continue"});
+  srOkT:"Streak locked in today", srOkS:n=>"You played "+n+" minutes!", srCelGo:"See my progress", srCelT:n=>"Streak: "+n+" day"+(n!==1?"s":"")+"!", srCelS:n=>"You played "+n+" minutes!", srCelH:"Tap the screen to continue", srCelHm:c=>"Tap the screen or play "+c+" to continue"});
 
 // ---- A. tutoriel : puces mises en forme, pointe centrée sur la cible ----
 function tuFmt(s){ return esc(s).replace(/\*\*(.+?)\*\*/g,"<b>$1</b>")
@@ -66,12 +66,13 @@ function sc1Var(cat){ const L=(t("sc1RV")||{})[cat]||[]; if(L.length<2) return L
       const tot=B.querySelector(".sc1-tot"); if(tot) tot.innerHTML='<span aria-hidden="true">★ </span>'+esc(t("sc1SumA")(sc1Total(s.mode),sc1Max(s.mode))); } }catch(e){ console.warn(e); } return r; }; }
 
 // ---- C. série validée au bout de SR_MIN minutes de jeu ----
-const SR_MIN=10, SR_SEC=SR_MIN*60;
+let SR_MIN=10, SR_SEC=600; // 08/11/2026 : le temps par jour se règle (= l'objectif en minutes, S.goal ; 10 si l'objectif est en XP)
+function srSync(){ const g=goalCfg(); SR_MIN = g.kind==="min" ? Math.max(1,Math.min(60,Math.round(+g.v)||10)) : 10; SR_SEC=SR_MIN*60; }
 const SR={prev:-1, wait:0, fanAt:0, force:0, pend:0, on:false, buf:[], bt:0, h:null, hide:0, gone:0, prevFocus:null};
 const srSec = d => (((S.playSec||{})[d||dayStr()])|0);
 // date de bascule : la nouvelle règle compte à partir de ce jour (un jour déjà compté par l'ancienne règle aujourd'hui reste compté)
 function srFrom(){ if(typeof S.srFrom!=="string" || !/^\d{4}-\d\d-\d\d$/.test(S.srFrom)){ S.srFrom = (S.streak && S.streak.last===dayStr()) ? addDays(1) : dayStr(); save(); } return S.srFrom; }
-function srOk(d){ d=d||dayStr(); return d<srFrom() ? ((S.xpDays||{})[d]|0)>0 : srSec(d)>=SR_SEC; }
+function srOk(d){ srSync(); const td=dayStr(); d=d||td; return d<srFrom() ? ((S.xpDays||{})[d]|0)>0 : srSec(d)>=(d<td ? Math.min(SR_SEC,600) : SR_SEC); } // un jour passé validé à 10 min le reste si l'objectif monte
 const srPct = () => srOk() ? 1 : Math.min(1, srSec()/SR_SEC);
 // le temps de jeu compte aussi le quiz au MIDI, le mode PIANO, le lecteur Play (MIDI relayé et touches de l'iframe)
 { const o=quizIn; quizIn=function(){ lastNoteAt=Date.now(); return o.apply(this,arguments); }; }
@@ -113,7 +114,7 @@ function srPaint(){ try{ srMenu(); }catch(e){} try{ if($("pfSr")) srRow(); }catc
 { const o=goalFanfare; goalFanfare=function(){ SR.fanAt=Date.now(); return o.apply(this,arguments); }; }
 function srPulse(){ SR.pulseAt=Date.now(); [$("streakStat")&&$("streakStat").querySelector(".sr-ic"), $("pfSr")].forEach(el=>{ if(!el) return; el.classList.remove("sr-pulse"); void el.offsetWidth; el.classList.add("sr-pulse"); setTimeout(()=>el.classList.remove("sr-pulse"),1300); }); }
 // chaque tick de temps de jeu (et chaque XP) : passage des 5 min, validation à 10 min
-function srTick(){ const d=dayStr(), s=srSec(d), was=SR.prev; SR.prev=s;
+function srTick(){ srSync(); const d=dayStr(), s=srSec(d), was=SR.prev; SR.prev=s;
   if(d>=srFrom() && s>=SR_SEC){ if(S.streak.last!==d){ SR.force=1; try{ bumpStreak(); }finally{ SR.force=0; } save(); try{ renderStatus(); }catch(e){} }
     if(S.srShown!==d && !SR.pend && !SR.on) srCelebrate(); } // S.srShown est posé quand elle se montre vraiment
   else if(was>=0 && was<SR_SEC/2 && s>=SR_SEC/2) srPulse();
@@ -163,7 +164,7 @@ function srShow(){ let c=$("srCel"); if(c) c.remove(); clearTimeout(SR.hide); cl
     +'<button type="button" class="btn primary sr-go" id="srGo"></button><small class="sr-hint"></small></div>';
   const T=String(t("srCelT")(N)), k=T.indexOf(N), h=c.querySelector(".sr-t");
   if(k>=0){ h.append(T.slice(0,k)); const sp=document.createElement("span"); sp.className="n"; sp.textContent=N; h.append(sp, T.slice(k+N.length)); } else h.textContent=T;
-  c.querySelector(".sr-s").textContent=t("srCelS")(fmtN(SR_MIN));
+  c.querySelector(".sr-s").textContent=t("srCelS")(fmtN(Math.max(SR_MIN,Math.floor(srSec()/60))));
   c.querySelector(".sr-hint").textContent = midiMode() && S.settings.midiC!==false ? t("srCelHm")(CNAME()) : t("srCelH");
   c.querySelector(".sr-go").textContent=t("srCelGo");
   c.addEventListener("click",e=>{ e.preventDefault(); e.stopPropagation(); const go=e.target.closest&&e.target.closest(".sr-go"); srClose(); if(go){ try{ openPage("progress"); }catch(_){} } });

@@ -81,7 +81,7 @@ check('menu : jamais « 0 j » (« À toi »)', await p.evaluate(() => document.
 await X('S.freeze={n:2,used:[],at:1}; S.streak={days:3,last:dayStr()}; S.goal={kind:"min",v:20,at:1}; S.playSec={[dayStr()]:240}; S.xpDays={[dayStr()]:10}'); // 20 min : avec 10 min, la ligne de l'objectif se fond dans celle de la série (r53)
 await p.click('#lvlAv'); await p.waitForTimeout(500);
 const pf = await p.evaluate(() => { const g = document.getElementById('pfGoal'), pane = document.getElementById('progPane'); return { txt: g.textContent, vis: g.offsetParent !== null, scroll: pane.scrollHeight - pane.clientHeight, day: document.getElementById('pfDay').textContent }; });
-check('fiche : ligne objectif « 4 / 20 min », semaine, 2 gels', pf.vis && /4 \/ 20 min/.test(pf.txt) && /Semaine : 1\/7/.test(pf.txt) && /2 gels/.test(pf.txt), pf);
+check('fiche : ligne objectif « 4 / 20 min », 2 gels (plus de « Semaine : n/7 » ; objectif en minutes = temps de la série depuis le 08/11 : ligne fondue dans celle de la série)', !pf.vis && /4 \/ 20 min/.test(pf.txt) && !/Semaine : /.test(pf.txt) && /2 gels/.test(pf.txt), pf);
 check('fiche : pas de défilement ajouté (1024×768)', pf.scroll <= 1, pf);
 await X('S.streak={days:5,last:addDays(-4)}; S.xpDays={}; renderFiche()');
 check('fiche : série cassée = « Nouvelle série : joue aujourd\'hui », jamais 0', await p.evaluate(() => document.getElementById('pfDay').textContent === "Nouvelle série : joue aujourd'hui"));

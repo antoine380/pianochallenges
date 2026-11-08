@@ -124,7 +124,7 @@ const TXT = {
     ntfCat_social:"Défis", ntfCat_progress:"Progrès", ntfCat_remind:"Rappels", ntfCat_news:"Nouveautés",
     ntfCatD_social:"Duels, revanches, classement de la semaine", ntfCatD_progress:"Niveaux, déblocages, records d'ELO", ntfCatD_remind:"Entraînement du jour, série en danger", ntfCatD_news:"Nouveaux morceaux, jeux et questions",
     ntfWeeklyT:"Récap de la semaine", ntfWeeklyD:"Le dimanche : XP, série, ELO et ton objectif", ntfApp:"Dans l'app", ntfMail:"E-mail",
-    ntfMailNote:"Au plus 2 e-mails par semaine, en plus des rappels de série. Chaque e-mail a un lien pour se désinscrire.", ntfMailGuest:"Crée un compte (S'inscrire, en haut) pour recevoir le récap et les rappels par e-mail.",
+    ntfMailNote:"Au plus 2 e-mails par semaine, en plus des rappels de série. Chaque e-mail a un lien pour se désinscrire.", ntfMailGuest:"Crée un compte (S'inscrire) pour recevoir le récap et les rappels par e-mail.",
     ntfMailOn:"Les e-mails sont activés pour ton compte. Tu peux les régler dans Réglages.", ntfMailOff:"Les e-mails sont désactivés. Tu peux les activer dans Réglages.",
     ntfEmptyT:"Rien de nouveau", ntfEmptyX:"Tes défis, tes progrès et les nouveautés arriveront ici.", ntfToday:"Aujourd'hui", ntfYesterday:"Hier", ntfWeek:"Cette semaine", ntfOlder:"Plus ancien",
     ntfNow:"à l'instant", ntfMin:n=>"il y a "+n+" min", ntfH:n=>"il y a "+n+" h", ntfYest:"hier", ntfOpen:"Voir", ntfPlay:"Jouer", ntfSee:"Voir", ntfSetGo:"Régler",

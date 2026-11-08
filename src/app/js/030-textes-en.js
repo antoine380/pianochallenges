@@ -121,7 +121,7 @@
     ntfCat_social:"Challenges", ntfCat_progress:"Progress", ntfCat_remind:"Reminders", ntfCat_news:"What's new",
     ntfCatD_social:"Duels, rematches, weekly leaderboard", ntfCatD_progress:"Levels, unlocks, ELO records", ntfCatD_remind:"Daily practice, streak in danger", ntfCatD_news:"New songs, games and questions",
     ntfWeeklyT:"Weekly recap", ntfWeeklyD:"On Sundays: XP, streak, ELO and your goal", ntfApp:"In the app", ntfMail:"E-mail",
-    ntfMailNote:"At most 2 e-mails a week, plus streak reminders. Every e-mail has an unsubscribe link.", ntfMailGuest:"Create an account (Sign up, at the top) to get the recap and reminders by e-mail.",
+    ntfMailNote:"At most 2 e-mails a week, plus streak reminders. Every e-mail has an unsubscribe link.", ntfMailGuest:"Create an account (Sign up) to get the recap and reminders by e-mail.",
     ntfMailOn:"E-mails are on for your account. You can change them in Settings.", ntfMailOff:"E-mails are off. You can turn them on in Settings.",
     ntfEmptyT:"Nothing new", ntfEmptyX:"Your challenges, progress and news will show up here.", ntfToday:"Today", ntfYesterday:"Yesterday", ntfWeek:"This week", ntfOlder:"Older",
     ntfNow:"just now", ntfMin:n=>n+" min ago", ntfH:n=>n+" h ago", ntfYest:"yesterday", ntfOpen:"Open", ntfPlay:"Play", ntfSee:"See", ntfSetGo:"Set up",
