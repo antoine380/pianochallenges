@@ -2,7 +2,7 @@
 /* croix « Fermer » en haut à droite de Réglages et de Progression (iPad, ordinateur) ; sur téléphone, dans la barre du haut (#mbClose) */
 .ph-x{margin-left:auto;flex:none;width:44px;height:44px;border:0;border-radius:999px;display:grid;place-items:center;background:var(--surface-2);color:var(--ink);cursor:pointer;position:relative}
 .ph-x svg,.mb-x svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2.6;stroke-linecap:round}
-.ph-x:hover{background:var(--line)}
+@media (hover:hover) and (pointer:fine){ .ph-x:hover{background:var(--line)} }
 .ph-x:focus-visible,.mb-x:focus-visible{outline:3px solid var(--accent,#7a5bf5);outline-offset:2px}
 #mbClose{display:none}
 @media (max-width:640px), (max-height:520px) and (orientation:landscape){

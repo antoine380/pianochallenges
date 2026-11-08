@@ -45,7 +45,7 @@ for (const [w, h] of [[1024, 768], [1180, 820], [1440, 900]]) {
 
 // ---- 3. écran de connexion : une erreur de saisie n'efface plus le mot de passe ni la case de consentement ----
 { const p = await open(1024, 768);
-  await p.evaluate(() => document.querySelector('#topAuth [data-auth=signup]').click()); await W(p, 1500);
+  await p.evaluate(() => document.querySelector('#sideAuth .btn[data-auth=signup]').click()); await W(p, 1500);
   await p.evaluate(() => { const b = document.getElementById('gtEmailGo'); b.disabled = false; b.click(); }); await W(p, 300);
   await p.fill('#gtEmail', 'test@example.com'); await p.fill('#gtPwd', '12345678');
   await p.evaluate(() => { const b = document.getElementById('gtGo'); b.disabled = false; b.click(); }); await W(p, 300);

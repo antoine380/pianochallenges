@@ -50,6 +50,7 @@ css/450-midi-4.css
 css/455-matieres-une-a-une.css
 css/460-reglages-fermer.css
 css/465-audio-parfait.css
+css/470-navigation-retour.css
 body.html
 js/000-midi-natif.js
 js/010-debut-iife.js
@@ -144,6 +145,7 @@ js/885-midi-4.js
 js/886-matieres-une-a-une.js
 js/887-reglages-fermer.js
 js/888-audio-parfait.js
+js/889-navigation-retour.js
 js/890-demarrage-boot.js
 js/900-live-update.js
 js/910-fin-iife.js

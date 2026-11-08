@@ -97,7 +97,7 @@ jobs:
           - shard: "E · premium, famille, mise à jour"
             tests: >-
               tools/audit/r15_premium.mjs tools/audit/r45_famille.mjs tools/audit/r47_live.mjs tools/audit/r43_bugs.mjs
-              tools/audit/r11_notifs.mjs tools/audit/r13_audit.mjs tools/audit/r14_staff.mjs tools/audit/r42_finitions.mjs
+              tools/audit/r11_notifs.mjs tools/audit/r13_audit.mjs tools/audit/r14_staff.mjs tools/audit/r42_finitions.mjs tools/audit/r58_navigation.mjs
           # F = garde audio (demande d'Antoine : « à chaque release, il faut s'assurer que tout est bon ») : r55_audio (rendu hors ligne de
           # chaque instrument et de tone(), 2 min de temps réel simulé avec effets visuels, fuites de nœuds) + r48_piano (mode PIANO,
           # échantillons, timbres) ≈ 3 + 3 min ; r55 relancé une fois s'il échoue (mesures temps réel sur un runner partagé).

@@ -69,12 +69,12 @@ await ev(() => document.getElementById('setBtn').click()); await wait(page, 300)
 check('Réglages : revoir la présentation', await vis('tour'));
 // guests: « S'inscrire » / « Se connecter » at the top (and in the side menu), they open the sign-in screen in the right mode
 for (const k of ['#onbSkip', '#tourX']) for (let i = 0; i < 6; i++) { if (await page.isVisible(k)) await page.click(k); await wait(page, 150); }
-check('invité : « S’inscrire » et « Se connecter » en haut et dans le menu', await ev(() => { const v = s => { const e = document.querySelector(s); return !!e && !!e.offsetParent; };
-  return v('#topAuth [data-auth=signup]') && v('#topAuth [data-auth=login]') && (v('#sideAuth [data-auth=signup].btn') || v('#sideAuthIc')) && !v('#accountBtn'); }));
-await ev(() => document.querySelector('#topAuth [data-auth=login]').click()); await wait(page, 300);
+check('invité : « S’inscrire » et « Se connecter » dans le menu seulement (plus en haut à droite, 08/11)', await ev(() => { const v = s => { const e = document.querySelector(s); return !!e && !!e.offsetParent; };
+  return !v('#topAuth [data-auth=signup]') && v('#sideAuth .btn[data-auth=login]') && (v('#sideAuth [data-auth=signup].btn') || v('#sideAuthIc')) && !v('#accountBtn'); }));
+await ev(() => document.querySelector('#sideAuth .btn[data-auth=login]').click()); await wait(page, 300);
 check('« Se connecter » en haut : écran ouvert en mode Se connecter', await vis('gate') && await ev(() => /Connecte-toi/.test(document.querySelector('.gt-h').textContent)));
 await ev(() => document.getElementById('gateGuest').click()); await wait(page, 300);
-await ev(() => document.querySelector('#topAuth [data-auth=signup]').click()); await wait(page, 300);
+await ev(() => document.querySelector('#sideAuth .btn[data-auth=signup]').click()); await wait(page, 300);
 check('« S’inscrire » en haut : écran ouvert en mode inscription', await vis('gate') && await ev(() => /Crée ton compte/.test(document.querySelector('.gt-h').textContent)));
 await ev(() => document.getElementById('gateGuest').click()); await wait(page, 300);
 check('connecté : plus de boutons S’inscrire / Se connecter, Profil revient', await ev(() => { document.body.classList.remove('guest'); const r = !document.querySelector('#topAuth').offsetParent && !document.querySelector('#sideAuth').offsetParent && !!document.getElementById('accountBtn').offsetParent; document.body.classList.add('guest'); return r; }));
