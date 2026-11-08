@@ -112,9 +112,9 @@ function ipLoop(){ cancelAnimationFrame(IP.raf); const step=()=>{ const P=$("inP
     const vu=$("micVu"); if(vu) vu.style.transform="scaleX("+Math.min(1, MIC.lvl*14).toFixed(3)+")";
     const n=$("micNote"), hz=$("micHz"); if(n){ if(micOn && MIC.f>0 && MIC.m!=null){ n.textContent=octName(MIC.m); n.style.setProperty("--nc","var(--note-"+(((MIC.m%12)+12)%12)+")"); n.classList.add("hit"); hz.textContent=t("micHz")(MIC.f, MIC.cents); } else if(!micOn || MIC.lvl<MIC_RMS[micSens()]){ n.textContent=micOn?t("micNone"):"—"; n.classList.remove("hit"); hz.textContent=""; } } };
   IP.raf=requestAnimationFrame(step); }
-// la pastille : micro / écran → ce panneau ; MIDI → la fenêtre Clavier MIDI (avec les 3 boutons)
-{ const o=mdPillClick; mdPillClick=function(){ const m=S.settings.input; if(m==="mic" || (m==="screen" && mdState().k!=="plug")){ try{ closeDrawer(); }catch(e){} ipOpen(); return; } return o.apply(this,arguments); }; }
-$("mbMidi").addEventListener("click", e=>{ const m=S.settings.input; if(m==="mic" || (m==="screen" && mdState().k!=="plug")){ e.stopImmediatePropagation(); ipOpen(); } }, true);
+// la pastille : micro (et écran sans MIDI possible) → ce panneau ; sinon comme avant (fenêtre Clavier MIDI avec les 3 boutons, assistant)
+{ const o=mdPillClick; mdPillClick=function(){ const m=S.settings.input; if(m==="mic" || (m==="screen" && !midiPossible())){ try{ closeDrawer(); }catch(e){} ipOpen(); return; } return o.apply(this,arguments); }; }
+$("mbMidi").addEventListener("click", e=>{ const m=S.settings.input; if(m==="mic" || (m==="screen" && !midiPossible())){ e.stopImmediatePropagation(); ipOpen(); } }, true);
 $("inCfg").addEventListener("click", e=>{ if(S.settings.input==="mic"){ e.stopImmediatePropagation(); ipOpen(); } }, true);
 // les 3 boutons aussi en tête de la fenêtre Clavier MIDI
 { const o=renderMidiModal; renderMidiModal=function(){ const r=o.apply(this,arguments); try{ const body=document.querySelector("#midiModal .midi-body"); if(!body) return r;

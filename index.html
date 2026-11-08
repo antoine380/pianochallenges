@@ -10483,7 +10483,7 @@ addEventListener("resize",()=>{ if(page==="acc" && ACC.view==="play" && ACC.run)
 // (fetch keepalive vers la fonction SQL track_events), sans le SDK Supabase. Hors ligne, la file attend. Une table ou une
 // fonction absente (migration pas encore lancée) coupe l'envoi sans erreur. En développement (localhost), rien ne part sur
 // le réseau, sauf si localStorage « pc-trk-test » = "1" (tests). Interrupteur : S.settings.analytics (absent = activé).
-const APP_BUILD="2026-11-08T11:07Z"; // remplacé par tools/build.py par la date de construction (version.txt)
+const APP_BUILD="2026-11-08T11:10Z"; // remplacé par tools/build.py par la date de construction (version.txt)
 const TRK={q:[], t:0, off:false, anon:null, sent:0, errs:[], errT:0, errSeen:new Set(), errOn:null, ports:new Set(), first:false};
 const RC={flags:{}, daily:{}, at:0};
 const TRK_NAMES=new Set(["song_import","app_open","first_note","input_mode","midi_connected","pp_lesson_done","learn_end","game_end","quiz_end","duel_end","goal_reached","badge","signup","login","play","feedback","acc_end","song_open","route_step","route_stage"]);
@@ -15305,9 +15305,9 @@ function ipLoop(){ cancelAnimationFrame(IP.raf); const step=()=>{ const P=$("inP
     const vu=$("micVu"); if(vu) vu.style.transform="scaleX("+Math.min(1, MIC.lvl*14).toFixed(3)+")";
     const n=$("micNote"), hz=$("micHz"); if(n){ if(micOn && MIC.f>0 && MIC.m!=null){ n.textContent=octName(MIC.m); n.style.setProperty("--nc","var(--note-"+(((MIC.m%12)+12)%12)+")"); n.classList.add("hit"); hz.textContent=t("micHz")(MIC.f, MIC.cents); } else if(!micOn || MIC.lvl<MIC_RMS[micSens()]){ n.textContent=micOn?t("micNone"):"—"; n.classList.remove("hit"); hz.textContent=""; } } };
   IP.raf=requestAnimationFrame(step); }
-// la pastille : micro / écran → ce panneau ; MIDI → la fenêtre Clavier MIDI (avec les 3 boutons)
-{ const o=mdPillClick; mdPillClick=function(){ const m=S.settings.input; if(m==="mic" || (m==="screen" && mdState().k!=="plug")){ try{ closeDrawer(); }catch(e){} ipOpen(); return; } return o.apply(this,arguments); }; }
-$("mbMidi").addEventListener("click", e=>{ const m=S.settings.input; if(m==="mic" || (m==="screen" && mdState().k!=="plug")){ e.stopImmediatePropagation(); ipOpen(); } }, true);
+// la pastille : micro (et écran sans MIDI possible) → ce panneau ; sinon comme avant (fenêtre Clavier MIDI avec les 3 boutons, assistant)
+{ const o=mdPillClick; mdPillClick=function(){ const m=S.settings.input; if(m==="mic" || (m==="screen" && !midiPossible())){ try{ closeDrawer(); }catch(e){} ipOpen(); return; } return o.apply(this,arguments); }; }
+$("mbMidi").addEventListener("click", e=>{ const m=S.settings.input; if(m==="mic" || (m==="screen" && !midiPossible())){ e.stopImmediatePropagation(); ipOpen(); } }, true);
 $("inCfg").addEventListener("click", e=>{ if(S.settings.input==="mic"){ e.stopImmediatePropagation(); ipOpen(); } }, true);
 // les 3 boutons aussi en tête de la fenêtre Clavier MIDI
 { const o=renderMidiModal; renderMidiModal=function(){ const r=o.apply(this,arguments); try{ const body=document.querySelector("#midiModal .midi-body"); if(!body) return r;
