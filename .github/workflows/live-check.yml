@@ -13,6 +13,6 @@ jobs:
         with: { node-version: 22 }
       - name: Attendre le déploiement OVH
         if: github.event_name == 'workflow_run'
-        run: sleep 120
+        run: sleep 180
       - name: Comparer les fichiers servis au manifeste
         run: node tools/live_check.mjs

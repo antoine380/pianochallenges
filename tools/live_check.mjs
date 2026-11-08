@@ -8,6 +8,9 @@ const m = await get(SITE + '/live/manifest.json?v=' + Math.floor(Date.now() / 10
 if (m.st !== 200) { console.log('manifeste : HTTP', m.st); process.exit(1); }
 const man = JSON.parse(m.buf.toString('utf8'));
 console.log('version', man.version, '· native_min', man.native_min, '·', man.files.length, 'fichiers');
+// le site sert-il la version du dépôt ? (sinon : déploiement OVH bloqué, l'app ne voit rien de nouveau)
+let want = ''; try { want = (await import('node:fs')).readFileSync(new URL('../version.txt', import.meta.url), 'utf8').trim(); } catch (e) {}
+if (want && want !== man.version) { console.log('DÉPLOIEMENT EN RETARD : le site sert', man.version, 'mais le dépôt est en', want, '(webhook OVH ?)'); if (!process.env.LIVE_SOFT) process.exitCode = 2; }
 let bad = 0, bytes = 0;
 for (const f of man.files) {
   const src = f.src || f.path, u = SITE + '/' + src + '?v=' + f.sha256.slice(0, 12);
@@ -16,4 +19,4 @@ for (const f of man.files) {
   if (r.st !== 200 || r.buf.length !== f.size || sha !== f.sha256) { bad++; console.log('NE CORRESPOND PAS', src, '· HTTP', r.st, '· taille', r.buf.length, 'attendu', f.size, '· sha', sha.slice(0, 12), 'attendu', f.sha256.slice(0, 12), '· cache', r.h['cache-control'] || '-', '· type', r.h['content-type'] || '-'); }
 }
 console.log(bad ? bad + ' fichier(s) ne correspondent pas : l’app refuse la mise à jour.' : 'Tous les fichiers correspondent (' + Math.round(bytes / 1024) + ' Ko).');
-process.exit(bad ? 1 : 0);
+process.exit(bad ? 1 : (process.exitCode || 0));
