@@ -159,7 +159,7 @@ await done(p);
 p = await open({ width: 1024, height: 768 }, { ...BASE, goal: { kind: 'min', v: 5, at: 1, asked: 1 } }, { fake: {} });
 await p.X('openPage("games"); gameOpen("speed",true)'); await T(p, 400); await p.X('DU.view="solo"; duRender()').catch(() => {});
 await p.X('ACCT.pend=null; window.__busy=true; actNow=()=>({k:"game"})'); // une partie en cours
-await p.X('S.playSec={[dayStr()]:300}; goalTick()'); await T(p, 1800);
+await p.X('S.srShown=dayStr(); S.playSec={[dayStr()]:300}; goalTick()'); await T(p, 1800);
 check('premier objectif atteint pendant une partie : D23 attend', !await vis(p, '#accModal') && await p.X('ACCT.pend==="goal"'));
 await p.X('actNow=()=>null; openPage("hub")'); await T(p, 2600);
 check('… et s\'affiche une fois la partie finie', await vis(p, '#accModal'));
@@ -195,7 +195,7 @@ await p.X('S.xpDays={[addDays(-3)]:40}; S.ppRem={n:1,last:addDays(-1)}; delete S
 await p.X(`remCheck(${at(18)})`);
 check('textes en rotation : 2e rappel « 2 minutes pour ta leçon 4 ? »', await p.X('(S.notifs.list.find(n=>n.id==="ppr-"+dayStr())||{}).ti') === '2 minutes pour ta leçon 4 ?');
 // CA-21 objectif atteint : anneau doré, aucun rappel ce jour-là
-await p.X('delete S.notifs.keys["ppr-"+dayStr()]; S.notifs.list=S.notifs.list.filter(n=>n.type!=="path"); S.ppRem=undefined; S.xpDays={[addDays(-1)]:40}; S.playSec={[dayStr()]:300}; goalTick()'); await T(p, 300);
+await p.X('delete S.notifs.keys["ppr-"+dayStr()]; S.notifs.list=S.notifs.list.filter(n=>n.type!=="path"); S.ppRem=undefined; S.srShown=dayStr(); S.xpDays={[addDays(-1)]:40}; S.playSec={[dayStr()]:300}; goalTick()'); await T(p, 300);
 check('CA-21 objectif 5 min atteint : anneau .done', await p.evaluate(() => document.getElementById('lvlAv').classList.contains('done')));
 check('CA-21 … et aucun rappel créé ce jour-là', await p.X(`remCheck(${at(19)})`) === false && await p.X('!S.notifs.list.some(n=>n.type==="path")'));
 // Réglages › Notifications : heure du rappel

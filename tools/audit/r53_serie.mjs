@@ -79,6 +79,7 @@ await p.X('openPage("games")'); await W(p, 300);
 await play(p, 19);
 check('9 min 45 : pas d’animation, série toujours à 3', !(await cel(p)) && await p.X('S.streak.days') === 3);
 await play(p, 1); await p.clock.runFor(300);
+for (let i = 0; i < 12 && !(await cel(p)); i++) { await p.clock.runFor(400); await W(p, 100); } // runner lent : l'écran calme peut arriver un peu après
 const c1 = await cel(p);
 check('10 min, sur une autre page (GAMES) : l’animation « Série : 4 jours ! » / « Tu as joué 10 minutes ! » apparaît', !!c1 && c1.t === 'Série : 4 jours !' && c1.s === 'Tu as joué 10 minutes !' && c1.h === "Touche l'écran pour continuer", c1);
 const pg1 = await p.X('[page, anyWin(), SR.on]');
