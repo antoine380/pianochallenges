@@ -38,7 +38,7 @@ $("dcLen").addEventListener("click",e=>{ const b=e.target.closest("button"); if(
 $("dcReview").addEventListener("change",e=>{ dcRev=e.target.checked; });
 $("dcOk").addEventListener("click",()=>{ S.settings.dailySecs=SECS.filter(x=>dcSel.includes(x)); S.settings.dailyLen=dcLenV; S.settings.dailyReview=dcRev; const changed=JSON.stringify([S.settings.dailySecs,S.settings.dailyLen,S.settings.dailyReview])!==JSON.stringify([dcPrev&&dcPrev[0],dcPrev&&dcPrev[1],dcPrev&&dcPrev[2]]); save(); closeMod("dailyCfgModal");
   if(dcStartAfter){ dcStartAfter=false; if(changed) dailyPlan(true); startDaily(); return; } if(!(game&&game.daily)){ dailyPlan(true); renderDaily(); } });
-const userPhoto = () => user && user.user_metadata && (user.user_metadata.avatar_url || user.user_metadata.picture) || "";
+const userPhoto = () => { if(!user) return ""; const m=user.user_metadata||{}; let u=m.avatar_url||m.picture||""; if(!u) (user.identities||[]).some(i=>{ const d=i&&i.identity_data||{}; u=d.avatar_url||d.picture||""; return !!u; }); return u; }; // 08/11 : aussi la photo de l'identité Google
 function showIntro(key){
   const k = key==="section" ? (page==="practice"?S.section:page) : key, d=t("intro")[k]; if(!d) return;
   S.introSeen=S.introSeen||{}; S.introSeen[k]=true; save();

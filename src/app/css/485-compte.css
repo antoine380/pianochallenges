@@ -1,0 +1,19 @@
+/* ==== Compte (08/11/2026) (JS : js/889d-compte.js) ==== */
+.au-card{max-width:400px;text-align:center;padding:28px 24px 22px;position:relative}
+.au-x{position:absolute;top:10px;right:10px}
+.au-hero{position:relative;width:88px;height:88px;margin:4px auto 12px}
+.au-av{width:88px;height:88px;border-radius:50%;display:block;overflow:hidden;box-shadow:0 10px 24px -12px rgba(40,30,110,.6)}
+.au-av img{width:100%;height:100%;object-fit:cover}
+.au-ok{position:absolute;right:-2px;bottom:-2px;width:30px;height:30px;border-radius:50%;background:var(--good);display:grid;place-items:center;border:3px solid var(--surface)}
+.au-ok svg{width:16px;height:16px;fill:none;stroke:#fff;stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
+.au-kick{margin:0;font-size:.74rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--good)}
+.au-card h2{margin:4px 0 6px}
+.au-mail{margin:0 0 10px;color:var(--muted);font-size:.85rem;word-break:break-all}
+.au-s{margin:0 0 18px;font-size:.92rem}
+.au-go{width:100%;min-height:46px}
+.au-not{margin-top:12px;font-size:.84rem}
+.au-acts{display:flex;gap:10px} .au-acts .btn{flex:1 1 0;min-height:44px}
+#authOut .au-card{text-align:left}
+.au-row{display:flex;gap:10px;flex-wrap:wrap;margin-top:8px}
+#accountBtn.has-photo > svg{display:none}
+#accountBtn .au-mav{width:26px;height:26px;border-radius:50%;object-fit:cover;flex:none;box-shadow:0 0 0 2px var(--surface)}

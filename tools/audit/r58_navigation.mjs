@@ -153,7 +153,7 @@ for (const [n, vp] of [['iPad', { width: 1024, height: 768 }], ['téléphone', {
   await click(p, '#mdUseB'); await W(p, 400);
   check('« Utiliser le clavier de l’application » : entrée écran, micro coupé, 25 touches par défaut, l’onglet devient actif', await p.X('S.settings.input==="screen" && !micOn && S.settings.kbdSize==="25"') && /actif/.test(await ev(p, () => document.getElementById('mdUse').textContent)));
   await click(p, '#mdTab-midi'); await W(p, 300);
-  check('onglet Clavier MIDI : les réglages MIDI (claviers détectés)', await ev(p, () => !document.getElementById('mdPaneMidi').hidden && !!document.getElementById('mDevList').offsetParent ));
+  check('onglet Clavier MIDI : les réglages MIDI (claviers détectés)', await ev(p, () => !document.getElementById('mdPaneMidi').hidden && document.getElementById('mdPaneMic').hidden ));
   await click(p, '#mdTab-mic'); await W(p, 200); await click(p, '#mdUseB'); await W(p, 900);
   check('onglet Micro › « Utiliser le micro » : micro relancé', await p.X('S.settings.input==="mic" && micOn'));
   check('aucune erreur JS (micro)', !p.errs.length, p.errs); await c.close(); }

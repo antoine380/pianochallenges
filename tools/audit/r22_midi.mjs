@@ -15,7 +15,7 @@ const click = (p, s) => ev(p, s => { const e = document.querySelector(s); if (e)
 const waitFor = async (p, f, ms = 5000, a) => { const t = Date.now(); while (Date.now() - t < ms) { if (await ev(p, f, a)) return true; await W(p, 100); } return false; };
 const st = p => ev(p, () => JSON.parse(localStorage.getItem('memo-gammes-v1') || '{}'));
 const vis = (p, id) => ev(p, id => { const e = document.getElementById(id); return !!e && !e.hidden; }, id);
-const pill = p => ev(p, () => { const c = document.getElementById('inChip'); return { st: c.dataset.st, lbl: (c.querySelector('.mp-t') || {}).textContent, title: c.title, dot: getComputedStyle(c.querySelector('i')).backgroundColor, good: getComputedStyle(document.body).getPropertyValue('--good').trim(), mb: document.getElementById('mbMidi').className }; });
+const pill = p => ev(p, () => { const c = document.getElementById('inChip'); return { st: c.dataset.st, lbl: (c.querySelector('.mp-t') || {}).textContent, title: c.title, dot: getComputedStyle(c.querySelector('.mp-dot') || c.querySelector('i')).backgroundColor, good: getComputedStyle(document.body).getPropertyValue('--good').trim(), mb: document.getElementById('mbMidi').className }; });
 const toastTxt = p => ev(p, () => { const e = document.getElementById('mdToast'); return e && e.classList.contains('on') ? e.textContent : ''; });
 const seed = (input = 'midi', extra = {}) => `(()=>{ try{ if(sessionStorage.getItem('seeded')) return; sessionStorage.setItem('seeded','1');
   localStorage.setItem('memo-gammes-v1', JSON.stringify(Object.assign({settings:{lang:'fr',notation:'fr',input:'${input}',earV2:true,diffV2:true,midiV2:true,uiSound:false,delay:6,midiSound:true},
@@ -49,7 +49,7 @@ const fill = p => ev(p, () => document.getElementById('tFill').style.transform);
 // ---- CA-M01 : états de la pastille ----
 let A = await open({ input: 'screen', mode: 'none' });
 let P = await pill(A);
-check('CA-M01 sans Web MIDI : la pastille dit « Écran »', P.st === 'screen' && P.lbl === 'Écran', P);
+check('CA-M01 sans Web MIDI : la pastille dit « Clavier Application » (08/11)', P.st === 'screen' && P.lbl === 'Clavier Application', P);
 await click(A, '#inChip'); await W(A, 300);
 check('CA-M01 sans Web MIDI : la pastille ouvre « Mode d’entrée » sur l’onglet Écran (onglets Clavier Application / Micro, jamais « connecter ») — 08/11', await vis(A, 'midiModal') && await ev(A, () => [...document.querySelectorAll('#mdInSeg button')].map(b => b.dataset.v + ':' + b.getAttribute('aria-selected')).join() === 'screen:true,mic:false' && !document.getElementById('mdPaneScreen').hidden && document.getElementById('mdPaneMidi').hidden));
 await A.ctx.close();
@@ -63,18 +63,18 @@ await A.ctx.close();
 A = await open({ name: 'Roland FP-10' });
 await waitFor(A, () => document.getElementById('inChip').dataset.st === 'ok');
 P = await pill(A);
-check('CA-M01 un port « Roland FP-10 » : point vert et nom', P.st === 'ok' && P.lbl === 'Roland FP-10' && P.title === 'Roland FP-10' && /md-ok/.test(P.mb), P);
-check('CA-M01 le point est vert (--good)', await ev(A, () => { const i = document.querySelector('#inChip i'), d = document.createElement('i'); d.style.background = 'var(--good)'; document.body.appendChild(d); const g = getComputedStyle(d).backgroundColor; d.remove(); return getComputedStyle(i).backgroundColor === g; }));
+check('CA-M01 un port « Roland FP-10 » : point vert, « Clavier MIDI », nom dans l’infobulle (08/11)', P.st === 'ok' && P.lbl === 'Clavier MIDI' && P.title === 'Roland FP-10' && /md-ok/.test(P.mb), P);
+check('CA-M01 le point est vert (--good)', await ev(A, () => { const i = document.querySelector('#inChip .mp-dot'), d = document.createElement('i'); d.style.background = 'var(--good)'; document.body.appendChild(d); const g = getComputedStyle(d).backgroundColor; d.remove(); return getComputedStyle(i).backgroundColor === g; }));
 check('M2 accueil branché : « ✓ Roland FP-10 » + Tester', await ev(A, () => { const c = document.getElementById('hsMidi'); return c.classList.contains('md-ok') && document.getElementById('hsMidiT').textContent === 'Roland FP-10' && document.getElementById('hsMidiBtn').textContent === 'Tester'; }));
 check('S.midi.seenAt et hw.name enregistrés', await st(A).then(s => !!s.midi?.seenAt && s.midi.hw?.name === 'Roland FP-10'));
 // ---- CA-M13 : ports virtuels ----
 await ev(A, () => window.__midi.addVirtual()); await W(A, 300);
 P = await pill(A);
-check('CA-M13 un port virtuel ne compte pas (pastille, toast)', P.lbl === 'Roland FP-10' && !/session|network/i.test(P.title) && !(await toastTxt(A)), { P, t: await toastTxt(A) });
+check('CA-M13 un port virtuel ne compte pas (pastille, toast)', P.title === 'Roland FP-10' && !/session|network/i.test(P.title) && !(await toastTxt(A)), { P, t: await toastTxt(A) });
 // ---- M13 hors partie : débranché / rebranché ----
 await ev(A, () => window.__midi.disconnect(0)); await W(A, 400);
 P = await pill(A);
-check('M13 débranché hors partie : toast « Clavier déconnecté », pastille orange', /Clavier déconnecté/.test(await toastTxt(A)) && P.st === 'wait' && P.lbl === 'Clavier : en attente' && !(await vis(A, 'mdLost')), { P, t: await toastTxt(A) });
+check('M13 débranché hors partie : toast « Clavier déconnecté », pastille orange', /Clavier déconnecté/.test(await toastTxt(A)) && P.st === 'wait' && P.lbl === 'Clavier MIDI' && P.title === 'Clavier : en attente' && P.dot === 'rgb(180, 83, 10)' && !(await vis(A, 'mdLost')), { P, t: await toastTxt(A) });
 check('CA-M13 seul le port virtuel reste : la pastille n’est pas verte', P.st !== 'ok');
 await ev(A, () => window.__midi.reconnect(0)); await W(A, 400);
 check('M13 rebranché (entrée déjà MIDI) : toast « Roland FP-10 connecté »', /Roland FP-10 connecté/.test(await toastTxt(A)), await toastTxt(A));
@@ -85,7 +85,7 @@ await A.ctx.close();
 A = await open({ name: 'Yamaha Clavinova CLP-745 Port 1' });
 await waitFor(A, () => document.getElementById('inChip').dataset.st === 'ok');
 P = await pill(A);
-check('CA-M02 nom > 18 caractères tronqué avec « … », complet dans title', P.lbl.length === 18 && P.lbl.endsWith('…') && P.title === 'Yamaha Clavinova CLP-745 Port 1', P);
+check('CA-M02 « Clavier MIDI » dans la pastille, nom complet dans title (08/11)', P.lbl === 'Clavier MIDI' && P.title === 'Yamaha Clavinova CLP-745 Port 1', P);
 await A.ctx.close();
 
 // ---- CA-M03 : branchement à chaud, entrée écran, permission déjà donnée ----

@@ -54,8 +54,13 @@
 .ip-tunebox[open] .ip-tune{margin-top:6px}
 /* menu : un rond devant Clavier MIDI / Micro / Clavier Application */
 .md-pill .mp-dot{flex:none;width:9px;height:9px;border-radius:50%;background:#b8b6cc}
-.md-pill .mp-dot.on{background:#22c55e;box-shadow:0 0 0 3px rgba(34,197,94,.2)}
+.md-pill .mp-dot.on{background:var(--good);box-shadow:0 0 0 3px color-mix(in srgb,var(--good) 22%,transparent)} .md-pill .mp-dot.wait{background:#b4530a;animation:mdBlink 1.4s ease-in-out infinite} @keyframes mdBlink{50%{opacity:.35}} @media (prefers-reduced-motion:reduce){ .md-pill .mp-dot.wait{animation:none} }
 .side:not(.collapsed) .md-pill .mp-ic, .side:not(.collapsed) .md-pill > i:not(.mp-dot){display:none}
 .side.collapsed .md-pill .mp-dot{display:none}
 #midiModal.md-notcur #mdPaneMidi .midi-status, #midiModal.md-noacc #mdPaneMidi #mDevList{display:none!important}
 @media (max-height:720px){ #mdPaneMic .ip-tip, #mdPaneMic #micSensH{display:none} .ip-kbp{height:52px} #midiModal .midi-body{gap:10px} }
+/* 08/11 soir : commandes segmentées = rectangles aux bords arrondis, boutons de même largeur, sur toute la largeur */
+.seg{border-radius:14px}
+.seg button{border-radius:11px;flex:1 1 0;min-width:0}
+.set-nav,#pfNav.set-nav,.ntf-tabs{align-self:stretch!important;width:100%;max-width:none!important}
+.set-nav button,.ntf-tabs button{flex:1 1 0;min-width:0;padding-inline:6px;overflow:hidden;text-overflow:ellipsis}

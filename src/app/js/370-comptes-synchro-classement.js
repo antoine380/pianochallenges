@@ -187,17 +187,19 @@ async function renderRank(){ const tok=++rankTok;
     const me=row({name:t("you"),avatar:charIndex(li.L),photo:userPhoto(),level:li.L,xp:m.xp,streak:effStreak()},"",true); me.classList.add("out");
     me.querySelector("b").textContent=t("rankOrd")(m.rank)+" · "+t("you"); me.querySelector("b").title=me.querySelector("b").textContent; ol.appendChild(me); }
 }
-async function oauthLogin(provider){
+// Google : toujours proposer le choix du compte (sinon impossible de passer à un autre compte Google) — 08/11/2026
+const oauthQP = pv => pv==="google" ? {prompt:"select_account"} : undefined;
+async function oauthLogin(provider){ try{ sessionStorage.setItem("pc-auth-want", String(Date.now())); }catch(e){}
   try{
     if(isApp()){
-      const {data,error}=await sb.auth.signInWithOAuth({provider, options:{redirectTo:"pianochallenges://auth", skipBrowserRedirect:true}});
+      const {data,error}=await sb.auth.signInWithOAuth({provider, options:{redirectTo:"pianochallenges://auth", skipBrowserRedirect:true, queryParams:oauthQP(provider)}});
       if(error) throw error;
       const r=await window.Capacitor.nativePromise("Auth","start",{url:data.url, scheme:"pianochallenges"});
       const back=new URL(r.url.replace("pianochallenges://","https://x/")), code=back.searchParams.get("code");
       if(!code) throw new Error(back.searchParams.get("error_description")||"cancelled");
       const ex=await sb.auth.exchangeCodeForSession(code); if(ex.error) throw ex.error;
     } else {
-      const {data,error}=await sb.auth.signInWithOAuth({provider, options:{redirectTo:location.origin+location.pathname, skipBrowserRedirect:true}}); if(error) throw error;
+      const {data,error}=await sb.auth.signInWithOAuth({provider, options:{redirectTo:location.origin+location.pathname, skipBrowserRedirect:true, queryParams:oauthQP(provider)}}); if(error) throw error;
       // make sure the auth server answers before leaving the page (otherwise the user lands on a browser error page)
       const ac=new AbortController(), to=setTimeout(()=>ac.abort(),4000);
       try{ const h=await fetch(SUPA_URL+"/auth/v1/health",{signal:ac.signal, headers:{apikey:SUPA_KEY}}); if(!h.ok) throw 0; }

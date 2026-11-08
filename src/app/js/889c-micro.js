@@ -68,7 +68,7 @@ async function micStart(){ if(micOn || micAsking) return; const md=navigator.med
     if(performance.now()<micMuteUntil) return;
     if(attack && m===lastEmit) lastEmit=null;
     if(m===cand) count++; else { cand=m; count=1; }
-    if(count>=2 && m!==lastEmit){ lastEmit=m; flashKey(m,"k-hit",150); midiIn(m); }
+    if((count>=3 || (count>=2 && MIC.clar>=.8)) && m!==lastEmit){ lastEmit=m; flashKey(m,"k-hit",150); midiIn(m); } // 3 lectures, ou 2 bien nettes : pas de fausse note pendant un changement de note
   },25);
   renderInputUI(); ipRender(); }
 { const o=micStop; micStop=function(){ const r=o.apply(this,arguments); try{ if(MIC.src) MIC.src.disconnect(); }catch(e){} MIC.src=null; MIC.an=null; MIC.f=-1; MIC.lvl=0;
@@ -154,7 +154,7 @@ function ipLoop(){ cancelAnimationFrame(IP.raf); const step=()=>{ if(!midiOpen |
 { const o=openMidi; openMidi=function(){ MDT.tab=MDT.want||mdtCur(); MDT.want=null; const r=o.apply(this,arguments); try{ mdtRender(true); }catch(e){ console.warn(e); }
     requestAnimationFrame(()=>{ const b=document.querySelector("#midiModal .midi-body"); if(b) b.scrollTop=0; }); return r; }; }
 { const o=renderMidiModal; renderMidiModal=function(){ const r=o.apply(this,arguments); try{ mdtRender(false); }catch(e){ console.warn(e); } return r; }; }
-{ const o=renderInputUI; renderInputUI=function(){ const r=o.apply(this,arguments); try{ if(midiOpen) mdtRender(false); }catch(e){} return r; }; }
+{ const o=renderInputUI; renderInputUI=function(){ const r=o.apply(this,arguments); try{ const sg=$("segInput"); if(sg) ["midi","screen","mic"].forEach(v=>{ const b=sg.querySelector('[data-v="'+v+'"]'); if(b) sg.appendChild(b); }); if(midiOpen) mdtRender(false); }catch(e){} return r; }; } // Réglages « Je joue avec » : Clavier MIDI / Clavier Application / Micro
 // la pastille du menu : la fenêtre s'ouvre sur l'onglet de l'entrée choisie (micro, écran) ; MIDI : comme avant (assistant si jamais branché)
 { const o=mdPillClick; mdPillClick=function(){ const m=S.settings.input; if(!midiPossible()){ try{ closeDrawer(); }catch(e){} mdtOpen(mdtCur()); return; } if(m==="mic" || (m==="screen" && mdState().k!=="plug")){ try{ closeDrawer(); }catch(e){} mdtOpen(m); return; } return o.apply(this,arguments); }; }
 $("mbMidi").addEventListener("click", e=>{ const m=S.settings.input; if(m==="mic" || (m==="screen" && mdState().k!=="plug")){ e.stopImmediatePropagation(); mdtOpen(m); } }, true);
@@ -164,6 +164,6 @@ function ipOpen(){ mdtOpen(mdtCur()); }
     const lab = k==="ok"||k==="wait" ? N.midi : k==="mic"||k==="micoff" ? N.mic : k==="plug" ? null : N.screen, on = k==="ok"||k==="mic"||k==="screen";
     if(lab){ c.querySelector(".mp-t").textContent=lab; if(!c.title || c.title===lab) c.title=lab; c.setAttribute("aria-label",lab+(c.title&&c.title!==lab?" · "+c.title:"")); }
     if(!c.querySelector(".mp-dot")){ const d=document.createElement("i"); d.className="mp-dot"; d.setAttribute("aria-hidden","true"); c.prepend(d); }
-    c.querySelector(".mp-dot").classList.toggle("on", on); }catch(e){} return r; }; }
+    c.querySelector(".mp-dot").classList.toggle("on", on); c.querySelector(".mp-dot").classList.toggle("wait", k==="wait"); }catch(e){} return r; }; }
 try{ mdPill(); }catch(e){}
 /* ==== fin Micro et mode d'entrée ==== */
