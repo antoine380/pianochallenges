@@ -51,7 +51,7 @@ let A = await open({ input: 'screen', mode: 'none' });
 let P = await pill(A);
 check('CA-M01 sans Web MIDI : la pastille dit « Écran »', P.st === 'screen' && P.lbl === 'Écran', P);
 await click(A, '#inChip'); await W(A, 300);
-check('CA-M01 sans Web MIDI : la pastille ouvre le panneau « Mode d’entrée » (Micro / Écran, jamais « connecter ») — 08/11', await vis(A, 'inPanel') && !(await vis(A, 'midiModal')) && await ev(A, () => [...document.querySelectorAll('#inSeg button')].map(b => b.dataset.v).join() === 'mic,screen'));
+check('CA-M01 sans Web MIDI : la pastille ouvre « Mode d’entrée » sur l’onglet Écran (onglets Micro / Écran, jamais « connecter ») — 08/11', await vis(A, 'midiModal') && await ev(A, () => [...document.querySelectorAll('#mdInSeg button')].map(b => b.dataset.v + ':' + b.getAttribute('aria-selected')).join() === 'mic:false,screen:true' && !document.getElementById('mdPaneScreen').hidden && document.getElementById('mdPaneMidi').hidden));
 await A.ctx.close();
 A = await open({ input: 'screen', empty: true });
 P = await pill(A);

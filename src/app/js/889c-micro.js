@@ -1,9 +1,8 @@
 // fragment de l'IIFE principale — ordre 889c, voir src/app/README.md
 /* ==== Micro et mode d'entrée (08/11/2026) ====
-// Panneau « Mode d'entrée » #inPanel ouvert par la pastille du menu (#inChip, #mbMidi) en entrée micro ou écran : 3 boutons Clavier MIDI /
-// Micro / Écran (#inSeg) ; en micro : état + Activer/Pause (#micGo), vu-mètre, note entendue (nom, octave, Hz, écart), sensibilité
-// (S.settings.micSens 1/2/3), accordage du piano (S.settings.micCents, curseur + « Mesurer »), conseils. La fenêtre Clavier MIDI reçoit
-// les mêmes 3 boutons (#mdInSeg). Moteur du micro refait (MIC) : contexte audio à lui, créé dans le geste et recréé à la fréquence du
+// Une seule fenêtre « Mode d'entrée » (#midiModal) à 3 onglets Clavier MIDI / Micro / Écran (#mdInSeg, panneaux #mdPaneMidi/Mic/Screen,
+// « Utiliser … » #mdUse) ; onglet Micro : état + Activer/Pause (#micGo), vu-mètre, note entendue, sensibilité (S.settings.micSens),
+// accordage (S.settings.micCents + « Mesurer ») ; onglet Écran : taille du clavier à l'écran (#kbField déplacé). Moteur du micro refait (MIC) : contexte audio à lui, créé dans le geste et recréé à la fréquence du
 // micro si elle diffère (iPad : sinon l'analyse ne reçoit que du silence), relancé s'il est suspendu ; détection MPM (NSDF) sur 2048
 // échantillons, Do1 → Do7 ; une note répétée est reconnue à chaque attaque (montée du niveau) ; 2 lectures identiques suffisent. */
 Object.assign(TXT.fr,{ipT:"Mode d'entrée", ipModes:{midi:"Clavier MIDI",mic:"Micro",screen:"Écran"},
@@ -77,49 +76,63 @@ $("micBtn").addEventListener("click", e=>{ e.stopImmediatePropagation(); e.preve
 { const o=mpListen; mpListen=function(){ const a=audio; if(MIC.an) audio=()=>MIC.an.context; try{ return o.apply(this,arguments); } finally { audio=a; } }; }
 function micTuneEnd(){ const L=MIC.tune.slice().sort((a,b)=>a-b); MIC.tune=null; const med=L[Math.floor(L.length/2)]; S.settings.micCents=Math.max(-50,Math.min(50,Math.round(med))); save(); MIC.tuned=S.settings.micCents; ipRender(); }
 
-// ---- le panneau « Mode d'entrée » ----
-{ const m=document.createElement("div"); m.className="modal"; m.id="inPanel"; m.hidden=true; m.setAttribute("role","dialog"); m.setAttribute("aria-modal","true"); m.setAttribute("aria-labelledby","ipT");
-  m.innerHTML='<div class="modal-bg" data-close="inPanel"></div><div class="modal-card small ip-card"><div class="modal-head"><h2 id="ipT"></h2><button class="modal-close" type="button" data-close="inPanel" aria-label="Close">×</button></div>'
-    +'<div class="modal-body"><div class="seg ip-seg" id="inSeg" role="group"></div><div id="ipBody"></div></div></div>';
-  document.body.appendChild(m); }
+// ---- une seule fenêtre « Mode d'entrée » à 3 onglets (la fenêtre Clavier MIDI #midiModal) ----
+// Onglets #mdInSeg Clavier MIDI / Micro / Écran : on regarde les réglages de chacun ; l'onglet d'un autre mode que l'entrée choisie
+// montre en tête « Utiliser … » (#mdUse) ; la pastille du menu ouvre sur l'onglet de l'entrée choisie (MDT.want sinon).
+Object.assign(TXT.fr,{ipUse:{midi:"Utiliser le clavier MIDI",mic:"Utiliser le micro",screen:"Utiliser l'écran"}, ipActive:"Mode d'entrée actif"});
+Object.assign(TXT.en,{ipUse:{midi:"Use the MIDI keyboard",mic:"Use the microphone",screen:"Use the screen"}, ipActive:"Current input mode"});
+const MDT={tab:null, want:null, mic:""};
+const mdtTabs = () => ["midi","mic","screen"].filter(v=>v!=="midi"||midiPossible());
+const mdtCur = () => { const m=S.settings.input; return m==="mic"||m==="screen"||m==="midi" ? (m==="midi"&&!midiPossible()?"screen":m) : (midiPossible()?"midi":"screen"); };
+{ const body=$("midiModal").querySelector(".midi-body"), pm=document.createElement("div"); pm.id="mdPaneMidi"; pm.className="md-pane"; while(body.firstChild) pm.appendChild(body.firstChild);
+  const tabs=document.createElement("div"); tabs.id="mdInSeg"; tabs.className="ip-tabs"; tabs.setAttribute("role","tablist");
+  const use=document.createElement("div"); use.id="mdUse"; use.className="md-use";
+  const mic=document.createElement("div"); mic.id="mdPaneMic"; mic.className="md-pane"; mic.hidden=true;
+  const sc=document.createElement("div"); sc.id="mdPaneScreen"; sc.className="md-pane"; sc.hidden=true; sc.innerHTML='<p class="ip-p" id="ipScreenS"></p>';
+  body.append(tabs, use, pm, mic, sc); }
+function mdtOpen(tab){ MDT.want=tab||null; if(midiOpen){ MDT.tab=MDT.want||mdtCur(); MDT.want=null; mdtRender(true); } else openMidi(); }
+function mdtRender(full){ const M=$("midiModal"); if(!M) return; const tab=MDT.tab||mdtCur(), cur=mdtCur(), L=mdtTabs(); if(!L.includes(tab)) MDT.tab=L[0];
+  $("midiTitle").textContent=t("ipT");
+  const tb=$("mdInSeg"); tb.setAttribute("aria-label",t("ipT"));
+  if(tb.dataset.k!==L.join()+tab+cur+S.settings.lang){ tb.dataset.k=L.join()+tab+cur+S.settings.lang; const N=t("ipModes");
+    tb.innerHTML=L.map(v=>'<button type="button" role="tab" id="mdTab-'+v+'" data-v="'+v+'" aria-selected="'+(v===tab)+'" aria-controls="'+(v==="midi"?"mdPaneMidi":v==="mic"?"mdPaneMic":"mdPaneScreen")+'"><span class="ip-ic" aria-hidden="true">'+INPUT_ICONS[v]+'</span><span>'+esc(N[v])+'</span>'+(v===cur?'<i class="ip-on" aria-hidden="true"></i>':'')+'</button>').join("");
+    tb.querySelectorAll("button").forEach(b=>b.onclick=()=>{ MDT.tab=b.dataset.v; mdtRender(true); }); }
+  $("mdPaneMidi").hidden = tab!=="midi"; $("mdPaneMic").hidden = tab!=="mic"; $("mdPaneScreen").hidden = tab!=="screen";
+  const kb=$("kbField"); if(kb){ const host = tab==="screen" ? $("mdPaneScreen") : $("mdPaneMidi"); if(kb.parentNode!==host){ if(tab==="screen") host.appendChild(kb); else { const a=$("optMidiSound"); const lab=a&&a.closest("label"); if(lab && lab.parentNode===host) host.insertBefore(kb, lab); else host.appendChild(kb); } } }
+  const u=$("mdUse"); if(tab===cur){ u.className="md-use on"; u.innerHTML='<span class="ip-dot" aria-hidden="true"></span><span></span>'; u.lastChild.textContent=t("ipActive"); }
+  else { u.className="md-use"; u.innerHTML='<button type="button" class="btn primary" id="mdUseB"></button>'; const b=$("mdUseB"); b.textContent=t("ipUse")[tab];
+    b.onclick=()=>{ const v=tab; if(v!=="mic" && micOn) micStop(); MDT.want=v; setInput(v,true).then(()=>{ MDT.tab=v; mdtRender(true); }); }; }
+  if(tab==="screen") $("ipScreenS").textContent=t("ipScreenS");
+  const mk=[tab, micOn, MIC.err, micSens(), S.settings.micCents, MIC.tune?1:0, MIC.tuned, S.settings.lang].join("|");
+  if(tab==="mic" && (full || MDT.mic!==mk)){ MDT.mic=mk; ipMic($("mdPaneMic")); ipLoop(); } }
+function ipMic(B){ const err=!!MIC.err && !micOn, sens=micSens(), c=+S.settings.micCents||0, cur=mdtCur()==="mic";
+  B.innerHTML=(cur?'<div class="ip-st'+(micOn?" on":err?" err":"")+'"><span class="ip-dot" aria-hidden="true"></span><span class="ip-stt"><b id="micStT"></b>'+(err?'<small id="micStS"></small>':'')+'</span><button type="button" class="btn'+(micOn?"":" primary")+'" id="micGo"></button></div>':'')
+    +'<div class="ip-live"><span class="ip-vu" aria-hidden="true"><i id="micVu"></i></span><div class="ip-note"><small id="micHeardL"></small><b id="micNote" aria-live="polite">—</b><span class="mono" id="micHz"></span></div></div>'
+    +'<div class="ip-row"><span class="ip-l" id="micSensL"></span><div class="seg" id="micSens" role="group">'+t("micSens").map((x,i)=>'<button type="button" data-v="'+(i+1)+'" aria-pressed="'+(sens===i+1)+'">'+esc(x)+'</button>').join("")+'</div><small class="ip-h" id="micSensH"></small></div>'
+    +'<div class="ip-row"><span class="ip-l" id="micTuneL"></span><div class="ip-tune"><input type="range" min="-50" max="50" step="1" id="micCents" value="'+c+'"><b class="mono" id="micCentsV"></b><button type="button" class="btn" id="micTune"></button></div><small class="ip-h" id="micTuneH"></small></div>'
+    +'<p class="ip-tip" id="micTip"></p>';
+  if(cur){ $("micStT").textContent=t(micOn?"micOnT":err?"micErrT":"micOffT"); if(err) $("micStS").textContent=t("micErrS");
+    $("micGo").textContent=t(micOn?"micPause":err?"micRetry":"micStart"); $("micGo").onclick=()=>{ if(micOn){ micStop(); renderInputUI(); } else { MIC.err=""; micStart(); } }; }
+  $("micHeardL").textContent=t("micHeard"); $("micSensL").textContent=t("micSensL"); $("micSensH").textContent=t("micSensH"); $("micTuneL").textContent=t("micTuneL"); $("micTip").textContent=t("micTips");
+  $("micSens").setAttribute("aria-label",t("micSensL"));
+  $("micTuneH").textContent = MIC.tune ? t("micTuneWait") : MIC.tuned!=null ? t("micTuneOk")(MIC.tuned) : t("micTuneH");
+  $("micCentsV").textContent=(c>0?"+":"")+c+" ct"; $("micCents").setAttribute("aria-label",t("micTuneL"));
+  $("micCents").oninput=e=>{ S.settings.micCents=+e.target.value; save(); $("micCentsV").textContent=(+e.target.value>0?"+":"")+e.target.value+" ct"; };
+  $("micTune").textContent=t("micTuneGo"); $("micTune").disabled=!micOn; $("micTune").onclick=()=>{ MIC.tune=[]; MIC.tuned=null; mdtRender(true); };
+  $("micSens").querySelectorAll("button").forEach(b=>b.onclick=()=>{ S.settings.micSens=+b.dataset.v; save(); mdtRender(true); }); }
+function ipRender(){ if(midiOpen) mdtRender(); } // appelé par le moteur (micro allumé, coupé, mesure)
 const IP={raf:0};
-function ipSegHTML(id){ const M=t("ipModes"), cur=S.settings.input||"screen", L=["midi","mic","screen"].filter(v=>v!=="midi"||midiPossible());
-  return L.map(v=>'<button type="button" data-v="'+v+'" aria-pressed="'+(cur===v)+'"><span class="ip-ic" aria-hidden="true">'+INPUT_ICONS[v]+'</span><span>'+esc(M[v])+'</span></button>').join(""); }
-function ipPick(v){ if(v===(S.settings.input||"screen") && v!=="midi") return;
-  if(v==="midi"){ closeMod("inPanel"); setInput("midi",true).then(()=>{ if(!midiOpen) openMidi(); }); return; }
-  setInput(v,true); if(v!=="mic" && micOn) micStop(); setTimeout(ipRender,0); }
-function ipOpen(){ openMod("inPanel"); ipRender(); ipLoop(); }
-function ipRender(){ const P=$("inPanel"); if(!P || P.hidden) return; $("ipT").textContent=t("ipT");
-  const seg=$("inSeg"); seg.setAttribute("aria-label",t("ipT")); seg.innerHTML=ipSegHTML(); seg.querySelectorAll("button").forEach(b=>b.onclick=()=>ipPick(b.dataset.v));
-  const m=S.settings.input||"screen", B=$("ipBody");
-  if(m==="mic"){ const err=!!MIC.err && !micOn, sens=micSens(), c=+S.settings.micCents||0;
-    B.innerHTML='<div class="ip-st'+(micOn?" on":err?" err":"")+'"><span class="ip-dot" aria-hidden="true"></span><span class="ip-stt"><b id="micStT"></b>'+(err?'<small id="micStS"></small>':'')+'</span><button type="button" class="btn'+(micOn?"":" primary")+'" id="micGo"></button></div>'
-      +'<div class="ip-live"><span class="ip-vu" aria-hidden="true"><i id="micVu"></i></span><div class="ip-note"><small id="micHeardL"></small><b id="micNote" aria-live="polite">—</b><span class="mono" id="micHz"></span></div></div>'
-      +'<div class="ip-row"><span class="ip-l" id="micSensL"></span><div class="seg" id="micSens" role="group">'+t("micSens").map((x,i)=>'<button type="button" data-v="'+(i+1)+'" aria-pressed="'+(sens===i+1)+'">'+esc(x)+'</button>').join("")+'</div><small class="ip-h" id="micSensH"></small></div>'
-      +'<div class="ip-row"><span class="ip-l" id="micTuneL"></span><div class="ip-tune"><input type="range" min="-50" max="50" step="1" id="micCents" value="'+c+'"><b class="mono" id="micCentsV"></b><button type="button" class="btn" id="micTune"></button></div><small class="ip-h" id="micTuneH"></small></div>'
-      +'<p class="ip-tip" id="micTip"></p>';
-    $("micStT").textContent=t(micOn?"micOnT":err?"micErrT":"micOffT"); if(err) $("micStS").textContent=t("micErrS");
-    $("micGo").textContent=t(micOn?"micPause":err?"micRetry":"micStart"); $("micGo").onclick=()=>{ if(micOn){ micStop(); renderInputUI(); } else { MIC.err=""; micStart(); } };
-    $("micHeardL").textContent=t("micHeard"); $("micSensL").textContent=t("micSensL"); $("micSensH").textContent=t("micSensH"); $("micTuneL").textContent=t("micTuneL"); $("micTip").textContent=t("micTips");
-    $("micTuneH").textContent = MIC.tune ? t("micTuneWait") : MIC.tuned!=null ? t("micTuneOk")(MIC.tuned) : t("micTuneH");
-    $("micCentsV").textContent=(c>0?"+":"")+c+" ct"; $("micCents").setAttribute("aria-label",t("micTuneL"));
-    $("micCents").oninput=e=>{ S.settings.micCents=+e.target.value; save(); $("micCentsV").textContent=(+e.target.value>0?"+":"")+e.target.value+" ct"; };
-    $("micTune").textContent=t("micTuneGo"); $("micTune").disabled=!micOn; $("micTune").onclick=()=>{ MIC.tune=[]; MIC.tuned=null; ipRender(); };
-    $("micSens").querySelectorAll("button").forEach(b=>b.onclick=()=>{ S.settings.micSens=+b.dataset.v; save(); ipRender(); }); }
-  else if(m==="midi"){ B.innerHTML='<p class="ip-p" id="ipMidiS"></p><button type="button" class="btn primary" id="ipMidiGo"></button>'; $("ipMidiS").textContent=t("ipMidiS"); $("ipMidiGo").textContent=t("ipMidiGo"); $("ipMidiGo").onclick=()=>{ closeMod("inPanel"); openMidi(); }; }
-  else { B.innerHTML='<p class="ip-p" id="ipScreenS"></p>'; $("ipScreenS").textContent=t("ipScreenS"); } }
-function ipLoop(){ cancelAnimationFrame(IP.raf); const step=()=>{ const P=$("inPanel"); if(!P || P.hidden) return; IP.raf=requestAnimationFrame(step);
+function ipLoop(){ cancelAnimationFrame(IP.raf); const step=()=>{ if(!midiOpen || (MDT.tab||mdtCur())!=="mic") return; IP.raf=requestAnimationFrame(step);
     const vu=$("micVu"); if(vu) vu.style.transform="scaleX("+Math.min(1, MIC.lvl*14).toFixed(3)+")";
     const n=$("micNote"), hz=$("micHz"); if(n){ if(micOn && MIC.f>0 && MIC.m!=null){ n.textContent=octName(MIC.m); n.style.setProperty("--nc","var(--note-"+(((MIC.m%12)+12)%12)+")"); n.classList.add("hit"); hz.textContent=t("micHz")(MIC.f, MIC.cents); } else if(!micOn || MIC.lvl<MIC_RMS[micSens()]){ n.textContent=micOn?t("micNone"):"—"; n.classList.remove("hit"); hz.textContent=""; } } };
   IP.raf=requestAnimationFrame(step); }
-// la pastille : micro (et écran sans MIDI possible) → ce panneau ; sinon comme avant (fenêtre Clavier MIDI avec les 3 boutons, assistant)
-{ const o=mdPillClick; mdPillClick=function(){ const m=S.settings.input; if(m==="mic" || (m==="screen" && !midiPossible())){ try{ closeDrawer(); }catch(e){} ipOpen(); return; } return o.apply(this,arguments); }; }
-$("mbMidi").addEventListener("click", e=>{ const m=S.settings.input; if(m==="mic" || (m==="screen" && !midiPossible())){ e.stopImmediatePropagation(); ipOpen(); } }, true);
-$("inCfg").addEventListener("click", e=>{ if(S.settings.input==="mic"){ e.stopImmediatePropagation(); ipOpen(); } }, true);
-// les 3 boutons aussi en tête de la fenêtre Clavier MIDI
-{ const o=renderMidiModal; renderMidiModal=function(){ const r=o.apply(this,arguments); try{ const body=document.querySelector("#midiModal .midi-body"); if(!body) return r;
-    let s=$("mdInSeg"); if(!s){ s=document.createElement("div"); s.id="mdInSeg"; s.className="seg ip-seg"; s.setAttribute("role","group"); body.prepend(s); }
-    s.setAttribute("aria-label",t("ipT")); s.innerHTML=ipSegHTML(); s.querySelectorAll("button").forEach(b=>b.onclick=()=>{ const v=b.dataset.v; if(v==="midi"){ if(S.settings.input!=="midi") setInput("midi",true); return; } closeMidi(); setInput(v,true); setTimeout(ipOpen,0); }); }catch(e){ console.warn(e); } return r; }; }
-{ const o=openMidi; openMidi=function(){ const r=o.apply(this,arguments); requestAnimationFrame(()=>{ const b=document.querySelector("#midiModal .midi-body"); if(b) b.scrollTop=0; }); return r; }; }
-{ const o=renderInputUI; renderInputUI=function(){ const r=o.apply(this,arguments); try{ if($("inPanel") && !$("inPanel").hidden) ipRender(); }catch(e){} return r; }; }
+{ const o=openMidi; openMidi=function(){ MDT.tab=MDT.want||mdtCur(); MDT.want=null; const r=o.apply(this,arguments); try{ mdtRender(true); }catch(e){ console.warn(e); }
+    requestAnimationFrame(()=>{ const b=document.querySelector("#midiModal .midi-body"); if(b) b.scrollTop=0; }); return r; }; }
+{ const o=renderMidiModal; renderMidiModal=function(){ const r=o.apply(this,arguments); try{ mdtRender(false); }catch(e){ console.warn(e); } return r; }; }
+{ const o=renderInputUI; renderInputUI=function(){ const r=o.apply(this,arguments); try{ if(midiOpen) mdtRender(false); }catch(e){} return r; }; }
+// la pastille du menu : la fenêtre s'ouvre sur l'onglet de l'entrée choisie (micro, écran) ; MIDI : comme avant (assistant si jamais branché)
+{ const o=mdPillClick; mdPillClick=function(){ const m=S.settings.input; if(m==="mic" || (m==="screen" && mdState().k!=="plug")){ try{ closeDrawer(); }catch(e){} mdtOpen(m); return; } return o.apply(this,arguments); }; }
+$("mbMidi").addEventListener("click", e=>{ const m=S.settings.input; if(m==="mic" || (m==="screen" && mdState().k!=="plug")){ e.stopImmediatePropagation(); mdtOpen(m); } }, true);
+$("inCfg").addEventListener("click", e=>{ const m=S.settings.input; if(m==="mic"){ e.stopImmediatePropagation(); mdtOpen("mic"); } }, true);
+function ipOpen(){ mdtOpen(mdtCur()); }
 /* ==== fin Micro et mode d'entrée ==== */

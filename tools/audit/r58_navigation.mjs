@@ -137,21 +137,25 @@ for (const [n, vp] of [['iPad', { width: 1024, height: 768 }], ['téléphone', {
   await p.goto(URL); await p.waitForFunction(() => !!window.__X, null, { timeout: 15000 }); await W(p, 1500); p.X = s => p.evaluate(s => window.__X(s), s);
   await p.mouse.click(600, 400); await W(p, 700); // premier toucher = le micro démarre
   await p.click('#inChip'); await W(p, 400);
-  const pn = await ev(p, () => ({ on: !document.getElementById('inPanel').hidden, midi: !document.getElementById('midiModal').hidden, seg: [...document.querySelectorAll('#inSeg button')].map(b => b.dataset.v + ':' + b.getAttribute('aria-pressed')).join(), st: document.getElementById('micStT')?.textContent }));
-  check('micro : la pastille ouvre le panneau « Mode d’entrée » (pas la fenêtre Clavier MIDI), 3 boutons, micro choisi, « Le micro écoute »', pn.on && !pn.midi && pn.seg === 'midi:false,mic:true,screen:false' && /écoute/.test(pn.st || ''), pn);
+  const pn = await ev(p, () => ({ on: !document.getElementById('midiModal').hidden, title: document.getElementById('midiTitle').textContent, tabs: [...document.querySelectorAll('#mdInSeg button')].map(b => b.dataset.v + ':' + b.getAttribute('aria-selected')).join(),
+    panes: ['mdPaneMidi', 'mdPaneMic', 'mdPaneScreen'].map(id => document.getElementById(id).hidden ? 0 : 1).join(''), act: document.getElementById('mdUse').textContent, st: document.getElementById('micStT')?.textContent, chg: getComputedStyle(document.getElementById('mdChange')).display }));
+  check('micro : la pastille ouvre « Mode d’entrée » sur l’onglet Micro (3 onglets, « Mode d’entrée actif », « Le micro écoute », plus de « Changer d’entrée »)', pn.on && pn.title === 'Mode d’entrée'.replace('’', "'") && pn.tabs === 'midi:false,mic:true,screen:false' && pn.panes === '010' && /actif/.test(pn.act) && /écoute/.test(pn.st || '') && pn.chg === 'none', pn);
   await p.X('window.__got=[]; const o=midiIn; midiIn=function(m){ window.__got.push(m); return o.apply(this,arguments); }');
   for (const f of [261.63, 0, 261.63, 65.41, 440]) { await p.evaluate(f => window.__setFreqs(f ? [f] : []), f); await W(p, f ? 380 : 300); }
   const got = await p.X('window.__got.join()'), note = await ev(p, () => document.getElementById('micNote').textContent);
-  check('moteur du micro : Do3, Do3 rejoué, Do1 (grave), La3 reconnus ; note affichée dans le panneau', got === '60,60,36,69' && note === 'La3', { got, note });
+  check('moteur du micro : Do3, Do3 rejoué, Do1 (grave), La3 reconnus ; note affichée dans l’onglet', got === '60,60,36,69' && note === 'La3', { got, note });
   await click(p, '#micSens [data-v="3"]'); check('sensibilité « Forte » mémorisée', await p.X('S.settings.micSens') === 3);
   await p.evaluate(() => window.__setFreqs([440 * Math.pow(2, 20 / 1200)])); await click(p, '#micTune'); await W(p, 1200);
   check('accordage : « Mesurer » sur un La un peu haut → +20 cents environ', Math.abs((await p.X('S.settings.micCents')) - 20) <= 3, await p.X('S.settings.micCents'));
-  await click(p, '#inSeg [data-v=screen]'); await W(p, 300);
-  check('bouton « Écran » : entrée écran, micro coupé', await p.X('S.settings.input==="screen" && !micOn'));
-  await click(p, '#inSeg [data-v=midi]'); await W(p, 700);
-  check('bouton « Clavier MIDI » : la fenêtre Clavier MIDI, avec les mêmes 3 boutons en tête', await ev(p, () => !document.getElementById('midiModal').hidden && !!document.querySelector('#mdInSeg [data-v=mic]')));
-  await click(p, '#mdInSeg [data-v=mic]'); await W(p, 800);
-  check('… et « Micro » depuis la fenêtre MIDI : retour au panneau, micro relancé', await p.X('S.settings.input==="mic" && micOn && !document.getElementById("inPanel").hidden'));
+  await click(p, '#mdTab-screen'); await W(p, 300);
+  const sc = await ev(p, () => ({ panes: ['mdPaneMidi', 'mdPaneMic', 'mdPaneScreen'].map(id => document.getElementById(id).hidden ? 0 : 1).join(''), use: document.getElementById('mdUseB')?.textContent, kb: document.getElementById('kbField').parentNode.id }));
+  check('onglet Écran : on regarde sans changer d’entrée (« Utiliser l’écran »), taille du clavier à l’écran ici', sc.panes === '001' && sc.use === "Utiliser l'écran" && sc.kb === 'mdPaneScreen' && await p.X('S.settings.input==="mic" && micOn'), sc);
+  await click(p, '#mdUseB'); await W(p, 400);
+  check('« Utiliser l’écran » : entrée écran, micro coupé, l’onglet devient actif', await p.X('S.settings.input==="screen" && !micOn') && /actif/.test(await ev(p, () => document.getElementById('mdUse').textContent)));
+  await click(p, '#mdTab-midi'); await W(p, 300);
+  check('onglet Clavier MIDI : les réglages MIDI (claviers détectés), la taille du clavier revient ici', await ev(p, () => !document.getElementById('mdPaneMidi').hidden && !!document.getElementById('mDevList').offsetParent && document.getElementById('kbField').parentNode.id === 'mdPaneMidi'));
+  await click(p, '#mdTab-mic'); await W(p, 200); await click(p, '#mdUseB'); await W(p, 900);
+  check('onglet Micro › « Utiliser le micro » : micro relancé', await p.X('S.settings.input==="mic" && micOn'));
   check('aucune erreur JS (micro)', !p.errs.length, p.errs); await c.close(); }
 
 await b.close();
