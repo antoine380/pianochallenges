@@ -64,3 +64,8 @@
 .seg button{border-radius:11px;flex:1 1 0;min-width:0}
 .set-nav,#pfNav.set-nav,.ntf-tabs{align-self:stretch!important;width:100%;max-width:none!important}
 .set-nav button,.ntf-tabs button{flex:1 1 0;min-width:0;padding-inline:6px;overflow:hidden;text-overflow:ellipsis}
+/* 09/11 : fenêtre plus large (« Clavier Application » sur une ligne), boutons « Chercher encore » + assistant côte à côte */
+#midiModal .modal-card{width:min(580px,calc(100vw - 24px));max-width:none}
+.ip-tabs button span{white-space:nowrap}
+@media (max-width:420px){ .ip-tabs button span{white-space:normal;text-align:center;line-height:1.15} }
+.md-nfb{display:grid;grid-template-columns:1fr 1.4fr;gap:8px} .md-nfb .btn{width:100%;min-height:44px}

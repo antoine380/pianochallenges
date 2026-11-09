@@ -141,18 +141,28 @@ for (const [n, vp] of [['iPad', { width: 1024, height: 768 }], ['téléphone', {
     panes: ['mdPaneMidi', 'mdPaneMic', 'mdPaneScreen'].map(id => document.getElementById(id).hidden ? 0 : 1).join(''), act: document.getElementById('mdUse').textContent, st: document.getElementById('micStT')?.textContent, chg: getComputedStyle(document.getElementById('mdChange')).display }));
   check('micro : la pastille ouvre « Mode d’entrée » sur l’onglet Micro (3 onglets, « Mode d’entrée actif », « Le micro écoute », plus de « Changer d’entrée »)', pn.on && pn.title === 'Mode d’entrée'.replace('’', "'") && pn.tabs === 'midi:false,screen:false,mic:true' && pn.panes === '010' && /actif/.test(pn.act) && /écoute/.test(pn.st || '') && pn.chg === 'none', pn);
   await p.X('window.__got=[]; const o=midiIn; midiIn=function(m){ window.__got.push(m); return o.apply(this,arguments); }');
-  for (const f of [261.63, 0, 261.63, 65.41, 440]) { await p.evaluate(f => window.__setFreqs(f ? [f] : []), f); await W(p, f ? 380 : 300); }
+  for (const f of [261.63, 0, 261.63, 0, 65.41, 0, 440]) { await p.evaluate(f => window.__setFreqs(f ? [f] : []), f); await W(p, f ? 380 : 300); }
   const got = await p.X('window.__got.join()'), note = await ev(p, () => document.getElementById('micNote').textContent);
-  check('moteur du micro : Do3, Do3 rejoué, Do1 (grave), La3 reconnus ; note affichée dans l’onglet', got === '60,60,36,69' && note === 'La3', { got, note });
+  check('moteur du micro : Do3, Do3 rejoué, Do1 (grave), La3 reconnus (chacun avec son attaque) ; note affichée dans l’onglet', got === '60,60,36,69' && note === 'La3', { got, note });
+  await p.evaluate(() => window.__setFreqs([])); await W(p, 300); await p.X('window.__got=[]'); await p.evaluate(() => window.__setFreqs([196])); await W(p, 400); await p.evaluate(() => window.__setFreqs([300])); await W(p, 500); await p.evaluate(() => window.__setFreqs([150])); await W(p, 500);
+  check('09/11 : un son qui continue et change de hauteur sans attaque (bruit, voix) n’envoie pas de note de plus', await p.X('window.__got.join()') === '55', await p.X('window.__got.join()'));
+  await p.evaluate(() => window.__setFreqs([])); await W(p, 300);
+  const dots = await ev(p, () => [...document.querySelectorAll('#mdInSeg button')].map(b => b.dataset.v + (b.querySelector('.ip-dot.on') ? '+' : '-')).join());
+  check('09/11 : rond vert sur Micro (actif), gris sur Clavier MIDI (pas choisi) et Clavier Application', dots === 'midi-,screen-,mic+', dots);
+  check('09/11 : le conseil « Pose l’iPad… » est au-dessus de la sensibilité', await ev(p, () => !!(document.getElementById('micTip').compareDocumentPosition(document.getElementById('micSens')) & 4)));
   await click(p, '#micSens [data-v="3"]'); check('sensibilité « Forte » mémorisée', await p.X('S.settings.micSens') === 3);
   await p.evaluate(() => window.__setFreqs([440 * Math.pow(2, 20 / 1200)])); await click(p, '#micTune'); await W(p, 1200);
   check('accordage : « Mesurer » sur un La un peu haut → +20 cents environ', Math.abs((await p.X('S.settings.micCents')) - 20) <= 3, await p.X('S.settings.micCents'));
   await click(p, '#mdTab-screen'); await W(p, 300);
-  const sc = await ev(p, () => ({ panes: ['mdPaneMidi', 'mdPaneMic', 'mdPaneScreen'].map(id => document.getElementById(id).hidden ? 0 : 1).join(''), use: document.getElementById('mdUseB')?.textContent, size: document.querySelector('#ipSize [aria-pressed=true]')?.dataset.v || null }));
-  check('onglet Clavier Application : on regarde sans changer d’entrée (« Utiliser le clavier de l’application »), taille à choisir', sc.panes === '001' && sc.use === "Utiliser le clavier de l'application" && sc.size === null && await p.X('S.settings.input==="mic" && micOn'), sc);
+  const sc = await ev(p, () => ({ panes: ['mdPaneMidi', 'mdPaneMic', 'mdPaneScreen'].map(id => document.getElementById(id).hidden ? 0 : 1).join(''), use: document.getElementById('mdUseB')?.textContent, size: document.querySelector('#ipSize [aria-pressed=true]')?.dataset.v || null, lbl: document.getElementById('ipSizeL').textContent }));
+  check('onglet Clavier Application : on regarde sans changer d’entrée (« Utiliser le clavier de l’application »), 25 touches de base, « nombre de touches »', sc.panes === '001' && sc.use === "Utiliser le clavier de l'application" && sc.size === '25' && sc.lbl === 'Taille du clavier (nombre de touches)' && await p.X('S.settings.input==="mic" && micOn'), sc);
   await click(p, '#mdUseB'); await W(p, 400);
   check('« Utiliser le clavier de l’application » : entrée écran, micro coupé, 25 touches par défaut, l’onglet devient actif', await p.X('S.settings.input==="screen" && !micOn && S.settings.kbdSize==="25"') && /actif/.test(await ev(p, () => document.getElementById('mdUse').textContent)));
   await click(p, '#mdTab-midi'); await W(p, 300);
+  const md = await ev(p, () => ({ use: document.getElementById('mdUseB')?.textContent, dot: !!document.querySelector('#mdTab-midi .ip-dot.on'), w: document.querySelector('#midiModal .modal-card').getBoundingClientRect().width, h: [...document.querySelectorAll('#mdInSeg button span')].map(s => s.getBoundingClientRect().height) }));
+  check('09/11 : onglet Clavier MIDI pas actif = rond gris, bouton « Rechercher un clavier MIDI » ; fenêtre assez large pour « Clavier Application » sur une ligne', md.use === 'Rechercher un clavier MIDI' && !md.dot && md.w >= 560 && md.h.every(x => x < 26), md);
+  await click(p, '#mdUseB'); await W(p, 1200);
+  check('09/11 : « Rechercher » trouve le clavier branché et le choisit tout de suite (rond vert, « Mode d’entrée actif »)', await p.X('S.settings.input==="midi" && midiReady') && await ev(p, () => !!document.querySelector('#mdTab-midi .ip-dot.on') && /actif/.test(document.getElementById('mdUse').textContent)));
   check('onglet Clavier MIDI : les réglages MIDI (claviers détectés)', await ev(p, () => !document.getElementById('mdPaneMidi').hidden && document.getElementById('mdPaneMic').hidden ));
   await click(p, '#mdTab-mic'); await W(p, 200); await click(p, '#mdUseB'); await W(p, 900);
   check('onglet Micro › « Utiliser le micro » : micro relancé', await p.X('S.settings.input==="mic" && micOn'));
